@@ -2,13 +2,11 @@
 import { Menu, X, Search, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion'; // Import framer-motion
+import { motion } from 'framer-motion';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-
-  // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -30,13 +28,13 @@ export default function Navbar() {
       className={`fixed w-full z-50 transition-all duration-300 ${
         isScrolled ? 'bg-white shadow-md' : 'bg-transparent'
       }`}
-      initial={{ opacity: 0 }} // Initial opacity for animation
-      animate={{ opacity: 1 }} // Animate to full opacity
-      transition={{ duration: 0.5 }} // Duration of the fade-in effect
+      initial={{ opacity: 0 }} 
+      animate={{ opacity: 1 }} 
+      transition={{ duration: 0.5 }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
-          {/* Mobile Menu Button */}
+         
           <div className="flex items-center md:hidden">
             <button
               onClick={toggleMenu}
@@ -47,7 +45,6 @@ export default function Navbar() {
             </button>
           </div>
 
-          {/* Desktop Links */}
           <div className="hidden md:flex items-center space-x-8">
             <motion.div
               initial={{ x: -100, opacity: 0 }}
@@ -74,8 +71,6 @@ export default function Navbar() {
               </Link>
             </motion.div>
           </div>
-
-          {/* Brand Logo */}
           <div className="flex-1 flex items-center justify-center">
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
@@ -84,14 +79,12 @@ export default function Navbar() {
             >
               <Link
                 href="/"
-                className="text-2xl md:text-3xl font-serif text-gray-900 hover:opacity-80 transition-opacity"
+                className="text-2xl md:text-3xl font-serif text-gray-900 hover:text-red-500 hover:opacity-80 transition-opacity"
               >
                 GULBHAHAR
               </Link>
             </motion.div>
           </div>
-
-          {/* Cart and Search Icons */}
           <div className="hidden md:flex items-center space-x-6">
             <motion.div
               initial={{ y: 50, opacity: 0 }}
@@ -118,8 +111,6 @@ export default function Navbar() {
               </Link>
             </motion.div>
           </div>
-
-          {/* Mobile Links */}
           <div className="flex md:hidden items-center space-x-4">
             <Link
               href="/search"
@@ -139,8 +130,6 @@ export default function Navbar() {
             </Link>
           </div>
         </div>
-
-        {/* Mobile Menu */}
         <div
           className={`md:hidden transition-all duration-300 ease-in-out ${
             isMenuOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
