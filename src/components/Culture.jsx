@@ -11,7 +11,6 @@ export default function Culture() {
 
   return (
     <div className="relative w-full h-screen flex items-center justify-center bg-white overflow-hidden">
-      {/* Sliding Boxes */}
       <div className="absolute inset-0 flex justify-center items-center">
         <div 
           className={`w-1/4 sm:w-1/3 md:w-1/4 lg:w-1/3 h-full bg-gray-100 transform transition-all duration-1000 ease-in-out ${
@@ -27,7 +26,6 @@ export default function Culture() {
         />
       </div>
       
-      {/* CULTURE Text */}
       <h1 
         className={`relative font-black text-black tracking-[-0.05em] z-10 transition-opacity duration-1000
           text-[15vw] sm:text-[12vw] md:text-[12vw] lg:text-[12vw] xl:text-[14vw]
@@ -44,3 +42,4 @@ export default function Culture() {
     </div>
   )
 }
+

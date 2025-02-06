@@ -13,9 +13,9 @@ export default function About() {
     <main className="min-h-screen p-4 md:p-8 lg:p-12">
       <div className="max-w-7xl mx-auto">
         <header className="flex justify-between items-center mb-12">
-          <h1 className="text-3xl mt-14 md:text-4xl font-bold tracking-tight sm:mt-6">ABOUT US</h1>
+          <h1 className="text-3xl mt-6 md:text-4xl font-bold tracking-tight sm:mt-2">ABOUT US</h1>
           <Link 
-            href="/discover" 
+            href="/collection" 
             className="group flex justify-center items-center gap-2 hover:opacity-80 transition-opacity mt-14 "
           >
             <span className="text-lg ">DISCOVER</span>
@@ -41,7 +41,7 @@ export default function About() {
           </div>
           <div className="flex items-center">
             <p className="text-lg md:text-xl leading-relaxed">
-              GULBMAHAR COMBINES EXPERT CRAFTSMANSHIP WITH A COMMITMENT 
+              GULBHAHAR COMBINES EXPERT CRAFTSMANSHIP WITH A COMMITMENT 
               TO SUSTAINABILITY AND MODERN DESIGN
             </p>
           </div>
@@ -50,7 +50,7 @@ export default function About() {
           <div className="order-2 md:order-1">
             <div className="mb-8">
               <p className="text-lg md:text-xl leading-relaxed mb-8">
-                GULBMAHAR COMBINES EXPERT CRAFTSMANSHIP WITH A COMMITMENT 
+                GULBHAHAR COMBINES EXPERT CRAFTSMANSHIP WITH A COMMITMENT 
                 TO SUSTAINABILITY AND MODERN DESIGN
               </p>
               <h2 className="text-6xl md:text-8xl font-serif tracking-tight">TRADITIONS</h2>
