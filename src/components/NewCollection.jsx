@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
+import Link from "next/link";
 
 export default function NewCollection() {
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -35,70 +36,83 @@ export default function NewCollection() {
   const collections = [
     {
       id: 1,
-      image: "../../public/1.svg",
+      image: "/4.svg",
       name: "Noorani (Jutti)",
       price: "₹ 5,000",
     },
     {
       id: 2,
-      image: "../../public/2.svg",
+      image: "/5.svg",
       name: "Noorani (Jutti)",
       price: "₹ 5,000",
     },
     {
       id: 3,
-      image: "../../public/3.svg",
+      image: "/6.svg",
       name: "Noorani (Jutti)",
       price: "₹ 5,000",
     },
     {
       id: 4,
-      image: "../../public/4.svg",
+      image: "/4.svg",
       name: "Noorani (Jutti)",
       price: "₹ 5,000",
     },
     {
       id: 5,
-      image: "../../public/5.svg",
+      image: "/5.svg",
       name: "Noorani (Jutti)",
       price: "₹ 5,000",
     },
     {
       id: 6,
-      image: "../../public/5.svg",
+      image: "/6.svg",
       name: "Noorani (Jutti)",
       price: "₹ 5,000",
     },
     {
       id: 7,
-      image: "../../public/5.svg",
+      image: "/4.svg",
       name: "Noorani (Jutti)",
       price: "₹ 5,000",
     },
     {
       id: 8,
-      image: "../../public/5.svg",
+      image: "/5.svg",
       name: "Noorani (Jutti)",
       price: "₹ 5,000",
     },
   ];
 
+  const firstTwoDigitsOfYear = new Date().getFullYear().toString().slice(0, 2);
+
+  
+  const lastTwoDigitsOfYear = new Date().getFullYear().toString().slice(-2);
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white overflow-x-hidden">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-between items-center mb-12">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+          <h1 className="text-4xl font-bold tracking-tight text-gray-900 font-raleway">
             NEW COLLECTION
           </h1>
+          <Link href="/collection">
           <button className="flex items-center gap-2 text-gray-900 hover:text-gray-600 transition-colors">
             SEE MORE
             <ArrowUpRight className="w-5 h-5" />
           </button>
+          </Link>
         </div>
 
         <div className="relative">
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex gap-4 sm:gap-8">
+            <div className="absolute top-[90%] left-80 transform -translate-x-1/2 -translate-y-1/2 text-[200px] font-bold z-0 font-raleway text-customYellow opacity-60 ">
+                {firstTwoDigitsOfYear}
+              </div>
+              <div className="absolute top-[12%] right-12 transform -translate-x-1/2 -translate-y-1/2 text-[200px] font-bold z-10 font-raleway text-customYellow opacity-60">
+                {lastTwoDigitsOfYear}
+              </div>
               {collections.map((item) => (
                 <div
                   key={item.id}
@@ -108,10 +122,10 @@ export default function NewCollection() {
                     <Image
                       src={item.image}
                       alt={item.name}
-                      width={800}
-                      height={1000}
+                      width={360}
+                      height={468}
                       layout="responsive"
-                      className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                      className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300 rounded-lg shadow-lg"
                     />
                   </div>
                   <div className="mt-4 flex justify-between">

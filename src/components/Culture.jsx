@@ -1,45 +1,52 @@
-'use client'
-
-import { useEffect, useState } from 'react'
-
-export default function Culture() {
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    setIsVisible(true)
-  }, [])
-
+"use client"
+import Image from "next/image"
+export default function Home() {
+  
   return (
-    <div className="relative w-full h-screen flex items-center justify-center bg-white overflow-hidden">
-      <div className="absolute inset-0 flex justify-center items-center">
-        <div 
-          className={`w-1/4 sm:w-1/3 md:w-1/4 lg:w-1/3 h-full bg-gray-100 transform transition-all duration-1000 ease-in-out ${
-            isVisible ? 'translate-x-0' : '-translate-x-full'
-          }`} 
-          style={{ transitionDelay: '200ms' }}
-        />
-        <div 
-          className={`w-1/4 sm:w-1/3 md:w-1/4 lg:w-1/3 h-full bg-gray-100 transform transition-all duration-1000 ease-in-out ${
-            isVisible ? 'translate-x-0' : 'translate-x-full'
-          }`} 
-          style={{ transitionDelay: '400ms' }}
-        />
+    <main className="min-h-screen  flex items-center  justify-center bg-white relative overflow-hidden lg:mt-16 mb-8">
+      <div className="relative">
+        <div className="absolute left-[50%]  -translate-y-1/2 z-0 top-52 ">
+          <Image
+            src="/18.svg"
+            alt="Background block 1"
+            width={350}
+            height={350}
+            className="bg-gray-200 rounded-lg shadow-lg"
+          />
+        </div>
+        <div className="absolute top-52 -translate-y-1/2 z-0]">
+          <Image
+            src="/19.svg"
+            alt="Background block 2"
+            width={350}
+            height={386}
+            className="bg-gray-200 rounded-lg shadow-lg"
+          />
+        </div>
+        <Image src="/culture.svg" width={1559} height={329} alt="culture_img" className="relative top-72 z-30 p-0 m-0" />
+        <div className="relative top-80 left-[26%]  -translate-y-1/2 z-0">
+          <Image
+            src="/20.svg"
+            alt="Foreground block 1"
+            width={350}
+            height={386}
+            className="rounded-lg shadow-lg"
+          />
+        </div>
+        <div className="absolute right-[2%] z-0 -translate-y-2/3">
+          <Image
+            src="/21.svg"
+            alt="Foreground block 2"
+            width={350}
+            height={386}
+            className="bg-gray-200 top-10 shadow-lg rounded-lg"
+          />
+        </div>
       </div>
-      
-      <h1 
-        className={`relative font-black text-black tracking-[-0.05em] z-10 transition-opacity duration-1000
-          text-[15vw] sm:text-[12vw] md:text-[12vw] lg:text-[12vw] xl:text-[14vw]
-          px-4 sm:px-6 md:px-8 
-          ${isVisible ? 'opacity-100' : 'opacity-0'}
-        `}
-        style={{ 
-          fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif',
-          textShadow: '0.5px 0.5px 0px rgba(0, 0, 0, 0.1)'
-        }}
-      >
-        CULTURE
-      </h1>
-    </div>
+    </main>
   )
 }
+
+
+
 

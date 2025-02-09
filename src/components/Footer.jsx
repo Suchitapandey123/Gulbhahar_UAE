@@ -3,7 +3,7 @@ import { Youtube, Twitter, Instagram } from "lucide-react"
 import { Old_Standard_TT } from "next/font/google"
 
 const oldStandardTT = Old_Standard_TT({
-  weight: "700",
+  weight: "400",
   variable: "--font-old-standard-tt",
   subsets: ["latin"],
 })
@@ -60,30 +60,30 @@ export default function Footer() {
         </div>
         <div className="mt-5 md:mt-24">
           <div className="relative text-center">
-            <div className="flex flex-col sm:flex-row justify-center items-center lg:gap-96 md:gap-5 gap-4 text-sm">
-              <Link href="/return-policy" className="hover:underline cursor-pointer text-xl">
+            <div className="flex flex-col sm:flex-row justify-center items-center lg:gap-80 md:gap-5 gap-5 text-sm">
+              <Link href="/return-policy" className="hover:underline cursor-pointer text-xl font-raleway">
                 RETURN POLICY
               </Link>
-              <Link href="/terms" className="hover:underline cursor-pointer text-xl">
+              <Link href="/terms" className="hover:underline cursor-pointer text-xl font-raleway font-extralight">
                 TERMS OF SERVICE
               </Link>
-              <Link href="/privacy" className="hover:underline cursor-pointer text-xl mb-2">
+              <Link href="/privacy" className="hover:underline cursor-pointer text-xl mb-2 font-raleway">
                 PRIVACY POLICY
               </Link>
             </div>
 
             <h1
-              className={`${oldStandardTT.variable} text-4xl sm:text-5xl md:text-6xl lg:text-[180px] xl:text-[180px] font-serif tracking-[auto] sm:tracking-[auto] md:tracking-[auto] lg:tracking-[auto] xl:tracking-[auto] font-bold`}
+              className={`${oldStandardTT.variable} text-4xl sm:text-5xl md:text-6xl lg:text-[180px] xl:text-[180px] font-serif tracking-[auto] sm:tracking-[auto] md:tracking-[auto] lg:tracking-[auto] xl:tracking-[auto] font-extralight `}
             >
-              <span className="relative z-10">G</span>
-              <span className="relative z-10">U</span>
-              <span className="relative z-10">L</span>
-              <span className="relative z-10">B</span>
-              <span className="relative z-10">H</span>
-              <span className="relative z-10">A</span>
-              <span className="relative z-10">H</span>
-              <span className="relative z-10">A</span>
-              <span className="relative z-10">R</span>
+              <span className="relative z-10 text-customRed">G</span>
+              <span className="relative z-10 text-customRed">U</span>
+              <span className="relative z-10 text-customRed">L</span>
+              <span className="relative z-10 text-customRed">B</span>
+              <span className="relative z-10 text-customRed">H</span>
+              <span className="relative z-10 text-customRed">A</span>
+              <span className="relative z-10 text-customRed">H</span>
+              <span className="relative z-10 text-customRed">A</span>
+              <span className="relative z-10 text-customRed">R</span>
             </h1>
           </div>
         </div>

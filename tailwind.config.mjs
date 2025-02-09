@@ -10,6 +10,11 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        customYellow:'#A29031',
+        customRed:'#9F0715',
+      },
+      fontFamily: {
+        raleway: ['Raleway', 'sans-serif'],
       },
     },
   },
