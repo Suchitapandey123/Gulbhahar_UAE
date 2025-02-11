@@ -1,5 +1,9 @@
-import Collections from "@/components/Collections";
+import Collection from "@/components/Collection";
 
-export default function Collectionpage() {
-  return <Collections />;
+export default function CollectionPage(){
+  return(
+    <div>
+       <Collection/>
+    </div>
+  )
 }

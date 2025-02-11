@@ -11,16 +11,16 @@ export default function Home() {
             alt="Background block 1"
             width={350}
             height={350}
-            className="bg-gray-200 rounded-lg shadow-lg"
+            className="bg-red-600 rounded-lg shadow-lg"
           />
         </div>
-        <div className="absolute top-52 -translate-y-1/2 z-0]">
+        <div className="absolute top-56 -translate-y-1/2 z-10">
           <Image
             src="/19.svg"
             alt="Background block 2"
             width={350}
             height={386}
-            className="bg-gray-200 rounded-lg shadow-lg"
+            className="bg-blue-600 rounded-lg shadow-lg"
           />
         </div>
         <Image src="/culture.svg" width={1559} height={329} alt="culture_img" className="relative top-72 z-30 p-0 m-0" />

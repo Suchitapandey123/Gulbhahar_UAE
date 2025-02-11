@@ -11,8 +11,7 @@
 // import { motion } from "framer-motion";
 // import Popular from "@/components/Popular";
 
-import HomePage from "./homepage/page";
-import Footer from "@/components/Footer";
+import HomePage from "@/components/HomePage";
 
 // const oldStandardTT = Old_Standard_TT({
 //   weight: "400",
@@ -188,11 +187,12 @@ import Footer from "@/components/Footer";
 // }
 
 
-export default function Home(){
+
+
+export default function Homepage(){
   return(
-    <>
-    <HomePage/>
-    <Footer/>
-    </>
+    <div>
+      <HomePage/>
+    </div>
   )
 }

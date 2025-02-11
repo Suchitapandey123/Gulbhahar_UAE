@@ -32,27 +32,27 @@ export const collections = [
     title: 'Noorani (Jutti)',
     price: 5000,
     season: 'FALL 2024',
-    image: '/14.svg'
+    image: '/10.svg'
   },
   {
     id: '6',
     title: 'Noorani (Jutti)',
     price: 5000,
     season: 'WINTER 2024',
-    image: '/15.svg'
+    image: '/11.svg'
   },
   {
     id: '7',
     title: 'Noorani (Jutti)',
     price: 5000,
     season: 'SPRING 2024',
-    image: '/16.svg'
+    image: '/12.svg'
   },
   {
     id: '8',
     title: 'Noorani (Jutti)',
     price: 5000,
     season: 'SPRING SUMMER 2024',
-    image: '/17.svg'
+    image: '/13.svg'
   },
 ];

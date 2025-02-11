@@ -6,12 +6,12 @@ export default function OurShowcase() {
       <h1 className="text-5xl font-bold mb-12 text-left font-raleway text-customRed">OUR SHOWCASE</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="aspect-[3/4] relative  rounded-lg overflow-hidden object-cover shadow-lg">
+          <div key={i} className="aspect-[3/4] relative  rounded-md overflow-hidden object-cover shadow-lg">
             <Image
-              src="/1.svg"
+              src="/showcase.svg"
               alt={`Image of Gulbhahar ${i + 1}`}
               layout="fill"
-              className="object-cover"
+              className="object-cover w-[300x] h-[450px] bg-showcaseBgColor rounded-md"
             />
           </div>
         ))}

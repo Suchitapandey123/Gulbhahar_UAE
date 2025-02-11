@@ -5,6 +5,7 @@ import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import Link from "next/link";
+import ArrowVector from "./ui/ArrowVector";
 
 export default function NewCollection() {
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -90,27 +91,27 @@ export default function NewCollection() {
   const lastTwoDigitsOfYear = new Date().getFullYear().toString().slice(-2);
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden">
+    <div className="min-h-screen bg-white overflow-x-hidden mt-20">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-between items-center mb-12">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900 font-raleway">
+          <h1 className="lg:text-5xl lg:-ml-12 text-[67px] font-bold tracking-tight text-gray-900 font-raleway ">
             NEW COLLECTION
           </h1>
           <Link href="/collection">
-          <button className="flex items-center gap-2 text-gray-900 hover:text-gray-600 transition-colors">
+          <button className="flex items-center gap-5 text-gray-900 hover:text-gray-600 lg:text-2xl transition-colors font-raleway -mt-6 tracking-wider w-[186] h-[33px]">
             SEE MORE
-            <ArrowUpRight className="w-5 h-5" />
+           <ArrowVector className="w-[20px] h-[20px] mb-3"/>
           </button>
           </Link>
         </div>
 
         <div className="relative">
           <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex gap-4 sm:gap-8">
-            <div className="absolute top-[90%] left-80 transform -translate-x-1/2 -translate-y-1/2 text-[200px] font-bold z-0 font-raleway text-customYellow opacity-60 ">
+            <div className="flex gap-6 sm:gap-8">
+            <div className="absolute top-[75%] left-80 transform -translate-x-1/2 -translate-y-1/2 text-[200px] font-bold z-20 font-raleway text-customYellow opacity-60 ">
                 {firstTwoDigitsOfYear}
               </div>
-              <div className="absolute top-[12%] right-12 transform -translate-x-1/2 -translate-y-1/2 text-[200px] font-bold z-10 font-raleway text-customYellow opacity-60">
+              <div className="absolute  right-16 top-[10%] transform -translate-x-1/2 -translate-y-1/2 text-[200px] font-bold z-10 font-raleway text-customYellow opacity-55">
                 {lastTwoDigitsOfYear}
               </div>
               {collections.map((item) => (
@@ -118,22 +119,21 @@ export default function NewCollection() {
                   key={item.id}
                   className="flex-shrink-0 w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 group relative"
                 >
-                  <div className="aspect-[3/4] w-full overflow-hidden rounded-lg bg-gray-200">
+                  <div className="aspect-[3/4] overflow-hidden">
                     <Image
                       src={item.image}
                       alt={item.name}
                       width={360}
                       height={468}
-                      layout="responsive"
-                      className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300 rounded-lg shadow-lg"
+                      objectFit="cover"
                     />
                   </div>
-                  <div className="mt-4 flex justify-between">
-                    <div>
-                      <h3 className="text-sm text-gray-700">{item.name}</h3>
+                  <div className="mt-3 flex justify-between">
+                    <div className="bg-white border-black w-[360px] h-[106px] mx-auto m-3">
                       <p className="mt-1 text-sm font-medium text-gray-900">
                         {item.price}
                       </p>
+                      <h3 className="text-sm  text-gray-700">{item.name}</h3>
                     </div>
                     <button className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <ChevronRight className="w-5 h-5 text-gray-500 hover:text-gray-700" />

@@ -4,32 +4,33 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { useState } from "react";
+import ArrowVector from "./ui/ArrowVector";
 
 export default function About() {
   const [imageError1, setImageError1] = useState(false);
   const [imageError2, setImageError2] = useState(false);
 
   return (
-    <main className="min-h-screen p-4 md:p-8 lg:p-12">
+    <main className="min-h-screen p-4 md:p-8 lg:p-4">
       <div className="max-w-7xl mx-auto">
-        <header className="flex justify-between items-center mb-12">
-          <h1 className="text-3xl mt-6 md:text-4xl font-bold tracking-tight sm:mt-2 font-raleway text-customRed">ABOUT US</h1>
-          <Link 
-            href="/collection" 
-            className="group flex justify-center items-center gap-2 hover:opacity-80 transition-opacity mt-14 "
-          >
-            <span className="text-lg ">DISCOVER</span>
-            <ArrowUpRight className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+        <header className="flex justify-between items-center mt-20 mb-16">
+          <h1 className="text-3xl lg:text-5xl lg:-mt-16 md:text-4xl font-bold tracking-tight sm:mt-2 font-raleway text-customRed lg:-ml-16  ">
+            ABOUT US
+          </h1>
+          <Link href="/collection">
+            <button className="flex items-center gap-5 text-gray-900 hover:text-gray-600 lg:text-2xl transition-colors font-raleway -mt-6 tracking-wider w-[215] h-[33px] uppercase">
+              discover
+              <ArrowVector className="w-[20px] h-[20px] mb-3" />
+            </button>
           </Link>
         </header>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-          
-          <div className="relative aspect-[4/3] mt-16">
-          <div className="absolute inset-0 -z-10 mt-12 rounded-lg shadow-lg">
+          <div className="relative aspect-[4/3] mt-24">
+            <div className="absolute inset-0 -z-20 mt-12">
               <Image
                 src="/22.svg"
                 alt="Background design"
-                className="object-cover transition-opacity lg:ml-24 xl:ml-48 relative -top-20 sm:-top-40 rounded-lg shadow-lg"
+                className="ml-24 relative -top-20 sm:-top-40 "
                 width={500}
                 height={400}
               />
@@ -40,7 +41,8 @@ export default function About() {
                 alt="Craftsmanship showcase"
                 width={500}
                 height={600}
-                className="object-cover transition-opacity rounded-lg shadow-lg stroke-black"
+                // className="object-cover transition-opacity rounded-lg shadow-lg stroke-black"
+                className="-ml-16"
                 priority
                 onError={() => setImageError1(true)}
               />
@@ -51,20 +53,22 @@ export default function About() {
             )}
           </div>
           <div className="flex items-center">
-            <p className="text-lg md:text-xl leading-relaxed lg:ml-16">
-              GULBHAHAR COMBINES EXPERT CRAFTSMANSHIP WITH A COMMITMENT 
-              TO SUSTAINABILITY AND MODERN DESIGN
+            <p className="text-lg md:text-xl leading-relaxed ml-20 mb-20">
+              GULBHAHAR COMBINES EXPERT CRAFTSMANSHIP WITH A COMMITMENT TO
+              SUSTAINABILITY AND MODERN DESIGN
             </p>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div className="order-2 md:order-1">
             <div className="mb-8">
-              <p className="text-lg md:text-xl leading-relaxed mb-8">
-                GULBHAHAR COMBINES EXPERT CRAFTSMANSHIP WITH A COMMITMENT 
-                TO SUSTAINABILITY AND MODERN DESIGN
+              <p className="text-lg md:text-xl leading-relaxed mb-8 mr-20 mt-20">
+                GULBHAHAR COMBINES EXPERT CRAFTSMANSHIP WITH A COMMITMENT TO
+                SUSTAINABILITY AND MODERN DESIGN
               </p>
-              <h2 className=" relative text-5xl md:text-8xl font-serif tracking-wider lg:text-[140px] lg:mt-96 text-customYellow z-20">TRADITIONS</h2>
+              <h2 className="font-old-standard relative text-5xl md:text-8xl tracking-wider text-[200px] top-56 ml-40 text-customYellow z-10 opacity-55 font-bold w-[1336px] h-[247px]">
+                TRADITIONS
+              </h2>
             </div>
           </div>
           <div className="relative aspect-square  order-1 md:order-2">
@@ -74,7 +78,6 @@ export default function About() {
                 alt="Traditional craftsmanship"
                 width={500}
                 height={600}
-                className="priority object-cover transition-opacity rounded-md shadow-lg"
                 onError={() => setImageError2(true)}
               />
             ) : (
