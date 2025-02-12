@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
 import { Old_Standard_TT } from "next/font/google";
 import Collections from "@/components/Collections";
 import About from "@/components/About";
@@ -19,11 +18,11 @@ const oldStandardTT = Old_Standard_TT({
 
 export default function HomePage() {
   return (
-    <main className="pt-16 md:pt-20 w-full max-w-8xl">
-      <div className="container mx-auto px-3 py-6 md:py-12">
+    <main className="pt-16 md:pt-20 w-full lg:max-w-8xl 2xl:w-full">
+      <div className="container mx-auto px-3 py-6 md:py-12 overflow-hidden 2xl:w-full">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8 sm:gap-8">
           <div className="space-y-12">
-            <div className="relative w-full ml-6  aspect-[4/3] ">
+            <div className="relative w-full ml-6 aspect-[4/3] ">
               <div className="absolute inset-0 flex items-center justify-center w-full">
                 <Image
                   src="/1.svg"

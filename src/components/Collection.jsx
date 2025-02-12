@@ -9,6 +9,7 @@ import SortIcon from "./ui/SortIcon";
 import ArrowUp from "./ui/ArrowUp";
 import ArrowLeft from "./ui/ArrowLeft";
 import ArrowRight from "./ui/ArrowRight";
+import {X,filter} from "lucide-react"
 
 const collections = [
   {
@@ -23,7 +24,7 @@ const collections = [
   {
     id: 2,
     name: "Noorani Outfit",
-    price: 5000,
+    price: 2200,
     image: "/16.svg",
     season: "WINTER 2024",
     stock: 15,
@@ -32,7 +33,7 @@ const collections = [
   {
     id: 3,
     name: "Noorani Outfit",
-    price: 5000,
+    price: 1500,
     image: "/16.svg",
     season: "WINTER 2024",
     stock: 15,
@@ -59,7 +60,7 @@ const collections = [
   {
     id: 7,
     name: "Noorani Outfit",
-    price: 5000,
+    price: 1800,
     image: "/16.svg",
     season: "WINTER 2024",
     stock: 15,
@@ -77,7 +78,7 @@ const collections = [
   {
     id: 9,
     name: "Noorani Outfit",
-    price: 5000,
+    price: 1200,
     image: "/16.svg",
     season: "WINTER 2024",
     stock: 15,

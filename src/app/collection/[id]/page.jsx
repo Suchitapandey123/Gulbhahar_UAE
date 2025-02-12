@@ -72,15 +72,7 @@ export default function ProductDetails() {
 
   return (
     <div className="min-h-screen bg-white py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <button
-          onClick={() => router.back()}
-          className="flex items-center gap-2 mb-6 text-gray-600 hover:text-black mt-12"
-        >
-          <ArrowLeft className="w-4 h-4 font-raleway
-          " />
-          Back to Collections
-        </button>
+      <div className="max-w-7xl mx-auto mt-24">
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
          
@@ -110,6 +102,18 @@ export default function ProductDetails() {
                   />
                 </button>
               ))}
+            </div>
+            <div>
+            <h3 className="font-bold mb-4 mt-12 font-raleway">Overview</h3>
+              <p className="space-y-1 text-sm font-raleway text-gray-500">
+                {product.overview}
+              </p>
+              <h3 className="font-bold mb-2 font-raleway mt-2">Product Details</h3>
+              <ul className="space-y-1 text-sm font-raleway text-gray-500 list-inside list-disc">
+                {product.details.map((detail, idx) => (
+                  <li key={idx}>{detail}</li>
+                ))}
+              </ul>
             </div>
           </div>
 
@@ -178,23 +182,23 @@ export default function ProductDetails() {
                   placeholder="Enter pincode"
                   className="px-3 py-2 border rounded-md flex-1 font-raleway"
                 />
-                <Button variant="outline">Check</Button>
+                {/* <Button variant="outline">Check</Button> */}
               </div>
             </div>
 
             
             <div className="flex gap-4">
-              <Button
+              {/* <Button
                 onClick={handleAddToCart}
                 className="flex-1 bg-black font-raleway shadow-lg rounded-md text-white hover:bg-black/90"
               >
                 Add to cart
-              </Button>
-              <Button variant="outline" size="icon">
+              </Button> */}
+              {/* <Button variant="outline" size="icon">
                 <Heart className="h-5 w-5" />
-              </Button>
+              </Button> */}
             </div>
-            <div>
+            {/* <div>
             <h3 className="font-medium mb-2 font-raleway">Overview</h3>
               <p className="space-y-1 text-sm font-raleway text-gray-500">
                 {product.overview}
@@ -205,7 +209,7 @@ export default function ProductDetails() {
                   <li key={idx}>{detail}</li>
                 ))}
               </ul>
-            </div>
+            </div> */}
             <div>
               <div className="flex items-center gap-4 mb-4">
                 <h3 className="font-medium font-raleway">Review</h3>
