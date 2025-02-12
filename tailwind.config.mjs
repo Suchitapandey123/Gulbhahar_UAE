@@ -18,6 +18,7 @@ export default {
 				cultureColor:'#FCC83D',
 				showcaseBgColor:'#D9D9D966',
 				slateColor2:'#EAEEF266',
+				footerBgColor:'#EAEEF2',
 				fontFamily: {
 					'old-standard': ['Old Standard TT', 'serif'],
 				},

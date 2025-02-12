@@ -70,7 +70,7 @@ export default function Home() {
           <Breadcrumb/>
         </div> */}
         <div className="flex flex-col md:flex-row gap-8 mt-20 ">
-          <div className="w-[337px] md:w-64 mt-10 p-6 rounded-lg bg-slateColor2 shadow-lg h-[896px]">
+          <div className="w-[337px] md:w-64 mt-10 p-6 rounded-lg bg-slateColor2 shadow-lg h-[800px]">
             <div className="flex justify-between items-center mb-6 ">
               <h3 className="text-lg font-medium font-raleway">Filter</h3>
               <button 
