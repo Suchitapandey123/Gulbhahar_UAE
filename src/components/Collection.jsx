@@ -4,7 +4,10 @@ import { Filter, Grid, List, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import Breadcrumb from './Breadcrumb'
-import { useRouter } from 'next/router'; 
+import BoxIcon from './ui/BoxIcon'
+import BoxIcon2 from './ui/BoxIcon2'
+import SortIcon from './ui/SortIcon'
+import ArrowUp from './ui/ArrowUp'
 
 const collections = [
   { id: 1, name: 'Noorani Outfit', price: 5000, image: '/16.svg', season: 'FALL 2024', stock: 12, size: 'S' },
@@ -56,8 +59,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="relative mt-16">
+      <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className=" w-full relative mt-16 ">
           <Image
             src="/banner.svg"
             alt="Latest Collections Banner"
@@ -153,7 +156,6 @@ export default function Home() {
 
             {(selectedSizes.length > 0 || selectedSeason !== 'ALL' || priceRange[0] !== 2000 || priceRange[1] !== 5000) && (
               <div className="mb-6">
-                <h4 className="text-sm font-medium mb-3">Active Filters</h4>
                 <div className="flex flex-wrap gap-2">
                   {selectedSizes.map((size) => (
                     <span key={size} className="px-2 py-1 bg-gray-100 rounded-md text-sm flex items-center gap-1">
@@ -192,8 +194,31 @@ export default function Home() {
               </div>
             )}
           </div>
-
           <div className="flex-1 mt-28">
+            <div className='flex items-center gap-3 mt-2'>
+            <button
+                    onClick={() => setViewMode('list')}
+                    className={`p-2 rounded-md ${viewMode === 'list' ? 'bg-gray-100' : ''}`}
+                  >
+             <BoxIcon className="w-[18px] h-[19px]"/>
+                  </button>
+             <button
+                    onClick={() => setViewMode('grid')}
+                    className={`p-2 rounded-md ${viewMode === 'grid' ? 'bg-gray-100' : ''}`}
+                  >
+                <BoxIcon2 className="w-[47px] h-[40px]"/>
+                  </button>
+            </div>
+          <div className='flex justify-end -mb-2 gap-2'>
+              <div className='flex items-center gap-3 -mb-2'> 
+                <SortIcon className="w-[16px] h-[8px]"/>
+                <p className='text-gray-500'>Sort by :</p>
+              </div>
+              <div className='flex gap-4'>
+                   <p className='font-raleway'>price</p>
+                   <ArrowUp className="mt-1"/>
+              </div>
+            </div>
             <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
               <div className="flex justify-between items-center ">
                 <div className="flex gap-8 text-[20px]  overflow-x-auto pb-2 border-black shadow-lg font-raleway">
@@ -210,20 +235,6 @@ export default function Home() {
                       {season}
                     </button>
                   ))}
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setViewMode('grid')}
-                    className={`p-2 rounded-md ${viewMode === 'grid' ? 'bg-gray-100' : ''}`}
-                  >
-                    <Grid className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={() => setViewMode('list')}
-                    className={`p-2 rounded-md ${viewMode === 'list' ? 'bg-gray-100' : ''}`}
-                  >
-                    <List className="w-5 h-5" />
-                  </button>
                 </div>
               </div>
             </div>
@@ -248,13 +259,13 @@ export default function Home() {
                     <div className="p-4">
                       <div className="flex justify-between items-start mb-2">
                         <div>
-                          <h3 className="font-medium">{item.name}</h3>
-                          <p className="text-sm text-gray-600">{item.season}</p>
-                          <p className="text-sm text-gray-600">Size: {item.size}</p>
-                        </div>
                         <p className="font-medium">₹{item.price}</p>
+                         <div className='flex items-center gap-12'>
+                         <h3 className="font-medium">{item.name}</h3> 
+                         <p className="text-sm text-customRed">{item.stock} items left</p>
+                         </div>
+                        </div>
                       </div>
-                      <p className="text-sm text-customRed">{item.stock} items left</p>
                     </div>
                   </div>
                 </Link>
