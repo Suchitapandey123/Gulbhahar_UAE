@@ -66,7 +66,7 @@ export default function About() {
                 GULBHAHAR COMBINES EXPERT CRAFTSMANSHIP WITH A COMMITMENT TO
                 SUSTAINABILITY AND MODERN DESIGN
               </p>
-              <h2 className="font-old-standard relative md:text-8xl tracking-wider lg:top-40 text-traditionColor z-10 opacity-[75%] lg:-ml-16 font-bold lg:text-[190px]">
+              <h2 className="font-old-standard relative md:text-8xl tracking-wider lg:top-40 text-traditionColor z-10  lg:-ml-16 font-bold lg:text-[190px]">
                 TRADITIONS
               </h2>
             </div>

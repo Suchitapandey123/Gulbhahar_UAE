@@ -89,7 +89,7 @@ export default function CartPage() {
                       onChange={() => toggleSelect(item.id)}
                       className="h-4 w-4 rounded border-gray-300 font-raleway"
                     />
-                    <img
+                    <Image
                       src="/cart.svg"
                       alt={item.name}
                       className="h-24 w-24 object-cover rounded"

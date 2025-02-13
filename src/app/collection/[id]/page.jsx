@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { Star, Heart, ArrowLeft } from 'lucide-react'
 // import { Button } from '@/components/ui/button'
 import { useParams, useRouter } from 'next/navigation'
+import Breadcrumb from '@/components/Breadcrumb'
 
 
 const getProductData = (id) => ({
@@ -65,17 +66,20 @@ export default function ProductDetails() {
   const handleAddToCart = () => {
     if (!selectedSize) {
       alert('Please select a size')
-      return
+      return;
     }
     
   }
 
+//  <Breadcrumb data={product}/>
+
   return (
     <div className="min-h-screen bg-white py-8 px-4 sm:px-6 lg:px-8">
+      
       <div className="max-w-7xl mx-auto mt-24">
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-         
+         <Breadcrumb data = {getProductData.name}/>
           <div className="space-y-4">
             <div className="aspect-square relative rounded-lg overflow-hidden border lg:-ml-[50px]">
               <Image

@@ -1,37 +1,35 @@
-'use client';
+// 'use client';
 
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+// import Link from 'next/link';
+// import { useRouter } from 'next/navigation';
+// import { useEffect, useState } from 'react';
 
-const Breadcrumb = () => {
-  const [isClient, setIsClient] = useState(false);
+// const Breadcrumb = ({data}) => {
+//   const [isClient, setIsClient] = useState(false);
+//   const router = useRouter();
+//   const path = router.pathname;
 
-  const router = useRouter();
-  const path = router.pathname;
+//   useEffect(() => {
+//     setIsClient(true);
+//   }, []);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+//   if (!isClient) {
+//     return null;
+//   }
 
-  if (!isClient) {
-    return null;
-  }
+//   console.log(data.name)
 
-  return (
-    <nav aria-label="breadcrumb">
-      <ol className="flex space-x-2 text-blue-600">
-        <li>
-          <Link href="/" className="hover:underline">
-            Home
-          </Link>
-        </li>
-        {path === '/collection' && (
-          <li className="text-customRed">Collection</li>
-        )}
-      </ol>
-    </nav>
-  );
-};
+//   return (
+//     <nav aria-label="breadcrumb">
+//         <div className='flex items-center mt-12 gap-1'>
+//           <span><Link href="/" className='text-black font-raleway text-lg'>Home</Link></span> &nbsp;
+//           <span>&gt;</span> 
+//           <span><Link href="/collection" className='text-customRed text-lg mRed font-raleway'>Collection</Link></span>
+//           <span>&gt;</span>
+//           <span><Link href="/collection" className='text-customRed text-lg mRed font-raleway'>{data.name}</Link></span>
+//         </div>
+//     </nav>
+//   );
+// };
 
-export default Breadcrumb;
+// export default Breadcrumb;

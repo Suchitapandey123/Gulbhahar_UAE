@@ -43,7 +43,7 @@ export default function CollectionsPage() {
           <button
             key={season}
             onClick={() => setSelectedSeason(season)}
-            className={`px-4 py-2 lg:w-[210px] text-sm rounded-md shadow-md border  lg:h-[44px] border-black break-words font-raleway lg:text-[14px] transition-colors text-[12px] 
+            className={`px-4 py-2 lg:w-[210px] text-sm rounded-md shadow-md border  lg:h-[44px] border-black break-words font-raleway lg:text-[14px] transition-colors text-[12px] outline outline-black 
               ${
                 selectedSeason === season
                   ? "bg-black text-white"
