@@ -489,7 +489,7 @@ export default function Home() {
                 <Link href={`/collection/${item.id}`} key={item.id}>
                   <div className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200">
                     <div className="relative pb-[100%] rounded-lg lg:mr-12 lg:ml-4">
-                      <Image
+                      <img
                         src={item.image}
                         alt={item.name}
                         className="absolute inset-0 w-[307px] h-[372px] object-cover rounded-lg"

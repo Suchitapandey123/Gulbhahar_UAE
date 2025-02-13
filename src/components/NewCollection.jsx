@@ -1,11 +1,12 @@
 
 "use client";
 import { useEffect, useState } from "react";
-import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import Link from "next/link";
 import ArrowVector from "./ui/ArrowVector";
+import { ArrowRight } from "lucide-react";
+import ArrowLeft from "./ui/ArrowLeft";
 
 export default function NewCollection() {
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -137,7 +138,7 @@ export default function NewCollection() {
                       <h3 className="text-sm  text-gray-700">{item.name}</h3>
                     </div>
                     <button className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <ChevronRight className="w-5 h-5 text-gray-500 hover:text-gray-700" />
+                      <ArrowRight className="w-5 h-5 text-gray-500 hover:text-gray-700"/>
                     </button>
                   </div>
                 </div>
@@ -153,7 +154,8 @@ export default function NewCollection() {
             }`}
             aria-label="Previous slide"
           >
-            <ChevronLeft className="w-6 h-6" />
+            
+            <ArrowLeft className="w-6 h-6"/>
           </button>
 
           <button
@@ -164,7 +166,7 @@ export default function NewCollection() {
             }`}
             aria-label="Next slide"
           >
-            <ChevronRight className="w-6 h-6" />
+            <ArrowRight className="w-6 h-6"/>
           </button>
         </div>
       </div>
