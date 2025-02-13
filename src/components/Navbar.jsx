@@ -28,7 +28,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className={`fixed  w-full z-10 transition-all duration-200  ${
+    <nav className={`fixed  w-full z-50 transition-all duration-200  ${
       isScrolled ? 'bg-white shadow-md' : 'bg-transparent'
     }`}>
       <div className="lg:max-w-[1449px] mx-auto px-2 sm:px-6 lg:px-8">

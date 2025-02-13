@@ -9,7 +9,6 @@ import SortIcon from "./ui/SortIcon";
 import ArrowUp from "./ui/ArrowUp";
 import ArrowLeft from "./ui/ArrowLeft";
 import ArrowRight from "./ui/ArrowRight";
-import {X,filter} from "lucide-react"
 
 const collections = [
   {
@@ -245,17 +244,21 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="w-full relative mt-16">
+    <div className="min-h-screen  bg-white">
+      <div className="max-w-8xl sm:px-6 py-8">
+        <div className="w-[2000px] -ml-[18px]  relative mt-16">
           <Image
             src="/banner.svg"
             alt="Latest Collections Banner"
             width={1512}
             height={349}
             priority
-            className="w-full h-auto object-cover rounded-lg"
+            className="object-cover rounded-lg"
           />
+        </div>
+
+        <div>
+          {/* <Breadcrumb/> */}
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8 mt-20">
@@ -372,7 +375,7 @@ export default function Home() {
                         }
                         className="text-gray-500 hover:text-gray-700"
                       >
-                        <X className="w-4 h-4" />
+                        {/* <X className="w-4 h-4" /> */}
                       </button>
                     </span>
                   ))}
@@ -383,7 +386,7 @@ export default function Home() {
                         onClick={() => setSelectedSeason("ALL")}
                         className="text-gray-500 hover:text-gray-700 font-raleway"
                       >
-                        <X className="w-4 h-4" />
+                        {/* <X className="w-4 h-4" /> */}
                       </button>
                     </span>
                   )}
@@ -394,7 +397,7 @@ export default function Home() {
                         onClick={() => handlePriceChange(2000, 5000)}
                         className="text-gray-500 hover:text-gray-700"
                       >
-                        <X className="w-3 h-3" />
+                        {/* <X className="w-3 h-3" /> */}
                       </button>
                     </span>
                   )}
@@ -515,7 +518,7 @@ export default function Home() {
                 disabled={currentPage === 1}
                 className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-50"
               >
-                <div className="flex">
+                <div className="flex cursor-pointer">
                <ArrowLeft/>
                <ArrowLeft/>
                 </div>
@@ -525,9 +528,9 @@ export default function Home() {
                 disabled={currentPage === 1}
                 className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-50"
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 cursor-pointer">
                   <ArrowLeft/>
-                  <p className="font-raleway">previous</p>
+                  <p className="font-raleway cursor-pointer">previous</p>
                 </div>
               </button>
               <span className="text-sm px-2">
@@ -538,10 +541,11 @@ export default function Home() {
                   setCurrentPage((prev) => Math.min(totalPages, prev + 1))
                 }
                 disabled={currentPage === totalPages}
-                className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-50"
+                className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-50 cursor-pointer"
+                
               >
-                <div className="flex items-center gap-2">
-                  <p className="font-raleway">Next</p>
+                <div className="flex items-center gap-2 ">
+                  <p  className="font-raleway">Next</p>
                   <ArrowRight/>
                 </div>
               </button>

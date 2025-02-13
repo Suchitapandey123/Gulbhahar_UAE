@@ -19,6 +19,9 @@ export default {
 				showcaseBgColor:'#D9D9D966',
 				slateColor2:'#EAEEF266',
 				footerBgColor:'#EAEEF2',
+				yellowTwo:'#FFBC00',
+				slateTwo:'#C4C4C4',
+				traditionColor:'#F5DFA4BF',
 				fontFamily: {
 					'old-standard': ['Old Standard TT', 'serif'],
 				},

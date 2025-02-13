@@ -125,7 +125,7 @@ export default function MainFooter() {
           </div>
         </div>
         <div className="mt-8 border-t border-gray-200 pt-8">
-        <p className="text-lg text-black text-center font-raleway">
+        <p className="text-lg text-black text-center font-raleway ">
       Copyright © {currentYear} Gulbhahar. All rights reserved
     </p>
         </div>

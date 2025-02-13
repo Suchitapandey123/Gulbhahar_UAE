@@ -14,7 +14,7 @@ export default function About() {
     <main className="min-h-screen p-4 md:p-8 lg:p-4">
       <div className="max-w-7xl mx-auto">
         <header className="flex justify-between items-center mt-20 mb-16">
-          <h1 className="text-3xl lg:text-5xl lg:-mt-16 md:text-4xl font-bold tracking-tight sm:mt-2 font-raleway text-customRed lg:-ml-16  ">
+          <h1 className="text-3xl lg:text-5xl lg:-mt-16 md:text-4xl font-bold tracking-tight sm:mt-2 font-raleway text-customRed lg:-ml-10  ">
             ABOUT US
           </h1>
           <Link href="/collection">
@@ -30,7 +30,7 @@ export default function About() {
               <Image
                 src="/22.svg"
                 alt="Background design"
-                className="ml-24 relative -top-20 sm:-top-40 "
+                className="lg:ml-32 relative -top-20 sm:-top-40 "
                 width={500}
                 height={400}
               />
@@ -42,7 +42,7 @@ export default function About() {
                 width={500}
                 height={600}
                 // className="object-cover transition-opacity rounded-lg shadow-lg stroke-black"
-                className="-ml-16"
+                className="-ml-20"
                 priority
                 onError={() => setImageError1(true)}
               />
@@ -53,7 +53,7 @@ export default function About() {
             )}
           </div>
           <div className="flex items-center">
-            <p className="text-lg md:text-xl leading-relaxed ml-20 mb-20">
+            <p className="text-lg md:text-xl leading-relaxed lg:mb-80 lg:ml-12">
               GULBHAHAR COMBINES EXPERT CRAFTSMANSHIP WITH A COMMITMENT TO
               SUSTAINABILITY AND MODERN DESIGN
             </p>
@@ -61,17 +61,17 @@ export default function About() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div className="order-2 md:order-1">
-            <div className="mb-8">
-              <p className="text-lg md:text-xl leading-relaxed mb-8 mr-20 mt-20">
+            <div className="lg:mb-56 lg:mr-20">
+              <p className="text-lg md:text-xl leading-relaxed">
                 GULBHAHAR COMBINES EXPERT CRAFTSMANSHIP WITH A COMMITMENT TO
                 SUSTAINABILITY AND MODERN DESIGN
               </p>
-              <h2 className="font-old-standard relative text-5xl md:text-8xl tracking-wider text-[200px] top-56 ml-40 text-customYellow z-10 opacity-55 font-bold w-[1336px] h-[247px]">
+              <h2 className="font-old-standard relative md:text-8xl tracking-wider lg:top-40 text-traditionColor z-10 opacity-[75%] lg:-ml-16 font-bold lg:text-[190px]">
                 TRADITIONS
               </h2>
             </div>
           </div>
-          <div className="relative aspect-square  order-1 md:order-2">
+          <div className="relative aspect-square  order-1 md:order-2 lg:-mt-96 lg:ml-52">
             {!imageError2 ? (
               <Image
                 src="/8.svg"

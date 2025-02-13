@@ -1,17 +1,19 @@
+"use client"
 import Image from "next/image";
 
 export default function OurShowcase() {
   return (
-    <section className="container mx-auto px-4 py-16">
-      <h1 className="text-5xl font-bold mb-12 text-left font-raleway text-customRed">OUR SHOWCASE</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <section className="container mx-auto px-6 py-16 mt-16">
+      <h1 className="text-5xl font-bold mb-12 text-left font-raleway text-customRed lg:ml-10">OUR SHOWCASE</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  ml-12">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="aspect-[3/4] relative  rounded-md overflow-hidden object-cover shadow-lg">
+          <div key={i} className="aspect-[3/4] relative">
             <Image
               src="/showcase.svg"
               alt={`Image of Gulbhahar ${i + 1}`}
-              layout="fill"
-              className="object-cover w-[300x] h-[450px] bg-showcaseBgColor rounded-md"
+              width={300}
+              height={450}
+              className=" object-cover"
             />
           </div>
         ))}

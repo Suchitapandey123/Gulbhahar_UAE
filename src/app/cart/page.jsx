@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react';
-import { Minus, Plus, X } from 'lucide-react';
 import DeleteIcon from '@/components/ui/DeleteIcon';
+import Minus from '@/components/ui/Minus';
+import Plus from '@/components/ui/Plus';
 
 const products = [
   {
@@ -48,6 +49,10 @@ export default function CartPage() {
     setCartItems(items => items.filter(item => item.id !== id));
   };
 
+  const removeAllItems=(id)=>{
+    setCartItems(items=>items.filter(()=>false))
+  }
+
   const toggleSelect = (id) => {
     setCartItems(items =>
       items.map(item =>
@@ -69,8 +74,8 @@ export default function CartPage() {
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-semibold font-raleway">Cart</h2>
                 <button className="text-gray-500 hover:text-gray-700 flex items-center">
-                  <DeleteIcon/>
-                  <p className='font-raleway text-black'>Remove</p>
+                  <DeleteIcon onClick={() => removeAllItems()} className="cursor-pointer"/>
+                  <p onClick={() => removeAllItems()} className='font-raleway text-black hover:text-customRed cursor-pointer'>Remove</p>
                 </button>
               </div>
 
@@ -94,32 +99,36 @@ export default function CartPage() {
                       <p className="text-gray-500 font-raleway">
                         {item.color} | {item.size}
                       </p>
-                      <div className="mt-2 flex items-center space-x-4 font-raleway">
-                        <div className="flex items-center border rounded font-raleway">
+                      <div className="mt-2 flex items-center space-x-4 font-raleway justify-center">
+                        <div className="flex items-center border rounded font-raleway ">
                           <button
                             onClick={() => updateQuantity(item.id, -1)}
                             className="p-2 hover:bg-gray-100"
                           >
-                            <Minus className="h-4 w-4" />
+                            <Minus/>
                           </button>
                           <span className="px-4">{item.quantity}</span>
                           <button
                             onClick={() => updateQuantity(item.id, 1)}
                             className="p-2 hover:bg-gray-100"
                           >
-                            <Plus className="h-4 w-4" />
+                            <Plus/>
                           </button>
                         </div>
+                        <div className='flex items-center '>
+                          <DeleteIcon onClick={() => removeItem(item.id)}
+                          className="text-gray-500 hover:text-customRed cursor-pointer"/>
                         <button
                           onClick={() => removeItem(item.id)}
-                          className="text-gray-500 hover:text-red-500"
+                          className="text-gray-500 hover:text-customRed"
                         >
                           Remove
                         </button>
+                        </div>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-lg font-medium">INR {item.price.toLocaleString()}</p>
+                      <p className="text-lg font-medium font-raleway">INR {item.price.toLocaleString()}</p>
                     </div>
                   </div>
                 ))}
@@ -134,7 +143,7 @@ export default function CartPage() {
                   <span className="text-gray-600 font-raleway">Subtotal</span>
                   <span className="font-medium font-raleway">INR {subtotal.toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between ">
                   <span className="text-gray-600 font-raleway">Discount</span>
                   <span className="font-medium font-raleway">INR 0</span>
                 </div>
@@ -146,12 +155,13 @@ export default function CartPage() {
                 </div>
               </div>
 
-              <button className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition-colors font-raleway">
+              <button className="w-full bg-black text-white py-3 hover:bg-gray-800 transition-colors font-raleway rounded-[12px] shadowlg
+              ">
                 Checkout Now
               </button>
 
               <div className="space-y-4">
-                <div className="border rounded-lg p-4">
+                <div className="border p-4">
                   <h3 className="font-medium mb-2 font-raleway">Apply promocode 🎉</h3>
                   <p className="text-sm text-gray-500 mb-4 font-raleway">
                     Do you have any coupons? Apply now!!!
@@ -162,7 +172,7 @@ export default function CartPage() {
                       placeholder="Coupon code"
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black font-raleway"
                     />
-                    <button className="w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition-colors font-raleway">
+                    <button className="w-full bg-black text-white py-2 rounded-[12px] hover:bg-gray-800 transition-colors font-raleway shadow-lg">
                       Apply Now
                     </button>
                   </div>

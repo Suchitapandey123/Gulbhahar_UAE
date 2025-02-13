@@ -77,7 +77,7 @@ export default function ProductDetails() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
          
           <div className="space-y-4">
-            <div className="aspect-square relative rounded-lg overflow-hidden border">
+            <div className="aspect-square relative rounded-lg overflow-hidden border lg:-ml-[50px]">
               <Image
                 src={mainImage}
                 alt={product.name}
@@ -85,7 +85,7 @@ export default function ProductDetails() {
                 className="object-cover"
               />
             </div>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-4 gap-2 lg:-ml-12">
               {product.images.map((img, idx) => (
                 <button
                   key={idx}
@@ -104,12 +104,12 @@ export default function ProductDetails() {
               ))}
             </div>
             <div>
-            <h3 className="font-bold mb-4 mt-12 font-raleway">Overview</h3>
-              <p className="space-y-1 text-sm font-raleway text-gray-500">
+            <h3 className="font-bold mb-4 mt-12 font-raleway lg:-ml-12 text-lg">Overview</h3>
+              <p className="space-y-1 text-sm font-raleway text-gray-500 lg:-ml-12">
                 {product.overview}
               </p>
-              <h3 className="font-bold mb-2 font-raleway mt-2">Product Details</h3>
-              <ul className="space-y-1 text-sm font-raleway text-gray-500 list-inside list-disc">
+              <h3 className="font-bold mb-2 font-raleway mt-2 lg:-ml-12">Product Details</h3>
+              <ul className="space-y-1 text-sm font-raleway text-gray-500 list-inside list-disc lg:-ml-12">
                 {product.details.map((detail, idx) => (
                   <li key={idx}>{detail}</li>
                 ))}
@@ -118,7 +118,7 @@ export default function ProductDetails() {
           </div>
 
           
-          <div className="space-y-6">
+          <div className="space-y-6 lg:ml-16">
             <div>
               <h1 className="text-2xl font-semibold font-raleway">{product.name}</h1>
               <p className="text-gray-600 font-raleway">{product.category}</p>
@@ -159,10 +159,10 @@ export default function ProductDetails() {
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
-                    className={`py-2 text-sm border rounded  ${
+                    className={`py-2 text-sm border rounded font-raleway hover:bg-yellowTwo  ${
                       selectedSize === size
                         ? 'border-black bg-customPaleYellow text-white'
-                        : 'border-gray-200 hover:border-black'
+                        : 'border-gray-200 hover:border-customYellow'
                     }`}
                   >
                     {size}

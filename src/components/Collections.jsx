@@ -43,7 +43,7 @@ export default function CollectionsPage() {
           <button
             key={season}
             onClick={() => setSelectedSeason(season)}
-            className={`px-4 py-2 text-sm rounded-md shadow-md border border-black transition-colors text-[24px] 
+            className={`px-4 py-2 lg:w-[210px] text-sm rounded-md shadow-md border  lg:h-[44px] border-black break-words font-raleway lg:text-[14px] transition-colors text-[12px] 
               ${
                 selectedSeason === season
                   ? "bg-black text-white"
@@ -58,7 +58,7 @@ export default function CollectionsPage() {
       <div className="grid grid-cols-1  sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {filteredCollections.map((collection) => (
           <div key={collection.id} className="space-y-3">
-            <div className="relative  rounded-lg overflow-hidden shadow-lg">
+            <div className="relative overflow-hidden">
               <Image
                 src={collection.image || "/placeholder.svg"}
                 alt={collection.title}

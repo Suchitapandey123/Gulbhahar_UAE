@@ -18,12 +18,12 @@ const oldStandardTT = Old_Standard_TT({
 
 export default function HomePage() {
   return (
-    <main className="pt-16 md:pt-20 w-full lg:max-w-8xl 2xl:w-full">
-      <div className="container mx-auto px-3 py-6 md:py-12 overflow-hidden 2xl:w-full">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8 sm:gap-8">
+    <main className="pt-16 md:pt-20 w-full lg:max-w-8xl">
+      <div className="container mx-auto px-3 py-6 md:py-12 overflow-hidden">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 lg:gap-16 gap-8 sm:gap-8 ">
           <div className="space-y-12">
-            <div className="relative w-full ml-6 aspect-[4/3] ">
-              <div className="absolute inset-0 flex items-center justify-center w-full">
+            <div className="relative w-full ml-6 aspect-[4/3] mx-auto">
+              <div className="absolute inset-0 flex items-center justify-center w-full lg:ml-2 ">
                 <Image
                   src="/1.svg"
                   alt="GulBhahar"
@@ -33,7 +33,7 @@ export default function HomePage() {
                 />
               </div>
             </div>
-            <p className="text-sm uppercase tracking-widest lg:text-[22px] sm:text-left font-extralight text-center ml-12">
+            <p className="text-sm uppercase tracking-widest lg:text-[22px] sm:text-left font-extralight text-center ml-14">
               Gulbhahar combines
               <span className="block lg:mt-2">craftsmanship</span>
             </p>
@@ -57,7 +57,7 @@ export default function HomePage() {
               <span className="block lg:mt-2">CRAFTMANSHIP</span>
             </p>
             <div className="relative w-full aspect-[4/3]">
-              <div className="absolute inset-0 flex items-center justify-center mr-7">
+              <div className="absolute inset-0 flex items-center justify-center lg:mr-14">
                 <Image
                   src="/3.svg"
                   alt="Gulbhahar"
@@ -72,15 +72,15 @@ export default function HomePage() {
 
         <div className="mt-16 md:mt-20">
           <Link href={"/about"}>
-            <div className="flex items-center gap-5 mx-7 justify-end cursor-pointer -mb-4">
-              <span className="lg:text-2xl font-raleway uppercase tracking-wider w-[186] h-[33px]  ">Learn more</span>
-             <ArrowVector className="w-[20px] h-[20px] mb-3"/>
+            <div className="flex items-center lg:gap-5 lg:mx-8 justify-end cursor-pointer -mb-20 lg:mb-0 gap-2">
+              <span className="lg:text-2xl font-raleway uppercase tracking-wider lg:w-[186] lg:h-[33px]  ">Learn more</span>
+             <ArrowVector className="lg:w-[20px] lg:h-[20px] lg:mb-3 mb-1 w-3 h-3"/>
             </div>
           </Link>
 
-          <div className="relative text-center w-full h-full">
+          <div className="relative text-center">
             <h1
-              className={`${oldStandardTT.variable}  sm:text-6xl md:text-7xl lg:text-[220px]  tracking-[auto] sm:tracking-[auto] md:tracking-[auto] lg:tracking-[auto] xl:tracking-[auto] font-extralight stroke-black `}
+              className={`${oldStandardTT.variable}  sm:text-6xl md:text-7xl lg:text-[210px] tracking-[auto] sm:tracking-[auto] md:tracking-[auto] lg:tracking-[auto] xl:tracking-[auto] font-extralight stroke-black text-5xl -mb-24 lg:mb-0`}
             >
               <span className="relative z-10 text-customRed leading-[247.2px]">G</span>
               <span className="relative z-10 text-customRed leading-[247.2px]">U</span>
@@ -92,15 +92,15 @@ export default function HomePage() {
               <span className="relative z-10 text-customRed leading-[247.2px]">A</span>
               <span className="relative z-10 text-customRed leading-[247.2px]">R</span>
             </h1>
-            <div className="flex justify-between items-center text-lg sm:text-base ml-8 tracking-wider">
-              <span className="font-extralight lg:text-2xl font-raleway text-customRed -mt-16 tracking-wider">
+            <div className="flex justify-between items-center text-lg sm:text-base lg:ml-6 tracking-wider ">
+              <span className="font-extralight lg:text-2xl font-raleway text-customRed lg:-mt-20 tracking-wider text-sm lg:ml-12">
                 Handcrafted
               </span>
               <span className="text-center lg:text-2xl text-customRed tracking-wider
-               font-raleway font-extralight -mt-16">
+               font-raleway font-extralight lg:-mt-20 text-sm">
                 Tailored with love
               </span>
-              <span className="text-right lg:text-2xl text-customRed font-raleway mr-[2%] tracking-wider -mt-16">
+              <span className="text-right lg:text-2xl text-customRed font-raleway mr-[2%] tracking-wider lg:-mt-20 text-sm lg:mr-14">
                 piece by piece
               </span>
             </div>

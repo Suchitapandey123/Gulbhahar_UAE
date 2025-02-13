@@ -91,16 +91,16 @@ export default function NewCollection() {
   const lastTwoDigitsOfYear = new Date().getFullYear().toString().slice(-2);
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden mt-20">
+    <div className="min-h-screen bg-white overflow-x-hidden mt-6 lg:mt-24">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex justify-between items-center mb-12">
-          <h1 className="lg:text-5xl lg:-ml-12 text-[67px] font-bold tracking-tight text-gray-900 font-raleway ">
+        <div className="flex justify-between items-center lg:mb-20 mb-6">
+          <h1 className="lg:text-[60px] font-bold tracking-tight text-gray-900 font-raleway text-md">
             NEW COLLECTION
           </h1>
           <Link href="/collection">
-          <button className="flex items-center gap-5 text-gray-900 hover:text-gray-600 lg:text-2xl transition-colors font-raleway -mt-6 tracking-wider w-[186] h-[33px]">
+          <button className="flex items-center lg:gap-5 gap-2 text-gray-900 hover:text-gray-600 lg:text-2xl transition-colors font-raleway -mt-6 tracking-wider w-[186] h-[33px] text-sm">
             SEE MORE
-           <ArrowVector className="w-[20px] h-[20px] mb-3"/>
+           <ArrowVector className="lg:w-[20px] lg:h-[20px] lg:mb-3 w-3 h-3 mb-2"/>
           </button>
           </Link>
         </div>
@@ -108,7 +108,7 @@ export default function NewCollection() {
         <div className="relative">
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex gap-6 sm:gap-8">
-            <div className="absolute top-[75%] left-80 transform -translate-x-1/2 -translate-y-1/2 text-[200px] font-bold z-20 font-raleway text-customYellow opacity-60 ">
+            <div className="absolute top-[90%] left-80 transform -translate-x-1/2 -translate-y-1/2 text-[200px] font-bold z-20 font-raleway text-customYellow opacity-60 ">
                 {firstTwoDigitsOfYear}
               </div>
               <div className="absolute  right-16 top-[10%] transform -translate-x-1/2 -translate-y-1/2 text-[200px] font-bold z-10 font-raleway text-customYellow opacity-55">
@@ -126,6 +126,7 @@ export default function NewCollection() {
                       width={360}
                       height={468}
                       objectFit="cover"
+                      className=" mx-auto overflow-x-hidden w-lg:[360px] lg:h-[468px]"
                     />
                   </div>
                   <div className="mt-3 flex justify-between">

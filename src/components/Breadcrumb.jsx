@@ -5,18 +5,17 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 const Breadcrumb = () => {
-  const [isClient, setIsClient] = useState(false); // State to track if component is mounted on client
+  const [isClient, setIsClient] = useState(false);
 
   const router = useRouter();
   const path = router.pathname;
 
-  // Set isClient to true once the component is mounted on the client
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   if (!isClient) {
-    return null; // Return nothing on the server side
+    return null;
   }
 
   return (
@@ -28,7 +27,7 @@ const Breadcrumb = () => {
           </Link>
         </li>
         {path === '/collection' && (
-          <li className="text-gray-500">Collection</li>
+          <li className="text-customRed">Collection</li>
         )}
       </ol>
     </nav>
