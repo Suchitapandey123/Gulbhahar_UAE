@@ -4,7 +4,7 @@ import { useState } from 'react';
 import DeleteIcon from '@/components/ui/DeleteIcon';
 import Minus from '@/components/ui/Minus';
 import Plus from '@/components/ui/Plus';
-
+import Breadcrumb from '@/components/Breadcrumb';
 const products = [
   {
     id: 1,
@@ -68,6 +68,9 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-8xl mx-auto mt-20">
+      <div>
+      <Breadcrumb/>
+      </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow p-6">

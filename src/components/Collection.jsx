@@ -58,7 +58,7 @@ const collections = [
     size: "XL",
   },
   {
-    id: 7,
+    id: 6,
     name: "Noorani Outfit",
     price: 1800,
     image: "/collection.svg",
@@ -67,7 +67,7 @@ const collections = [
     size: "XS",
   },
   {
-    id: 8,
+    id: 7,
     name: "Noorani Outfit",
     price: 5000,
     image: "/collection.svg",
@@ -76,9 +76,18 @@ const collections = [
     size: "XS",
   },
   {
-    id: 9,
+    id: 8,
     name: "Noorani Outfit",
     price: 1200,
+    image: "/collection.svg",
+    season: "WINTER 2024",
+    stock: 15,
+    size: "XS",
+  },
+  {
+    id: 9,
+    name: "Noorani Outfit",
+    price: 5000,
     image: "/collection.svg",
     season: "WINTER 2024",
     stock: 15,
@@ -131,6 +140,69 @@ const collections = [
   },
   {
     id: 15,
+    name: "Noorani Outfit",
+    price: 5000,
+    image: "/collection.svg",
+    season: "WINTER 2024",
+    stock: 15,
+    size: "XS",
+  },
+  {
+    id: 16,
+    name: "Noorani Outfit",
+    price: 5000,
+    image: "/collection.svg",
+    season: "WINTER 2024",
+    stock: 15,
+    size: "XS",
+  },
+  {
+    id: 17,
+    name: "Noorani Outfit",
+    price: 5000,
+    image: "/collection.svg",
+    season: "WINTER 2024",
+    stock: 15,
+    size: "XS",
+  },
+  {
+    id: 18,
+    name: "Noorani Outfit",
+    price: 5000,
+    image: "/collection.svg",
+    season: "WINTER 2024",
+    stock: 15,
+    size: "XS",
+  },
+  {
+    id: 19,
+    name: "Noorani Outfit",
+    price: 5000,
+    image: "/collection.svg",
+    season: "WINTER 2024",
+    stock: 15,
+    size: "XS",
+  },
+  {
+    id: 20,
+    name: "Noorani Outfit",
+    price: 5000,
+    image: "/collection.svg",
+    season: "WINTER 2024",
+    stock: 15,
+    size: "XS",
+  },
+  {
+    id: 21,
+    name: "Noorani Outfit",
+    price: 5000,
+    image: "/collection.svg",
+    season: "WINTER 2024",
+    stock: 15,
+    size: "XS",
+  },
+  {
+    id: 22,
     name: "Noorani Outfit",
     price: 5000,
     image: "/collection.svg",
@@ -259,7 +331,9 @@ export default function Home() {
           
         </div>
         <div className="mt-2">
-       {/* <Breadcrumb/> */}
+      <div className="lg:-mb-16">
+      <Breadcrumb/>
+      </div>
         </div>
         <div className="flex flex-col lg:flex-row gap-8 mt-20">
           <div className="w-full lg:w-64 p-6 rounded-lg bg-slateColor2 shadow-lg lg:h-[600px] sticky top-4">
