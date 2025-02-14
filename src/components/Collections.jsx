@@ -61,7 +61,8 @@ export default function CollectionsPage() {
             <div className="relative overflow-hidden">
               <Image
                 src={collection.image}
-                alt={collection.title}
+                // alt={collection.title}
+                alt="collection image"
                 width={307.54}
                 height={446.13}
                 className="object-cover"

@@ -565,7 +565,8 @@ export default function Home() {
                     <div className="relative pb-[100%] rounded-lg lg:mr-12 lg:ml-4">
                       <img
                         src={item.image}
-                        alt={item.name}
+                        // alt={item.name}
+                        alt="item image"
                         className="absolute inset-0 w-[307px] h-[372px] object-cover rounded-lg"
                       />
                     </div>

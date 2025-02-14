@@ -17,6 +17,12 @@ const oldStandardTT = Old_Standard_TT({
 });
 
 export default function HomePage() {
+
+  const img1="/1.svg"
+  const img2="/2.svg"
+  const img3="/3.svg"
+
+
   return (
     <main className="pt-16 md:pt-20 w-full lg:max-w-8xl">
       <div className="container mx-auto px-3 py-6 md:py-12 overflow-hidden">
@@ -25,7 +31,7 @@ export default function HomePage() {
             <div className="relative w-full ml-6 aspect-[4/3] mx-auto">
               <div className="absolute inset-0 flex items-center justify-center w-full lg:ml-2 ">
                 <Image
-                  src="/1.svg"
+                  src={img1 || null}
                   alt="GulBhahar"
                   width={410}
                   height={349}
@@ -42,7 +48,7 @@ export default function HomePage() {
             <div className="relative w-full aspect-[3/4] ">
               <div className="absolute inset-0 flex items-center justify-center">
                 <Image
-                  src="/2.svg"
+                  src={img2 || null}
                   alt="GulBhahar"
                   objectFit="cover"
                   width={410}
@@ -59,7 +65,7 @@ export default function HomePage() {
             <div className="relative w-full aspect-[4/3]">
               <div className="absolute inset-0 flex items-center justify-center lg:mr-14">
                 <Image
-                  src="/3.svg"
+                  src={img3 || null}
                   alt="Gulbhahar"
                   objectFit="cover"
                   width={410}

@@ -9,6 +9,8 @@ export default function About() {
   const [imageError1, setImageError1] = useState(false);
   const [imageError2, setImageError2] = useState(false);
 
+  const img1='/22.svg'
+
   return (
     <main className="min-h-screen p-4 md:p-8 lg:p-4">
       <div className="max-w-7xl mx-auto">
@@ -27,7 +29,7 @@ export default function About() {
           <div className="relative aspect-[4/3] mt-24">
             <div className="absolute inset-0 -z-20 mt-12">
               <Image
-                src="/22.svg"
+                src={img1 || null}
                 alt="Background design"
                 className="lg:ml-32 relative -top-20 sm:-top-40 "
                 width={500}

@@ -11,7 +11,7 @@ export default function Checkout() {
 
   const router=useRouter();
   const handlePayment=()=>{
-    router.push('/payment')
+    router.push('/cart/checkout/payment')
   }
 
   const cartItems = [
@@ -169,7 +169,8 @@ export default function Checkout() {
                   <div key={item.id} className="flex items-center space-x-4">
                     <Image
                       src={item.image}
-                      alt={item.name}
+                      // alt={item.name}
+                      alt='item-image'
                       width={60}
                       height={60}
                       className="rounded-md"

@@ -35,7 +35,6 @@ export default function Culture() {
             alt="Foreground block 1"
             width={350}
             height={386}
-            className="bg-blue-800"
           />
         </div>
         <div className="absolute right-1 z-0 lg:top-[74%] -translate-y-1/2  ">

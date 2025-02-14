@@ -111,7 +111,7 @@ export default function ProductDetails() {
             <div className="aspect-square relative rounded-lg overflow-hidden border lg:-ml-[50px]">
               <Image
                 src={mainImage}
-                alt={product.name}
+                alt="Product-image"
                 fill
                 className="object-cover"
               />
@@ -127,7 +127,8 @@ export default function ProductDetails() {
                 >
                   <Image
                     src={img}
-                    alt={`${product.name} ${idx + 1}`}
+                    // alt={`${product.name} ${idx + 1}`}
+                    alt="Product-image"
                     fill
                     className="object-cover"
                   />
@@ -183,7 +184,8 @@ export default function ProductDetails() {
                   >
                     <Image
                       src={color}
-                      alt={`Color ${idx + 1}`}
+                      // alt={`Color ${idx + 1}`}
+                      alt="product-image"
                       width={52}
                       height={52}
                       className="w-full h-full object-cover"
@@ -290,7 +292,7 @@ export default function ProductDetails() {
                     <div className="flex items-center gap-4">
                       <Image
                         src="/user.svg"
-                        alt="user"
+                        alt="user image"
                         width={45}
                         height={45}
                         objectFit="cover"
@@ -351,7 +353,8 @@ export default function ProductDetails() {
                   <div className="relative mb-4">
                     <Image
                       src="/23.svg"
-                      alt={item.name}
+                      // alt={item.name}
+                      alt="item-image"
                       width={126}
                       height={142}
                       className="object-cover rounded-lg"

@@ -10,7 +10,8 @@ export default function OurShowcase() {
           <div key={i} className="aspect-[3/4] relative">
             <Image
               src="/showcase.svg"
-              alt={`Image of Gulbhahar ${i + 1}`}
+              // alt={`Image of Gulbhahar ${i + 1}`}
+              alt="showcase image"
               width={300}
               height={450}
               className=" object-cover"
