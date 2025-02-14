@@ -89,7 +89,7 @@ export default function Navbar() {
             >
               Search
               {pathname === '/search' && (
-                <span className="absolute left-0 bottom-0 w-full h-0.5 bg-customRed transition-all duration-300" />
+                <span className="absolute left-0 bottom-0 w-full h-0.5 bg-customRed transition-all duration-300 lg:w-[30px] lg:ml-6" />
               )}
             </Link>
             <Link
@@ -98,7 +98,7 @@ export default function Navbar() {
             >
               Cart
               {pathname === '/cart' && (
-                <span className="absolute left-0 bottom-0 w-full h-0.5 bg-customRed transition-all duration-300" />
+                <span className="absolute left-0 bottom-0 w-full h-0.5 bg-customRed transition-all duration-300 lg:w-[30px] lg:ml-3" />
               )}
             </Link>
           </div>

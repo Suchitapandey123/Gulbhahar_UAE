@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-export default function Home() {
+export default function Culture() {
   return (
     <main className="min-h-screen  flex items-center  justify-center bg-white relative overflow-hidden lg:mt-20 mb-6">
       <div className="relative">

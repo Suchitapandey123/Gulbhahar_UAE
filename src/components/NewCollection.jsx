@@ -86,10 +86,12 @@ export default function NewCollection() {
     },
   ];
 
-  const firstTwoDigitsOfYear = new Date().getFullYear().toString().slice(0, 2);
+  // const firstTwoDigitsOfYear = new Date().getFullYear().toString().slice(0, 2);
+  const firstTwoDigitsOfYear = 20
 
   
-  const lastTwoDigitsOfYear = new Date().getFullYear().toString().slice(-2);
+  // const lastTwoDigitsOfYear = new Date().getFullYear().toString().slice(-2);
+  const lastTwoDigitsOfYear = 25;
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden mt-6 lg:mt-24">

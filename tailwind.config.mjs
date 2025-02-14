@@ -25,6 +25,7 @@ export default {
 				starColor:'#FCC83D',
 				replyColor:'#E52836',
 				slateColorThree:'#9292920A',
+				slateFour:'#929292',
 				fontFamily: {
 					'old-standard': ['Old Standard TT', 'serif'],
 				},

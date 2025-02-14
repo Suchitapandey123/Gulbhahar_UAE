@@ -60,7 +60,7 @@ export default function CollectionsPage() {
           <div key={collection.id} className="space-y-3">
             <div className="relative overflow-hidden">
               <Image
-                src={collection.image || "/placeholder.svg"}
+                src={collection.image}
                 alt={collection.title}
                 width={307.54}
                 height={446.13}
