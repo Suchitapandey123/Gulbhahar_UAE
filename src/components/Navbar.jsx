@@ -63,7 +63,7 @@ export default function Navbar() {
             >
               About
               {pathname === '/about' && (
-                <span className="absolute bottom-0 w-[30px] h-0.5 bg-customRed transition-all duration-300" />
+               <span className="absolute left-0 bottom-0 w-full h-0.5 bg-customRed transition-all duration-300 lg:w-[30px] lg:ml-4" />
               )}
             </Link>
           </div>

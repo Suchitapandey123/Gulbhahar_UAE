@@ -260,15 +260,15 @@ image: "/trend2.svg",
   },
 ];
 
-const ITEMS_PER_PAGE = 12;
+const ITEMS_PER_PAGE = 9;
 
 export default function Home() {
   const [viewMode, setViewMode] = useState("grid");
   const [selectedSeason, setSelectedSeason] = useState("ALL");
-  const [priceRange, setPriceRange] = useState([2000, 5000]);
+  const [priceRange, setPriceRange] = useState([2000, 12000]);
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [minPrice, setMinPrice] = useState(2000);
-  const [maxPrice, setMaxPrice] = useState(5000);
+  const [maxPrice, setMaxPrice] = useState(12000);
   const [sortBy, setSortBy] = useState("relevance");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -310,9 +310,9 @@ export default function Home() {
 
   const clearFilters = () => {
     setSelectedSeason("ALL");
-    setPriceRange([2000, 5000]);
+    setPriceRange([2000, 12000]);
     setMinPrice(2000);
-    setMaxPrice(5000);
+    setMaxPrice(12000);
     setSelectedSizes([]);
   };
 
@@ -356,7 +356,7 @@ export default function Home() {
                   <input
                     type="range"
                     min="2000"
-                    max="5000"
+                    max="12000"
                     step="100"
                     value={minPrice}
                     onChange={(e) =>
@@ -369,7 +369,7 @@ export default function Home() {
                   <input
                     type="range"
                     min="2000"
-                    max="5000"
+                    max="12000"
                     step="100"
                     value={maxPrice}
                     onChange={(e) =>
@@ -432,7 +432,7 @@ export default function Home() {
             {(selectedSizes.length > 0 ||
               selectedSeason !== "ALL" ||
               priceRange[0] !== 2000 ||
-              priceRange[1] !== 5000) && (
+              priceRange[1] !== 12000) && (
               <div className="mb-6 p-4 bg-white rounded-lg ">
                 <div className="flex flex-wrap gap-2">
                   {selectedSizes.map((size) => (
@@ -462,11 +462,11 @@ export default function Home() {
                       </button>
                     </span>
                   )}
-                  {(priceRange[0] !== 2000 || priceRange[1] !== 5000) && (
+                  {(priceRange[0] !== 2000 || priceRange[1] !== 12000) && (
                     <span className="px-2 py-1 bg-gray-100 rounded-md text-sm flex items-center gap-1">
                       ₹{priceRange[0]} - ₹{priceRange[1]}
                       <button
-                        onClick={() => handlePriceChange(2000, 5000)}
+                        onClick={() => handlePriceChange(2000, 12000)}
                         className="text-gray-500 hover:text-gray-700"
                       >
                       </button>

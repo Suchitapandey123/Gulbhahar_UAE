@@ -33,7 +33,6 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} ${oldStandardTT.variable} antialiased`}
       >
         <Navbar />
-        {/* <Breadcrumb className="mt-12"/> */}
         {children}
         <MainFooter/>
       </body>

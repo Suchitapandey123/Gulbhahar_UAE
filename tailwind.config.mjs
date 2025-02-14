@@ -22,6 +22,9 @@ export default {
 				yellowTwo:'#FFBC00',
 				slateTwo:'#C4C4C4',
 				traditionColor:'#F5DFA4BF',
+				starColor:'#FCC83D',
+				replyColor:'#E52836',
+				slateColorThree:'#9292920A',
 				fontFamily: {
 					'old-standard': ['Old Standard TT', 'serif'],
 				},

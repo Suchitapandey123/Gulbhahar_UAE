@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 import { useState } from "react";
 import ArrowVector from "./ui/ArrowVector";
 
@@ -14,7 +13,7 @@ export default function About() {
     <main className="min-h-screen p-4 md:p-8 lg:p-4">
       <div className="max-w-7xl mx-auto">
         <header className="flex justify-between items-center mt-20 mb-16">
-          <h1 className="text-3xl lg:text-5xl lg:-mt-16 md:text-4xl font-bold tracking-tight sm:mt-2 font-raleway text-customRed lg:-ml-10  ">
+          <h1 className="text-3xl lg:text-5xl md:text-4xl font-bold tracking-tight sm:mt-2 font-raleway text-customRed lg:-ml-10 lg:mt-16  ">
             ABOUT US
           </h1>
           <Link href="/collection">
