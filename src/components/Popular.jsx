@@ -32,7 +32,7 @@ export default function Popular() {
         <h2 className="text-[22px] md:text-xl lg:font-[28px] lg:mb-2 lg:ml-12 font-semibold ">
           Traditional & modern handcrafted india's finest footwear - GULBHAHAR
         </h2>
-        <p className="text-gray-700 leading-relaxed lg:text-[23px] md:text-base lg:ml-12 text-[19px]
+        <p className="text-gray-700 leading-relaxed lg:text-[23px] md:text-base lg:ml-12 text-[19px] 
         ">
         Welcome to Needledust, where handcrafted excellence meets India's finest footwear. Discover a captivating array of women's ethnic juttis, heels, mules, Kolhapur, and purses, meticulously crafted with premium materials and traditional craftsmanship. Embrace ethnic elegance with our exquisite designs, featuring intricate embroidery, luxurious fabrics, and timeless motifs celebrating India's rich heritage. Indulge in the allure of premium handcrafted footwear and accessories that celebrate tradition while embracing modern style. Whether it's a timeless pair of kolhapuris or an intricately embroidered purse, our collection promises to elevate your wardrobe and evoke a sense of pride in India's artisanal heritage. Explore our range of men's and kids' juttis, each reflecting the same level of craftsmanship and attention to detail. At Needledust, we take pride in creating more than just shoes; we create pieces of art that tell a story of tradition and passion. Step into a world where every step is a celebration of craftsmanship and culture. Welcome to Needledust, your destination for India's finest handcrafted footwear.
         </p>

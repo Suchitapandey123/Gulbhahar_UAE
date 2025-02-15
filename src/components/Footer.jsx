@@ -6,7 +6,7 @@ import Instagram from "./ui/Instagram"
 import Image from "next/image"
 
 const oldStandardTT = Old_Standard_TT({
-  weight: "400",
+  weight: "700",
   variable: "--font-old-standard-tt",
   subsets: ["latin"],
 })
@@ -57,7 +57,7 @@ export default function Footer() {
         </div>
         <div className="lg:mt-5 md:mt-24 mt-1">
           <div className="relative text-center">
-            <div className="flex flex-col sm:flex-row justify-center items-center lg:gap-[360px] md:gap-5 gap-5 text-sm lg:-mb-6 mt-7">
+            <div className="flex flex-col sm:flex-row justify-center items-center lg:gap-[378px] md:gap-5 gap-5 text-sm lg:-mb-8 mt-7">
               <Link href="#" className="hover:underline cursor-pointer text-xl font-raleway">
                 RETURN POLICY
               </Link>
@@ -70,7 +70,7 @@ export default function Footer() {
             </div>
 
             <h1
-              className={`${oldStandardTT.variable} w-full max-w-7xl  sm:text-6xl lg:-ml-28 md:text-7xl lg:text-[220px]  tracking-[auto] sm:tracking-[auto] md:tracking-[auto] lg:tracking-[auto] xl:tracking-[auto] font-extralight stroke-black text-center text-5xl`}
+              className={`${oldStandardTT.variable} w-full max-w-7xl lg:mt-5  sm:text-6xl lg:-ml-20 md:text-7xl lg:text-[210px]  tracking-[auto] sm:tracking-[auto] md:tracking-[auto] lg:tracking-[auto] xl:tracking-[auto] font-extralight stroke-black text-center text-5xl`}
             >
               <span className="relative z-10 text-customRed leading-[247.2px]">G</span>
               <span className="relative z-10 text-customRed leading-[247.2px]">U</span>

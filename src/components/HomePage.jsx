@@ -17,11 +17,9 @@ const oldStandardTT = Old_Standard_TT({
 });
 
 export default function HomePage() {
-
-  const img1="/1.svg"
-  const img2="/2.svg"
-  const img3="/3.svg"
-
+  const img1 = "/1.svg";
+  const img2 = "/2.svg";
+  const img3 = "/3.svg";
 
   return (
     <main className="pt-16 md:pt-20 w-full lg:max-w-8xl">
@@ -30,14 +28,17 @@ export default function HomePage() {
           <div className="space-y-12">
             <div className="relative w-full lg:ml-6 aspect-[4/3] mx-auto">
               <div className="absolute inset-0 flex items-center justify-center w-full lg:ml-2 ">
-                <Image
-                  src={img1 || null}
-                  alt="GulBhahar"
-                  width={410}
-                  height={349}
-                  // objectFit="cover"
-                  className="object-cover"
-                />
+                {img1 && img1 !== "" ? (
+                  <Image
+                    src={img1}
+                    alt="GulBhahar"
+                    width={410}
+                    height={349}
+                    className="object-cover"
+                  />
+                ) : (
+                  <p>Image not available</p>
+                )}
               </div>
             </div>
             <p className="text-lg uppercase tracking-widest lg:text-[22px] sm:text-left font-extralight text-center lg:ml-14">
@@ -82,8 +83,10 @@ export default function HomePage() {
         <div className="mt-16 md:mt-20">
           <Link href={"/about"}>
             <div className="flex items-center lg:gap-5 lg:mx-8 justify-end cursor-pointer -mb-20 lg:mb-0 gap-2">
-              <span className="lg:text-2xl font-raleway uppercase tracking-wider lg:w-[186] lg:h-[33px]">Learn more</span>
-             <ArrowVector className="lg:w-[20px] lg:h-[20px] lg:mb-3 mb-1 w-3 h-3"/>
+              <span className="lg:text-2xl font-raleway uppercase tracking-wider lg:w-[186] lg:h-[33px]">
+                Learn more
+              </span>
+              <ArrowVector className="lg:w-[20px] lg:h-[20px] lg:mb-3 mb-1 w-3 h-3" />
             </div>
           </Link>
 
@@ -91,22 +94,42 @@ export default function HomePage() {
             <h1
               className={`${oldStandardTT.variable}  sm:text-6xl md:text-7xl lg:text-[210px] tracking-[auto] sm:tracking-[auto] md:tracking-[auto] lg:tracking-[auto] xl:tracking-[auto] font-extralight stroke-black text-5xl -mb-24 lg:mb-0`}
             >
-              <span className="relative z-10 text-customRed leading-[247.2px]">G</span>
-              <span className="relative z-10 text-customRed leading-[247.2px]">U</span>
-              <span className="relative z-10 text-customRed leading-[247.2px]">L</span>
-              <span className="relative z-10 text-customRed leading-[247.2px]">B</span>
-              <span className="relative z-10 text-customRed leading-[247.2px]">H</span>
-              <span className="relative z-10 text-customRed leading-[247.2px]">A</span>
-              <span className="relative z-10 text-customRed leading-[247.2px]">H</span>
-              <span className="relative z-10 text-customRed leading-[247.2px]">A</span>
-              <span className="relative z-10 text-customRed leading-[247.2px]">R</span>
+              <span className="relative z-10 text-customRed leading-[247.2px]">
+                G
+              </span>
+              <span className="relative z-10 text-customRed leading-[247.2px]">
+                U
+              </span>
+              <span className="relative z-10 text-customRed leading-[247.2px]">
+                L
+              </span>
+              <span className="relative z-10 text-customRed leading-[247.2px]">
+                B
+              </span>
+              <span className="relative z-10 text-customRed leading-[247.2px]">
+                H
+              </span>
+              <span className="relative z-10 text-customRed leading-[247.2px]">
+                A
+              </span>
+              <span className="relative z-10 text-customRed leading-[247.2px]">
+                H
+              </span>
+              <span className="relative z-10 text-customRed leading-[247.2px]">
+                A
+              </span>
+              <span className="relative z-10 text-customRed leading-[247.2px]">
+                R
+              </span>
             </h1>
             <div className="flex justify-between items-center text-lg sm:text-base lg:ml-6 tracking-wider ">
               <span className="font-extralight lg:text-2xl font-raleway text-customRed lg:-mt-20 tracking-wider text-sm lg:ml-12">
                 Handcrafted
               </span>
-              <span className="text-center lg:text-2xl text-customRed tracking-wider
-               font-raleway font-extralight lg:-mt-20 text-sm">
+              <span
+                className="text-center lg:text-2xl text-customRed tracking-wider
+               font-raleway font-extralight lg:-mt-20 text-sm"
+              >
                 Tailored with love
               </span>
               <span className="text-right lg:text-2xl text-customRed font-raleway mr-[2%] tracking-wider lg:-mt-20 text-sm lg:mr-14">

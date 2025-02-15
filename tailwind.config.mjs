@@ -71,7 +71,8 @@ export default {
   		fontFamily: {
   			raleway: [
   				'Raleway',
-  				'sans-serif'
+  				'sans-serif',
+					'Old Standard TT'
   			]
   		},
   		borderRadius: {
