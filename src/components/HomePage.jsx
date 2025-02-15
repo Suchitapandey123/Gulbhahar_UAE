@@ -28,20 +28,21 @@ export default function HomePage() {
       <div className="container mx-auto px-3 py-6 md:py-12 overflow-hidden">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 lg:gap-16 gap-8 sm:gap-8 ">
           <div className="space-y-12">
-            <div className="relative w-full ml-6 aspect-[4/3] mx-auto">
+            <div className="relative w-full lg:ml-6 aspect-[4/3] mx-auto">
               <div className="absolute inset-0 flex items-center justify-center w-full lg:ml-2 ">
                 <Image
                   src={img1 || null}
                   alt="GulBhahar"
                   width={410}
                   height={349}
-                  objectFit="cover"
+                  // objectFit="cover"
+                  className="object-cover"
                 />
               </div>
             </div>
-            <p className="text-sm uppercase tracking-widest lg:text-[22px] sm:text-left font-extralight text-center ml-14">
+            <p className="text-lg uppercase tracking-widest lg:text-[22px] sm:text-left font-extralight text-center lg:ml-14">
               Gulbhahar combines
-              <span className="block lg:mt-2">craftsmanship</span>
+              <span className="block lg:mt-2 mb-4">craftsmanship</span>
             </p>
           </div>
           <div className="md:col-span-2 lg:col-span-1 relative flex flex-col items-center justify-center">
@@ -50,15 +51,16 @@ export default function HomePage() {
                 <Image
                   src={img2 || null}
                   alt="GulBhahar"
-                  objectFit="cover"
+                  // objectFit="cover"
                   width={410}
                   height={649}
+                  className="object-cover"
                 />
               </div>
             </div>
           </div>
           <div className="flex flex-col justify-end items-center">
-            <p className="text-sm uppercase tracking-widest mb-16 lg:mr-36 text-center sm:text-left lg:text-[22px]">
+            <p className="text-lg m uppercase mb-8 mt-5 tracking-widest lg:mb-16 lg:mr-36 text-center sm:text-left lg:text-[22px]">
               GULBHAHAR COMBINES
               <span className="block lg:mt-2">CRAFTMANSHIP</span>
             </p>
@@ -67,9 +69,10 @@ export default function HomePage() {
                 <Image
                   src={img3 || null}
                   alt="Gulbhahar"
-                  objectFit="cover"
+                  // objectFit="cover"
                   width={410}
                   height={349}
+                  className="object-cover"
                 />
               </div>
             </div>
@@ -79,7 +82,7 @@ export default function HomePage() {
         <div className="mt-16 md:mt-20">
           <Link href={"/about"}>
             <div className="flex items-center lg:gap-5 lg:mx-8 justify-end cursor-pointer -mb-20 lg:mb-0 gap-2">
-              <span className="lg:text-2xl font-raleway uppercase tracking-wider lg:w-[186] lg:h-[33px]  ">Learn more</span>
+              <span className="lg:text-2xl font-raleway uppercase tracking-wider lg:w-[186] lg:h-[33px]">Learn more</span>
              <ArrowVector className="lg:w-[20px] lg:h-[20px] lg:mb-3 mb-1 w-3 h-3"/>
             </div>
           </Link>

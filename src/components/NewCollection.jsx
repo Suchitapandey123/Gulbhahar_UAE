@@ -96,12 +96,12 @@ export default function NewCollection() {
   return (
     <div className="min-h-screen bg-white overflow-x-hidden mt-6 lg:mt-24">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex justify-between items-center lg:mb-20 mb-6">
-          <h1 className="lg:text-[60px] font-bold tracking-tight text-gray-900 font-raleway text-md">
+        <div className="flex justify-between items-center lg:mb-20 mb-4">
+          <h1 className="lg:text-[60px] font-bold tracking-tight text-gray-900 font-raleway text-[23px]">
             NEW COLLECTION
           </h1>
           <Link href="/collection">
-          <button className="flex items-center lg:gap-5 gap-2 text-gray-900 hover:text-gray-600 lg:text-2xl transition-colors font-raleway -mt-6 tracking-wider w-[186] h-[33px] text-sm">
+          <button className="flex items-center lg:gap-5 gap-2 text-gray-900 hover:text-gray-600 lg:text-2xl transition-colors font-raleway -mt-6 tracking-wider w-[186] h-[33px] text-md">
             SEE MORE
            <ArrowVector className="lg:w-[20px] lg:h-[20px] lg:mb-3 w-3 h-3 mb-2"/>
           </button>
@@ -111,7 +111,7 @@ export default function NewCollection() {
         <div className="relative">
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex gap-6 sm:gap-8">
-            <div className="absolute top-[90%] left-80 transform -translate-x-1/2 -translate-y-1/2 text-[200px] font-bold z-20 font-raleway text-customYellow opacity-60 ">
+            <div className="absolute top-[80%] left-80 transform -translate-x-1/2 -translate-y-1/2 text-[200px] font-bold z-20 font-raleway text-customYellow opacity-60 ">
                 {firstTwoDigitsOfYear}
               </div>
               <div className="absolute  right-16 top-[10%] transform -translate-x-1/2 -translate-y-1/2 text-[200px] font-bold z-10 font-raleway text-customYellow opacity-55">
@@ -125,11 +125,11 @@ export default function NewCollection() {
                   <div className="aspect-[3/4] overflow-hidden">
                     <Image
                       src={item.image || null}
-                      alt={item.name}
+                      alt='collection-image'
                       width={360}
                       height={468}
-                      objectFit="cover"
-                      className=" mx-auto overflow-x-hidden w-lg:[360px] lg:h-[468px]"
+                      // objectFit="cover"
+                      className=" mx-auto overflow-x-hidden lg:w-[360px] lg:h-[468px] object-cover"
                     />
                   </div>
                   <div className="mt-3 flex justify-between">

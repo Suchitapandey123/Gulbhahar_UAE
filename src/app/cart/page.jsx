@@ -79,15 +79,15 @@ export default function CartPage() {
   
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-8xl mx-auto mt-20">
-        <div>
+    <div className="min-h-screen bg-gray-50 py-8  lg:px-8">
+      <div className="max-w-8xl mx-auto mt-20 lg:ml-8 lg:mb-20">
+        <div className="lg:-ml-6">
           <Breadcrumb />
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex justify-between items-center mb-6">
+              <div className="flex justify-between items-center lg:mb-6 mb-4">
                 <h2 className="text-2xl font-semibold font-raleway">Cart</h2>
                 <button className="text-gray-500 hover:text-gray-700 flex items-center">
                   <DeleteIcon
@@ -103,7 +103,7 @@ export default function CartPage() {
                 </button>
               </div>
 
-              <div className="flex items-center gap-4 justify-between font-raleway">
+              <div className="flex items-center lg:gap-4 gap-2 justify-between font-raleway">
                 <div className="flex items-start gap-4">
                   <input
                     type="checkbox"
@@ -184,10 +184,10 @@ export default function CartPage() {
             </div>
           </div>
 
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 lg:mr-10">
             <div className="bg-white rounded-lg shadow p-6 space-y-6">
               <div className="space-y-4">
-                <div className="flex justify-between">
+                <div className="flex justify-between ">
                   <span className="text-gray-600 font-raleway tracking-wide">Subtotal</span>
                   <span className="font-medium font-raleway">
                     INR {subtotal.toLocaleString()}

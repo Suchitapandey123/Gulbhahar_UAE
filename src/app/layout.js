@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${oldStandardTT.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${oldStandardTT.variable} antialiased`} suppressHydrationWarning="true"
       >
         <Navbar />
         {children}

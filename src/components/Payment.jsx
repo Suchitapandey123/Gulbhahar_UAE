@@ -9,18 +9,30 @@ import Visa from "./ui/Visa"
 import Breadcrumb from "./Breadcrumb"
 import PayPal from "./ui/PayPal"
 import UPI from "./ui/UPI"
+import { useRouter } from "next/navigation";
 
 export default function PaymentPage() {
   const [paymentMethod, setPaymentMethod] = useState("credit-card")
 
+  const order='/order.svg'
+  const order2='/order2.svg'
+
+  const router=useRouter();
+  const handleTransaction=()=>{
+    router.push('/transaction')
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50 py-8 font-raleway ">
-      <div className="mx-auto max-w-7xl px-4 lg:mt-16 lg:ml-12">
-      <Breadcrumb className="lg:-ml-4"/>
+    <div className="min-h-screen py-8 font-raleway lg:mb-16">
+       <div className="lg:mt-10 lg:ml-12">
+        <Breadcrumb/>
+        </div>
+      <div className="mx-auto max-w-8xl  px-4 lg:mt-8 lg:ml-12 shadow-lg">
+       
         <div className="grid gap-8 md:grid-cols-2">
           <div className="space-y-6">
            
-            <div className="rounded-lg border bg-white p-6">
+            <div className="rounded-lg border bg-white p-6 lg:w-[58vw]">
               <h2 className="mb-4 text-lg font-medium">Select payment methods</h2>
               <label className="mb-4 flex items-center justify-between rounded-md border p-4">
                 <div className="flex items-center gap-2">
@@ -95,7 +107,7 @@ export default function PaymentPage() {
               <UPI/>
               </label>
             </div>
-            <div className="rounded-lg border bg-white p-6">
+            <div className="rounded-lg border bg-white p-6 lg:w-[58vw]">
               <h2 className="mb-4 text-lg font-medium">Billing Address</h2>
 
               <div className="space-y-4 ">
@@ -116,13 +128,13 @@ export default function PaymentPage() {
                 <input
                   type="text"
                   placeholder="Street name and house number"
-                  className="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none"
+                  className="w-full rounded-md border border-gray-300 p-2 focus:border-black focus:outline-none"
                 />
                 <label className="font-raleway">City</label>
                 <input
                   type="text"
                   placeholder="City"
-                  className="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none"
+                  className="w-full rounded-md border border-gray-300 p-2 focus:border-black focus:outline-none"
                 />
 
                 <div className="relative">
@@ -156,13 +168,13 @@ export default function PaymentPage() {
               </label>
             </div>
           </div>
-          <div className="rounded-lg border bg-white p-6">
+          <div className="rounded-lg border bg-white p-6 lg:w-[30vw] lg:ml-48 lg:h-[79vh] shadow-lg">
             <h2 className="mb-4 text-lg font-medium">Your Order</h2>
             <div className="space-y-4">
               {[1, 2].map((item) => (
                 <div key={item} className="flex items-center gap-4">
                   <Image
-                    src="/order.svg"
+                    src={order || null}
                     alt="Product"
                     width={80}
                     height={80}
@@ -195,7 +207,9 @@ export default function PaymentPage() {
                 <span>INR 2,500</span>
               </div>
             </div>
-            <button className="mt-6 w-full rounded-[12px] px-4 py-2 bg-slateFour">
+            <button
+            onClick={handleTransaction}
+             className="mt-6 w-full rounded-[12px] px-4 py-2 bg-slateFour">
               Continue to payment
             </button>
 

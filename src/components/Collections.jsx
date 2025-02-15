@@ -27,18 +27,18 @@ export default function CollectionsPage() {
   return (
     <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-[67px] lg:text-5xl sm:text-4xl mt-16 font-bold text-customRed font-raleway  ">
+        <h1 className="text-3xl lg:text-5xl sm:text-4xl lg:mt-16 font-bold text-customRed font-raleway">
           COLLECTIONS
         </h1>
         <Link href="/collection">
-          <button className="flex items-center gap-5 text-gray-900 hover:text-gray-600 lg:text-2xl transition-colors font-raleway  tracking-wider w-[215] h-[33px] uppercase">
+          <button className="flex items-center lg:gap-5  text-gray-900 hover:text-gray-600 lg:text-2xl transition-colors font-raleway  tracking-wider lg:w-[215] lg:h-[33px] uppercase text-lg">
             Visit shop
-            <ArrowVector className="w-[20px] h-[20px]" />
+            <ArrowVector className="lg:w-[20px] lg:h-[20px mb-4" />
           </button>
         </Link>
       </div>
 
-      <div className="flex flex-wrap gap-12 font-raleway mb-10">
+      <div className="flex flex-wrap lg:space-x-5 gap-2 font-raleway lg:mb-10 mb-5">
         {seasons.map((season) => (
           <button
             key={season}
@@ -60,7 +60,7 @@ export default function CollectionsPage() {
           <div key={collection.id} className="space-y-3">
             <div className="relative overflow-hidden">
               <Image
-                src={collection.image}
+                src={collection.image || null}
                 // alt={collection.title}
                 alt="collection image"
                 width={307.54}

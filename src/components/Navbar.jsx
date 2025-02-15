@@ -7,9 +7,14 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
 export default function Navbar() {
+
+  const logo='/logo.svg'
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+
+
   const pathname = usePathname();
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -73,7 +78,7 @@ export default function Navbar() {
               className="text-2xl md:text-3xl text-gray-900 hover:opacity-80 transition-opacity"
             >
               <Image
-                src="/logo.svg"
+                src={logo || null}
                 alt="Logo"
                 width={413}
                 height={89}
@@ -97,7 +102,13 @@ export default function Navbar() {
               className="relative text-gray-800 text-lg uppercase tracking-wider transition-colors font-raleway"
             >
               Cart
-              {pathname === '/cart' && (
+              {pathname === '/cart'  && (
+                <span className="absolute left-0 bottom-0 w-full h-0.5 bg-customRed transition-all duration-300 lg:w-[30px] lg:ml-3" />
+              )}
+              {pathname === '/cart/checkout'  && (
+                <span className="absolute left-0 bottom-0 w-full h-0.5 bg-customRed transition-all duration-300 lg:w-[30px] lg:ml-3" />
+              )}
+              {pathname === '/cart/checkout/payment'  && (
                 <span className="absolute left-0 bottom-0 w-full h-0.5 bg-customRed transition-all duration-300 lg:w-[30px] lg:ml-3" />
               )}
             </Link>
