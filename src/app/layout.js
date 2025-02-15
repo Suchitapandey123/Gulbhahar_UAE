@@ -3,6 +3,7 @@ import { Old_Standard_TT } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import MainFooter from "@/components/MainFooter";
+import Breadcrumb from "@/components/Breadcrumb";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

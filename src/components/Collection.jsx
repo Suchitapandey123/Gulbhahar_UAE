@@ -2,20 +2,21 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Breadcrumb from "./Breadcrumb";
+
 import BoxIcon from "./ui/BoxIcon";
 import BoxIcon2 from "./ui/BoxIcon2";
 import SortIcon from "./ui/SortIcon";
 import ArrowUp from "./ui/ArrowUp";
 import ArrowLeft from "./ui/ArrowLeft";
 import ArrowRight from "./ui/ArrowRight";
+import Breadcrumb from "./Breadcrumb";
 
 const collections = [
   {
     id: 1,
     name: "Noorani Outfit",
     price: 5000,
-    image: "/16.svg",
+    image: "/collection.svg",
     season: "FALL 2024",
     stock: 12,
     size: "S",
@@ -24,7 +25,7 @@ const collections = [
     id: 2,
     name: "Noorani Outfit",
     price: 2200,
-    image: "/16.svg",
+    image: "/collection.svg",
     season: "WINTER 2024",
     stock: 15,
     size: "XXS",
@@ -33,7 +34,7 @@ const collections = [
     id: 3,
     name: "Noorani Outfit",
     price: 1500,
-    image: "/16.svg",
+    image: "/collection.svg",
     season: "WINTER 2024",
     stock: 15,
     size: "M",
@@ -42,7 +43,7 @@ const collections = [
     id: 4,
     name: "Noorani Outfit",
     price: 5000,
-    image: "/16.svg",
+    image: "/collection.svg",
     season: "WINTER 2024",
     stock: 15,
     size: "L",
@@ -51,16 +52,25 @@ const collections = [
     id: 5,
     name: "Noorani Outfit",
     price: 5000,
-    image: "/16.svg",
+    image: "/collection.svg",
     season: "WINTER 2024",
     stock: 15,
     size: "XL",
   },
   {
-    id: 7,
+    id: 6,
     name: "Noorani Outfit",
     price: 1800,
-    image: "/16.svg",
+    image: "/collection.svg",
+    season: "WINTER 2024",
+    stock: 15,
+    size: "XS",
+  },
+  {
+    id: 7,
+    name: "Noorani Outfit",
+    price: 5000,
+    image: "/collection.svg",
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -68,8 +78,8 @@ const collections = [
   {
     id: 8,
     name: "Noorani Outfit",
-    price: 5000,
-    image: "/16.svg",
+    price: 1200,
+    image: "/collection.svg",
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -77,8 +87,8 @@ const collections = [
   {
     id: 9,
     name: "Noorani Outfit",
-    price: 1200,
-    image: "/16.svg",
+    price: 5000,
+    image: "/collection.svg",
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -87,7 +97,7 @@ const collections = [
     id: 10,
     name: "Noorani Outfit",
     price: 5000,
-    image: "/16.svg",
+    image: "/collection.svg",
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -96,7 +106,7 @@ const collections = [
     id: 11,
     name: "Noorani Outfit",
     price: 5000,
-    image: "/16.svg",
+    image: "/collection.svg",
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -105,7 +115,7 @@ const collections = [
     id: 12,
     name: "Noorani Outfit",
     price: 5000,
-    image: "/16.svg",
+    image: "/collection.svg",
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -114,7 +124,7 @@ const collections = [
     id: 13,
     name: "Noorani Outfit",
     price: 5000,
-    image: "/16.svg",
+    image: "/collection.svg",
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -123,7 +133,7 @@ const collections = [
     id: 14,
     name: "Noorani Outfit",
     price: 5000,
-    image: "/16.svg",
+    image: "/collection.svg",
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -132,7 +142,70 @@ const collections = [
     id: 15,
     name: "Noorani Outfit",
     price: 5000,
-    image: "/16.svg",
+    image: "/collection.svg",
+    season: "WINTER 2024",
+    stock: 15,
+    size: "XS",
+  },
+  {
+    id: 16,
+    name: "Noorani Outfit",
+    price: 5000,
+    image: "/collection.svg",
+    season: "WINTER 2024",
+    stock: 15,
+    size: "XS",
+  },
+  {
+    id: 17,
+    name: "Noorani Outfit",
+    price: 5000,
+    image: "/collection.svg",
+    season: "WINTER 2024",
+    stock: 15,
+    size: "XS",
+  },
+  {
+    id: 18,
+    name: "Noorani Outfit",
+    price: 5000,
+    image: "/collection.svg",
+    season: "WINTER 2024",
+    stock: 15,
+    size: "XS",
+  },
+  {
+    id: 19,
+    name: "Noorani Outfit",
+    price: 5000,
+    image: "/collection.svg",
+    season: "WINTER 2024",
+    stock: 15,
+    size: "XS",
+  },
+  {
+    id: 20,
+    name: "Noorani Outfit",
+    price: 5000,
+    image: "/collection.svg",
+    season: "WINTER 2024",
+    stock: 15,
+    size: "XS",
+  },
+  {
+    id: 21,
+    name: "Noorani Outfit",
+    price: 5000,
+    image: "/collection.svg",
+    season: "WINTER 2024",
+    stock: 15,
+    size: "XS",
+  },
+  {
+    id: 22,
+    name: "Noorani Outfit",
+    price: 5000,
+    image: "/collection.svg",
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -160,42 +233,42 @@ const trends = [
   
 
 This is the best time to buy women's casual shoes because brands thrive on creating as many imaginative variations as possible. There is always a good reason to pick up a pair of women's casual shoes, whether for an event or just to give your mood a lift. Further, shopping for casual shoes for women online now gives you the freedom of browsing through several brands at once. Retail therapy on Gulbhahr.`,
-    image: "/trend1.svg",
+    image: "/trend2.svg",
   },
   {
     title: "Flat n Heels, Black Solid Synthetic High-Top Flat Boots",
     description: `Gold hardware on the front of these boots makes them the perfect dressy boot. These women casual shoes will look great with fitted denim or A-line skirts worn with tights.
 Carlton London, Blue Printed Textured Ballerinas
 Every woman should own a ballerina along with other women casual shoes. They are simple, comfortable and always in style.`,
-    image: "/trend1.svg",
+image: "/trend2.svg",
   },
   {
     title: "DressBerry, Metallic Brown Sneakers",
     description: `The trend of velvety-metallic finish sneakers is all the rage right now in women casual shoes. This pair would couple well with dark skinny jeans and an off-shoulder Bardot top.`,
-    image: "/trend1.svg",
+    image: "/trend2.svg",
   },
   {
     title: "Nike, Pink AIR FORCE 1 07 Sneakers",
     description: `Shades of millennial pink are still making waves in fashion. This pair of women casual shoes will complement shades of grey, black or white very well.
 Ladies Casual Shoes Online.`,
-    image: "/trend1.svg",
+image: "/trend2.svg",
   },
   {
     title: "SHOP BY TYPES OF WOMENS FOOTWEAR",
     description: `Sandals For Women | Heels For Women | Sneakers For Women | Boots For Women | Flats For Women | Flip Flops For Women | Sports Shoes For Women | Wedges For Women | Formal Shoes For Women | Loafers For Women | Jutti For Women | Slippers For Women | Clogs For Women | Trekking Shoes For Women | Slides For Women| Slip On Shoes For Women`,
-    image: "/trend4.jpg",
+    image: "/trend2.svg",
   },
 ];
 
-const ITEMS_PER_PAGE = 12;
+const ITEMS_PER_PAGE = 9;
 
 export default function Home() {
   const [viewMode, setViewMode] = useState("grid");
   const [selectedSeason, setSelectedSeason] = useState("ALL");
-  const [priceRange, setPriceRange] = useState([2000, 5000]);
+  const [priceRange, setPriceRange] = useState([2000, 12000]);
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [minPrice, setMinPrice] = useState(2000);
-  const [maxPrice, setMaxPrice] = useState(5000);
+  const [maxPrice, setMaxPrice] = useState(12000);
   const [sortBy, setSortBy] = useState("relevance");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -218,7 +291,7 @@ export default function Home() {
           return a.price - b.price;
         case "newest":
           return b.id - a.id;
-        default:
+        default: "Price"
           return 0;
       }
     });
@@ -237,16 +310,16 @@ export default function Home() {
 
   const clearFilters = () => {
     setSelectedSeason("ALL");
-    setPriceRange([2000, 5000]);
+    setPriceRange([2000, 12000]);
     setMinPrice(2000);
-    setMaxPrice(5000);
+    setMaxPrice(12000);
     setSelectedSizes([]);
   };
 
   return (
     <div className="min-h-screen  bg-white">
       <div className="max-w-8xl sm:px-6 py-8">
-        <div className="w-[2000px] -ml-[18px]  relative mt-16">
+        <div className="lg:w-[2000px] lg:-ml-[18px]   relative mt-16">
           <Image
             src="/banner.svg"
             alt="Latest Collections Banner"
@@ -255,12 +328,13 @@ export default function Home() {
             priority
             className="object-cover rounded-lg"
           />
+          
         </div>
-
-        <div>
-          {/* <Breadcrumb/> */}
+        <div className="mt-2">
+      <div className="lg:-mb-16">
+      <Breadcrumb/>
+      </div>
         </div>
-
         <div className="flex flex-col lg:flex-row gap-8 mt-20">
           <div className="w-full lg:w-64 p-6 rounded-lg bg-slateColor2 shadow-lg lg:h-[600px] sticky top-4">
             <div className="flex justify-between items-center mb-6">
@@ -282,7 +356,7 @@ export default function Home() {
                   <input
                     type="range"
                     min="2000"
-                    max="5000"
+                    max="12000"
                     step="100"
                     value={minPrice}
                     onChange={(e) =>
@@ -295,7 +369,7 @@ export default function Home() {
                   <input
                     type="range"
                     min="2000"
-                    max="5000"
+                    max="12000"
                     step="100"
                     value={maxPrice}
                     onChange={(e) =>
@@ -330,7 +404,7 @@ export default function Home() {
 
             <div className="mb-6">
               <h4 className="text-sm font-medium mb-3 font-raleway">Size</h4>
-              <div className="grid grid-cols-3 gap-2 p-4 bg-white rounded-lg">
+              <div className="grid grid-cols-3 gap-2 p-4 bg-white rounded-lg font-raleway">
                 {["XXS", "XS", "S", "M", "L", "XL"].map((size) => (
                   <button
                     key={size}
@@ -358,8 +432,8 @@ export default function Home() {
             {(selectedSizes.length > 0 ||
               selectedSeason !== "ALL" ||
               priceRange[0] !== 2000 ||
-              priceRange[1] !== 5000) && (
-              <div className="mb-6 p-4 bg-white rounded-lg">
+              priceRange[1] !== 12000) && (
+              <div className="mb-6 p-4 bg-white rounded-lg ">
                 <div className="flex flex-wrap gap-2">
                   {selectedSizes.map((size) => (
                     <span
@@ -375,29 +449,26 @@ export default function Home() {
                         }
                         className="text-gray-500 hover:text-gray-700"
                       >
-                        {/* <X className="w-4 h-4" /> */}
                       </button>
                     </span>
                   ))}
                   {selectedSeason !== "ALL" && (
-                    <span className="px-2 py-1 bg-gray-100 rounded-md text-sm flex items-center gap-1 font-raleway">
+                    <span className="px-2 py-1 bg-gray-100 rounded-md text-sm flex items-center gap-1 font-raleway  ">
                       {selectedSeason}
                       <button
                         onClick={() => setSelectedSeason("ALL")}
                         className="text-gray-500 hover:text-gray-700 font-raleway"
                       >
-                        {/* <X className="w-4 h-4" /> */}
                       </button>
                     </span>
                   )}
-                  {(priceRange[0] !== 2000 || priceRange[1] !== 5000) && (
+                  {(priceRange[0] !== 2000 || priceRange[1] !== 12000) && (
                     <span className="px-2 py-1 bg-gray-100 rounded-md text-sm flex items-center gap-1">
                       ₹{priceRange[0]} - ₹{priceRange[1]}
                       <button
-                        onClick={() => handlePriceChange(2000, 5000)}
+                        onClick={() => handlePriceChange(2000, 12000)}
                         className="text-gray-500 hover:text-gray-700"
                       >
-                        {/* <X className="w-3 h-3" /> */}
                       </button>
                     </span>
                   )}
@@ -426,26 +497,29 @@ export default function Home() {
                   <BoxIcon2 className="w-[47px] h-[40px]" />
                 </button>
               </div>
-              <div className="relative">
+              <div className="relative lg:mr-12">
                 <div
                   className="flex items-center gap-2 cursor-pointer"
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 >
                   <SortIcon className="w-[16px] h-[8px]" />
                   <span className="text-gray-500 font-raleway">Sort by:</span>
+                  <div className="flex items-center gap-2">
+                    <ArrowUp/>
+                  </div>
                   <span className="font-raleway">
                     {sortOptions.find((option) => option.value === sortBy)
                       ?.label || "Relevance"}
                   </span>
                 </div>
                 {isDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 font-raleway">
+                  <div className="absolute right-0 mt-2 w-48 bg-white  z-10 font-raleway">
                     {sortOptions.map((option) => (
                       <button
                         key={option.value}
-                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
+                        className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100  ${
                           sortBy === option.value
-                            ? "bg-customRed text-white text-center"
+                            ? "bg-customRed rounded text-white text-center"
                             : ""
                         }`}
                         onClick={() => {
@@ -461,13 +535,13 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="bg-white p-4 rounded-lg shadow-sm mb-6 overflow-x-auto font-raleway">
+            <div className="bg-white p-4 rounded-lg shadow-sm mb-6 overflow-x-auto font-raleway ">
               <div className="flex gap-4 min-w-max font-raleway">
                 {seasons.map((season) => (
                   <button
                     key={season}
                     onClick={() => setSelectedSeason(season)}
-                    className={`px-4 py-2 font-raleway text-sm rounded-md whitespace-nowrap ${
+                    className={`px-4 py-2 font-raleway text-sm w-[180px] rounded-md whitespace-nowrap outline outline-black ${
                       selectedSeason === season
                         ? "bg-black text-white shadow-lg"
                         : "text-gray-600 hover:bg-gray-100"
@@ -488,11 +562,12 @@ export default function Home() {
               {paginatedCollections.map((item) => (
                 <Link href={`/collection/${item.id}`} key={item.id}>
                   <div className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200">
-                    <div className="relative pb-[100%] rounded-lg">
+                    <div className="relative pb-[100%] rounded-lg lg:mr-12 lg:ml-4">
                       <img
                         src={item.image}
-                        alt={item.name}
-                        className="absolute inset-0 w-full h-full object-cover rounded-lg"
+                        // alt={item.name}
+                        alt="item image"
+                        className="absolute inset-0 w-[307px] h-[372px] object-cover rounded-lg"
                       />
                     </div>
                     <div className="p-4">
@@ -567,7 +642,7 @@ export default function Home() {
         <h2 className="text-2xl font-bold mb-8 font-raleway ">Top Trends</h2>
         <div className="flex items-center gap-16 rounded-md">
           <Image
-            src="/trend1.svg"
+            src={trends.image}
             alt="trends"
             width={300}
             height={450}

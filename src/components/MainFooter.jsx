@@ -14,7 +14,8 @@ export default function MainFooter() {
   if(pathname==='/'){
     return null;
   }
-  const currentYear = new Date().getFullYear();
+  // const currentYear = new Date().getFullYear();
+  const currentYear=2025;
   return (
     <footer className="w-full px-6 py-8 bg-footerBgColor">
       <div className="container mx-auto">

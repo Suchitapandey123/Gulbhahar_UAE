@@ -57,20 +57,20 @@ export default function Footer() {
         </div>
         <div className="mt-5 md:mt-24">
           <div className="relative text-center">
-            <div className="flex flex-col sm:flex-row justify-center items-center lg:gap-[360px] md:gap-5 gap-5 text-sm">
+            <div className="flex flex-col sm:flex-row justify-center items-center lg:gap-[360px] md:gap-5 gap-6 text-sm -mb-6">
               <Link href="/return-policy" className="hover:underline cursor-pointer text-xl font-raleway">
                 RETURN POLICY
               </Link>
               <Link href="/terms" className="hover:underline cursor-pointer text-xl font-raleway font-extralight">
                 TERMS OF SERVICE
               </Link>
-              <Link href="/privacy" className="hover:underline cursor-pointer text-xl mb-2 font-raleway">
+              <Link href="/privacy" className="hover:underline cursor-pointer text-xl mb-2 font-raleway ">
                 PRIVACY POLICY
               </Link>
             </div>
 
             <h1
-              className={`${oldStandardTT.variable} w-full max-w-7xl  sm:text-6xl -ml-28 md:text-7xl lg:text-[220px]  tracking-[auto] sm:tracking-[auto] md:tracking-[auto] lg:tracking-[auto] xl:tracking-[auto] font-extralight stroke-black `}
+              className={`${oldStandardTT.variable} w-full max-w-7xl  sm:text-6xl -ml-28 md:text-7xl lg:text-[220px]  tracking-[auto] sm:tracking-[auto] md:tracking-[auto] lg:tracking-[auto] xl:tracking-[auto] font-extralight stroke-black text-center  `}
             >
               <span className="relative z-10 text-customRed leading-[247.2px]">G</span>
               <span className="relative z-10 text-customRed leading-[247.2px]">U</span>
