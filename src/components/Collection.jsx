@@ -10,6 +10,8 @@ import ArrowUp from "./ui/ArrowUp";
 import ArrowLeft from "./ui/ArrowLeft";
 import ArrowRight from "./ui/ArrowRight";
 import Breadcrumb from "./Breadcrumb";
+import Divider from "./ui/Divider";
+import ArrowSmallUp from "./ui/ArrowSmallUp";
 
 const collections = [
   {
@@ -336,23 +338,26 @@ export default function Home() {
       </div>
         </div>
         <div className="flex flex-col lg:flex-row gap-8 mt-20">
-          <div className="w-full lg:w-64 p-6 rounded-lg bg-slateColor2 shadow-lg lg:h-[600px] sticky top-4">
+          <div className="w-full lg:w-80 xl:w-80 p-6 rounded-lg bg-slateColor2 shadow-lg lg:h-[600px] sticky top-4">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-lg font-medium font-raleway">Filter</h3>
+              <h3 className="text-lg font-medium font-raleway xl:text-[22px]">Filter</h3>
               <button
                 onClick={clearFilters}
-                className="text-customRed text-sm hover:text-customRed flex items-center font-raleway gap-1"
+                className="text-customRed text-sm hover:text-customRed flex items-center font-raleway gap-1 xl:text-[22px]"
               >
                 Advance
               </button>
             </div>
 
-            <div className="mb-6 bg-white p-4 rounded-lg">
-              <h4 className="text-sm font-medium mb-3 font-raleway">
-                Price Range
+            <div className="mb-6 bg-white p-4 rounded-[12px] shadow-[12px] xl:w-full">
+              <div className="flex items-center justify-between">
+              <h4 className="text-sm font-medium mb-3 font-raleway xl:text-[18px]">
+                Price
               </h4>
+              <ArrowSmallUp className="xl:-mt-4"/>
+              </div>
               <div className="space-y-4">
-                <div className="flex items-center gap-4 font-raleway">
+                <div className="flex items-center  bg-accent-slateColor gap-4 font-raleway ">
                   <input
                     type="range"
                     min="2000"
@@ -385,17 +390,20 @@ export default function Home() {
                     onChange={(e) =>
                       handlePriceChange(parseInt(e.target.value), maxPrice)
                     }
-                    className="w-full px-3 py-1 border rounded-md text-sm"
+                    className="w-full px-3 py-1 border text-sm font-bold rounded-[12px] xl:text-[15px]"
                     placeholder="Min"
                   />
-                  <span className="text-gray-500">-</span>
+                  <span>
+                    <Divider/>
+                  </span>
+                  {/* <span className="text-gray-500">-</span> */}
                   <input
                     type="number"
                     value={maxPrice}
                     onChange={(e) =>
                       handlePriceChange(minPrice, parseInt(e.target.value))
                     }
-                    className="w-full px-3 py-1 border rounded-md text-sm"
+                    className="w-full px-3 py-1 border text-sm xl:text-[15px] font-bold rounded-[12px]"
                     placeholder="Max"
                   />
                 </div>
@@ -403,8 +411,8 @@ export default function Home() {
             </div>
 
             <div className="mb-6">
-              <h4 className="text-sm font-medium mb-3 font-raleway">Size</h4>
-              <div className="grid grid-cols-3 gap-2 p-4 bg-white rounded-lg font-raleway">
+              <h4 className="text-sm xl:text-[18px] font-medium mb-3 font-raleway">Size</h4>
+              <div className="grid grid-cols-3 gap-2 p-4 bg-white font-raleway xl:text-[16px] rounded-[12px]">
                 {["XXS", "XS", "S", "M", "L", "XL"].map((size) => (
                   <button
                     key={size}
@@ -417,10 +425,10 @@ export default function Home() {
                         setSelectedSizes([...selectedSizes, size]);
                       }
                     }}
-                    className={`px-3 py-1 text-sm border rounded-md ${
+                    className={`px-3 py-1 text-sm border rounded-[12px] xl:text-[16px] xl:h-[34px] xl:w-[62px]hover:border-customPaleYellow ${
                       selectedSizes.includes(size)
                         ? "bg-black text-white border-black"
-                        : "border-gray-300 hover:border-black"
+                        : "border-gray-300 hover:border-customPaleYellow"
                     }`}
                   >
                     {size}
@@ -519,7 +527,7 @@ export default function Home() {
                         key={option.value}
                         className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100  ${
                           sortBy === option.value
-                            ? "bg-customRed rounded text-white text-center"
+                            ? "bg-customRed rounded text-white text-center borber-b"
                             : ""
                         }`}
                         onClick={() => {

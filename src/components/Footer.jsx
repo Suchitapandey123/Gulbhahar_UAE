@@ -64,7 +64,7 @@ export default function Footer() {
               <Link href="#" className="hover:underline cursor-pointer text-xl font-raleway font-extralight">
                 TERMS OF SERVICE
               </Link>
-              <Link href="#" className="hover:underline cursor-pointer text-xl lg:mb-2 font-raleway ">
+              <Link href="#" className="hover:underline cursor-pointer text-xl lg:mb-2 font-raleway xl:ml-16 ">
                 PRIVACY POLICY
               </Link>
             </div>
