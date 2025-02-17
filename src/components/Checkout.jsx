@@ -43,12 +43,12 @@ export default function Checkout() {
   const total = subtotal + shipping - Discount
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 ">
-      <div className='lg:mt-10 mt-8 lg:ml-10'>
+    <div className="min-h-screen py-8 lg:ml-12 ">
+      <div className='lg:mt-10 mt-8 '>
         <Breadcrumb/>
       </div>
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto lg:mt-10 font-raleway lg:ml-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-8xl mx-auto lg:mt-10 font-raleway lg:ml-2">
           <div className="lg:col-span-2">
             <div className="bg-white p-6 rounded-lg shadow mb-6">
               <h2 className="text-xl font-semibold mb-6 font-raleway">Shipping Information</h2>
@@ -138,7 +138,7 @@ export default function Checkout() {
               <h2 className="text-xl font-semibold mb-6">Shipping Method</h2>
               <div className="space-y-3">
                 {Object.entries(shippingOptions).map(([key, { price, days }]) => (
-                  <label key={key} className="flex items-center space-x-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                  <label key={key} className="flex items-center space-x-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50 accent-black">
                     <input
                       type="radio"
                       name="shipping"
@@ -160,7 +160,7 @@ export default function Checkout() {
             </div>
           </div>
 
-          <div className="lg:col-span-1 font-raleway ">
+          <div className="lg:col-span-1 font-raleway lg:mr-12 ">
             <div className="bg-white p-6 rounded-lg shadow h-fit  top-8 ">
               <h2 className="text-xl font-semibold mb-6">Your Order</h2>
               
@@ -168,7 +168,7 @@ export default function Checkout() {
                 {cartItems.map((item) => (
                   <div key={item.id} className="flex items-center space-x-4">
                     <Image
-                      src={item.image}
+                      src={item.image || null}
                       // alt={item.name}
                       alt='item-image'
                       width={60}
@@ -189,8 +189,8 @@ export default function Checkout() {
                 ))}
 
                 <div className="border-t pt-4 space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-slateFour">Subtotal</span>
+                  <div className="flex justify-between ">
+                    <span className="text-slateFour ">Subtotal</span>
                     <span>INR {subtotal.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">

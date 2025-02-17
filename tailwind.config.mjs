@@ -26,6 +26,8 @@ export default {
 				replyColor:'#E52836',
 				slateColorThree:'#9292920A',
 				slateFour:'#929292',
+				digitColor:'#F5DFA4BF',
+				navColor:'#D9D9D9',
 				fontFamily: {
 					'old-standard': ['Old Standard TT', 'serif'],
 				},
@@ -71,7 +73,8 @@ export default {
   		fontFamily: {
   			raleway: [
   				'Raleway',
-  				'sans-serif'
+  				'sans-serif',
+					'Old Standard TT'
   			]
   		},
   		borderRadius: {

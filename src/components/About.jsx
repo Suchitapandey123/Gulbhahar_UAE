@@ -10,11 +10,13 @@ export default function About() {
   const [imageError2, setImageError2] = useState(false);
 
   const img1='/22.svg'
+  const img2='/7.svg'
+  const img3='/8.svg'
 
   return (
     <main className="min-h-screen p-4 md:p-8 lg:p-4">
-      <div className="max-w-7xl mx-auto">
-        <header className="flex justify-between items-center mt-20 mb-16">
+      <div className="max-w-7xl mx-auto -mt-32 lg:mt-1">
+        <header className="flex justify-between items-center lg:mt-20 lg:mb-16 -mt-12">
           <h1 className="text-3xl lg:text-5xl md:text-4xl font-bold tracking-tight sm:mt-2 font-raleway text-customRed lg:-ml-10 lg:mt-16  ">
             ABOUT US
           </h1>
@@ -25,25 +27,25 @@ export default function About() {
             </button>
           </Link>
         </header>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:gap-8 lg:mb-16">
           <div className="relative aspect-[4/3] mt-24">
-            <div className="absolute inset-0 -z-20 mt-12">
+            <div className="absolute inset-0 -z-20 lg:mt-12 mt-10">
               <Image
                 src={img1 || null}
                 alt="Background design"
-                className="lg:ml-32 relative -top-20 sm:-top-40 "
+                className="lg:ml-32 relative -top-20 sm:-top-40 ml-3 object-cover"
                 width={500}
                 height={400}
               />
             </div>
             {!imageError1 ? (
               <Image
-                src="/7.svg"
+                src={img2 || null}
                 alt="Craftsmanship showcase"
                 width={500}
                 height={600}
                 // className="object-cover transition-opacity rounded-lg shadow-lg stroke-black"
-                className="-ml-20"
+                className="lg:-ml-20  lg:mt-1  lg:p-1 mt-12 object-cover"
                 priority
                 onError={() => setImageError1(true)}
               />
@@ -67,7 +69,7 @@ export default function About() {
                 GULBHAHAR COMBINES EXPERT CRAFTSMANSHIP WITH A COMMITMENT TO
                 SUSTAINABILITY AND MODERN DESIGN
               </p>
-              <h2 className="font-old-standard relative md:text-8xl tracking-wider lg:top-40 text-traditionColor z-10  lg:-ml-16 font-bold lg:text-[190px]">
+              <h2 className="font-old-standard relative md:text-8xl tracking-wider lg:top-40 text-traditionColor z-10  lg:-ml-16 font-bold lg:text-[190px] text-[50px] -ml-7 -mb-10">
                 TRADITIONS
               </h2>
             </div>
@@ -75,10 +77,11 @@ export default function About() {
           <div className="relative aspect-square  order-1 md:order-2 lg:-mt-96 lg:ml-52">
             {!imageError2 ? (
               <Image
-                src="/8.svg"
+                src={img3 || null}
                 alt="Traditional craftsmanship"
                 width={500}
                 height={600}
+                className="object-cover"
                 onError={() => setImageError2(true)}
               />
             ) : (

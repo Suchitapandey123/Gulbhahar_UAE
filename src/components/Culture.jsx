@@ -1,49 +1,58 @@
 "use client";
 import Image from "next/image";
 export default function Culture() {
+  const img1='/18.svg'
+    const img2='/19.svg'
+    const img3='/20.svg'
+    const img4='/21.svg'
+    const culture='/culture.svg'
   return (
-    <main className="min-h-screen  flex items-center  justify-center bg-white relative overflow-hidden lg:mt-20 mb-6">
+
+    <main className="min-h-screen lg:w-[1559px] lg:-ml-4 flex items-center  justify-center bg-white relative overflow-hidden lg:mt-20 lg:mb-6 ">
       <div className="relative">
-        <div className="absolute lg:left-[50%]  -translate-y-1/2 z-0 top-56 ">
+        <div className="absolute lg:left-[50%]  -translate-y-1/2 z-0 lg:top-56 ">
           <Image
-            src="/18.svg"
+            src={img1 || null}
             alt="Background block 1"
             width={350}
             height={350}
-            className=" rounded-lg shadow-lg"
+            className=" rounded-lg shadow-lg lg:w-[300px] lg:h-[300px] w-full h-full object-cover"
           />
         </div>
         <div className="absolute lg:top-56 -translate-y-1/2 z-10">
           <Image
-            src="/19.svg"
+            src={img2 || null}
             alt="Background block 2"
             width={350}
             height={386}
-            className="rounded-lg shadow-lg w-full h-full"
+             className=" rounded-lg shadow-lg lg:w-[300px] lg:h-[300px] w-full h-full object-cover"
           />
         </div>
+        <div className="">
         <Image
-          src="/culture.svg"
+          src={culture || null}
           width={1600}
-          height={300}
+          height={400}
           alt="culture_img"
-          className="relative lg:top-56 z-50"
+          className="relative lg:top-56 z-10"
         />
-        <div className="relative lg:top-60 left-[24%]  -translate-y-1/2 z-0">
+        </div>
+        <div className="relative lg:top-56 left-[24%]  -translate-y-1/2 z-0">
           <Image
-            src="/20.svg"
+            src={img3 || null}
             alt="Foreground block 1"
             width={350}
             height={386}
+            className=" rounded-lg shadow-lg lg:w-[300px] lg:h-[300px] w-full h-full object-cover"
           />
         </div>
-        <div className="absolute right-1 z-0 lg:top-[74%] -translate-y-1/2  ">
+        <div className="absolute right-1 z-0 lg:top-[87%] -translate-y-1/2  ">
           <Image
-            src="/21.svg"
+            src={img4 || null}
             alt="Foreground block 2"
             width={350}
             height={386}
-            className="bg-gray-200 top-10 shadow-lg rounded-lg"
+             className=" rounded-lg shadow-lg lg:w-[300px] lg:h-[300px] w-full h-full object-cover"
           />
         </div>
       </div>
