@@ -38,7 +38,7 @@ export default function NewCollection() {
   const collections = [
     {
       id: 1,
-      image: "/4.svg",
+      image: "/5.svg",
       name: "Noorani (Jutti)",
       price: "₹ 5,000",
     },
@@ -56,7 +56,7 @@ export default function NewCollection() {
     },
     {
       id: 4,
-      image: "/4.svg",
+      image: "/5.svg",
       name: "Noorani (Jutti)",
       price: "₹ 5,000",
     },
@@ -74,7 +74,7 @@ export default function NewCollection() {
     },
     {
       id: 7,
-      image: "/4.svg",
+      image: "/5.svg",
       name: "Noorani (Jutti)",
       price: "₹ 5,000",
     },
@@ -95,15 +95,15 @@ export default function NewCollection() {
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden mt-6 lg:mt-24">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="lg:max-w-[1400px] mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center lg:mb-20 mb-4">
-          <h1 className="lg:text-[60px] font-bold tracking-tight text-gray-900 font-raleway text-[23px]">
+          <h1 className="lg:text-5xl font-bold tracking-tight text-gray-900 font-raleway text-2xl">
             NEW COLLECTION
           </h1>
           <Link href="/collection">
-          <button className="flex items-center lg:gap-5 gap-2 text-gray-900 hover:text-gray-600 lg:text-2xl transition-colors font-raleway -mt-6 tracking-wider w-[186] h-[33px] text-md">
+          <button className="flex items-center lg:gap-3 gap-2 text-gray-900 hover:text-gray-600 lg:text-2xl transition-colors font-raleway -mt-6 tracking-wider w-[186] h-[33px] text-md">
             SEE MORE
-           <ArrowVector className="lg:w-[20px] lg:h-[20px] lg:mb-3 w-3 h-3 mb-2"/>
+           <ArrowVector className="lg:w-[20px] lg:h-[20px] lg:mb-3 w-3 h-3 lg:mt-2"/>
           </button>
           </Link>
         </div>
@@ -111,16 +111,16 @@ export default function NewCollection() {
         <div className="relative">
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex gap-6 sm:gap-8">
-            <div className="absolute top-[80%] left-80 transform -translate-x-1/2 -translate-y-1/2 text-[200px] font-bold z-20 font-raleway text-customYellow opacity-60 ">
+            <div className="lg:absolute lg:top-[80%] lg:left-80 transform -translate-x-1/2 -translate-y-1/2 lg:text-[250px] font-bold z-20 font-raleway text-customYellow opacity-60 ">
                 {firstTwoDigitsOfYear}
               </div>
-              <div className="absolute  right-16 top-[10%] transform -translate-x-1/2 -translate-y-1/2 text-[200px] font-bold z-10 font-raleway text-customYellow opacity-55">
+              <div className="lg:absolute lg:right-10 lg:top-[12%] transform -translate-x-1/2 -translate-y-1/2 lg:text-[220px] font-bold -z-10 font-raleway text-digitColor">
                 {lastTwoDigitsOfYear}
               </div>
               {collections.map((item) => (
                 <div
                   key={item.id}
-                  className="flex-shrink-0 w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 group relative"
+                  className="flex-shrink-0 w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 group relative mt-20 "
                 >
                   <div className="aspect-[3/4] overflow-hidden">
                     <Image
@@ -128,8 +128,7 @@ export default function NewCollection() {
                       alt='collection-image'
                       width={360}
                       height={468}
-                      // objectFit="cover"
-                      className=" mx-auto overflow-x-hidden lg:w-[360px] lg:h-[468px] object-cover"
+                      className="w-full h-full object-cover"
                     />
                   </div>
                   <div className="mt-3 flex justify-between">

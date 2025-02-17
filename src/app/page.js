@@ -1,7 +1,9 @@
 import HomePage from "./homepage/page";
 import Footer from "@/components/Footer";
+import { cookies } from "next/headers";
 
-export default function Home(){
+export default async function Home(){
+  const cookieStore=await cookies();
   return(
     <>
     <HomePage/>
