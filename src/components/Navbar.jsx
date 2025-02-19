@@ -32,12 +32,12 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed w-full  z-50 ${
+      className={`fixed w-full z-50 ${
         isScrolled ? "bg-white shadow-md" : "bg-transparent"
       }`}
     >
-      <div className="lg:max-w-full mx-auto px-2 sm:px-6 lg:px-28 xl:px-20 overflow-hidden">
-        <div className="flex items-center justify-center h-12 md:h-20 overflow-hidden">
+      <div className="lg:max-w-full mx-auto px-2 sm:px-6 lg:px-28 xl:px-20">
+        <div className="flex items-center justify-center h-12 md:h-20 overflow-visible">
           <div className="flex items-center md:hidden">
             <button
               onClick={toggleMenu}
@@ -70,7 +70,7 @@ export default function Navbar() {
               <div>
                 <div>
                   {showMegaMenu && (
-                    <div className="lg:absolute left-0 top-full lg:w-[1500px] bg-white shadow-lg p-8 grid grid-cols-4 gap-3 transition-all duration-200 ease-in-out font-raleway">
+                    <div className="lg:absolute left-0 top-full lg:w-[1550px] xl:-ml-20  bg-white shadow-lg p-8 grid grid-cols-4 gap-3 transition-all duration-200 ease-in-out font-raleway">
                       <div className="space-y-2">
                         <h3 className="text-lg border-b border-customRed inline-block pb-1 font-bold">
                           Bridal Jutti

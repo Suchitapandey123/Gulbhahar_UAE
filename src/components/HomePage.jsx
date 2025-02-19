@@ -9,7 +9,6 @@ import OurShowCase from "@/components/OurShowCase";
 import Link from "next/link";
 import Popular from "@/components/Popular";
 import ArrowVector from "./ui/ArrowVector";
-// import img1 from "../../public/1.svg"
 
 const oldStandardTT = Old_Standard_TT({
   weight: "700",
@@ -26,15 +25,15 @@ export default function HomePage() {
     <main className=" pt-16 md:pt-20 w-full mx-auto overflow-hidden">
       <div className="lg:max-w-full container mx-auto  md:py-12 overflow-hidden">
         {/* px-3 py-6 */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8  mx-auto overflow-hidden ">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8  mx-auto overflow-hidden">
           {/* lg:gap-24 gap-8  2xl:gap-12 sm:gap-8 lg:ml-16 2xl:ml-1 */}
           <div className="space-y-12">
             <div className="relative w-full lg:ml-6 aspect-[4/3]">
               {/* mx-auto  */}
-              <div className="absolute inset-0 flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center justify-center xl:ml-4 ml-10">
                 {/* w-full lg:ml-2 */}
                 <Image
-                  src={img1 || "/1.svg"} 
+                  src="/1.svg" 
                   alt="GulBhahar"
                   width={410}
                   height={349}
@@ -42,16 +41,16 @@ export default function HomePage() {
                 />
               </div>
             </div>
-            <p className="uppercase tracking-widest lg:text-2xl sm:text-left font-extralight text-center lg:ml-8 xl:ml-16">
+            <p className="uppercase tracking-widest lg:text-2xl sm:text-left font-extralight text-center lg:ml-8 xl:ml-20">
               Gulbhahar combines
               <span className="block xl:mt-2 mb-4">craftsmanship</span>
             </p>
           </div>
           <div className="md:col-span-2 lg:col-span-1 relative flex flex-col items-center justify-center">
-            <div className="relative w-full aspect-[3/4] lg:mt-4 ">
+            <div className="relative w-full aspect-[3/4] lg:mt-4 ml-10 ">
               <div className="absolute inset-0 flex items-center justify-center w-full lg:m-auto lg:mt-6 xl:-mt-6">
                 <Image
-                  src={img2 ? img2 : undefined}
+                  src="/2.svg"
                   alt="GulBhahar"
                   width={410}
                   height={649}
@@ -68,7 +67,7 @@ export default function HomePage() {
             <div className="relative w-full aspect-[4/3] lg:mr-40">
               <div className="absolute inset-0 flex items-center justify-center w-full lg:ml-12 xl:-mt-12 lg:top-8">
                 <Image
-                  src={img3 ? img3 : undefined}
+                 src="/3.svg"
                   alt="GulBhahar"
                   width={410}
                   height={349}

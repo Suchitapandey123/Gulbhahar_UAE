@@ -94,7 +94,8 @@ export default function NewCollection() {
   const lastTwoDigitsOfYear = 25;
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden mt-6 lg:mt-24">
+    <div className="min-h-screen bg-white  mt-6 lg:mt-24">
+      {/* overflow-x-hidden  */}
       <div className="lg:max-w-[1400px] mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center lg:mb-20 mb-4">
           <h1 className="lg:text-5xl font-bold tracking-tight text-gray-900 font-raleway text-2xl mt-2">
@@ -120,7 +121,7 @@ export default function NewCollection() {
               {collections.map((item) => (
                 <div
                   key={item.id}
-                  className="flex-shrink-0 w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 group relative mt-20"
+                  className="flex-shrink-0 w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 group relative lg:mt-20 gap-2 mt-4 lg:-ml-1 -ml-16"
                 >
                   <div className="aspect-[3/4] overflow-hidden ">
                     <Image

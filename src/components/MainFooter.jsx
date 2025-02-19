@@ -94,12 +94,12 @@ export default function MainFooter() {
               <h3 className="text-sm font-semibold uppercase tracking-wider font-raleway">SUPPORT</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link href="#" className="text-sm text-gray-600 hover:text-gray-900 font-raleway">
+                  <Link href="/FAQ" className="text-sm text-gray-600 hover:text-gray-900 font-raleway">
                     FAQs
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-sm text-gray-600 hover:text-gray-900 font-raleway">
+                  <Link href="/cookie" className="text-sm text-gray-600 hover:text-gray-900 font-raleway">
                     Cookie Policy
                   </Link>
                 </li>

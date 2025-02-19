@@ -1,136 +1,180 @@
-'use client';
+"use client"
 
-import { useState } from 'react';
+import { useState } from "react"
 
-export default function Contact() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
-  });
-
-  const [errors, setErrors] = useState({
-    name: '',
-    email: '',
-    message: '',
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const validateForm = () => {
-    const newErrors = {
-      name: '',
-      email: '',
-      message: '',
-    };
-
-    let isValid = true;
-    if (!formData.name) {
-      newErrors.name = 'Name is required';
-      isValid = false;
-    }
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-      isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is not valid';
-      isValid = false;
-    }
-    if (!formData.message) {
-      newErrors.message = 'Message is required';
-      isValid = false;
-    }
-
-    setErrors(newErrors);
-
-    return isValid;
-  };
+export default function ContactPage() {
+  const [queryType, setQueryType] = useState("")
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    if (validateForm()) {
-      console.log('Form Submitted:', formData);
-      setFormData({
-        name: '',
-        email: '',
-        message: '',
-      });
-    }
-  };
+    e.preventDefault()
+   
+  }
 
   return (
-    <section className="max-w-3xl mx-auto py-12 px-6 sm:px-8">
-      <h2 className="text-3xl font-bold text-center mb-6 mt-5">Contact Us</h2>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="flex flex-col">
-          <label htmlFor="name" className="text-sm font-medium text-gray-700">
-            Full Name
-          </label>
-          <input
-            id="name"
-            name="name"
-            type="text"
-            value={formData.name}
-            onChange={handleChange}
-            className={`mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              errors.name ? 'border-red-500' : ''
-            }`}
-            placeholder="Enter your full name"
-          />
-          {errors.name && <p className="text-sm text-red-500 mt-1">{errors.name}</p>}
-        </div>
+    <div className="container mx-auto px-4 py-12 font-raleway">
+      <div className="mb-8 text-center font-raleway mt-16">
+        <h1 className="text-5xl font-semibold mb-2">Contact & Support</h1>
+        <p className="text-black">Interested in business sales? Message us to our team</p>
+      </div>
 
-        <div className="flex flex-col">
-          <label htmlFor="email" className="text-sm font-medium text-gray-700">
-            Email Address
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            className={`mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              errors.email ? 'border-red-500' : ''
-            }`}
-            placeholder="Enter your email"
-          />
-          {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
-        </div>
+      <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+        <div className="space-y-6">
+          <form onSubmit={handleSubmit}>
+            <div className="space-y-2">
+              <label className="block text-lg font-semibold mb-1">Contact us</label>
+              <div className="relative">
+                <button
+                  type="button"
+                  className="w-full px-4 py-2 text-left border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-gray-200"
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                >
+                  {queryType || "Select query type"}
+                </button>
+                {isDropdownOpen && (
+                  <div className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg">
+                    <div
+                      className="py-2 px-4 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => {
+                        setQueryType("Sales Inquiry")
+                        setIsDropdownOpen(false)
+                      }}
+                    >
+                      Sales Inquiry
+                    </div>
+                    <div
+                      className="py-2 px-4 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => {
+                        setQueryType("Technical Support")
+                        setIsDropdownOpen(false)
+                      }}
+                    >
+                      Technical Support
+                    </div>
+                    <div
+                      className="py-2 px-4 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => {
+                        setQueryType("General Question")
+                        setIsDropdownOpen(false)
+                      }}
+                    >
+                      General Question
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
 
-        <div className="flex flex-col">
-          <label htmlFor="message" className="text-sm font-medium text-gray-700">
-            Your Message
-          </label>
-          <textarea
-            id="message"
-            name="message"
-            value={formData.message}
-            onChange={handleChange}
-            className={`mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              errors.message ? 'border-red-500' : ''
-            }`}
-            placeholder="Write your message here"
-            rows="6"
-          ></textarea>
-          {errors.message && <p className="text-sm text-red-500 mt-1">{errors.message}</p>}
-        </div>
+            <div className="space-y-2 mt-6">
+              <label htmlFor="full-name" className="block text-sm font-medium mb-1">
+                Full Name*
+              </label>
+              <input
+                id="full-name"
+                type="text"
+                placeholder="Enter your full name"
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-200"
+                required
+              />
+            </div>
 
-        <div className="text-center">
-          <button
-            type="submit"
-            className="px-6 py-3 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"
-          >
-            Send Message
-          </button>
+            <div className="space-y-2 mt-6">
+              <label htmlFor="email" className="block text-sm font-medium mb-1">
+                Email address*
+              </label>
+              <input
+                id="email"
+                type="email"
+                placeholder="Enter your email address"
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-200"
+                required
+              />
+            </div>
+
+            <div className="space-y-2 mt-6">
+              <label htmlFor="phone" className="block text-sm font-medium mb-1">
+                Phone number*
+              </label>
+              <input
+                id="phone"
+                type="tel"
+                placeholder="Enter your phone number"
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-200"
+                required
+              />
+            </div>
+
+            <div className="space-y-2 mt-6">
+              <label htmlFor="location" className="block text-sm font-medium mb-1">
+                Location
+              </label>
+              <input
+                id="location"
+                type="text"
+                placeholder="Enter your location"
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-200"
+              />
+            </div>
+
+            <div className="space-y-2 mt-6">
+              <label htmlFor="message" className="block text-sm font-medium mb-1">
+                Message
+              </label>
+              <textarea
+                id="message"
+                placeholder="Leave us a message"
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-200 min-h-[120px] resize-y"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full mt-6 px-4 py-2 bg-black text-white rounded-[12px] hover:bg-slateFour transition-colors"
+            >
+              Send message
+            </button>
+          </form>
         </div>
-      </form>
-    </section>
-  );
+        <div className="space-y-8">
+          <div>
+            <h2 className="font-semibold text-lg mb-1">Chat to sales</h2>
+            <p className="text-sm text-black mb-1">Interested in business sales? Speak to our sales team</p>
+            <a href="mailto:sales@gulbhahar.com" className="text-sm text-black font-semibold hover:underline">
+              sales@gulbhahar.com
+            </a>
+          </div>
+
+          <div>
+            <h2 className="font-semibold text-lg mb-1">Email support</h2>
+            <p className="text-sm text-black mb-1">Interested in business sales? Speak to our sales team</p>
+            <a href="mailto:support@gulbhahar.com" className="text-sm hover:underline text-black font-semibold">
+              support@gulbhahar.com
+            </a>
+          </div>
+
+          <div>
+            <h2 className="font-semibold mb-1">Call us</h2>
+            <p className="text-sm text-gray-600 mb-1">Mon - Fri, 9:00 AM - 5:00 PM (UTC/GMT + 05:30)</p>
+            <div className="space-y-1 text-black font-semibold">
+              <a href="tel:+919878543210" className="text-sm block hover:underline">
+                +91 9876543210
+              </a>
+              <a href="tel:+919878543210" className="text-sm block hover:underline">
+                +91 9876543210
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <h2 className="font-semibold mb-1">Office Address</h2>
+            <p className="text-sm mb-1">S-12, Rajouri Garden, New Delhi-110079</p>
+            <a href="#" className="text-sm hover:underline text-black">
+              Locate on map
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
+
