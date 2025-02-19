@@ -32,12 +32,12 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed w-full z-50 ${
+      className={`fixed w-full  z-50 ${
         isScrolled ? "bg-white shadow-md" : "bg-transparent"
       }`}
     >
-      <div className="lg:max-w-full mx-auto px-2 sm:px-6 lg:px-28 xl:px-20">
-        <div className="flex items-center justify-center h-12 md:h-20 overflow-visible">
+      <div className="lg:max-w-full mx-auto px-2 sm:px-6 lg:px-28 xl:px-20 overflow-hidden">
+        <div className="flex items-center justify-center h-12 md:h-20 overflow-hidden">
           <div className="flex items-center md:hidden">
             <button
               onClick={toggleMenu}

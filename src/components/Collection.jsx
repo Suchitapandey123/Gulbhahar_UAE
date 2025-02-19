@@ -650,36 +650,32 @@ export default function Home() {
         <h2 className="text-2xl font-bold mb-8 font-raleway ">Top Trends</h2>
         <div className="flex items-center gap-16 rounded-md">
           <Image
-            src={trends.image}
+            src="/trend1.svg"
             alt="trends"
             width={300}
             height={450}
-            objectFit="cover"
-            className="bg-slateColor rounded-md"
+            className="bg-slateColor rounded-md object-cover"
           />
           <Image
             src="/trend1.svg"
             alt="trends"
             width={300}
             height={450}
-            objectFit="cover"
-            className="bg-slateColor"
+            className="bg-slateColor object-cover"
           />
           <Image
             src="/trend1.svg"
             alt="trends"
             width={300}
             height={450}
-            objectFit="cover"
-            className="bg-slateColor"
+            className="bg-slateColor object-cover"
           />
           <Image
             src="/trend1.svg"
             alt="trends"
             width={300}
             height={450}
-            objectFit="cover"
-            className="bg-slateColor"
+            className="bg-slateColor object-cover"
           />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 font-raleway mt-16">

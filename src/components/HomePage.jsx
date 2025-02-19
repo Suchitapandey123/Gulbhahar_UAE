@@ -9,6 +9,7 @@ import OurShowCase from "@/components/OurShowCase";
 import Link from "next/link";
 import Popular from "@/components/Popular";
 import ArrowVector from "./ui/ArrowVector";
+// import img1 from "../../public/1.svg"
 
 const oldStandardTT = Old_Standard_TT({
   weight: "700",
@@ -22,23 +23,23 @@ export default function HomePage() {
   const img3 = "/3.svg";
 
   return (
-    <main className="pt-16 md:pt-20 w-full">
-      <div className="lg:max-w-full container mx-auto px-3 py-6 md:py-12 overflow-hidden">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 lg:gap-24 gap-8 2xl:gap-12 sm:gap-8 lg:ml-16 2xl:ml-1 ">
+    <main className=" pt-16 md:pt-20 w-full mx-auto overflow-hidden">
+      <div className="lg:max-w-full container mx-auto  md:py-12 overflow-hidden">
+        {/* px-3 py-6 */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8  mx-auto overflow-hidden ">
+          {/* lg:gap-24 gap-8  2xl:gap-12 sm:gap-8 lg:ml-16 2xl:ml-1 */}
           <div className="space-y-12">
-            <div className="relative w-full lg:ml-6 aspect-[4/3] mx-auto">
-              <div className="absolute inset-0 flex items-center justify-center w-full lg:ml-2">
-                {img1 && img1 !== "" ? (
-                  <Image
-                    src={img1}
-                    alt="GulBhahar"
-                    width={410}
-                    height={349}
-                    className="object-cover"
-                  />
-                ) : (
-                  <p>Image not available</p>
-                )}
+            <div className="relative w-full lg:ml-6 aspect-[4/3]">
+              {/* mx-auto  */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                {/* w-full lg:ml-2 */}
+                <Image
+                  src={img1 || "/1.svg"} 
+                  alt="GulBhahar"
+                  width={410}
+                  height={349}
+                  className="object-cover"
+                />
               </div>
             </div>
             <p className="uppercase tracking-widest lg:text-2xl sm:text-left font-extralight text-center lg:ml-8 xl:ml-16">
@@ -47,12 +48,11 @@ export default function HomePage() {
             </p>
           </div>
           <div className="md:col-span-2 lg:col-span-1 relative flex flex-col items-center justify-center">
-            <div className="relative w-full aspect-[3/4] ">
-              <div className="absolute inset-0 flex items-center justify-center w-full lg:m-auto lg:mt-6 xl:mt-1">
+            <div className="relative w-full aspect-[3/4] lg:mt-4 ">
+              <div className="absolute inset-0 flex items-center justify-center w-full lg:m-auto lg:mt-6 xl:-mt-6">
                 <Image
-                  src={img2 || null}
+                  src={img2 ? img2 : undefined}
                   alt="GulBhahar"
-                  // objectFit="cover"
                   width={410}
                   height={649}
                   className="object-cover"
@@ -66,11 +66,10 @@ export default function HomePage() {
               <span className="block xl:mt-2">CRAFTMANSHIP</span>
             </p>
             <div className="relative w-full aspect-[4/3] lg:mr-40">
-              <div className="absolute inset-0 flex items-center justify-center w-full lg:ml-12 xl:mt-1 lg:mt-12">
+              <div className="absolute inset-0 flex items-center justify-center w-full lg:ml-12 xl:-mt-12 lg:top-8">
                 <Image
-                  src={img3 || null}
-                  alt="Gulbhahar"
-                  // objectFit="cover"
+                  src={img3 ? img3 : undefined}
+                  alt="GulBhahar"
                   width={410}
                   height={349}
                   className="object-cover"

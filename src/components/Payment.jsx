@@ -209,7 +209,7 @@ export default function PaymentPage() {
             </div>
             <button
             onClick={handleTransaction}
-             className="mt-6 w-full rounded-[12px] px-4 py-2 bg-slateFour">
+             className="mt-6 w-full lg:rounded-[12px] sm:rounded-[12px] px-4 py-2 bg-slateFour">
               Continue to payment
             </button>
 

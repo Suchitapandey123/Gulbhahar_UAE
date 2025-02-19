@@ -50,9 +50,15 @@ export default function Footer() {
             </Link>
           </div>
           <div className="flex justify-center items-center gap-4 lg:gap-2 lg:-ml-24 mt-6 sm:mt-0 xl:ml-12 ">
-            <Image href="./foot.svg" className="h-32 w-20 bg-slateColor text-center rounded-md"/>
-            <Image href="./foot2.svg" className="h-32 w-20 bg-slateColor text-center rounded-md  pt-10"/>
-            <Image href="./foot3.svg" className="h-32 w-20 bg-slateColor text-center rounded-md  pt-10"/>
+            <Image
+             height={200}
+             width={200}
+              src="./foot.svg"
+               alt="foot-image" className="h-32 w-20 bg-slateColor text-center rounded-md"/>
+            <Image  height={200}
+             width={200} src="./foot2.svg" alt="foot-image" className="h-32 w-20 bg-slateColor text-center rounded-md  pt-10"/>
+            <Image height={200}
+             width={200} src="./foot3.svg" alt="foot-image" className="h-32 w-20 bg-slateColor text-center rounded-md  pt-10"/>
           </div>
         </div>
         <div className="lg:mt-5 md:mt-24 mt-1">

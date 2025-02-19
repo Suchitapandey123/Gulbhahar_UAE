@@ -124,7 +124,7 @@ export default function NewCollection() {
                 >
                   <div className="aspect-[3/4] overflow-hidden ">
                     <Image
-                      src={item.image || null}
+                      src={item.image || undefined}
                       alt='collection-image'
                       width={360}
                       height={468}
