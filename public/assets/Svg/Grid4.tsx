@@ -1,0 +1,49 @@
+import * as React from "react";
+const Grid4 = (props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>) => (
+  <svg
+    width={22}
+    height={22}
+    viewBox="0 0 22 22"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <rect
+      x={0.6}
+      y={0.6}
+      width={8.95385}
+      height={8.95385}
+      rx={1.4}
+      stroke="black"
+      strokeWidth={1.2}
+    />
+    <rect
+      x={12.4457}
+      y={0.6}
+      width={8.95385}
+      height={8.95385}
+      rx={1.4}
+      stroke="black"
+      strokeWidth={1.2}
+    />
+    <rect
+      x={0.6}
+      y={12.4461}
+      width={8.95385}
+      height={8.95385}
+      rx={1.4}
+      stroke="black"
+      strokeWidth={1.2}
+    />
+    <rect
+      x={12.4457}
+      y={12.4461}
+      width={8.95385}
+      height={8.95385}
+      rx={1.4}
+      stroke="black"
+      strokeWidth={1.2}
+    />
+  </svg>
+);
+export default Grid4;
