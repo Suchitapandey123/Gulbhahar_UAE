@@ -1,7 +1,7 @@
 "use client";
 import { SetStateAction, useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronUp, Grid, List, SlidersHorizontal, X, Star, Heart, ShoppingBag } from 'lucide-react';
-import img11 from "../../../../public/Image/About3.png"
+import img11 from "../../../public/Image/About3.png"
 import Image from "next/image";
 
 

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, ChevronDown, Search, ShoppingBag } from 'lucide-react';
+import { Menu, X, ChevronDown, Search, ShoppingBag, User, LogOut, Settings, Package } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import SearchPopup from './SearchPopup'; // Import the new SearchPopup component
@@ -11,12 +11,34 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCollectionDropdownOpen, setIsCollectionDropdownOpen] = useState(false);
   const [isMobileCollectionOpen, setIsMobileCollectionOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false); // New state for search popup
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false); // New state for user dropdown
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Authentication state
+  const [user, setUser] = useState({ name: '', email: '' }); // User data
+  
   const pathname = usePathname();
   const router = useRouter();
   const dropdownRef = useRef(null);
+  const userDropdownRef = useRef(null); // New ref for user dropdown
   const hoverTimeoutRef = useRef(null);
+  const userHoverTimeoutRef = useRef(null); // New timeout ref for user dropdown
+
+  // Simulate user authentication check on component mount
+  useEffect(() => {
+    // This would typically check localStorage, cookies, or make an API call
+    const checkAuthStatus = () => {
+      const token = localStorage.getItem('authToken');
+      const userData = localStorage.getItem('userData');
+      
+      if (token && userData) {
+        setIsLoggedIn(true);
+        setUser(JSON.parse(userData));
+      }
+    };
+
+    checkAuthStatus();
+  }, []);
 
   // Smooth scroll detection with throttling
   useEffect(() => {
@@ -35,11 +57,14 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsCollectionDropdownOpen(false);
+      }
+      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target)) {
+        setIsUserDropdownOpen(false);
       }
     };
 
@@ -52,7 +77,8 @@ const Navbar = () => {
     if (!isMenuOpen) {
       setIsCollectionDropdownOpen(false);
       setIsMobileCollectionOpen(false);
-      setIsSearchOpen(false); // Close search when opening mobile menu
+      setIsSearchOpen(false);
+      setIsUserDropdownOpen(false); // Close user dropdown when opening mobile menu
     }
   };
 
@@ -67,14 +93,34 @@ const Navbar = () => {
   const toggleSearchPopup = () => {
     setIsSearchOpen(!isSearchOpen);
     if (isMenuOpen) {
-      setIsMenuOpen(false); // Close mobile menu if open
+      setIsMenuOpen(false);
     }
+  };
+
+  const toggleUserDropdown = () => {
+    setIsUserDropdownOpen(!isUserDropdownOpen);
+  };
+
+  // Handle login (this would typically redirect to login page or open a modal)
+  const handleLogin = () => {
+    // Simulate login - in real app, this would redirect to login page
+    router.push('/login');
+  };
+
+  // Handle logout
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userData');
+    setIsLoggedIn(false);
+    setUser({ name: '', email: '' });
+    setIsUserDropdownOpen(false);
+    router.push('/');
   };
 
   const handleCollectionClick = (e) => {
     e.preventDefault();
     if (window.innerWidth >= 768) {
-      router.push('/Collections');
+      router.push('/collections');
     }
   };
 
@@ -85,7 +131,7 @@ const Navbar = () => {
     setIsMenuOpen(false);
   };
 
-  // Enhanced hover handlers for desktop only
+  // Enhanced hover handlers for collections dropdown
   const handleMouseEnter = () => {
     if (window.innerWidth >= 768) {
       if (hoverTimeoutRef.current) {
@@ -103,11 +149,32 @@ const Navbar = () => {
     }
   };
 
-  // Cleanup timeout on unmount
+  // Hover handlers for user dropdown
+  const handleUserMouseEnter = () => {
+    if (window.innerWidth >= 768 && isLoggedIn) {
+      if (userHoverTimeoutRef.current) {
+        clearTimeout(userHoverTimeoutRef.current);
+      }
+      setIsUserDropdownOpen(true);
+    }
+  };
+
+  const handleUserMouseLeave = () => {
+    if (window.innerWidth >= 768 && isLoggedIn) {
+      userHoverTimeoutRef.current = setTimeout(() => {
+        setIsUserDropdownOpen(false);
+      }, 150);
+    }
+  };
+
+  // Cleanup timeouts on unmount
   useEffect(() => {
     return () => {
       if (hoverTimeoutRef.current) {
         clearTimeout(hoverTimeoutRef.current);
+      }
+      if (userHoverTimeoutRef.current) {
+        clearTimeout(userHoverTimeoutRef.current);
       }
     };
   }, []);
@@ -199,6 +266,13 @@ const Navbar = () => {
         "Exclusive Craftsmanship"
       ]
     }
+  ];
+
+  // User menu items for logged-in users
+  const userMenuItems = [
+    { icon: User, label: 'My Profile', href: '/profile' },
+    { icon: Package, label: 'My Orders', href: '/orders' },
+    { icon: Settings, label: 'Settings', href: '/settings' },
   ];
 
   return (
@@ -308,6 +382,92 @@ const Navbar = () => {
                 </div>
                 <span className="hidden lg:inline">Cart</span>
               </Link>
+
+              {/* User Account Section */}
+              {isLoggedIn ? (
+                <div 
+                  className="relative"
+                  ref={userDropdownRef}
+                  onMouseEnter={handleUserMouseEnter}
+                  onMouseLeave={handleUserMouseLeave}
+                >
+                  <button
+                    onClick={toggleUserDropdown}
+                    className={`
+                      flex items-center space-x-1 lg:space-x-2 text-xs sm:text-sm font-semibold 
+                      uppercase tracking-wide transition-all duration-300 ease-out group
+                      ${isUserDropdownOpen || pathname.startsWith('/profile') || pathname.startsWith('/orders') || pathname.startsWith('/settings')
+                        ? 'text-[#800000] scale-105'
+                        : 'text-gray-800 hover:text-[#800000] hover:scale-105'
+                      }
+                    `}
+                  >
+                    <User size={16} className="group-hover:scale-110 transition-transform duration-300" />
+                    <span className="hidden lg:inline">{user.name || 'Account'}</span>
+                    <ChevronDown 
+                      size={12} 
+                      className={`ml-1 transition-all duration-300 ease-out ${
+                        isUserDropdownOpen ? 'rotate-180' : ''
+                      }`} 
+                    />
+                  </button>
+
+                  {/* User Dropdown Menu */}
+                  <div 
+                    className={`
+                      absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-md shadow-2xl 
+                      rounded-lg border border-gray-100 z-50 transition-all duration-300 ease-out
+                      ${isUserDropdownOpen 
+                        ? 'opacity-100 visible translate-y-0' 
+                        : 'opacity-0 invisible -translate-y-2 pointer-events-none'
+                      }
+                    `}
+                  >
+                    <div className="p-3 border-b border-gray-100">
+                      <p className="font-semibold text-gray-800 text-sm">{user.name}</p>
+                      <p className="text-xs text-gray-600">{user.email}</p>
+                    </div>
+                    
+                    <div className="py-2">
+                      {userMenuItems.map((item) => (
+                        <Link
+                          key={item.label}
+                          href={item.href}
+                          className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-800 
+                                   hover:text-[#800000] hover:bg-[#800000]/5 transition-all duration-200"
+                          onClick={() => setIsUserDropdownOpen(false)}
+                        >
+                          <item.icon size={16} />
+                          <span>{item.label}</span>
+                        </Link>
+                      ))}
+                      
+                      <hr className="my-2 border-gray-100" />
+                      
+                      <button
+                        onClick={handleLogout}
+                        className="flex items-center space-x-3 px-4 py-2 text-sm text-red-600 
+                                 hover:text-red-700 hover:bg-red-50 transition-all duration-200 w-full text-left"
+                      >
+                        <LogOut size={16} />
+                        <span>Logout</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  onClick={handleLogin}
+                  className={`
+                    flex items-center space-x-1 lg:space-x-2 text-xs sm:text-sm font-semibold 
+                    uppercase tracking-wide transition-all duration-300 ease-out group
+                    text-gray-800 hover:text-[#800000] hover:scale-105
+                  `}
+                >
+                  <User size={16} className="group-hover:scale-110 transition-transform duration-300" />
+                  <span className="hidden lg:inline">Login</span>
+                </button>
+              )}
             </div>
 
             <div className="flex items-center space-x-2 md:hidden">
@@ -318,6 +478,26 @@ const Navbar = () => {
               >
                 <Search size={18} />
               </button>
+              
+              {/* Mobile User Account */}
+              {isLoggedIn ? (
+                <button
+                  onClick={toggleUserDropdown}
+                  className="p-2 text-gray-800 hover:text-[#800000] transition-all duration-300 
+                           transform hover:scale-110 active:scale-95"
+                >
+                  <User size={18} />
+                </button>
+              ) : (
+                <button
+                  onClick={handleLogin}
+                  className="p-2 text-gray-800 hover:text-[#800000] transition-all duration-300 
+                           transform hover:scale-110 active:scale-95"
+                >
+                  <User size={18} />
+                </button>
+              )}
+              
               <Link 
                 href="/cart"
                 className="p-2 text-gray-800 hover:text-[#800000] transition-all duration-300 
@@ -332,6 +512,7 @@ const Navbar = () => {
             </div>
           </div>
 
+          {/* Collections Dropdown */}
           <div 
             className={`
               absolute left-0 w-full bg-white/95 backdrop-blur-md shadow-2xl z-50 
@@ -396,6 +577,7 @@ const Navbar = () => {
         </div>
       </nav>
 
+      {/* Mobile Menu */}
       <div
         className={`
           md:hidden fixed inset-y-0 left-0 z-50 w-72 sm:w-80 bg-white shadow-xl
@@ -423,6 +605,38 @@ const Navbar = () => {
 
           <div className="flex-1 overflow-y-auto p-4 sm:p-6">
             <div className="space-y-4 sm:space-y-6">
+              {/* User Account Section in Mobile */}
+              {isLoggedIn && (
+                <div className="pb-4 border-b border-gray-100">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-10 h-10 bg-[#800000] rounded-full flex items-center justify-center">
+                      <User size={20} className="text-white" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-800">{user.name}</p>
+                      <p className="text-sm text-gray-600">{user.email}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    {userMenuItems.map((item) => (
+                      <button
+                        key={item.label}
+                        onClick={() => {
+                          router.push(item.href);
+                          toggleMenu();
+                        }}
+                        className="flex items-center space-x-3 w-full p-2 text-left text-gray-800 
+                                 hover:text-[#800000] hover:bg-[#800000]/5 rounded-lg transition-all duration-200"
+                      >
+                        <item.icon size={16} />
+                        <span>{item.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="space-y-3">
                 <button
                   onClick={toggleMobileCollection}
@@ -517,6 +731,35 @@ const Navbar = () => {
                     </button>
                   );
                 })}
+
+                {/* Mobile Login/Logout */}
+                {isLoggedIn ? (
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      toggleMenu();
+                    }}
+                    className="flex items-center space-x-3 w-full p-3 text-left font-semibold 
+                             text-base sm:text-lg text-red-600 hover:text-red-700 
+                             hover:bg-red-50 rounded-lg transition-all duration-300"
+                  >
+                    <LogOut size={18} />
+                    <span>Logout</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      handleLogin();
+                      toggleMenu();
+                    }}
+                    className="flex items-center space-x-3 w-full p-3 text-left font-semibold 
+                             text-base sm:text-lg text-gray-800 hover:text-[#800000] 
+                             hover:bg-[#800000]/5 rounded-lg transition-all duration-300"
+                  >
+                    <User size={18} />
+                    <span>Login</span>
+                  </button>
+                )}
               </div>
             </div>
           </div>
