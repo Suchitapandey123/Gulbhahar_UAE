@@ -104,7 +104,7 @@ const collections = [
     image: "/api/placeholder/260/340",
     season: "WINTER 2024",
     stock: 15,
-    size: "XS",
+    size: "XS", 
   },
   {
     id: 11,
@@ -435,8 +435,8 @@ export default function Collection() {
 
   const FilterContent = () => (
     <div className="font-sans">
-      <div className="flex justify-between items-center p-6 border-b border-red-100">
-        <span className="text-xl font-bold text-red-900">Filters</span>
+      <div className="flex justify-between items-center  p-6 border-b border-red-100">
+        <span className="text-xl font-bold  text-red-900">Filters</span>
         <button 
           onClick={clearFilters}
           className="text-red-900 hover:text-red-700 font-semibold transition-colors"
@@ -530,7 +530,7 @@ export default function Collection() {
             className="flex justify-between items-center cursor-pointer group"
             onClick={() => toggleSection('size')}
           >
-            <h3 className="text-lg font-bold text-red-900 group-hover:text-red-700 transition-colors">Size</h3>
+            <h3 className="text-lg font-bold  text-red-900 group-hover:text-red-700 transition-colors">Size</h3>
             {openSections.size ? 
               <ChevronUp size={20} className="text-red-900" /> : 
               <ChevronDown size={20} className="text-red-900" />
@@ -551,7 +551,7 @@ export default function Collection() {
                     }
                   }}
                   className={`
-                    py-3 px-2 border-2 rounded-lg font-bold transition-all duration-200 transform hover:scale-105
+                    py-3 px-0 border-2 rounded-lg font-bold transition-all duration-200 transform hover:scale-105
                     ${selectedSizes.includes(size) 
                       ? 'bg-red-900 text-white border-red-900 shadow-lg' 
                       : 'bg-white text-red-900 border-red-200 hover:bg-red-50 hover:border-red-900'}
@@ -568,17 +568,17 @@ export default function Collection() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-rose-50">
+    <div className="min-h-screen  bg-gradient-to-br from-red-50 to-rose-50">
       {/* Hero Section */}
-      <div className="relative overflow-hidden">
+      <div className="relative  overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-red-900/20 to-rose-900/20"></div>
         <div className="relative flex flex-col sm:flex-row justify-between mb-6 w-full">
-          <div className="flex w-full">
-            <div className="border flex justify-start w-full min-w-full py-20 bg-gradient-to-r from-red-100 to-rose-100">
-              <h1 className="text-left font-serif mx-auto max-w-7xl md:text-8xl text-3xl font-bold text-red-900 leading-tight px-4">
+          <div className="flex justify-center items-center w-full">
+            <div className="border flex    justify-center items-center w-full min-w-full py-20 bg-gradient-to-r from-red-100 to-rose-100">
+              <h1 className="text-left mt-14 xs:my-0 font-serif mx-auto max-w-7xl md:text-8xl text-3xl font-bold text-red-900 leading-tight px-4">
                 Try our
                 <br />
-                <span className="md:ml-32 md:text-8xl text-3xl bg-gradient-to-r from-red-900 to-rose-700 bg-clip-text text-transparent">
+                <span className="md:ml-32 md:text-8xl  text-3xl bg-gradient-to-r from-red-900 to-rose-700 bg-clip-text text-transparent">
                   Latest Collections
                 </span>
               </h1>
@@ -596,207 +596,222 @@ export default function Collection() {
         </nav>
       </div>
 
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row mt-8 px-2">
-        {/* Sidebar */}
-        <div className="flex-row max-w-[360px] mb-8 md:mb-0">
-          <p className="font-bold text-2xl text-red-900 pl-5 mb-6">
-            {filteredCollections.length} Results
-          </p>
-          
-          <div className="bg-white border-2 border-red-200 hidden md:block lg:h-[890px] h-[850px] w-[280px] rounded-xl shadow-lg">
-            <FilterContent />
-          </div>
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row mt-8 px-2">
+  {/* Sidebar - Visible only on lg screens and larger */}
+  <div className="hidden xl:flex xl:flex-row max-w-[360px] mb-8">
+    <p className="font-bold text-2xl text-red-900 pl-5 mb-6">
+      {/* {filteredCollections.length} Results */}
+    </p>
+    
+    <div className="bg-white border-2 border-red-200 h-[890px] w-[280px] rounded-xl shadow-lg">
+      <FilterContent />
+    </div>
+  </div>
 
-          {/* Mobile Filter Modal */}
-          {isModalOpen && (
-            <div className="fixed inset-0 z-50 md:hidden flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
-              <div className="bg-white rounded-xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto shadow-2xl">
-                <div className="flex justify-between items-center px-6 py-4 border-b border-red-100">
-                  <h2 className="text-xl font-bold text-red-900">Filters</h2>
-                  <button 
-                    onClick={closeModal}
-                    className="p-2 hover:bg-red-50 rounded-full transition-colors"
-                  >
-                    <X size={20} className="text-red-900" />
-                  </button>
-                </div>
-                <div className="p-2">
-                  <FilterContent />
-                </div>
-                <div className="px-6 py-4 border-t border-red-100 flex justify-end">
-                  <button 
-                    onClick={closeModal}
-                    className="px-8 py-3 bg-red-900 text-white rounded-lg hover:bg-red-800 transition-colors font-bold shadow-lg"
-                  >
-                    Apply Filters
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+  {/* Mobile Filter Modal - Shown on mobile/tablet when toggled */}
+  {isModalOpen && (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm lg:hidden">
+      <div className="bg-white rounded-xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto shadow-2xl">
+        <div className="flex justify-between items-center px-6 py-8 border-b border-red-100">
+          <h2 className="text-xl font-bold  text-red-900">Filters</h2>
+          <button 
+            onClick={closeModal}
+            className="p-2 hover:bg-red-50 rounded-full transition-colors"
+          >
+            <X size={20} className="text-red-900" />
+          </button>
         </div>
-
-        {/* Main Content */}
-        <div className="w-full  md:px-6">
-          {/* Controls */}
-          <div className="flex flex-wrap items-center justify-between border-b-2 border-red-200 pb-4 mb-6 gap-4">
-            <div className="flex items-center gap-4">
-              <div className="flex bg-white border-2 border-red-200 rounded-lg p-1 shadow-sm">
-                <button 
-                  className={`p-3 rounded-md transition-all ${viewMode === 'grid' ? 'bg-red-900 text-white shadow-md' : 'text-red-900 hover:bg-red-50'}`}
-                  onClick={() => setViewMode('grid')}
-                >
-                  <Grid size={18} />
-                </button>
-                <button 
-                  className={`p-3 rounded-md transition-all ${viewMode === 'list' ? 'bg-red-900 text-white shadow-md' : 'text-red-900 hover:bg-red-50'}`}
-                  onClick={() => setViewMode('list')}
-                >
-                  <List size={18} />
-                </button>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <button 
-                className="md:hidden flex items-center justify-center p-3 border-2 border-red-300 rounded-lg bg-white hover:bg-red-50 transition-colors"
-                onClick={toggleModal}
-              >
-                <SlidersHorizontal size={18} className="text-red-900" />
-              </button>
-              
-              <span className="text-red-900 font-semibold">Sort by:</span>
-              <select 
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-2 border-2 border-red-300 rounded-lg bg-white text-red-900 font-medium focus:border-red-900 focus:ring-2 focus:ring-red-100 transition-all"
-              >
-                {sortOptions.map(option => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Season Filters */}
-          <div className="flex flex-nowrap gap-2 sm:gap-3 mb-8 overflow-x-auto pb-2">
-            {seasons.map((season) => (
-              <button
-                key={season}
-                onClick={() => setSelectedSeason(season)}
-                className={`px-4 sm:px-6 py-2 sm:py-3 border-2 font-bold text-xs sm:text-sm rounded-lg transition-all duration-200 transform hover:scale-105 whitespace-nowrap flex-shrink-0 ${
-                  selectedSeason === season 
-                    ? "bg-red-900 text-white border-red-900 shadow-lg" 
-                    : "bg-white text-red-900 border-red-300 hover:bg-red-50 hover:border-red-900"
-                }`}
-              >
-                {season}
-              </button>
-            ))}
-          </div>
-
-          {/* Product Grid */}
-          <div className={`grid gap-2 sm:gap-4 ${
-            viewMode === 'grid' 
-              ? 'grid-cols-2 md:grid-cols-3' 
-              : 'grid-cols-1'
-          }`}>
-            {paginatedCollections.map((item) => (
-              <div key={item.id} className="group bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-red-100">
-                <div className="relative overflow-hidden h-36 sm:h-52 lg:h-58">
-                  <Image
-                  priority
-                  height={100}
-                  width={100}
-                    src="/Image/About3.png"
-                    alt={item.name}
-                    className="w-full h-full -ml-3  object-cover scale-150 group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute top-2 right-2 sm:top-4 sm:right-4 flex gap-2">
-                    <button
-                      onClick={() => toggleFavorite(item.id)}
-                      className={`p-2 rounded-full backdrop-blur-sm transition-all ${
-                        favorites.has(item.id)
-                          ? 'bg-red-900 text-white'
-                          : 'bg-white/80 text-red-900 hover:bg-red-50'
-                      }`}
-                    >
-                      <Heart size={16} fill={favorites.has(item.id) ? 'currentColor' : 'none'} />
-                    </button>
-                  </div>
-                  {item.stock <= 5 && (
-                    <div className="absolute top-4 left-4 bg-red-900 text-white px-3 py-1 rounded-full text-xs font-bold">
-                      Only {item.stock} left!
-                    </div>
-                  )}
-                </div>
-                
-                <div className="p-2 sm:p-2">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-bold text-sm sm:text-lg text-red-900 group-hover:text-red-700 transition-colors">
-                      {item.title}
-                    </h3>
-                    <div className="flex items-center gap-1">
-                      <Star size={12} className="text-yellow-500 fill-current sm:w-4 sm:h-4" />
-                      <span className="text-xs sm:text-sm text-gray-600">4.8</span>
-                    </div>
-                  </div>
-                  
-                  <p className="text-gray-600 mb-3 text-xs sm:text-base">{item.name}</p>
-                  
-                  <div className="flex justify-between items-center  sm:flex-row gap-2">
-                    <span className="xs:text-sm sm:text-lg font-bold text-red-900">₹{item.price.toLocaleString()}</span>
-                    <button className="bg-red-900 max-w-[60%] text-white px-2 py-1 sm:px-3 sm:py-1.5 md:py-2 rounded-lg hover:bg-red-800 transition-colors font-semibold flex items-center gap-1 sm:gap-2 text-xs sm:text-sm w-full sm:w-auto justify-center">
-                      <ShoppingBag size={14} className="sm:w-4 w-2 h-2 sm:h-4" />
-                      <span className="hidden text-sm md:text-sm sm:inline text-nowrap">Add to Cart</span>
-                      <span className="sm:hidden">Add</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Pagination */}
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-3 py-8 border-t-2 border-red-200">
-            <button
-              onClick={() => setCurrentPage(1)}
-              disabled={currentPage === 1}
-              className="px-4 py-2 rounded-lg border-2 border-red-300 bg-white text-red-900 hover:bg-red-50 disabled:opacity-50 font-semibold transition-all"
-            >
-              First
-            </button>
-            
-            <button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-              className="px-6 py-2 rounded-lg border-2 border-red-300 bg-white text-red-900 hover:bg-red-50 disabled:opacity-50 font-semibold transition-all"
-            >
-              Previous
-            </button>
-
-            <span className="px-4 py-2 bg-red-900 text-white rounded-lg font-bold">
-              {currentPage} of {totalPages}
-            </span>
-
-            <button
-              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-              disabled={currentPage === totalPages}
-              className="px-6 py-2 rounded-lg border-2 border-red-300 bg-white text-red-900 hover:bg-red-50 disabled:opacity-50 font-semibold transition-all"
-            >
-              Next
-            </button>
-            
-            <button
-              onClick={() => setCurrentPage(totalPages)}
-              disabled={currentPage === totalPages}
-              className="px-4 py-2 rounded-lg border-2 border-red-300 bg-white text-red-900 hover:bg-red-50 disabled:opacity-50 font-semibold transition-all"
-            >
-              Last
-            </button>
-          </div>
+        <div className="p-2">
+          <FilterContent />
+        </div>
+        <div className="px-6 py-4 border-t border-red-100 flex justify-end">
+          <button 
+            onClick={closeModal}
+            className="px-8 py-3 bg-red-900 text-white rounded-lg hover:bg-red-800 transition-colors font-bold shadow-lg"
+          >
+            Apply Filters
+          </button>
         </div>
       </div>
+    </div>
+  )}
+
+  {/* Main Content */}
+  <div className="w-full lg:px-6">
+    {/* Controls - Modified for responsive behavior */}
+    <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center justify-between border-b-2 border-red-200 pb-4 mb-6 gap-4">
+      <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
+        {/* Results count - shown on mobile but hidden on lg (shown in sidebar instead) */}
+        <p className="font-bold text-xl text-red-900 lg:hidden">
+          {filteredCollections.length} Results
+        </p>
+        
+        {/* View toggle buttons */}
+        <div className="flex bg-white border-2 border-red-200 rounded-lg p-1 shadow-sm">
+          <button 
+            className={`p-3 rounded-md transition-all ${viewMode === 'grid' ? 'bg-red-900 text-white shadow-md' : 'text-red-900 hover:bg-red-50'}`}
+            onClick={() => setViewMode('grid')}
+          >
+            <Grid size={18} />
+          </button>
+          <button 
+            className={`p-3 rounded-md transition-all ${viewMode === 'list' ? 'bg-red-900 text-white shadow-md' : 'text-red-900 hover:bg-red-50'}`}
+            onClick={() => setViewMode('list')}
+          >
+            <List size={18} />
+          </button>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3  w-full sm:w-auto justify-between sm:justify-start">
+        {/* Filter button - shown on mobile/tablet, hidden on lg */}
+        <button 
+          className="flex lg:hidden items-center justify-center p-[6.5px] border-2 border-red-300 rounded-lg bg-white hover:bg-red-50 transition-colors"
+          onClick={toggleModal}
+        >
+          <SlidersHorizontal size={18} className="text-red-900 mr-2" />
+          <span className="text-red-900 font-medium">Filters</span>
+        </button>
+        
+        {/* Sort dropdown */}
+        <div className="flex items-center   gap-2 ">
+          <span className="text-red-900 font-semibold hidden sm:inline">Sort by:</span>
+          {/* <div className="mr-20 xs:mr-0"> */}
+          <select 
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="px-2  py-2 border-2 border-red-300 rounded-lg bg-white text-red-900 font-medium focus:border-red-900 focus:ring-2 focus:ring-red-100 transition-all"
+          >
+           
+            {sortOptions.map(option => (
+              <option key={option.value} value={option.value}>{option.label}</option>
+            ))}
+
+          </select>
+          {/* </div> */}
+        </div>
+      </div>
+    </div>
+
+    {/* Season Filters */}
+    <div className="flex flex-nowrap gap-2 sm:gap-3 mb-8 overflow-x-auto pb-2">
+      {seasons.map((season) => (
+        <button
+          key={season}
+          onClick={() => setSelectedSeason(season)}
+          className={`px-4 sm:px-6 py-2 sm:py-3 border-2 font-bold text-xs sm:text-sm rounded-lg transition-all duration-200 transform hover:scale-105 whitespace-nowrap flex-shrink-0 ${
+            selectedSeason === season 
+              ? "bg-red-900 text-white border-red-900 shadow-lg" 
+              : "bg-white text-red-900 border-red-300 hover:bg-red-50 hover:border-red-900"
+          }`}
+        >
+          {season}
+        </button>
+      ))}
+    </div>
+
+    {/* Product Grid - Responsive columns */}
+    <div className={`grid gap-2 sm:gap-4 ${
+      viewMode === 'grid' 
+        ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-3' 
+        : 'grid-cols-1'
+    }`}>
+      {paginatedCollections.map((item) => (
+        <div key={item.id} className="group bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-red-100">
+          <div className="relative overflow-hidden h-36 sm:h-52 lg:h-58">
+            <Image
+              priority
+              height={100}
+              width={100}
+              src="/Image/About3.png"
+              alt={item.name}
+              className="w-full h-full -ml-3 object-cover scale-150 group-hover:scale-105 transition-transform duration-300"
+            />
+            <div className="absolute top-2 right-2 sm:top-4 sm:right-4 flex gap-2">
+              <button
+                onClick={() => toggleFavorite(item.id)}
+                className={`p-2 rounded-full backdrop-blur-sm transition-all ${
+                  favorites.has(item.id)
+                    ? 'bg-red-900 text-white'
+                    : 'bg-white/80 text-red-900 hover:bg-red-50'
+                }`}
+              >
+                <Heart size={16} fill={favorites.has(item.id) ? 'currentColor' : 'none'} />
+              </button>
+            </div>
+            {item.stock <= 5 && (
+              <div className="absolute top-4 left-4 bg-red-900 text-white px-3 py-1 rounded-full text-xs font-bold">
+                Only {item.stock} left!
+              </div>
+            )}
+          </div>
+          
+          <div className="p-2 sm:p-2">
+            <div className="flex justify-between items-start mb-2">
+              <h3 className="font-bold text-sm sm:text-lg text-red-900 group-hover:text-red-700 transition-colors">
+                {item.title}
+              </h3>
+              <div className="flex items-center gap-1">
+                <Star size={12} className="text-yellow-500 fill-current sm:w-4 sm:h-4" />
+                <span className="text-xs sm:text-sm text-gray-600">4.8</span>
+              </div>
+            </div>
+            
+            <p className="text-gray-600 mb-3 text-xs sm:text-base">{item.name}</p>
+            
+            <div className="flex justify-between items-center sm:flex-row gap-2">
+              <span className="xs:text-sm sm:text-lg font-bold text-red-900">₹{item.price.toLocaleString()}</span>
+              <button className="bg-red-900 max-w-[60%] text-white px-2 py-1 sm:px-3 sm:py-1.5 md:py-2 rounded-lg hover:bg-red-800 transition-colors font-semibold flex items-center gap-1 sm:gap-2 text-xs sm:text-sm w-full sm:w-auto justify-center">
+                <ShoppingBag size={14} className="sm:w-4 w-2 h-2 sm:h-4" />
+                <span className="hidden text-sm md:text-sm sm:inline text-nowrap">Add to Cart</span>
+                <span className="sm:hidden">Add</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    {/* Pagination */}
+    <div className="mt-12 flex flex-wrap items-center justify-center gap-3 py-8 border-t-2 border-red-200">
+      <button
+        onClick={() => setCurrentPage(1)}
+        disabled={currentPage === 1}
+        className="px-4 py-2 rounded-lg border-2 border-red-300 bg-white text-red-900 hover:bg-red-50 disabled:opacity-50 font-semibold transition-all"
+      >
+        First
+      </button>
+      
+      <button
+        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+        disabled={currentPage === 1}
+        className="px-6 py-2 rounded-lg border-2 border-red-300 bg-white text-red-900 hover:bg-red-50 disabled:opacity-50 font-semibold transition-all"
+      >
+        Previous
+      </button>
+
+      <span className="px-4 py-2 bg-red-900 text-white rounded-lg font-bold">
+        {currentPage} of {totalPages}
+      </span>
+
+      <button
+        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+        disabled={currentPage === totalPages}
+        className="px-6 py-2 rounded-lg border-2 border-red-300 bg-white text-red-900 hover:bg-red-50 disabled:opacity-50 font-semibold transition-all"
+      >
+        Next
+      </button>
+      
+      <button
+        onClick={() => setCurrentPage(totalPages)}
+        disabled={currentPage === totalPages}
+        className="px-4 py-2 rounded-lg border-2 border-red-300 bg-white text-red-900 hover:bg-red-50 disabled:opacity-50 font-semibold transition-all"
+      >
+        Last
+      </button>
+    </div>
+  </div>
+</div>
 
       {/* Top Trends Section */}
       <div className="bg-gradient-to-r from-red-100 to-rose-100 py-16 mt-16">
