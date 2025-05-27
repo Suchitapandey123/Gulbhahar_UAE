@@ -1,7 +1,7 @@
-"use client";
-import { ReactNode } from "react";
+
 import Breadcrumb from "./components/Breadcrumb";
-import Sidebar from "./components/sidebar";
+import Sidebar from "./components/Sidebar";
+
 
 export default function AccountLayout({ children }) {
   return (

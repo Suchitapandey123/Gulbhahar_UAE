@@ -3,7 +3,7 @@ import { SetStateAction, useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronUp, Grid, List, SlidersHorizontal, X, Star, Heart, ShoppingBag } from 'lucide-react';
 import img11 from "../../../public/Image/About3.png"
 import Image from "next/image";
-
+import { motion, AnimatePresence } from "framer-motion";
 
 const collections = [
   {
@@ -445,87 +445,173 @@ export default function Collection() {
         </button>
       </div>
 
-      <div className="bg-gradient-to-br from-red-50 to-rose-50 rounded-lg m-4 shadow-sm">
-        <div className="p-6">
-          <div
-            className="flex justify-between items-center cursor-pointer group"
-            onClick={() => toggleSection("price")}
+   <motion.div 
+      className="bg-gradient-to-br from-red-50 to-rose-50 rounded-lg m-4 shadow-sm"
+      whileHover={{ scale: 1.005 }}
+      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+    >
+      <div className="p-2">
+        <div
+          className="flex justify-between items-center cursor-pointer group"
+          onClick={() => toggleSection("price")}
+        >
+          <motion.h3 
+            className="text-lg font-bold text-red-900"
+            whileHover={{ color: "#b91c1c" }}
+            transition={{ duration: 0.2 }}
           >
-            <h3 className="text-lg font-bold text-red-900 group-hover:text-red-700 transition-colors">Price Range</h3>
-            {openSections.price ? 
-              <ChevronUp size={20} className="text-red-900" /> : 
-              <ChevronDown size={20} className="text-red-900" />
-            }
-          </div>
-
-          {openSections.price && (
-            <div className="mt-6 space-y-4">
-              <div className="relative h-20 flex items-end space-x-1 mb-6 bg-white rounded-lg p-3">
-                {histogramData.map((bar, index) => (
-                  <div
-                    key={index}
-                    className="flex-1 bg-gradient-to-t from-red-900 to-red-600 rounded-t transition-all duration-300 hover:from-red-800 hover:to-red-500"
-                    style={{ height: `${bar.count * 3}px` }}
-                  />
-                ))}
-              </div>
-              
-              <div 
-                className="relative h-2 bg-red-100 rounded-full mb-6 shadow-inner"
-                ref={sliderRef}
-              >
-                <div
-                  className="absolute h-full bg-gradient-to-r from-red-900 to-red-700 rounded-full shadow-sm"
-                  style={{
-                    left: `${minPosition}%`,
-                    width: `${maxPosition - minPosition}%`
-                  }}
-                />
-                <div
-                  className="absolute w-5 h-5 bg-white border-3 border-red-900 rounded-full shadow-lg -top-1.5 -ml-2.5 cursor-pointer hover:scale-110 transition-transform"
-                  style={{ left: `${minPosition}%` }}
-                  onMouseDown={handleMouseDown('min')}
-                  onTouchStart={handleTouchStart('min')}
-                />
-                <div
-                  className="absolute w-5 h-5 bg-white border-3 border-red-900 rounded-full shadow-lg -top-1.5 -ml-2.5 cursor-pointer hover:scale-110 transition-transform"
-                  style={{ left: `${maxPosition}%` }}
-                  onMouseDown={handleMouseDown('max')}
-                  onTouchStart={handleTouchStart('max')}
-                />
-              </div>
-              
-              <div className="flex justify-between text-sm font-bold text-red-900 mb-4">
-                <span className="bg-white px-3 py-1 rounded-full shadow-sm">₹{priceRange[0].toLocaleString()}</span>
-                <span className="bg-white px-3 py-1 rounded-full shadow-sm">₹{priceRange[1].toLocaleString()}</span>
-              </div>
-              
-              <div className="flex justify-between space-x-3">
-                <input
-                  type="number"
-                  value={priceRange[0]}
-                  onChange={(e) => handlePriceChange(0, Number(e.target.value))}
-                  className="w-full border-2 border-red-200 rounded-lg px-3 py-2 focus:border-red-900 focus:ring-2 focus:ring-red-100 transition-all"
-                  min={MIN_PRICE}
-                  max={MAX_PRICE}
-                />
-                <span className="flex items-center text-red-900 font-bold">—</span>
-                <input
-                  type="number"
-                  value={priceRange[1]}
-                  onChange={(e) => handlePriceChange(1, Number(e.target.value))}
-                  className="w-full border-2 border-red-200 rounded-lg px-3 py-2 focus:border-red-900 focus:ring-2 focus:ring-red-100 transition-all"
-                  min={MIN_PRICE}
-                  max={MAX_PRICE}
-                />
-              </div>
-            </div>
-          )}
+            Price Range
+          </motion.h3>
+          {openSections.price ? 
+            <ChevronUp size={20} className="text-red-900" /> : 
+            <ChevronDown size={20} className="text-red-900" />
+          }
         </div>
+
+        <AnimatePresence>
+          {openSections.price && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="overflow-hidden"
+            >
+              <div className="mt-6 space-y-4">
+                {/* Histogram with staggered animations */}
+                <motion.div 
+                  className="relative h-20 flex items-end space-x-1 mb-6 bg-white rounded-lg p-3"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  {histogramData.map((bar, index) => (
+                    <motion.div
+                      key={index}
+                      className="flex-1 bg-gradient-to-t from-red-900 to-red-600 rounded-t"
+                      initial={{ height: 0 }}
+                      animate={{ height: `${bar.count * 3}px` }}
+                      transition={{ 
+                        duration: 0.5,
+                        delay: index * 0.05,
+                        type: "spring"
+                      }}
+                      whileHover={{
+                        background: "linear-gradient(to top, #991b1b, #dc2626)",
+                        scaleY: 1.1,
+                        originY: 1
+                      }}
+                    />
+                  ))}
+                </motion.div>
+                
+                {/* Range slider */}
+                <motion.div 
+                  className="relative h-2 bg-red-100 rounded-full mb-6 shadow-inner"
+                  ref={sliderRef}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  <motion.div
+                    className="absolute h-full bg-gradient-to-r from-red-900 to-red-700 rounded-full shadow-sm"
+                    style={{
+                      left: `${minPosition}%`,
+                      width: `${maxPosition - minPosition}%`
+                    }}
+                  />
+                  
+                  {/* Min thumb */}
+                  <motion.div
+                    className="absolute w-5 h-5 bg-white border-3 border-red-900 rounded-full shadow-lg -top-1.5 -ml-2.5 cursor-pointer"
+                    style={{ left: `${minPosition}%` }}
+                    onMouseDown={handleMouseDown('min')}
+                    onTouchStart={handleTouchStart('min')}
+                    whileHover={{ scale: 1.2 }}
+                    whileTap={{ scale: 0.9 }}
+                    drag="x"
+                    dragConstraints={sliderRef}
+                    dragElastic={0}
+                  />
+                  
+                  {/* Max thumb */}
+                  <motion.div
+                    className="absolute w-4 h-4 bg-white border-3 border-red-900 rounded-full shadow-lg -top-1.5 -ml-2.5 cursor-pointer"
+                    style={{ left: `${maxPosition}%` }}
+                    onMouseDown={handleMouseDown('max')}
+                    onTouchStart={handleTouchStart('max')}
+                    whileHover={{ scale: 1.2 }}
+                    whileTap={{ scale: 0.9 }}
+                    drag="x"
+                    dragConstraints={sliderRef}
+                    dragElastic={0}
+                  />
+                </motion.div>
+                
+                {/* Price display */}
+                <motion.div 
+                  className="flex justify-between text-sm font-bold text-red-900 mb-4"
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <motion.span 
+                    className="bg-white px-2 py-1 rounded-full shadow-sm"
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    ₹{priceRange[0].toLocaleString()}
+                  </motion.span>
+                  <motion.span 
+                    className="bg-white px-2 py-1 rounded-full shadow-sm"
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    ₹{priceRange[1].toLocaleString()}
+                  </motion.span>
+                </motion.div>
+                
+                {/* Input fields */}
+                <motion.div 
+                  className="flex justify-between space-x-3"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.6 }}
+                >
+                  <motion.input
+                    type="number"
+                    value={priceRange[0]}
+                    onChange={(e) => handlePriceChange(0, Number(e.target.value))}
+                    className="w-full border-2 border-red-200 rounded-lg px-2 py-1 focus:border-red-900 focus:ring-2 focus:ring-red-100"
+                    min={MIN_PRICE}
+                    max={MAX_PRICE}
+                    whileFocus={{ scale: 1.02 }}
+                  />
+                  <motion.span 
+                    className="flex items-center text-red-900 font-bold"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.7 }}
+                  >
+                    —
+                  </motion.span>
+                  <motion.input
+                    type="number"
+                    value={priceRange[1]}
+                    onChange={(e) => handlePriceChange(1, Number(e.target.value))}
+                    className="w-full border-2 border-red-200 rounded-lg px-2 py-1 focus:border-red-900 focus:ring-2 focus:ring-red-100"
+                    min={MIN_PRICE}
+                    max={MAX_PRICE}
+                    whileFocus={{ scale: 1.02 }}
+                  />
+                </motion.div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
+    </motion.div>
 
       <div className="bg-gradient-to-br from-red-50 to-rose-50 rounded-lg m-4 shadow-sm">
-        <div className="p-6">
+        <div className="p-2">
           <div 
             className="flex justify-between items-center cursor-pointer group"
             onClick={() => toggleSection('size')}
@@ -551,7 +637,7 @@ export default function Collection() {
                     }
                   }}
                   className={`
-                    py-3 px-0 border-2 rounded-lg font-bold transition-all duration-200 transform hover:scale-105
+                    py-1 px-[-8] border-2 rounded-lg font-bold transition-all duration-200 transform hover:scale-105
                     ${selectedSizes.includes(size) 
                       ? 'bg-red-900 text-white border-red-900 shadow-lg' 
                       : 'bg-white text-red-900 border-red-200 hover:bg-red-50 hover:border-red-900'}
@@ -624,10 +710,10 @@ export default function Collection() {
         <div className="p-2">
           <FilterContent />
         </div>
-        <div className="px-6 py-4 border-t border-red-100 flex justify-end">
+        <div className="px-6 py-4 xs:px-6 xs:py-4  border-t border-red-100 flex justify-end">
           <button 
             onClick={closeModal}
-            className="px-8 py-3 bg-red-900 text-white rounded-lg hover:bg-red-800 transition-colors font-bold shadow-lg"
+            className="px-4 py-2 xs:px-8 xs:py-3 bg-red-900 text-white rounded-lg hover:bg-red-800 transition-colors font-bold shadow-lg"
           >
             Apply Filters
           </button>
