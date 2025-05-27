@@ -14,6 +14,8 @@ import PaymentDetailsPage from './PaymentMethodsDetails';
 import { OrderHistoryDetails } from './OrderHistoryDetails';
 import { OrderDetailsPage } from './OrderDetailsPage';
 import TrackOrderPage from './TrackOrderPage';
+import RefundHistoryDetails from './RefundHistory';
+import ReturnExchangeDetails from './ReturnExchangeDetails';
 
 const OrderView = {
   MAIN: "main",
@@ -112,7 +114,7 @@ const RefundHistoryDetails1 = ({ onBack }) => (
       <ArrowLeft size={16} className="mr-1 xs:mr-2 xs:w-5 xs:h-5" />
       Back to Orders
     </button>
-    
+    <RefundHistoryDetails />
   </div>
 );
 
@@ -122,9 +124,8 @@ const ReturnExchangeDetails1 = ({ onBack }) => (
       <ArrowLeft size={16} className="mr-1 xs:mr-2 xs:w-5 xs:h-5" />
       Back to Orders
     </button>
-    <h3 className="text-lg xs:text-xl sm:text-2xl font-semibold text-red-900 mb-3 xs:mb-4">Return/Exchange</h3>
-    <p className="text-gray-600 text-sm xs:text-base">Return and exchange information will appear here...</p>
-  </div>
+    <ReturnExchangeDetails />
+     </div>
 );
 
 const PaymentDetailsPage1 = ({ onBack }) => (
@@ -157,7 +158,8 @@ const OrderHistory = () => {
       title: "Refund History",
       description: "Track refunds, view refund status and history",
       icon: RefreshCcw,
-      href: "/account/account-centre/my-order/refund-history"
+      // href: "/account/account-centre/my-order"
+      onClick: () => setActiveView(OrderView.REFUND)
     },
     {
       title: "Return/Exchange Requests",
