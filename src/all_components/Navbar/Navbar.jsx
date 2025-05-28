@@ -746,7 +746,7 @@ const Navbar = () => {
                       >
                         {category.title}
                       </div>
-                      <ul className="ml-3 sm:ml-4 space-y-1">
+                      <ul className="ml-3 d sm:ml-4 space-y-1">
                         {category.items.map((item, itemIndex) => (
                           <li key={itemIndex}>
                             <div 
