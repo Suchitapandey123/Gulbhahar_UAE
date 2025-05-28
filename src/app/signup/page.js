@@ -367,7 +367,7 @@ const SignupPage = () => {
       {/* Header */}
       <header className="relative z-10 bg-white/80 backdrop-blur-sm border-b border-red-100 shadow-sm">
         <div className="flex items-center justify-center py-6">
-          <div className="max-w-7xl mx-auto flex justify-center items-center">
+          <div className="max-w-[1600px] mx-auto flex justify-center items-center">
             <div className="text-3xl font-bold bg-gradient-to-r from-red-900 to-rose-700 bg-clip-text text-transparent">
               LOGO
             </div>
@@ -377,7 +377,7 @@ const SignupPage = () => {
 
       {/* Main Content */}
       <div className="flex min-h-[calc(100vh-100px)] w-full items-center justify-center py-8">
-        <div className="mx-auto flex w-full max-w-7xl flex-col-reverse md:flex-row gap-8 px-6">
+        <div className="mx-auto flex w-full max-w-[1600px] flex-col-reverse md:flex-row gap-8 px-6">
           
           {/* Carousel Section */}
           <div className="hidden md:block md:w-2/5">

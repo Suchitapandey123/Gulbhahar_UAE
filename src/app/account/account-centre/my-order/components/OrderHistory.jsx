@@ -177,7 +177,7 @@ const OrderHistory = () => {
 
   return (
     <div className=" bg-gradient-to-br from-red-50/30 to-white min-h-screen">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-[1600px] mx-auto">
         {activeView === OrderView.MAIN && (
           <>
             {/* Header Section */}

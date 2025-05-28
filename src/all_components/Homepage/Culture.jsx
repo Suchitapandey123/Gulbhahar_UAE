@@ -280,7 +280,7 @@ export default function Culture() {
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
         variants={containerVariants}
-        className="container mx-auto lg:max-w-7xl lg:my-32"
+        className="container mx-auto lg:max-w-[1600px] lg:my-32"
       >
         <motion.h1 
           variants={headerVariants}

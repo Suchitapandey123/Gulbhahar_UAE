@@ -255,7 +255,7 @@ export default function HeroAnimated() {
       `}</style>
       
       <motion.section 
-        className="md:py-12 md:px-4 max-w-7xl mx-auto md:mt-20 mt-6"
+        className="md:py-12 md:px-4 max-w-[1600px] mx-auto md:mt-20 mt-6"
         initial="hidden"
         animate="visible"
         variants={containerVariants}

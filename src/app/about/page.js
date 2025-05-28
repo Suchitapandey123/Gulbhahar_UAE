@@ -47,7 +47,7 @@ const CraftingStoriesSection = () => {
   return (
     <motion.div 
       ref={ref}
-      className="flex flex-col  mt:22 lg:flex-row min-h-[70vh] max-w-7xl mx-auto my-8 lg:my-16 px-4 lg:px-8 gap-12 items-center"
+      className="flex flex-col  mt:22 lg:flex-row min-h-[70vh] max-w-[1600px] mx-auto my-8 lg:my-16 px-4 lg:px-8 gap-12 items-center"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
@@ -164,7 +164,7 @@ const HeroSection1 = () => {
     <motion.div 
       ref={containerRef}
       style={{ opacity }}
-      className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20"
+      className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20"
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
         {/* Social Links */}
@@ -271,7 +271,7 @@ const TraditionContemporarySection = () => {
   return (
     <motion.div 
       ref={containerRef}
-      className="max-w-7xl mx-auto mb-20 lg:mb-40 px-4 lg:px-8"
+      className="max-w-[1600px] mx-auto mb-20 lg:mb-40 px-4 lg:px-8"
     >
       {/* Title Section */}
       <motion.div 
@@ -432,7 +432,7 @@ const JuttisSection = () => {
   return (
     <motion.div 
       ref={containerRef}
-      className="grid grid-cols-1 lg:grid-cols-[60%_40%] min-h-[70vh] max-w-7xl mx-auto my-12 lg:my-20 px-4 lg:px-8 gap-8 lg:gap-0"
+      className="grid grid-cols-1 lg:grid-cols-[60%_40%] min-h-[70vh] max-w-[1600px] mx-auto my-12 lg:my-20 px-4 lg:px-8 gap-8 lg:gap-0"
     >
       <motion.div 
         style={{ x: imageX }}
@@ -529,7 +529,7 @@ const GridSection2 = () => {
   return (
     <motion.div 
       ref={containerRef}
-      className="grid grid-cols-1 lg:grid-cols-[40%_60%] min-h-[70vh] max-w-7xl mx-auto my-12 lg:my-20 px-4 lg:px-8 gap-8 lg:gap-0"
+      className="grid grid-cols-1 lg:grid-cols-[40%_60%] min-h-[70vh] max-w-[1600px] mx-auto my-12 lg:my-20 px-4 lg:px-8 gap-8 lg:gap-0"
     >
       {/* Text Section - now appears first on mobile */}
       <motion.div 

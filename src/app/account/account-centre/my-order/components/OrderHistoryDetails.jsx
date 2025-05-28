@@ -50,7 +50,7 @@ const orders = [
 export const OrderHistoryDetails = ({ onOrderClick }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white">
-      <div className="max-w-7xl mx-auto  py-3 sm:py-6 md:py-8">
+      <div className="max-w-[1600px] mx-auto  py-3 sm:py-6 md:py-8">
         {/* Header Section */}
         <div className="mb-4 sm:mb-6 md:mb-8">
           {/* <div className="flex items-center gap-1 sm:gap-2 mb-3 sm:mb-4">

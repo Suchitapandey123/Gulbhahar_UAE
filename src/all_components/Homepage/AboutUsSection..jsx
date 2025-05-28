@@ -143,7 +143,7 @@ export default function AboutUsSection() {
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={containerVariants}
-      className="max-w-7xl p-4 md:p-8 lg:p-4 mx-auto"
+      className="max-w-[1600px] p-4 md:p-8 lg:p-4 mx-auto"
     >
       {/* Animated Header */}
       <motion.div 
