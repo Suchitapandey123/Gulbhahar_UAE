@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, ChevronDown, Search, ShoppingBag, User, LogOut, Settings, Package } from 'lucide-react';
+import { Menu, X, ChevronDown, Search, ShoppingBag, User, LogOut, Settings, Package, Eye } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import SearchPopup from './SearchPopup'; // Import the new SearchPopup component
@@ -12,21 +12,21 @@ const Navbar = () => {
   const [isCollectionDropdownOpen, setIsCollectionDropdownOpen] = useState(false);
   const [isMobileCollectionOpen, setIsMobileCollectionOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false); // New state for user dropdown
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Authentication state
-  const [user, setUser] = useState({ name: '', email: '' }); // User data
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState({ name: '', email: '' });
+  const [isHoverMode, setIsHoverMode] = useState(true); // Track if we're in hover mode or click mode
   
   const pathname = usePathname();
   const router = useRouter();
   const dropdownRef = useRef(null);
-  const userDropdownRef = useRef(null); // New ref for user dropdown
+  const userDropdownRef = useRef(null);
   const hoverTimeoutRef = useRef(null);
-  const userHoverTimeoutRef = useRef(null); // New timeout ref for user dropdown
+  const userHoverTimeoutRef = useRef(null);
 
   // Simulate user authentication check on component mount
   useEffect(() => {
-    // This would typically check localStorage, cookies, or make an API call
     const checkAuthStatus = () => {
       const token = localStorage.getItem('authToken');
       const userData = localStorage.getItem('userData');
@@ -62,6 +62,7 @@ const Navbar = () => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsCollectionDropdownOpen(false);
+        setIsHoverMode(true); // Reset to hover mode when clicking outside
       }
       if (userDropdownRef.current && !userDropdownRef.current.contains(event.target)) {
         setIsUserDropdownOpen(false);
@@ -78,12 +79,9 @@ const Navbar = () => {
       setIsCollectionDropdownOpen(false);
       setIsMobileCollectionOpen(false);
       setIsSearchOpen(false);
-      setIsUserDropdownOpen(false); // Close user dropdown when opening mobile menu
+      setIsUserDropdownOpen(false);
+      setIsHoverMode(true); // Reset to hover mode when opening mobile menu
     }
-  };
-
-  const toggleCollectionDropdown = () => {
-    setIsCollectionDropdownOpen(!isCollectionDropdownOpen);
   };
 
   const toggleMobileCollection = () => {
@@ -101,9 +99,8 @@ const Navbar = () => {
     setIsUserDropdownOpen(!isUserDropdownOpen);
   };
 
-  // Handle login (this would typically redirect to login page or open a modal)
+  // Handle login
   const handleLogin = () => {
-    // Simulate login - in real app, this would redirect to login page
     router.push('/login');
   };
 
@@ -117,23 +114,55 @@ const Navbar = () => {
     router.push('/');
   };
 
+  // Enhanced Collections click handler
   const handleCollectionClick = (e) => {
     e.preventDefault();
     if (window.innerWidth >= 768) {
-      router.push('/collections');
+      // Toggle between hover mode and click mode
+      if (isHoverMode) {
+        // Switch to click mode and show dropdown
+        setIsHoverMode(false);
+        setIsCollectionDropdownOpen(true);
+      } else {
+        // Toggle dropdown in click mode
+        setIsCollectionDropdownOpen(!isCollectionDropdownOpen);
+      }
     }
   };
 
   const handleCategoryClick = (category) => {
-    router.push(`/Collections/`);
+    router.push(`/collections/`);
     setIsCollectionDropdownOpen(false);
     setIsMobileCollectionOpen(false);
     setIsMenuOpen(false);
+    setIsHoverMode(true); // Reset to hover mode after navigation
+  };
+
+  // View All Collections handler
+  const handleViewAllCollections = (e) => {
+    console.log('handleViewAllCollections called'); // Debug log
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
+    try {
+      console.log('Attempting to navigate to /collections');
+      router.push('/collections');
+      console.log('Router.push called successfully');
+    } catch (error) {
+      console.error('Router.push failed:', error);
+    }
+    
+    setIsCollectionDropdownOpen(false);
+    setIsMobileCollectionOpen(false);
+    setIsMenuOpen(false);
+    setIsHoverMode(true);
   };
 
   // Enhanced hover handlers for collections dropdown
   const handleMouseEnter = () => {
-    if (window.innerWidth >= 768) {
+    if (window.innerWidth >= 768 && isHoverMode) {
       if (hoverTimeoutRef.current) {
         clearTimeout(hoverTimeoutRef.current);
       }
@@ -142,7 +171,7 @@ const Navbar = () => {
   };
 
   const handleMouseLeave = () => {
-    if (window.innerWidth >= 768) {
+    if (window.innerWidth >= 768 && isHoverMode) {
       hoverTimeoutRef.current = setTimeout(() => {
         setIsCollectionDropdownOpen(false);
       }, 150);
@@ -181,7 +210,7 @@ const Navbar = () => {
 
   // Enhanced NavLink component
   const NavLink = ({ href, children, hasDropdown = false, className = "" }) => {
-    const isActive = pathname === href || (hasDropdown && pathname.startsWith('/Collections'));
+    const isActive = pathname === href || (hasDropdown && pathname.startsWith('/collections'));
     
     return (
       <div 
@@ -190,8 +219,7 @@ const Navbar = () => {
         onMouseEnter={hasDropdown ? handleMouseEnter : undefined}
         onMouseLeave={hasDropdown ? handleMouseLeave : undefined}
       >
-        <Link 
-          href={href}
+        <button 
           className={`
             relative flex items-center px-3 lg:px-4 py-2 font-semibold text-xs sm:text-sm 
             uppercase tracking-wide transition-all duration-300 ease-out
@@ -200,7 +228,7 @@ const Navbar = () => {
               : 'text-gray-800 hover:text-[#800000] hover:scale-105'
             }
           `}
-          onClick={hasDropdown ? handleCollectionClick : undefined}
+          onClick={hasDropdown ? handleCollectionClick : () => router.push(href)}
         >
           <span className="relative z-10 flex items-center">
             {children}
@@ -219,7 +247,7 @@ const Navbar = () => {
             transition-all duration-300 ease-out
             ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}
           `}></div>
-        </Link>
+        </button>
       </div>
     );
   };
@@ -316,7 +344,7 @@ const Navbar = () => {
             </div>
 
             <div className="hidden md:flex items-center space-x-2 lg:space-x-6">
-              <NavLink href="/Collections" hasDropdown={true}>
+              <NavLink href="/collections" hasDropdown={true}>
                 Collections
               </NavLink>
               <NavLink href="/about">
@@ -525,7 +553,30 @@ const Navbar = () => {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
           >
-            <div className="max-w-7xl mx-auto p-6 lg:p-8">
+            <div className="max-w-7xl mx-auto p-6 lg:p-8" style={{ pointerEvents: 'auto' }}>
+              {/* View All Collections Button - Desktop */}
+              <div className="flex justify-center mb-6" style={{ pointerEvents: 'auto' }}>
+                <button
+                  type="button"
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Button clicked!');
+                    router.push('/collections');
+                    setIsCollectionDropdownOpen(false);
+                    setIsHoverMode(true);
+                  }}
+                  className="inline-flex items-center space-x-2 px-6 py-3 bg-[#800000] text-white 
+                           font-semibold text-sm uppercase tracking-wide rounded-lg
+                           hover:bg-[#600000] transform hover:scale-105 transition-all duration-300
+                           shadow-lg hover:shadow-xl cursor-pointer relative z-10"
+                  style={{ pointerEvents: 'auto' }}
+                >
+                  <Eye size={16} />
+                  <span>View All Collections</span>
+                </button>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
                 {collectionCategories.map((category, index) => (
                   <div 
@@ -644,7 +695,7 @@ const Navbar = () => {
                     flex items-center justify-between w-full p-3 text-left font-semibold 
                     text-base sm:text-lg transition-all duration-300 rounded-lg
                     hover:bg-gray-50 active:scale-95
-                    ${pathname.startsWith('/Collections')
+                    ${pathname.startsWith('/collections')
                       ? 'text-[#800000] bg-[#800000]/5'
                       : 'text-gray-800 hover:text-[#800000]'
                     }
@@ -662,10 +713,26 @@ const Navbar = () => {
                 <div className={`
                   space-y-3 sm:space-y-4 transition-all duration-400 ease-out overflow-hidden
                   ${isMobileCollectionOpen 
-                    ? 'max-h-96 opacity-100 translate-y-0' 
+                    ? 'max-h-[500px] opacity-100 translate-y-0' 
                     : 'max-h-0 opacity-0 -translate-y-2'
                   }
                 `}>
+                  {/* View All Collections Button - Mobile */}
+                  <div className="ml-3 sm:ml-4 mb-4">
+                    <button
+                      type="button"
+                      onClick={handleViewAllCollections}
+                      className="inline-flex items-center space-x-2 px-4 py-2 bg-[#800000] text-white 
+                               font-semibold text-sm uppercase tracking-wide rounded-lg
+                               hover:bg-[#600000] transform hover:scale-105 transition-all duration-300
+                               shadow-md hover:shadow-lg w-full justify-center cursor-pointer"
+                      style={{ pointerEvents: 'auto' }}
+                    >
+                      <Eye size={16} />
+                      <span>View All Collections</span>
+                    </button>
+                  </div>
+
                   {collectionCategories.map((category, index) => (
                     <div key={index} className="ml-3 sm:ml-4 space-y-2">
                       <div 

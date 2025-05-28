@@ -684,7 +684,7 @@ export default function Collection() {
   );
 
   return (
-    <div className="min-h-screen  bg-gradient-to-br from-red-50 to-rose-50">
+    <div className="min-h-screen mt-20 bg-gradient-to-br from-red-50 to-rose-50">
       {/* Hero Section */}
       <div className="relative  overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-red-900/20 to-rose-900/20"></div>
@@ -704,7 +704,7 @@ export default function Collection() {
       </div>
 
       {/* Breadcrumb */}
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-6 ">
         <nav className="py-4">
           <span className="text-red-700 hover:text-red-900 transition-colors cursor-pointer">
             Home
@@ -714,7 +714,7 @@ export default function Collection() {
         </nav>
       </div>
 
-      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row mt-8 px-2">
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row  ">
         {/* Sidebar - Visible only on lg screens and larger */}
         <div className="hidden xl:flex xl:flex-row max-w-[360px] mb-8">
           <p className="font-bold text-2xl text-red-900 pl-5 mb-6">
@@ -839,88 +839,59 @@ export default function Collection() {
           </div>
 
           {/* Product Grid - Responsive columns */}
-          <div
-            className={`grid gap-2 sm:gap-4 ${
-              viewMode === "grid"
-                ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-3"
-                : "grid-cols-1"
-            }`}
-          >
-            {paginatedCollections.map((item) => (
-              <div
-                key={item.id}
-                className="group bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-red-100"
-              >
-                <div className="relative overflow-hidden h-36 sm:h-52 lg:h-58">
-                  <Image
-                    priority
-                    height={100}
-                    width={100}
-                    src="/Image/About3.png"
-                    alt={item.name}
-                    className="w-full h-full -ml-3 object-cover scale-150 group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute top-2 right-2 sm:top-4 sm:right-4 flex gap-2">
-                    <button
-                      onClick={() => toggleFavorite(item.id)}
-                      className={`p-2 rounded-full backdrop-blur-sm transition-all ${
-                        favorites.has(item.id)
-                          ? "bg-red-900 text-white"
-                          : "bg-white/80 text-red-900 hover:bg-red-50"
-                      }`}
-                    >
-                      <Heart
-                        size={16}
-                        fill={favorites.has(item.id) ? "currentColor" : "none"}
-                      />
-                    </button>
-                  </div>
-                  {item.stock <= 5 && (
-                    <div className="absolute top-4 left-4 bg-red-900 text-white px-3 py-1 rounded-full text-xs font-bold">
-                      Only {item.stock} left!
-                    </div>
-                  )}
-                </div>
+         <div
+  className={`grid gap-4 ${
+    viewMode === "grid"
+      ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+      : "grid-cols-1"
+  }`}
+>
+  {paginatedCollections.map((item) => (
+    <div
+      key={item.id}
+      className="group relative border border-gray-200 rounded-sm bg-white overflow-hidden transition-all hover:shadow-lg"
+    >
+      {/* Image */}
+      <div className="overflow-hidden">
+        <Image
+          priority
+          height={300}
+          width={300}
+          src={ "/Image/About3.png"}
+          alt={item.title}
+          className="w-full h-80 object-cover transition-transform scale-y-125"
+        />
+      </div>
 
-                <div className="p-2 sm:p-2">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-bold text-sm sm:text-lg text-red-900 group-hover:text-red-700 transition-colors">
-                      {item.title}
-                    </h3>
-                    <div className="flex items-center gap-1">
-                      <Star
-                        size={12}
-                        className="text-yellow-500 fill-current sm:w-4 sm:h-4"
-                      />
-                      <span className="text-xs sm:text-sm text-gray-600">
-                        4.8
-                      </span>
-                    </div>
-                  </div>
+      {/* Tag */}
+      {item.stock <= 5 && (
+        <span className="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded z-10">
+          Only {item.stock} left!
+        </span>
+      )}
 
-                  <p className="text-gray-600 mb-3 text-xs sm:text-base">
-                    {item.name}
-                  </p>
+      {/* Basic Info */}
+      <div className="p-3">
+        <h3 className="text-sm font-semibold text-gray-800 truncate">
+          {item.title}
+        </h3>
+        <p className="text-xs text-gray-500 mb-1 truncate">{item.name}</p>
+        <span className="text-red-600 font-bold text-sm">
+          ₹{item.price.toLocaleString()}
+        </span>
+      </div>
 
-                  <div className="flex justify-between items-center sm:flex-row gap-2">
-                    <span className="xs:text-sm sm:text-lg font-bold text-red-900">
-                      ₹{item.price.toLocaleString()}
-                    </span>
-                    <button className="bg-red-900 max-w-[60%] text-white px-2 py-1 sm:px-3 sm:py-1.5 md:py-2 rounded-lg hover:bg-red-800 transition-colors font-semibold flex items-center gap-1 sm:gap-2 text-xs sm:text-sm w-full sm:w-auto justify-center">
-                      <ShoppingBag
-                        size={14}
-                        className="sm:w-4 w-2 h-2 sm:h-4"
-                      />
-                      <span className="hidden text-sm md:text-sm sm:inline text-nowrap">
-                        Add to Cart
-                      </span>
-                      <span className="sm:hidden">Add</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* Hover Content */}
+      <div className="absolute bottom-0 left-0 w-full bg-white px-3 py-2 border-t border-gray-200 translate-y-full group-hover:translate-y-0 transition-all duration-300 ease-in-out">
+        <button className="bg-red-900 text-white px-3 py-2 rounded w-full text-sm font-semibold hover:bg-red-800 transition-colors flex items-center justify-center gap-2">
+          <ShoppingBag size={14} className="w-4 h-4" />
+          <span>Add to Cart</span>
+        </button>
+      </div>
+    </div>
+  ))}
+</div>
+
 
           {/* Pagination */}
           <div className="mt-12 flex flex-wrap items-center justify-center gap-3 py-8 border-t-2 border-red-200">
