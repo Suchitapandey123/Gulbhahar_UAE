@@ -222,7 +222,7 @@ const NewCollection = () => {
         </motion.div>
       </motion.div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="max-w-[1600px] mx-auto relative z-10">
         {/* Animated Section heading with "SEE MORE" button */}
         <motion.div 
         variants={headerVariants}

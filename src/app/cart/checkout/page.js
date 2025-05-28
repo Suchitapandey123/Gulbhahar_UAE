@@ -72,7 +72,7 @@ export default function CheckoutComponent() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb />
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

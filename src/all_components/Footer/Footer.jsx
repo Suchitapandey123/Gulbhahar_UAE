@@ -76,7 +76,7 @@ export default function Footer() {
     <footer className="w-full bg-gradient-to-br from-gray-50 to-white border-t-2 border-red-100">
       {/* Trust Badges */}
       <div className="bg-red-50 border-b border-red-100 py-4 sm:py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
             <div className="flex flex-col items-center gap-2">
               <div className="w-10 h-10 bg-red-900 rounded-full flex items-center justify-center">
@@ -119,7 +119,7 @@ export default function Footer() {
       </div>
 
       {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
           
           {/* Brand Section */}
@@ -291,7 +291,7 @@ export default function Footer() {
 
       {/* Copyright */}
       <div className="bg-red-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-sm text-center sm:text-left">
               Copyright © {currentYear} Gulbhahar. All rights reserved

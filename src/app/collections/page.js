@@ -691,7 +691,7 @@ export default function Collection() {
         <div className="relative flex flex-col sm:flex-row justify-between mb-6 w-full">
           <div className="flex justify-center items-center w-full">
             <div className="border flex    justify-center items-center w-full min-w-full py-20 bg-gradient-to-r from-red-100 to-rose-100">
-              <h1 className="text-left mt-14 xs:my-0 font-serif mx-auto max-w-7xl md:text-8xl text-3xl font-bold text-red-900 leading-tight px-4">
+              <h1 className="text-left mt-14 xs:my-0 font-serif mx-auto max-w-[1600px] md:text-8xl text-3xl font-bold text-red-900 leading-tight px-4">
                 Try our
                 <br />
                 <span className="md:ml-32 md:text-8xl  text-3xl bg-gradient-to-r from-red-900 to-rose-700 bg-clip-text text-transparent">
@@ -704,7 +704,7 @@ export default function Collection() {
       </div>
 
       {/* Breadcrumb */}
-      <div className="max-w-7xl mx-auto px-6 ">
+      <div className="max-w-[1600px] mx-auto px-6 ">
         <nav className="py-4">
           <span className="text-red-700 hover:text-red-900 transition-colors cursor-pointer">
             Home
@@ -714,7 +714,7 @@ export default function Collection() {
         </nav>
       </div>
 
-      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row  ">
+      <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row  ">
         {/* Sidebar - Visible only on lg screens and larger */}
         <div className="hidden xl:flex xl:flex-row max-w-[360px] mb-8">
           <p className="font-bold text-2xl text-red-900 pl-5 mb-6">
@@ -938,7 +938,7 @@ export default function Collection() {
 
       {/* Top Trends Section */}
       <div className="bg-gradient-to-r from-red-100 to-rose-100 py-16 mt-16">
-        <section className="container mx-auto lg:max-w-7xl px-4">
+        <section className="container mx-auto lg:max-w-[1600px] px-4">
           <h2 className="text-5xl font-bold mb-12 text-red-900 text-center">
             Top Trends
           </h2>
@@ -971,7 +971,7 @@ export default function Collection() {
       </div>
 
       {/* Content Section */}
-      <div className="max-w-7xl mx-auto px-4 py-16">
+      <div className="max-w-[1600px] mx-auto px-4 py-16">
         <div className="bg-white rounded-xl shadow-lg p-8 border border-red-200">
           <h2 className="text-3xl font-bold text-red-900 mb-6">
             Women's Casual Shoes You Need To Own
@@ -1082,7 +1082,7 @@ export default function Collection() {
 
       {/* Footer CTA */}
       <div className="bg-gradient-to-r from-red-900 to-rose-900 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 text-center">
+        <div className="max-w-[1600px] mx-auto px-4 text-center">
           <h2 className="text-4xl font-bold mb-4">
             Ready to Find Your Perfect Pair?
           </h2>

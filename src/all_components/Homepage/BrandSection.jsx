@@ -107,7 +107,7 @@ const BrandSection = () => {
       `}</style>
       
       <motion.section 
-        className="py-16 md:py-24 px-4 max-w-7xl mx-auto"
+        className="py-16 md:py-24 px-4 max-w-[1600px] mx-auto"
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"

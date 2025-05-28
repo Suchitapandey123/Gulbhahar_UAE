@@ -94,7 +94,7 @@ const CartPage = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto mt-20 lg:mb-28 px-4 bg-gradient-to-br from-red-50/30 to-white min-h-screen">
+    <div className="max-w-[1600px] mx-auto mt-20 lg:mb-28 px-4 bg-gradient-to-br from-red-50/30 to-white min-h-screen">
       <Breadcrumb />
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
