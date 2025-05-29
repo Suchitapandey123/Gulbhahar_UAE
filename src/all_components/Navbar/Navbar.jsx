@@ -318,10 +318,10 @@ const Navbar = () => {
 
       <nav 
         className={`
-          fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md
+          fixed top-[-1px] left-0 right-0 z-50 bg-white/95 backdrop-blur-md
           transition-all duration-500 ease-out border-b border-gray-100/50
           ${isScrolled 
-            ? 'shadow-lg py-2 lg:py-3' 
+            ? 'shadow-lg py-2.5 lg:py-3' 
             : 'shadow-sm py-3 lg:py-4'
           }
         `}

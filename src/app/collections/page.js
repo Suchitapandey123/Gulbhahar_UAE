@@ -684,9 +684,9 @@ export default function Collection() {
   );
 
   return (
-    <div className="min-h-screen mt-20 bg-gradient-to-br from-red-50 to-rose-50">
+    <div className="min-h-screen  mt-16 bg-gradient-to-br from-red-50 to-rose-50">
       {/* Hero Section */}
-      <div className="relative  overflow-hidden">
+      <div className="relative hidden overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-red-900/20 to-rose-900/20"></div>
         <div className="relative flex flex-col sm:flex-row justify-between mb-6 w-full">
           <div className="flex justify-center items-center w-full">
@@ -838,7 +838,7 @@ export default function Collection() {
             ))}
           </div>
 
-          {/* Product Grid - Responsive columns */}
+          {/* Product Grid - Responsive columns  dskag;abdslkjlfbgreljkfdbsaljkgbldsakjfbnlgrekajfsdbnlkjgrenflkjngrfldskjbnglrfjkdblgksdmnbvlfjkndgslfdjkv.bnfg.kjn*/}
          <div
   className={`grid gap-4 ${
     viewMode === "grid"
@@ -849,7 +849,7 @@ export default function Collection() {
   {paginatedCollections.map((item) => (
     <div
       key={item.id}
-      className="group relative border border-gray-200 rounded-sm bg-white overflow-hidden transition-all hover:shadow-lg"
+      className="group relative  overflow-hidden transition-all "
     >
       {/* Image */}
       <div className="overflow-hidden">
@@ -876,18 +876,22 @@ export default function Collection() {
           {item.title}
         </h3>
         <p className="text-xs text-gray-500 mb-1 truncate">{item.name}</p>
-        <span className="text-red-600 font-bold text-sm">
+        <span className="text-red-500 font-bold text-sm">
           ₹{item.price.toLocaleString()}
         </span>
       </div>
 
       {/* Hover Content */}
-      <div className="absolute bottom-0 left-0 w-full bg-white px-3 py-2 border-t border-gray-200 translate-y-full group-hover:translate-y-0 transition-all duration-300 ease-in-out">
-        <button className="bg-red-900 text-white px-3 py-2 rounded w-full text-sm font-semibold hover:bg-red-800 transition-colors flex items-center justify-center gap-2">
-          <ShoppingBag size={14} className="w-4 h-4" />
-          <span>Add to Cart</span>
-        </button>
-      </div>
+    <div className="absolute bottom-[55px] left-0 w-full bg-[#fff1f2] px-3 py-2 border-gray-200 transition-all duration-300 ease-in-out z-10 
+                opacity-0 translate-y-4 scale-95 group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100">
+  <button className="bg-red-900 text-white px-3 py-2 rounded w-full text-sm font-semibold hover:bg-red-800 transition-colors flex items-center justify-center gap-2">
+    <ShoppingBag size={14} className="w-4 h-4" />
+    <span>Add to Cart</span>
+  </button>
+</div>
+
+
+
     </div>
   ))}
 </div>
