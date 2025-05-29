@@ -415,22 +415,25 @@ export default function Collection() {
     setCurrentImageIndices(initialIndices);
   }, []);
 
-  const handleMouseEnter = (productId) => {
-    setHoveredProduct(productId);
-    clearInterval(slideIntervalRef.current); // Clear any existing interval
+ const handleMouseEnter = (productId) => {
+  setHoveredProduct(productId);
+  clearInterval(slideIntervalRef.current); // Clear any existing interval
 
-    // Start auto-sliding for this product
-    slideIntervalRef.current = setInterval(() => {
-      setCurrentImageIndices((prev) => {
-        const currentIndex = prev[productId] || 0;
-        const product = collections.find((item) => item.id === productId);
-        if (!product) return prev;
-        const nextIndex = (currentIndex + 1) % product.image.length;
-        return { ...prev, [productId]: nextIndex };
-      });
-    }, 1500); // Consistent 1.5 second interval
-  };
-
+  // Start auto-sliding for this product
+  slideIntervalRef.current = setInterval(() => {
+    setCurrentImageIndices((prev) => {
+      const currentIndex = prev[productId] || 0;
+      const product = collections.find((item) => item.id === productId);
+      if (!product) return prev;
+      
+      // Calculate next index with wrap-around
+      const nextIndex = (currentIndex + 1) % product.image.length;
+      
+      // Use smooth transition by updating the state
+      return { ...prev, [productId]: nextIndex };
+    });
+  }, 2000); // Consistent 2 second interval
+};
   const handleMouseLeave = () => {
     setHoveredProduct(null);
     clearInterval(slideIntervalRef.current); // Clear interval on leave
@@ -443,54 +446,6 @@ export default function Collection() {
     };
   }, []);
 
-  // Manual navigation handlers
-  const handleNextImage = (productId, e) => {
-    e.stopPropagation();
-    setCurrentImageIndices((prev) => {
-      const currentIndex = prev[productId] || 0;
-      const product = collections.find((item) => item.id === productId);
-      if (!product) return prev;
-      const nextIndex = (currentIndex + 1) % product.image.length;
-      return { ...prev, [productId]: nextIndex };
-    });
-    // Reset the interval when manually navigating
-    clearInterval(slideIntervalRef.current);
-    if (hoveredProduct === productId) {
-      slideIntervalRef.current = setInterval(() => {
-        setCurrentImageIndices((prev) => {
-          const currentIndex = prev[productId] || 0;
-          const product = collections.find((item) => item.id === productId);
-          if (!product) return prev;
-          const nextIndex = (currentIndex + 1) % product.image.length;
-          return { ...prev, [productId]: nextIndex };
-        });
-      }, 1500);
-    }
-  };
-
-  const handlePrevImage = (productId, e) => {
-    e.stopPropagation();
-    setCurrentImageIndices((prev) => {
-      const currentIndex = prev[productId] || 0;
-      const product = collections.find((item) => item.id === productId);
-      if (!product) return prev;
-      const prevIndex = (currentIndex - 1 + product.image.length) % product.image.length;
-      return { ...prev, [productId]: prevIndex };
-    });
-    // Reset the interval when manually navigating
-    clearInterval(slideIntervalRef.current);
-    if (hoveredProduct === productId) {
-      slideIntervalRef.current = setInterval(() => {
-        setCurrentImageIndices((prev) => {
-          const currentIndex = prev[productId] || 0;
-          const product = collections.find((item) => item.id === productId);
-          if (!product) return prev;
-          const nextIndex = (currentIndex + 1) % product.image.length;
-          return { ...prev, [productId]: nextIndex };
-        });
-      }, 1500); // Consistent 1.5 second interval
-    }
-  };
 
   const toggleFavorite = (id) => {
     setFavorites((prev) => {
@@ -900,7 +855,7 @@ export default function Collection() {
       </div>
 
       {/* Breadcrumb */}
-      <div className="max-w-[1600px] mx-auto px-6">
+      <div className="max-w-[1600px] mx-auto px-2 xs:px-6">
         <nav className="py-4">
           <span className="text-red-700 hover:text-red-900 transition-colors cursor-pointer">
             Home
@@ -926,7 +881,7 @@ export default function Collection() {
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm lg:hidden">
             <div className="bg-white rounded-xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto shadow-2xl">
-              <div className="flex justify-between items-center px-6 py-8 border-b border-red-100">
+              <div className="flex justify-between items-center px-2 xs:px-6 py-8 border-b border-red-100">
                 <h2 className="text-xl font-bold text-red-900">Filters</h2>
                 <button
                   onClick={closeModal}
@@ -951,7 +906,7 @@ export default function Collection() {
         )}
 
         {/* Main Content */}
-        <div className="w-full lg:px-6">
+        <div className="w-full px-2 xs:px-0 lg:px-6">
           {/* Controls - Modified for responsive behavior */}
           <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center justify-between border-b-2 border-red-200 pb-4 mb-6 gap-4">
             <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
@@ -985,7 +940,7 @@ export default function Collection() {
               </div>
             </div>
 
-            <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
+            <div className="flex items-center px-2 xs:px-0 gap-3 w-full sm:w-auto justify-between sm:justify-start">
               {/* Filter button - shown on mobile/tablet, hidden on lg */}
               <button
                 className="flex lg:hidden items-center justify-center p-[6.5px] border-2 border-red-300 rounded-lg bg-white hover:bg-red-50 transition-colors"
@@ -1034,16 +989,16 @@ export default function Collection() {
 
           {/* Updated Product Grid with Image Slider */}
           <div
-            className={`grid gap-4 ${
+            className={`grid gap-2 xs:gap-4  ${
               viewMode === "grid"
-                ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-5"
-                : "grid-cols-1"
+                ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4 "
+                : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 "
             }`}
           >
             {paginatedCollections.map((item) => (
               <div
                 key={item.id}
-                className="group relative overflow-hidden transition-all"
+                className="group xs:px-0 cursor-pointer relative overflow-hidden transition-all"
                 onMouseEnter={() => handleMouseEnter(item.id)}
                 onMouseLeave={handleMouseLeave}
               >
@@ -1129,10 +1084,10 @@ export default function Collection() {
 
                 {/* Hover Content */}
                 <div
-                  className={`absolute bottom-[55px] left-0 w-full bg-[#fff1f2] px-3 py-2 border-gray-200 transition-all duration-300 ease-in-out z-10 
+                  className={`absolute bottom-[35px] left-0 w-full bg-[#fff1f2] px-0 py-2 border-gray-200 transition-all duration-300 ease-in-out z-10 
                 opacity-0 translate-y-4 scale-95 group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100`}
                 >
-                  <button className="bg-red-900 text-white px-3 py-2 rounded w-full text-sm font-semibold hover:bg-red-800 transition-colors flex items-center justify-center gap-2">
+                  <button className="bg-red-900 text-white px-2 py-2 rounded w-full text-sm font-semibold hover:bg-red-800 transition-colors flex items-center justify-center gap-2">
                     <ShoppingBag size={14} className="w-4 h-4" />
                     <span>Add to Cart</span>
                   </button>
@@ -1146,7 +1101,7 @@ export default function Collection() {
             <button
               onClick={() => setCurrentPage(1)}
               disabled={currentPage === 1}
-              className="px-4 py-2 rounded-lg border-2 border-red-300 bg-white text-red-900 hover:bg-red-50 disabled:opacity-50 font-semibold transition-all"
+              className="px-4 py-2 hidden sm:block rounded-lg border-2 border-red-300 bg-white text-red-900 hover:bg-red-50 disabled:opacity-50 font-semibold transition-all"
             >
               First
             </button>
@@ -1176,7 +1131,7 @@ export default function Collection() {
             <button
               onClick={() => setCurrentPage(totalPages)}
               disabled={currentPage === totalPages}
-              className="px-4 py-2 rounded-lg border-2 border-red-300 bg-white text-red-900 hover:bg-red-50 disabled:opacity-50 font-semibold transition-all"
+              className="px-4 py-2 hidden sm:block rounded-lg border-2 border-red-300 bg-white text-red-900 hover:bg-red-50 disabled:opacity-50 font-semibold transition-all"
             >
               Last
             </button>
@@ -1186,41 +1141,42 @@ export default function Collection() {
 
       {/* Top Trends Section */}
       <div className="bg-gradient-to-r from-red-100 to-rose-100 py-16 mt-16">
-        <section className="container mx-auto lg:max-w-[1600px] px-4">
-          <h2 className="text-5xl font-bold mb-12 text-red-900 text-center">
-            Top Trends
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[...Array(4)].map((_, i) => (
-              <div
-                key={i}
-                className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-red-200 group"
-              >
-                <div className="relative">
-                  <img
-                    src="/api/placeholder/300/400"
-                    alt="Trend item"
-                    className="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                </div>
-                <div className="p-6">
-                  <h3 className="font-bold text-lg text-red-900 mb-2">
-                    Trending Style {i + 1}
-                  </h3>
-                  <p className="text-gray-600">
-                    Discover the latest fashion trends
-                  </p>
-                </div>
-              </div>
-            ))}
+  <section className="container mx-auto lg:max-w-[1600px] px-2 xs:px-4">
+    <h2 className="text-5xl font-bold mb-12 text-red-900 text-center">
+      Top Trends
+    </h2>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      {[...Array(4)].map((_, i) => (
+        <div
+          key={i}
+          className="bg-white  shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-red-200 group"
+        >
+          <div className="relative w-full h-[510px] xs:h-[470px] overflow-hidden">
+            <img
+              src="/Image/About1.png"
+              alt="Trend item"
+              className="w-full h-full object-cover transition-transform duration-500 scale-150 group-hover:scale-150"
+            />
+            {/* Slide-up text section */}
+            <div className="absolute bottom-0 left-0 w-full bg-white text-black p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+              <h3 className="font-bold text-lg mb-1">
+                Trending Style {i + 1}
+              </h3>
+              <p className="text-sm">
+                Discover the latest fashion trends
+              </p>
+            </div>
           </div>
-        </section>
-      </div>
+        </div>
+      ))}
+    </div>
+  </section>
+</div>
+
 
       {/* Content Section */}
-      <div className="max-w-[1600px] mx-auto px-4 py-16">
-        <div className="bg-white rounded-xl shadow-lg p-8 border border-red-200">
+      <div className="max-w-[1600px] mx-auto px-2 xs:px-4 py-16">
+        <div className="bg-white rounded-xl shadow-lg p-2 sm:p-8 border border-red-200">
           <h2 className="text-3xl font-bold text-red-900 mb-6">
             Women's Casual Shoes You Need To Own
           </h2>
@@ -1244,7 +1200,7 @@ export default function Collection() {
               therapy on Gulbhahr.
             </p>
 
-            <div className="bg-red-50 p-6 rounded-lg border-l-4 border-red-900">
+            <div className="bg-red-50 p-2 rounded-lg border-l-4 border-red-900">
               <h3 className="text-xl font-bold text-red-900 mb-3">
                 Featured Collections
               </h3>
