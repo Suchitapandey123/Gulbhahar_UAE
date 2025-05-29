@@ -10,6 +10,8 @@ import {
   Star,
   Heart,
   ShoppingBag,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import img11 from "../../../public/Image/About3.png";
 import Image from "next/image";
@@ -21,7 +23,12 @@ const collections = [
     title: "Bridal Jutti",
     name: "Noorani Outfit",
     price: 5000,
-    image: "../../../../public/Image/Culture.png",
+    image: [
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+    ],
     season: "FALL 2024",
     stock: 12,
     size: "S",
@@ -31,7 +38,12 @@ const collections = [
     title: "Casual Juttis",
     name: "Noorani Outfit",
     price: 2200,
-    image: "../../../../public/Image/Culture.png",
+    image: [
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+    ],
     season: "WINTER 2024",
     stock: 15,
     size: "XXS",
@@ -41,7 +53,12 @@ const collections = [
     title: "Festive Collection",
     name: "Noorani Outfit",
     price: 1500,
-    image: "/api/placeholder/260/340",
+    image: [
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+    ],
     season: "WINTER 2024",
     stock: 15,
     size: "M",
@@ -51,7 +68,12 @@ const collections = [
     title: "Bridal Jutti",
     name: "Noorani Outfit",
     price: 5000,
-    image: "/api/placeholder/260/340",
+    image: [
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+    ],
     season: "WINTER 2024",
     stock: 15,
     size: "L",
@@ -61,7 +83,12 @@ const collections = [
     title: "Casual Juttis",
     name: "Noorani Outfit",
     price: 5000,
-    image: "/api/placeholder/260/340",
+    image: [
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+    ],
     season: "WINTER 2024",
     stock: 15,
     size: "XL",
@@ -71,7 +98,12 @@ const collections = [
     title: "Festive Collection",
     name: "Noorani Outfit",
     price: 1800,
-    image: "/api/placeholder/260/340",
+    image: [
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+    ],
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -81,7 +113,12 @@ const collections = [
     title: "Bridal Jutti",
     name: "Noorani Outfit",
     price: 5000,
-    image: "/api/placeholder/260/340",
+    image: [
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+    ],
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -91,7 +128,12 @@ const collections = [
     title: "Casual Juttis",
     name: "Noorani Outfit",
     price: 1200,
-    image: "/api/placeholder/260/340",
+    image: [
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+    ],
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -101,7 +143,12 @@ const collections = [
     title: "Festive Collection",
     name: "Noorani Outfit",
     price: 5000,
-    image: "/api/placeholder/260/340",
+    image: [
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+    ],
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -111,7 +158,12 @@ const collections = [
     title: "Bridal Jutti",
     name: "Noorani Outfit",
     price: 5000,
-    image: "/api/placeholder/260/340",
+    image: [
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+    ],
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -121,7 +173,12 @@ const collections = [
     title: "Casual Juttis",
     name: "Noorani Outfit",
     price: 5000,
-    image: "/api/placeholder/260/340",
+    image: [
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+    ],
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -131,7 +188,12 @@ const collections = [
     title: "Festive Collection",
     name: "Noorani Outfit",
     price: 5000,
-    image: "/api/placeholder/260/340",
+    image: [
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+    ],
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -141,7 +203,12 @@ const collections = [
     title: "Bridal Jutti",
     name: "Noorani Outfit",
     price: 5000,
-    image: "/api/placeholder/260/340",
+    image: [
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+    ],
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -151,7 +218,12 @@ const collections = [
     title: "Casual Juttis",
     name: "Noorani Outfit",
     price: 5000,
-    image: "/api/placeholder/260/340",
+    image: [
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+    ],
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -161,7 +233,12 @@ const collections = [
     title: "Festive Collection",
     name: "Noorani Outfit",
     price: 5000,
-    image: "/api/placeholder/260/340",
+    image: [
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+    ],
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -171,7 +248,12 @@ const collections = [
     title: "Bridal Jutti",
     name: "Noorani Outfit",
     price: 5000,
-    image: "/api/placeholder/260/340",
+    image: [
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+    ],
     season: "SPRING 2024",
     stock: 15,
     size: "XS",
@@ -181,7 +263,12 @@ const collections = [
     title: "Casual Juttis",
     name: "Noorani Outfit",
     price: 5000,
-    image: "/api/placeholder/260/340",
+    image: [
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+    ],
     season: "SPRING SUMMER 2024",
     stock: 15,
     size: "XS",
@@ -191,7 +278,12 @@ const collections = [
     title: "Festive Collection",
     name: "Noorani Outfit",
     price: 5000,
-    image: "/api/placeholder/260/340",
+    image: [
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+    ],
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -201,7 +293,12 @@ const collections = [
     title: "Bridal Jutti",
     name: "Noorani Outfit",
     price: 5000,
-    image: "/api/placeholder/260/340",
+    image: [
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+    ],
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -211,7 +308,12 @@ const collections = [
     title: "Casual Juttis",
     name: "Noorani Outfit",
     price: 5000,
-    image: "/api/placeholder/260/340",
+    image: [
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+    ],
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -221,7 +323,12 @@ const collections = [
     title: "Festive Collection",
     name: "Noorani Outfit",
     price: 5000,
-    image: "/api/placeholder/260/340",
+    image: [
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+    ],
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -231,7 +338,12 @@ const collections = [
     title: "Bridal Jutti",
     name: "Noorani Outfit",
     price: 5000,
-    image: "/api/placeholder/260/340",
+    image: [
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+      "../../../../public/Image/Culture.png",
+    ],
     season: "WINTER 2024",
     stock: 15,
     size: "XS",
@@ -256,6 +368,8 @@ const sortOptions = [
 const ITEMS_PER_PAGE = 9;
 
 export default function Collection() {
+  const [currentImageIndices, setCurrentImageIndices] = useState({});
+  const [hoveredProduct, setHoveredProduct] = useState(null);
   const [viewMode, setViewMode] = useState("grid");
   const [selectedSeason, setSelectedSeason] = useState("ALL");
   const [selectedSizes, setSelectedSizes] = useState([]);
@@ -270,6 +384,7 @@ export default function Collection() {
   const [selectedSize, setSelectedSize] = useState(null);
   const [isDragging, setIsDragging] = useState(null);
   const [favorites, setFavorites] = useState(new Set());
+  const slideIntervalRef = useRef(null);
 
   const sliderRef = useRef(null);
 
@@ -291,6 +406,91 @@ export default function Collection() {
   const MIN_PRICE = 2000;
   const MAX_PRICE = 12000;
   const PRICE_RANGE = MAX_PRICE - MIN_PRICE;
+
+  useEffect(() => {
+    const initialIndices = {};
+    collections.forEach((item) => {
+      initialIndices[item.id] = 0;
+    });
+    setCurrentImageIndices(initialIndices);
+  }, []);
+
+  const handleMouseEnter = (productId) => {
+    setHoveredProduct(productId);
+    clearInterval(slideIntervalRef.current); // Clear any existing interval
+
+    // Start auto-sliding for this product
+    slideIntervalRef.current = setInterval(() => {
+      setCurrentImageIndices((prev) => {
+        const currentIndex = prev[productId] || 0;
+        const product = collections.find((item) => item.id === productId);
+        if (!product) return prev;
+        const nextIndex = (currentIndex + 1) % product.image.length;
+        return { ...prev, [productId]: nextIndex };
+      });
+    }, 1500); // Consistent 1.5 second interval
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredProduct(null);
+    clearInterval(slideIntervalRef.current); // Clear interval on leave
+  };
+
+  // Cleanup interval when component unmounts
+  useEffect(() => {
+    return () => {
+      clearInterval(slideIntervalRef.current);
+    };
+  }, []);
+
+  // Manual navigation handlers
+  const handleNextImage = (productId, e) => {
+    e.stopPropagation();
+    setCurrentImageIndices((prev) => {
+      const currentIndex = prev[productId] || 0;
+      const product = collections.find((item) => item.id === productId);
+      if (!product) return prev;
+      const nextIndex = (currentIndex + 1) % product.image.length;
+      return { ...prev, [productId]: nextIndex };
+    });
+    // Reset the interval when manually navigating
+    clearInterval(slideIntervalRef.current);
+    if (hoveredProduct === productId) {
+      slideIntervalRef.current = setInterval(() => {
+        setCurrentImageIndices((prev) => {
+          const currentIndex = prev[productId] || 0;
+          const product = collections.find((item) => item.id === productId);
+          if (!product) return prev;
+          const nextIndex = (currentIndex + 1) % product.image.length;
+          return { ...prev, [productId]: nextIndex };
+        });
+      }, 1500);
+    }
+  };
+
+  const handlePrevImage = (productId, e) => {
+    e.stopPropagation();
+    setCurrentImageIndices((prev) => {
+      const currentIndex = prev[productId] || 0;
+      const product = collections.find((item) => item.id === productId);
+      if (!product) return prev;
+      const prevIndex = (currentIndex - 1 + product.image.length) % product.image.length;
+      return { ...prev, [productId]: prevIndex };
+    });
+    // Reset the interval when manually navigating
+    clearInterval(slideIntervalRef.current);
+    if (hoveredProduct === productId) {
+      slideIntervalRef.current = setInterval(() => {
+        setCurrentImageIndices((prev) => {
+          const currentIndex = prev[productId] || 0;
+          const product = collections.find((item) => item.id === productId);
+          if (!product) return prev;
+          const nextIndex = (currentIndex + 1) % product.image.length;
+          return { ...prev, [productId]: nextIndex };
+        });
+      }, 1500); // Consistent 1.5 second interval
+    }
+  };
 
   const toggleFavorite = (id) => {
     setFavorites((prev) => {
@@ -330,7 +530,6 @@ export default function Collection() {
   };
 
   const handleMouseUp = () => {
-    // e.preventDefault();
     setIsDragging(null);
   };
 
@@ -446,8 +645,8 @@ export default function Collection() {
 
   const FilterContent = () => (
     <div className="font-sans">
-      <div className="flex justify-between items-center  p-6 border-b border-red-100">
-        <span className="text-xl font-bold  text-red-900">Filters</span>
+      <div className="flex justify-between items-center p-6 border-b border-red-100">
+        <span className="text-xl font-bold text-red-900">Filters</span>
         <button
           onClick={clearFilters}
           className="text-red-900 hover:text-red-700 font-semibold transition-colors"
@@ -502,9 +701,6 @@ export default function Collection() {
                 layout
               >
                 <motion.div className="mt-6 space-y-4" layout>
-                  {/* Histogram */}
-                  
-
                   {/* Range Slider */}
                   <motion.div
                     className="relative h-2 bg-red-100 rounded-full mb-6 shadow-inner"
@@ -515,7 +711,7 @@ export default function Collection() {
                     layout
                   >
                     <motion.div
-                      className="absolute h-full  bg-gradient-to-r from-red-900 to-red-700 rounded-full shadow-sm"
+                      className="absolute h-full bg-gradient-to-r from-red-900 to-red-700 rounded-full shadow-sm"
                       style={{
                         left: `${minPosition}%`,
                         width: `${maxPosition - minPosition}%`,
@@ -641,7 +837,7 @@ export default function Collection() {
             className="flex justify-between items-center cursor-pointer group"
             onClick={() => toggleSection("size")}
           >
-            <h3 className="text-lg font-bold  text-red-900 group-hover:text-red-700 transition-colors">
+            <h3 className="text-lg font-bold text-red-900 group-hover:text-red-700 transition-colors">
               Size
             </h3>
             {openSections.size ? (
@@ -684,17 +880,17 @@ export default function Collection() {
   );
 
   return (
-    <div className="min-h-screen  mt-16 bg-gradient-to-br from-red-50 to-rose-50">
+    <div className="min-h-screen mt-16 bg-gradient-to-br from-red-50 to-rose-50">
       {/* Hero Section */}
       <div className="relative hidden overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-red-900/20 to-rose-900/20"></div>
         <div className="relative flex flex-col sm:flex-row justify-between mb-6 w-full">
           <div className="flex justify-center items-center w-full">
-            <div className="border flex    justify-center items-center w-full min-w-full py-20 bg-gradient-to-r from-red-100 to-rose-100">
+            <div className="border flex justify-center items-center w-full min-w-full py-20 bg-gradient-to-r from-red-100 to-rose-100">
               <h1 className="text-left mt-14 xs:my-0 font-serif mx-auto max-w-[1600px] md:text-8xl text-3xl font-bold text-red-900 leading-tight px-4">
                 Try our
                 <br />
-                <span className="md:ml-32 md:text-8xl  text-3xl bg-gradient-to-r from-red-900 to-rose-700 bg-clip-text text-transparent">
+                <span className="md:ml-32 md:text-8xl text-3xl bg-gradient-to-r from-red-900 to-rose-700 bg-clip-text text-transparent">
                   Latest Collections
                 </span>
               </h1>
@@ -704,7 +900,7 @@ export default function Collection() {
       </div>
 
       {/* Breadcrumb */}
-      <div className="max-w-[1600px] mx-auto px-6 ">
+      <div className="max-w-[1600px] mx-auto px-6">
         <nav className="py-4">
           <span className="text-red-700 hover:text-red-900 transition-colors cursor-pointer">
             Home
@@ -714,7 +910,7 @@ export default function Collection() {
         </nav>
       </div>
 
-      <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row  ">
+      <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row">
         {/* Sidebar - Visible only on lg screens and larger */}
         <div className="hidden xl:flex xl:flex-row max-w-[360px] mb-8">
           <p className="font-bold text-2xl text-red-900 pl-5 mb-6">
@@ -731,7 +927,7 @@ export default function Collection() {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm lg:hidden">
             <div className="bg-white rounded-xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto shadow-2xl">
               <div className="flex justify-between items-center px-6 py-8 border-b border-red-100">
-                <h2 className="text-xl font-bold  text-red-900">Filters</h2>
+                <h2 className="text-xl font-bold text-red-900">Filters</h2>
                 <button
                   onClick={closeModal}
                   className="p-2 hover:bg-red-50 rounded-full transition-colors"
@@ -742,7 +938,7 @@ export default function Collection() {
               <div className="p-2">
                 <FilterContent />
               </div>
-              <div className="px-6 py-4 xs:px-6 xs:py-4  border-t border-red-100 flex justify-end">
+              <div className="px-6 py-4 xs:px-6 xs:py-4 border-t border-red-100 flex justify-end">
                 <button
                   onClick={closeModal}
                   className="px-4 py-2 xs:px-8 xs:py-3 bg-red-900 text-white rounded-lg hover:bg-red-800 transition-colors font-bold shadow-lg"
@@ -789,7 +985,7 @@ export default function Collection() {
               </div>
             </div>
 
-            <div className="flex items-center gap-3  w-full sm:w-auto justify-between sm:justify-start">
+            <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
               {/* Filter button - shown on mobile/tablet, hidden on lg */}
               <button
                 className="flex lg:hidden items-center justify-center p-[6.5px] border-2 border-red-300 rounded-lg bg-white hover:bg-red-50 transition-colors"
@@ -800,15 +996,14 @@ export default function Collection() {
               </button>
 
               {/* Sort dropdown */}
-              <div className="flex items-center   gap-2 ">
+              <div className="flex items-center gap-2">
                 <span className="text-red-900 font-semibold hidden sm:inline">
                   Sort by:
                 </span>
-                {/* <div className="mr-20 xs:mr-0"> */}
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="px-2  py-2 border-2 border-red-300 rounded-lg bg-white text-red-900 font-medium focus:border-red-900 focus:ring-2 focus:ring-red-100 transition-all"
+                  className="px-2 py-2 border-2 border-red-300 rounded-lg bg-white text-red-900 font-medium focus:border-red-900 focus:ring-2 focus:ring-red-100 transition-all"
                 >
                   {sortOptions.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -816,7 +1011,6 @@ export default function Collection() {
                     </option>
                   ))}
                 </select>
-                {/* </div> */}
               </div>
             </div>
           </div>
@@ -838,64 +1032,114 @@ export default function Collection() {
             ))}
           </div>
 
-          {/* Product Grid - Responsive columns  dskag;abdslkjlfbgreljkfdbsaljkgbldsakjfbnlgrekajfsdbnlkjgrenflkjngrfldskjbnglrfjkdblgksdmnbvlfjkndgslfdjkv.bnfg.kjn*/}
-         <div
-  className={`grid gap-4 ${
-    viewMode === "grid"
-      ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-5"
-      : "grid-cols-1"
-  }`}
->
-  {paginatedCollections.map((item) => (
-    <div
-      key={item.id}
-      className="group relative  overflow-hidden transition-all "
-    >
-      {/* Image */}
-      <div className="overflow-hidden">
-        <Image
-          priority
-          height={300}
-          width={300}
-          src={ "/Image/About3.png"}
-          alt={item.title}
-          className="w-full h-80 object-cover transition-transform scale-y-125"
-        />
-      </div>
+          {/* Updated Product Grid with Image Slider */}
+          <div
+            className={`grid gap-4 ${
+              viewMode === "grid"
+                ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-5"
+                : "grid-cols-1"
+            }`}
+          >
+            {paginatedCollections.map((item) => (
+              <div
+                key={item.id}
+                className="group relative overflow-hidden transition-all"
+                onMouseEnter={() => handleMouseEnter(item.id)}
+                onMouseLeave={handleMouseLeave}
+              >
+                {/* Image Slider Container */}
+                <div className="relative overflow-hidden h-80">
+                  <div
+                    className="flex h-full transition-transform duration-500 ease-in-out"
+                    style={{
+                      transform: `translateX(-${
+                        currentImageIndices[item.id] * 100
+                      }%)`,
+                      width: `${item.image.length * 100}%`,
+                    }}
+                  >
+                    {item.image.map((image, idx) => (
+                      <div key={idx} className="w-full flex-shrink-0 h-full">
+                        <Image
+                          priority
+                          height={300}
+                          width={300}
+                          src={"/Image/About1.png"}
+                          alt={`${item.title} - ${idx + 1}`}
+                          className="w-full h-full scale-150 object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
 
-      {/* Tag */}
-      {item.stock <= 5 && (
-        <span className="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded z-10">
-          Only {item.stock} left!
-        </span>
-      )}
+                  {/* Navigation Arrows */}
+                  {hoveredProduct === item.id && item.image.length > 1 && (
+                    <>
+                      {/* <button
+                        onClick={(e) => handlePrevImage(item.id, e)}
+                        className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-1 shadow-md hover:bg-white transition-all z-10"
+                      >
+                        <ChevronLeft size={20} className="text-red-900" />
+                      </button>
+                      <button
+                        onClick={(e) => handleNextImage(item.id, e)}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-1 shadow-md hover:bg-white transition-all z-10"
+                      >
+                        <ChevronRight size={20} className="text-red-900" />
+                      </button> */}
+                    </>
+                  )}
 
-      {/* Basic Info */}
-      <div className="p-3">
-        <h3 className="text-sm font-semibold text-gray-800 truncate">
-          {item.title}
-        </h3>
-        <p className="text-xs text-gray-500 mb-1 truncate">{item.name}</p>
-        <span className="text-red-500 font-bold text-sm">
-          ₹{item.price.toLocaleString()}
-        </span>
-      </div>
+                  {/* Image Indicators */}
+                  {item.image.length > 1 && (
+                    <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
+                      {item.image.map((_, idx) => (
+                        <div
+                          key={idx}
+                          className={`w-2 h-2 rounded-full transition-all ${
+                            currentImageIndices[item.id] === idx
+                              ? "bg-red-900 w-3"
+                              : "bg-white/80"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  )}
 
-      {/* Hover Content */}
-    <div className="absolute bottom-[55px] left-0 w-full bg-[#fff1f2] px-3 py-2 border-gray-200 transition-all duration-300 ease-in-out z-10 
-                opacity-0 translate-y-4 scale-95 group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100">
-  <button className="bg-red-900 text-white px-3 py-2 rounded w-full text-sm font-semibold hover:bg-red-800 transition-colors flex items-center justify-center gap-2">
-    <ShoppingBag size={14} className="w-4 h-4" />
-    <span>Add to Cart</span>
-  </button>
-</div>
+                  {/* Stock Tag */}
+                  {item.stock <= 5 && (
+                    <span className="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded z-10">
+                      Only {item.stock} left!
+                    </span>
+                  )}
+                </div>
 
+                {/* Basic Info */}
+                <div className="p-3">
+                  <h3 className="text-sm font-semibold text-gray-800 truncate">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs text-gray-500 mb-1 truncate">
+                    {item.name}
+                  </p>
+                  <span className="text-red-500 font-bold text-sm">
+                    ₹{item.price.toLocaleString()}
+                  </span>
+                </div>
 
-
-    </div>
-  ))}
-</div>
-
+                {/* Hover Content */}
+                <div
+                  className={`absolute bottom-[55px] left-0 w-full bg-[#fff1f2] px-3 py-2 border-gray-200 transition-all duration-300 ease-in-out z-10 
+                opacity-0 translate-y-4 scale-95 group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100`}
+                >
+                  <button className="bg-red-900 text-white px-3 py-2 rounded w-full text-sm font-semibold hover:bg-red-800 transition-colors flex items-center justify-center gap-2">
+                    <ShoppingBag size={14} className="w-4 h-4" />
+                    <span>Add to Cart</span>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
 
           {/* Pagination */}
           <div className="mt-12 flex flex-wrap items-center justify-center gap-3 py-8 border-t-2 border-red-200">
