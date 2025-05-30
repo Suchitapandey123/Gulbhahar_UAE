@@ -76,12 +76,12 @@ import {
   
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50/40 via-white to-red-50/20">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="max-w-[1600px] mx-auto px-2 sm:px-6 lg:px-8 py-6 sm:py-8">
           
           {/* Header Section */}
           <div className="mb-8">
             {/* Breadcrumb */}
-            <div className="flex items-center gap-2 mb-6">
+            <div className="flex items-center pl-2 gap-2 mb-6">
               <button 
                 onClick={onBack}
                 className="flex items-center gap-2 text-red-900 hover:text-red-700 transition-colors group"
@@ -183,7 +183,7 @@ import {
                 return (
                   <div
                     key={index}
-                    className="bg-white border border-gray-200 rounded-xl p-6 hover:border-red-200 hover:shadow-md transition-all duration-200"
+                    className="bg-white border border-gray-200 rounded-xl p-3 sm:p-6  py-6 hover:border-red-200 hover:shadow-md transition-all duration-200"
                   >
                     {/* Card Header */}
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">

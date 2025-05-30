@@ -227,7 +227,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50/40 via-white to-red-50/20">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <div className="max-w-[1600px] mx-auto px-0 sm:px-6 lg:px-8 py-6 sm:py-8">
         
         {activeView === ProfileView.MAIN && (
           <div>

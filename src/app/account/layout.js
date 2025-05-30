@@ -5,7 +5,7 @@ import Sidebar from "./components/Sidebar";
 
 export default function AccountLayout({ children }) {
   return (
-    <div className=" mt-16 mx-auto max-w-[1600px] px-2 xs:px-3 sm:px-4 py-3 xs:py-4 sm:py-6 md:py-8 min-h-screen flex flex-col xs:mt-10 sm:mt-12 md:mt-14">
+    <div className=" mt-16 mx-auto max-w-[1600px] px-0 xs:px-3 sm:px-4 py-3 xs:py-4 sm:py-6 md:py-8 min-h-screen flex flex-col xs:mt-10 sm:mt-12 md:mt-14">
       {/* Breadcrumb Navigation */}
       <Breadcrumb />
       
