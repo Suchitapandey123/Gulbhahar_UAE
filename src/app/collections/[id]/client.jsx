@@ -3,17 +3,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import Breadcrumb from "@/components/Breadcrumb";
-import Cart from "@/components/ui/Cart";
-import HeartIcon from "@/components/ui/HeartIcon";
-import Star from "@/components/ui/Star";
-import ThumbUp from "@/components/ui/ThumbUp";
-import ThumbDown from "@/components/ui/ThumbDown";
-import Collection from "@/assets/Svg/collection.svg";
-import user from "@/assets/Svg/user.svg";
-import itemimage from "@/assets/Svg/23.svg";
-import productimage from "@/assets/Image/Product.png";
-import img1 from "@/assets/Image/C1.png";
+import { ShoppingCart, Heart, Star, ThumbsUp, ThumbsDown, User, Package, Truck, ChevronRight, Home } from "lucide-react";
+import Breadcrumb from "@/app/account/components/Breadcrumb";
 
 export function ProductClient({ product, similarProducts }) {
   const router = useRouter();
@@ -39,11 +30,25 @@ export function ProductClient({ product, similarProducts }) {
   });
 
   return (
-    <div className="min-h-screen bg-white py-4 px-4 sm:py-6 sm:px-6 lg:py-8 lg:px-8 font-raleway">
+    <div className="min-h-screen bg-white py-4 mt-10 sm:mt-0 px-4 sm:py-6 sm:px-6 lg:py-8 lg:px-8 font-raleway">
       <div className="max-w-[1600px] mx-auto mt-6 sm:mt-10 md:mt-24">
         {/* Breadcrumb */}
         <div className="mb-4 lg:mb-6">
-          <Breadcrumb />
+          <nav className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm text-gray-600 overflow-x-auto pb-1">
+            <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+              <Home className="w-3 h-3 sm:w-4 sm:h-4" />
+              <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hover:text-red-900 cursor-pointer whitespace-nowrap">Shop</span>
+              <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hover:text-red-900 cursor-pointer whitespace-nowrap max-w-[80px] sm:max-w-none truncate" title={product.category}>
+                {product.category}
+              </span>
+              <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="text-gray-900 font-medium whitespace-nowrap max-w-[100px] sm:max-w-[200px] lg:max-w-none truncate" title={product.name}>
+                {product.name}
+              </span>
+            </div>
+          </nav>
         </div>
 
         {/* Main Product Section */}
@@ -51,13 +56,8 @@ export function ProductClient({ product, similarProducts }) {
           {/* Product Images */}
           <div className="space-y-4">
             {/* Main Image */}
-            <div className="aspect-square relative rounded-lg overflow-hidden border md:h-[500px] lg:h-[625px]">
-              <Image
-                src={Collection}
-                alt="Product-image"
-                fill
-                className="object-cover"
-              />
+            <div className="aspect-square relative rounded-lg overflow-hidden border md:h-[500px] lg:h-[625px] bg-gray-100 flex items-center justify-center">
+              <Package className="w-32 h-32 text-gray-400" />
             </div>
 
             {/* Thumbnail Images */}
@@ -66,18 +66,13 @@ export function ProductClient({ product, similarProducts }) {
                 <button
                   key={idx}
                   onClick={() => setMainImage(img)}
-                  className={`aspect-square relative rounded border transition-all duration-200 ${
+                  className={`aspect-square relative rounded border transition-all duration-200 bg-gray-100 flex items-center justify-center ${
                     mainImage === img
                       ? "border-red-900 ring-2 ring-red-900 ring-opacity-50"
                       : "border-gray-200 hover:border-red-300"
                   }`}
                 >
-                  <Image
-                    src={Collection}
-                    alt="Product-image"
-                    fill
-                    className="object-cover"
-                  />
+                  <Package className="w-8 h-8 text-gray-400" />
                 </button>
               ))}
             </div>
@@ -137,13 +132,9 @@ export function ProductClient({ product, similarProducts }) {
                     }`}
                     onClick={() => setSelectedColor(color)}
                   >
-                    <Image
-                      src={productimage}
-                      alt="product-image"
-                      width={88}
-                      height={109}
-                      className="w-full h-full object-cover"
-                    />
+                    <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
+                      <Package className="w-8 h-8 text-gray-500" />
+                    </div>
                   </button>
                 ))}
               </div>
@@ -201,30 +192,18 @@ export function ProductClient({ product, similarProducts }) {
                   onClick={handleAddToCart}
                   className="flex-1 bg-black text-white rounded-[15px] h-16 sm:h-20 shadow-lg hover:bg-gray-800 transition-colors duration-200 flex items-center justify-center"
                 >
-                  <Cart />
+                  <ShoppingCart className="w-6 h-6 sm:w-8 sm:h-8" />
                   <span className="text-base sm:text-lg ml-2">Add To Cart</span>
                 </button>
 
                 <button className="flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-[15px] hover:bg-gray-50 transition-colors duration-200">
-                  <HeartIcon className="w-8 h-8 sm:w-10 sm:h-10 text-red-900" />
+                  <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-red-900" />
                 </button>
               </div>
 
               {/* Free Delivery Info */}
               <div className="flex items-center gap-2 p-3 bg-red-50 rounded-lg">
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 30 30"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="flex-shrink-0"
-                >
-                  <path
-                    d="M15.4 12.5C15.2917 12.5033 15.1875 12.5483 15.1108 12.6267L12.9125 14.8183L11.5583 13.4683C11.1792 13.0733 10.5667 13.6833 10.9625 14.0617L12.615 15.71C12.7792 15.8742 13.0458 15.8742 13.2108 15.71L15.7067 13.2208C15.9817 12.9542 15.7792 12.5 15.4008 12.5H15.4ZM2.91667 15.8333H5.41667C5.6475 15.8333 5.83333 16.0192 5.83333 16.25C5.83333 16.4808 5.6475 16.6667 5.41667 16.6667H2.91667C2.68583 16.6667 2.5 16.4808 2.5 16.25C2.5 16.0192 2.68583 15.8333 2.91667 15.8333ZM2.91667 12.5H5.41667C5.6475 12.5 5.83333 12.6858 5.83333 12.9167C5.83333 13.1475 5.6475 13.3333 5.41667 13.3333H2.91667C2.68583 13.3333 2.5 13.1475 2.5 12.9167C2.5 12.6858 2.68583 12.5 2.91667 12.5ZM2.91667 9.16667H5.41667C5.6475 9.16667 5.83333 9.3525 5.83333 9.58333C5.83333 9.81417 5.6475 10 5.41667 10H2.91667C2.68583 10 2.5 9.81417 2.5 9.58333C2.5 9.3525 2.68583 9.16667 2.91667 9.16667ZM22.9167 18.3333C21.7708 18.3333 20.8333 19.2708 20.8333 20.4167C20.8333 21.5625 21.7708 22.5 22.9167 22.5C24.0625 22.5 25 21.5625 25 20.4167C25 19.2708 24.0625 18.3333 22.9167 18.3333ZM22.9167 19.1667C23.6117 19.1667 24.1667 19.7217 24.1667 20.4167C24.1667 21.1117 23.6117 21.6667 22.9167 21.6667C22.2217 21.6667 21.6667 21.1117 21.6667 20.4167C21.6667 19.7217 22.2217 19.1667 22.9167 19.1667ZM12.0833 18.3333C10.9375 18.3333 10 19.2708 10 20.4167C10 21.5625 10.9375 22.5 12.0833 22.5C13.2292 22.5 14.1667 21.5625 14.1667 20.4167C14.1667 19.2708 13.2292 18.3333 12.0833 18.3333ZM12.0833 19.1667C12.7783 19.1667 13.3333 19.7217 13.3333 20.4167C13.3333 21.1117 12.7783 21.6667 12.0833 21.6667C11.3883 21.6667 10.8333 21.1117 10.8333 20.4167C10.8333 19.7217 11.3883 19.1667 12.0833 19.1667ZM7.91667 7.5C7.23167 7.5 6.66667 8.065 6.66667 8.75V17.9167C6.66667 18.6017 7.23167 19.1667 7.91667 19.1667H9.58333C10.1467 19.175 10.1467 18.325 9.58333 18.3333H7.91667C7.67833 18.3333 7.5 18.155 7.5 17.9167V8.75C7.5 8.51167 7.67833 8.33333 7.91667 8.33333H18.75C18.9883 8.33333 19.1667 8.51167 19.1667 8.75V18.3333H14.5833C14.0333 18.3333 14.0433 19.175 14.5833 19.1667H20.4167C20.9667 19.1667 20.9617 18.3333 20.4167 18.3333H20V10.8333H23.5225L26.6667 15.7467V17.9167C26.6667 18.155 26.4883 18.3333 26.25 18.3333H25.4167C24.8717 18.3333 24.8717 19.1667 25.4167 19.1667H26.25C26.935 19.1667 27.5 18.6017 27.5 17.9167V15.625C27.5 15.5458 27.4775 15.4667 27.435 15.4L24.1017 10.1917C24.025 10.0725 23.8933 10 23.75 10H20V8.75C20 8.065 19.435 7.5 18.75 7.5H7.91667Z"
-                    fill="#7f1d1d"
-                  />
-                </svg>
+                <Truck className="w-6 h-6 text-red-900 flex-shrink-0" />
                 <span className="text-red-900 text-sm font-medium">
                   Free delivery on orders above ₹500.00
                 </span>
@@ -256,15 +235,13 @@ export function ProductClient({ product, similarProducts }) {
                   <div className="flex items-center gap-2">
                     <div className="flex">
                       {[...Array(5)].map((_, idx) => (
-                        <div
+                        <Star
                           key={idx}
                           onClick={() => setUserRating(idx + 1)}
-                          className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 cursor-pointer"
-                        >
-                          <Star
-                            fillColor={idx < userRating ? "#7f1d1d" : "#D1D5DB"}
-                          />
-                        </div>
+                          className={`w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 cursor-pointer ${
+                            idx < userRating ? "fill-red-900 text-red-900" : "fill-gray-300 text-gray-300"
+                          }`}
+                        />
                       ))}
                     </div>
                     <span className="text-lg font-medium ml-2 sm:ml-4">
@@ -327,13 +304,9 @@ export function ProductClient({ product, similarProducts }) {
                       {/* Review Header */}
                       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3">
                         <div className="flex items-center gap-3">
-                          <Image
-                            src={user}
-                            alt="user image"
-                            width={40}
-                            height={40}
-                            className="rounded-full"
-                          />
+                          <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                            <User className="w-6 h-6 text-gray-600" />
+                          </div>
                           <p className="text-sm sm:text-base font-medium text-gray-900">
                             {review.user}
                           </p>
@@ -348,11 +321,12 @@ export function ProductClient({ product, similarProducts }) {
                         <span className="text-sm text-gray-500">Rating:</span>
                         <div className="flex">
                           {[...Array(5)].map((_, idx) => (
-                            <div key={idx} className="w-4 h-4 sm:w-5 sm:h-5">
-                              <Star
-                                fillColor={idx < review.rating ? "#eab308" : "#d1d5db"}
-                              />
-                            </div>
+                            <Star
+                              key={idx}
+                              className={`w-4 h-4 sm:w-5 sm:h-5 ${
+                                idx < review.rating ? "fill-yellow-400 text-yellow-400" : "fill-gray-300 text-gray-300"
+                              }`}
+                            />
                           ))}
                         </div>
                       </div>
@@ -366,11 +340,11 @@ export function ProductClient({ product, similarProducts }) {
                           Reply
                         </button>
                         <div className="flex items-center gap-1">
-                          <ThumbUp className="w-4 h-4" />
+                          <ThumbsUp className="w-4 h-4" />
                           <span>10</span>
                         </div>
                         <div className="flex items-center gap-1">
-                          <ThumbDown className="w-4 h-4" />
+                          <ThumbsDown className="w-4 h-4" />
                           <span>0</span>
                         </div>
                       </div>
@@ -394,13 +368,8 @@ export function ProductClient({ product, similarProducts }) {
                 className="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow duration-200 bg-gray-50"
               >
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                  <div className="relative w-full sm:w-32 h-32 flex-shrink-0">
-                    <Image
-                      src={itemimage}
-                      alt="item-image"
-                      fill
-                      className="object-cover rounded-lg"
-                    />
+                  <div className="relative w-full sm:w-32 h-32 flex-shrink-0 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <Package className="w-16 h-16 text-gray-400" />
                   </div>
                   <div className="space-y-2 flex-1">
                     <h3 className="font-semibold text-base sm:text-lg text-gray-900">
@@ -408,9 +377,7 @@ export function ProductClient({ product, similarProducts }) {
                     </h3>
                     <div className="flex items-center gap-1">
                       {[...Array(item.rating)].map((_, idx) => (
-                        <div key={idx} className="w-4 h-4">
-                          <Star fillColor={"#d1d5db"} />
-                        </div>
+                        <Star key={idx} className="w-4 h-4 fill-gray-300 text-gray-300" />
                       ))}
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
@@ -442,14 +409,9 @@ export function ProductClient({ product, similarProducts }) {
             {[...Array(4)].map((_, i) => (
               <div
                 key={i}
-                className="flex-shrink-0 w-60 sm:w-72 lg:w-auto aspect-[3/4] relative hover:shadow-lg transition-shadow duration-200"
+                className="flex-shrink-0 w-60 sm:w-72 lg:w-auto aspect-[3/4] relative hover:shadow-lg transition-shadow duration-200 bg-gray-100 rounded-lg flex items-center justify-center"
               >
-                <Image
-                  src={img1}
-                  alt="similar product"
-                  fill
-                  className="object-cover rounded-lg"
-                />
+                <Package className="w-24 h-24 text-gray-400" />
               </div>
             ))}
           </div>

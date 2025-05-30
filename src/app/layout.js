@@ -25,11 +25,11 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* <ReactQueryProvider> */}
+        <ReactQueryProvider>
         <Navbar />
         {children}
         <Footer />
-        {/* </ReactQueryProvider>  */}
+        </ReactQueryProvider> 
       </body>
     </html>
   );
