@@ -104,7 +104,7 @@ const CartPage = () => {
             {/* Cart Header */}
             <div className="flex justify-between items-center lg:mb-8 mb-6 bg-white p-4 rounded-xl shadow-sm border border-red-100">
               <div className="flex items-center gap-3">
-                <ShoppingCart className="h-6 w-6 text-red-900" />
+                <ShoppingCart className="h-6 w-6 text-red-900 " />
                 <h2 className="sm:text-2xl sm:block hidden text-lg text-nowrap font-bold font-raleway text-gray-900">Shopping Cart</h2>
                 <h2 className="sm:text-2xl block sm:hidden text-lg text-nowrap font-bold font-raleway text-gray-900"> Cart</h2>
                 

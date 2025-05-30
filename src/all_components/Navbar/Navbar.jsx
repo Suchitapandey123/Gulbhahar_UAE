@@ -40,6 +40,15 @@ const Navbar = () => {
     checkAuthStatus();
   }, []);
 
+
+const [openCategoryIndex, setOpenCategoryIndex] = useState(null);
+
+    const toggleCategory = (index) => {
+    setOpenCategoryIndex(prev => (prev === index ? null : index));
+  };
+
+
+
   // Smooth scroll detection with throttling
   useEffect(() => {
     let ticking = false;
@@ -255,13 +264,13 @@ const Navbar = () => {
   // Collection categories
   const collectionCategories = [
     {
-      title: "Bridal Jutti",
-      subtitle: "Wedding Elegance",
+      title: "Designed By Monica",
+      subtitle: "Exclusive Collection",
       items: [
-        "Heavy Embroidered Gold Work",
-        "Pearl Embellished",
-        "Mirror Work",
-        "Wedding Special Sets"
+        "Juttis",
+        "Heels",
+        "Purses",
+
       ]
     },
     {
@@ -294,6 +303,31 @@ const Navbar = () => {
         "Exclusive Craftsmanship"
       ]
     }
+  ];
+
+   const collectionCategoriesForMobile = [
+    {
+      title: "Designed By Monica",
+      subtitle: "Exclusive Collection",
+      items: [
+        "Juttis",
+        "Heels",
+        "Purses",
+
+      ]
+    },
+    {
+      title: "Women",
+      subtitle: "Everyday Comfort",
+      items: [
+        "Juttis",
+        "Heels",
+        "Purses",
+        
+      ]
+    },
+    
+  
   ];
 
   // User menu items for logged-in users
@@ -402,11 +436,11 @@ const Navbar = () => {
               >
                 <div className="relative">
                   <ShoppingBag size={16} className="group-hover:scale-110 transition-transform duration-300" />
-                  <span className="absolute -top-2 -right-2 w-3.5 h-3.5 bg-[#800000] text-white 
+                  {/* <span className="absolute -top-2 -right-2 w-3.5 h-3.5 bg-[#800000] text-white 
                                  text-xs rounded-full flex items-center justify-center font-bold
                                  animate-pulse">
                     3
-                  </span>
+                  </span> */}
                 </div>
                 <span className="hidden lg:inline">Cart</span>
               </Link>
@@ -722,8 +756,8 @@ const Navbar = () => {
                     <button
                       type="button"
                       onClick={handleViewAllCollections}
-                      className="inline-flex items-center space-x-2 px-4 py-2 bg-[#800000] text-white 
-                               font-semibold text-sm uppercase tracking-wide rounded-lg
+                      className="inline-flex items-center space-x-2 px-8 py-2 bg-[#800000] text-white 
+                               font-semibold text-[12px] uppercase tracking-wide rounded-lg
                                hover:bg-[#600000] transform hover:scale-105 transition-all duration-300
                                shadow-md hover:shadow-lg w-full justify-center cursor-pointer"
                       style={{ pointerEvents: 'auto' }}
@@ -733,39 +767,54 @@ const Navbar = () => {
                     </button>
                   </div>
 
-                  {collectionCategories.map((category, index) => (
-                    <div key={index} className="ml-3 sm:ml-4 space-y-2">
-                      <div 
-                        onClick={() => {
-                          handleCategoryClick(category.title);
-                          toggleMenu();
-                        }}
-                        className="font-semibold text-gray-800 hover:text-[#800000] 
-                                 transition-all duration-300 cursor-pointer p-2 rounded-lg
-                                 hover:bg-[#800000]/5 transform hover:translate-x-1"
-                      >
-                        {category.title}
-                      </div>
-                      <ul className="ml-3 d sm:ml-4 space-y-1">
-                        {category.items.map((item, itemIndex) => (
-                          <li key={itemIndex}>
-                            <div 
-                              onClick={() => {
-                                handleCategoryClick(`${category.title} ${item}`);
-                                toggleMenu();
-                              }}
-                              className="text-sm text-gray-600 hover:text-[#800000] 
-                                       transition-all duration-300 cursor-pointer 
-                                       transform hover:translate-x-2 p-2 rounded
-                                       hover:bg-[#800000]/5"
-                            >
-                              • {item}
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
+                  <div
+    onClick={() => {
+      handleCategoryClick('All Products'); // Or any custom logic
+      toggleMenu(); // Optional: close menu
+    }}
+    className="font-semibold text-gray-800 hover:text-[#800000] 
+               transition-all duration-300 cursor-pointer p-2 rounded-lg
+               hover:bg-[#800000]/5 transform hover:translate-x-1"
+  >
+    New
+  </div>
+
+                  {collectionCategoriesForMobile.map((category, index) => (
+  <div key={index} className="ml-3 sm:ml-4 space-y-2">
+   
+    <div
+      onClick={() => toggleCategory(index)}
+      className="font-semibold text-gray-800 hover:text-[#800000] 
+                 transition-all duration-300 cursor-pointer p-2 rounded-lg
+                 hover:bg-[#800000]/5 transform hover:translate-x-1 flex justify-between items-center"
+    >
+      <span>{category.title}</span>
+      <span>{openCategoryIndex === index ? '▲' : '▼'}</span>
+    </div>
+
+    {openCategoryIndex === index && (
+      <ul className="ml-3 sm:ml-4 space-y-1">
+        {category.items.map((item, itemIndex) => (
+          <li key={itemIndex}>
+            <div
+              onClick={() => {
+                handleCategoryClick(`${category.title} ${item}`);
+                toggleMenu(); // close the menu
+              }}
+              className="text-sm text-gray-600 hover:text-[#800000] 
+                         transition-all duration-300 cursor-pointer 
+                         transform hover:translate-x-2 p-2 rounded
+                         hover:bg-[#800000]/5"
+            >
+              • {item}
+            </div>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+))}
+
                 </div>
               </div>
 

@@ -1,5 +1,6 @@
 "use client";
 import { SetStateAction, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import {
   ChevronDown,
   ChevronUp,
@@ -1014,6 +1015,7 @@ export default function Collection() {
                     }}
                   >
                     {item.image.map((image, idx) => (
+                      <Link href={`/collections/${item.id}`} className="w-full h-full" key={idx}>
                       <div key={idx} className="w-full flex-shrink-0 h-full">
                         <Image
                           priority
@@ -1024,6 +1026,7 @@ export default function Collection() {
                           className="w-full h-full scale-150 object-cover"
                         />
                       </div>
+                      </Link>
                     ))}
                   </div>
 

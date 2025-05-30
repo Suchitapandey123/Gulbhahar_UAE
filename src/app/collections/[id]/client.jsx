@@ -56,8 +56,17 @@ export function ProductClient({ product, similarProducts }) {
           {/* Product Images */}
           <div className="space-y-4">
             {/* Main Image */}
+            
             <div className="aspect-square relative rounded-lg overflow-hidden border md:h-[500px] lg:h-[625px] bg-gray-100 flex items-center justify-center">
-              <Package className="w-32 h-32 text-gray-400" />
+              {/* <Package className="w-32 h-32 text-gray-400" /> */}
+              
+               <Image
+      src="/assets/Image/About1.png" 
+      alt="Description of image"
+      className="object-cover w-full h-full scale-150"
+      width={1000}              
+      height={700}            
+    />
             </div>
 
             {/* Thumbnail Images */}
@@ -72,7 +81,14 @@ export function ProductClient({ product, similarProducts }) {
                       : "border-gray-200 hover:border-red-300"
                   }`}
                 >
-                  <Package className="w-8 h-8 text-gray-400" />
+                  {/* <Package className="w-8 h-8 text-gray-400" /> */}
+                  <Image
+                    src="/assets/Image/About1.png"
+                    alt={`Thumbnail ${idx + 1}`}
+                    className="object-cover w-full h-full"
+                    width={1000}
+                    height={700}
+                    />
                 </button>
               ))}
             </div>
@@ -133,7 +149,14 @@ export function ProductClient({ product, similarProducts }) {
                     onClick={() => setSelectedColor(color)}
                   >
                     <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
-                      <Package className="w-8 h-8 text-gray-500" />
+                      {/* <Package className="w-8 h-8 text-gray-500" /> */}
+                      <Image
+                        src="/assets/Image/About1.png" // Assuming images are named by color
+                        alt={color}
+                        className="object-cover w-full h-full scale-150"
+                        width={1000}
+                        height={700}
+                      />
                     </div>
                   </button>
                 ))}
@@ -369,7 +392,14 @@ export function ProductClient({ product, similarProducts }) {
               >
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                   <div className="relative w-full sm:w-32 h-32 flex-shrink-0 bg-gray-100 rounded-lg flex items-center justify-center">
-                    <Package className="w-16 h-16 text-gray-400" />
+                    {/* <Package className="w-16 h-16 text-gray-400" /> */}
+                    <Image
+                      src="/assets/Image/About2.png" // Assuming images are named by item.id
+                      alt={item.name}
+                      className="object-cover w-full h-full "
+                      width={1000}
+                      height={700}
+                    />
                   </div>
                   <div className="space-y-2 flex-1">
                     <h3 className="font-semibold text-base sm:text-lg text-gray-900">
@@ -412,6 +442,13 @@ export function ProductClient({ product, similarProducts }) {
                 className="flex-shrink-0 w-60 sm:w-72 lg:w-auto aspect-[3/4] relative hover:shadow-lg transition-shadow duration-200 bg-gray-100 rounded-lg flex items-center justify-center"
               >
                 <Package className="w-24 h-24 text-gray-400" />
+                <Image
+                src={`/assets/Image/About3.png`} 
+                height={700}
+                width={1000}
+                className="object-cover w-full h-full"
+                alt="Product Image"
+                />
               </div>
             ))}
           </div>
