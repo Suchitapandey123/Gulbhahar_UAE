@@ -85,7 +85,7 @@ export default function HeroAnimated() {
     
     return (
       <div 
-        className="md:hidden relative w-full h-[39rem] overflow-hidden bg-gray-50"
+        className="md:hidden relative w-full h-[39rem]  mt-[61px] overflow-hidden bg-gray-50"
         onMouseEnter={() => setIsAutoPlaying(false)}
         onMouseLeave={() => setIsAutoPlaying(true)}
       >

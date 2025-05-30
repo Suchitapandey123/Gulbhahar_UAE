@@ -2,9 +2,10 @@ import React from "react";
 import { ProductClient } from "./client";
 
 
-function getProductData(id) {
+function getProductData({productID}) {
+  console.log(productID)
   return {
-    id,
+    productID,
     name: "Noorani Jutti",
     category: "Noorani Jutti FOR WOMEN",
     price: 5500,
@@ -51,6 +52,9 @@ function getProductData(id) {
   };
 }
 
+
+
+
 const similarProducts = [
   {
     id: 1,
@@ -77,19 +81,17 @@ const similarProducts = [
     itemsLeft: 2,
   },
 ];
+ 
 
 export async function generateStaticParams() {
   const productIds = ["1", "2", "3" ,"4", "5", "6", "7","8","9", "10" , "11", "12", "13", "14", "15","16", "17" ];
   return productIds.map((id) => ({ id }));
 }
 
-export default function CollectionPage({ params }) {
-  try {
-    console.log('Params:', params);
-    const product = getProductData(params.id);
+export default async function CollectionPage({ params }) {
+    const param = await params
+    const productID = param.id
+    console.log('Params:', productID);
+    const product = getProductData(productID);
     return <ProductClient product={product} similarProducts={similarProducts} />;
-  } catch (error) {
-    console.error('Error:', error);
-    return <div className="text-red-900">Error loading product: {String(error)}</div>;
-  }
 }

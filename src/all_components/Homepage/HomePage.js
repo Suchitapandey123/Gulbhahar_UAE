@@ -7,12 +7,13 @@ import CollectionsPage from './CollectionPage'
 import Culture from './Culture'
 import QuickSearch from './QuickLinks'
 
-const HomePage = () => {
+const HomePage = ({data}) => {
+  console.log(data)
   return (
     <>
       <HeroAnimated/>
       <BrandSection />
-      <NewCollection  />
+      <NewCollection newCollection = {data} />
       <AboutUsSection />
       <CollectionsPage />
       <Culture />
