@@ -1,27 +1,27 @@
-// import axios from 'axios';
-// import { QueryClient, dehydrate } from '@tanstack/react-query';
+import axios from 'axios';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
+import Providers from './providers'; // your React Query Provider
+import HomePage from '@/all_components/Homepage/HomePage';
+import Navbar from '@/all_components/Navbar/Navbar';
+import Footer from '@/all_components/Footer/Footer';
+import productApi from './api/v0/product-service';
 
-// import HomePage from '@/all_components/Homepage/HomePage';
-// import Navbar from '@/all_components/Navbar/Navbar';
-// import Footer from '@/all_components/Footer/Footer';
-// import productApi from './api/v0/product-service';
 
+export default async function Home() {
+  const queryClient = new QueryClient();
 
-// export default async function Home() {
-//   const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ['products'],
+    queryFn: productApi.getAllProduct(),
+  });
 
-//   await queryClient.prefetchQuery({
-//     queryKey: ['products'],
-//     queryFn: productApi.getAllProduct(),
-//   });
+  const dehydratedState = dehydrate(queryClient);
 
-//   const dehydratedState = dehydrate(queryClient);
-
-//   return (
-//     <ReactQde hydratedState={dehydratedState}>
-//       <Navbar />
-//       <HomePage />
-//       <Footer />
-//     </>
-//   );
-// }
+  return (
+    // <Providers dehydratedState={dehydratedState}>
+    //   <Navbar />
+      <HomePage />
+    //   <Footer />
+    // </Providers>
+  );
+}
