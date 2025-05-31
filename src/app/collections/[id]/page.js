@@ -1,61 +1,38 @@
 import React from "react";
 import { ProductClient } from "./client";
+import { QueryClient } from "@tanstack/react-query";
+import productApi from "@/app/api/v0/product-service";
 
 
-function getProductData({productID}) {
-  console.log(productID)
-  return {
-    productID,
-    name: "Noorani Jutti",
-    category: "Noorani Jutti FOR WOMEN",
-    price: 5500,
-    originalPrice: 10000,
-    discount: "75% OFF",
-    colors: ["blue","green","black"],
-    sizes: ["XXS", "XS", "S", "M", "L", "XL"],
-    images: ["/16.svg", "/16.svg", "/16.svg", "/16.svg"],
-    overview: [
-      `Casual shoes for women come in an endless number of styles which are constantly updated according to various fashion trends and pop culture influences.Any women who loves shoes knoes that they can make or break an outfit.If there is a shoe for every foot, then there is also a pair of womens casual shoes for every occasion`,
-    ],
-    details: [
-      "Wipe with a clean dry cloth when needed",
-      "Memory foam inside",
-      "Lace fastening",
-      "45-day warranty against manufacturing defects",
-      "PU uppwe",
-      "Package contain 1 pair of shoes",
-      "EVA sole",
-      "Product Code: P12344",
-    ],
-    rating: 4.8,
-    reviews: [
-      { stars: 5, count: 28 },
-      { stars: 4, count: 9 },
-      { stars: 3, count: 7 },
-      { stars: 2, count: 4 },
-      { stars: 1, count: 0 },
-    ],
-    reviewComments: [
-      {
-        user: "John Doe",
-        rating: 5,
-        comment: "Excellent running shoes. It was very sturdy on the foot",
-        date: "yesterday",
-      },
-      {
-        user: "John Doe",
-        rating: 5,
-        comment: "Excellent running shoes. It was very sturdy on the foot",
-        date: "yesterday",
-      },
-    ],
-  };
+async function getProductData(productID) {
+  const queryClient = new QueryClient();
+
+  try {
+    // Fetch product details using fetchQuery
+    const product = await queryClient.fetchQuery({
+      queryKey: ['product', productID],
+      queryFn: () => productApi.productById(productID)
+    });
+
+    // Fetch similar products using fetchQuery
+    const similarProducts = await queryClient.fetchQuery({
+      queryKey: ['similarProducts', productID],
+      queryFn: () => productApi.getSimilarProducts(productID)
+    });
+
+    return {
+      product,
+      similarProducts
+    };
+
+  } catch (error) {
+    console.error('Error fetching product data:', error);
+    throw error;
+  }
 }
 
-
-
-
-const similarProducts = [
+// Fallback similar products in case the API fails
+const fallbackSimilarProducts = [
   {
     id: 1,
     name: "Noorani Jutti",
@@ -81,17 +58,32 @@ const similarProducts = [
     itemsLeft: 2,
   },
 ];
- 
-
-export async function generateStaticParams() {
-  const productIds = ["1", "2", "3" ,"4", "5", "6", "7","8","9", "10" , "11", "12", "13", "14", "15","16", "17" ];
-  return productIds.map((id) => ({ id }));
-}
 
 export default async function CollectionPage({ params }) {
-    const param = await params
-    const productID = param.id
-    console.log('Params:', productID);
-    const product = getProductData(productID);
-    return <ProductClient product={product} similarProducts={similarProducts} />;
+  try {
+    const param = await params;
+    const productID = param.id;
+    // console.log('Params:', productID);
+    
+    const { product, similarProducts } = await getProductData(productID);
+
+    // console.log('Product:', product);
+    // console.log('Similar Products:', similarProducts);
+    
+    return (
+      <ProductClient 
+        product={product} 
+        similarProducts={similarProducts || fallbackSimilarProducts} 
+      />
+    );
+  } catch (error) {
+    console.error('Error in CollectionPage:', error);
+    
+    return (
+      <div className="error-container">
+        <h2>Error loading product</h2>
+        <p>Unable to load product details. Please try again later.</p>
+      </div>
+    );
+  }
 }

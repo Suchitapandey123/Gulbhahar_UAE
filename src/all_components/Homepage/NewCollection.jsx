@@ -18,7 +18,7 @@ const NewCollection = ({ newCollection }) => {
   const [hoveredCard, setHoveredCard] = useState(null);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  console.log(newCollection[17]?.images);
+  // console.log(newCollection[17]?.images);
   // Product data with imported images
   const products = [
     {

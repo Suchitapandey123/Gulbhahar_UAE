@@ -11,7 +11,7 @@ export default async function Home() {
    queryFn: () => productApi.getAllProduct()  // Arrow function
  });
  
- console.log('Server Response:', data);
+//  console.log('Server Response:', data);
 
  return (
    <HomePage data={data} />

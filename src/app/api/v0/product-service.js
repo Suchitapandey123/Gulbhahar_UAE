@@ -23,13 +23,43 @@ const productApi = {
       throw error.response ? error.response.data : error;
     }
   },
-  propertyById: async (propertyId) => {
-    // console.log(propertyId)
+  productById: async (productId) => {
+    // console.log(productId)
     try {
       const response = await api.post(
-        "/property-service/v0/get-api/property-by-id" ,
+        "/api/products/get-product-by" ,
         {
-            propertyId
+            productId
+        }
+      );
+      const data = response.data;
+      return data;
+    } catch (error) {
+      throw error.response ? error.response.data : error;
+    }
+  },
+  getSimilarProducts: async (productId) => {
+    // console.log(productId)
+    try {
+      const response = await api.get(
+        "/api/products/get-similar-product" ,
+        {
+            productId
+        }
+      );
+      const data = response.data;
+      return data;
+    } catch (error) {
+      throw error.response ? error.response.data : error;
+    }
+  },
+  getInterestedProducts: async (productId) => {
+    // console.log(productId)
+    try {
+      const response = await api.post(
+        "api/products/intrested-product",
+        {
+            productId
         }
       );
       const data = response.data;

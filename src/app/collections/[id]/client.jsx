@@ -3,17 +3,60 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ShoppingCart, Heart, Star, ThumbsUp, ThumbsDown, User, Package, Truck, ChevronRight, Home } from "lucide-react";
-import Breadcrumb from "@/app/account/components/Breadcrumb";
+import {
+  ShoppingCart,
+  Heart,
+  Star,
+  ThumbsUp,
+  ThumbsDown,
+  User,
+  Package,
+  Truck,
+  ChevronRight,
+  Home,
+} from "lucide-react";
+
+const reviews = {
+  rating: 4.8,
+  reviews: [
+    { stars: 5, count: 28 },
+    { stars: 4, count: 9 },
+    { stars: 3, count: 7 },
+    { stars: 2, count: 4 },
+    { stars: 1, count: 0 },
+  ],
+  reviewComments: [
+    {
+      user: "John Doe",
+      rating: 5,
+      comment: "Excellent running shoes. It was very sturdy on the foot",
+      date: "yesterday",
+    },
+    {
+      user: "John Doe",
+      rating: 5,
+      comment: "Excellent running shoes. It was very sturdy on the foot",
+      date: "yesterday",
+    },
+  ],
+};
 
 export function ProductClient({ product, similarProducts }) {
   const router = useRouter();
   const [selectedSize, setSelectedSize] = useState("");
-  const [mainImage, setMainImage] = useState(product.images[0]);
+  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
+  const [mainImageIndex, setMainImageIndex] = useState(0);
   const [pincode, setPincode] = useState("");
   const [userRating, setUserRating] = useState(4);
-  const [selectedColor, setSelectedColor] = useState("green");
   const [sortOrder, setSortOrder] = useState("Newest");
+
+  // Get current color and its images
+  const currentColor = product.colors[selectedColorIndex];
+  const currentImages = product.images[selectedColorIndex] || [];
+  const currentMainImage = currentImages[mainImageIndex] || "/assets/Image/About1.png";
+
+  // Calculate discount percentage
+  const discountPercentage = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
 
   const handleAddToCart = () => {
     if (!selectedSize) {
@@ -23,7 +66,12 @@ export function ProductClient({ product, similarProducts }) {
     router.push("/cart");
   };
 
-  const sortedReviews = [...product.reviewComments].sort((a, b) => {
+  const handleColorChange = (colorIndex) => {
+    setSelectedColorIndex(colorIndex);
+    setMainImageIndex(0); // Reset to first image of new color
+  };
+
+  const sortedReviews = [...reviews.reviewComments].sort((a, b) => {
     return sortOrder === "Newest"
       ? new Date(b.date).getTime() - new Date(a.date).getTime()
       : new Date(a.date).getTime() - new Date(b.date).getTime();
@@ -38,13 +86,21 @@ export function ProductClient({ product, similarProducts }) {
             <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
               <Home className="w-3 h-3 sm:w-4 sm:h-4" />
               <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hover:text-red-900 cursor-pointer whitespace-nowrap">Shop</span>
+              <span className="hover:text-red-900 cursor-pointer whitespace-nowrap">
+                Shop
+              </span>
               <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hover:text-red-900 cursor-pointer whitespace-nowrap max-w-[80px] sm:max-w-none truncate" title={product.category}>
+              <span
+                className="hover:text-red-900 cursor-pointer whitespace-nowrap max-w-[80px] sm:max-w-none truncate"
+                title={product.category}
+              >
                 {product.category}
               </span>
               <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="text-gray-900 font-medium whitespace-nowrap max-w-[100px] sm:max-w-[200px] lg:max-w-none truncate" title={product.name}>
+              <span
+                className="text-gray-900 font-medium whitespace-nowrap max-w-[100px] sm:max-w-[200px] lg:max-w-none truncate"
+                title={product.name}
+              >
                 {product.name}
               </span>
             </div>
@@ -56,39 +112,35 @@ export function ProductClient({ product, similarProducts }) {
           {/* Product Images */}
           <div className="space-y-4">
             {/* Main Image */}
-            
             <div className="aspect-square relative rounded-lg overflow-hidden border md:h-[500px] lg:h-[625px] bg-gray-100 flex items-center justify-center">
-              {/* <Package className="w-32 h-32 text-gray-400" /> */}
-              
-               <Image
-      src="/assets/Image/About1.png" 
-      alt="Description of image"
-      className="object-cover w-full h-full scale-150"
-      width={1000}              
-      height={700}            
-    />
+              <Image
+                src={currentMainImage}
+                alt={`${product.name} - ${currentColor}`}
+                className="object-cover w-full h-full"
+                width={1000}
+                height={700}
+              />
             </div>
 
             {/* Thumbnail Images */}
             <div className="grid grid-cols-4 gap-2">
-              {product.images.map((img, idx) => (
+              {currentImages.map((img, idx) => (
                 <button
                   key={idx}
-                  onClick={() => setMainImage(img)}
+                  onClick={() => setMainImageIndex(idx)}
                   className={`aspect-square relative rounded border transition-all duration-200 bg-gray-100 flex items-center justify-center ${
-                    mainImage === img
+                    mainImageIndex === idx
                       ? "border-red-900 ring-2 ring-red-900 ring-opacity-50"
                       : "border-gray-200 hover:border-red-300"
                   }`}
                 >
-                  {/* <Package className="w-8 h-8 text-gray-400" /> */}
                   <Image
-                    src="/assets/Image/About1.png"
-                    alt={`Thumbnail ${idx + 1}`}
+                    src={img}
+                    alt={`${product.name} thumbnail ${idx + 1}`}
                     className="object-cover w-full h-full"
                     width={1000}
                     height={700}
-                    />
+                  />
                 </button>
               ))}
             </div>
@@ -96,8 +148,12 @@ export function ProductClient({ product, similarProducts }) {
             {/* Product Details - Mobile/Tablet */}
             <div className="lg:hidden mt-8">
               <h3 className="font-bold mb-4 text-lg text-gray-900">Overview</h3>
-              <p className="text-sm text-gray-600 mb-4">{product.overview}</p>
-              
+              <ul className="space-y-1 text-sm text-gray-600 list-disc list-inside mb-4">
+                {product.overview.map((item, idx) => (
+                  <li key={idx}>{item}</li>
+                ))}
+              </ul>
+
               <h3 className="font-bold mb-2 text-gray-900">Product Details</h3>
               <ul className="space-y-1 text-sm text-gray-600 list-disc list-inside">
                 {product.details.map((detail, idx) => (
@@ -114,7 +170,7 @@ export function ProductClient({ product, similarProducts }) {
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-gray-900 mb-2">
                 {product.name}
               </h1>
-              <p className="text-gray-600">{product.category}</p>
+              <p className="text-gray-600">{product.title || product.category}</p>
             </div>
 
             {/* Pricing */}
@@ -124,10 +180,12 @@ export function ProductClient({ product, similarProducts }) {
               </span>
               <span className="text-gray-500 flex items-center text-lg sm:text-xl">
                 MRP
-                <span className="line-through pl-2">₹{product.originalPrice}</span>
+                <span className="line-through pl-2">
+                  ₹{product.originalPrice}
+                </span>
               </span>
               <span className="font-medium text-red-900 text-lg sm:text-xl">
-                ({product.discount})
+                ({discountPercentage}% off)
               </span>
             </div>
 
@@ -135,25 +193,24 @@ export function ProductClient({ product, similarProducts }) {
             <div className="mb-8">
               <h3 className="text-sm font-medium mb-3 flex flex-wrap items-center gap-2">
                 Color:
-                <span className="text-gray-500 text-sm">blue</span>
+                <span className="text-gray-500 text-sm">{currentColor}</span>
               </h3>
               <div className="flex gap-2 flex-wrap">
                 {product.colors.map((color, idx) => (
                   <button
                     key={idx}
                     className={`w-16 h-20 sm:w-20 sm:h-24 lg:w-[88px] lg:h-[109px] rounded-lg overflow-hidden shadow-md transition-all duration-200 ${
-                      selectedColor === color
+                      selectedColorIndex === idx
                         ? "border-4 border-red-900 shadow-lg"
                         : "shadow-md hover:shadow-lg"
                     }`}
-                    onClick={() => setSelectedColor(color)}
+                    onClick={() => handleColorChange(idx)}
                   >
                     <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
-                      {/* <Package className="w-8 h-8 text-gray-500" /> */}
                       <Image
-                        src="/assets/Image/About1.png" // Assuming images are named by color
+                        src={product.images[idx]?.[0] || "/assets/Image/About1.png"}
                         alt={color}
-                        className="object-cover w-full h-full scale-150"
+                        className="object-cover w-full h-full"
                         width={1000}
                         height={700}
                       />
@@ -201,9 +258,13 @@ export function ProductClient({ product, similarProducts }) {
               <div className="mt-2 space-y-1">
                 <p className="text-red-900 text-sm">
                   Delivery by 31st January, Friday |
-                  <span className="text-gray-400 line-through ml-2">Free ₹60</span>
+                  <span className="text-gray-400 line-through ml-2">
+                    Free ₹60
+                  </span>
                 </p>
-                <p className="text-gray-400 text-sm">If order before 9:30 P.M</p>
+                <p className="text-gray-400 text-sm">
+                  If order before 9:30 P.M
+                </p>
               </div>
             </div>
 
@@ -236,8 +297,12 @@ export function ProductClient({ product, similarProducts }) {
             {/* Product Details - Desktop Only */}
             <div className="hidden lg:block">
               <h3 className="font-bold mb-4 text-lg text-gray-900">Overview</h3>
-              <p className="text-sm text-gray-600 mb-4">{product.overview}</p>
-              
+              <ul className="space-y-1 text-sm text-gray-600 list-disc list-inside mb-4">
+                {product.overview.map((item, idx) => (
+                  <li key={idx}>{item}</li>
+                ))}
+              </ul>
+
               <h3 className="font-bold mb-2 text-gray-900">Product Details</h3>
               <ul className="space-y-1 text-sm text-gray-600 list-disc list-inside">
                 {product.details.map((detail, idx) => (
@@ -262,20 +327,22 @@ export function ProductClient({ product, similarProducts }) {
                           key={idx}
                           onClick={() => setUserRating(idx + 1)}
                           className={`w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 cursor-pointer ${
-                            idx < userRating ? "fill-red-900 text-red-900" : "fill-gray-300 text-gray-300"
+                            idx < userRating
+                              ? "fill-red-900 text-red-900"
+                              : "fill-gray-300 text-gray-300"
                           }`}
                         />
                       ))}
                     </div>
                     <span className="text-lg font-medium ml-2 sm:ml-4">
-                      {userRating || product.rating}
+                      {userRating || reviews.rating}
                     </span>
                   </div>
                 </div>
 
                 {/* Rating Breakdown */}
                 <div className="space-y-3 my-8">
-                  {product.reviews.map(({ stars, count }) => (
+                  {reviews.reviews.map(({ stars, count }) => (
                     <div key={stars} className="flex items-center gap-3">
                       <span className="w-3 text-sm font-medium">{stars}</span>
                       <div className="flex-1 h-6 bg-gray-200 rounded-full overflow-hidden">
@@ -323,7 +390,10 @@ export function ProductClient({ product, similarProducts }) {
                 {/* Individual Reviews */}
                 <div className="space-y-6">
                   {sortedReviews.map((review, idx) => (
-                    <div key={idx} className="border-b border-gray-100 pb-6 last:border-b-0">
+                    <div
+                      key={idx}
+                      className="border-b border-gray-100 pb-6 last:border-b-0"
+                    >
                       {/* Review Header */}
                       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3">
                         <div className="flex items-center gap-3">
@@ -347,7 +417,9 @@ export function ProductClient({ product, similarProducts }) {
                             <Star
                               key={idx}
                               className={`w-4 h-4 sm:w-5 sm:h-5 ${
-                                idx < review.rating ? "fill-yellow-400 text-yellow-400" : "fill-gray-300 text-gray-300"
+                                idx < review.rating
+                                  ? "fill-yellow-400 text-yellow-400"
+                                  : "fill-gray-300 text-gray-300"
                               }`}
                             />
                           ))}
@@ -355,7 +427,9 @@ export function ProductClient({ product, similarProducts }) {
                       </div>
 
                       {/* Review Comment */}
-                      <p className="text-sm text-gray-700 mb-4">{review.comment}</p>
+                      <p className="text-sm text-gray-700 mb-4">
+                        {review.comment}
+                      </p>
 
                       {/* Review Actions */}
                       <div className="flex items-center gap-4 text-sm">
@@ -385,16 +459,16 @@ export function ProductClient({ product, similarProducts }) {
             You might be interested in
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {similarProducts.map((item) => (
+            {similarProducts.slice(10,16).map((item) => (
               <div
-                key={item.id}
+                key={item.productId}
                 className="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow duration-200 bg-gray-50"
               >
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                   <div className="relative w-full sm:w-32 h-32 flex-shrink-0 bg-gray-100 rounded-lg flex items-center justify-center">
                     {/* <Package className="w-16 h-16 text-gray-400" /> */}
                     <Image
-                      src="/assets/Image/About2.png" // Assuming images are named by item.id
+                      src={ item.images.length !== 0 ? item.images[0][0] : "/Image/About1.png"} // Assuming images are named by item.id
                       alt={item.name}
                       className="object-cover w-full h-full "
                       width={1000}
@@ -407,7 +481,10 @@ export function ProductClient({ product, similarProducts }) {
                     </h3>
                     <div className="flex items-center gap-1">
                       {[...Array(item.rating)].map((_, idx) => (
-                        <Star key={idx} className="w-4 h-4 fill-gray-300 text-gray-300" />
+                        <Star
+                          key={idx}
+                          className="w-4 h-4 fill-gray-300 text-gray-300"
+                        />
                       ))}
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
@@ -434,20 +511,20 @@ export function ProductClient({ product, similarProducts }) {
             </h3>
             <div className="flex-grow h-px bg-gray-300"></div>
           </div>
-          
+
           <div className="flex overflow-x-auto pb-4 gap-4 lg:grid lg:grid-cols-4 lg:gap-6 no-scrollbar">
-            {[...Array(4)].map((_, i) => (
+            {similarProducts.slice(31,35).map((product, i) => (
               <div
                 key={i}
                 className="flex-shrink-0 w-60 sm:w-72 lg:w-auto aspect-[3/4] relative hover:shadow-lg transition-shadow duration-200 bg-gray-100 rounded-lg flex items-center justify-center"
               >
                 <Package className="w-24 h-24 text-gray-400" />
                 <Image
-                src={`/assets/Image/About3.png`} 
-                height={700}
-                width={1000}
-                className="object-cover w-full h-full"
-                alt="Product Image"
+                  src={product.images[0][0]}
+                  height={700}
+                  width={1000}
+                  className="object-cover w-full h-full"
+                  alt="Product Image"
                 />
               </div>
             ))}
@@ -469,13 +546,13 @@ export function ProductClient({ product, similarProducts }) {
             </p>
             <p>
               This is the best time to buy women casual shoes because brands
-              thrive on creating as many imaginative variations as possible. There
-              is always a good reason to pick up a pair of women casual shoes,
-              whether for an event or just to give your mood a lift. Further,
-              shopping for casual shoes for women online now gives you the freedom
-              of browsing through several brands at once.
+              thrive on creating as many imaginative variations as possible.
+              There is always a good reason to pick up a pair of women casual
+              shoes, whether for an event or just to give your mood a lift.
+              Further, shopping for casual shoes for women online now gives you
+              the freedom of browsing through several brands at once.
             </p>
-            
+
             <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mt-6 mb-3">
               Flat + Heels, Black Soft Synthetic High-Top Flat Boots
             </h3>
@@ -484,7 +561,7 @@ export function ProductClient({ product, similarProducts }) {
               dressy boot. These women casual shoes will look great with fitted
               jeans or A line skirt with tights.
             </p>
-            
+
             <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mt-6 mb-3">
               Carlton London, Blue Printed Textured Ballerinas
             </h3>
@@ -492,14 +569,14 @@ export function ProductClient({ product, similarProducts }) {
               Every woman should own a ballerina pair with other women casual
               shoes. They are simple, comfortable and always in style.
             </p>
-            
+
             <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mt-6 mb-3">
               DressBerry, Metallic Brown Sneakers
             </h3>
             <p>
-              The trend of velvety-metallic finish sneakers is all the rage right
-              now in women casual shoes. This pair would couple well with dark
-              skinny jeans and an off-shoulder Bardot top.
+              The trend of velvety-metallic finish sneakers is all the rage
+              right now in women casual shoes. This pair would couple well with
+              dark skinny jeans and an off-shoulder Bardot top.
             </p>
           </div>
         </div>
