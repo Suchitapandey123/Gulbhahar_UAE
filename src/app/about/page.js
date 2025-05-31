@@ -40,6 +40,12 @@ const CraftingStoriesSection = () => {
     offset: ["start end", "end start"]
   });
 
+
+
+
+
+
+
   const textY = useTransform(scrollYProgress, [0, 1], [50, -50]);
   const imageY = useTransform(scrollYProgress, [0, 1], [-50, 50]);
   const imageRotate = useTransform(scrollYProgress, [0, 1], [0, 5]);
@@ -47,7 +53,7 @@ const CraftingStoriesSection = () => {
   return (
     <motion.div 
       ref={ref}
-      className="flex flex-col  mt:22 lg:flex-row min-h-[70vh] max-w-7xl mx-auto my-8 lg:my-16 px-4 lg:px-8 gap-12 items-center"
+      className="flex flex-col  mt-16 lg:flex-row min-h-[70vh] max-w-[1600px] mx-auto my-8 lg:my-16 px-4 lg:px-8 gap-12 items-center"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
@@ -160,50 +166,64 @@ const HeroSection1 = () => {
 
   const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.7, 1, 1, 0.7]);
 
+
+
+    const socialLinks = [
+  {
+    name: 'Facebook',
+    url: 'https://www.facebook.com/yourpage',
+  },
+  {
+    name: 'Instagram',
+    url: 'https://www.instagram.com/gulbhahar_official?igsh=MzRlODBiNWFlZA==',
+  },
+  {
+    name: 'Twitter',
+    url: 'https://twitter.com/yourhandle',
+  },
+];
+
+
+
   return (
     <motion.div 
       ref={containerRef}
       style={{ opacity }}
-      className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20"
+      className="max-w-[1600px]  mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20"
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
         {/* Social Links */}
-        <motion.div 
-          className="lg:col-span-3 order-3 lg:order-1"
-          initial={{ opacity: 0, x: -50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <div className="flex flex-row lg:flex-col justify-center lg:justify-start space-x-8 lg:space-x-0 lg:space-y-6">
-            {['Facebook', 'Instagram', 'Twitter'].map((platform, i) => (
-              <motion.div 
-                key={platform}
-                className="relative group"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1, duration: 0.6 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.05 }}
-              >
-                <a 
-                  href="#" 
-                  className="block text-base sm:text-lg lg:text-xl font-semibold tracking-wide text-black hover:text-gray-600 transition-colors duration-300"
-                  style={{ fontFamily: 'sans-serif' }}
-                >
-                  {platform}
-                </a>
-                <motion.div 
-                  className="absolute left-0 right-0 bottom-[-4px] h-0.5 bg-black origin-left"
-                  initial={{ scaleX: 0 }}
-                  whileInView={{ scaleX: 1 }}
-                  transition={{ duration: 0.8, delay: i * 0.1 + 0.3 }}
-                  viewport={{ once: true }}
-                />
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+        <div className="flex flex-row lg:flex-col justify-center items-center lg:justify-center space-x-8 lg:space-x-0 lg:space-y-6">
+  {socialLinks.map((platform, i) => (
+    <motion.div 
+      key={platform.name}
+      className="relative group"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ delay: i * 0.1, duration: 0.6 }}
+      viewport={{ once: true }}
+      whileHover={{ scale: 1.05 }}
+    >
+      <a 
+        href={platform.url} 
+        className="block  text-base sm:text-lg lg:text-xl font-semibold tracking-wide text-black hover:text-gray-600 transition-colors duration-300"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ fontFamily: 'sans-serif' }}
+      >
+        {platform.name}
+      </a>
+      <motion.div 
+        className="absolute left-0 right-0 bottom-[-4px] h-0.5 bg-black origin-left"
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        transition={{ duration: 0.8, delay: i * 0.1 + 0.3 }}
+        viewport={{ once: true }}
+      />
+    </motion.div>
+  ))}
+</div>
+
 
         {/* Main Content */}
         <motion.div 
@@ -215,7 +235,7 @@ const HeroSection1 = () => {
         >
           <div className="relative">
             <motion.span 
-              className="absolute text-6xl sm:text-7xl lg:text-8xl font-bold -mt-4 lg:-mt-6 leading-none text-gray-800"
+              className="absolute text-6xl  sm:text-7xl lg:text-8xl font-bold -mt-4 lg:-mt-6 leading-none text-gray-800"
               initial={{ opacity: 0, scale: 0, rotate: -180 }}
               whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
               transition={{ duration: 1, type: "spring", stiffness: 200 }}
@@ -271,7 +291,7 @@ const TraditionContemporarySection = () => {
   return (
     <motion.div 
       ref={containerRef}
-      className="max-w-7xl mx-auto mb-20 lg:mb-40 px-4 lg:px-8"
+      className="max-w-[1600px] mx-auto mb-20 lg:mb-40 px-4 lg:px-8"
     >
       {/* Title Section */}
       <motion.div 
@@ -432,7 +452,7 @@ const JuttisSection = () => {
   return (
     <motion.div 
       ref={containerRef}
-      className="grid grid-cols-1 lg:grid-cols-[60%_40%] min-h-[70vh] max-w-7xl mx-auto my-12 lg:my-20 px-4 lg:px-8 gap-8 lg:gap-0"
+      className="grid grid-cols-1 lg:grid-cols-[60%_40%] min-h-[70vh] max-w-[1600px] mx-auto my-12 lg:my-20 px-4 lg:px-8 gap-8 lg:gap-0"
     >
       <motion.div 
         style={{ x: imageX }}
@@ -529,7 +549,7 @@ const GridSection2 = () => {
   return (
     <motion.div 
       ref={containerRef}
-      className="grid grid-cols-1 lg:grid-cols-[40%_60%] min-h-[70vh] max-w-7xl mx-auto my-12 lg:my-20 px-4 lg:px-8 gap-8 lg:gap-0"
+      className="grid grid-cols-1 lg:grid-cols-[40%_60%] min-h-[70vh] max-w-[1600px] mx-auto my-12 lg:my-20 px-4 lg:px-8 gap-8 lg:gap-0"
     >
       {/* Text Section - now appears first on mobile */}
       <motion.div 

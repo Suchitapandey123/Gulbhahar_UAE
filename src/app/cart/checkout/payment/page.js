@@ -75,7 +75,7 @@ export default function PaymentPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1600px] mx-auto px-1 sm:px-6 lg:px-8 py-8">
         <div className="lg:mt-20">
           <Breadcrumb />
         </div>
@@ -102,7 +102,7 @@ export default function PaymentPage() {
                   : "border-red-200 hover:border-red-300"
               }`}>
                 <label 
-                  className="flex items-center justify-between cursor-pointer p-4 sm:p-6" 
+                  className="flex items-center justify-between cursor-pointer p-3 sm:p-6" 
                   onClick={() => setPaymentMethod("credit-card")}
                 >
                   <div className="flex items-center gap-3">

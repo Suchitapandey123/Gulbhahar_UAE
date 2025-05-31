@@ -109,8 +109,8 @@ const TrackOrderPage1 = ({ onBack }) => (
 );
 
 const RefundHistoryDetails1 = ({ onBack }) => (
-  <div className="bg-white rounded-lg sm:rounded-xl p-3 shadow-sm border border-red-200">
-    <button onClick={onBack} className="flex items-center text-red-900 mb-3 xs:mb-4 hover:text-red-700 text-sm xs:text-base">
+  <div className="bg-  rounded-lg sm:rounded-xl py-3   shadow-sm border border-red-200">
+    <button onClick={onBack} className="flex pl-3 items-center text-red-900 mb-3 xs:mb-4 hover:text-red-700 text-sm xs:text-base">
       <ArrowLeft size={16} className="mr-1 xs:mr-2 xs:w-5 xs:h-5" />
       Back to Orders
     </button>
@@ -177,7 +177,7 @@ const OrderHistory = () => {
 
   return (
     <div className=" bg-gradient-to-br from-red-50/30 to-white min-h-screen">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-[1600px] mx-auto">
         {activeView === OrderView.MAIN && (
           <>
             {/* Header Section */}

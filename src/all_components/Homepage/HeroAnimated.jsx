@@ -85,7 +85,7 @@ export default function HeroAnimated() {
     
     return (
       <div 
-        className="md:hidden relative w-full h-[39rem] overflow-hidden bg-gray-50"
+        className="md:hidden relative w-full h-[39rem]  mt-[61px] overflow-hidden bg-gray-50"
         onMouseEnter={() => setIsAutoPlaying(false)}
         onMouseLeave={() => setIsAutoPlaying(true)}
       >
@@ -255,7 +255,7 @@ export default function HeroAnimated() {
       `}</style>
       
       <motion.section 
-        className="md:py-12 md:px-4 max-w-7xl mx-auto md:mt-20 mt-6"
+        className="md:py-12 md:px-4 max-w-[1600px] mx-auto md:mt-20 mt-6"
         initial="hidden"
         animate="visible"
         variants={containerVariants}

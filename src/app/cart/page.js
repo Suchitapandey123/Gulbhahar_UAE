@@ -94,7 +94,7 @@ const CartPage = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto mt-20 lg:mb-28 px-4 bg-gradient-to-br from-red-50/30 to-white min-h-screen">
+    <div className="max-w-[1600px] mx-auto mt-20 lg:mb-28 px-1 sm:px-4 bg-gradient-to-br from-red-50/30 to-white min-h-screen">
       <Breadcrumb />
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -104,7 +104,7 @@ const CartPage = () => {
             {/* Cart Header */}
             <div className="flex justify-between items-center lg:mb-8 mb-6 bg-white p-4 rounded-xl shadow-sm border border-red-100">
               <div className="flex items-center gap-3">
-                <ShoppingCart className="h-6 w-6 text-red-900" />
+                <ShoppingCart className="h-6 w-6 text-red-900 " />
                 <h2 className="sm:text-2xl sm:block hidden text-lg text-nowrap font-bold font-raleway text-gray-900">Shopping Cart</h2>
                 <h2 className="sm:text-2xl block sm:hidden text-lg text-nowrap font-bold font-raleway text-gray-900"> Cart</h2>
                 
@@ -155,7 +155,7 @@ const CartPage = () => {
                   className="sm:flex items-start sm:items-center py-6 bg-white rounded-xl shadow-sm border border-red-100/50 hover:shadow-md hover:border-red-200 transition-all duration-200"
                 >
                   {/* Mobile Layout */}
-                  <div className="flex items-start sm:hidden w-full mb-4 p-4">
+                  <div className="flex items-start sm:hidden ml-4 sm:ml-0  w-full mb-4 p-1 sm:p-4">
                     <input
                       type="checkbox"
                       checked={item.selected}
@@ -304,7 +304,7 @@ const CartPage = () => {
         {/* Order Summary Section */}
         <div className="lg:col-span-1 lg:mr-10 my-8 mt-12">
           {/* Order Summary Card */}
-          <div className="bg-white rounded-xl border-2 border-red-200 p-8 space-y-6 shadow-lg hover:shadow-xl transition-shadow duration-200">
+          <div className="bg-white rounded-xl border-2 border-red-200 p-6 space-y-6 shadow-lg hover:shadow-xl transition-shadow duration-200">
             <div className="flex items-center gap-3 mb-6">
               <div className="bg-red-900 p-2 rounded-lg">
                 <ShoppingCart className="h-5 w-5 text-white" />

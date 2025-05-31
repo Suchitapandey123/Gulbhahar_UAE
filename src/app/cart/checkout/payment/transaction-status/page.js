@@ -159,7 +159,7 @@ export default function Transaction() {
     <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white">
       {showConfetti && <Confetti />}
       
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-20">
+      <div className="max-w-4xl mx-auto px-1 sm:px-6 lg:px-8 py-8 lg:py-20">
         <div className={`bg-white rounded-2xl shadow-2xl border-2 border-red-100 overflow-hidden transform transition-all duration-1000 ${showContent ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-8'}`}>
           
           {/* Success Header */}
@@ -189,7 +189,7 @@ export default function Transaction() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               
               {/* Transaction Date */}
-              <div className="bg-red-50 rounded-xl p-4 sm:p-6 border border-red-200 hover:shadow-md transition-all duration-300 transform hover:scale-105 animate-slide-up" style={{animationDelay: '0.5s'}}>
+              <div className="bg-red-50 rounded-xl p-3 sm:p-6 border border-red-200 hover:shadow-md transition-all duration-300 transform hover:scale-105 animate-slide-up" style={{animationDelay: '0.5s'}}>
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center animate-spin-once">
                     <Calendar className="w-4 h-4 text-white" />

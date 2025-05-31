@@ -255,7 +255,7 @@ const Cookies = () => {
     <main className="min-h-screen bg-gradient-to-br from-red-50/30 to-white">
       {/* Header Section */}
       <div className="bg-white border-b-2 border-red-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-20">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-20">
           <div className="text-center">
             <div className="inline-flex items-center gap-2 bg-red-50 px-4 py-2 rounded-full mb-4">
               <CurrentIcon className="h-5 w-5 text-red-600" />
@@ -276,7 +276,7 @@ const Cookies = () => {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <div className="grid lg:grid-cols-4 gap-6 lg:gap-8">
           
           {/* Sidebar Navigation */}
