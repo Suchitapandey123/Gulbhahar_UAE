@@ -126,9 +126,9 @@ export default function Footer() {
           <div className="lg:col-span-4 text-center lg:text-left">
             <div className="space-y-4 sm:space-y-6">
               <Link href="/" className="inline-block">
-                <div className="text-2xl sm:text-3xl font-bold text-red-900 hover:text-red-700 transition-colors">
-                  Gulbhahar
-                </div>
+                <div className="text-5xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-700 via-pink-600 to-yellow-500  transition-all duration-500 drop-shadow-lg tracking-wide">
+  Gulbhahar
+</div>
                 <p className="text-xs text-gray-600 mt-1">Premium Fashion & Style</p>
               </Link>
               

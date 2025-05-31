@@ -649,12 +649,12 @@ const Navbar = () => {
                     <div className="space-y-2">
                       <h3
                         className="font-bold text-gray-900 text-base lg:text-lg 
-                                   group-hover:text-[#800000] transition-colors duration-300"
+                                    transition-colors duration-300"
                       >
                         {category.title}
                       </h3>
                       <p
-                        className="text-xs lg:text-sm text-gray-500 group-hover:text-[#800000]/70 
+                        className="text-xs lg:text-sm text-gray-500  
                                   transition-colors duration-300"
                       >
                         {category.subtitle}
