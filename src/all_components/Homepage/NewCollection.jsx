@@ -6,49 +6,19 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 
-// Import your images - update these paths to match your project structure
-import Product1Main from "../../../public/assets/Image/C2.png";
-import Product1Thumb1 from "../../../public/assets/Image/C2.png";
-import Product2Main from "../../../public/assets/Image/C2.png";
-import Product2Thumb1 from "../../../public/assets/Image/C2.png";
-import Product3Main from "../../../public/assets/Image/C2.png";
-import Product3Thumb1 from "../../../public/assets/Image/C2.png";
-
 const NewCollection = ({ newCollection }) => {
   const [hoveredCard, setHoveredCard] = useState(null);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  // console.log(newCollection[17]?.images);
-  // Product data with imported images
-  const products = [
-    {
-      id: 1,
-      name: "Noorani (Jutti)",
-      price: "₹ 5,000",
-      mainImage: Product1Main,
-      thumbnail: Product1Thumb1,
-      thumbnailPosition: "topRight",
-      href: "/collection/noorani-jutti",
-    },
-    {
-      id: 2,
-      name: "Noorani (Jutti)",
-      price: "₹ 5,000",
-      mainImage: Product2Main,
-      thumbnail: Product2Thumb1,
-      thumbnailPosition: "bottomRight",
-      href: "/collection/noorani-jutti-2",
-    },
-    {
-      id: 3,
-      name: "Noorani (Jutti)",
-      price: "₹ 5,000",
-      mainImage: Product3Main,
-      thumbnail: Product3Thumb1,
-      thumbnailPosition: "topRight",
-      href: "/collection/noorani-jutti-3",
-    },
-  ];
+
+  // Helper function to get safe image URL
+  const getSafeImageUrl = (product) => {
+    try {
+      return product?.images?.[0]?.[0] || '/assets/Image/fallback.jpg';
+    } catch {
+      return '/assets/Image/fallback.jpg';
+    }
+  };
 
   // Animation variants
   const containerVariants = {
@@ -94,62 +64,45 @@ const NewCollection = ({ newCollection }) => {
     },
   };
 
-  // Different animation variants for each card position
+  // Premium fashion-inspired animations
   const getCardVariants = (index) => {
-    if (index === 0) {
-      // First card - slide from left
-      return {
-        hidden: { opacity: 0, x: -100, scale: 0.9 },
-        visible: {
-          opacity: 1,
-          x: 0,
-          scale: 1,
-          transition: {
-            duration: 0.8,
-            ease: "easeOut",
-            delay: 0.2,
-          },
+    return {
+      hidden: { 
+        opacity: 0, 
+        y: 60,
+        scale: 0.8,
+        filter: "blur(10px)"
+      },
+      visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        filter: "blur(0px)",
+        transition: {
+          duration: 1.2,
+          ease: [0.25, 0.46, 0.45, 0.94], // Custom bezier curve
+          delay: index * 0.15,
+          scale: {
+            type: "spring",
+            damping: 20,
+            stiffness: 100
+          }
         },
-      };
-    } else if (index === 1) {
-      // Middle card - fade in
-      return {
-        hidden: { opacity: 0, scale: 0.8 },
-        visible: {
-          opacity: 1,
-          scale: 1,
-          transition: {
-            duration: 0.8,
-            ease: "easeOut",
-            delay: 0.4,
-          },
-        },
-      };
-    } else {
-      // Last card - slide from right
-      return {
-        hidden: { opacity: 0, x: 100, scale: 0.9 },
-        visible: {
-          opacity: 1,
-          x: 0,
-          scale: 1,
-          transition: {
-            duration: 0.8,
-            ease: "easeOut",
-            delay: 0.6,
-          },
-        },
-      };
-    }
+      },
+    };
   };
 
   const mainImageVariants = {
-    initial: { scale: 1 },
+    initial: { 
+      scale: 1,
+      filter: "brightness(1)"
+    },
     hover: {
       scale: 1.05,
+      filter: "brightness(1.05)",
       transition: {
-        duration: 0.4,
-        ease: "easeOut",
+        duration: 0.5,
+        ease: [0.25, 0.46, 0.45, 0.94],
       },
     },
   };
@@ -252,101 +205,77 @@ const NewCollection = ({ newCollection }) => {
           </motion.div>
         </motion.div>
 
-        {/* Animated Product cards */}
-        <div className="flex overflow-x-auto scrollbar-hide py-6 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 lg:gap-16 gap-6 snap-x snap-mandatory md:snap-none">
+        {/* Grid with Entry Animations Only */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {newCollection
-            .filter((product) => product.images && product.images.length > 0)
+            ?.filter((product) => product?.images && product.images.length > 0)
+            .slice(0, 6)
             .map((product, index) => (
               <motion.div
                 key={product.productId}
-                variants={getCardVariants(index)}
-                initial="hidden"
-                animate={isInView ? "visible" : "hidden"}
-                whileHover={{
-                  y: -10,
-                  transition: { duration: 0.3 },
+                initial={{ 
+                  opacity: 0, 
+                  y: 60,
+                  scale: 0.8,
+                  filter: "blur(10px)"
                 }}
-                onHoverStart={() => setHoveredCard(product.id)}
-                onHoverEnd={() => setHoveredCard(null)}
-                className="product-card relative bg-white pb-6 shadow-sm hover:shadow-xl transition-all duration-300 flex-shrink-0 w-[85vw] sm:w-2/3 md:w-auto snap-center rounded-lg overflow-hidden"
+                animate={isInView ? { 
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                  filter: "blur(0px)"
+                } : {
+                  opacity: 0, 
+                  y: 60,
+                  scale: 0.8,
+                  filter: "blur(10px)"
+                }}
+                transition={{
+                  duration: 1.2,
+                  ease: [0.25, 0.46, 0.45, 0.94],
+                  delay: index * 0.15,
+                  scale: {
+                    type: "spring",
+                    damping: 20,
+                    stiffness: 100
+                  }
+                }}
+                className="product-card relative bg-white shadow-sm hover:shadow-xl transition-shadow duration-300 w-full overflow-hidden group"
               >
-                {/* Main product image container */}
-                <div className="relative overflow-hidden">
-                  {/* Main product image */}
-                  <motion.div
-                    variants={mainImageVariants}
-                    initial="initial"
-                    animate={hoveredCard === product.id ? "hover" : "initial"}
-                    className="relative overflow-hidden rounded-t-lg"
-                  >
-                    <Image
-                      src={product?.images[0][0]}
-                      alt={product.name}
-                      width={400}
-                      height={533}
-                      className="w-full h-auto object-cover"
-                      priority={index === 0}
-                      loading={index === 0 ? "eager" : "lazy"}
-                      sizes="(max-width: 768px) 85vw, (max-width: 1024px) 50vw, 33vw"
-                    />
+                {/* Image Container */}
+                <div className="relative overflow-hidden w-full aspect-[3/4]">
+                  <Image
+                    src={getSafeImageUrl(product)}
+                    alt={product.name || "Product"}
+                    fill
+                    className="object-cover"
+                    priority={index < 4}
+                    sizes="(max-width: 640px) 50vw, (max-width: 768px) 50vw, (max-width: 1024px) 50vw, 33vw"
+                  />
 
-                    {/* Overlay effect on hover */}
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{
-                        opacity: hoveredCard === product.id ? 0.1 : 0,
-                      }}
-                      transition={{ duration: 0.3 }}
-                      className="absolute inset-0 bg-black"
-                    />
-                  </motion.div>
+                  {/* Simple overlay */}
+                  <div className="absolute inset-0 bg-black opacity-0 hover:opacity-10 transition-opacity duration-300" />
                 </div>
 
-                {/* Animated product details */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.2 + 0.3, duration: 0.5 }}
-                  className="pt-4 px-4"
-                >
-                  <motion.div
-                    animate={{
-                      color: hoveredCard === product.id ? "#8B0000" : "#000000",
-                    }}
-                    transition={{ duration: 0.3 }}
-                    className="text-lg md:text-xl font-oldstandardtt font-[400] mb-1"
-                  >
-                    {product.price}
-                  </motion.div>
-                  <motion.div
-                    animate={{
-                      x: hoveredCard === product.id ? 5 : 0,
-                      color: hoveredCard === product.id ? "#8B0000" : "#000000",
-                    }}
-                    transition={{ duration: 0.3 }}
-                    className="text-base md:text-lg font-oldstandardtt font-[400]"
-                  >
-                    {product.name}
-                  </motion.div>
-                </motion.div>
+                {/* Product details */}
+                <div className="p-2 sm:p-4 text-center">
+                  <div className="text-sm sm:text-lg md:text-xl font-oldstandardtt font-[400] mb-1">
+                    ₹ {product.price?.toLocaleString() || "0"}
+                  </div>
+                  <div className="text-xs sm:text-base md:text-lg font-oldstandardtt font-[400] line-clamp-2">
+                    {product.name?.toUpperCase() || "PRODUCT NAME"}
+                  </div>
+                </div>
 
                 {/* Clickable link overlay */}
                 <Link href={`/collections/${product.productId}`} className="absolute inset-0 z-10">
                   <span className="sr-only">View {product.name}</span>
                 </Link>
 
-                {/* Hover indicator */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{
-                    opacity: hoveredCard === product.id ? 1 : 0,
-                    scale: hoveredCard === product.id ? 1 : 0.8,
-                  }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg z-20"
-                >
-                  <ArrowUpRight className="size-4 text-[#8B0000]" />
-                </motion.div>
+                {/* Simple hover indicator */}
+                <div className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-white/90 rounded-full p-1 sm:p-2 shadow-lg z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <ArrowUpRight className="size-3 sm:size-4 text-[#8B0000]" />
+                </div>
               </motion.div>
             ))}
         </div>

@@ -247,8 +247,8 @@ const Navbar = () => {
             uppercase tracking-wide transition-all duration-300 ease-out
             ${
               isActive
-                ? "text-[#800000] scale-105"
-                : "text-gray-800 hover:text-[#800000] hover:scale-105"
+                ? `${(isScrolled || pathname !== "/") ? 'text-[#800000]' : 'text-white'} scale-105`
+                : `${(isScrolled || pathname !== "/") ? 'text-gray-800 hover:text-[#800000]' : 'text-white/90 hover:text-white'} hover:scale-105`
             }
           `}
           onClick={
@@ -269,8 +269,8 @@ const Navbar = () => {
 
           <div
             className={`
-            absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0.5 bg-[#800000] 
-            transition-all duration-300 ease-out
+            absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0.5 transition-all duration-300 ease-out
+            ${(isScrolled || pathname !== "/") ? 'bg-[#800000]' : 'bg-white'}
             ${isActive ? "w-full" : "w-0 group-hover:w-full"}
           `}
           ></div>
@@ -353,9 +353,12 @@ const Navbar = () => {
 
       <nav
         className={`
-          fixed top-[-1px] left-0 right-0 z-50 bg-white/95 backdrop-blur-md
-          transition-all duration-500 ease-out border-b border-gray-100/50
-          ${isScrolled ? "shadow-lg py-2.5 lg:py-3" : "shadow-sm py-3 lg:py-4"}
+          fixed top-0 left-0 right-0 z-50 backdrop-blur-md
+          transition-all duration-500 ease-out
+          ${isScrolled || pathname !== "/" 
+            ? 'bg-white/95 shadow-lg py-2.5 lg:py-3 border-b border-gray-100/50' 
+            : 'bg-transparent shadow-none py-3 lg:py-4 border-b border-white/10'
+          }
         `}
       >
         <div className="max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-8">
@@ -363,8 +366,11 @@ const Navbar = () => {
             <div className="flex items-center md:hidden">
               <button
                 onClick={toggleMenu}
-                className="p-2 text-gray-800 hover:text-[#800000] transition-colors duration-200 
-                         focus:outline-none"
+                className={`p-2 transition-colors duration-200 focus:outline-none ${
+                  (isScrolled || pathname !== "/") 
+                    ? 'text-gray-800 hover:text-[#800000]' 
+                    : 'text-white hover:text-white/80'
+                }`}
                 aria-label="Toggle menu"
               >
                 {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -379,24 +385,451 @@ const Navbar = () => {
             </div>
 
             <div className="flex-1 flex justify-center md:flex-initial">
-              <Link href="/" className="group">
-                <Image
-                  src="/combined.png"
-                  alt="Brand Logo"
-                  width={240}
-                  height={60}
-                  priority
-                  className={`
-                    transition-all duration-500 ease-out object-contain
-                    group-hover:scale-110 filter group-hover:brightness-110
-                    group-active:scale-95
-                    ${
-                      isScrolled
-                        ? "h-6 sm:h-7 md:h-8 lg:h-9 w-auto max-w-[100px] sm:max-w-[120px] md:max-w-[140px] lg:max-w-[160px]"
-                        : "h-7 sm:h-8 md:h-9 lg:h-10 xl:h-11 w-auto max-w-[120px] sm:max-w-[140px] md:max-w-[160px] lg:max-w-[180px] xl:max-w-[200px]"
-                    }
-                  `}
-                />
+              <Link href="/" className=" relative overflow-hidden">
+                {/* Static Logo for Non-Home Pages with Hover Magic */}
+                {pathname !== "/" && (
+                  <div className="relative">
+                    <Image
+                      src="/combined.png"
+                      alt="Brand Logo"
+                      width={240}
+                      height={60}
+                      priority
+                      className={`
+                        transition-all duration-500 ease-out object-contain
+                        filter group-hover:brightness-105 group-active:scale-95 relative z-10
+                        ${
+                          isScrolled
+                            ? "h-6 sm:h-7 md:h-8 lg:h-9 w-auto max-w-[100px] sm:max-w-[120px] md:max-w-[140px] lg:max-w-[160px]"
+                            : "h-7 sm:h-8 md:h-9 lg:h-10 xl:h-11 w-auto max-w-[120px] sm:max-w-[140px] md:max-w-[160px] lg:max-w-[180px] xl:max-w-[200px]"
+                        }
+                      `}
+                    />
+
+                    {/* Elegant Hover Effects - ABOVE Logo (Higher Z-Index) */}
+                    
+                    {/* Golden Dust Particles - Flying Above */}
+                    <div className="absolute inset-0 overflow-visible pointer-events-none z-20">
+                      {[...Array(12)].map((_, i) => (
+                        <div
+                          key={`dust-${i}`}
+                          className="absolute w-1.5 h-1.5 bg-gradient-to-r from-red-800 to-red-900 rounded-full 
+                                   opacity-0 group-hover:opacity-80 transition-all duration-1000 ease-out shadow-lg z-20"
+                          style={{
+                            left: `${15 + i * 7}%`,
+                            top: `${-30 + (i % 4) * 20}%`,
+                            transitionDelay: `${i * 80}ms`,
+                          }}
+                        >
+                          <div 
+                            className="w-full h-full bg-gradient-to-r from-red-800 to-red-900 rounded-full
+                                     group-hover:animate-pulse shadow-red-900/50"
+                            style={{ 
+                              animationDelay: `${i * 150}ms`,
+                              animationDuration: '2s'
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Floating Crown Above Logo */}
+                    <div
+                      className="absolute -top-10 left-1/2 transform -translate-x-1/2 z-30
+                               opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out
+                               group-hover:animate-bounce"
+                      style={{ 
+                        transitionDelay: '200ms',
+                        fontSize: '28px',
+                        filter: 'drop-shadow(0 4px 8px rgba(127, 29, 29, 0.3))'
+                      }}
+                    >
+                      👑
+                    </div>
+
+                    {/* Luxury Brand Sparkles - Floating Around */}
+                    <div className="absolute inset-0 overflow-visible pointer-events-none z-20">
+                      {[...Array(8)].map((_, i) => (
+                        <div
+                          key={`luxury-sparkle-${i}`}
+                          className="absolute opacity-0 group-hover:opacity-100 transition-all duration-600 ease-out z-20"
+                          style={{
+                            left: `${10 + i * 12}%`,
+                            top: `${-25 + (i % 3) * 25}%`,
+                            transitionDelay: `${150 + i * 75}ms`,
+                          }}
+                        >
+                          <div 
+                            className="w-2 h-2 bg-gradient-to-r from-red-800 to-red-900 rounded-full
+                                     group-hover:animate-ping shadow-lg shadow-red-900/50"
+                            style={{ 
+                              animationDelay: `${i * 200}ms`,
+                              animationDuration: '1.5s'
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Floating Brand Message - Above Everything */}
+                    <div
+                      className="absolute -top-16 left-1/2 transform -translate-x-1/2 z-40
+                               opacity-0 group-hover:opacity-100 transition-all duration-600 ease-out
+                               text-xs font-semibold text-red-900 whitespace-nowrap
+                               bg-gradient-to-r from-red-50 to-red-100 px-3 py-1.5 rounded-full 
+                               shadow-lg border border-red-200/50 backdrop-blur-sm
+                               group-hover:animate-bounce"
+                      style={{ transitionDelay: '400ms' }}
+                    >
+                      ✨ Crafted with Excellence ✨
+                    </div>
+
+                    {/* Floating Luxury Hearts - Above Logo */}
+                    <div className="absolute inset-0 overflow-visible pointer-events-none z-25">
+                      {[...Array(6)].map((_, i) => (
+                        <div
+                          key={`heart-${i}`}
+                          className="absolute opacity-0 group-hover:opacity-100 transition-all duration-800 ease-out z-25
+                                   text-red-900 group-hover:animate-bounce"
+                          style={{
+                            left: `${20 + i * 15}%`,
+                            top: `${-20 + (i % 2) * 40}%`,
+                            transitionDelay: `${250 + i * 100}ms`,
+                            fontSize: '14px',
+                            animationDelay: `${i * 300}ms`,
+                            animationDuration: '2s',
+                            filter: 'drop-shadow(0 2px 4px rgba(127, 29, 29, 0.4))'
+                          }}
+                        >
+                          ❤️
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Floating Side Elements */}
+                    <div className="absolute inset-0 overflow-visible pointer-events-none z-20">
+                      {/* Left side sparkle */}
+                      <div
+                        className="absolute -left-8 top-1/2 transform -translate-y-1/2 z-20
+                                 opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out
+                                 text-red-600 group-hover:animate-pulse"
+                        style={{ 
+                          transitionDelay: '300ms',
+                          fontSize: '20px',
+                          filter: 'drop-shadow(0 2px 4px rgba(127, 29, 29, 0.3))'
+                        }}
+                      >
+                        ✨
+                      </div>
+                      
+                      {/* Right side sparkle */}
+                      <div
+                        className="absolute -right-8 top-1/2 transform -translate-y-1/2 z-20
+                                 opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out
+                                 text-red-600 group-hover:animate-pulse"
+                        style={{ 
+                          transitionDelay: '500ms',
+                          fontSize: '20px',
+                          filter: 'drop-shadow(0 2px 4px rgba(127, 29, 29, 0.3))'
+                        }}
+                      >
+                        ✨
+                      </div>
+                    </div>
+
+                    {/* Floating Excellence Indicators */}
+                    <div className="absolute inset-0 overflow-visible pointer-events-none z-20">
+                      <div
+                        className="absolute -top-6 -left-4 z-20
+                                 opacity-0 group-hover:opacity-100 transition-all duration-600 ease-out
+                                 text-red-700 group-hover:animate-bounce"
+                        style={{ 
+                          transitionDelay: '600ms',
+                          fontSize: '14px',
+                          animationDelay: '0.5s'
+                        }}
+                      >
+                        💎
+                      </div>
+                      
+                      <div
+                        className="absolute -top-6 -right-4 z-20
+                                 opacity-0 group-hover:opacity-100 transition-all duration-600 ease-out
+                                 text-red-700 group-hover:animate-bounce"
+                        style={{ 
+                          transitionDelay: '700ms',
+                          fontSize: '14px',
+                          animationDelay: '0.7s'
+                        }}
+                      >
+                        💎
+                      </div>
+                    </div>
+
+                    {/* Morphing Geometric Shapes */}
+                    <div className="absolute inset-0 overflow-visible pointer-events-none z-15">
+                      {[...Array(6)].map((_, i) => (
+                        <div
+                          key={`morph-${i}`}
+                          className="absolute opacity-0 group-hover:opacity-70 transition-all duration-1000 ease-out z-15"
+                          style={{
+                            left: `${10 + i * 15}%`,
+                            top: `${-30 + (i % 3) * 20}%`,
+                            transitionDelay: `${800 + i * 100}ms`,
+                          }}
+                        >
+                          <div 
+                            className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-800 
+                                     group-hover:animate-pulse transform transition-all duration-1000
+                                     group-hover:rotate-45 group-hover:scale-150"
+                            style={{ 
+                              animationDelay: `${i * 200}ms`,
+                              animationDuration: '2s',
+                              borderRadius: i % 3 === 0 ? '50%' : i % 3 === 1 ? '0%' : '20%'
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Ripple Effect Circles */}
+                    <div className="absolute inset-0 overflow-visible pointer-events-none z-5">
+                      {[...Array(4)].map((_, i) => (
+                        <div
+                          key={`ripple-${i}`}
+                          className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2
+                                   opacity-0 group-hover:opacity-30 transition-all duration-1500 ease-out
+                                   border-2 border-red-300 rounded-full group-hover:animate-ping"
+                          style={{
+                            width: `${50 + i * 30}px`,
+                            height: `${50 + i * 30}px`,
+                            transitionDelay: `${900 + i * 200}ms`,
+                            animationDelay: `${i * 300}ms`,
+                            animationDuration: '3s'
+                          }}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Floating Energy Orbs */}
+                    <div className="absolute inset-0 overflow-visible pointer-events-none z-20">
+                      {[...Array(8)].map((_, i) => (
+                        <div
+                          key={`orb-${i}`}
+                          className="absolute opacity-0 group-hover:opacity-80 transition-all duration-800 ease-out z-20"
+                          style={{
+                            left: `${15 + i * 10}%`,
+                            top: `${-25 + (i % 2) * 50}%`,
+                            transitionDelay: `${1000 + i * 100}ms`,
+                          }}
+                        >
+                          <div 
+                            className="w-2 h-2 bg-gradient-to-r from-red-500 to-red-700 rounded-full
+                                     shadow-lg shadow-red-500/50 group-hover:animate-bounce
+                                     relative overflow-hidden"
+                            style={{ 
+                              animationDelay: `${i * 250}ms`,
+                              animationDuration: '2.5s'
+                            }}
+                          >
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent
+                                         transform -skew-x-12 group-hover:animate-pulse" />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* DNA Helix Effect */}
+                    <div className="absolute inset-0 overflow-visible pointer-events-none z-10">
+                      {[...Array(16)].map((_, i) => (
+                        <div
+                          key={`helix-${i}`}
+                          className="absolute w-1 h-1 bg-red-400 rounded-full
+                                   opacity-0 group-hover:opacity-60 transition-all duration-1200 ease-out"
+                          style={{
+                            left: `${50 + Math.cos(i * 0.4) * 40}%`,
+                            top: `${50 + Math.sin(i * 0.4) * 40}%`,
+                            transitionDelay: `${1200 + i * 50}ms`,
+                            transform: `rotate(${i * 22.5}deg)`,
+                            animation: 'none'
+                          }}
+                        >
+                          <div className="w-full h-full bg-red-400 rounded-full group-hover:animate-spin"
+                               style={{ animationDuration: '4s', animationDelay: `${i * 100}ms` }} />
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Prismatic Light Beams */}
+                    <div className="absolute inset-0 overflow-visible pointer-events-none z-8">
+                      {[...Array(8)].map((_, i) => (
+                        <div
+                          key={`beam-${i}`}
+                          className="absolute opacity-0 group-hover:opacity-40 transition-all duration-1000 ease-out"
+                          style={{
+                            width: '200%',
+                            height: '2px',
+                            left: '-50%',
+                            top: '50%',
+                            background: `linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.6), transparent)`,
+                            transform: `rotate(${i * 45}deg)`,
+                            transformOrigin: 'center',
+                            transitionDelay: `${1400 + i * 75}ms`,
+                          }}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Magnetic Field Lines */}
+                    <div className="absolute inset-0 overflow-visible pointer-events-none z-7">
+                      {[...Array(3)].map((_, i) => (
+                        <div
+                          key={`field-${i}`}
+                          className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2
+                                   opacity-0 group-hover:opacity-25 transition-all duration-1500 ease-out
+                                   border border-red-300 rounded-full group-hover:animate-pulse"
+                          style={{
+                            width: `${80 + i * 60}px`,
+                            height: `${40 + i * 30}px`,
+                            transitionDelay: `${1500 + i * 200}ms`,
+                            animationDelay: `${i * 500}ms`,
+                            animationDuration: '4s'
+                          }}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Quantum Particles */}
+                    <div className="absolute inset-0 overflow-visible pointer-events-none z-25">
+                      {[...Array(12)].map((_, i) => (
+                        <div
+                          key={`quantum-${i}`}
+                          className="absolute opacity-0 group-hover:opacity-100 transition-all duration-600 ease-out z-25"
+                          style={{
+                            left: `${20 + (i * 7) % 60}%`,
+                            top: `${-20 + (i * 11) % 40}%`,
+                            transitionDelay: `${1600 + i * 80}ms`,
+                          }}
+                        >
+                          <div 
+                            className="w-1 h-1 bg-red-600 rounded-full relative group-hover:animate-ping"
+                            style={{ 
+                              animationDelay: `${i * 150}ms`,
+                              animationDuration: '2s'
+                            }}
+                          >
+                            <div className="absolute inset-0 bg-red-600 rounded-full animate-pulse" />
+                            <div className="absolute -inset-1 bg-red-400/30 rounded-full animate-ping" 
+                                 style={{ animationDelay: `${i * 200}ms` }} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Magical Logo Effect - Only on Home Page */}
+                {pathname === "/" && (
+                  <>
+                    {/* Original Logo - Only appears when scrolled */}
+                    <Image
+                      src="/combined.png"
+                      alt="Brand Logo"
+                      width={240}
+                      height={60}
+                      priority
+                      className={`
+                        transition-all duration-700 ease-out object-contain
+                        group-hover:scale-110 filter group-hover:brightness-110
+                        group-active:scale-95 relative z-10
+                        ${
+                          isScrolled
+                            ? "opacity-100 translate-y-0 scale-100"
+                            : "opacity-0 translate-y-8 scale-90"
+                        }
+                        ${
+                          isScrolled
+                            ? "h-6 sm:h-7 md:h-8 lg:h-9 w-auto max-w-[100px] sm:max-w-[120px] md:max-w-[140px] lg:max-w-[160px]"
+                            : "h-7 sm:h-8 md:h-9 lg:h-10 xl:h-11 w-auto max-w-[120px] sm:max-w-[140px] md:max-w-[160px] lg:max-w-[180px] xl:max-w-[200px]"
+                        }
+                      `}
+                    />
+
+                    {/* Magical Transition Overlay - Only when scrolling */}
+                    <div
+                      className={`
+                        absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent
+                        transform -skew-x-12 transition-all duration-1000 ease-out pointer-events-none
+                        ${
+                          isScrolled
+                            ? "translate-x-full opacity-30"
+                            : "-translate-x-full opacity-0"
+                        }
+                      `}
+                      style={{
+                        width: '200%',
+                        left: '-50%',
+                      }}
+                    />
+
+                    {/* Shimmer Effect - Only when scrolling */}
+                    <div
+                      className={`
+                        absolute inset-0 bg-gradient-to-r from-transparent via-blue-100/20 to-transparent
+                        transform transition-all duration-1200 ease-out pointer-events-none
+                        ${
+                          isScrolled
+                            ? "translate-x-full opacity-100"
+                            : "-translate-x-full opacity-0"
+                        }
+                      `}
+                      style={{
+                        width: '150%',
+                        left: '-25%',
+                        animationDelay: '0.2s'
+                      }}
+                    />
+
+                    {/* Scale Effect Behind Logo */}
+                    <div
+                      className={`
+                        absolute inset-0 bg-white/10 rounded-lg backdrop-blur-sm
+                        transition-all duration-800 ease-out pointer-events-none
+                        ${
+                          isScrolled
+                            ? "opacity-100 scale-100"
+                            : "opacity-0 scale-110"
+                        }
+                      `}
+                    />
+
+                    {/* Burst Effect on Reveal */}
+                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                      {[...Array(8)].map((_, i) => (
+                        <div
+                          key={i}
+                          className={`
+                            absolute w-1 h-1 bg-red-400/60 rounded-full
+                            transition-all duration-1000 ease-out
+                            ${
+                              isScrolled
+                                ? "opacity-100 scale-100"
+                                : "opacity-0 scale-0"
+                            }
+                          `}
+                          style={{
+                            left: `${15 + i * 10}%`,
+                            top: `${20 + (i % 3) * 30}%`,
+                            transitionDelay: `${200 + i * 50}ms`,
+                            transform: isScrolled 
+                              ? `translate(${Math.cos(i * 45) * 10}px, ${Math.sin(i * 45) * 10}px)` 
+                              : 'translate(0, 0)'
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
               </Link>
             </div>
 
@@ -408,8 +841,8 @@ const Navbar = () => {
                   uppercase tracking-wide transition-all duration-300 ease-out group
                   ${
                     isSearchOpen || pathname === "/search"
-                      ? "text-[#800000] scale-105"
-                      : "text-gray-800 hover:text-[#800000] hover:scale-105"
+                      ? `${(isScrolled || pathname !== "/") ? 'text-[#800000]' : 'text-white'} scale-105`
+                      : `${(isScrolled || pathname !== "/") ? 'text-gray-800 hover:text-[#800000]' : 'text-white/90 hover:text-white'} hover:scale-105`
                   }
                 `}
               >
@@ -427,8 +860,8 @@ const Navbar = () => {
                   uppercase tracking-wide transition-all duration-300 ease-out group relative
                   ${
                     pathname === "/cart"
-                      ? "text-[#800000] scale-105"
-                      : "text-gray-800 hover:text-[#800000] hover:scale-105"
+                      ? `${(isScrolled || pathname !== "/") ? 'text-[#800000]' : 'text-white'} scale-105`
+                      : `${(isScrolled || pathname !== "/") ? 'text-gray-800 hover:text-[#800000]' : 'text-white/90 hover:text-white'} hover:scale-105`
                   }
                 `}
               >
@@ -437,11 +870,6 @@ const Navbar = () => {
                     size={16}
                     className="group-hover:scale-110 transition-transform duration-300"
                   />
-                  {/* <span className="absolute -top-2 -right-2 w-3.5 h-3.5 bg-[#800000] text-white 
-                                 text-xs rounded-full flex items-center justify-center font-bold
-                                 animate-pulse">
-                    3
-                  </span> */}
                 </div>
                 <span className="hidden lg:inline">Cart</span>
               </Link>
@@ -464,8 +892,8 @@ const Navbar = () => {
                         pathname.startsWith("/profile") ||
                         pathname.startsWith("/orders") ||
                         pathname.startsWith("/settings")
-                          ? "text-[#800000] scale-105"
-                          : "text-gray-800 hover:text-[#800000] hover:scale-105"
+                          ? `${(isScrolled || pathname !== "/") ? 'text-[#800000]' : 'text-white'} scale-105`
+                          : `${(isScrolled || pathname !== "/") ? 'text-gray-800 hover:text-[#800000]' : 'text-white/90 hover:text-white'} hover:scale-105`
                       }
                     `}
                   >
@@ -536,7 +964,7 @@ const Navbar = () => {
                   className={`
                     flex items-center space-x-1 lg:space-x-2 text-xs sm:text-sm font-semibold 
                     uppercase tracking-wide transition-all duration-300 ease-out group
-                    text-gray-800 hover:text-[#800000] hover:scale-105
+                    ${(isScrolled || pathname !== "/") ? 'text-gray-800 hover:text-[#800000]' : 'text-white/90 hover:text-white'} hover:scale-105
                   `}
                 >
                   <User
@@ -551,8 +979,11 @@ const Navbar = () => {
             <div className="flex items-center space-x-2 md:hidden">
               <button
                 onClick={toggleSearchPopup}
-                className="p-2 text-gray-800 hover:text-[#800000] transition-all duration-300 
-                         transform hover:scale-110 active:scale-95"
+                className={`p-2 transition-all duration-300 transform hover:scale-110 active:scale-95 ${
+                  isScrolled 
+                    ? 'text-gray-800 hover:text-[#800000]' 
+                    : 'text-white hover:text-white/80'
+                }`}
               >
                 <Search size={18} />
               </button>
@@ -561,16 +992,22 @@ const Navbar = () => {
               {isLoggedIn ? (
                 <button
                   onClick={toggleUserDropdown}
-                  className="p-2 text-gray-800 hover:text-[#800000] transition-all duration-300 
-                           transform hover:scale-110 active:scale-95"
+                  className={`p-2 transition-all duration-300 transform hover:scale-110 active:scale-95 ${
+                    (isScrolled || pathname !== "/") 
+                      ? 'text-gray-800 hover:text-[#800000]' 
+                      : 'text-white hover:text-white/80'
+                  }`}
                 >
                   <User size={18} />
                 </button>
               ) : (
                 <button
                   onClick={handleLogin}
-                  className="p-2 text-gray-800 hover:text-[#800000] transition-all duration-300 
-                           transform hover:scale-110 active:scale-95"
+                  className={`p-2 transition-all duration-300 transform hover:scale-110 active:scale-95 ${
+                    (isScrolled || pathname !== "/") 
+                      ? 'text-gray-800 hover:text-[#800000]' 
+                      : 'text-white hover:text-white/80'
+                  }`}
                 >
                   <User size={18} />
                 </button>
@@ -578,16 +1015,13 @@ const Navbar = () => {
 
               <Link
                 href="/cart"
-                className="p-2 text-gray-800 hover:text-[#800000] transition-all duration-300 
-                         relative transform hover:scale-110 active:scale-95"
+                className={`p-2 transition-all duration-300 relative transform hover:scale-110 active:scale-95 ${
+                  (isScrolled || pathname !== "/") 
+                    ? 'text-gray-800 hover:text-[#800000]' 
+                    : 'text-white hover:text-white/80'
+                }`}
               >
                 <ShoppingBag size={18} />
-                {/* <span
-                  className="absolute -top-1 -right-1 w-4 h-4 bg-[#800000] text-white text-xs 
-                               rounded-full flex items-center justify-center font-bold animate-pulse"
-                >
-                  3
-                </span> */}
               </Link>
             </div>
           </div>
@@ -840,12 +1274,7 @@ const Navbar = () => {
                       }}
                       className={`
                         block p-1 font-medium text-base sm:text-lg transition-all duration-300
-                        transform hover:translate-x-2 rounded-lg hover:bg-gray-50 
-                        // {
-                        //   isActive || (item === "Search" && isSearchOpen)
-                        //     ? "text-[#800000] bg-[#800000]/5"
-                        //     : "text-gray-700 hover:text-[#800000]"
-                        // }
+                        transform hover:translate-x-2 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-[#800000]
                       `}
                     >
                       {item}

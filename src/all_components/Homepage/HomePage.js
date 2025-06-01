@@ -15,7 +15,7 @@ const HomePage = ({data}) => {
       <BrandSection />
       <NewCollection newCollection = {data} />
       <AboutUsSection />
-      <CollectionsPage />
+      <CollectionsPage collections={data.slice(26,35)} />
       <Culture />
       <QuickSearch />
     </>
