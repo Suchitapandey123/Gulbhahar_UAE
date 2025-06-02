@@ -11,6 +11,7 @@ export default function ModernHeroAnimated() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
+  const [isFirstLoad, setIsFirstLoad] = useState(true); // Track first load
   const containerRef = useRef(null);
   
   // Parallax scrolling effect
@@ -60,53 +61,82 @@ export default function ModernHeroAnimated() {
     if (!isPlaying) return;
     
     const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % heroData.length);
+      setCurrentIndex((prev) => {
+        setIsFirstLoad(false); // After first transition, no longer first load
+        return (prev + 1) % heroData.length;
+      });
     }, 6000);
     
     return () => clearInterval(timer);
   }, [isPlaying, heroData.length]);
 
-  // Enhanced slide variants with no white flash
+  // Enhanced slide variants with better fade-in animations
   const slideVariants = {
-    enter: (direction) => ({
-      x: direction > 0 ? '100%' : '-100%',
-      opacity: 0,
-      scale: 1.05,
-      filter: 'blur(8px)'
-    }),
+    enter: (direction) => {
+      // First load: elegant center fade with subtle scale
+      if (isFirstLoad) {
+        return {
+          x: '0%',
+          y: '0%',
+          opacity: 0,
+          scale: 1.05,
+          filter: 'blur(4px) brightness(0.7)'
+        };
+      }
+      // Subsequent slides: come from right or left
+      return {
+        x: direction > 0 ? '100%' : '-100%',
+        opacity: 0,
+        scale: 1.1,
+        filter: 'blur(8px) brightness(0.8)'
+      };
+    },
     center: {
       x: '0%',
+      y: '0%',
       opacity: 1,
       scale: 1,
-      filter: 'blur(0px)',
+      filter: 'blur(0px) brightness(1)',
       transition: {
-        duration: 1.0,
-        ease: [0.25, 0.46, 0.45, 0.94],
-        opacity: { duration: 0.6 },
-        scale: { duration: 1.2 },
-        filter: { duration: 0.8 }
+        duration: isFirstLoad ? 1.8 : 1.2,
+        ease: isFirstLoad ? [0.16, 1, 0.3, 1] : [0.25, 0.46, 0.45, 0.94],
+        opacity: { 
+          duration: isFirstLoad ? 1.4 : 0.8,
+          ease: isFirstLoad ? [0.25, 1, 0.5, 1] : "easeOut"
+        },
+        scale: { 
+          duration: isFirstLoad ? 2.0 : 1.4,
+          ease: isFirstLoad ? [0.16, 1, 0.3, 1] : [0.25, 0.46, 0.45, 0.94]
+        },
+        filter: { 
+          duration: isFirstLoad ? 1.6 : 1.0,
+          ease: "easeOut"
+        }
       }
     },
     exit: (direction) => ({
       x: direction > 0 ? '-100%' : '100%',
       opacity: 0,
       scale: 0.95,
-      filter: 'blur(4px)',
+      filter: 'blur(6px) brightness(0.6)',
       transition: {
-        duration: 0.6,
-        ease: [0.25, 0.46, 0.45, 0.94]
+        duration: 0.8,
+        ease: [0.25, 0.46, 0.45, 0.94],
+        opacity: { duration: 0.4 },
+        scale: { duration: 0.8 },
+        filter: { duration: 0.6 }
       }
     })
   };
 
-  // Text animation variants
+  // Text animation variants with refined first load experience
   const textContainerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3
+        staggerChildren: isFirstLoad ? 0.15 : 0.2,
+        delayChildren: isFirstLoad ? 1.2 : 0.3 // Wait for image to partially fade in
       }
     }
   };
@@ -114,21 +144,31 @@ export default function ModernHeroAnimated() {
   const textVariants = {
     hidden: { 
       opacity: 0, 
-      y: 100,
-      rotateX: 90
+      y: isFirstLoad ? 20 : 100,
+      rotateX: isFirstLoad ? 0 : 90,
+      filter: isFirstLoad ? 'blur(2px)' : 'blur(0px)'
     },
     visible: { 
       opacity: 1, 
       y: 0,
       rotateX: 0,
+      filter: 'blur(0px)',
       transition: {
-        duration: 0.8,
-        ease: [0.23, 1, 0.32, 1]
+        duration: isFirstLoad ? 1.2 : 0.8,
+        ease: isFirstLoad ? [0.16, 1, 0.3, 1] : [0.23, 1, 0.32, 1],
+        opacity: { duration: isFirstLoad ? 0.8 : 0.6 },
+        filter: { duration: isFirstLoad ? 0.6 : 0.4 }
       }
     }
   };
 
   const currentSlide = heroData[currentIndex];
+
+  // Handle manual slide change
+  const handleSlideChange = (index) => {
+    setIsFirstLoad(false);
+    setCurrentIndex(index);
+  };
 
   return (
     <>
@@ -147,7 +187,7 @@ export default function ModernHeroAnimated() {
       >
         {/* Animated background with parallax + seamless transitions */}
         <motion.div 
-          className="absolute top-0 left-0 w-screen h-screen bg-black -z-10"
+          className="absolute top-0 left-0 w-screen h-screen bg-red-900 -z-10"
           style={{ y: backgroundY }}
         >
           <AnimatePresence mode="wait" custom={1}>
@@ -183,8 +223,8 @@ export default function ModernHeroAnimated() {
               </div>
               
               {/* Modern gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/30 to-transparent" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-br from-black/50 via-black/50 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40  via-transparent to-transparent" />
             </motion.div>
           </AnimatePresence>
         </motion.div>
@@ -263,11 +303,11 @@ export default function ModernHeroAnimated() {
                     {heroData.map((item, index) => (
                       <motion.button
                         key={item.id}
-                        onClick={() => setCurrentIndex(index)}
-                        className={`w-full text-left p-2 sm:p-3 md:p-4 rounded-lg sm:rounded-xl backdrop-blur-xl border transition-all duration-300 ${
+                        onClick={() => handleSlideChange(index)}
+                        className={`w-full text-left p-2 sm:p-3 md:p-4 rounded-lg sm:rounded-xl backdrop-blur-2xl border transition-all duration-300 ${
                           index === currentIndex 
                             ? 'bg-white/20 border-white/30 text-white' 
-                            : 'bg-white/5 border-white/10 text-white/60 hover:bg-white/10'
+                            : 'bg-white/10 border-white/30 text-white/90 hover:bg-white/50'
                         }`}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}

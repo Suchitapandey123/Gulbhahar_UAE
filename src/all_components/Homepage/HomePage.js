@@ -13,7 +13,7 @@ const HomePage = ({data}) => {
     <>
       <HeroAnimated/>
       <BrandSection />
-      <NewCollection newCollection = {data} />
+      <NewCollection newCollection = {data.slice(26,35)} />
       <AboutUsSection />
       <CollectionsPage collections={data.slice(26,35)} />
       <Culture />

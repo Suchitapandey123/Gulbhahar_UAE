@@ -126,9 +126,10 @@ export default function CollectionsPage({collections}) {
           animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
           transition={{ duration: 0.4, delay: 0.1 }}
         >
-          <Link href="/Collections">
+          <Link href="/collections">
             <motion.button 
               variants={buttonVariants}
+
               initial="rest"
               whileHover="hover"
               whileTap="tap"

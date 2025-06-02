@@ -193,9 +193,14 @@ const Navbar = () => {
 
   const handleMouseLeave = () => {
     if (window.innerWidth >= 768 && isHoverMode) {
-      hoverTimeoutRef.current = setTimeout(() => {
-        setIsCollectionDropdownOpen(false);
-      }, 150);
+      // Hide immediately instead of using timeout
+      setIsCollectionDropdownOpen(false);
+      
+      // Clear any existing timeout
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+        hoverTimeoutRef.current = null;
+      }
     }
   };
 
@@ -247,8 +252,16 @@ const Navbar = () => {
             uppercase tracking-wide transition-all duration-300 ease-out
             ${
               isActive
-                ? `${(isScrolled || pathname !== "/") ? 'text-[#800000]' : 'text-white'} scale-105`
-                : `${(isScrolled || pathname !== "/") ? 'text-gray-800 hover:text-[#800000]' : 'text-white/90 hover:text-white'} hover:scale-105`
+                ? `${
+                    isScrolled || pathname !== "/"
+                      ? "text-[#800000]"
+                      : "text-white"
+                  } scale-105`
+                : `${
+                    isScrolled || pathname !== "/"
+                      ? "text-gray-800 hover:text-[#800000]"
+                      : "text-white/90 hover:text-white"
+                  } hover:scale-105`
             }
           `}
           onClick={
@@ -270,7 +283,7 @@ const Navbar = () => {
           <div
             className={`
             absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0.5 transition-all duration-300 ease-out
-            ${(isScrolled || pathname !== "/") ? 'bg-[#800000]' : 'bg-white'}
+            ${isScrolled || pathname !== "/" ? "bg-[#800000]" : "bg-white"}
             ${isActive ? "w-full" : "w-0 group-hover:w-full"}
           `}
           ></div>
@@ -355,9 +368,10 @@ const Navbar = () => {
         className={`
           fixed top-0 left-0 right-0 z-50 backdrop-blur-md
           transition-all duration-500 ease-out
-          ${isScrolled || pathname !== "/" 
-            ? 'bg-white/95 shadow-lg py-2.5 lg:py-3 border-b border-gray-100/50' 
-            : 'bg-transparent shadow-none py-3 lg:py-4 border-b border-white/10'
+          ${
+            isScrolled || pathname !== "/"
+              ? "bg-white/95 shadow-lg py-2.5 lg:py-3 border-b border-gray-100/50"
+              : "bg-transparent shadow-none py-3 lg:py-4 border-b border-white/10"
           }
         `}
       >
@@ -367,9 +381,9 @@ const Navbar = () => {
               <button
                 onClick={toggleMenu}
                 className={`p-2 transition-colors duration-200 focus:outline-none ${
-                  (isScrolled || pathname !== "/") 
-                    ? 'text-gray-800 hover:text-[#800000]' 
-                    : 'text-white hover:text-white/80'
+                  isScrolled || pathname !== "/"
+                    ? "text-gray-800 hover:text-[#800000]"
+                    : "text-white hover:text-white/80"
                 }`}
                 aria-label="Toggle menu"
               >
@@ -385,7 +399,7 @@ const Navbar = () => {
             </div>
 
             <div className="flex-1 flex justify-center md:flex-initial">
-              <Link href="/" className=" relative overflow-hidden">
+              <Link href="/" className=" relative overflow-hidden group">
                 {/* Static Logo for Non-Home Pages with Hover Magic */}
                 {pathname !== "/" && (
                   <div className="relative">
@@ -406,10 +420,8 @@ const Navbar = () => {
                       `}
                     />
 
-                    {/* Elegant Hover Effects - ABOVE Logo (Higher Z-Index) */}
-                    
                     {/* Golden Dust Particles - Flying Above */}
-                    <div className="absolute inset-0 overflow-visible pointer-events-none z-20">
+                    <div className="absolute  inset-0 overflow-visible pointer-events-none z-20">
                       {[...Array(12)].map((_, i) => (
                         <div
                           key={`dust-${i}`}
@@ -421,12 +433,12 @@ const Navbar = () => {
                             transitionDelay: `${i * 80}ms`,
                           }}
                         >
-                          <div 
+                          <div
                             className="w-full h-full bg-gradient-to-r from-red-800 to-red-900 rounded-full
                                      group-hover:animate-pulse shadow-red-900/50"
-                            style={{ 
+                            style={{
                               animationDelay: `${i * 150}ms`,
-                              animationDuration: '2s'
+                              animationDuration: "2s",
                             }}
                           />
                         </div>
@@ -438,10 +450,10 @@ const Navbar = () => {
                       className="absolute -top-10 left-1/2 transform -translate-x-1/2 z-30
                                opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out
                                group-hover:animate-bounce"
-                      style={{ 
-                        transitionDelay: '200ms',
-                        fontSize: '28px',
-                        filter: 'drop-shadow(0 4px 8px rgba(127, 29, 29, 0.3))'
+                      style={{
+                        transitionDelay: "200ms",
+                        fontSize: "28px",
+                        filter: "drop-shadow(0 4px 8px rgba(127, 29, 29, 0.3))",
                       }}
                     >
                       👑
@@ -459,12 +471,12 @@ const Navbar = () => {
                             transitionDelay: `${150 + i * 75}ms`,
                           }}
                         >
-                          <div 
+                          <div
                             className="w-2 h-2 bg-gradient-to-r from-red-800 to-red-900 rounded-full
                                      group-hover:animate-ping shadow-lg shadow-red-900/50"
-                            style={{ 
+                            style={{
                               animationDelay: `${i * 200}ms`,
-                              animationDuration: '1.5s'
+                              animationDuration: "1.5s",
                             }}
                           />
                         </div>
@@ -479,7 +491,7 @@ const Navbar = () => {
                                bg-gradient-to-r from-red-50 to-red-100 px-3 py-1.5 rounded-full 
                                shadow-lg border border-red-200/50 backdrop-blur-sm
                                group-hover:animate-bounce"
-                      style={{ transitionDelay: '400ms' }}
+                      style={{ transitionDelay: "400ms" }}
                     >
                       ✨ Crafted with Excellence ✨
                     </div>
@@ -495,10 +507,11 @@ const Navbar = () => {
                             left: `${20 + i * 15}%`,
                             top: `${-20 + (i % 2) * 40}%`,
                             transitionDelay: `${250 + i * 100}ms`,
-                            fontSize: '14px',
+                            fontSize: "14px",
                             animationDelay: `${i * 300}ms`,
-                            animationDuration: '2s',
-                            filter: 'drop-shadow(0 2px 4px rgba(127, 29, 29, 0.4))'
+                            animationDuration: "2s",
+                            filter:
+                              "drop-shadow(0 2px 4px rgba(127, 29, 29, 0.4))",
                           }}
                         >
                           ❤️
@@ -513,24 +526,26 @@ const Navbar = () => {
                         className="absolute -left-8 top-1/2 transform -translate-y-1/2 z-20
                                  opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out
                                  text-red-600 group-hover:animate-pulse"
-                        style={{ 
-                          transitionDelay: '300ms',
-                          fontSize: '20px',
-                          filter: 'drop-shadow(0 2px 4px rgba(127, 29, 29, 0.3))'
+                        style={{
+                          transitionDelay: "300ms",
+                          fontSize: "20px",
+                          filter:
+                            "drop-shadow(0 2px 4px rgba(127, 29, 29, 0.3))",
                         }}
                       >
                         ✨
                       </div>
-                      
+
                       {/* Right side sparkle */}
                       <div
                         className="absolute -right-8 top-1/2 transform -translate-y-1/2 z-20
                                  opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out
                                  text-red-600 group-hover:animate-pulse"
-                        style={{ 
-                          transitionDelay: '500ms',
-                          fontSize: '20px',
-                          filter: 'drop-shadow(0 2px 4px rgba(127, 29, 29, 0.3))'
+                        style={{
+                          transitionDelay: "500ms",
+                          fontSize: "20px",
+                          filter:
+                            "drop-shadow(0 2px 4px rgba(127, 29, 29, 0.3))",
                         }}
                       >
                         ✨
@@ -543,23 +558,23 @@ const Navbar = () => {
                         className="absolute -top-6 -left-4 z-20
                                  opacity-0 group-hover:opacity-100 transition-all duration-600 ease-out
                                  text-red-700 group-hover:animate-bounce"
-                        style={{ 
-                          transitionDelay: '600ms',
-                          fontSize: '14px',
-                          animationDelay: '0.5s'
+                        style={{
+                          transitionDelay: "600ms",
+                          fontSize: "14px",
+                          animationDelay: "0.5s",
                         }}
                       >
                         💎
                       </div>
-                      
+
                       <div
                         className="absolute -top-6 -right-4 z-20
                                  opacity-0 group-hover:opacity-100 transition-all duration-600 ease-out
                                  text-red-700 group-hover:animate-bounce"
-                        style={{ 
-                          transitionDelay: '700ms',
-                          fontSize: '14px',
-                          animationDelay: '0.7s'
+                        style={{
+                          transitionDelay: "700ms",
+                          fontSize: "14px",
+                          animationDelay: "0.7s",
                         }}
                       >
                         💎
@@ -578,14 +593,19 @@ const Navbar = () => {
                             transitionDelay: `${800 + i * 100}ms`,
                           }}
                         >
-                          <div 
+                          <div
                             className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-800 
                                      group-hover:animate-pulse transform transition-all duration-1000
                                      group-hover:rotate-45 group-hover:scale-150"
-                            style={{ 
+                            style={{
                               animationDelay: `${i * 200}ms`,
-                              animationDuration: '2s',
-                              borderRadius: i % 3 === 0 ? '50%' : i % 3 === 1 ? '0%' : '20%'
+                              animationDuration: "2s",
+                              borderRadius:
+                                i % 3 === 0
+                                  ? "50%"
+                                  : i % 3 === 1
+                                  ? "0%"
+                                  : "20%",
                             }}
                           />
                         </div>
@@ -605,7 +625,7 @@ const Navbar = () => {
                             height: `${50 + i * 30}px`,
                             transitionDelay: `${900 + i * 200}ms`,
                             animationDelay: `${i * 300}ms`,
-                            animationDuration: '3s'
+                            animationDuration: "3s",
                           }}
                         />
                       ))}
@@ -623,17 +643,17 @@ const Navbar = () => {
                             transitionDelay: `${1000 + i * 100}ms`,
                           }}
                         >
-                          <div 
-                            className="w-2 h-2 bg-gradient-to-r from-red-500 to-red-700 rounded-full
-                                     shadow-lg shadow-red-500/50 group-hover:animate-bounce
-                                     relative overflow-hidden"
-                            style={{ 
+                          <div
+                            className="absolute w-1 h-1 bg-red-400 rounded-full opacity-0 group-hover:opacity-60 transition-all duration-1200 ease-out"
+                            style={{
                               animationDelay: `${i * 250}ms`,
-                              animationDuration: '2.5s'
+                              animationDuration: "2.5s",
                             }}
                           >
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent
-                                         transform -skew-x-12 group-hover:animate-pulse" />
+                            <div
+                              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent
+                                         transform -skew-x-12 group-hover:animate-pulse"
+                            />
                           </div>
                         </div>
                       ))}
@@ -644,19 +664,16 @@ const Navbar = () => {
                       {[...Array(16)].map((_, i) => (
                         <div
                           key={`helix-${i}`}
-                          className="absolute w-1 h-1 bg-red-400 rounded-full
-                                   opacity-0 group-hover:opacity-60 transition-all duration-1200 ease-out"
+                          className="absolute w-1 h-1 bg-red-400 rounded-full opacity-0 group-hover:opacity-60 transition-all duration-1200 ease-out"
                           style={{
-                            left: `${50 + Math.cos(i * 0.4) * 40}%`,
-                            top: `${50 + Math.sin(i * 0.4) * 40}%`,
-                            transitionDelay: `${1200 + i * 50}ms`,
-                            transform: `rotate(${i * 22.5}deg)`,
-                            animation: 'none'
+                            left: `${50 + 30 * Math.cos((i * Math.PI) / 8)}%`,
+                            top: `${50 + 30 * Math.sin((i * Math.PI) / 8)}%`,
+                            animationDelay: `${i * 100}ms`,
+                            transform: `rotate(${
+                              i * 22.5
+                            }deg) translateX(20px)`,
                           }}
-                        >
-                          <div className="w-full h-full bg-red-400 rounded-full group-hover:animate-spin"
-                               style={{ animationDuration: '4s', animationDelay: `${i * 100}ms` }} />
-                        </div>
+                        />
                       ))}
                     </div>
 
@@ -667,13 +684,13 @@ const Navbar = () => {
                           key={`beam-${i}`}
                           className="absolute opacity-0 group-hover:opacity-40 transition-all duration-1000 ease-out"
                           style={{
-                            width: '200%',
-                            height: '2px',
-                            left: '-50%',
-                            top: '50%',
+                            width: "200%",
+                            height: "2px",
+                            left: "-50%",
+                            top: "50%",
                             background: `linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.6), transparent)`,
                             transform: `rotate(${i * 45}deg)`,
-                            transformOrigin: 'center',
+                            transformOrigin: "center",
                             transitionDelay: `${1400 + i * 75}ms`,
                           }}
                         />
@@ -693,7 +710,7 @@ const Navbar = () => {
                             height: `${40 + i * 30}px`,
                             transitionDelay: `${1500 + i * 200}ms`,
                             animationDelay: `${i * 500}ms`,
-                            animationDuration: '4s'
+                            animationDuration: "4s",
                           }}
                         />
                       ))}
@@ -706,21 +723,23 @@ const Navbar = () => {
                           key={`quantum-${i}`}
                           className="absolute opacity-0 group-hover:opacity-100 transition-all duration-600 ease-out z-25"
                           style={{
-                            left: `${20 + (i * 7) % 60}%`,
-                            top: `${-20 + (i * 11) % 40}%`,
+                            left: `${20 + ((i * 7) % 60)}%`,
+                            top: `${-20 + ((i * 11) % 40)}%`,
                             transitionDelay: `${1600 + i * 80}ms`,
                           }}
                         >
-                          <div 
+                          <div
                             className="w-1 h-1 bg-red-600 rounded-full relative group-hover:animate-ping"
-                            style={{ 
+                            style={{
                               animationDelay: `${i * 150}ms`,
-                              animationDuration: '2s'
+                              animationDuration: "2s",
                             }}
                           >
                             <div className="absolute inset-0 bg-red-600 rounded-full animate-pulse" />
-                            <div className="absolute -inset-1 bg-red-400/30 rounded-full animate-ping" 
-                                 style={{ animationDelay: `${i * 200}ms` }} />
+                            <div
+                              className="absolute -inset-1 bg-red-400/30 rounded-full animate-ping"
+                              style={{ animationDelay: `${i * 200}ms` }}
+                            />
                           </div>
                         </div>
                       ))}
@@ -767,8 +786,8 @@ const Navbar = () => {
                         }
                       `}
                       style={{
-                        width: '200%',
-                        left: '-50%',
+                        width: "200%",
+                        left: "-50%",
                       }}
                     />
 
@@ -784,9 +803,9 @@ const Navbar = () => {
                         }
                       `}
                       style={{
-                        width: '150%',
-                        left: '-25%',
-                        animationDelay: '0.2s'
+                        width: "150%",
+                        left: "-25%",
+                        animationDelay: "0.2s",
                       }}
                     />
 
@@ -821,9 +840,11 @@ const Navbar = () => {
                             left: `${15 + i * 10}%`,
                             top: `${20 + (i % 3) * 30}%`,
                             transitionDelay: `${200 + i * 50}ms`,
-                            transform: isScrolled 
-                              ? `translate(${Math.cos(i * 45) * 10}px, ${Math.sin(i * 45) * 10}px)` 
-                              : 'translate(0, 0)'
+                            transform: isScrolled
+                              ? `translate(${Math.cos(i * 45) * 10}px, ${
+                                  Math.sin(i * 45) * 10
+                                }px)`
+                              : "translate(0, 0)",
                           }}
                         />
                       ))}
@@ -841,8 +862,16 @@ const Navbar = () => {
                   uppercase tracking-wide transition-all duration-300 ease-out group
                   ${
                     isSearchOpen || pathname === "/search"
-                      ? `${(isScrolled || pathname !== "/") ? 'text-[#800000]' : 'text-white'} scale-105`
-                      : `${(isScrolled || pathname !== "/") ? 'text-gray-800 hover:text-[#800000]' : 'text-white/90 hover:text-white'} hover:scale-105`
+                      ? `${
+                          isScrolled || pathname !== "/"
+                            ? "text-[#800000]"
+                            : "text-white"
+                        } scale-105`
+                      : `${
+                          isScrolled || pathname !== "/"
+                            ? "text-gray-800 hover:text-[#800000]"
+                            : "text-white/90 hover:text-white"
+                        } hover:scale-105`
                   }
                 `}
               >
@@ -860,8 +889,16 @@ const Navbar = () => {
                   uppercase tracking-wide transition-all duration-300 ease-out group relative
                   ${
                     pathname === "/cart"
-                      ? `${(isScrolled || pathname !== "/") ? 'text-[#800000]' : 'text-white'} scale-105`
-                      : `${(isScrolled || pathname !== "/") ? 'text-gray-800 hover:text-[#800000]' : 'text-white/90 hover:text-white'} hover:scale-105`
+                      ? `${
+                          isScrolled || pathname !== "/"
+                            ? "text-[#800000]"
+                            : "text-white"
+                        } scale-105`
+                      : `${
+                          isScrolled || pathname !== "/"
+                            ? "text-gray-800 hover:text-[#800000]"
+                            : "text-white/90 hover:text-white"
+                        } hover:scale-105`
                   }
                 `}
               >
@@ -892,8 +929,16 @@ const Navbar = () => {
                         pathname.startsWith("/profile") ||
                         pathname.startsWith("/orders") ||
                         pathname.startsWith("/settings")
-                          ? `${(isScrolled || pathname !== "/") ? 'text-[#800000]' : 'text-white'} scale-105`
-                          : `${(isScrolled || pathname !== "/") ? 'text-gray-800 hover:text-[#800000]' : 'text-white/90 hover:text-white'} hover:scale-105`
+                          ? `${
+                              isScrolled || pathname !== "/"
+                                ? "text-[#800000]"
+                                : "text-white"
+                            } scale-105`
+                          : `${
+                              isScrolled || pathname !== "/"
+                                ? "text-gray-800 hover:text-[#800000]"
+                                : "text-white/90 hover:text-white"
+                            } hover:scale-105`
                       }
                     `}
                   >
@@ -964,7 +1009,11 @@ const Navbar = () => {
                   className={`
                     flex items-center space-x-1 lg:space-x-2 text-xs sm:text-sm font-semibold 
                     uppercase tracking-wide transition-all duration-300 ease-out group
-                    ${(isScrolled || pathname !== "/") ? 'text-gray-800 hover:text-[#800000]' : 'text-white/90 hover:text-white'} hover:scale-105
+                    ${
+                      isScrolled || pathname !== "/"
+                        ? "text-gray-800 hover:text-[#800000]"
+                        : "text-white/90 hover:text-white"
+                    } hover:scale-105
                   `}
                 >
                   <User
@@ -980,9 +1029,9 @@ const Navbar = () => {
               <button
                 onClick={toggleSearchPopup}
                 className={`p-2 transition-all duration-300 transform hover:scale-110 active:scale-95 ${
-                  isScrolled 
-                    ? 'text-gray-800 hover:text-[#800000]' 
-                    : 'text-white hover:text-white/80'
+                  isScrolled
+                    ? "text-gray-800 hover:text-[#800000]"
+                    : "text-white hover:text-white/80"
                 }`}
               >
                 <Search size={18} />
@@ -993,9 +1042,9 @@ const Navbar = () => {
                 <button
                   onClick={toggleUserDropdown}
                   className={`p-2 transition-all duration-300 transform hover:scale-110 active:scale-95 ${
-                    (isScrolled || pathname !== "/") 
-                      ? 'text-gray-800 hover:text-[#800000]' 
-                      : 'text-white hover:text-white/80'
+                    isScrolled || pathname !== "/"
+                      ? "text-gray-800 hover:text-[#800000]"
+                      : "text-white hover:text-white/80"
                   }`}
                 >
                   <User size={18} />
@@ -1004,9 +1053,9 @@ const Navbar = () => {
                 <button
                   onClick={handleLogin}
                   className={`p-2 transition-all duration-300 transform hover:scale-110 active:scale-95 ${
-                    (isScrolled || pathname !== "/") 
-                      ? 'text-gray-800 hover:text-[#800000]' 
-                      : 'text-white hover:text-white/80'
+                    isScrolled || pathname !== "/"
+                      ? "text-gray-800 hover:text-[#800000]"
+                      : "text-white hover:text-white/80"
                   }`}
                 >
                   <User size={18} />
@@ -1016,9 +1065,9 @@ const Navbar = () => {
               <Link
                 href="/cart"
                 className={`p-2 transition-all duration-300 relative transform hover:scale-110 active:scale-95 ${
-                  (isScrolled || pathname !== "/") 
-                    ? 'text-gray-800 hover:text-[#800000]' 
-                    : 'text-white hover:text-white/80'
+                  isScrolled || pathname !== "/"
+                    ? "text-gray-800 hover:text-[#800000]"
+                    : "text-white hover:text-white/80"
                 }`}
               >
                 <ShoppingBag size={18} />
@@ -1030,7 +1079,7 @@ const Navbar = () => {
           <div
             className={`
               absolute left-0 w-full bg-white/95 backdrop-blur-md shadow-2xl z-50 
-              transition-all duration-500 ease-out border-b border-gray-100
+              transition-all duration- ease-out border-b border-gray-100
               ${
                 isCollectionDropdownOpen
                   ? "opacity-100 visible translate-y-0"
@@ -1188,72 +1237,68 @@ const Navbar = () => {
               )}
 
               <div className="space-y-1">
-
                 {/* new section */}
                 <div
-                    onClick={() => {
-                      handleCategoryClick("All Products"); // Or any custom logic
-                      toggleMenu(); // Optional: close menu
-                    }}
-                    className="font-medium text-gray-700 hover:text-[#800000] 
+                  onClick={() => {
+                    handleCategoryClick("All Products"); // Or any custom logic
+                    toggleMenu(); // Optional: close menu
+                  }}
+                  className="font-medium text-gray-700 hover:text-[#800000] 
                transition-all  duration-300 cursor-pointer p-2 rounded-lg
                hover:bg-[#800000]/5 transform hover:translate-x-1"
-                  >
-                    New
-                  </div>
-                  {/* maspping designed by monica */}
+                >
+                  New
+                </div>
+                {/* maspping designed by monica */}
                 {collectionCategoriesForMobile.map((category, index) => (
-                    <div key={index} className=" sm:ml-4 space-y-2">
-                      <div
-                        onClick={() => toggleCategory(index)}
-                        className="font-medium text-gray-700 hover:text-[#800000] 
+                  <div key={index} className=" sm:ml-4 space-y-2">
+                    <div
+                      onClick={() => toggleCategory(index)}
+                      className="font-medium text-gray-700 hover:text-[#800000] 
                  transition-all duration-300 cursor-pointer p-2 rounded-lg
                  hover:bg-[#800000]/5 transform hover:translate-x-1 flex justify-between items-center"
-                      >
-                        <span>{category.title}</span>
-                        <span>{openCategoryIndex === index ? "-" : "+"}</span>
-                      </div>
+                    >
+                      <span>{category.title}</span>
+                      <span>{openCategoryIndex === index ? "-" : "+"}</span>
+                    </div>
 
-                      {openCategoryIndex === index && (
-                        <ul className="ml-0 sm:ml-4 space-y-1">
-                          {category.items.map((item, itemIndex) => (
-                            <li key={itemIndex}>
-                              <div
-                                onClick={() => {
-                                  handleCategoryClick(
-                                    `${category.title} ${item}`
-                                  );
-                                  toggleMenu(); // close the menu
-                                }}
-                                className="text-sm text-gray-600 hover:text-[#800000] 
+                    {openCategoryIndex === index && (
+                      <ul className="ml-0 sm:ml-4 space-y-1">
+                        {category.items.map((item, itemIndex) => (
+                          <li key={itemIndex}>
+                            <div
+                              onClick={() => {
+                                handleCategoryClick(
+                                  `${category.title} ${item}`
+                                );
+                                toggleMenu(); // close the menu
+                              }}
+                              className="text-sm text-gray-600 hover:text-[#800000] 
                          transition-all duration-300 cursor-pointer 
                          transform hover:translate-x-2 p-2 rounded
                          hover:bg-[#800000]/5"
-                              >
-                                • {item}
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  ))}
-                  {/* view all collections */}
-                  <button
-                      type="button"
-                      onClick={handleViewAllCollections}
-                      className="inline-flex items-center truncate ml-1 space-x-4 px-8 py-2 mt-3 bg-[#800000] text-white 
+                            >
+                              • {item}
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ))}
+                {/* view all collections */}
+                <button
+                  type="button"
+                  onClick={handleViewAllCollections}
+                  className="inline-flex items-center truncate ml-1 space-x-4 px-8 py-2 mt-3 bg-[#800000] text-white 
                                font-semibold text-[12px] uppercase tracking-wide rounded-md
                                hover:bg-[#600000] transform hover:scale-105 transition-all duration-300
                                shadow-md hover:shadow-lg w-[70%] justify-center cursor-pointer"
-                      style={{ pointerEvents: 'auto' }}
-                    >
-                      {/* <Eye size={16} /> */}
-                      <span>View All Collections</span>
-                    </button>
-                
-
-                
+                  style={{ pointerEvents: "auto" }}
+                >
+                  {/* <Eye size={16} /> */}
+                  <span>View All Collections</span>
+                </button>
               </div>
 
               <div className="space-y-0 sm:space-y-1  border-gray-100">
@@ -1283,41 +1328,37 @@ const Navbar = () => {
                 })}
 
                 {/* Mobile Login/Logout */}
-               
               </div>
-             
             </div>
-            
           </div>
 
-                 {isLoggedIn ? (
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      toggleMenu();
-                    }}
-                    className="flex items-center space-x-3 w-full p-3 text-left font-medium 
+          {isLoggedIn ? (
+            <button
+              onClick={() => {
+                handleLogout();
+                toggleMenu();
+              }}
+              className="flex items-center space-x-3 w-full p-3 text-left font-medium 
                              text-base sm:text-lg text-red-600 hover:text-red-700 
                              hover:bg-red-50 rounded-lg transition-all duration-300"
-                  >
-                    <LogOut size={18} />
-                    <span>Logout</span>
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => {
-                      handleLogin();
-                      toggleMenu();
-                    }}
-                    className="flex mb-4 w- items-center justify-center    py-2 mx-2 text-left font-medium 
+            >
+              <LogOut size={18} />
+              <span>Logout</span>
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                handleLogin();
+                toggleMenu();
+              }}
+              className="flex mb-4 w- items-center justify-center    py-2 mx-2 text-left font-medium 
                              text-base sm:text-lg text-[#800000] text-[18px]
                              bg-[#800000]/10 rounded-lg transition-all duration-300"
-                  >
-                    {/* <User size={18} /> */}
-                    <span>Login</span>
-                  </button>
-                )}
-
+            >
+              {/* <User size={18} /> */}
+              <span>Login</span>
+            </button>
+          )}
         </div>
       </div>
     </>

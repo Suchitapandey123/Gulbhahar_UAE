@@ -1,5 +1,5 @@
 "use client";
-import { SetStateAction, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   ChevronDown,
@@ -8,17 +8,17 @@ import {
   List,
   SlidersHorizontal,
   X,
-  Star,
-  Heart,
   ShoppingBag,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
-import img11 from "../../../public/Image/About3.png";
-import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import productApi from "../api/v0/product-service";
+import ContentSection from "./components/ContentSection";
+import TopTrends from "./components/TopTrends";
+import Image from "next/image";
 
-const collections = [
+// Keep fallback data for when API is loading or fails
+const fallbackCollections = [
   {
     id: 1,
     title: "Bridal Jutti",
@@ -30,334 +30,13 @@ const collections = [
       "../../../../public/Image/Culture.png",
       "../../../../public/Image/Culture.png",
     ],
-    season: "FALL 2024",
+    season: "Winter",
     stock: 12,
     size: "S",
   },
-  {
-    id: 2,
-    title: "Casual Juttis",
-    name: "Noorani Outfit",
-    price: 2200,
-    image: [
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-    ],
-    season: "WINTER 2024",
-    stock: 15,
-    size: "XXS",
-  },
-  {
-    id: 3,
-    title: "Festive Collection",
-    name: "Noorani Outfit",
-    price: 1500,
-    image: [
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-    ],
-    season: "WINTER 2024",
-    stock: 15,
-    size: "M",
-  },
-  {
-    id: 4,
-    title: "Bridal Jutti",
-    name: "Noorani Outfit",
-    price: 5000,
-    image: [
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-    ],
-    season: "WINTER 2024",
-    stock: 15,
-    size: "L",
-  },
-  {
-    id: 5,
-    title: "Casual Juttis",
-    name: "Noorani Outfit",
-    price: 5000,
-    image: [
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-    ],
-    season: "WINTER 2024",
-    stock: 15,
-    size: "XL",
-  },
-  {
-    id: 6,
-    title: "Festive Collection",
-    name: "Noorani Outfit",
-    price: 1800,
-    image: [
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-    ],
-    season: "WINTER 2024",
-    stock: 15,
-    size: "XS",
-  },
-  {
-    id: 7,
-    title: "Bridal Jutti",
-    name: "Noorani Outfit",
-    price: 5000,
-    image: [
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-    ],
-    season: "WINTER 2024",
-    stock: 15,
-    size: "XS",
-  },
-  {
-    id: 8,
-    title: "Casual Juttis",
-    name: "Noorani Outfit",
-    price: 1200,
-    image: [
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-    ],
-    season: "WINTER 2024",
-    stock: 15,
-    size: "XS",
-  },
-  {
-    id: 9,
-    title: "Festive Collection",
-    name: "Noorani Outfit",
-    price: 5000,
-    image: [
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-    ],
-    season: "WINTER 2024",
-    stock: 15,
-    size: "XS",
-  },
-  {
-    id: 10,
-    title: "Bridal Jutti",
-    name: "Noorani Outfit",
-    price: 5000,
-    image: [
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-    ],
-    season: "WINTER 2024",
-    stock: 15,
-    size: "XS",
-  },
-  {
-    id: 11,
-    title: "Casual Juttis",
-    name: "Noorani Outfit",
-    price: 5000,
-    image: [
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-    ],
-    season: "WINTER 2024",
-    stock: 15,
-    size: "XS",
-  },
-  {
-    id: 12,
-    title: "Festive Collection",
-    name: "Noorani Outfit",
-    price: 5000,
-    image: [
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-    ],
-    season: "WINTER 2024",
-    stock: 15,
-    size: "XS",
-  },
-  {
-    id: 13,
-    title: "Bridal Jutti",
-    name: "Noorani Outfit",
-    price: 5000,
-    image: [
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-    ],
-    season: "WINTER 2024",
-    stock: 15,
-    size: "XS",
-  },
-  {
-    id: 14,
-    title: "Casual Juttis",
-    name: "Noorani Outfit",
-    price: 5000,
-    image: [
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-    ],
-    season: "WINTER 2024",
-    stock: 15,
-    size: "XS",
-  },
-  {
-    id: 15,
-    title: "Festive Collection",
-    name: "Noorani Outfit",
-    price: 5000,
-    image: [
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-    ],
-    season: "WINTER 2024",
-    stock: 15,
-    size: "XS",
-  },
-  {
-    id: 16,
-    title: "Bridal Jutti",
-    name: "Noorani Outfit",
-    price: 5000,
-    image: [
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-    ],
-    season: "SPRING 2024",
-    stock: 15,
-    size: "XS",
-  },
-  {
-    id: 17,
-    title: "Casual Juttis",
-    name: "Noorani Outfit",
-    price: 5000,
-    image: [
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-    ],
-    season: "SPRING SUMMER 2024",
-    stock: 15,
-    size: "XS",
-  },
-  {
-    id: 18,
-    title: "Festive Collection",
-    name: "Noorani Outfit",
-    price: 5000,
-    image: [
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-    ],
-    season: "WINTER 2024",
-    stock: 15,
-    size: "XS",
-  },
-  {
-    id: 19,
-    title: "Bridal Jutti",
-    name: "Noorani Outfit",
-    price: 5000,
-    image: [
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-    ],
-    season: "WINTER 2024",
-    stock: 15,
-    size: "XS",
-  },
-  {
-    id: 20,
-    title: "Casual Juttis",
-    name: "Noorani Outfit",
-    price: 5000,
-    image: [
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-    ],
-    season: "WINTER 2024",
-    stock: 15,
-    size: "XS",
-  },
-  {
-    id: 21,
-    title: "Festive Collection",
-    name: "Noorani Outfit",
-    price: 5000,
-    image: [
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-    ],
-    season: "WINTER 2024",
-    stock: 15,
-    size: "XS",
-  },
-  {
-    id: 22,
-    title: "Bridal Jutti",
-    name: "Noorani Outfit",
-    price: 5000,
-    image: [
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-      "../../../../public/Image/Culture.png",
-    ],
-    season: "WINTER 2024",
-    stock: 15,
-    size: "XS",
-  },
 ];
 
-const seasons = [
-  "ALL",
-  "FALL 2024",
-  "WINTER 2024",
-  "SPRING 2024",
-  "SPRING SUMMER 2024",
-];
+const seasons = ["all", "spring", "summer", "monsoon", "Autumn", "winter"];
 
 const sortOptions = [
   { label: "Price: high to low", value: "price-desc" },
@@ -372,7 +51,7 @@ export default function Collection() {
   const [currentImageIndices, setCurrentImageIndices] = useState({});
   const [hoveredProduct, setHoveredProduct] = useState(null);
   const [viewMode, setViewMode] = useState("grid");
-  const [selectedSeason, setSelectedSeason] = useState("ALL");
+  const [selectedSeason, setSelectedSeason] = useState("all");
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [sortBy, setSortBy] = useState("relevance");
   const [currentPage, setCurrentPage] = useState(1);
@@ -381,31 +60,111 @@ export default function Collection() {
     price: false,
     size: false,
   });
-  const [priceRange, setPriceRange] = useState([2000, 12000]);
+  const [priceRange, setPriceRange] = useState([500, 2000]);
+  const [minPrice, setMinPrice] = useState(500);
+  const [maxPrice, setMaxPrice] = useState(2000);
   const [selectedSize, setSelectedSize] = useState(null);
   const [isDragging, setIsDragging] = useState(null);
   const [favorites, setFavorites] = useState(new Set());
   const slideIntervalRef = useRef(null);
-
   const sliderRef = useRef(null);
 
+  // Data Fetching
+  const {
+    data: apiData,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["getAllProduct"],
+    queryFn: () => productApi.getAllProduct(),
+  });
+
+  console.log("API Data:", apiData);
+
+  // Transform API data to match component structure
+  const transformApiData = (apiProducts) => {
+    if (!apiProducts || !Array.isArray(apiProducts)) return [];
+
+    return apiProducts.map((product, index) => ({
+      id: product._id || `product-${index}`,
+      productId: product.productId,
+      title: product.title || "productTitle",
+      name: product.name || "Product",
+      price: product.price || 0,
+      originalPrice: product.originalPrice,
+      image:
+        product.images && product.images.length > 0
+          ? product.images
+          : ["/Image/About1.png", "/Image/About1.png", "/Image/About1.png"],
+      season: "Winter",
+      stock: product.stock || Math.floor(Math.random() * 15) + 6,
+      size: product.sizes && product.sizes.length > 0 ? product.sizes[0] : "M",
+      sizes: product.sizes || ["M"],
+      colors: product.colors || [],
+      overview: product.overview || [],
+      details: product.details || [],
+      isActive: product.isActive !== false,
+      createdAt: product.createdAt,
+    }));
+  };
+
+  // Use API data if available, otherwise fallback
+  const collections = apiData ? transformApiData(apiData) : fallbackCollections;
+  console.log(collections);
+
+  // Update price range based on actual data - Fixed to prevent infinite re-renders
+  useEffect(() => {
+    if (collections.length > 0) {
+      const prices = collections
+        .map((item) => item.price)
+        .filter((price) => price > 0);
+      if (prices.length > 0) {
+        const calculatedMin = Math.min(...prices);
+        const calculatedMax = Math.max(...prices);
+        const newMinPrice = Math.max(0, calculatedMin - 200);
+        const newMaxPrice = calculatedMax + 200;
+
+        // Only update if values are different to prevent infinite re-renders
+        if (minPrice !== newMinPrice || maxPrice !== newMaxPrice) {
+          setMinPrice(newMinPrice);
+          setMaxPrice(newMaxPrice);
+          setPriceRange([newMinPrice, newMaxPrice]);
+        }
+      }
+    }
+  }, [collections.length, minPrice, maxPrice]);
+
+  // Reset pagination when filters change - debounced to prevent multiple rapid changes
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setCurrentPage(1);
+    }, 100);
+
+    return () => clearTimeout(timeoutId);
+  }, [selectedSeason, selectedSizes, sortBy]);
+
   const histogramData = [
-    { range: "2k-3k", count: 3 },
-    { range: "3k-4k", count: 5 },
-    { range: "4k-5k", count: 8 },
-    { range: "5k-6k", count: 12 },
-    { range: "6k-7k", count: 10 },
-    { range: "7k-8k", count: 7 },
-    { range: "8k-9k", count: 5 },
-    { range: "9k-10k", count: 4 },
-    { range: "10k-11k", count: 3 },
-    { range: "11k-12k", count: 2 },
+    { range: "0-500", count: 3 },
+    { range: "500-1k", count: 5 },
+    { range: "1k-1.5k", count: 8 },
+    { range: "1.5k-2k", count: 12 },
+    { range: "2k-2.5k", count: 10 },
+    { range: "2.5k-3k", count: 7 },
+    { range: "3k-3.5k", count: 5 },
+    { range: "3.5k-4k", count: 4 },
+    { range: "4k-4.5k", count: 3 },
+    { range: "4.5k-5k", count: 2 },
   ];
 
-  const sizes = ["XXS", "XS", "S", "M", "L", "XL", "XXL"];
+  // Extract unique sizes from API data
+  const sizes = [
+    ...new Set(collections.flatMap((item) => item.sizes || [])),
+  ].filter(Boolean);
+  const allSizes =
+    sizes.length > 0 ? sizes : ["XXS", "XS", "S", "M", "L", "XL", "XXL"];
 
-  const MIN_PRICE = 2000;
-  const MAX_PRICE = 12000;
+  const MIN_PRICE = minPrice;
+  const MAX_PRICE = maxPrice;
   const PRICE_RANGE = MAX_PRICE - MIN_PRICE;
 
   useEffect(() => {
@@ -414,39 +173,39 @@ export default function Collection() {
       initialIndices[item.id] = 0;
     });
     setCurrentImageIndices(initialIndices);
-  }, []);
+  }, [collections.length]);
 
- const handleMouseEnter = (productId) => {
-  setHoveredProduct(productId);
-  clearInterval(slideIntervalRef.current); // Clear any existing interval
+  const handleMouseEnter = (productId) => {
+    setHoveredProduct(productId);
+    clearInterval(slideIntervalRef.current);
 
-  // Start auto-sliding for this product
-  slideIntervalRef.current = setInterval(() => {
-    setCurrentImageIndices((prev) => {
-      const currentIndex = prev[productId] || 0;
-      const product = collections.find((item) => item.id === productId);
-      if (!product) return prev;
-      
-      // Calculate next index with wrap-around
-      const nextIndex = (currentIndex + 1) % product.image.length;
-      
-      // Use smooth transition by updating the state
-      return { ...prev, [productId]: nextIndex };
-    });
-  }, 2000); // Consistent 2 second interval
-};
+    slideIntervalRef.current = setInterval(() => {
+      setCurrentImageIndices((prev) => {
+        const currentIndex = prev[productId] || 0;
+        const product = collections.find((item) => item.id === productId);
+        if (!product) return prev;
+
+        // Handle both data structures
+        const isMultipleColors = Array.isArray(product.image[0]);
+        const imagesToShow = isMultipleColors
+          ? product.image[0]
+          : product.image;
+
+        const nextIndex = (currentIndex + 1) % imagesToShow.length;
+        return { ...prev, [productId]: nextIndex };
+      });
+    }, 2000);
+  };
   const handleMouseLeave = () => {
     setHoveredProduct(null);
-    clearInterval(slideIntervalRef.current); // Clear interval on leave
+    clearInterval(slideIntervalRef.current);
   };
 
-  // Cleanup interval when component unmounts
   useEffect(() => {
     return () => {
       clearInterval(slideIntervalRef.current);
     };
   }, []);
-
 
   const toggleFavorite = (id) => {
     setFavorites((prev) => {
@@ -550,7 +309,7 @@ export default function Collection() {
       document.removeEventListener("touchmove", handleTouchMove);
       document.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [isDragging, priceRange]);
+  }, [isDragging, priceRange, MIN_PRICE, PRICE_RANGE]);
 
   const minPosition = ((priceRange[0] - MIN_PRICE) / PRICE_RANGE) * 100;
   const maxPosition = ((priceRange[1] - MIN_PRICE) / PRICE_RANGE) * 100;
@@ -565,12 +324,16 @@ export default function Collection() {
 
   const filteredCollections = collections
     .filter((item) => {
+      // Only show active products
+      if (item.isActive === false) return false;
+
       const matchesSeason =
-        selectedSeason === "ALL" || item.season === selectedSeason;
+        selectedSeason === "all" || item.season === selectedSeason;
       const matchesPrice =
         item.price >= priceRange[0] && item.price <= priceRange[1];
       const matchesSize =
-        selectedSizes.length === 0 || selectedSizes.includes(item.size);
+        selectedSizes.length === 0 ||
+        selectedSizes.some((size) => item.sizes && item.sizes.includes(size));
       return matchesSeason && matchesPrice && matchesSize;
     })
     .sort((a, b) => {
@@ -580,23 +343,28 @@ export default function Collection() {
         case "price-asc":
           return a.price - b.price;
         case "newest":
-          return b.id - a.id;
+          return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
         default:
           return 0;
       }
     });
 
   const totalPages = Math.ceil(filteredCollections.length / ITEMS_PER_PAGE);
+
+  // Ensure currentPage doesn't exceed totalPages
+  const safePage = Math.min(currentPage, Math.max(1, totalPages));
+
   const paginatedCollections = filteredCollections.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
+    (safePage - 1) * ITEMS_PER_PAGE,
+    safePage * ITEMS_PER_PAGE
   );
 
   const clearFilters = () => {
-    setSelectedSeason("ALL");
-    setPriceRange([2000, 12000]);
+    setSelectedSeason("all");
+    setPriceRange([minPrice, maxPrice]);
     setSelectedSizes([]);
     setSelectedSize(null);
+    setCurrentPage(1);
   };
 
   const FilterContent = () => (
@@ -805,7 +573,7 @@ export default function Collection() {
 
           {openSections.size && (
             <div className="mt-6 grid grid-cols-4 gap-3">
-              {sizes.map((size) => (
+              {allSizes.map((size) => (
                 <button
                   key={size}
                   onClick={() => {
@@ -835,26 +603,34 @@ export default function Collection() {
     </div>
   );
 
-  return (
-    <div className="min-h-screen mt-16 bg-gradient-to-br from-red-50 to-rose-50">
-      {/* Hero Section */}
-      <div className="relative hidden overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-red-900/20 to-rose-900/20"></div>
-        <div className="relative flex flex-col sm:flex-row justify-between mb-6 w-full">
-          <div className="flex justify-center items-center w-full">
-            <div className="border flex justify-center items-center w-full min-w-full py-20 bg-gradient-to-r from-red-100 to-rose-100">
-              <h1 className="text-left mt-14 xs:my-0 font-serif mx-auto max-w-[1600px] md:text-8xl text-3xl font-bold text-red-900 leading-tight px-4">
-                Try our
-                <br />
-                <span className="md:ml-32 md:text-8xl text-3xl bg-gradient-to-r from-red-900 to-rose-700 bg-clip-text text-transparent">
-                  Latest Collections
-                </span>
-              </h1>
-            </div>
-          </div>
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen mt-16 bg-gradient-to-br from-red-50 to-rose-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-red-900 mx-auto"></div>
+          <p className="mt-4 text-red-900 font-semibold">Loading products...</p>
         </div>
       </div>
+    );
+  }
 
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen mt-16 bg-gradient-to-br from-red-50 to-rose-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-900 font-semibold">
+            Error loading products: {error.message}
+          </p>
+          <p className="text-red-600 mt-2">Using fallback data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen mt-16 bg-gradient-to-br from-red-50 to-rose-50">
       {/* Breadcrumb */}
       <div className="max-w-[1600px] mx-auto px-2 xs:px-6">
         <nav className="py-4">
@@ -878,7 +654,7 @@ export default function Collection() {
           </div>
         </div>
 
-        {/* Mobile Filter Modal - Shown on mobile/tablet when toggled */}
+        {/* Mobile Filter Modal */}
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm lg:hidden">
             <div className="bg-white rounded-xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto shadow-2xl">
@@ -908,15 +684,13 @@ export default function Collection() {
 
         {/* Main Content */}
         <div className="w-full px-2 xs:px-0 lg:px-6">
-          {/* Controls - Modified for responsive behavior */}
+          {/* Controls */}
           <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center justify-between border-b-2 border-red-200 pb-4 mb-6 gap-4">
             <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
-              {/* Results count - shown on mobile but hidden on lg (shown in sidebar instead) */}
               <p className="font-bold text-xl text-red-900 lg:hidden">
                 {filteredCollections.length} Results
               </p>
 
-              {/* View toggle buttons */}
               <div className="flex bg-white border-2 border-red-200 rounded-lg p-1 shadow-sm">
                 <button
                   className={`p-3 rounded-md transition-all ${
@@ -942,7 +716,6 @@ export default function Collection() {
             </div>
 
             <div className="flex items-center px-2 xs:px-0 gap-3 w-full sm:w-auto justify-between sm:justify-start">
-              {/* Filter button - shown on mobile/tablet, hidden on lg */}
               <button
                 className="flex lg:hidden items-center justify-center p-[6.5px] border-2 border-red-300 rounded-lg bg-white hover:bg-red-50 transition-colors"
                 onClick={toggleModal}
@@ -951,7 +724,6 @@ export default function Collection() {
                 <span className="text-red-900 font-medium">Filters</span>
               </button>
 
-              {/* Sort dropdown */}
               <div className="flex items-center gap-2">
                 <span className="text-red-900 font-semibold hidden sm:inline">
                   Sort by:
@@ -976,331 +748,489 @@ export default function Collection() {
             {seasons.map((season) => (
               <button
                 key={season}
-                onClick={() => setSelectedSeason(season)}
+                onClick={() => {
+                  setSelectedSeason(season);
+                  setCurrentPage(1);
+                }}
                 className={`px-4 sm:px-6 py-2 sm:py-3 border-2 font-bold text-xs sm:text-sm rounded-lg transition-all duration-200 transform hover:scale-105 whitespace-nowrap flex-shrink-0 ${
                   selectedSeason === season
                     ? "bg-red-900 text-white border-red-900 shadow-lg"
                     : "bg-white text-red-900 border-red-300 hover:bg-red-50 hover:border-red-900"
                 }`}
               >
-                {season}
+                {season !== "all"
+                  ? `${season.toUpperCase()} 2024`
+                  : season.toUpperCase()}
               </button>
             ))}
           </div>
 
-          {/* Updated Product Grid with Image Slider */}
-          <div
-            className={`grid gap-2 xs:gap-4  ${
-              viewMode === "grid"
-                ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4 "
-                : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 "
-            }`}
-          >
-            {paginatedCollections.map((item) => (
-              <div
-                key={item.id}
-                className="group xs:px-0 cursor-pointer relative overflow-hidden transition-all"
-                onMouseEnter={() => handleMouseEnter(item.id)}
-                onMouseLeave={handleMouseLeave}
-              >
-                {/* Image Slider Container */}
-                <div className="relative overflow-hidden h-80">
+          {/* Product Grid/List with ViewMode Support */}
+<div className={`${
+  viewMode === "grid"
+    ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8"
+    : "flex flex-col gap-4"
+}`}>
+  {paginatedCollections.map((item, index) => (
+    <div
+      key={item.productId}
+      className={`group w-full ${
+        viewMode === "list" ? "bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow" : ""
+      }`}
+      onMouseEnter={() => handleMouseEnter(item.id)}
+      onMouseLeave={handleMouseLeave}
+    >
+      <Link href={`/collections/${item.productId}`}>
+        <div className={`cursor-pointer relative ${
+          viewMode === "grid" 
+            ? "space-y-3" 
+            : "flex gap-4 p-4"
+        }`}>
+          
+          {/* Image Container */}
+          <div className={`relative overflow-hidden ${
+            viewMode === "grid" 
+              ? "w-full aspect-[3/4]" 
+              : "w-32 h-32 sm:w-40 sm:h-40 flex-shrink-0 rounded-lg"
+          }`}>
+            {(() => {
+              const isMultipleColors = Array.isArray(item.image[0]);
+              const imagesToShow = isMultipleColors ? item.image[0] : item.image;
+              const currentImageIndex = currentImageIndices[item.id] || 0;
+              
+              return (
+                <div className="relative w-full h-full overflow-hidden">
+                  {/* Image Slider Container */}
                   <div
                     className="flex h-full transition-transform duration-500 ease-in-out"
                     style={{
-                      transform: `translateX(-${
-                        currentImageIndices[item.id] * 100
-                      }%)`,
-                      width: `${item.image.length * 100}%`,
+                      transform: `translateX(-${currentImageIndex * 100}%)`,
+                      width: `${imagesToShow.length * 100}%`,
                     }}
                   >
-                    {item.image.map((image, idx) => (
-                      <Link href={`/collections/${item.id}`} className="w-full h-full" key={idx}>
-                      <div key={idx} className="w-full flex-shrink-0 h-full">
+                    {imagesToShow.map((image, idx) => (
+                      <div key={idx} className="w-full flex-shrink-0 h-full relative">
                         <Image
-                          priority
-                          height={300}
-                          width={300}
-                          src={"/Image/About1.png"}
+                          src={image || "/Image/About1.png"}
                           alt={`${item.title} - ${idx + 1}`}
-                          className="w-full h-full scale-150 object-cover"
+                          height={500}
+                          width={500}
+                          sizes={viewMode === "grid" 
+                            ? "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                            : "(max-width: 640px) 128px, 160px"
+                          }
+                          priority={index < 4}
+                          className={`object-cover transition-transform duration-300 group-hover:scale-105 ${
+                            viewMode === "list" ? "rounded-lg" : ""
+                          }`}
+                          onError={(e) => {
+                            e.target.src = "/Image/About1.png";
+                          }}
                         />
                       </div>
-                      </Link>
                     ))}
                   </div>
+                  
+                  {/* Hover Overlay */}
+                  <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+                </div>
+              );
+            })()}
 
-                  {/* Navigation Arrows */}
-                  {hoveredProduct === item.id && item.image.length > 1 && (
-                    <>
-                      {/* <button
-                        onClick={(e) => handlePrevImage(item.id, e)}
-                        className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-1 shadow-md hover:bg-white transition-all z-10"
-                      >
-                        <ChevronLeft size={20} className="text-red-900" />
-                      </button>
-                      <button
-                        onClick={(e) => handleNextImage(item.id, e)}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-1 shadow-md hover:bg-white transition-all z-10"
-                      >
-                        <ChevronRight size={20} className="text-red-900" />
-                      </button> */}
-                    </>
-                  )}
+            {/* Image Indicators - Only show in grid view */}
+            {viewMode === "grid" && (() => {
+              const isMultipleColors = Array.isArray(item.image[0]);
+              const imagesToShow = isMultipleColors ? item.image[0] : item.image;
+              
+              return imagesToShow.length > 1 && (
+                <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
+                  {imagesToShow.map((_, idx) => (
+                    <div
+                      key={idx}
+                      className={`w-2 h-2 rounded-full transition-all ${
+                        (currentImageIndices[item.id] || 0) === idx
+                          ? "bg-red-900 w-3"
+                          : "bg-white/80"
+                      }`}
+                    />
+                  ))}
+                </div>
+              );
+            })()}
 
-                  {/* Image Indicators */}
-                  {item.image.length > 1 && (
-                    <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
-                      {item.image.map((_, idx) => (
-                        <div
-                          key={idx}
-                          className={`w-2 h-2 rounded-full transition-all ${
-                            currentImageIndices[item.id] === idx
-                              ? "bg-red-900 w-3"
-                              : "bg-white/80"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  )}
+            {/* Stock Tag */}
+            {item.stock && item.stock <= 5 && item.stock > 0 && (
+              <span className="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded z-10">
+                Only {item.stock} left!
+              </span>
+            )}
 
-                  {/* Stock Tag */}
-                  {item.stock <= 5 && (
-                    <span className="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded z-10">
-                      Only {item.stock} left!
+            {/* Discount Badge */}
+            {item.originalPrice && item.originalPrice > item.price && (
+              <span className="absolute top-2 right-2 bg-green-600 text-white text-xs px-2 py-1 rounded z-10">
+                {Math.round(
+                  ((item.originalPrice - item.price) / item.originalPrice) * 100
+                )}
+                % OFF
+              </span>
+            )}
+
+            {/* Hover Add to Cart Button - Only in grid view */}
+            {viewMode === "grid" && (
+              <div className="absolute bottom-0 left-0 right-0 bg-red-900 text-white text-center py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-full group-hover:translate-y-0">
+                <button className="w-full text-sm font-semibold flex items-center justify-center gap-2">
+                  <ShoppingBag size={14} />
+                  <span>Add to Cart</span>
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Product Info - Different layouts for grid vs list */}
+          {viewMode === "grid" ? (
+            /* Grid View - Compact Layout */
+            <div className="flex flex-col justify-between h-full px-2 py-2 space-y-1">
+              {/* Top Row - Product Name & Price */}
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-xs sm:text-sm font-semibold text-gray-900 line-clamp-2 leading-tight">
+                    {item.name?.toUpperCase() || "PRODUCT NAME"}
+                  </h3>
+                </div>
+                <div className="flex-shrink-0 text-right">
+                  <div className="flex flex-col items-end gap-0.5">
+                    <span className="text-sm font-bold text-red-600">
+                      ₹{item.price.toLocaleString()}
+                    </span>
+                    {item.originalPrice && item.originalPrice > item.price && (
+                      <span className="text-xs text-gray-400 line-through">
+                        ₹{item.originalPrice.toLocaleString()}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Second Row - Stock Status */}
+              <div className="flex items-center justify-start text-xs">
+                <div className="flex-1">
+                  {item.stock && item.stock <= 5 && item.stock > 0 ? (
+                    <span className="text-red-600 font-medium">
+                      {item.stock} left
+                    </span>
+                  ) : (
+                    <span className="text-green-600 font-medium">
+                      In Stock
                     </span>
                   )}
                 </div>
+              </div>
 
-                {/* Basic Info */}
-                <div className="p-3">
-                  <h3 className="text-sm font-semibold text-gray-800 truncate">
-                    {item.title}
-                  </h3>
-                  <p className="text-xs text-gray-500 mb-1 truncate">
-                    {item.name}
-                  </p>
-                  <span className="text-red-500 font-bold text-sm">
-                    ₹{item.price.toLocaleString()}
-                  </span>
+              {/* Bottom Row - Metadata */}
+              <div className="flex items-center justify-between text-xs text-gray-600">
+                {/* Sizes */}
+                <div className="flex items-center gap-1">
+                  {item.sizes && item.sizes.length > 0 && (
+                    <>
+                      <span className="text-gray-500">Size:</span>
+                      <div className="flex gap-1">
+                        {item.sizes.slice(0, 2).map((size, idx) => (
+                          <span
+                            key={idx}
+                            className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded text-xs font-medium"
+                          >
+                            {size}
+                          </span>
+                        ))}
+                        {item.sizes.length > 2 && (
+                          <span className="text-gray-500">+{item.sizes.length - 2}</span>
+                        )}
+                      </div>
+                    </>
+                  )}
                 </div>
 
-                {/* Hover Content */}
-                <div
-                  className={`absolute bottom-[35px] left-0 w-full bg-[#fff1f2] px-0 py-2 border-gray-200 transition-all duration-300 ease-in-out z-10 
-                opacity-0 translate-y-4 scale-95 group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100`}
-                >
-                  <button className="bg-red-900 text-white px-2 py-2 rounded w-full text-sm font-semibold hover:bg-red-800 transition-colors flex items-center justify-center gap-2">
-                    <ShoppingBag size={14} className="w-4 h-4" />
-                    <span>Add to Cart</span>
-                  </button>
+                {/* Colors */}
+                <div className="flex items-center gap-1">
+                  {item.colors && item.colors.length > 0 && (
+                    <div className="flex items-center gap-1">
+                      {item.colors.slice(0, 3).map((color, idx) => (
+                        <div
+                          key={idx}
+                          className="w-3 h-3 rounded-full border border-gray-300"
+                          style={{ backgroundColor: color.toLowerCase() }}
+                          title={color}
+                        />
+                      ))}
+                      {item.colors.length > 3 && (
+                        <span className="text-gray-500 text-xs">+{item.colors.length - 3}</span>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
-            ))}
-          </div>
-
-          {/* Pagination */}
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-3 py-8 border-t-2 border-red-200">
-            <button
-              onClick={() => setCurrentPage(1)}
-              disabled={currentPage === 1}
-              className="px-4 py-2 hidden sm:block rounded-lg border-2 border-red-300 bg-white text-red-900 hover:bg-red-50 disabled:opacity-50 font-semibold transition-all"
-            >
-              First
-            </button>
-
-            <button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-              className="px-6 py-2 rounded-lg border-2 border-red-300 bg-white text-red-900 hover:bg-red-50 disabled:opacity-50 font-semibold transition-all"
-            >
-              Previous
-            </button>
-
-            <span className="px-4 py-2 bg-red-900 text-white rounded-lg font-bold">
-              {currentPage} of {totalPages}
-            </span>
-
-            <button
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              disabled={currentPage === totalPages}
-              className="px-6 py-2 rounded-lg border-2 border-red-300 bg-white text-red-900 hover:bg-red-50 disabled:opacity-50 font-semibold transition-all"
-            >
-              Next
-            </button>
-
-            <button
-              onClick={() => setCurrentPage(totalPages)}
-              disabled={currentPage === totalPages}
-              className="px-4 py-2 hidden sm:block rounded-lg border-2 border-red-300 bg-white text-red-900 hover:bg-red-50 disabled:opacity-50 font-semibold transition-all"
-            >
-              Last
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Top Trends Section */}
-      <div className="bg-gradient-to-r from-red-100 to-rose-100 py-16 mt-16">
-  <section className="container mx-auto lg:max-w-[1600px] px-2 xs:px-4">
-    <h2 className="text-5xl font-bold mb-12 text-red-900 text-center">
-      Top Trends
-    </h2>
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-      {[...Array(4)].map((_, i) => (
-        <div
-          key={i}
-          className="bg-white  shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-red-200 group"
-        >
-          <div className="relative w-full h-[510px] xs:h-[470px] overflow-hidden">
-            <img
-              src="/Image/About1.png"
-              alt="Trend item"
-              className="w-full h-full object-cover transition-transform duration-500 scale-150 group-hover:scale-150"
-            />
-            {/* Slide-up text section */}
-            <div className="absolute bottom-0 left-0 w-full bg-white text-black p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-              <h3 className="font-bold text-lg mb-1">
-                Trending Style {i + 1}
-              </h3>
-              <p className="text-sm">
-                Discover the latest fashion trends
-              </p>
             </div>
-          </div>
+          ) : (
+            /* List View - Horizontal Layout */
+            <div className="flex-1 flex flex-col justify-between py-1">
+              {/* Top Section */}
+              <div className="space-y-2">
+                <div className="flex items-start justify-between">
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 line-clamp-2 pr-4">
+                    {item.name?.toUpperCase() || "PRODUCT NAME"}
+                  </h3>
+                  <div className="flex flex-col items-end gap-1">
+                    <span className="text-lg font-bold text-red-600">
+                      ₹{item.price.toLocaleString()}
+                    </span>
+                    {item.originalPrice && item.originalPrice > item.price && (
+                      <span className="text-sm text-gray-400 line-through">
+                        ₹{item.originalPrice.toLocaleString()}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Stock Status */}
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center text-sm">
+                    {item.stock && item.stock <= 5 && item.stock > 0 ? (
+                      <span className="text-red-600 font-medium">
+                        Only {item.stock} left
+                      </span>
+                    ) : (
+                      <span className="text-green-600 font-medium">
+                        ✓ In Stock
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Product Details */}
+                <div className="flex items-center gap-6 text-sm text-gray-600">
+                  {/* Sizes */}
+                  {item.sizes && item.sizes.length > 0 && (
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">Sizes:</span>
+                      <div className="flex gap-1">
+                        {item.sizes.slice(0, 4).map((size, idx) => (
+                          <span
+                            key={idx}
+                            className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium"
+                          >
+                            {size}
+                          </span>
+                        ))}
+                        {item.sizes.length > 4 && (
+                          <span className="text-gray-500">+{item.sizes.length - 4}</span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Colors */}
+                  {item.colors && item.colors.length > 0 && (
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">Colors:</span>
+                      <div className="flex items-center gap-1">
+                        {item.colors.slice(0, 5).map((color, idx) => (
+                          <div
+                            key={idx}
+                            className="w-5 h-5 rounded-full border-2 border-gray-300"
+                            style={{ backgroundColor: color.toLowerCase() }}
+                            title={color}
+                          />
+                        ))}
+                        {item.colors.length > 5 && (
+                          <span className="text-gray-500 text-sm">+{item.colors.length - 5}</span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Bottom Section - Add to Cart Button */}
+              <div className="flex items-center justify-between mt-4">
+                <div className="flex items-center gap-2">
+                  {/* Image Indicators for List View */}
+                  {(() => {
+                    const isMultipleColors = Array.isArray(item.image[0]);
+                    const imagesToShow = isMultipleColors ? item.image[0] : item.image;
+                    
+                    return imagesToShow.length > 1 && (
+                      <div className="flex gap-1">
+                        {imagesToShow.map((_, idx) => (
+                          <div
+                            key={idx}
+                            className={`w-2 h-2 rounded-full transition-all ${
+                              (currentImageIndices[item.id] || 0) === idx
+                                ? "bg-red-900"
+                                : "bg-gray-300"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    );
+                  })()}
+                </div>
+                
+                <button className="bg-red-900 hover:bg-red-800 text-white px-6 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2">
+                  <ShoppingBag size={16} />
+                  <span>Add to Cart</span>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
-      ))}
+      </Link>
     </div>
-  </section>
+  ))}
 </div>
 
-
-      {/* Content Section */}
-      <div className="max-w-[1600px] mx-auto px-2 xs:px-4 py-16">
-        <div className="bg-white rounded-xl shadow-lg p-2 sm:p-8 border border-red-200">
-          <h2 className="text-3xl font-bold text-red-900 mb-6">
-            Women's Casual Shoes You Need To Own
-          </h2>
-
-          <div className="prose prose-lg max-w-none text-gray-700 space-y-6">
-            <p className="text-lg leading-relaxed">
-              Casual shoes for women come in an endless number of styles, which
-              are constantly updated according to various fashion trends and pop
-              culture influences. Any woman who loves shoes knows that they can
-              make or break an outfit. If there is a shoe for every foot, then
-              there is also a pair of women's casual shoes for every occasion.
-            </p>
-
-            <p className="text-lg leading-relaxed">
-              This is the best time to buy women casual shoes because brands
-              thrive on creating as many imaginative variations as possible.
-              There is always a good reason to pick up a pair of women casual
-              shoes, whether for an event or just to give your mood a lift.
-              Further, shopping for casual shoes for women online now gives you
-              the freedom of browsing through several brands at once. Retail
-              therapy on Gulbhahr.
-            </p>
-
-            <div className="bg-red-50 p-2 rounded-lg border-l-4 border-red-900">
-              <h3 className="text-xl font-bold text-red-900 mb-3">
-                Featured Collections
-              </h3>
-              <div className="space-y-4">
-                <div>
-                  <h4 className="font-semibold text-red-800">
-                    Flat n Heels, Black Solid Synthetic High-Top Flat Boots
-                  </h4>
-                  <p>
-                    Gold hardware on the front of these boots makes them the
-                    perfect dressy boot. These women casual shoes will look
-                    great with fitted denim or A-line skirts worn with tights.
-                  </p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-red-800">
-                    Carlton London, Blue Printed Textured Ballerinas
-                  </h4>
-                  <p>
-                    Every woman should own a ballerina along with other women
-                    casual shoes. They are simple, comfortable and always in
-                    style.
-                  </p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-red-800">
-                    DressBerry, Metallic Brown Sneakers
-                  </h4>
-                  <p>
-                    The trend of velvety-metallic finish sneakers is all the
-                    rage right now in women casual shoes. This pair would couple
-                    well with dark skinny jeans and an off-shoulder Bardot top.
-                  </p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-red-800">
-                    Nike, Pink AIR FORCE 1 '07 Sneakers
-                  </h4>
-                  <p>
-                    Shades of millennial pink are still making waves in fashion.
-                    This pair of women casual shoes will complement shades of
-                    grey, black or white very well.
-                  </p>
+          {/* Enhanced No Products Found */}
+          {filteredCollections.length === 0 && (
+            <div className="flex flex-col items-center justify-center py-20 px-4 min-h-[400px]">
+              {/* Animated Icon Container */}
+              <div className="relative mb-8 group">
+                <div className="absolute inset-0 bg-gradient-to-r from-red-100 to-red-50 rounded-full blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-300"></div>
+                <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-full shadow-lg border border-gray-200">
+                  <ShoppingBag
+                    size={48}
+                    className="text-red-800  transition-colors duration-300"
+                  />
                 </div>
               </div>
-            </div>
 
-            <div className="bg-gradient-to-r from-red-900 to-rose-800 text-white p-8 rounded-xl">
-              <h3 className="text-2xl font-bold mb-4">
-                Shop by Types of Women's Footwear
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-sm">
-                {[
-                  "Sandals For Women",
-                  "Heels For Women",
-                  "Sneakers For Women",
-                  "Boots For Women",
-                  "Flats For Women",
-                  "Flip Flops For Women",
-                  "Sports Shoes For Women",
-                  "Wedges For Women",
-                  "Formal Shoes For Women",
-                  "Loafers For Women",
-                  "Jutti For Women",
-                  "Slippers For Women",
-                  "Clogs For Women",
-                  "Trekking Shoes For Women",
-                  "Slides For Women",
-                  "Slip On Shoes For Women",
-                ].map((category, index) => (
-                  <button
-                    key={index}
-                    className="text-left hover:text-red-200 transition-colors underline decoration-dotted"
+              {/* Main Content */}
+              <div className="text-center max-w-md space-y-4">
+                <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                  No products found
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  We couldn't find any products matching your current filters.
+                  Try broadening your search or exploring different categories.
+                </p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 mt-8">
+                <button
+                  onClick={clearFilters}
+                  className="group relative hidden px-8 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:from-red-700 hover:to-red-800 transform hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-red-200"
+                >
+                  <span className="relative z-10">Clear All Filters</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-red-700 to-red-800 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+                </button>
+
+                <button
+                  onClick={() => setSelectedSeason("all")}
+                  className="px-8 py-3 bg-white text-gray-700 font-semibold border-2 border-gray-300 rounded-xl hover:border-gray-400 hover:bg-gray-50 transform hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-gray-200"
+                >
+                  Browse All Products
+                </button>
+              </div>
+
+              {/* Helpful Suggestions */}
+              <div className="mt-12 p-6 bg-gradient-to-r from-red-100 to-red-100 rounded-2xl border border-red-200 max-w-lg">
+                <h4 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                  <svg
+                    className="w-5 h-5 text-red-900"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
                   >
-                    {category}
-                  </button>
-                ))}
+                    <path
+                      fillRule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  Search Tips
+                </h4>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>• Try using broader search terms</li>
+                  <li>• Check your spelling and try different keywords</li>
+                  <li>• Remove some filters to see more results</li>
+                  <li>• Browse our popular categories instead</li>
+                </ul>
               </div>
             </div>
-          </div>
+          )}
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="mt-12 flex flex-wrap items-center justify-center gap-3 py-8 border-t-2 border-red-200">
+              <button
+                onClick={() => setCurrentPage(1)}
+                disabled={safePage === 1}
+                className="px-4 py-2 hidden sm:block rounded-lg border-2 border-red-300 bg-white text-red-900 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed font-semibold transition-all"
+              >
+                First
+              </button>
+
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={safePage === 1}
+                className="px-6 py-2 rounded-lg border-2 border-red-300 bg-white text-red-900 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed font-semibold transition-all"
+              >
+                Previous
+              </button>
+
+              <div className="flex items-center gap-1">
+                {/* Show page numbers around current page */}
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  let pageNum;
+                  if (totalPages <= 5) {
+                    pageNum = i + 1;
+                  } else if (safePage <= 3) {
+                    pageNum = i + 1;
+                  } else if (safePage >= totalPages - 2) {
+                    pageNum = totalPages - 4 + i;
+                  } else {
+                    pageNum = safePage - 2 + i;
+                  }
+
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={`px-3 py-2 rounded-lg font-bold transition-all ${
+                        safePage === pageNum
+                          ? "bg-red-900 text-white"
+                          : "bg-white text-red-900 border-2 border-red-300 hover:bg-red-50"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={safePage === totalPages}
+                className="px-6 py-2 rounded-lg border-2 border-red-300 bg-white text-red-900 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed font-semibold transition-all"
+              >
+                Next
+              </button>
+
+              <button
+                onClick={() => setCurrentPage(totalPages)}
+                disabled={safePage === totalPages}
+                className="px-4 py-2 hidden sm:block rounded-lg border-2 border-red-300 bg-white text-red-900 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed font-semibold transition-all"
+              >
+                Last
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Footer CTA */}
-      <div className="bg-gradient-to-r from-red-900 to-rose-900 text-white py-16">
-        <div className="max-w-[1600px] mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold mb-4">
-            Ready to Find Your Perfect Pair?
-          </h2>
-          <p className="text-xl mb-8 text-red-100">
-            Explore our complete collection and discover your new favorite shoes
-          </p>
-          <button className="bg-white text-red-900 px-8 py-4 rounded-xl font-bold text-lg hover:bg-red-50 transition-colors shadow-lg transform hover:scale-105">
-            Shop All Collections
-          </button>
-        </div>
-      </div>
+      <TopTrends />
+
+      <ContentSection />
     </div>
   );
 }
