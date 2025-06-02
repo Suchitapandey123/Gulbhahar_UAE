@@ -113,7 +113,7 @@ export default function TrackOrderPage({ onBack = () => {} }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50/40 via-white to-red-50/20">
-      <div className="max-w-7xl mx-auto px-2 py-4 sm:py-6 lg:py-8">
+      <div className="max-w-[1600px] mx-auto px-2 py-4 sm:py-6 lg:py-8">
         {/* Header Section */}
         <div className="mb-6 sm:mb-8">
           {/* Breadcrumb */}

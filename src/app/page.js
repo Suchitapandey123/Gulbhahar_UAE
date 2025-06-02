@@ -1,12 +1,19 @@
-import Footer from "@/all_components/Footer/Footer";
-import HomePage from "@/all_components/Homepage/HomePage";
-import Navbar from "@/all_components/Navbar/Navbar";
+import HomePage from '@/all_components/Homepage/HomePage';
+import productApi from './api/v0/product-service';
+import { QueryClient } from '@tanstack/react-query';
 
-export default function Home() {
-  return (
-    <>
-    <HomePage/>
+export default async function Home() {
+ // Server fetch with TanStack
+ const queryClient = new QueryClient();
+ 
+ const data = await queryClient.fetchQuery({
+   queryKey: ['getAllProduct'],
+   queryFn: () => productApi.getAllProduct()  // Arrow function
+ });
+ 
+//  console.log('Server Response:', data);
 
-    </>
-  );
+ return (
+   <HomePage data={data} />
+ );
 }

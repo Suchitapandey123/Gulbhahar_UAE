@@ -93,7 +93,7 @@ export default function QuickSearch() {
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={containerVariants}
-      className="max-w-7xl mx-auto py-16 px-4 bg-gradient-to-b from-gray-50 to-white"
+      className="max-w-[1600px] mx-auto py-16 px-4 bg-gradient-to-b from-gray-50 to-white"
     >
       {/* Popular Searches Section */}
       <motion.div

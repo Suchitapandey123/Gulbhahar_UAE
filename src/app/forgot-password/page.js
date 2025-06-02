@@ -575,7 +575,7 @@ const RecoverAccountPage = () => {
       {/* Header */}
       <header className="relative z-10 bg-white/80 backdrop-blur-sm border-b border-red-100 shadow-sm">
         <div className="flex items-center justify-center py-6">
-          <div className="max-w-7xl mx-auto flex justify-center items-center">
+          <div className="max-w-[1600px] mx-auto flex justify-center items-center">
             <div className="text-3xl font-bold bg-gradient-to-r from-red-900 to-rose-700 bg-clip-text text-transparent">
               LOGO
             </div>
@@ -584,7 +584,7 @@ const RecoverAccountPage = () => {
       </header>
 
       {/* Back to Home */}
-      <div className="max-w-7xl mx-auto px-6 pt-6">
+      <div className="max-w-[1600px] mx-auto px-6 pt-6">
         <button className="group flex items-center text-red-700 hover:text-red-900 transition-all duration-200 transform hover:scale-105">
           <IoIosArrowBack className="mr-3 group-hover:-translate-x-1 transition-transform" />
           <span className='font-medium'>Back to login</span>
@@ -593,7 +593,7 @@ const RecoverAccountPage = () => {
       
       {/* Main content */}
       <div className="flex min-h-[calc(100vh-120px)] w-full items-center justify-center py-8">
-        <div className="mx-auto flex w-full max-w-7xl flex-col-reverse md:flex-row gap-8 px-6">
+        <div className="mx-auto flex w-full max-w-[1600px] flex-col-reverse md:flex-row gap-8 px-6">
           {/* Form Section */}
           <div className="w-full md:w-1/2 flex flex-col justify-center">
             {/* Step Indicator */}

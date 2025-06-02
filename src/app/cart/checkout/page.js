@@ -72,14 +72,14 @@ export default function CheckoutComponent() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1600px] mx-auto px-1 sm:px-6 lg:px-8 py-8">
         <Breadcrumb />
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Forms */}
           <div className="lg:col-span-2 space-y-6">
             {/* Shipping Country Card */}
-            <div className="bg-white rounded-2xl shadow-lg border-2 border-red-100 p-8 hover:shadow-xl hover:border-red-200 transition-all duration-300">
+            <div className="bg-white rounded-2xl shadow-lg border-2 border-red-100 p-6 sm:p-8 hover:shadow-xl hover:border-red-200 transition-all duration-300">
               <div className="flex items-center mb-6">
                 <div className="w-10 h-10 bg-red-900 rounded-full flex items-center justify-center mr-4 shadow-lg">
                   <MapPin className="text-white h-5 w-5" />
@@ -118,7 +118,7 @@ export default function CheckoutComponent() {
             </div>
 
             {/* Shipping Address Card */}
-            <div className="bg-white rounded-2xl shadow-lg border-2 border-red-100 p-8 hover:shadow-xl hover:border-red-200 transition-all duration-300">
+            <div className="bg-white rounded-2xl shadow-lg border-2 border-red-100 p-6 sm:p-8 hover:shadow-xl hover:border-red-200 transition-all duration-300">
               <div className="flex items-center mb-6">
                 <div className="w-10 h-10 bg-red-900 rounded-full flex items-center justify-center mr-4 shadow-lg">
                   <User className="text-white h-5 w-5" />
@@ -209,7 +209,7 @@ export default function CheckoutComponent() {
                   <label htmlFor="region" className="block text-sm font-semibold text-gray-700 mb-2">
                     State/Region
                   </label>
-                  <div className="relative">
+                  <div className="relative ml-4 sm:ml-0">
                     <select
                       id="region"
                       name="region"
@@ -248,7 +248,7 @@ export default function CheckoutComponent() {
             </div>
 
             {/* Shipping Method Card */}
-            <div className="bg-white rounded-2xl shadow-lg border-2 border-red-100 p-8 hover:shadow-xl hover:border-red-200 transition-all duration-300">
+            <div className="bg-white rounded-2xl shadow-lg border-2 border-red-100 p-6 sm:p-8 hover:shadow-xl hover:border-red-200 transition-all duration-300">
               <div className="flex items-center mb-6">
                 <div className="w-10 h-10 bg-red-900 rounded-full flex items-center justify-center mr-4 shadow-lg">
                   <Package className="text-white h-5 w-5" />
