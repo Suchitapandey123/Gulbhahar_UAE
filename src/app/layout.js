@@ -1,17 +1,23 @@
-import { Geist, Geist_Mono } from "next/font/google";
+// app/layout.js or app/layout.tsx
+
+import { Poppins, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Footer from "@/all_components/Footer/Footer";
 import Navbar from "@/all_components/Navbar/Navbar";
 import ReactQueryProvider from "@/Providers/ReactQueryProvider/ReactQueryProvider";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Configure fonts
+const poppins = Poppins({
+  variable: "--font-sans",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"], // Customize as needed
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata = {
@@ -26,7 +32,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${poppins.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <ReactQueryProvider>
           <Navbar />
