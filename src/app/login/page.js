@@ -310,9 +310,9 @@ const LoginPage = () => {
   };
 
   return (
-    <div className='w-full min-h-screen bg-gradient-to-br from-red-50 via-rose-50 to-red-100'>
+    <div className='w-full min-h-screen mt-6'>
       <header className="relative z-10 bg-white/80 backdrop-blur-sm border-b border-red-100 shadow-sm">
-        <div className="flex items-center justify-center py-6">
+        <div className="flex items-center justify-center">
           <div className="max-w-[1600px] mx-auto flex justify-center items-center">
             <div className="text-3xl font-bold bg-gradient-to-r from-red-900 to-rose-700 bg-clip-text text-transparent">
               LOGO

@@ -936,7 +936,7 @@ const SignupPage = () => {
   );
 
   return (
-    <div className='w-full min-h-screen bg-gradient-to-br from-red-50 via-rose-50 to-red-100'>
+    <div className='w-full min-h-screen '>
       {/* Header */}
       <header className="relative z-10 bg-white/80 backdrop-blur-sm border-b border-red-100 shadow-sm">
         <div className="flex items-center justify-center py-6">
