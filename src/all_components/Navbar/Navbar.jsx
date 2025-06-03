@@ -563,21 +563,21 @@ const Navbar = () => {
               </NavLink>
               <NavLink href="/about">About</NavLink>
             </div>
-
+ 
             <div className="flex-1 flex justify-center md:flex-initial">
-              <Link href="/" className=" relative overflow-hidden group">
+              <Link href="/" className=" relative group">
                 {/* Static Logo for Non-Home Pages with Hover Magic */}
                 {pathname !== "/" && (
                   <div className="relative">
                     <Image
-                      src="/combined.png"
+                      src="/ful-gulbhaharlogo.png"
                       alt="Brand Logo"
                       width={240}
-                      height={60}
+                      height={100}
                       priority
                       className={`
-                        transition-all duration-500 ease-out object-contain
-                        filter group-hover:brightness-105 group-active:scale-95 relative z-10
+                        transition-all  duration-500 ease-out object-cover
+                        filter group-hover:brightness-105  group-active:scale-95 relative z-10
                         ${
                           isScrolled
                             ? "h-6 sm:h-7 md:h-8 lg:h-9 w-auto max-w-[100px] sm:max-w-[120px] md:max-w-[140px] lg:max-w-[160px]"
@@ -708,15 +708,15 @@ const Navbar = () => {
                   <>
                     {/* Original Logo - Only appears when scrolled */}
                     <Image
-                      src="/combined.png"
+                      src="/ful-gulbhaharlogo.png"
                       alt="Brand Logo"
-                      width={240}
-                      height={60}
+                      width={340}
+                      height={160}
                       priority
                       className={`
-                        transition-all duration-700 ease-out object-contain
-                        group-hover:scale-110 filter group-hover:brightness-110
-                        group-active:scale-95 relative z-10
+                        transition-all h-full w-full duration-700 ease-out object-contain
+                         filter group-hover:brightness-110
+                         relative z-10 bg-transparent
                         ${
                           isScrolled
                             ? "opacity-100 translate-y-0 scale-100"
@@ -1231,7 +1231,7 @@ const Navbar = () => {
           {/* Mobile Menu Header */}
           <div className="flex items-center justify-between p-3 xs:p-4 sm:p-6 border-b border-gray-100">
             <Image
-              src="/combined.png"
+              src="/ful-gulbhaharlogo.png"
               alt="Brand Logo"
               width={80}
               height={24}

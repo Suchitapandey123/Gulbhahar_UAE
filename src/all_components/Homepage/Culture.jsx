@@ -7,6 +7,7 @@ import culture from "../../../public/assets/Svg/culture.svg";
 import img1 from "../../../public/assets/Image/C2.png";
 
 
+
 export default function Culture() {
   const [isVisible, setIsVisible] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -128,7 +129,7 @@ export default function Culture() {
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
         variants={containerVariants}
-        className="md:min-h-screen lg:max-w-full min-h-[670px] flex items-center justify-center bg-white relative overflow-hidden lg:mt-20 lg:mb-6"
+        className="h-screen lg:max-w-full overflow-x-hidden w-[96%] mx-auto bg-white flex items-start"
       >
         {/* Mobile view - carousel */}
         <div className="md:hidden w-full h-full flex items-center justify-center">
@@ -193,36 +194,36 @@ export default function Culture() {
         </div>
       
         {/* Desktop view - original layout */}
-        <div className="hidden md:block relative w-full h-full">
+        <div className="hidden md:block relative  w-[96%] xl:w-[98%]  h-full">
           <div className="relative">
             {/* Background Images */}
             <motion.div 
               variants={imageVariants}
-              className="absolute lg:left-[50%] -translate-y-1/2 z-0 lg:top-56"
+              className="absolute lg:left-[50%] lg:top-8  -translate-y-1/2 z-0 "
               whileHover={{ scale: 1.05, rotate: 2 }}
               transition={{ duration: 0.3 }}
             >
               <Image
-                src={img1}
+                src={"/gulbhahar-1.png"}
                 alt="Background block 1"
                 width={350}
                 height={350}
-                className="rounded-lg shadow-lg lg:w-[300px] lg:h-[300px] w-full h-full object-cover mx-2 md:ml-0"
+                className="rounded-lg  shadow-lg lg:w-[300px] lg:h-[300px] w-full h-full object-cover mx-2 md:ml-0"
               />
             </motion.div>
 
             <motion.div 
               variants={imageVariants}
-              className="absolute lg:top-56 -translate-y-1/2 z-10 hidden lg:block"
+              className="absolute  lg:top-8  -translate-y-1/2  z-10 hidden lg:block"
               whileHover={{ scale: 1.05, rotate: -2 }}
               transition={{ duration: 0.3 }}
             >
               <Image
-                src={img1}
+                src={"/gulbhahar2.png"}
                 alt="Background block 2"
                 width={350}
                 height={386}
-                className="rounded-lg shadow-lg lg:w-[300px] lg:h-[300px] w-full h-full object-cover"
+                className="rounded-lg shadow-lg  lg:w-[300px] lg:h-[300px] w-full h-full object-cover"
               />
             </motion.div>
 
@@ -236,34 +237,34 @@ export default function Culture() {
                 width={1600}
                 height={400}
                 alt="culture_img"
-                className="relative lg:top-56 z-10 w-full h-auto"
+                className="relative lg:top-52 z-10 w-full h-auto"
               />
             </motion.div>
 
             {/* Foreground Images */}
             <motion.div 
               variants={imageVariants}
-              className="relative lg:top-56 left-[24%] -translate-y-1/2 z-0 hidden lg:block"
+              className="relative  left-[24%] lg:top-[93px] -translate-y-1/2 z-0 hidden lg:block"
               whileHover={{ scale: 1.05, rotate: 1 }}
               transition={{ duration: 0.3 }}
             >
               <Image
-                src={img1}
+                src={"/gulbhahar-3.png"}
                 alt="Foreground block 1"
                 width={350}
                 height={386}
-                className="rounded-lg shadow-lg lg:w-[300px] lg:h-[300px] w-full h-full object-cover"
+                className="rounded-lg  shadow-lg lg:w-[300px] lg:h-[300px] w-full h-full object-cover"
               />
             </motion.div>
 
             <motion.div 
               variants={imageVariants}
-              className="absolute right-0 z-0 lg:top-[87%] -translate-y-1/2 hidden md:block"
+              className="absolute right-0 z-0 lg:top-[67%] -translate-y-1/2 hidden md:block"
               whileHover={{ scale: 1.05, rotate: -1 }}
               transition={{ duration: 0.3 }}
             >
               <Image
-                src={img1}
+                src={"/gulbhahar-4.png"}
                 alt="Foreground block 2"
                 width={350}
                 height={386}
@@ -280,7 +281,7 @@ export default function Culture() {
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
         variants={containerVariants}
-        className="container mx-auto lg:max-w-[1600px] lg:my-32"
+        className="container mx-auto lg:max-w-[1600px] "
       >
         <motion.h1 
           variants={headerVariants}
@@ -310,7 +311,7 @@ export default function Culture() {
                 transition={{ duration: 0.3 }}
               >
                 <Image
-                  src={img1}
+                  src={"/gulbhahar-5.png"}
                   alt="showcase image"
                   width={300}
                   height={450}

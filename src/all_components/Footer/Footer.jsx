@@ -126,9 +126,10 @@ export default function Footer() {
           <div className="lg:col-span-4 text-center lg:text-left">
             <div className="space-y-4 sm:space-y-6">
               <Link href="/" className="inline-block">
-                <div className="text-5xl uppercase sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-700 via-pink-600 to-yellow-500  transition-all duration-500 drop-shadow-lg tracking-wide">
+               <div className="text-5xl uppercase sm:text-4xl font-[700] text-transparent bg-clip-text bg-red-900 transition-all duration-500 drop-shadow-lg tracking-wide font-['oldstandard']">
   Gulbhahar
 </div>
+
                 <p className="text-xs text-gray-600 mt-1">Premium Fashion & Style</p>
               </Link>
               
@@ -154,13 +155,13 @@ export default function Footer() {
                     <FooterTwitterX className="h-5 w-5" />
                   </Link>
                   <Link 
-                    href="#" 
+                    href="https://www.instagram.com/gulbhahar_official?igsh=MzRlODBiNWFlZA==" 
                     className="w-10 h-10 bg-red-100 hover:bg-red-900 text-red-900 hover:text-white rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110"
                   >
                     <FooterInstagram className="h-5 w-5" />
                   </Link>
                   <Link 
-                    href="#" 
+                    href="https://www.facebook.com/share/1GN5HZC6dS/" 
                     className="w-10 h-10 bg-red-100 hover:bg-red-900 text-red-900 hover:text-white rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110"
                   >
                     <Facebook className="h-5 w-5" />

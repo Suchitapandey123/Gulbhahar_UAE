@@ -29,10 +29,10 @@ const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   
   const slides = [
-    "/api/placeholder/600/800",
-    "/api/placeholder/600/800",
-    "/api/placeholder/600/800",
-    "/api/placeholder/600/800",
+    "/gulbhahar-11.png",
+    "/gulbhahar-12.png",
+    "/gulbhahar-13.png",
+    "/gulbhahar-14.png",
   ];
 
   useEffect(() => {

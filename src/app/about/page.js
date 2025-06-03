@@ -171,7 +171,7 @@ const HeroSection1 = () => {
     const socialLinks = [
   {
     name: 'Facebook',
-    url: 'https://www.facebook.com/yourpage',
+    url: 'https://www.facebook.com/share/1GN5HZC6dS/',
   },
   {
     name: 'Instagram',
