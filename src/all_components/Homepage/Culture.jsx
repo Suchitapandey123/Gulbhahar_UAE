@@ -292,7 +292,7 @@ export default function Culture() {
 
         <motion.div 
           variants={containerVariants}
-          className="flex overflow-x-auto pb-4 sm:pb-4 md:grid md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-12 xl:gap-5 no-scrollbar"
+          className="flex overflow-x-auto mx-auto pb-4 sm:pb-4 md:grid md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-12 xl:gap-5 no-scrollbar"
         >
           {[...Array(4)].map((_, i) => (
             <motion.div 
@@ -311,7 +311,7 @@ export default function Culture() {
                 transition={{ duration: 0.3 }}
               >
                 <Image
-                  src={"/gulbhahar-5.png"}
+                  src={"/gulbhahar-20.png"}
                   alt="showcase image"
                   width={300}
                   height={450}

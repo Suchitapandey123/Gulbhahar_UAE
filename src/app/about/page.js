@@ -144,7 +144,7 @@ const CraftingStoriesSection = () => {
           </motion.div>
 
           <Image
-            src="/C3.png"
+            src="/gulbhahar-21.png"
             alt="Crafting Story"
             fill
             sizes="100vw"
@@ -343,7 +343,7 @@ const TraditionContemporarySection = () => {
             }}
           >
              <Image
-            src={"/C3.png"}
+            src={"/gulbhahar-22.png"}
             alt='dsfe'
             height={100}
             width={100}
@@ -407,7 +407,7 @@ const TraditionContemporarySection = () => {
             }}
           >
                <Image
-            src={"/C3.png"}
+            src={"/gulbhahar-23.png"}
             alt='dsfe'
             height={100}
             width={100}
@@ -471,7 +471,7 @@ const JuttisSection = () => {
           }}
         >
                <Image
-            src={"/C3.png"}
+            src={"/gulbhahar-24.png"}
             alt='dsfe'
             height={100}
             width={100}
@@ -612,7 +612,7 @@ const GridSection2 = () => {
           }}
         >
           <Image
-            src="/C3.png"
+            src="/gulbhahar-25.png"
             alt="Craftsmanship Image"
             height={100}
             width={100}
