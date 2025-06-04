@@ -1,6 +1,14 @@
 import React from "react";
 
 const TopTrends = () => {
+
+    const slides = [
+    "/gulbhahar-11.png",
+    "/gulbhahar-12.png",
+    "/gulbhahar-13.png",
+    "/gulbhahar-14.png",
+  ];
+
   return (
     <>
       {/* Top Trends Section */}
@@ -17,7 +25,7 @@ const TopTrends = () => {
               >
                 <div className="relative w-full h-[510px] xs:h-[470px] overflow-hidden">
                   <img
-                    src="/Image/About1.png"
+                    src="/gulbhahar-14.png"
                     alt="Trend item"
                     className="w-full h-full object-cover transition-transform duration-500 scale-150 group-hover:scale-150"
                   />

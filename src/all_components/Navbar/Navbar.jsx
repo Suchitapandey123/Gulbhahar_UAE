@@ -27,8 +27,17 @@ const Navbar = () => {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState({ name: "", email: "" });
-  const [isHoverMode, setIsHoverMode] = useState(true); // Track if we're in hover mode or click mode
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+    firstName: "",
+    lastName: "",
+    imageUrl: "",
+    userId: "",
+  });
+  const [isHoverMode, setIsHoverMode] = useState(true);
+  const [profileImageLoading, setProfileImageLoading] = useState(false);
+  const [profileImageError, setProfileImageError] = useState(false);
 
   const pathname = usePathname();
   const router = useRouter();
@@ -37,15 +46,98 @@ const Navbar = () => {
   const hoverTimeoutRef = useRef(null);
   const userHoverTimeoutRef = useRef(null);
 
-  // Simulate user authentication check on component mount
+  // Function to fetch user profile data
+  const fetchUserProfile = async (token) => {
+    try {
+      setProfileImageLoading(true);
+      console.log(
+        "🔄 Fetching user profile with token:",
+        token.substring(0, 20) + "..."
+      );
+
+      const response = await fetch(
+        "http://194.238.23.44:9080/api/users/user-by-token",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("✅ Profile data fetched successfully:", data);
+
+        if (data.user) {
+          const userData = {
+            name: `${data.user.firstName || ""} ${
+              data.user.lastName || ""
+            }`.trim(),
+            email: data.user.email || "",
+            firstName: data.user.firstName || "",
+            lastName: data.user.lastName || "",
+            imageUrl: data.user.imageUrl || "",
+            userId: data.user.userId || data.user._id || "",
+          };
+
+          setUser(userData);
+
+          // Update localStorage with the latest user data
+          localStorage.setItem("userData", JSON.stringify(userData));
+
+          console.log("👤 User profile updated:", userData);
+        }
+      } else {
+        console.error("❌ Failed to fetch profile:", response.status);
+        // If token is invalid, clear auth data
+        if (response.status === 401 || response.status === 403) {
+          handleLogout();
+        }
+      }
+    } catch (error) {
+      console.error("🚨 Error fetching user profile:", error);
+    } finally {
+      setProfileImageLoading(false);
+    }
+  };
+
+  // Enhanced authentication check
   useEffect(() => {
-    const checkAuthStatus = () => {
+    const checkAuthStatus = async () => {
       const token = localStorage.getItem("authToken");
       const userData = localStorage.getItem("userData");
 
-      if (token && userData) {
+      if (token) {
         setIsLoggedIn(true);
-        setUser(JSON.parse(userData));
+
+        // If we have stored user data, use it initially
+        if (userData) {
+          try {
+            const parsedUserData = JSON.parse(userData);
+            setUser(parsedUserData);
+            console.log(
+              "📱 Loaded user data from localStorage:",
+              parsedUserData
+            );
+          } catch (error) {
+            console.error("Error parsing stored user data:", error);
+          }
+        }
+
+        // Always fetch fresh profile data
+        await fetchUserProfile(token);
+      } else {
+        setIsLoggedIn(false);
+        setUser({
+          name: "",
+          email: "",
+          firstName: "",
+          lastName: "",
+          imageUrl: "",
+          userId: "",
+        });
       }
     };
 
@@ -80,7 +172,7 @@ const Navbar = () => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsCollectionDropdownOpen(false);
-        setIsHoverMode(true); // Reset to hover mode when clicking outside
+        setIsHoverMode(true);
       }
       if (
         userDropdownRef.current &&
@@ -101,7 +193,7 @@ const Navbar = () => {
       setIsMobileCollectionOpen(false);
       setIsSearchOpen(false);
       setIsUserDropdownOpen(false);
-      setIsHoverMode(true); // Reset to hover mode when opening mobile menu
+      setIsHoverMode(true);
     }
   };
 
@@ -125,27 +217,48 @@ const Navbar = () => {
     router.push("/login");
   };
 
-  // Handle logout
+  // Enhanced logout function
   const handleLogout = () => {
+    // Clear all authentication data
     localStorage.removeItem("authToken");
     localStorage.removeItem("userData");
+    localStorage.removeItem("loginTimestamp");
+
+    // Clear cookies
+    document.cookie =
+      "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie =
+      "userEmail=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie =
+      "userName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie =
+      "loginTimestamp=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
     setIsLoggedIn(false);
-    setUser({ name: "", email: "" });
+    setUser({
+      name: "",
+      email: "",
+      firstName: "",
+      lastName: "",
+      imageUrl: "",
+      userId: "",
+    });
     setIsUserDropdownOpen(false);
+    setProfileImageError(false);
+
     router.push("/");
+    console.log("🚪 User logged out successfully");
   };
 
   // Enhanced Collections click handler
   const handleCollectionClick = (e) => {
     e.preventDefault();
     if (window.innerWidth >= 768) {
-      // Toggle between hover mode and click mode
       if (isHoverMode) {
-        // Switch to click mode and show dropdown
         setIsHoverMode(false);
         setIsCollectionDropdownOpen(true);
       } else {
-        // Toggle dropdown in click mode
         setIsCollectionDropdownOpen(!isCollectionDropdownOpen);
       }
     }
@@ -156,12 +269,12 @@ const Navbar = () => {
     setIsCollectionDropdownOpen(false);
     setIsMobileCollectionOpen(false);
     setIsMenuOpen(false);
-    setIsHoverMode(true); // Reset to hover mode after navigation
+    setIsHoverMode(true);
   };
 
   // View All Collections handler
   const handleViewAllCollections = (e) => {
-    console.log("handleViewAllCollections called"); // Debug log
+    console.log("handleViewAllCollections called");
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -193,10 +306,8 @@ const Navbar = () => {
 
   const handleMouseLeave = () => {
     if (window.innerWidth >= 768 && isHoverMode) {
-      // Hide immediately instead of using timeout
       setIsCollectionDropdownOpen(false);
-      
-      // Clear any existing timeout
+
       if (hoverTimeoutRef.current) {
         clearTimeout(hoverTimeoutRef.current);
         hoverTimeoutRef.current = null;
@@ -220,6 +331,90 @@ const Navbar = () => {
         setIsUserDropdownOpen(false);
       }, 150);
     }
+  };
+
+  // Enhanced Profile image component with better mobile responsiveness
+  const ProfileImage = ({ size = "w-8 h-8", className = "" }) => {
+    const handleImageError = () => {
+      setProfileImageError(true);
+    };
+
+    const handleImageLoad = () => {
+      setProfileImageError(false);
+    };
+
+    // Extract size for determining text size
+    const isSmall = size.includes("w-6") || size.includes("w-7");
+    const isMedium = size.includes("w-8") || size.includes("w-10");
+    const isLarge = size.includes("w-12");
+
+    if (profileImageLoading) {
+      return (
+        <div
+          className={`${size} ${className} bg-gray-200 rounded-full flex items-center justify-center animate-pulse`}
+        >
+          <User
+            size={isSmall ? 12 : isMedium ? 16 : 20}
+            className="text-gray-400"
+          />
+        </div>
+      );
+    }
+
+    if (user.imageUrl && !profileImageError) {
+      return (
+        <div
+          className={`${size} ${className} relative overflow-hidden rounded-full bg-gray-100 flex-shrink-0`}
+        >
+          <Image
+            src={user.imageUrl}
+            alt={`${user.firstName || "User"}'s profile`}
+            fill
+            className="object-cover"
+            onError={handleImageError}
+            onLoad={handleImageLoad}
+            sizes="(max-width: 640px) 32px, (max-width: 768px) 40px, 48px"
+          />
+        </div>
+      );
+    }
+
+    // Fallback to initials or user icon
+    const initials =
+      user.firstName && user.lastName
+        ? `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase()
+        : user.name
+        ? user.name
+            .split(" ")
+            .map((n) => n.charAt(0))
+            .join("")
+            .toUpperCase()
+            .slice(0, 2)
+        : "";
+
+    if (initials) {
+      return (
+        <div
+          className={`${size} ${className} bg-[#800000] rounded-full flex items-center justify-center flex-shrink-0`}
+        >
+          <span
+            className={`text-white font-semibold ${
+              isSmall ? "text-xs" : isMedium ? "text-sm" : "text-base"
+            }`}
+          >
+            {initials}
+          </span>
+        </div>
+      );
+    }
+
+    return (
+      <div
+        className={`${size} ${className} bg-[#800000] rounded-full flex items-center justify-center flex-shrink-0`}
+      >
+        <User size={isSmall ? 12 : isMedium ? 16 : 20} className="text-white" />
+      </div>
+    );
   };
 
   // Cleanup timeouts on unmount
@@ -346,9 +541,21 @@ const Navbar = () => {
 
   // User menu items for logged-in users
   const userMenuItems = [
-    { icon: User, label: "My Profile", href: "/profile" },
-    { icon: Package, label: "My Orders", href: "/orders" },
-    { icon: Settings, label: "Settings", href: "/settings" },
+    {
+      icon: User,
+      label: "My Profile",
+      href: "/account/account-centre/profile",
+    },
+    {
+      icon: Package,
+      label: "My Orders",
+      href: "/account/account-centre/my-order",
+    },
+    {
+      icon: Settings,
+      label: "Settings",
+      href: "/account/account-centre/settings",
+    },
   ];
 
   return (
@@ -391,34 +598,47 @@ const Navbar = () => {
               </button>
             </div>
 
-            <div className="hidden md:flex items-center space-x-2 lg:space-x-6">
+            <div className="hidden md:flex items-center space-x-2 lg:space-x-12">
               <NavLink href="/collections" hasDropdown={true}>
                 Collections
               </NavLink>
               <NavLink href="/about">About</NavLink>
             </div>
 
-            <div className="flex-1 flex justify-center md:flex-initial">
-              <Link href="/" className=" relative overflow-hidden group">
+            <div className="flex-1 flex items-center  justify-center md:flex-initial">
+              <Link href="/" className=" relative group">
                 {/* Static Logo for Non-Home Pages with Hover Magic */}
                 {pathname !== "/" && (
-                  <div className="relative">
+                  //  <div className="flex  items-center gap-2 sm:gap-3 md:gap-4 lg:gap-6">z
+                  <div className="relative h-8 lg:h-12 flex items-center justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-14">
                     <Image
-                      src="/combined.png"
+                      src="/logo-only.png"
                       alt="Brand Logo"
-                      width={240}
-                      height={60}
+                      width={500}
+                      height={260}
                       priority
                       className={`
-                        transition-all duration-500 ease-out object-contain
-                        filter group-hover:brightness-105 group-active:scale-95 relative z-10
-                        ${
-                          isScrolled
-                            ? "h-6 sm:h-7 md:h-8 lg:h-9 w-auto max-w-[100px] sm:max-w-[120px] md:max-w-[140px] lg:max-w-[160px]"
-                            : "h-7 sm:h-8 md:h-9 lg:h-10 xl:h-11 w-auto max-w-[120px] sm:max-w-[140px] md:max-w-[160px] lg:max-w-[180px] xl:max-w-[200px]"
-                        }
-                      `}
+      transition-all duration-500 ease-out object-cover
+      filter group-hover:brightness-105 group-active:scale-95 relative z-10
+      ${
+        isScrolled
+          ? "h-6 sm:h-7 md:h-8 lg:h-16 xl:h-20 w-auto max-w-[100px] sm:max-w-[120px] md:max-w-[140px] lg:max-w-[220px] xl:max-w-[260px]"
+          : "h-7 sm:h-8 md:h-9 lg:h-20 xl:h-24 w-auto max-w-[120px] sm:max-w-[140px] md:max-w-[160px] lg:max-w-[240px] xl:max-w-[280px]"
+      }
+    `}
                     />
+                    <div
+                      className="
+      font-['Old_Standard_TT'] font-bold uppercase tracking-wider 
+      text-transparent bg-clip-text bg-red-900 drop-shadow-lg transition-all duration-500
+      text-sm sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl scale-x-[1.3]
+      lg:scale-x-[1.5]
+    "
+                    >
+                      Gulbhahar
+                    </div>
+
+                    {/* </div> */}
 
                     {/* Golden Dust Particles - Flying Above */}
                     <div className="absolute  inset-0 overflow-visible pointer-events-none z-20">
@@ -431,216 +651,6 @@ const Navbar = () => {
                             left: `${15 + i * 7}%`,
                             top: `${-30 + (i % 4) * 20}%`,
                             transitionDelay: `${i * 80}ms`,
-                          }}
-                        >
-                          <div
-                            className="w-full h-full bg-gradient-to-r from-red-800 to-red-900 rounded-full
-                                     group-hover:animate-pulse shadow-red-900/50"
-                            style={{
-                              animationDelay: `${i * 150}ms`,
-                              animationDuration: "2s",
-                            }}
-                          />
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Floating Crown Above Logo */}
-                    <div
-                      className="absolute -top-10 left-1/2 transform -translate-x-1/2 z-30
-                               opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out
-                               group-hover:animate-bounce"
-                      style={{
-                        transitionDelay: "200ms",
-                        fontSize: "28px",
-                        filter: "drop-shadow(0 4px 8px rgba(127, 29, 29, 0.3))",
-                      }}
-                    >
-                      👑
-                    </div>
-
-                    {/* Luxury Brand Sparkles - Floating Around */}
-                    <div className="absolute inset-0 overflow-visible pointer-events-none z-20">
-                      {[...Array(8)].map((_, i) => (
-                        <div
-                          key={`luxury-sparkle-${i}`}
-                          className="absolute opacity-0 group-hover:opacity-100 transition-all duration-600 ease-out z-20"
-                          style={{
-                            left: `${10 + i * 12}%`,
-                            top: `${-25 + (i % 3) * 25}%`,
-                            transitionDelay: `${150 + i * 75}ms`,
-                          }}
-                        >
-                          <div
-                            className="w-2 h-2 bg-gradient-to-r from-red-800 to-red-900 rounded-full
-                                     group-hover:animate-ping shadow-lg shadow-red-900/50"
-                            style={{
-                              animationDelay: `${i * 200}ms`,
-                              animationDuration: "1.5s",
-                            }}
-                          />
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Floating Brand Message - Above Everything */}
-                    <div
-                      className="absolute -top-16 left-1/2 transform -translate-x-1/2 z-40
-                               opacity-0 group-hover:opacity-100 transition-all duration-600 ease-out
-                               text-xs font-semibold text-red-900 whitespace-nowrap
-                               bg-gradient-to-r from-red-50 to-red-100 px-3 py-1.5 rounded-full 
-                               shadow-lg border border-red-200/50 backdrop-blur-sm
-                               group-hover:animate-bounce"
-                      style={{ transitionDelay: "400ms" }}
-                    >
-                      ✨ Crafted with Excellence ✨
-                    </div>
-
-                    {/* Floating Luxury Hearts - Above Logo */}
-                    <div className="absolute inset-0 overflow-visible pointer-events-none z-25">
-                      {[...Array(6)].map((_, i) => (
-                        <div
-                          key={`heart-${i}`}
-                          className="absolute opacity-0 group-hover:opacity-100 transition-all duration-800 ease-out z-25
-                                   text-red-900 group-hover:animate-bounce"
-                          style={{
-                            left: `${20 + i * 15}%`,
-                            top: `${-20 + (i % 2) * 40}%`,
-                            transitionDelay: `${250 + i * 100}ms`,
-                            fontSize: "14px",
-                            animationDelay: `${i * 300}ms`,
-                            animationDuration: "2s",
-                            filter:
-                              "drop-shadow(0 2px 4px rgba(127, 29, 29, 0.4))",
-                          }}
-                        >
-                          ❤️
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Floating Side Elements */}
-                    <div className="absolute inset-0 overflow-visible pointer-events-none z-20">
-                      {/* Left side sparkle */}
-                      <div
-                        className="absolute -left-8 top-1/2 transform -translate-y-1/2 z-20
-                                 opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out
-                                 text-red-600 group-hover:animate-pulse"
-                        style={{
-                          transitionDelay: "300ms",
-                          fontSize: "20px",
-                          filter:
-                            "drop-shadow(0 2px 4px rgba(127, 29, 29, 0.3))",
-                        }}
-                      >
-                        ✨
-                      </div>
-
-                      {/* Right side sparkle */}
-                      <div
-                        className="absolute -right-8 top-1/2 transform -translate-y-1/2 z-20
-                                 opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out
-                                 text-red-600 group-hover:animate-pulse"
-                        style={{
-                          transitionDelay: "500ms",
-                          fontSize: "20px",
-                          filter:
-                            "drop-shadow(0 2px 4px rgba(127, 29, 29, 0.3))",
-                        }}
-                      >
-                        ✨
-                      </div>
-                    </div>
-
-                    {/* Floating Excellence Indicators */}
-                    <div className="absolute inset-0 overflow-visible pointer-events-none z-20">
-                      <div
-                        className="absolute -top-6 -left-4 z-20
-                                 opacity-0 group-hover:opacity-100 transition-all duration-600 ease-out
-                                 text-red-700 group-hover:animate-bounce"
-                        style={{
-                          transitionDelay: "600ms",
-                          fontSize: "14px",
-                          animationDelay: "0.5s",
-                        }}
-                      >
-                        💎
-                      </div>
-
-                      <div
-                        className="absolute -top-6 -right-4 z-20
-                                 opacity-0 group-hover:opacity-100 transition-all duration-600 ease-out
-                                 text-red-700 group-hover:animate-bounce"
-                        style={{
-                          transitionDelay: "700ms",
-                          fontSize: "14px",
-                          animationDelay: "0.7s",
-                        }}
-                      >
-                        💎
-                      </div>
-                    </div>
-
-                    {/* Morphing Geometric Shapes */}
-                    <div className="absolute inset-0 overflow-visible pointer-events-none z-15">
-                      {[...Array(6)].map((_, i) => (
-                        <div
-                          key={`morph-${i}`}
-                          className="absolute opacity-0 group-hover:opacity-70 transition-all duration-1000 ease-out z-15"
-                          style={{
-                            left: `${10 + i * 15}%`,
-                            top: `${-30 + (i % 3) * 20}%`,
-                            transitionDelay: `${800 + i * 100}ms`,
-                          }}
-                        >
-                          <div
-                            className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-800 
-                                     group-hover:animate-pulse transform transition-all duration-1000
-                                     group-hover:rotate-45 group-hover:scale-150"
-                            style={{
-                              animationDelay: `${i * 200}ms`,
-                              animationDuration: "2s",
-                              borderRadius:
-                                i % 3 === 0
-                                  ? "50%"
-                                  : i % 3 === 1
-                                  ? "0%"
-                                  : "20%",
-                            }}
-                          />
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Ripple Effect Circles */}
-                    <div className="absolute inset-0 overflow-visible pointer-events-none z-5">
-                      {[...Array(4)].map((_, i) => (
-                        <div
-                          key={`ripple-${i}`}
-                          className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2
-                                   opacity-0 group-hover:opacity-30 transition-all duration-1500 ease-out
-                                   border-2 border-red-300 rounded-full group-hover:animate-ping"
-                          style={{
-                            width: `${50 + i * 30}px`,
-                            height: `${50 + i * 30}px`,
-                            transitionDelay: `${900 + i * 200}ms`,
-                            animationDelay: `${i * 300}ms`,
-                            animationDuration: "3s",
-                          }}
-                        />
-                      ))}
-                    </div>
-
-                    {/* Floating Energy Orbs */}
-                    <div className="absolute inset-0 overflow-visible pointer-events-none z-20">
-                      {[...Array(8)].map((_, i) => (
-                        <div
-                          key={`orb-${i}`}
-                          className="absolute opacity-0 group-hover:opacity-80 transition-all duration-800 ease-out z-20"
-                          style={{
-                            left: `${15 + i * 10}%`,
-                            top: `${-25 + (i % 2) * 50}%`,
-                            transitionDelay: `${1000 + i * 100}ms`,
                           }}
                         >
                           <div
@@ -751,33 +761,46 @@ const Navbar = () => {
                 {pathname === "/" && (
                   <>
                     {/* Original Logo - Only appears when scrolled */}
-                    <Image
-                      src="/combined.png"
-                      alt="Brand Logo"
-                      width={240}
-                      height={60}
-                      priority
-                      className={`
-                        transition-all duration-700 ease-out object-contain
-                        group-hover:scale-110 filter group-hover:brightness-110
-                        group-active:scale-95 relative z-10
-                        ${
-                          isScrolled
-                            ? "opacity-100 translate-y-0 scale-100"
-                            : "opacity-0 translate-y-8 scale-90"
-                        }
-                        ${
-                          isScrolled
-                            ? "h-6 sm:h-7 md:h-8 lg:h-9 w-auto max-w-[100px] sm:max-w-[120px] md:max-w-[140px] lg:max-w-[160px]"
-                            : "h-7 sm:h-8 md:h-9 lg:h-10 xl:h-11 w-auto max-w-[120px] sm:max-w-[140px] md:max-w-[160px] lg:max-w-[180px] xl:max-w-[200px]"
-                        }
-                      `}
-                    />
+                    <div className="flex h-12 items-center justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-12">
+                      {/* Logo Image */}
+                      <Image
+                        src="/logo-only.png"
+                        alt="Brand Logo"
+                        width={1000}
+                        height={160}
+                        priority
+                        className={`
+      transition-all duration-700 ease-out object-contain
+      filter group-hover:brightness-110
+      relative z-10
+      ${
+        isScrolled
+          ? "opacity-100 translate-y-0 scale-100"
+          : "opacity-0 translate-y-8 scale-90"
+      }
+      h-6 sm:h-8 md:h-12 lg:h-10 xl:h-20
+      w-auto max-w-[150px] sm:max-w-[200px] md:max-w-[240px] lg:max-w-[300px] xl:max-w-[360px]
+    `}
+                      />
+
+                      {/* Brand Name Text */}
+                      <div
+                        className="
+      font-['Old_Standard_TT'] font-bold uppercase tracking-widest 
+      text-transparent bg-clip-text bg-red-900 drop-shadow-lg transition-all duration-500
+      text-xs sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl scale-x-[1.1]
+      lg:scale-x-[1.5]
+    "
+                      >
+                        Gulbhahar
+                      </div>
+                    </div>
 
                     {/* Magical Transition Overlay - Only when scrolling */}
+
                     <div
                       className={`
-                        absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent
+                        absolute inset-0 bg-transparent
                         transform -skew-x-12 transition-all duration-1000 ease-out pointer-events-none
                         ${
                           isScrolled
@@ -792,9 +815,10 @@ const Navbar = () => {
                     />
 
                     {/* Shimmer Effect - Only when scrolling */}
+
                     <div
                       className={`
-                        absolute inset-0 bg-gradient-to-r from-transparent via-blue-100/20 to-transparent
+                        absolute inset-0 bg-transparent
                         transform transition-all duration-1200 ease-out pointer-events-none
                         ${
                           isScrolled
@@ -810,9 +834,10 @@ const Navbar = () => {
                     />
 
                     {/* Scale Effect Behind Logo */}
+
                     <div
                       className={`
-                        absolute inset-0 bg-white/10 rounded-lg backdrop-blur-sm
+                        absolute inset-0 bg-transparent rounded-lg 
                         transition-all duration-800 ease-out pointer-events-none
                         ${
                           isScrolled
@@ -911,7 +936,7 @@ const Navbar = () => {
                 <span className="hidden lg:inline">Cart</span>
               </Link>
 
-              {/* User Account Section */}
+              {/* Enhanced User Account Section */}
               {isLoggedIn ? (
                 <div
                   className="relative"
@@ -942,12 +967,12 @@ const Navbar = () => {
                       }
                     `}
                   >
-                    <User
-                      size={16}
-                      className="group-hover:scale-110 transition-transform duration-300"
+                    <ProfileImage
+                      size="w-6 h-6 lg:w-7 lg:h-7"
+                      className="group-hover:scale-110 transition-transform duration-300 border border-current/20"
                     />
                     <span className="hidden lg:inline">
-                      {user.name || "Account"}
+                      {user.firstName || "Account"}
                     </span>
                     <ChevronDown
                       size={12}
@@ -957,10 +982,10 @@ const Navbar = () => {
                     />
                   </button>
 
-                  {/* User Dropdown Menu */}
+                  {/* Enhanced User Dropdown Menu */}
                   <div
                     className={`
-                      absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-md shadow-2xl 
+                      absolute right-0 top-full mt-2 w-56 bg-white/95 backdrop-blur-md shadow-2xl 
                       rounded-lg border border-gray-100 z-50 transition-all duration-300 ease-out
                       ${
                         isUserDropdownOpen
@@ -969,11 +994,23 @@ const Navbar = () => {
                       }
                     `}
                   >
-                    <div className="p-3 border-b border-gray-100">
-                      <p className="font-semibold text-gray-800 text-sm">
-                        {user.name}
-                      </p>
-                      <p className="text-xs text-gray-600">{user.email}</p>
+                    {/* User Info Section with Profile Image */}
+                    <div className="p-4 border-b border-gray-100">
+                      <div className="flex items-center space-x-3">
+                        <ProfileImage
+                          size="w-10 h-10"
+                          className="border-2 border-gray-200"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-gray-800 text-sm truncate">
+                            {user.name ||
+                              `${user.firstName} ${user.lastName}`.trim()}
+                          </p>
+                          <p className="text-xs text-gray-600 truncate">
+                            {user.email}
+                          </p>
+                        </div>
+                      </div>
                     </div>
 
                     <div className="py-2">
@@ -1025,52 +1062,128 @@ const Navbar = () => {
               )}
             </div>
 
-            <div className="flex items-center space-x-2 md:hidden">
+            <div className="flex items-center space-x-1 sm:space-x-2 md:hidden">
               <button
                 onClick={toggleSearchPopup}
-                className={`p-2 transition-all duration-300 transform hover:scale-110 active:scale-95 ${
+                className={`p-1.5 sm:p-2 transition-all duration-300 transform hover:scale-110 active:scale-95 ${
                   isScrolled
                     ? "text-gray-800 hover:text-[#800000]"
                     : "text-white hover:text-white/80"
                 }`}
               >
-                <Search size={18} />
+                <Search size={16} className="sm:hidden" />
+                <Search size={18} className="hidden sm:block" />
               </button>
 
-              {/* Mobile User Account */}
+              {/* Enhanced Mobile User Account - Fixed Nested Button Issue */}
               {isLoggedIn ? (
-                <button
-                  onClick={toggleUserDropdown}
-                  className={`p-2 transition-all duration-300 transform hover:scale-110 active:scale-95 ${
-                    isScrolled || pathname !== "/"
-                      ? "text-gray-800 hover:text-[#800000]"
-                      : "text-white hover:text-white/80"
-                  }`}
-                >
-                  <User size={18} />
-                </button>
+                <div className="relative">
+                  <button
+                    onClick={toggleUserDropdown}
+                    className={`p-1 sm:p-1.5 transition-all duration-300 transform hover:scale-110 active:scale-95 ${
+                      isScrolled || pathname !== "/"
+                        ? "text-gray-800 hover:text-[#800000]"
+                        : "text-white hover:text-white/80"
+                    }`}
+                  >
+                    <ProfileImage
+                      size="w-6 h-6 sm:w-7 sm:h-7"
+                      className="border border-current/20"
+                    />
+                  </button>
+
+                  {/* Mobile User Dropdown - Fixed: No nested buttons */}
+                  <div
+                    className={`
+                      absolute right-0 top-full mt-2 w-64 sm:w-72 bg-white/95 backdrop-blur-md shadow-2xl 
+                      rounded-lg border border-gray-100 z-50 transition-all duration-300 ease-out
+                      ${
+                        isUserDropdownOpen
+                          ? "opacity-100 visible translate-y-0"
+                          : "opacity-0 invisible -translate-y-2 pointer-events-none"
+                      }
+                    `}
+                  >
+                    {/* Mobile User Info Section with Profile Image */}
+                    <div className="p-3 sm:p-4 border-b border-gray-100">
+                      <div className="flex items-center space-x-3">
+                        <ProfileImage
+                          size="w-10 h-10 sm:w-12 sm:h-12"
+                          className="border-2 border-gray-200"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-gray-800 text-sm sm:text-base truncate">
+                            {user.name ||
+                              `${user.firstName} ${user.lastName}`.trim()}
+                          </p>
+                          <p className="text-xs sm:text-sm text-gray-600 truncate">
+                            {user.email}
+                          </p>
+                          {user.userId && (
+                            <p className="text-xs text-gray-500 truncate">
+                              ID: {user.userId}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="py-2">
+                      {userMenuItems.map((item) => (
+                        <div
+                          key={item.label}
+                          onClick={() => {
+                            router.push(item.href);
+                            setIsUserDropdownOpen(false);
+                          }}
+                          className="flex items-center space-x-3 px-3 sm:px-4 py-2.5 text-sm sm:text-base text-gray-800 
+                                   hover:text-[#800000] hover:bg-[#800000]/5 transition-all duration-200 cursor-pointer"
+                        >
+                          <item.icon size={16} className="sm:w-5 sm:h-5" />
+                          <span>{item.label}</span>
+                        </div>
+                      ))}
+
+                      <hr className="my-2 border-gray-100" />
+
+                      <div
+                        onClick={() => {
+                          handleLogout();
+                          setIsUserDropdownOpen(false);
+                        }}
+                        className="flex items-center space-x-3 px-3 sm:px-4 py-2.5 text-sm sm:text-base text-red-600 
+                                 hover:text-red-700 hover:bg-red-50 transition-all duration-200 cursor-pointer"
+                      >
+                        <LogOut size={16} className="sm:w-5 sm:h-5" />
+                        <span>Logout</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               ) : (
                 <button
                   onClick={handleLogin}
-                  className={`p-2 transition-all duration-300 transform hover:scale-110 active:scale-95 ${
+                  className={`p-1.5 sm:p-2 transition-all duration-300 transform hover:scale-110 active:scale-95 ${
                     isScrolled || pathname !== "/"
                       ? "text-gray-800 hover:text-[#800000]"
                       : "text-white hover:text-white/80"
                   }`}
                 >
-                  <User size={18} />
+                  <User size={16} className="sm:hidden" />
+                  <User size={18} className="hidden sm:block" />
                 </button>
               )}
 
               <Link
                 href="/cart"
-                className={`p-2 transition-all duration-300 relative transform hover:scale-110 active:scale-95 ${
+                className={`p-1.5 sm:p-2 transition-all duration-300 relative transform hover:scale-110 active:scale-95 ${
                   isScrolled || pathname !== "/"
                     ? "text-gray-800 hover:text-[#800000]"
                     : "text-white hover:text-white/80"
                 }`}
               >
-                <ShoppingBag size={18} />
+                <ShoppingBag size={16} className="sm:hidden" />
+                <ShoppingBag size={18} className="hidden sm:block" />
               </Link>
             </div>
           </div>
@@ -1176,94 +1289,117 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - Enhanced Responsive */}
       <div
         className={`
-          md:hidden h-full overflow-x-hidden  fixed inset-y-0 left-0 z-50 w-72 sm:w-80 bg-white shadow-xl
+          md:hidden h-full overflow-x-hidden fixed inset-y-0 left-0 z-50 
+          w-[280px] xs:w-[300px] sm:w-80 bg-white shadow-xl
           transition-transform duration-300 ease-out
           ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
-        <div className="flex flex-col h-full  ">
-          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-100">
+        <div className="flex flex-col h-full">
+          {/* Mobile Menu Header */}
+          <div className="flex items-center justify-between p-3 xs:p-4 sm:p-6 border-b border-gray-100">
             <Image
-              src="/combined.png"
+              src="/ful-gulbhaharlogo.png"
               alt="Brand Logo"
               width={80}
               height={24}
-              className="h-5 sm:h-6 w-auto object-contain"
+              className="h-4 xs:h-5 sm:h-6 w-auto object-contain"
             />
             <button
               onClick={toggleMenu}
-              className="p-2 text-gray-600 hover:text-[#800000] transition-colors duration-200 
+              className="p-1.5 xs:p-2 text-gray-600 hover:text-[#800000] transition-colors duration-200 
                        rounded-full hover:bg-gray-100 flex-shrink-0"
             >
-              <X size={18} />
+              <X size={16} className="xs:w-4 xs:h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-            <div className="space-y-4 sm:space-y-6">
-              {/* User Account Section in Mobile */}
+          {/* Mobile Menu Content */}
+          <div className="flex-1 overflow-y-auto p-3 xs:p-4 sm:p-6">
+            <div className="space-y-3 xs:space-y-4 sm:space-y-6">
+              {/* Enhanced User Account Section in Mobile */}
               {isLoggedIn && (
-                <div className="pb-4 border-b border-gray-100">
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-10 h-10 bg-[#800000] rounded-full flex items-center justify-center">
-                      <User size={20} className="text-white" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-800">{user.name}</p>
-                      <p className="text-sm text-gray-600">{user.email}</p>
+                <div className="pb-3 xs:pb-4 border-b border-gray-100">
+                  <div className="flex items-center space-x-2 xs:space-x-3 mb-3 xs:mb-4">
+                    <ProfileImage
+                      size="w-10 h-10 xs:w-11 xs:h-11 sm:w-12 sm:h-12"
+                      className="border-2 border-gray-200"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-gray-800 text-sm xs:text-base truncate">
+                        {user.name ||
+                          `${user.firstName} ${user.lastName}`.trim()}
+                      </p>
+                      <p className="text-xs xs:text-sm text-gray-600 truncate">
+                        {user.email}
+                      </p>
+                      {user.userId && (
+                        <p className="text-xs text-gray-500 truncate">
+                          ID: {user.userId}
+                        </p>
+                      )}
                     </div>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-1 xs:space-y-2">
                     {userMenuItems.map((item) => (
-                      <button
+                      <div
                         key={item.label}
                         onClick={() => {
                           router.push(item.href);
                           toggleMenu();
                         }}
-                        className="flex items-center space-x-3 w-full p-2 text-left text-gray-800 
-                                 hover:text-[#800000] hover:bg-[#800000]/5 rounded-lg transition-all duration-200"
+                        className="flex items-center space-x-2 xs:space-x-3 w-full p-2 xs:p-2.5 text-left 
+                                 text-gray-800 hover:text-[#800000] hover:bg-[#800000]/5 rounded-lg 
+                                 transition-all duration-200 text-sm xs:text-base cursor-pointer"
                       >
-                        <item.icon size={16} />
+                        <item.icon
+                          size={14}
+                          className="xs:w-4 xs:h-4 sm:w-5 sm:h-5"
+                        />
                         <span>{item.label}</span>
-                      </button>
+                      </div>
                     ))}
                   </div>
                 </div>
               )}
 
+              {/* Mobile Navigation Links */}
               <div className="space-y-1">
-                {/* new section */}
+                {/* New section */}
                 <div
                   onClick={() => {
-                    handleCategoryClick("All Products"); // Or any custom logic
-                    toggleMenu(); // Optional: close menu
+                    handleCategoryClick("All Products");
+                    toggleMenu();
                   }}
                   className="font-medium text-gray-700 hover:text-[#800000] 
-               transition-all  duration-300 cursor-pointer p-2 rounded-lg
-               hover:bg-[#800000]/5 transform hover:translate-x-1"
+               transition-all duration-300 cursor-pointer p-2 xs:p-2.5 rounded-lg
+               hover:bg-[#800000]/5 transform hover:translate-x-1 text-sm xs:text-base"
                 >
                   New
                 </div>
-                {/* maspping designed by monica */}
+
+                {/* Collection categories for mobile */}
                 {collectionCategoriesForMobile.map((category, index) => (
-                  <div key={index} className=" sm:ml-4 space-y-2">
+                  <div key={index} className="space-y-1 xs:space-y-2">
                     <div
                       onClick={() => toggleCategory(index)}
                       className="font-medium text-gray-700 hover:text-[#800000] 
-                 transition-all duration-300 cursor-pointer p-2 rounded-lg
-                 hover:bg-[#800000]/5 transform hover:translate-x-1 flex justify-between items-center"
+                 transition-all duration-300 cursor-pointer p-2 xs:p-2.5 rounded-lg
+                 hover:bg-[#800000]/5 transform hover:translate-x-1 flex justify-between items-center
+                 text-sm xs:text-base"
                     >
                       <span>{category.title}</span>
-                      <span>{openCategoryIndex === index ? "-" : "+"}</span>
+                      <span className="text-lg xs:text-xl">
+                        {openCategoryIndex === index ? "-" : "+"}
+                      </span>
                     </div>
 
                     {openCategoryIndex === index && (
-                      <ul className="ml-0 sm:ml-4 space-y-1">
+                      <ul className="ml-2 xs:ml-3 sm:ml-4 space-y-1">
                         {category.items.map((item, itemIndex) => (
                           <li key={itemIndex}>
                             <div
@@ -1271,11 +1407,11 @@ const Navbar = () => {
                                 handleCategoryClick(
                                   `${category.title} ${item}`
                                 );
-                                toggleMenu(); // close the menu
+                                toggleMenu();
                               }}
-                              className="text-sm text-gray-600 hover:text-[#800000] 
+                              className="text-xs xs:text-sm text-gray-600 hover:text-[#800000] 
                          transition-all duration-300 cursor-pointer 
-                         transform hover:translate-x-2 p-2 rounded
+                         transform hover:translate-x-2 p-1.5 xs:p-2 rounded
                          hover:bg-[#800000]/5"
                             >
                               • {item}
@@ -1286,25 +1422,27 @@ const Navbar = () => {
                     )}
                   </div>
                 ))}
-                {/* view all collections */}
+
+                {/* View all collections button */}
                 <button
                   type="button"
                   onClick={handleViewAllCollections}
-                  className="inline-flex items-center truncate ml-1 space-x-4 px-8 py-2 mt-3 bg-[#800000] text-white 
-                               font-semibold text-[12px] uppercase tracking-wide rounded-md
-                               hover:bg-[#600000] transform hover:scale-105 transition-all duration-300
-                               shadow-md hover:shadow-lg w-[70%] justify-center cursor-pointer"
+                  className="inline-flex items-center justify-center space-x-2 xs:space-x-3 
+                           px-4 xs:px-6 sm:px-8 py-2 xs:py-2.5 mt-2 xs:mt-3 
+                           bg-[#800000] text-white font-semibold 
+                           text-xs xs:text-sm uppercase tracking-wide rounded-md
+                           hover:bg-[#600000] transform hover:scale-105 transition-all duration-300
+                           shadow-md hover:shadow-lg w-[90%] xs:w-[80%] sm:w-[70%] cursor-pointer"
                   style={{ pointerEvents: "auto" }}
                 >
-                  {/* <Eye size={16} /> */}
                   <span>View All Collections</span>
                 </button>
               </div>
 
-              <div className="space-y-0 sm:space-y-1  border-gray-100">
+              {/* Other navigation items */}
+              <div className="space-y-0 xs:space-y-1 border-gray-100">
                 {["About", "Cart"].map((item, index) => {
                   const href = `/${item.toLowerCase()}`;
-                  const isActive = pathname === href;
 
                   return (
                     <button
@@ -1317,48 +1455,47 @@ const Navbar = () => {
                           toggleMenu();
                         }
                       }}
-                      className={`
-                        block p-1 font-medium text-base sm:text-lg transition-all duration-300
-                        transform hover:translate-x-2 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-[#800000]
-                      `}
+                      className="block p-1.5 xs:p-2 font-medium text-sm xs:text-base sm:text-lg 
+                               transition-all duration-300 transform hover:translate-x-2 rounded-lg 
+                               hover:bg-gray-50 text-gray-700 hover:text-[#800000]"
                     >
                       {item}
                     </button>
                   );
                 })}
-
-                {/* Mobile Login/Logout */}
               </div>
             </div>
           </div>
 
-          {isLoggedIn ? (
-            <button
-              onClick={() => {
-                handleLogout();
-                toggleMenu();
-              }}
-              className="flex items-center space-x-3 w-full p-3 text-left font-medium 
-                             text-base sm:text-lg text-red-600 hover:text-red-700 
-                             hover:bg-red-50 rounded-lg transition-all duration-300"
-            >
-              <LogOut size={18} />
-              <span>Logout</span>
-            </button>
-          ) : (
-            <button
-              onClick={() => {
-                handleLogin();
-                toggleMenu();
-              }}
-              className="flex mb-4 w- items-center justify-center    py-2 mx-2 text-left font-medium 
-                             text-base sm:text-lg text-[#800000] text-[18px]
-                             bg-[#800000]/10 rounded-lg transition-all duration-300"
-            >
-              {/* <User size={18} /> */}
-              <span>Login</span>
-            </button>
-          )}
+          {/* Mobile Menu Footer */}
+          <div className="border-t border-gray-100 p-3 xs:p-4">
+            {isLoggedIn ? (
+              <div
+                onClick={() => {
+                  handleLogout();
+                  toggleMenu();
+                }}
+                className="flex items-center space-x-2 xs:space-x-3 w-full p-2 xs:p-3 text-left 
+                         font-medium text-sm xs:text-base sm:text-lg text-red-600 hover:text-red-700 
+                         hover:bg-red-50 rounded-lg transition-all duration-300 cursor-pointer"
+              >
+                <LogOut size={16} className="xs:w-4 xs:h-4 sm:w-5 sm:h-5" />
+                <span>Logout</span>
+              </div>
+            ) : (
+              <div
+                onClick={() => {
+                  handleLogin();
+                  toggleMenu();
+                }}
+                className="flex items-center justify-center w-full py-2 xs:py-2.5 sm:py-3 
+                         font-medium text-sm xs:text-base sm:text-lg text-[#800000]
+                         bg-[#800000]/10 rounded-lg transition-all duration-300 hover:bg-[#800000]/20 cursor-pointer"
+              >
+                <span>Login</span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>

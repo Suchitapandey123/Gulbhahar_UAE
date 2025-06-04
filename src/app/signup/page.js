@@ -1,18 +1,38 @@
 "use client"
 import { useEffect, useState, useRef } from 'react';
 import { FaGoogle, FaFacebook, FaEye, FaEyeSlash } from 'react-icons/fa';
-import { FiUser, FiLock, FiMail, FiMapPin, FiPhone, FiShield, FiCheck } from 'react-icons/fi';
+import { FiUser, FiLock, FiMail, FiMapPin, FiPhone, FiShield, FiCheck, FiCamera, FiUpload } from 'react-icons/fi';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
+
+// Utility functions for token storage
+const setAuthToken = (token) => {
+  // Store in localStorage
+  localStorage.setItem('authToken', token);
+  
+  // Store in cookie with 30 days expiration
+  const expirationDate = new Date();
+  expirationDate.setDate(expirationDate.getDate() + 30);
+  document.cookie = `authToken=${token}; expires=${expirationDate.toUTCString()}; path=/; secure; samesite=strict`;
+};
+
+const setUserData = (userData) => {
+  // Store user data in localStorage
+  localStorage.setItem('userData', JSON.stringify(userData));
+  
+  // Store essential user info in cookies
+  document.cookie = `userEmail=${userData.email || ''}; path=/; secure; samesite=strict`;
+  document.cookie = `userName=${userData.firstName || ''} ${userData.lastName || ''}; path=/; secure; samesite=strict`;
+};
 
 // Carousel component
 const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   
   const slides = [
-    "/api/placeholder/600/800",
-    "/api/placeholder/600/800",
-    "/api/placeholder/600/800",
-    "/api/placeholder/600/800",
+    "/gulbhahar-11.png",
+    "/gulbhahar-12.png",
+    "/gulbhahar-13.png",
+    "/gulbhahar-14.png",
   ];
 
   useEffect(() => {
@@ -74,9 +94,15 @@ const SignupPage = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [emailVerificationLoading, setEmailVerificationLoading] = useState(false);
+  const [phoneVerificationLoading, setPhoneVerificationLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
+  const [imageUploadLoading, setImageUploadLoading] = useState(false);
+  const [autoLoginLoading, setAutoLoginLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [profileImageUrl, setProfileImageUrl] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -93,6 +119,7 @@ const SignupPage = () => {
 
   const emailInputRefs = useRef([]);
   const phoneInputRefs = useRef([]);
+  const fileInputRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -104,12 +131,60 @@ const SignupPage = () => {
     if (error) setError('');
   };
 
-  // API call for login (can be used when user exists)
-  const handleLogin = async () => {
-    setLoading(true);
+  // Handle image selection
+  const handleImageSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPreviewImage(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Upload profile image to S3
+  const uploadProfileImage = async () => {
+    if (!selectedImage || !profileImageUrl) return;
+
+    setImageUploadLoading(true);
     setError('');
-    
+
     try {
+      const response = await fetch(profileImageUrl, {
+        method: 'PUT',
+        body: selectedImage,
+        headers: {
+          'Content-Type': selectedImage.type,
+        },
+      });
+
+      if (response.ok) {
+        setSuccess('Profile image uploaded successfully!');
+        setTimeout(() => {
+          setStep(4); // Move to email verification
+          setSuccess('');
+        }, 500);
+      } else {
+        setError('Failed to upload profile image');
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      setError('Network error during image upload. Please try again.');
+    } finally {
+      setImageUploadLoading(false);
+    }
+  };
+
+  // Auto-login function after successful registration
+  const performAutoLogin = async () => {
+    setAutoLoginLoading(true);
+    setError('');
+
+    try {
+      console.log('Attempting auto-login for:', formData.email);
+      
       const response = await fetch('http://194.238.23.44:9080/api/users/login', {
         method: 'POST',
         headers: {
@@ -124,36 +199,59 @@ const SignupPage = () => {
       const data = await response.json();
       
       if (response.ok) {
-        console.log('Login successful:', data);
-        // Check if user needs verification
-        if (data.emailVerified === false) {
-          setSuccess('Please verify your email to continue.');
-          setTimeout(() => {
-            setStep(3);
-            setSuccess('');
-          }, 1500);
-        } else if (data.phoneVerified === false) {
-          setSuccess('Please verify your phone number to continue.');
-          setTimeout(() => {
-            setStep(4);
-            setSuccess('');
-          }, 1500);
-        } else {
-          // User is fully verified, redirect to dashboard
-          setSuccess('Login successful! Redirecting...');
-          setTimeout(() => {
-            window.location.href = '/dashboard';
-          }, 1500);
+        console.log('Auto-login successful:', data);
+        
+        // Store authentication token
+        if (data.token || data.accessToken || data.authToken) {
+          const token = data.token || data.accessToken || data.authToken;
+          setAuthToken(token);
+          console.log('Token stored successfully');
         }
+        
+        // Store user data
+        const userData = {
+          email: formData.email,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          location: formData.location,
+          phoneNumber: formData.phoneNumber,
+          ...data.user 
+        };
+        setUserData(userData);
+        console.log('User data stored successfully');
+        
+        setSuccess('Registration complete! Auto-login successful. Redirecting to Homepage...');
+        
+        // Redirect to dashboard after a short delay
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 2000);
+        
       } else {
-        setError(data.message || 'Login failed');
+        console.error('Auto-login failed:', data);
+        setError(`Auto-login failed: ${data.message || 'Unknown error'}`);
+        
+        // Still redirect to login page if auto-login fails
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 3000);
       }
     } catch (error) {
-      console.error('Error during login:', error);
-      setError('Network error. Please try again.');
+      console.error('Error during auto-login:', error);
+      setError('Network error during auto-login. Redirecting to login page...');
+      
+      // Redirect to login page on error
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 3000);
     } finally {
-      setLoading(false);
+      setAutoLoginLoading(false);
     }
+  };
+
+  // API call for login (can be used when user exists)
+  const handleLogin = async () => {
+    window.location.href = '/login'; // Redirect to login page
   };
     
   const handleVerificationCodeChange = (index, value, type) => {
@@ -205,9 +303,9 @@ const SignupPage = () => {
         setSuccess('Email verified successfully!');
         // Move to phone verification step after a short delay
         setTimeout(() => {
-          setStep(4);
+          setStep(5);
           setSuccess('');
-        }, 1500);
+        }, 1000);
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Invalid verification code');
@@ -217,6 +315,68 @@ const SignupPage = () => {
       setError('Network error. Please try again.');
     } finally {
       setEmailVerificationLoading(false);
+    }
+  };
+
+  // Enhanced phone verification with auto-login
+  const handlePhoneVerification = async () => {
+    setPhoneVerificationLoading(true);
+    setError('');
+    setSuccess('');
+    
+    const verificationCode = formData.phoneVerificationCode.join('');
+    
+    if (verificationCode.length !== 4) {
+      setError('Please enter the complete 4-digit verification code');
+      setPhoneVerificationLoading(false);
+      return;
+    }
+    
+    // Check if code is 1234 - bypass API call and perform auto-login
+    if (verificationCode === '1234') {
+      setSuccess('Phone verified successfully! Completing registration...');
+      setPhoneVerificationLoading(false);
+      
+      // Perform auto-login after a short delay
+      setTimeout(() => {
+        performAutoLogin();
+      }, 1000);
+      return;
+    }
+    
+    // For other codes, make API call
+    try {
+      const response = await fetch('http://194.238.23.44:9080/api/users/verify-phone', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          phoneNumber: formData.phoneNumber,
+          verificationCode: verificationCode
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Phone verified successfully:', data);
+        setSuccess('Phone verified successfully! Completing registration...');
+        setPhoneVerificationLoading(false);
+        
+        // Perform auto-login after successful phone verification
+        setTimeout(() => {
+          performAutoLogin();
+        }, 1000);
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Invalid verification code');
+        setPhoneVerificationLoading(false);
+      }
+    } catch (error) {
+      console.error('Error verifying phone:', error);
+      setError('Network error. Please try again.');
+      setPhoneVerificationLoading(false);
     }
   };
 
@@ -259,6 +419,7 @@ const SignupPage = () => {
       setResendLoading(false);
     }
   };
+
   const handleSignup = async () => {
     setLoading(true);
     setError('');
@@ -284,7 +445,13 @@ const SignupPage = () => {
       if (response.ok) {
         const data = await response.json();
         console.log('User created successfully:', data);
-        // Move to email verification step
+        
+        // Store the image upload URL for profile picture upload
+        if (data.imgUploadUrl) {
+          setProfileImageUrl(data.imgUploadUrl);
+        }
+        
+        // Move to profile image upload step
         setStep(3);
       } else {
         const errorData = await response.json();
@@ -564,7 +731,76 @@ const SignupPage = () => {
     </div>
   );
 
-  // Step 3: Email Verification
+  // Step 3: Profile Image Upload
+  const renderProfileImageUpload = () => (
+    <div className="w-full space-y-8">
+      <div className="text-center">
+        <span className="text-red-600 font-medium text-lg">Let's setup your account</span>
+        <h1 className="text-4xl font-bold text-red-900 mt-2">Create Account</h1>
+        <p className="text-red-700 mt-2">Add a profile picture to personalize your account</p>
+      </div>
+      
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-6">
+          {error}
+        </div>
+      )}
+      
+      {success && (
+        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl mb-6">
+          {success}
+        </div>
+      )}
+      
+      <div className="bg-white rounded-2xl shadow-xl border border-red-100 p-8 text-center space-y-8">
+        <div className="w-32 h-32 bg-red-100 rounded-full flex items-center justify-center mx-auto relative overflow-hidden border-4 border-red-200">
+          {previewImage ? (
+            <img 
+              src={previewImage} 
+              alt="Profile preview" 
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <FiCamera className="w-16 h-16 text-red-600" />
+          )}
+        </div>
+        
+        <div>
+          <h2 className="text-2xl font-bold text-red-900 mb-4">Upload Profile Picture</h2>
+          <p className="text-red-700 text-lg">
+            Choose a photo that represents you best
+          </p>
+          <p className="text-red-600 mt-2">This step is optional - you can skip it and add a photo later</p>
+        </div>
+        
+        <div className="space-y-4">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImageSelect}
+            className="hidden"
+          />
+          
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="bg-red-100 border-2 border-red-300 border-dashed text-red-900 px-8 py-6 rounded-xl hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-100 transition-all duration-200 flex items-center justify-center mx-auto font-semibold"
+          >
+            <FiUpload className="mr-3 w-6 h-6" />
+            {selectedImage ? 'Change Photo' : 'Choose Photo'}
+          </button>
+          
+          {selectedImage && (
+            <p className="text-red-700 text-sm">
+              Selected: {selectedImage.name}
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  // Step 4: Email Verification
   const renderEmailVerification = () => (
     <div className="w-full space-y-8">
       <div className="text-center">
@@ -627,7 +863,7 @@ const SignupPage = () => {
     </div>
   );
 
-  // Step 4: Phone Verification
+  // Step 5: Phone Verification
   const renderPhoneVerification = () => (
     <div className="w-full space-y-8">
       <div className="text-center">
@@ -635,6 +871,26 @@ const SignupPage = () => {
         <h1 className="text-4xl font-bold text-red-900 mt-2">Create Account</h1>
         <p className="text-red-700 mt-2">One more step! Verify your phone number</p>
       </div>
+      
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-6">
+          {error}
+        </div>
+      )}
+      
+      {success && (
+        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl mb-6">
+          {success}
+        </div>
+      )}
+
+      {/* Auto-login loading indicator */}
+      {autoLoginLoading && (
+        <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-xl mb-6 flex items-center">
+          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-700 mr-3"></div>
+          Logging you in automatically...
+        </div>
+      )}
       
       <div className="bg-white rounded-2xl shadow-xl border border-red-100 p-8 text-center space-y-8">
         <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto">
@@ -647,6 +903,7 @@ const SignupPage = () => {
             We've sent a verification code to <span className="font-semibold">+91 {formData.phoneNumber}</span>
           </p>
           <p className="text-red-600 mt-2">Please enter the 4-digit code below to complete your registration</p>
+          <p className="text-sm text-red-500 mt-2 italic">💡 Tip: Try entering "1234" for quick verification</p>
         </div>
         
         <div className="flex justify-center space-x-4">
@@ -659,14 +916,18 @@ const SignupPage = () => {
               maxLength={1}
               value={formData.phoneVerificationCode[index]}
               onChange={(e) => handleVerificationCodeChange(index, e.target.value, 'phone')}
-              className="w-16 h-16 text-center border-2 border-red-300 rounded-xl text-2xl font-bold text-red-900 focus:border-red-900 focus:outline-none focus:ring-4 focus:ring-red-100 transition-all duration-200 bg-red-50/30"
+              disabled={autoLoginLoading}
+              className="w-16 h-16 text-center border-2 border-red-300 rounded-xl text-2xl font-bold text-red-900 focus:border-red-900 focus:outline-none focus:ring-4 focus:ring-red-100 transition-all duration-200 bg-red-50/30 disabled:opacity-50"
             />
           ))}
         </div>
         
         <div className="text-center">
           <p className="text-red-600">Didn't receive the code?</p>
-          <button className="text-red-900 font-semibold underline hover:text-red-700 transition-colors mt-2">
+          <button 
+            disabled={autoLoginLoading}
+            className="text-red-900 font-semibold underline hover:text-red-700 transition-colors mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             Resend code
           </button>
         </div>
@@ -675,7 +936,7 @@ const SignupPage = () => {
   );
 
   return (
-    <div className='w-full min-h-screen bg-gradient-to-br from-red-50 via-rose-50 to-red-100'>
+    <div className='w-full min-h-screen '>
       {/* Header */}
       <header className="relative z-10 bg-white/80 backdrop-blur-sm border-b border-red-100 shadow-sm">
         <div className="flex items-center justify-center py-6">
@@ -751,7 +1012,7 @@ const SignupPage = () => {
                   </div>
                   <div className="ml-3 hidden sm:block">
                     <div className="text-sm font-semibold text-red-900">Step 3</div>
-                    <div className="text-xs text-red-600">Email Verify</div>
+                    <div className="text-xs text-red-600">Profile Image</div>
                   </div>
                 </div>
                 
@@ -763,12 +1024,31 @@ const SignupPage = () => {
                 {/* Step 4 */}
                 <div className="flex items-center">
                   <div className={`flex items-center justify-center w-12 h-12 rounded-full border-2 transition-all duration-300 ${
+                    step >= 4 ? 'bg-red-900 border-red-900 text-white shadow-lg' : 
                     step === 4 ? 'bg-red-100 border-red-900 text-red-900' : 'bg-white border-red-300 text-red-600'
                   }`}>
-                    4
+                    {step > 4 ? <FiCheck className="w-6 h-6" /> : "4"}
                   </div>
                   <div className="ml-3 hidden sm:block">
                     <div className="text-sm font-semibold text-red-900">Step 4</div>
+                    <div className="text-xs text-red-600">Email Verify</div>
+                  </div>
+                </div>
+                
+                {/* Connector */}
+                <div className={`flex-1 h-1 mx-4 rounded-full transition-all duration-300 ${
+                  step > 4 ? 'bg-red-900' : 'bg-red-200'
+                }`}></div>
+                
+                {/* Step 5 */}
+                <div className="flex items-center">
+                  <div className={`flex items-center justify-center w-12 h-12 rounded-full border-2 transition-all duration-300 ${
+                    step === 5 ? 'bg-red-100 border-red-900 text-red-900' : 'bg-white border-red-300 text-red-600'
+                  }`}>
+                    5
+                  </div>
+                  <div className="ml-3 hidden sm:block">
+                    <div className="text-sm font-semibold text-red-900">Step 5</div>
                     <div className="text-xs text-red-600">Phone Verify</div>
                   </div>
                 </div>
@@ -779,8 +1059,9 @@ const SignupPage = () => {
             <div className="mb-8">
               {step === 1 && renderPersonalInformation()}
               {step === 2 && renderSecurity()}
-              {step === 3 && renderEmailVerification()}
-              {step === 4 && renderPhoneVerification()}
+              {step === 3 && renderProfileImageUpload()}
+              {step === 4 && renderEmailVerification()}
+              {step === 5 && renderPhoneVerification()}
             </div>
 
             {/* Login/Signup Toggle for Existing Users */}
@@ -805,7 +1086,7 @@ const SignupPage = () => {
                 <button
                   onClick={prevStep}
                   className="flex items-center px-6 py-3 text-red-700 hover:text-red-900 font-semibold transition-colors group"
-                  disabled={loading}
+                  disabled={loading || emailVerificationLoading || phoneVerificationLoading || imageUploadLoading || autoLoginLoading}
                 >
                   <IoIosArrowBack className='sm:mr-3 mr-1 group-hover:-translate-x-1 transition-transform' />
                   Previous step
@@ -833,6 +1114,37 @@ const SignupPage = () => {
                   )}
                 </button>
               ) : step === 3 ? (
+                <div className="flex space-x-4">
+                  <button
+                    onClick={() => {
+                      setStep(4);
+                      setError('');
+                    }}
+                    className="bg-white border-2 border-red-300 text-red-900 px-6 py-3 rounded-xl hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-100 transition-all duration-200 font-semibold"
+                  >
+                    Skip for now
+                  </button>
+                  {selectedImage && (
+                    <button
+                      onClick={uploadProfileImage}
+                      disabled={imageUploadLoading}
+                      className="bg-gradient-to-r from-red-900 to-red-800 text-white px-8 py-3 rounded-xl shadow-xl hover:from-red-800 hover:to-red-700 focus:outline-none focus:ring-4 focus:ring-red-200 transition-all duration-200 transform hover:scale-105 flex items-center font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {imageUploadLoading ? (
+                        <>
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                          Uploading...
+                        </>
+                      ) : (
+                        <>
+                          <FiUpload className='mr-3' />
+                          Upload & Continue
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
+              ) : step === 4 ? (
                 <button
                   onClick={handleEmailVerification}
                   disabled={emailVerificationLoading}
@@ -852,10 +1164,21 @@ const SignupPage = () => {
                 </button>
               ) : (
                 <button
-                  className="bg-gradient-to-r text-nowrap from-red-900 to-red-800 text-white sm:px-8 px-4 py-3 sm:py-4 rounded-xl shadow-xl hover:from-red-800 hover:to-red-700 focus:outline-none focus:ring-4 focus:ring-red-200 transition-all duration-200 transform hover:scale-105 flex items-center font-bold"
+                  onClick={handlePhoneVerification}
+                  disabled={phoneVerificationLoading || autoLoginLoading}
+                  className="bg-gradient-to-r text-nowrap from-red-900 to-red-800 text-white sm:px-8 px-4 py-3 sm:py-4 rounded-xl shadow-xl hover:from-red-800 hover:to-red-700 focus:outline-none focus:ring-4 focus:ring-red-200 transition-all duration-200 transform hover:scale-105 flex items-center font-bold disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <FiCheck className='sm:mr-3 mr-1' />
-                  Complete Registration
+                  {phoneVerificationLoading || autoLoginLoading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white sm:mr-3 mr-1"></div>
+                      {autoLoginLoading ? 'Logging in...' : 'Verifying...'}
+                    </>
+                  ) : (
+                    <>
+                      <FiCheck className='sm:mr-3 mr-1' />
+                      Complete Registration
+                    </>
+                  )}
                 </button>
               )}
             </div>

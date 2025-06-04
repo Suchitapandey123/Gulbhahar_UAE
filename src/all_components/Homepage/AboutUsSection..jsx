@@ -82,7 +82,7 @@ export default function AlternatingAbout() {
       variants={containerVariants}
       className="py-16 px-4 sm:py-20 sm:px-6 lg:py-24 lg:px-8 bg-white"
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto overflow-x-hidden">
         
         {/* Header */}
         <motion.div 
