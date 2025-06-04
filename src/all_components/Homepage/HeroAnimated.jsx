@@ -57,6 +57,8 @@ export default function ModernHeroAnimated() {
   ];
 
   // Auto-advance carousel
+
+
   useEffect(() => {
     if (!isPlaying) return;
     
@@ -69,6 +71,8 @@ export default function ModernHeroAnimated() {
     
     return () => clearInterval(timer);
   }, [isPlaying, heroData.length]);
+
+
 
   // Enhanced slide variants with better fade-in animations
   const slideVariants = {
@@ -175,11 +179,11 @@ export default function ModernHeroAnimated() {
       {/* Modern glassmorphism hero section - FULL WIDTH */}
       <motion.section 
         ref={containerRef}
-        className="relative min-h-screen w-screen overflow-hidden"
+        className="relative min-h-screen w-screen  overflow-hidden"
         style={{ 
           marginLeft: 'calc(-50vw + 50%)',
           marginRight: 'calc(-50vw + 50%)',
-          width: '100vw'
+          width: '100vw',
         }}
         initial="hidden"
         animate="visible"
@@ -230,10 +234,10 @@ export default function ModernHeroAnimated() {
         </motion.div>
 
         {/* Modern content layout - MOBILE OPTIMIZED */}
-        <div className="relative z-40 min-h-screen mt-8 sm:mt-12 md:mt-16 w-full flex flex-col px-4 sm:px-6 md:px-12 lg:px-20 justify-center">
+        <div className="relative z-40 min-h-screen mt-8 sm:mt-12 md:mt-16 w-full  flex flex-col px-4 sm:px-0 md:px-12 lg:px-20 justify-center">
           <motion.div
             style={{ y: textY }}
-            className="max-w-[1500px] mx-auto w-full"
+            className="max-w-[1500px]  mx-auto w-full"
           >
             {/* Main content grid - RESPONSIVE */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-16 items-center lg:items-end">

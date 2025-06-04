@@ -130,7 +130,7 @@ export default function Footer() {
   Gulbhahar
 </div>
 
-                <p className="text-xs text-gray-600 mt-1">Premium Fashion & Style</p>
+                <p className="text-[18px] text-gray-600 mt-1">Premium Fashion & Style</p>
               </Link>
               
               <p className="text-sm sm:text-base text-gray-600 max-w-sm mx-auto lg:mx-0">

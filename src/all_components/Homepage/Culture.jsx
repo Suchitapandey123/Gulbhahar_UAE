@@ -194,85 +194,214 @@ export default function Culture() {
         </div>
       
         {/* Desktop view - original layout */}
-        <div className="hidden md:block relative  w-[96%] xl:w-[98%]  h-full">
-          <div className="relative">
-            {/* Background Images */}
-            <motion.div 
-              variants={imageVariants}
-              className="absolute lg:left-[50%] lg:top-8  -translate-y-1/2 z-0 "
-              whileHover={{ scale: 1.05, rotate: 2 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Image
-                src={"/gulbhahar-1.png"}
-                alt="Background block 1"
-                width={350}
-                height={350}
-                className="rounded-lg  shadow-lg lg:w-[300px] lg:h-[300px] w-full h-full object-cover mx-2 md:ml-0"
-              />
-            </motion.div>
+        <div className="relative w-screen h-screen overflow-hidden bg-gradient-to-br from-stone-100 to-amber-50">
+  {/* Animated floating particles */}
+  <div className="absolute inset-0 z-0">
+    {[...Array(30)].map((_, i) => (
+      <motion.div
+        key={i}
+        className="absolute rounded-full bg-amber-400/20"
+        style={{
+          width: `${Math.random() * 12 + 4}px`,
+          height: `${Math.random() * 12 + 4}px`,
+          top: `${Math.random() * 100}%`,
+          left: `${Math.random() * 100}%`,
+        }}
+        animate={{
+          y: [0, -100, 0],
+          x: [0, Math.random() > 0.5 ? 40 : -40, 0],
+          opacity: [0.2, 1, 0.2],
+        }}
+        transition={{
+          duration: Math.random() * 15 + 15,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+    ))}
+  </div>
 
-            <motion.div 
-              variants={imageVariants}
-              className="absolute  lg:top-8  -translate-y-1/2  z-10 hidden lg:block"
-              whileHover={{ scale: 1.05, rotate: -2 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Image
-                src={"/gulbhahar2.png"}
-                alt="Background block 2"
-                width={350}
-                height={386}
-                className="rounded-lg shadow-lg  lg:w-[300px] lg:h-[300px] w-full h-full object-cover"
-              />
-            </motion.div>
-
-            {/* Main Culture Image */}
-            <motion.div 
-              variants={headerVariants}
-              className=""
-            >
-              <Image
-                src={culture}
-                width={1600}
-                height={400}
-                alt="culture_img"
-                className="relative lg:top-52 z-10 w-full h-auto"
-              />
-            </motion.div>
-
-            {/* Foreground Images */}
-            <motion.div 
-              variants={imageVariants}
-              className="relative  left-[24%] lg:top-[93px] -translate-y-1/2 z-0 hidden lg:block"
-              whileHover={{ scale: 1.05, rotate: 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Image
-                src={"/gulbhahar-3.png"}
-                alt="Foreground block 1"
-                width={350}
-                height={386}
-                className="rounded-lg  shadow-lg lg:w-[300px] lg:h-[300px] w-full h-full object-cover"
-              />
-            </motion.div>
-
-            <motion.div 
-              variants={imageVariants}
-              className="absolute right-0 z-0 lg:top-[67%] -translate-y-1/2 hidden md:block"
-              whileHover={{ scale: 1.05, rotate: -1 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Image
-                src={"/gulbhahar-4.png"}
-                alt="Foreground block 2"
-                width={350}
-                height={386}
-                className="rounded-lg shadow-lg lg:w-[300px] lg:h-[300px] w-full h-full object-cover"
-              />
-            </motion.div>
-          </div>
+  {/* Main grid layout */}
+  <div className="relative z-10 h-full w-full grid grid-rows-3 grid-cols-1 gap-8 p-8">
+    {/* Top row - 2 images */}
+    <div className="row-start-1 flex justify-center gap-8 md:gap-16">
+      <motion.div
+        className="relative w-full max-w-[500px] h-[200px] md:h-[300px]"
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        whileHover={{ scale: 1.05, zIndex: 20 }}
+      >
+        <div className="absolute inset-0 rounded-2xl overflow-hidden border-4 border-white shadow-2xl">
+          <Image
+            src="/gulbhahar-1.png"
+            alt="Cultural Artifact"
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
         </div>
+        <motion.div
+          className="absolute -bottom-4 -left-4 bg-amber-600 text-white px-4 py-2 rounded-lg shadow-lg"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.8 }}
+        >
+          <span className="font-bold">Heritage</span>
+        </motion.div>
+      </motion.div>
+
+      <motion.div
+        className="relative w-full max-w-[500px] h-[200px] md:h-[300px]"
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.4 }}
+        whileHover={{ scale: 1.05, zIndex: 20 }}
+      >
+        <div className="absolute inset-0 rounded-2xl overflow-hidden border-4 border-white shadow-2xl">
+          <Image
+            src="/gulbhahar2.png"
+            alt="Cultural Artifact"
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+        </div>
+        <motion.div
+          className="absolute -bottom-4 -left-4 bg-amber-600 text-white px-4 py-2 rounded-lg shadow-lg"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 1.0 }}
+        >
+          <span className="font-bold">Tradition</span>
+        </motion.div>
+      </motion.div>
+    </div>
+
+    {/* Center culture SVG */}
+    <motion.div 
+      className="row-start-2 flex items-center justify-center"
+      initial={{ scale: 0.8, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ duration: 0.6 }}
+    >
+      <div className="relative mx-auto w-full max-w-[1600px] h-auto">
+        <Image
+          src={culture}
+          alt="Cultural Heritage"
+          width={1600}
+          height={400}
+          className="w-full h-auto drop-shadow-[0_25px_50px_rgba(180,83,9,0.3)]"
+        />
+        <motion.div
+          className="absolute inset-0 bg-amber-400/10 rounded-lg"
+          animate={{
+            boxShadow: [
+              '0 0 0 0px rgba(180, 83, 9, 0.1)',
+              '0 0 0 10px rgba(180, 83, 9, 0)',
+              '0 0 0 0px rgba(180, 83, 9, 0)'
+            ]
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+      </div>
+    </motion.div>
+
+    {/* Bottom row - 2 images */}
+    <div className="row-start-3 flex mt-[-80px] justify-center gap-8 md:gap-16">
+      <motion.div
+        className="relative w-full max-w-[500px] h-[200px] md:h-[300px]"
+        initial={{ y: 100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.6 }}
+        whileHover={{ scale: 1.05, zIndex: 20 }}
+      >
+        <div className="absolute inset-0 rounded-2xl overflow-hidden border-4 border-white shadow-2xl">
+          <Image
+            src="/gulbhahar-3.png"
+            alt="Cultural Artifact"
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+        </div>
+        <motion.div
+          className="absolute -top-4 -right-4 bg-amber-600 text-white px-4 py-2 rounded-lg shadow-lg"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 1.2 }}
+        >
+          <span className="font-bold">Artistry</span>
+        </motion.div>
+      </motion.div>
+
+      <motion.div
+        className="relative w-full max-w-[500px] h-[200px] md:h-[300px]"
+        initial={{ y: 100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.8 }}
+        whileHover={{ scale: 1.05, zIndex: 20 }}
+      >
+        <div className="absolute inset-0 rounded-2xl overflow-hidden border-4 border-white shadow-2xl">
+          <Image
+            src="/gulbhahar-4.png"
+            alt="Cultural Artifact"
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+        </div>
+        <motion.div
+          className="absolute -top-4 -right-4 bg-amber-600 text-white px-4 py-2 rounded-lg shadow-lg"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 1.4 }}
+        >
+          <span className="font-bold">Legacy</span>
+        </motion.div>
+      </motion.div>
+    </div>
+  </div>
+
+  {/* Animated connection lines */}
+  <svg className="absolute inset-0 pointer-events-none z-0">
+    <motion.path
+      d="M 20% 30% L 50% 50% L 80% 30%"
+      stroke="rgba(180, 83, 9, 0.3)"
+      strokeWidth="2"
+      fill="none"
+      strokeDasharray="0 1"
+      animate={{
+        strokeDasharray: ["0 1", "1 0", "0 1"],
+      }}
+      transition={{
+        duration: 6,
+        repeat: Infinity,
+        ease: "linear"
+      }}
+    />
+    <motion.path
+      d="M 20% 70% L 50% 50% L 80% 70%"
+      stroke="rgba(180, 83, 9, 0.3)"
+      strokeWidth="2"
+      fill="none"
+      strokeDasharray="0 1"
+      animate={{
+        strokeDasharray: ["0 1", "1 0", "0 1"],
+      }}
+      transition={{
+        duration: 6,
+        repeat: Infinity,
+        ease: "linear",
+        delay: 0.5
+      }}
+    />
+  </svg>
+</div> 
       </motion.main>
 
       {/* Showcase Section */}

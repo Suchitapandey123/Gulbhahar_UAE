@@ -20,19 +20,20 @@ import SearchPopup from "./SearchPopup"; // Import the new SearchPopup component
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isCollectionDropdownOpen, setIsCollectionDropdownOpen] = useState(false);
+  const [isCollectionDropdownOpen, setIsCollectionDropdownOpen] =
+    useState(false);
   const [isMobileCollectionOpen, setIsMobileCollectionOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState({ 
-    name: "", 
-    email: "", 
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
     firstName: "",
     lastName: "",
     imageUrl: "",
-    userId: ""
+    userId: "",
   });
   const [isHoverMode, setIsHoverMode] = useState(true);
   const [profileImageLoading, setProfileImageLoading] = useState(false);
@@ -49,46 +50,54 @@ const Navbar = () => {
   const fetchUserProfile = async (token) => {
     try {
       setProfileImageLoading(true);
-      console.log('🔄 Fetching user profile with token:', token.substring(0, 20) + '...');
-      
-      const response = await fetch('http://194.238.23.44:9080/api/users/user-by-token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token
+      console.log(
+        "🔄 Fetching user profile with token:",
+        token.substring(0, 20) + "..."
+      );
+
+      const response = await fetch(
+        "http://194.238.23.44:9080/api/users/user-by-token",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
         }
-      });
+      );
 
       if (response.ok) {
         const data = await response.json();
-        console.log('✅ Profile data fetched successfully:', data);
-        
+        console.log("✅ Profile data fetched successfully:", data);
+
         if (data.user) {
           const userData = {
-            name: `${data.user.firstName || ''} ${data.user.lastName || ''}`.trim(),
-            email: data.user.email || '',
-            firstName: data.user.firstName || '',
-            lastName: data.user.lastName || '',
-            imageUrl: data.user.imageUrl || '',
-            userId: data.user.userId || data.user._id || ''
+            name: `${data.user.firstName || ""} ${
+              data.user.lastName || ""
+            }`.trim(),
+            email: data.user.email || "",
+            firstName: data.user.firstName || "",
+            lastName: data.user.lastName || "",
+            imageUrl: data.user.imageUrl || "",
+            userId: data.user.userId || data.user._id || "",
           };
-          
+
           setUser(userData);
-          
+
           // Update localStorage with the latest user data
-          localStorage.setItem('userData', JSON.stringify(userData));
-          
-          console.log('👤 User profile updated:', userData);
+          localStorage.setItem("userData", JSON.stringify(userData));
+
+          console.log("👤 User profile updated:", userData);
         }
       } else {
-        console.error('❌ Failed to fetch profile:', response.status);
+        console.error("❌ Failed to fetch profile:", response.status);
         // If token is invalid, clear auth data
         if (response.status === 401 || response.status === 403) {
           handleLogout();
         }
       }
     } catch (error) {
-      console.error('🚨 Error fetching user profile:', error);
+      console.error("🚨 Error fetching user profile:", error);
     } finally {
       setProfileImageLoading(false);
     }
@@ -102,29 +111,32 @@ const Navbar = () => {
 
       if (token) {
         setIsLoggedIn(true);
-        
+
         // If we have stored user data, use it initially
         if (userData) {
           try {
             const parsedUserData = JSON.parse(userData);
             setUser(parsedUserData);
-            console.log('📱 Loaded user data from localStorage:', parsedUserData);
+            console.log(
+              "📱 Loaded user data from localStorage:",
+              parsedUserData
+            );
           } catch (error) {
-            console.error('Error parsing stored user data:', error);
+            console.error("Error parsing stored user data:", error);
           }
         }
-        
+
         // Always fetch fresh profile data
         await fetchUserProfile(token);
       } else {
         setIsLoggedIn(false);
-        setUser({ 
-          name: "", 
-          email: "", 
+        setUser({
+          name: "",
+          email: "",
           firstName: "",
           lastName: "",
           imageUrl: "",
-          userId: ""
+          userId: "",
         });
       }
     };
@@ -211,28 +223,32 @@ const Navbar = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("userData");
     localStorage.removeItem("loginTimestamp");
-    
+
     // Clear cookies
-    document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie = "userEmail=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie = "userName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie =
+      "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie =
+      "userEmail=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie =
+      "userName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     document.cookie = "userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie = "loginTimestamp=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    
+    document.cookie =
+      "loginTimestamp=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
     setIsLoggedIn(false);
-    setUser({ 
-      name: "", 
-      email: "", 
+    setUser({
+      name: "",
+      email: "",
       firstName: "",
       lastName: "",
       imageUrl: "",
-      userId: ""
+      userId: "",
     });
     setIsUserDropdownOpen(false);
     setProfileImageError(false);
-    
+
     router.push("/");
-    console.log('🚪 User logged out successfully');
+    console.log("🚪 User logged out successfully");
   };
 
   // Enhanced Collections click handler
@@ -291,7 +307,7 @@ const Navbar = () => {
   const handleMouseLeave = () => {
     if (window.innerWidth >= 768 && isHoverMode) {
       setIsCollectionDropdownOpen(false);
-      
+
       if (hoverTimeoutRef.current) {
         clearTimeout(hoverTimeoutRef.current);
         hoverTimeoutRef.current = null;
@@ -328,16 +344,18 @@ const Navbar = () => {
     };
 
     // Extract size for determining text size
-    const isSmall = size.includes('w-6') || size.includes('w-7');
-    const isMedium = size.includes('w-8') || size.includes('w-10');
-    const isLarge = size.includes('w-12');
+    const isSmall = size.includes("w-6") || size.includes("w-7");
+    const isMedium = size.includes("w-8") || size.includes("w-10");
+    const isLarge = size.includes("w-12");
 
     if (profileImageLoading) {
       return (
-        <div className={`${size} ${className} bg-gray-200 rounded-full flex items-center justify-center animate-pulse`}>
-          <User 
-            size={isSmall ? 12 : isMedium ? 16 : 20} 
-            className="text-gray-400" 
+        <div
+          className={`${size} ${className} bg-gray-200 rounded-full flex items-center justify-center animate-pulse`}
+        >
+          <User
+            size={isSmall ? 12 : isMedium ? 16 : 20}
+            className="text-gray-400"
           />
         </div>
       );
@@ -345,10 +363,12 @@ const Navbar = () => {
 
     if (user.imageUrl && !profileImageError) {
       return (
-        <div className={`${size} ${className} relative overflow-hidden rounded-full bg-gray-100 flex-shrink-0`}>
+        <div
+          className={`${size} ${className} relative overflow-hidden rounded-full bg-gray-100 flex-shrink-0`}
+        >
           <Image
             src={user.imageUrl}
-            alt={`${user.firstName || 'User'}'s profile`}
+            alt={`${user.firstName || "User"}'s profile`}
             fill
             className="object-cover"
             onError={handleImageError}
@@ -360,18 +380,28 @@ const Navbar = () => {
     }
 
     // Fallback to initials or user icon
-    const initials = user.firstName && user.lastName 
-      ? `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase()
-      : user.name 
-        ? user.name.split(' ').map(n => n.charAt(0)).join('').toUpperCase().slice(0, 2)
-        : '';
+    const initials =
+      user.firstName && user.lastName
+        ? `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase()
+        : user.name
+        ? user.name
+            .split(" ")
+            .map((n) => n.charAt(0))
+            .join("")
+            .toUpperCase()
+            .slice(0, 2)
+        : "";
 
     if (initials) {
       return (
-        <div className={`${size} ${className} bg-[#800000] rounded-full flex items-center justify-center flex-shrink-0`}>
-          <span className={`text-white font-semibold ${
-            isSmall ? 'text-xs' : isMedium ? 'text-sm' : 'text-base'
-          }`}>
+        <div
+          className={`${size} ${className} bg-[#800000] rounded-full flex items-center justify-center flex-shrink-0`}
+        >
+          <span
+            className={`text-white font-semibold ${
+              isSmall ? "text-xs" : isMedium ? "text-sm" : "text-base"
+            }`}
+          >
             {initials}
           </span>
         </div>
@@ -379,11 +409,10 @@ const Navbar = () => {
     }
 
     return (
-      <div className={`${size} ${className} bg-[#800000] rounded-full flex items-center justify-center flex-shrink-0`}>
-        <User 
-          size={isSmall ? 12 : isMedium ? 16 : 20} 
-          className="text-white" 
-        />
+      <div
+        className={`${size} ${className} bg-[#800000] rounded-full flex items-center justify-center flex-shrink-0`}
+      >
+        <User size={isSmall ? 12 : isMedium ? 16 : 20} className="text-white" />
       </div>
     );
   };
@@ -512,9 +541,21 @@ const Navbar = () => {
 
   // User menu items for logged-in users
   const userMenuItems = [
-    { icon: User, label: "My Profile", href: "/account/account-centre/profile" },
-    { icon: Package, label: "My Orders", href: "/account/account-centre/my-order" },
-    { icon: Settings, label: "Settings", href: "/account/account-centre/settings" },
+    {
+      icon: User,
+      label: "My Profile",
+      href: "/account/account-centre/profile",
+    },
+    {
+      icon: Package,
+      label: "My Orders",
+      href: "/account/account-centre/my-order",
+    },
+    {
+      icon: Settings,
+      label: "Settings",
+      href: "/account/account-centre/settings",
+    },
   ];
 
   return (
@@ -557,34 +598,47 @@ const Navbar = () => {
               </button>
             </div>
 
-            <div className="hidden md:flex items-center space-x-2 lg:space-x-6">
+            <div className="hidden md:flex items-center space-x-2 lg:space-x-12">
               <NavLink href="/collections" hasDropdown={true}>
                 Collections
               </NavLink>
               <NavLink href="/about">About</NavLink>
             </div>
- 
-            <div className="flex-1 flex justify-center md:flex-initial">
+
+            <div className="flex-1 flex items-center  justify-center md:flex-initial">
               <Link href="/" className=" relative group">
                 {/* Static Logo for Non-Home Pages with Hover Magic */}
                 {pathname !== "/" && (
-                  <div className="relative">
+                  //  <div className="flex  items-center gap-2 sm:gap-3 md:gap-4 lg:gap-6">z
+                  <div className="relative h-8 lg:h-12 flex items-center justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-14">
                     <Image
-                      src="/ful-gulbhaharlogo.png"
+                      src="/logo-only.png"
                       alt="Brand Logo"
-                      width={240}
-                      height={100}
+                      width={500}
+                      height={260}
                       priority
                       className={`
-                        transition-all  duration-500 ease-out object-cover
-                        filter group-hover:brightness-105  group-active:scale-95 relative z-10
-                        ${
-                          isScrolled
-                            ? "h-6 sm:h-7 md:h-8 lg:h-9 w-auto max-w-[100px] sm:max-w-[120px] md:max-w-[140px] lg:max-w-[160px]"
-                            : "h-7 sm:h-8 md:h-9 lg:h-10 xl:h-11 w-auto max-w-[120px] sm:max-w-[140px] md:max-w-[160px] lg:max-w-[180px] xl:max-w-[200px]"
-                        }
-                      `}
+      transition-all duration-500 ease-out object-cover
+      filter group-hover:brightness-105 group-active:scale-95 relative z-10
+      ${
+        isScrolled
+          ? "h-6 sm:h-7 md:h-8 lg:h-16 xl:h-20 w-auto max-w-[100px] sm:max-w-[120px] md:max-w-[140px] lg:max-w-[220px] xl:max-w-[260px]"
+          : "h-7 sm:h-8 md:h-9 lg:h-20 xl:h-24 w-auto max-w-[120px] sm:max-w-[140px] md:max-w-[160px] lg:max-w-[240px] xl:max-w-[280px]"
+      }
+    `}
                     />
+                    <div
+                      className="
+      font-['Old_Standard_TT'] font-bold uppercase tracking-wider 
+      text-transparent bg-clip-text bg-red-900 drop-shadow-lg transition-all duration-500
+      text-sm sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl scale-x-[1.3]
+      lg:scale-x-[1.5]
+    "
+                    >
+                      Gulbhahar
+                    </div>
+
+                    {/* </div> */}
 
                     {/* Golden Dust Particles - Flying Above */}
                     <div className="absolute  inset-0 overflow-visible pointer-events-none z-20">
@@ -707,33 +761,46 @@ const Navbar = () => {
                 {pathname === "/" && (
                   <>
                     {/* Original Logo - Only appears when scrolled */}
-                    <Image
-                      src="/ful-gulbhaharlogo.png"
-                      alt="Brand Logo"
-                      width={340}
-                      height={160}
-                      priority
-                      className={`
-                        transition-all h-full w-full duration-700 ease-out object-contain
-                         filter group-hover:brightness-110
-                         relative z-10 bg-transparent
-                        ${
-                          isScrolled
-                            ? "opacity-100 translate-y-0 scale-100"
-                            : "opacity-0 translate-y-8 scale-90"
-                        }
-                        ${
-                          isScrolled
-                            ? "h-6 sm:h-7 md:h-8 lg:h-9 w-auto max-w-[100px] sm:max-w-[120px] md:max-w-[140px] lg:max-w-[160px]"
-                            : "h-7 sm:h-8 md:h-9 lg:h-10 xl:h-11 w-auto max-w-[120px] sm:max-w-[140px] md:max-w-[160px] lg:max-w-[180px] xl:max-w-[200px]"
-                        }
-                      `}
-                    />
+                    <div className="flex h-12 items-center justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-12">
+                      {/* Logo Image */}
+                      <Image
+                        src="/logo-only.png"
+                        alt="Brand Logo"
+                        width={1000}
+                        height={160}
+                        priority
+                        className={`
+      transition-all duration-700 ease-out object-contain
+      filter group-hover:brightness-110
+      relative z-10
+      ${
+        isScrolled
+          ? "opacity-100 translate-y-0 scale-100"
+          : "opacity-0 translate-y-8 scale-90"
+      }
+      h-6 sm:h-8 md:h-12 lg:h-10 xl:h-20
+      w-auto max-w-[150px] sm:max-w-[200px] md:max-w-[240px] lg:max-w-[300px] xl:max-w-[360px]
+    `}
+                      />
+
+                      {/* Brand Name Text */}
+                      <div
+                        className="
+      font-['Old_Standard_TT'] font-bold uppercase tracking-widest 
+      text-transparent bg-clip-text bg-red-900 drop-shadow-lg transition-all duration-500
+      text-xs sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl scale-x-[1.1]
+      lg:scale-x-[1.5]
+    "
+                      >
+                        Gulbhahar
+                      </div>
+                    </div>
 
                     {/* Magical Transition Overlay - Only when scrolling */}
+
                     <div
                       className={`
-                        absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent
+                        absolute inset-0 bg-transparent
                         transform -skew-x-12 transition-all duration-1000 ease-out pointer-events-none
                         ${
                           isScrolled
@@ -748,9 +815,10 @@ const Navbar = () => {
                     />
 
                     {/* Shimmer Effect - Only when scrolling */}
+
                     <div
                       className={`
-                        absolute inset-0 bg-gradient-to-r from-transparent via-blue-100/20 to-transparent
+                        absolute inset-0 bg-transparent
                         transform transition-all duration-1200 ease-out pointer-events-none
                         ${
                           isScrolled
@@ -766,9 +834,10 @@ const Navbar = () => {
                     />
 
                     {/* Scale Effect Behind Logo */}
+
                     <div
                       className={`
-                        absolute inset-0 bg-white/10 rounded-lg backdrop-blur-sm
+                        absolute inset-0 bg-transparent rounded-lg 
                         transition-all duration-800 ease-out pointer-events-none
                         ${
                           isScrolled
@@ -898,8 +967,8 @@ const Navbar = () => {
                       }
                     `}
                   >
-                    <ProfileImage 
-                      size="w-6 h-6 lg:w-7 lg:h-7" 
+                    <ProfileImage
+                      size="w-6 h-6 lg:w-7 lg:h-7"
                       className="group-hover:scale-110 transition-transform duration-300 border border-current/20"
                     />
                     <span className="hidden lg:inline">
@@ -928,13 +997,14 @@ const Navbar = () => {
                     {/* User Info Section with Profile Image */}
                     <div className="p-4 border-b border-gray-100">
                       <div className="flex items-center space-x-3">
-                        <ProfileImage 
-                          size="w-10 h-10" 
+                        <ProfileImage
+                          size="w-10 h-10"
                           className="border-2 border-gray-200"
                         />
                         <div className="flex-1 min-w-0">
                           <p className="font-semibold text-gray-800 text-sm truncate">
-                            {user.name || `${user.firstName} ${user.lastName}`.trim()}
+                            {user.name ||
+                              `${user.firstName} ${user.lastName}`.trim()}
                           </p>
                           <p className="text-xs text-gray-600 truncate">
                             {user.email}
@@ -1016,12 +1086,12 @@ const Navbar = () => {
                         : "text-white hover:text-white/80"
                     }`}
                   >
-                    <ProfileImage 
-                      size="w-6 h-6 sm:w-7 sm:h-7" 
+                    <ProfileImage
+                      size="w-6 h-6 sm:w-7 sm:h-7"
                       className="border border-current/20"
                     />
                   </button>
-                  
+
                   {/* Mobile User Dropdown - Fixed: No nested buttons */}
                   <div
                     className={`
@@ -1037,13 +1107,14 @@ const Navbar = () => {
                     {/* Mobile User Info Section with Profile Image */}
                     <div className="p-3 sm:p-4 border-b border-gray-100">
                       <div className="flex items-center space-x-3">
-                        <ProfileImage 
-                          size="w-10 h-10 sm:w-12 sm:h-12" 
+                        <ProfileImage
+                          size="w-10 h-10 sm:w-12 sm:h-12"
                           className="border-2 border-gray-200"
                         />
                         <div className="flex-1 min-w-0">
                           <p className="font-semibold text-gray-800 text-sm sm:text-base truncate">
-                            {user.name || `${user.firstName} ${user.lastName}`.trim()}
+                            {user.name ||
+                              `${user.firstName} ${user.lastName}`.trim()}
                           </p>
                           <p className="text-xs sm:text-sm text-gray-600 truncate">
                             {user.email}
@@ -1253,15 +1324,18 @@ const Navbar = () => {
               {isLoggedIn && (
                 <div className="pb-3 xs:pb-4 border-b border-gray-100">
                   <div className="flex items-center space-x-2 xs:space-x-3 mb-3 xs:mb-4">
-                    <ProfileImage 
-                      size="w-10 h-10 xs:w-11 xs:h-11 sm:w-12 sm:h-12" 
+                    <ProfileImage
+                      size="w-10 h-10 xs:w-11 xs:h-11 sm:w-12 sm:h-12"
                       className="border-2 border-gray-200"
                     />
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-gray-800 text-sm xs:text-base truncate">
-                        {user.name || `${user.firstName} ${user.lastName}`.trim()}
+                        {user.name ||
+                          `${user.firstName} ${user.lastName}`.trim()}
                       </p>
-                      <p className="text-xs xs:text-sm text-gray-600 truncate">{user.email}</p>
+                      <p className="text-xs xs:text-sm text-gray-600 truncate">
+                        {user.email}
+                      </p>
                       {user.userId && (
                         <p className="text-xs text-gray-500 truncate">
                           ID: {user.userId}
@@ -1282,7 +1356,10 @@ const Navbar = () => {
                                  text-gray-800 hover:text-[#800000] hover:bg-[#800000]/5 rounded-lg 
                                  transition-all duration-200 text-sm xs:text-base cursor-pointer"
                       >
-                        <item.icon size={14} className="xs:w-4 xs:h-4 sm:w-5 sm:h-5" />
+                        <item.icon
+                          size={14}
+                          className="xs:w-4 xs:h-4 sm:w-5 sm:h-5"
+                        />
                         <span>{item.label}</span>
                       </div>
                     ))}
@@ -1316,7 +1393,9 @@ const Navbar = () => {
                  text-sm xs:text-base"
                     >
                       <span>{category.title}</span>
-                      <span className="text-lg xs:text-xl">{openCategoryIndex === index ? "-" : "+"}</span>
+                      <span className="text-lg xs:text-xl">
+                        {openCategoryIndex === index ? "-" : "+"}
+                      </span>
                     </div>
 
                     {openCategoryIndex === index && (
@@ -1325,7 +1404,9 @@ const Navbar = () => {
                           <li key={itemIndex}>
                             <div
                               onClick={() => {
-                                handleCategoryClick(`${category.title} ${item}`);
+                                handleCategoryClick(
+                                  `${category.title} ${item}`
+                                );
                                 toggleMenu();
                               }}
                               className="text-xs xs:text-sm text-gray-600 hover:text-[#800000] 
