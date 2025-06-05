@@ -126,11 +126,18 @@ export default function Footer() {
           <div className="lg:col-span-4 text-center lg:text-left">
             <div className="space-y-4 sm:space-y-6">
               <Link href="/" className="inline-block">
-               <div className="text-5xl uppercase sm:text-4xl font-[700] text-transparent bg-clip-text bg-red-900 transition-all duration-500 drop-shadow-lg tracking-wide font-['oldstandard']">
+               {/* <div className="text-5xl uppercase sm:text-4xl font-[700] text-transparent bg-clip-text bg-[#FFD700] transition-all duration-500 drop-shadow-lg tracking-wide font-['oldstandard']">
   Gulbhahar
-</div>
+</div> */}
+                <Image 
+                  src="/gulbhahar.png" 
+                  alt="Gulbhahar Logo" 
+                  width={300} 
+                  height={50} 
+                  className="h-12 sm:h-16 mx-auto lg:mx-0"
+                />
 
-                <p className="text-[18px] text-gray-600 mt-1">Premium Fashion & Style</p>
+                <p className="text-[16px] text-gray-600  ">Premium Fashion & Style</p>
               </Link>
               
               <p className="text-sm sm:text-base text-gray-600 max-w-sm mx-auto lg:mx-0">

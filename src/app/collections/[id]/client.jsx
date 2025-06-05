@@ -1,5 +1,8 @@
 "use client";
 
+
+import { EasyZoomOnHover } from "easy-magnify";
+import { EasyZoomOnMove } from "easy-magnify";
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -114,7 +117,7 @@ export function ProductClient({ product, similarProducts }) {
           {/* Product Images */}
           <div className="space-y-4">
             {/* Main Image */}
-            <div className="aspect-square relative rounded-lg overflow-hidden border md:h-[500px] lg:h-[625px] bg-gray-100 flex items-center justify-center group">
+            {/* <div className="aspect-square relative rounded-lg overflow-hidden border md:h-[500px] lg:h-[625px] bg-gray-100 flex items-center justify-center group">
   <Image
     src={currentMainImage}
     alt={`${product.name} - ${currentColor}`}
@@ -122,8 +125,54 @@ export function ProductClient({ product, similarProducts }) {
     width={1000}
     height={700}
   />
-</div>
+</div> */}
 
+{/* Main Image with Flipkart-like Hover Zoom */}
+{/* <div
+  className="aspect-square relative rounded-lg overflow-hidden border md:h-[500px] lg:h-[625px] bg-gray-100 flex items-center justify-center group"
+  onMouseMove={(e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    e.currentTarget.querySelector("img").style.transformOrigin = `${x}% ${y}%`;
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.querySelector("img").style.transformOrigin = "center center";
+  }}
+>
+  <Image
+    src={currentMainImage}
+    alt={`${product.name} - ${currentColor}`}
+    className="object-cover w-full h-full transition-transform duration-300 ease-in-out group-hover:scale-125"
+    width={1000}
+    height={700}
+  />
+</div> */}
+
+
+{/* <EasyZoomOnHover
+      mainImage={{
+          src: {currentMainImage},
+          alt: "My Product"
+      }}
+      zoomImage={{
+          src: {currentMainImage},
+          alt: "My Product Zoom"
+      }}
+  />
+
+<EasyZoomOnMove image={{
+    src: ,
+    alt: "My Product",
+    width: 466,
+    height: 466
+}}
+    zoomImage={{
+        src: "https://m.media-amazon.com/images/I/61vThyaOrHL._AC_SX1500_.jpg",
+        alt: "My Product",
+    }}
+
+/> */}
 
             {/* Thumbnail Images */}
 

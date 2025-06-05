@@ -605,11 +605,11 @@ const Navbar = () => {
               <NavLink href="/about">About</NavLink>
             </div>
 
-            <div className="flex-1 flex items-center w-full h-full justify-center md:flex-initial">
-  <Link href="/" className="relative group w-full h-full mx-auto">
+            <div className="flex-1 flex items-center   w-full h-full justify-center md:flex-initial">
+  <Link href="/" className="relative group   w-full h-full mx-auto">
     {/* Static Logo for Non-Home Pages with Hover Magic */}
     {pathname !== "/" && (
-      <div className="relative flex items-center justify-center w-[65%] mx-auto h-[80%]">
+      <div className="relative z-50  flex items-center  justify-center  w-[65%] mx-auto h-[80%]">
         <Image
           src="/gulbhahar.png"
           alt="Brand Logo"
@@ -619,12 +619,12 @@ const Navbar = () => {
           className={`
             transition-all duration-500 object-fill ease-out
             filter group-hover:brightness-105 group-active:scale-95 relative z-10 
-            w-full ${isScrolled ? "h-12" :"h-12"}
+            w-full ${isScrolled ? "h-10" :"h-10"}
           `}
         />
 
         {/* Golden Dust Particles - Flying Above */}
-        <div className="absolute inset-0 overflow-visible pointer-events-none z-20">
+        <div className="absolute inset-0  pointer-events-none z-20">
           {[...Array(12)].map((_, i) => (
             <div
               key={`dust-${i}`}
@@ -640,7 +640,7 @@ const Navbar = () => {
         </div>
 
         {/* DNA Helix Effect */}
-        <div className="absolute inset-0 overflow-visible pointer-events-none z-10">
+        <div className="absolute inset-0  pointer-events-none z-10">
           {[...Array(16)].map((_, i) => (
             <div
               key={`helix-${i}`}
@@ -656,14 +656,14 @@ const Navbar = () => {
         </div>
 
         {/* Prismatic Light Beams */}
-        <div className="absolute inset-0 overflow-visible pointer-events-none z-8">
+        <div className="absolute inset-0   pointer-events-none z-8">
           {[...Array(8)].map((_, i) => (
             <div
               key={`beam-${i}`}
-              className="absolute opacity-0 group-hover:opacity-40 transition-all duration-1000 ease-out"
+              className="absolute opacity-0 group-hover:opacity-40  transition-all duration-1000 ease-out"
               style={{
                 width: "200%",
-                height: "2px",
+                height: "0.0px",
                 left: "-50%",
                 top: "50%",
                 background: `linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.6), transparent)`,
@@ -684,6 +684,7 @@ const Navbar = () => {
                        opacity-0 group-hover:opacity-25 transition-all duration-1500 ease-out
                        border border-red-300 rounded-full group-hover:animate-pulse"
               style={{
+
                 width: `${80 + i * 60}px`,
                 height: `${40 + i * 30}px`,
                 transitionDelay: `${1500 + i * 200}ms`,
