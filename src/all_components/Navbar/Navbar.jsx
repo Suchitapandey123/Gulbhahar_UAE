@@ -56,7 +56,7 @@ const Navbar = () => {
       );
 
       const response = await fetch(
-        "http://194.238.23.44:9080/api/users/user-by-token",
+        "https://api.gulbhahar.com/api/users/user-by-token",
         {
           method: "POST",
           headers: {

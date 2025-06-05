@@ -58,7 +58,7 @@ const Profile = () => {
 
       console.log('🔄 Fetching user profile...');
       
-      const response = await fetch('http://194.238.23.44:9080/api/users/user-by-token', {
+      const response = await fetch('https://api.gulbhahar.com/api/users/user-by-token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

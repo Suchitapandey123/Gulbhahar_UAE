@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://194.238.23.44:9080";
+const API_BASE_URL = "https://api.gulbhahar.com";
 
 const api = axios.create({
   baseURL: API_BASE_URL,

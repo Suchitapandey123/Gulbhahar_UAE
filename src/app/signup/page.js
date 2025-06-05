@@ -185,7 +185,7 @@ const SignupPage = () => {
     try {
       console.log('Attempting auto-login for:', formData.email);
       
-      const response = await fetch('http://194.238.23.44:9080/api/users/login', {
+      const response = await fetch('https://api.gulbhahar.com/api/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -286,7 +286,7 @@ const SignupPage = () => {
     }
     
     try {
-      const response = await fetch('http://194.238.23.44:9080/api/users/verify-email', {
+      const response = await fetch('https://api.gulbhahar.com/api/users/verify-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -346,7 +346,7 @@ const SignupPage = () => {
     
     // For other codes, make API call
     try {
-      const response = await fetch('http://194.238.23.44:9080/api/users/verify-phone', {
+      const response = await fetch('https://api.gulbhahar.com/api/users/verify-phone', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -387,7 +387,7 @@ const SignupPage = () => {
     setSuccess('');
     
     try {
-      const response = await fetch('http://194.238.23.44:9080/api/users/resend-verification-code', {
+      const response = await fetch('https://api.gulbhahar.com/api/users/resend-verification-code', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -425,7 +425,7 @@ const SignupPage = () => {
     setError('');
     
     try {
-      const response = await fetch('http://194.238.23.44:9080/api/users/sign-up', {
+      const response = await fetch('https://api.gulbhahar.com/api/users/sign-up', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
