@@ -605,287 +605,170 @@ const Navbar = () => {
               <NavLink href="/about">About</NavLink>
             </div>
 
-            <div className="flex-1 flex items-center  justify-center md:flex-initial">
-              <Link href="/" className=" relative group">
-                {/* Static Logo for Non-Home Pages with Hover Magic */}
-                {pathname !== "/" && (
-                  //  <div className="flex  items-center gap-2 sm:gap-3 md:gap-4 lg:gap-6">z
-                  <div className="relative h-8 lg:h-12 flex items-center justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-14">
-                    <Image
-                      src="/logo-only.png"
-                      alt="Brand Logo"
-                      width={500}
-                      height={260}
-                      priority
-                      className={`
-      transition-all duration-500 ease-out object-cover
-      filter group-hover:brightness-105 group-active:scale-95 relative z-10
-      ${
-        isScrolled
-          ? "h-6 sm:h-7 md:h-8 lg:h-16 xl:h-20 w-auto max-w-[100px] sm:max-w-[120px] md:max-w-[140px] lg:max-w-[220px] xl:max-w-[260px]"
-          : "h-7 sm:h-8 md:h-9 lg:h-20 xl:h-24 w-auto max-w-[120px] sm:max-w-[140px] md:max-w-[160px] lg:max-w-[240px] xl:max-w-[280px]"
-      }
-    `}
-                    />
-                    <div
-                      className="
-      font-['Old_Standard_TT'] font-bold uppercase tracking-wider 
-      text-transparent bg-clip-text bg-red-900 drop-shadow-lg transition-all duration-500
-      text-sm sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl scale-x-[1.3]
-      lg:scale-x-[1.5]
-    "
-                    >
-                      Gulbhahar
-                    </div>
+            <div className="flex-1 flex items-center w-full h-full justify-center md:flex-initial">
+  <Link href="/" className="relative group w-full h-full mx-auto">
+    {/* Static Logo for Non-Home Pages with Hover Magic */}
+    {pathname !== "/" && (
+      <div className="relative flex items-center justify-center w-[65%] mx-auto h-[80%]">
+        <Image
+          src="/gulbhahar.png"
+          alt="Brand Logo"
+          width={1200}
+          height={100}
+          priority
+          className={`
+            transition-all duration-500 object-fill ease-out
+            filter group-hover:brightness-105 group-active:scale-95 relative z-10 
+            w-full ${isScrolled ? "h-12" :"h-12"}
+          `}
+        />
 
-                    {/* </div> */}
+        {/* Golden Dust Particles - Flying Above */}
+        <div className="absolute inset-0 overflow-visible pointer-events-none z-20">
+          {[...Array(12)].map((_, i) => (
+            <div
+              key={`dust-${i}`}
+              className="absolute w-1.5 h-1.5 bg-gradient-to-r from-red-800 to-red-900 rounded-full 
+                       opacity-0 group-hover:opacity-80 transition-all duration-1000 ease-out shadow-lg z-20"
+              style={{
+                left: `${15 + i * 7}%`,
+                top: `${-30 + (i % 4) * 20}%`,
+                transitionDelay: `${i * 80}ms`,
+              }}
+            />
+          ))}
+        </div>
 
-                    {/* Golden Dust Particles - Flying Above */}
-                    <div className="absolute  inset-0 overflow-visible pointer-events-none z-20">
-                      {[...Array(12)].map((_, i) => (
-                        <div
-                          key={`dust-${i}`}
-                          className="absolute w-1.5 h-1.5 bg-gradient-to-r from-red-800 to-red-900 rounded-full 
-                                   opacity-0 group-hover:opacity-80 transition-all duration-1000 ease-out shadow-lg z-20"
-                          style={{
-                            left: `${15 + i * 7}%`,
-                            top: `${-30 + (i % 4) * 20}%`,
-                            transitionDelay: `${i * 80}ms`,
-                          }}
-                        >
-                          <div
-                            className="absolute w-1 h-1 bg-red-400 rounded-full opacity-0 group-hover:opacity-60 transition-all duration-1200 ease-out"
-                            style={{
-                              animationDelay: `${i * 250}ms`,
-                              animationDuration: "2.5s",
-                            }}
-                          >
-                            <div
-                              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent
-                                         transform -skew-x-12 group-hover:animate-pulse"
-                            />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+        {/* DNA Helix Effect */}
+        <div className="absolute inset-0 overflow-visible pointer-events-none z-10">
+          {[...Array(16)].map((_, i) => (
+            <div
+              key={`helix-${i}`}
+              className="absolute w-1 h-1 bg-red-400 rounded-full opacity-0 group-hover:opacity-60 transition-all duration-1200 ease-out"
+              style={{
+                left: `${50 + 30 * Math.cos((i * Math.PI) / 8)}%`,
+                top: `${50 + 30 * Math.sin((i * Math.PI) / 8)}%`,
+                animationDelay: `${i * 100}ms`,
+                transform: `rotate(${i * 22.5}deg) translateX(20px)`,
+              }}
+            />
+          ))}
+        </div>
 
-                    {/* DNA Helix Effect */}
-                    <div className="absolute inset-0 overflow-visible pointer-events-none z-10">
-                      {[...Array(16)].map((_, i) => (
-                        <div
-                          key={`helix-${i}`}
-                          className="absolute w-1 h-1 bg-red-400 rounded-full opacity-0 group-hover:opacity-60 transition-all duration-1200 ease-out"
-                          style={{
-                            left: `${50 + 30 * Math.cos((i * Math.PI) / 8)}%`,
-                            top: `${50 + 30 * Math.sin((i * Math.PI) / 8)}%`,
-                            animationDelay: `${i * 100}ms`,
-                            transform: `rotate(${
-                              i * 22.5
-                            }deg) translateX(20px)`,
-                          }}
-                        />
-                      ))}
-                    </div>
+        {/* Prismatic Light Beams */}
+        <div className="absolute inset-0 overflow-visible pointer-events-none z-8">
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={`beam-${i}`}
+              className="absolute opacity-0 group-hover:opacity-40 transition-all duration-1000 ease-out"
+              style={{
+                width: "200%",
+                height: "2px",
+                left: "-50%",
+                top: "50%",
+                background: `linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.6), transparent)`,
+                transform: `rotate(${i * 45}deg)`,
+                transformOrigin: "center",
+                transitionDelay: `${1400 + i * 75}ms`,
+              }}
+            />
+          ))}
+        </div>
 
-                    {/* Prismatic Light Beams */}
-                    <div className="absolute inset-0 overflow-visible pointer-events-none z-8">
-                      {[...Array(8)].map((_, i) => (
-                        <div
-                          key={`beam-${i}`}
-                          className="absolute opacity-0 group-hover:opacity-40 transition-all duration-1000 ease-out"
-                          style={{
-                            width: "200%",
-                            height: "2px",
-                            left: "-50%",
-                            top: "50%",
-                            background: `linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.6), transparent)`,
-                            transform: `rotate(${i * 45}deg)`,
-                            transformOrigin: "center",
-                            transitionDelay: `${1400 + i * 75}ms`,
-                          }}
-                        />
-                      ))}
-                    </div>
+        {/* Magnetic Field Lines */}
+        <div className="absolute inset-0 overflow-visible pointer-events-none z-7">
+          {[...Array(3)].map((_, i) => (
+            <div
+              key={`field-${i}`}
+              className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2
+                       opacity-0 group-hover:opacity-25 transition-all duration-1500 ease-out
+                       border border-red-300 rounded-full group-hover:animate-pulse"
+              style={{
+                width: `${80 + i * 60}px`,
+                height: `${40 + i * 30}px`,
+                transitionDelay: `${1500 + i * 200}ms`,
+                animationDelay: `${i * 500}ms`,
+                animationDuration: "4s",
+              }}
+            />
+          ))}
+        </div>
 
-                    {/* Magnetic Field Lines */}
-                    <div className="absolute inset-0 overflow-visible pointer-events-none z-7">
-                      {[...Array(3)].map((_, i) => (
-                        <div
-                          key={`field-${i}`}
-                          className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2
-                                   opacity-0 group-hover:opacity-25 transition-all duration-1500 ease-out
-                                   border border-red-300 rounded-full group-hover:animate-pulse"
-                          style={{
-                            width: `${80 + i * 60}px`,
-                            height: `${40 + i * 30}px`,
-                            transitionDelay: `${1500 + i * 200}ms`,
-                            animationDelay: `${i * 500}ms`,
-                            animationDuration: "4s",
-                          }}
-                        />
-                      ))}
-                    </div>
-
-                    {/* Quantum Particles */}
-                    <div className="absolute inset-0 overflow-visible pointer-events-none z-25">
-                      {[...Array(12)].map((_, i) => (
-                        <div
-                          key={`quantum-${i}`}
-                          className="absolute opacity-0 group-hover:opacity-100 transition-all duration-600 ease-out z-25"
-                          style={{
-                            left: `${20 + ((i * 7) % 60)}%`,
-                            top: `${-20 + ((i * 11) % 40)}%`,
-                            transitionDelay: `${1600 + i * 80}ms`,
-                          }}
-                        >
-                          <div
-                            className="w-1 h-1 bg-red-600 rounded-full relative group-hover:animate-ping"
-                            style={{
-                              animationDelay: `${i * 150}ms`,
-                              animationDuration: "2s",
-                            }}
-                          >
-                            <div className="absolute inset-0 bg-red-600 rounded-full animate-pulse" />
-                            <div
-                              className="absolute -inset-1 bg-red-400/30 rounded-full animate-ping"
-                              style={{ animationDelay: `${i * 200}ms` }}
-                            />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Magical Logo Effect - Only on Home Page */}
-                {pathname === "/" && (
-                  <>
-                    {/* Original Logo - Only appears when scrolled */}
-                    {/* <div className={`h-10
-              
-                      `}> */}
-                      {/* Logo Image */}
-                      <Image
-                        src="/gulbhahar.png"
-                        alt="Brand Logo"
-                        width={700}
-                        height={100}
-                        priority
-                        style={{ height: '47px' }}
-
-                        className={`
-      transition-all duration-700 ease-out object-contain
-      filter group-hover:brightness-110
-      relative z-10
-
-                 ${
-        isScrolled
-          ? "opacity-100 translate-y-0 scale-100"
-          : "opacity-0 translate-y-8 scale-90"
-      }
-      h-6 sm:h-8 md:h-12 lg:h-10 xl:h-20
-      w-auto max-w-[150px] sm:max-w-[200px] md:max-w-[240px] lg:max-w-[300px] xl:max-w-[360px]
-   
-    `}
-                      />
-
-                      {/* Brand Name Text */}
-                      {/* <div
-                        className={`
-      font-['Old_Standard_TT'] font-bold uppercase tracking-widest 
-      text-transparent bg-clip-text bg-red-900 drop-shadow-lg transition-all duration-500
-      text-xs sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl scale-x-[1.1]
-      lg:scale-x-[1.5]
-      
-    
-                         `} >
-                        Gulbhahar
-                      </div> */}
-                    
-                    {/* </div> */}
-
-                    {/* Magical Transition Overlay - Only when scrolling */}
-
-                    <div
-                      className={`
-                        absolute inset-0 bg-transparent
-                        transform -skew-x-12 transition-all duration-1000 ease-out pointer-events-none
-                        ${
-                          isScrolled
-                            ? "translate-x-full opacity-30"
-                            : "-translate-x-full opacity-0"
-                        }
-                      `}
-                      style={{
-                        width: "200%",
-                        left: "-50%",
-                      }}
-                    />
-
-                    {/* Shimmer Effect - Only when scrolling */}
-
-                    <div
-                      className={`
-                        absolute inset-0 bg-transparent
-                        transform transition-all duration-1200 ease-out pointer-events-none
-                        ${
-                          isScrolled
-                            ? "translate-x-full opacity-100"
-                            : "-translate-x-full opacity-0"
-                        }
-                      `}
-                      style={{
-                        width: "150%",
-                        left: "-25%",
-                        animationDelay: "0.2s",
-                      }}
-                    />
-
-                    {/* Scale Effect Behind Logo */}
-
-                    <div
-                      className={`
-                        absolute inset-0 bg-transparent rounded-lg 
-                        transition-all duration-800 ease-out pointer-events-none
-                        ${
-                          isScrolled
-                            ? "opacity-100 scale-100"
-                            : "opacity-0 scale-110"
-                        }
-                      `}
-                    />
-
-                    {/* Burst Effect on Reveal */}
-                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                      {[...Array(8)].map((_, i) => (
-                        <div
-                          key={i}
-                          className={`
-                            absolute w-1 h-1 bg-red-400/60 rounded-full
-                            transition-all duration-1000 ease-out
-                            ${
-                              isScrolled
-                                ? "opacity-100 scale-100"
-                                : "opacity-0 scale-0"
-                            }
-                          `}
-                          style={{
-                            left: `${15 + i * 10}%`,
-                            top: `${20 + (i % 3) * 30}%`,
-                            transitionDelay: `${200 + i * 50}ms`,
-                            transform: isScrolled
-                              ? `translate(${Math.cos(i * 45) * 10}px, ${
-                                  Math.sin(i * 45) * 10
-                                }px)`
-                              : "translate(0, 0)",
-                          }}
-                        />
-                      ))}
-                    </div>
-                  </>
-                )}
-              </Link>
+        {/* Quantum Particles */}
+        <div className="absolute inset-0 overflow-visible pointer-events-none z-25">
+          {[...Array(12)].map((_, i) => (
+            <div
+              key={`quantum-${i}`}
+              className="absolute opacity-0 group-hover:opacity-100 transition-all duration-600 ease-out z-25"
+              style={{
+                left: `${20 + ((i * 7) % 60)}%`,
+                top: `${-20 + ((i * 11) % 40)}%`,
+                transitionDelay: `${1600 + i * 80}ms`,
+              }}
+            >
+              <div
+                className="w-1 h-1 bg-red-600 rounded-full relative group-hover:animate-ping"
+                style={{
+                  animationDelay: `${i * 150}ms`,
+                  animationDuration: "2s",
+                }}
+              >
+                <div className="absolute inset-0 bg-red-600 rounded-full animate-pulse" />
+                <div
+                  className="absolute -inset-1 bg-red-400/30 rounded-full animate-ping"
+                  style={{ animationDelay: `${i * 200}ms` }}
+                />
+              </div>
             </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {/* Magical Logo Effect - Only on Home Page */}
+    {pathname === "/" && (
+      <div className="relative w-[65%] h-[70%] mx-auto flex justify-center">
+        <Image
+          src="/gulbhahar.png"
+          alt="Brand Logo"
+          width={700}
+          height={100}
+          priority
+          className={`
+            transition-all duration-700 ease-out 
+            filter group-hover:brightness-110 relative z-10
+            w-full max-w-full object-fill
+            ${isScrolled ? "h-10 opacity-100" : "h-10 opacity-0"}
+          `}
+        />
+
+        {/* Burst Effect on Reveal */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={i}
+              className={`
+                absolute w-1 h-1 bg-red-400/60 rounded-full
+                transition-all duration-1000 ease-out
+                ${isScrolled ? "opacity-100 scale-100" : "opacity-0 scale-0"}
+              `}
+              style={{
+                left: `${15 + i * 10}%`,
+                top: `${20 + (i % 3) * 30}%`,
+                transitionDelay: `${200 + i * 50}ms`,
+                transform: isScrolled
+                  ? `translate(${Math.cos(i * 45) * 10}px, ${
+                      Math.sin(i * 45) * 10
+                    }px)`
+                  : "translate(0, 0)",
+              }}
+            />
+          ))}
+        </div>
+      </div>
+    )}
+  </Link>
+</div>
 
             <div className="hidden md:flex items-center space-x-2 lg:space-x-6">
               <button
