@@ -181,7 +181,7 @@ const LoginPage = () => {
     try {
       console.log('🔄 Attempting login with:', { email, password: '***' });
       
-      const response = await fetch('http://194.238.23.44:9080/api/users/login', {
+      const response = await fetch('https://api.gulbhahar.com/api/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
