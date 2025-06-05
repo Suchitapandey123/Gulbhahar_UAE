@@ -761,40 +761,48 @@ const Navbar = () => {
                 {pathname === "/" && (
                   <>
                     {/* Original Logo - Only appears when scrolled */}
-                    <div className="flex h-12 items-center justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-12">
+                    {/* <div className={`h-10
+              
+                      `}> */}
                       {/* Logo Image */}
                       <Image
-                        src="/logo-only.png"
+                        src="/gulbhahar.png"
                         alt="Brand Logo"
-                        width={1000}
-                        height={160}
+                        width={700}
+                        height={100}
                         priority
+                        style={{ height: '47px' }}
+
                         className={`
       transition-all duration-700 ease-out object-contain
       filter group-hover:brightness-110
       relative z-10
-      ${
+
+                 ${
         isScrolled
           ? "opacity-100 translate-y-0 scale-100"
           : "opacity-0 translate-y-8 scale-90"
       }
       h-6 sm:h-8 md:h-12 lg:h-10 xl:h-20
       w-auto max-w-[150px] sm:max-w-[200px] md:max-w-[240px] lg:max-w-[300px] xl:max-w-[360px]
+   
     `}
                       />
 
                       {/* Brand Name Text */}
-                      <div
-                        className="
+                      {/* <div
+                        className={`
       font-['Old_Standard_TT'] font-bold uppercase tracking-widest 
       text-transparent bg-clip-text bg-red-900 drop-shadow-lg transition-all duration-500
       text-xs sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl scale-x-[1.1]
       lg:scale-x-[1.5]
-    "
-                      >
+      
+    
+                         `} >
                         Gulbhahar
-                      </div>
-                    </div>
+                      </div> */}
+                    
+                    {/* </div> */}
 
                     {/* Magical Transition Overlay - Only when scrolling */}
 
