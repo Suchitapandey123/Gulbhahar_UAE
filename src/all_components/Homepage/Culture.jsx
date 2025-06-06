@@ -125,95 +125,32 @@ export default function Culture() {
     <>
       {/* Hero Section */}
       <motion.main 
-        ref={ref}
-        initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
-        variants={containerVariants}
-        className="h-screen lg:max-w-full overflow-x-hidden w-[96%] mx-auto bg-white flex items-start"
-      >
-        {/* Mobile view - carousel */}
-        <div className="md:hidden w-full h-full flex items-center justify-center">
-          <motion.div 
-            variants={imageVariants}
-            className="relative z-20"
-          >
-            <Image
-              src={culture}
-              width={1600}
-              height={400}
-              alt="culture_img"
-              className="relative z-10 w-full h-auto px-4"
-            />
-          </motion.div>
-
-          <AnimatePresence mode="wait">
-            {mobileImages.map((image, index) => (
-              index === currentImageIndex && (
-                <motion.div 
-                  key={index}
-                  variants={mobileCarouselVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  className="absolute inset-0 flex items-center justify-center p-4"
-                >
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    width={350}
-                    height={350}
-                    className="rounded-lg shadow-lg w-full h-auto object-cover max-h-[80vh]"
-                  />
-                </motion.div>
-              )
-            ))}
-          </AnimatePresence>
-        
-          {/* Indicator dots */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.4 }}
-            className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-20"
-          >
-            {mobileImages.map((_, index) => (
-              <motion.div 
-                key={index}
-                animate={{
-                  scale: index === currentImageIndex ? 1.2 : 1,
-                  opacity: index === currentImageIndex ? 1 : 0.5
-                }}
-                transition={{ duration: 0.3 }}
-                className={`w-2 h-2 rounded-full cursor-pointer ${
-                  index === currentImageIndex ? 'bg-black' : 'bg-gray-300'
-                }`}
-                onClick={() => setCurrentImageIndex(index)}
-              />
-            ))}
-          </motion.div>
-        </div>
-      
-        {/* Desktop view - original layout */}
-        <div className="relative w-screen h-screen overflow-hidden bg-gradient-to-br from-stone-100 to-amber-50">
-  {/* Animated floating particles */}
-  <div className="absolute inset-0 z-0">
-    {[...Array(30)].map((_, i) => (
+  ref={ref}
+  initial="hidden"
+  animate={isInView ? "visible" : "hidden"}
+  variants={containerVariants}
+  className="min-h-screen hidden w-full overflow-hidden bg-gradient-to-br from-slate-50 via-white to-amber-50/30 relative"
+>
+  {/* Floating orbs background */}
+  <div className="absolute inset-0 overflow-hidden">
+    {[...Array(15)].map((_, i) => (
       <motion.div
         key={i}
-        className="absolute rounded-full bg-amber-400/20"
+        className="absolute rounded-full bg-gradient-to-r from-amber-400/10 to-orange-300/10 blur-sm"
         style={{
-          width: `${Math.random() * 12 + 4}px`,
-          height: `${Math.random() * 12 + 4}px`,
+          width: `${Math.random() * 200 + 50}px`,
+          height: `${Math.random() * 200 + 50}px`,
           top: `${Math.random() * 100}%`,
           left: `${Math.random() * 100}%`,
         }}
         animate={{
-          y: [0, -100, 0],
-          x: [0, Math.random() > 0.5 ? 40 : -40, 0],
-          opacity: [0.2, 1, 0.2],
+          y: [0, -50, 0],
+          x: [0, Math.random() > 0.5 ? 30 : -30, 0],
+          scale: [1, 1.1, 1],
+          opacity: [0.3, 0.6, 0.3],
         }}
         transition={{
-          duration: Math.random() * 15 + 15,
+          duration: Math.random() * 20 + 10,
           repeat: Infinity,
           ease: "easeInOut",
         }}
@@ -221,188 +158,246 @@ export default function Culture() {
     ))}
   </div>
 
-  {/* Main grid layout */}
-  <div className="relative z-10 h-full w-full grid grid-rows-3 grid-cols-1 gap-8 p-8">
-    {/* Top row - 2 images */}
-    <div className="row-start-1 flex justify-center gap-8 md:gap-16">
-      <motion.div
-        className="relative w-full max-w-[500px] h-[200px] md:h-[300px]"
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        whileHover={{ scale: 1.05, zIndex: 20 }}
-      >
-        <div className="absolute inset-0 rounded-2xl overflow-hidden border-4 border-white shadow-2xl">
-          <Image
-            src="/gulbhahar-1.png"
-            alt="Cultural Artifact"
-            fill
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-        </div>
-        <motion.div
-          className="absolute -bottom-4 -left-4 bg-amber-600 text-white px-4 py-2 rounded-lg shadow-lg"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.8 }}
-        >
-          <span className="font-bold">Heritage</span>
-        </motion.div>
-      </motion.div>
-
-      <motion.div
-        className="relative w-full max-w-[500px] h-[200px] md:h-[300px]"
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.4 }}
-        whileHover={{ scale: 1.05, zIndex: 20 }}
-      >
-        <div className="absolute inset-0 rounded-2xl overflow-hidden border-4 border-white shadow-2xl">
-          <Image
-            src="/gulbhahar2.png"
-            alt="Cultural Artifact"
-            fill
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-        </div>
-        <motion.div
-          className="absolute -bottom-4 -left-4 bg-amber-600 text-white px-4 py-2 rounded-lg shadow-lg"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 1.0 }}
-        >
-          <span className="font-bold">Tradition</span>
-        </motion.div>
-      </motion.div>
-    </div>
-
-    {/* Center culture SVG */}
+  {/* Main container */}
+  <div className="relative z-10 px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+    {/* Section header */}
     <motion.div 
-      className="row-start-2 flex items-center justify-center"
-      initial={{ scale: 0.8, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      transition={{ duration: 0.6 }}
+      className="text-center mb-12 sm:mb-16 lg:mb-20"
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
     >
-      <div className="relative mx-auto w-full max-w-[1600px] h-auto">
-        <Image
-          src={culture}
-          alt="Cultural Heritage"
-          width={1600}
-          height={400}
-          className="w-full h-auto drop-shadow-[0_25px_50px_rgba(180,83,9,0.3)]"
-        />
-        <motion.div
-          className="absolute inset-0 bg-amber-400/10 rounded-lg"
-          animate={{
-            boxShadow: [
-              '0 0 0 0px rgba(180, 83, 9, 0.1)',
-              '0 0 0 10px rgba(180, 83, 9, 0)',
-              '0 0 0 0px rgba(180, 83, 9, 0)'
-            ]
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-      </div>
+      <motion.h2 
+        className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-bold bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 bg-clip-text text-transparent mb-4 sm:mb-6"
+        initial={{ scale: 0.9 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+      >
+        Cultural Heritage
+      </motion.h2>
+      <motion.p 
+        className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.4 }}
+      >
+        Discover the timeless beauty and rich traditions that define our cultural identity
+      </motion.p>
     </motion.div>
 
-    {/* Bottom row - 2 images */}
-    <div className="row-start-3 flex mt-[-80px] justify-center gap-8 md:gap-16">
-      <motion.div
-        className="relative w-full max-w-[500px] h-[200px] md:h-[300px]"
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.6 }}
-        whileHover={{ scale: 1.05, zIndex: 20 }}
+    {/* Hexagonal grid layout */}
+    <div className="relative max-w-7xl mx-auto">
+      {/* Central focal image */}
+      <motion.div 
+        className="relative z-20 mx-auto mb-8 sm:mb-12 lg:mb-16"
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.3 }}
       >
-        <div className="absolute inset-0 rounded-2xl overflow-hidden border-4 border-white shadow-2xl">
-          <Image
-            src="/gulbhahar-3.png"
-            alt="Cultural Artifact"
-            fill
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+        <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl mx-auto">
+          {/* Hexagonal container */}
+          <div className="relative aspect-square">
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-br from-amber-400 to-orange-600 rounded-full"
+              animate={{
+                rotate: [0, 360],
+                scale: [1, 1.05, 1],
+              }}
+              transition={{
+                rotate: { duration: 20, repeat: Infinity, ease: "linear" },
+                scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+              }}
+            />
+            <div className="absolute inset-2 sm:inset-3 bg-white rounded-full shadow-2xl overflow-hidden">
+              <div className="relative w-full h-full">
+                <Image
+                  src={culture}
+                  alt="Cultural Heritage"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+              </div>
+            </div>
+          </div>
         </div>
-        <motion.div
-          className="absolute -top-4 -right-4 bg-amber-600 text-white px-4 py-2 rounded-lg shadow-lg"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 1.2 }}
-        >
-          <span className="font-bold">Artistry</span>
-        </motion.div>
       </motion.div>
 
-      <motion.div
-        className="relative w-full max-w-[500px] h-[200px] md:h-[300px]"
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.8 }}
-        whileHover={{ scale: 1.05, zIndex: 20 }}
-      >
-        <div className="absolute inset-0 rounded-2xl overflow-hidden border-4 border-white shadow-2xl">
-          <Image
-            src="/gulbhahar-4.png"
-            alt="Cultural Artifact"
-            fill
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+      {/* Surrounding images in orbit pattern */}
+      <div className="relative">
+        {/* Desktop orbit layout */}
+        <div className="hidden lg:block">
+          {[
+            { src: "/gulbhahar-1.png", angle: 0, distance: "300px", label: "Heritage", delay: 0.5 },
+            { src: "/gulbhahar2.png", angle: 72, distance: "280px", label: "Tradition", delay: 0.7 },
+            { src: "/gulbhahar-3.png", angle: 144, distance: "320px", label: "Artistry", delay: 0.9 },
+            { src: "/gulbhahar-4.png", angle: 216, distance: "290px", label: "Legacy", delay: 1.1 },
+            { src: "/gulbhahar-1.png", angle: 288, distance: "310px", label: "Culture", delay: 1.3 },
+          ].map((item, index) => {
+            const radian = (item.angle * Math.PI) / 180;
+            const x = Math.cos(radian) * parseInt(item.distance);
+            const y = Math.sin(radian) * parseInt(item.distance);
+            
+            return (
+              <motion.div
+                key={index}
+                className="absolute top-1/2 left-1/2 w-32 h-32 xl:w-40 xl:h-40"
+                style={{
+                  transform: `translate(-50%, -50%) translate(${x}px, ${y}px)`,
+                }}
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.6, delay: item.delay }}
+                whileHover={{ 
+                  scale: 1.1, 
+                  zIndex: 30,
+                  transition: { duration: 0.2 }
+                }}
+              >
+                <div className="relative w-full h-full group">
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-br from-amber-400/80 to-orange-600/80 rounded-2xl"
+                    animate={{
+                      rotate: [0, 5, -5, 0],
+                    }}
+                    transition={{
+                      duration: 6,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  />
+                  <div className="absolute inset-1 bg-white rounded-xl shadow-lg overflow-hidden">
+                    <Image
+                      src={item.src}
+                      alt={item.label}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </div>
+                  <motion.div
+                    className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-amber-600 text-white px-2 py-1 rounded-lg text-xs font-semibold shadow-lg opacity-0 group-hover:opacity-100"
+                    initial={{ y: 10 }}
+                    whileHover={{ y: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {item.label}
+                  </motion.div>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
-        <motion.div
-          className="absolute -top-4 -right-4 bg-amber-600 text-white px-4 py-2 rounded-lg shadow-lg"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 1.4 }}
-        >
-          <span className="font-bold">Legacy</span>
-        </motion.div>
-      </motion.div>
+
+        {/* Tablet layout */}
+        <div className="hidden md:block lg:hidden">
+          <div className="grid grid-cols-2 gap-6 max-w-md mx-auto">
+            {[
+              { src: "/gulbhahar-1.png", label: "Heritage" },
+              { src: "/gulbhahar2.png", label: "Tradition" },
+              { src: "/gulbhahar-3.png", label: "Artistry" },
+              { src: "/gulbhahar-4.png", label: "Legacy" },
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                className="relative aspect-square group"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
+                whileHover={{ scale: 1.05 }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-amber-400 to-orange-600 rounded-2xl" />
+                <div className="absolute inset-1 bg-white rounded-xl shadow-lg overflow-hidden">
+                  <Image
+                    src={item.src}
+                    alt={item.label}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                </div>
+                <div className="absolute bottom-2 left-2 bg-amber-600 text-white px-2 py-1 rounded text-xs font-semibold">
+                  {item.label}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Mobile layout */}
+        <div className="md:hidden">
+          <div className="space-y-4">
+            {[
+              { src: "/gulbhahar-1.png", label: "Heritage" },
+              { src: "/gulbhahar2.png", label: "Tradition" },
+              { src: "/gulbhahar-3.png", label: "Artistry" },
+              { src: "/gulbhahar-4.png", label: "Legacy" },
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                className="relative h-32 mx-4 group"
+                initial={{ x: index % 2 === 0 ? -100 : 100, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.5 + index * 0.1 }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-amber-400 to-orange-600 rounded-2xl" />
+                <div className="absolute inset-1 bg-white rounded-xl shadow-lg overflow-hidden flex items-center">
+                  <div className="w-28 h-full relative">
+                    <Image
+                      src={item.src}
+                      alt={item.label}
+                      fill
+                      className="object-cover rounded-l-xl"
+                    />
+                  </div>
+                  <div className="flex-1 p-4">
+                    <h3 className="text-lg font-bold text-gray-800 mb-1">{item.label}</h3>
+                    <p className="text-sm text-gray-600">Traditional cultural element</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  {/* Animated connection lines */}
-  <svg className="absolute inset-0 pointer-events-none z-0">
-    <motion.path
-      d="M 20% 30% L 50% 50% L 80% 30%"
-      stroke="rgba(180, 83, 9, 0.3)"
-      strokeWidth="2"
-      fill="none"
-      strokeDasharray="0 1"
-      animate={{
-        strokeDasharray: ["0 1", "1 0", "0 1"],
-      }}
-      transition={{
-        duration: 6,
-        repeat: Infinity,
-        ease: "linear"
-      }}
-    />
-    <motion.path
-      d="M 20% 70% L 50% 50% L 80% 70%"
-      stroke="rgba(180, 83, 9, 0.3)"
-      strokeWidth="2"
-      fill="none"
-      strokeDasharray="0 1"
-      animate={{
-        strokeDasharray: ["0 1", "1 0", "0 1"],
-      }}
-      transition={{
-        duration: 6,
-        repeat: Infinity,
-        ease: "linear",
-        delay: 0.5
-      }}
-    />
-  </svg>
-</div> 
-      </motion.main>
+    {/* Connecting lines animation */}
+    <svg className="absolute inset-0 pointer-events-none z-0 hidden lg:block">
+      <defs>
+        <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="rgba(245, 158, 11, 0.4)" />
+          <stop offset="100%" stopColor="rgba(249, 115, 22, 0.4)" />
+        </linearGradient>
+      </defs>
+      {[0, 72, 144, 216, 288].map((angle, index) => {
+        const nextAngle = (angle + 72) % 360;
+        const r1 = (angle * Math.PI) / 180;
+        const r2 = (nextAngle * Math.PI) / 180;
+        const distance = 250;
+        
+        return (
+          <motion.line
+            key={index}
+            x1={`${50 + Math.cos(r1) * (distance / 8)}%`}
+            y1={`${50 + Math.sin(r1) * (distance / 8)}%`}
+            x2={`${50 + Math.cos(r2) * (distance / 8)}%`}
+            y2={`${50 + Math.sin(r2) * (distance / 8)}%`}
+            stroke="url(#lineGradient)"
+            strokeWidth="2"
+            strokeDasharray="5,5"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{
+              duration: 2,
+              delay: 1.5 + index * 0.2,
+              ease: "easeInOut"
+            }}
+          />
+        );
+      })}
+    </svg>
+  </div>
+</motion.main>
 
       {/* Showcase Section */}
       <motion.section 

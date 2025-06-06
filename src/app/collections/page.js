@@ -79,7 +79,7 @@ export default function Collection() {
     queryFn: () => productApi.getAllProduct(),
   });
 
-  console.log("API Data:", apiData);
+  // console.log("API Data:", apiData);
 
   // Transform API data to match component structure
   const transformApiData = (apiProducts) => {
@@ -110,7 +110,7 @@ export default function Collection() {
 
   // Use API data if available, otherwise fallback
   const collections = apiData ? transformApiData(apiData) : fallbackCollections;
-  console.log(collections);
+  // console.log(collections);
 
   // Update price range based on actual data - Fixed to prevent infinite re-renders
   useEffect(() => {
