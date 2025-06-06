@@ -113,15 +113,15 @@ export function ProductClient({ product, similarProducts }) {
           {/* Product Images */}
           <div className="space-y-4">
             {/* Main Image */}
-            {/* <div className="aspect-square relative rounded-lg overflow-hidden border md:h-[500px] lg:h-[625px] bg-gray-100 flex items-center justify-center group">
+            <div className="aspect-square relative rounded-lg overflow-hidden border md:h-[500px] lg:h-[625px] bg-gray-100 flex items-center justify-center group">
   <Image
     src={currentMainImage}
     alt={`${product.name} - ${currentColor}`}
-    className="object-cover w-full h-full transition-transform duration-300 ease-in-out group-hover:scale-125"
+    className="object-cover w-full h-full transition-transform duration-300 ease-in-out "
     width={1000}
     height={700}
   />
-</div> */}
+</div>
 
 {/* Main Image with Flipkart-like Hover Zoom */}
 {/* <div
