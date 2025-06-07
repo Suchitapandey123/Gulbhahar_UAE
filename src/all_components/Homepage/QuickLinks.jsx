@@ -162,7 +162,7 @@ export default function QuickSearch() {
               variants={itemVariants}
               className="group"
             >
-              <Link href="/Collections">
+              <Link href="/collections">
                 <motion.div
                   variants={tagVariants}
                   initial="rest"
@@ -286,7 +286,7 @@ export default function QuickSearch() {
               variants={itemVariants}
               className="group"
             >
-              <Link href="/Collections">
+              <Link href="/collections">
                 <motion.div
                   variants={tagVariants}
                   initial="rest"
