@@ -49,10 +49,10 @@ const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   
   const slides = [
-    "/gulbhahar-7.png",
-    "/gulbhahar-8.png", 
-    "/gulbhahar-9.png",
-    "/gulbhahar-10.png",
+    "/image/gulbhahar-7.png",
+    "/image/gulbhahar-8.png", 
+    "/image/gulbhahar-9.png",
+    "/image/gulbhahar-10.png",
   ];
 
   useEffect(() => {
