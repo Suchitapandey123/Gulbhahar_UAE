@@ -81,6 +81,13 @@ export default function Culture() {
                     priority
                     className="object-cover"
                   />
+
+
+
+               
+
+
+
                 </div>
                 <div className="absolute bottom-2 left-2 bg-amber-600 text-white px-2 py-1 text-xs font-semibold">
                   {item.label}
