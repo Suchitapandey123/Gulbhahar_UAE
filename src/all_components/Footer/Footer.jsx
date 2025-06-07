@@ -246,7 +246,7 @@ export default function Footer() {
             </h3>
             {/* dfscxgkljefdbgfbgkckjxbvfdasfxkjbciruebgfidub
             dcxgknf;dln;ofdg;lk ;l;nvc;
-            fdvcs;flgcknbvfk;gndcbv;snk */}
+            fdvcs;flgcknbvfk;gndcbv;snki */}
             
             {/* Contact Info */}
             <div className="space-y-3 mb-6">
