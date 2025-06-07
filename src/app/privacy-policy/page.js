@@ -12,7 +12,7 @@ export default function PrivacyPolicy() {
           </p>
         </div>
 
-        {/* Main Content */}
+        {/* Main Content xlkjVNgidpsjxnpiougdwbpcixjcndkj;kjgndpvcdjk npfdjknvkfdspc;xvijkv;ldkcxznpckvjnfwpdoscnvdfeojwndspo;kefmpwodinpwoendpiungwdfpsiunrpiweu */}
         <div className="flex gap-8">
           {/* Sidebar */}
           <div className="w-64 flex-shrink-0">

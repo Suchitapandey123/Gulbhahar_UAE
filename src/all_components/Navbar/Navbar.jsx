@@ -7,6 +7,7 @@ import {
   X,
   ChevronDown,
   Search,
+
   ShoppingBag,
   User,
   LogOut,
@@ -78,6 +79,7 @@ const Navbar = () => {
             email: data.user.email || "",
             firstName: data.user.firstName || "",
             lastName: data.user.lastName || "",
+            
             imageUrl: data.user.imageUrl || "",
             userId: data.user.userId || data.user._id || "",
           };
@@ -576,7 +578,7 @@ const Navbar = () => {
           transition-all duration-500 ease-out
           ${
             isScrolled || pathname !== "/"
-              ? "bg-white/95  shadow-lg py-2.5 lg:py-3 border-b border-gray-100/50"
+              ? "bg-white/95 shadow-lg py-2.5 lg:py-3 border-b border-gray-100/50"
               : "bg-transparent shadow-none py-3 lg:py-4 border-b border-white/10"
           }
         `}
@@ -829,7 +831,7 @@ const Navbar = () => {
                   {/* Enhanced User Dropdown Menu */}
                   <div
                     className={`
-                      absolute right-0 top-full mt-2 w-56 bg-transparent backdrop-blur-md shadow-2xl 
+                      absolute right-0 top-full mt-2 w-56 bg-white/95 backdrop-blur-md shadow-2xl 
                       rounded-lg border border-gray-100 z-50 transition-all duration-300 ease-out
                       ${
                         isUserDropdownOpen
@@ -1346,3 +1348,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

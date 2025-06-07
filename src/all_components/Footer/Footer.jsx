@@ -130,14 +130,14 @@ export default function Footer() {
   Gulbhahar
 </div> */}
                 <Image 
-                  src="/full-logo.png" 
+                  src="/footerlogo.png" 
                   alt="Gulbhahar Logo" 
                   width={300} 
                   height={150} 
                   className="h-16 object-cover sm:h-16  lg:mx-0"
                 />
 
-                <p className="text-[16px] text-gray-600  ">Premium Fashion & Style</p>
+                <p className="text-[16px] mt-[-10px] ml-1 text-gray-600  ">Premium Fashion & Style</p>
               </Link>
               
               <p className="text-sm sm:text-base text-gray-600 max-w-sm mx-auto lg:mx-0">
@@ -244,6 +244,9 @@ export default function Footer() {
             <h3 className="text-sm font-bold uppercase tracking-wider text-red-900 mb-4 sm:mb-6">
               Get in Touch
             </h3>
+            {/* dfscxgkljefdbgfbgkckjxbvfdasfxkjbciruebgfidub
+            dcxgknf;dln;ofdg;lk ;l;nvc;
+            fdvcs;flgcknbvfk;gndcbv;snk */}
             
             {/* Contact Info */}
             <div className="space-y-3 mb-6">
