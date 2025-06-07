@@ -286,6 +286,7 @@ export default function ModernHeroAnimated() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className="inline-flex items-center gap-2 sm:gap-3 md:gap-4 px-4 py-2 sm:px-6 sm:py-3 md:px-8 md:py-4 rounded-full bg-white text-black hover:bg-white/90 transition-all duration-300 cursor-pointer group"
+                  onClick={()=>window.location.href="/collections"}
                 >
                   <span className="font-medium tracking-wider text-sm sm:text-base">
                     EXPLORE COLLECTION
