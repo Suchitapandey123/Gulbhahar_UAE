@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   User, 
   MapPin, 
@@ -14,8 +14,11 @@ import {
   Save,
   ArrowLeft,
   Phone,
-  Home
+  Home,
+  Camera,
+  Upload
 } from "lucide-react";
+import Image from "next/image";
 
 const ProfileView = {
   MAIN: "main",
@@ -27,13 +30,74 @@ const ProfileView = {
 
 const Profile = () => {
   const [activeView, setActiveView] = useState(ProfileView.MAIN);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [user, setUser] = useState(null);
+  const [profileImageError, setProfileImageError] = useState(false);
 
-  // Personal info form state
+  // Personal info form state - will be populated from API
   const [formData, setFormData] = useState({
-    fullName: "Akash Pandey",
-    email: "akashpandey@reeltor.com",
-    phoneNumber: "+91 9876543211"
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    location: "",
+    imageUrl: ""
   });
+
+  // Fetch user data from API
+  const fetchUserProfile = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("authToken");
+      
+      if (!token) {
+        console.error("No auth token found");
+        return;
+      }
+
+      console.log('🔄 Fetching user profile...');
+      
+      const response = await fetch('https://api.gulbhahar.com/api/users/user-by-token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('✅ Profile data fetched:', data);
+        
+        if (data.user) {
+          const userData = data.user;
+          setUser(userData);
+          
+          // Populate form data
+          setFormData({
+            firstName: userData.firstName || "",
+            lastName: userData.lastName || "",
+            email: userData.email || "",
+            phoneNumber: userData.phoneNumber || "",
+            location: userData.location || "",
+            imageUrl: userData.imageUrl || ""
+          });
+        }
+      } else {
+        console.error('❌ Failed to fetch profile:', response.status);
+      }
+    } catch (error) {
+      console.error('🚨 Error fetching user profile:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load user data on component mount
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,9 +107,66 @@ const Profile = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+    setSaving(true);
+    
+    try {
+      console.log("Saving profile data:", formData);
+      
+      // Here you would typically make an API call to update the user profile
+      // await updateUserProfile(formData);
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      console.log("Profile updated successfully");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Profile Image Component with error handling
+  const ProfileImageDisplay = ({ size = "w-20 h-20", className = "" }) => {
+    const handleImageError = () => {
+      setProfileImageError(true);
+    };
+
+    const handleImageLoad = () => {
+      setProfileImageError(false);
+    };
+
+    if (formData.imageUrl && !profileImageError) {
+      return (
+        <div className={`${size} ${className} relative overflow-hidden rounded-full bg-gray-100 border-4 border-white shadow-lg`}>
+          <Image
+            src={formData.imageUrl}
+            alt={`${formData.firstName || 'User'}'s profile`}
+            fill
+            className="object-cover"
+            onError={handleImageError}
+            onLoad={handleImageLoad}
+          />
+        </div>
+      );
+    }
+
+    // Fallback to initials
+    const initials = formData.firstName && formData.lastName 
+      ? `${formData.firstName.charAt(0)}${formData.lastName.charAt(0)}`.toUpperCase()
+      : formData.firstName 
+        ? formData.firstName.charAt(0).toUpperCase()
+        : 'U';
+
+    return (
+      <div className={`${size} ${className} bg-red-900 rounded-full flex items-center justify-center border-4 border-white shadow-lg`}>
+        <span className="text-white font-bold text-2xl">
+          {initials}
+        </span>
+      </div>
+    );
   };
 
   // Address form state
@@ -225,25 +346,51 @@ const Profile = () => {
     </div>
   );
 
+  // Loading component
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-red-50/40 via-white to-red-50/20">
+        <div className="max-w-[1600px] mx-auto px-0 sm:px-6 lg:px-8 py-6 sm:py-8">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center">
+              <div className="w-12 h-12 border-4 border-red-900 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading profile...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50/40 via-white to-red-50/20">
       <div className="max-w-[1600px] mx-auto px-0 sm:px-6 lg:px-8 py-6 sm:py-8">
         
         {activeView === ProfileView.MAIN && (
           <div>
-            {/* Header */}
+            {/* Header with Profile Image */}
             <div className="mb-8 sm:mb-12">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="p-3 bg-red-900 rounded-xl">
-                  <User className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
-                    Profile Settings
-                  </h1>
-                  <p className="text-gray-600 text-sm sm:text-base mt-1">
-                    Manage your account settings and preferences
-                  </p>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-6">
+                <ProfileImageDisplay size="w-20 h-20 sm:w-24 sm:h-24" />
+                <div className="flex-1">
+                  <div className="flex items-center gap-4 mb-2">
+                    <div className={`p-3 ${formData.imageUrl ? "hidden" : "hidden"} bg-red-900 rounded-xl`}>
+                      <User className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
+                        Welcome, {formData.firstName || 'User'}!
+                      </h1>
+                      <p className="text-gray-600 text-sm sm:text-base mt-1">
+                        Manage your account settings and preferences
+                      </p>
+                    </div>
+                  </div>
+                  {formData.email && (
+                    <p className="text-gray-600 text-sm">
+                      {formData.email}
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="h-1 bg-gradient-to-r from-red-900 via-red-700 to-red-500 rounded-full w-24" />
@@ -305,31 +452,82 @@ const Profile = () => {
                   </div>
                   <button 
                     onClick={handleSubmit}
-                    className="flex items-center gap-2 bg-red-900 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors text-sm font-medium"
+                    disabled={saving}
+                    className="flex items-center gap-2 bg-red-900 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <Save className="w-4 h-4" />
-                    Save Changes
+                    {saving ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        Saving...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="w-4 h-4" />
+                        Save Changes
+                      </>
+                    )}
                   </button>
                 </div>
               </div>
 
               {/* Form */}
               <div className="p-6 sm:p-8">
-                <div className="space-y-6">
+                {/* Profile Image Section */}
+                <div className="mb-8 p-6 bg-gray-50 rounded-lg">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                    <ProfileImageDisplay size="w-20 h-20" />
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">Profile Picture</h3>
+                      <p className="text-gray-600 text-sm mb-4">
+                        This is your current profile picture. You can update it anytime.
+                      </p>
+                      <div className="flex gap-3">
+                        <button className="flex items-center gap-2 px-4 py-2 bg-red-900 text-white rounded-lg hover:bg-red-800 transition-colors text-sm">
+                          <Camera className="w-4 h-4" />
+                          Change Photo
+                        </button>
+                        <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm">
+                          <Upload className="w-4 h-4" />
+                          Upload New
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
-                      Full Name <span className="text-red-500">*</span>
+                    <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
+                      First Name <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
                       <User className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
                       <input
                         type="text"
-                        id="fullName"
-                        name="fullName"
-                        value={formData.fullName}
+                        id="firstName"
+                        name="firstName"
+                        value={formData.firstName}
                         onChange={handleChange}
                         className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-900 focus:border-red-900 transition-colors"
-                        placeholder="Enter your full name"
+                        placeholder="Enter your first name"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
+                      Last Name <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <User className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                      <input
+                        type="text"
+                        id="lastName"
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-900 focus:border-red-900 transition-colors"
+                        placeholder="Enter your last name"
                       />
                     </div>
                   </div>
@@ -369,7 +567,38 @@ const Profile = () => {
                       />
                     </div>
                   </div>
+
+                  <div className="lg:col-span-2">
+                    <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+                      Location
+                    </label>
+                    <div className="relative">
+                      <MapPin className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                      <input
+                        type="text"
+                        id="location"
+                        name="location"
+                        value={formData.location}
+                        onChange={handleChange}
+                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-900 focus:border-red-900 transition-colors"
+                        placeholder="Enter your location"
+                      />
+                    </div>
+                  </div>
                 </div>
+
+                {/* User ID Display */}
+                {user && user.userId && (
+                  <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <User className="w-5 h-5 text-gray-400" />
+                      <div>
+                        <p className="text-sm font-medium text-gray-700">User ID</p>
+                        <p className="text-sm text-gray-500">{user.userId}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -475,58 +704,6 @@ const Profile = () => {
             </div>
 
             {/* Saved Addresses */}
-            <div className="bg-white rounded-xl border border-red-100 shadow-sm">
-              <div className="bg-gradient-to-r from-red-50 to-red-25 px-6 sm:px-8 py-6 border-b border-red-100">
-                <h2 className="text-xl font-semibold text-gray-900">Saved Addresses</h2>
-                <p className="text-gray-600 text-sm mt-1">Manage your delivery addresses</p>
-              </div>
-              
-              <div className="p-6 sm:p-8">
-                <div className="space-y-4">
-                  {savedAddresses.map((address) => (
-                    <div key={address.id} className="border border-gray-200 rounded-lg p-6 hover:border-red-200 transition-colors">
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                        <div className="flex-1">
-                          <div className="flex items-start gap-3">
-                            <MapPin className="w-5 h-5 text-red-900 mt-0.5 flex-shrink-0" />
-                            <div>
-                              <p className="font-medium text-gray-900">{address.streetAddress}</p>
-                              <p className="text-gray-600 text-sm mt-1">Postal Code: {address.postalCode}</p>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center gap-2">
-                          <button className="flex items-center gap-2 px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm">
-                            <Edit3 className="w-4 h-4" />
-                            Edit
-                          </button>
-                          <button 
-                            onClick={() => handleRemoveAddress(address.id)}
-                            className="flex items-center gap-2 px-3 py-2 text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors text-sm"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                            Remove
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeView === ProfileView.NEWSLETTER && (
-          <div className="max-w-4xl mx-auto">
-            <Breadcrumb 
-              items={[
-                { label: "Profile", onClick: () => setActiveView(ProfileView.MAIN) },
-                { label: "Newsletter Subscription" }
-              ]} 
-            />
-
             <div className="bg-white rounded-xl border border-red-100 shadow-sm">
               <div className="bg-gradient-to-r from-red-50 to-red-25 px-6 sm:px-8 py-6 border-b border-red-100">
                 <h2 className="text-xl font-semibold text-gray-900">Newsletter Subscription</h2>

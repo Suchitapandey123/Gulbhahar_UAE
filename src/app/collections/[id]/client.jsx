@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -49,6 +48,8 @@ export function ProductClient({ product, similarProducts }) {
   const [pincode, setPincode] = useState("");
   const [userRating, setUserRating] = useState(4);
   const [sortOrder, setSortOrder] = useState("Newest");
+
+  
 
   // Get current color and its images
   const currentColor = product.colors[selectedColorIndex];
@@ -112,23 +113,71 @@ export function ProductClient({ product, similarProducts }) {
           {/* Product Images */}
           <div className="space-y-4">
             {/* Main Image */}
-            <div className="aspect-square relative rounded-lg overflow-hidden border md:h-[500px] lg:h-[625px] bg-gray-100 flex items-center justify-center">
-              <Image
-                src={currentMainImage}
-                alt={`${product.name} - ${currentColor}`}
-                className="object-cover w-full h-full"
-                width={1000}
-                height={700}
-              />
-            </div>
+            <div className="aspect-square relative rounded-lg overflow-hidden border md:h-[500px] lg:h-[625px] bg-gray-100 flex items-center justify-center group">
+  <Image
+    src={currentMainImage}
+    alt={`${product.name} - ${currentColor}`}
+    className="object-cover w-full h-full transition-transform duration-300 ease-in-out "
+    width={1000}
+    height={700}
+  />
+</div>
+
+{/* Main Image with Flipkart-like Hover Zoom */}
+{/* <div
+  className="aspect-square relative rounded-lg overflow-hidden border md:h-[500px] lg:h-[625px] bg-gray-100 flex items-center justify-center group"
+  onMouseMove={(e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    e.currentTarget.querySelector("img").style.transformOrigin = `${x}% ${y}%`;
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.querySelector("img").style.transformOrigin = "center center";
+  }}
+>
+  <Image
+    src={currentMainImage}
+    alt={`${product.name} - ${currentColor}`}
+    className="object-cover w-full h-full transition-transform duration-300 ease-in-out group-hover:scale-125"
+    width={1000}
+    height={700}
+  />
+</div> */}
+
+
+{/* <EasyZoomOnHover
+      mainImage={{
+          src: {currentMainImage},
+          alt: "My Product"
+      }}
+      zoomImage={{
+          src: {currentMainImage},
+          alt: "My Product Zoom"
+      }}
+  />
+
+<EasyZoomOnMove image={{
+    src: ,
+    alt: "My Product",
+    width: 466,
+    height: 466
+}}
+    zoomImage={{
+        src: "https://m.media-amazon.com/images/I/61vThyaOrHL._AC_SX1500_.jpg",
+        alt: "My Product",
+    }}
+
+/> */}
 
             {/* Thumbnail Images */}
+
             <div className="grid grid-cols-4 gap-2">
               {currentImages.map((img, idx) => (
                 <button
                   key={idx}
                   onClick={() => setMainImageIndex(idx)}
-                  className={`aspect-square relative rounded border transition-all duration-200 bg-gray-100 flex items-center justify-center ${
+                  className={`aspect-square  relative  rounded border transition-all duration-200 bg-gray-100 flex items-center justify-center ${
                     mainImageIndex === idx
                       ? "border-red-900 ring-2 ring-red-900 ring-opacity-50"
                       : "border-gray-200 hover:border-red-300"
@@ -137,13 +186,31 @@ export function ProductClient({ product, similarProducts }) {
                   <Image
                     src={img}
                     alt={`${product.name} thumbnail ${idx + 1}`}
-                    className="object-cover w-full h-full"
+                    className="object-cover  w-full h-full"
                     width={1000}
                     height={700}
                   />
                 </button>
               ))}
             </div>
+
+            <div className="hidden lg:block">
+  <div className="mt-14"> {/* Added wrapper div with margin */}
+    <h3 className="font-bold mt-1 text-lg text-gray-900">Overview</h3>
+    <ul className="space-y-1 text-sm text-gray-600 list-disc list-inside mb-4">
+      {product.overview.map((item, idx) => (
+        <li key={idx}>{item}</li>
+      ))}
+    </ul>
+
+    <h3 className="font-bold mb-2 text-gray-900">Product Details</h3>
+    <ul className="space-y-1 text-sm text-gray-600 list-disc list-inside">
+      {product.details.map((detail, idx) => (
+        <li key={idx}>{detail}</li>
+      ))}
+    </ul>
+  </div>
+</div>
 
             {/* Product Details - Mobile/Tablet */}
             <div className="lg:hidden mt-8">
@@ -295,21 +362,7 @@ export function ProductClient({ product, similarProducts }) {
             </div>
 
             {/* Product Details - Desktop Only */}
-            <div className="hidden lg:block">
-              <h3 className="font-bold mb-4 text-lg text-gray-900">Overview</h3>
-              <ul className="space-y-1 text-sm text-gray-600 list-disc list-inside mb-4">
-                {product.overview.map((item, idx) => (
-                  <li key={idx}>{item}</li>
-                ))}
-              </ul>
-
-              <h3 className="font-bold mb-2 text-gray-900">Product Details</h3>
-              <ul className="space-y-1 text-sm text-gray-600 list-disc list-inside">
-                {product.details.map((detail, idx) => (
-                  <li key={idx}>{detail}</li>
-                ))}
-              </ul>
-            </div>
+            
 
             {/* Reviews Section */}
             <div className="mt-12 lg:mt-16">

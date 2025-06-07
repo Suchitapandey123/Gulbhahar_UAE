@@ -73,9 +73,9 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="w-full bg-gradient-to-br from-gray-50 to-white border-t-2 border-red-100">
+    <footer className="w-full">
       {/* Trust Badges */}
-      <div className="bg-red-50 border-b border-red-100 py-4 sm:py-6">
+      <div className=" py-4 sm:py-6">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
             <div className="flex flex-col items-center gap-2">
@@ -126,10 +126,18 @@ export default function Footer() {
           <div className="lg:col-span-4 text-center lg:text-left">
             <div className="space-y-4 sm:space-y-6">
               <Link href="/" className="inline-block">
-                <div className="text-5xl uppercase sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-700 via-pink-600 to-yellow-500  transition-all duration-500 drop-shadow-lg tracking-wide">
+               {/* <div className="text-5xl uppercase sm:text-4xl font-[700] text-transparent bg-clip-text bg-[#FFD700] transition-all duration-500 drop-shadow-lg tracking-wide font-['oldstandard']">
   Gulbhahar
-</div>
-                <p className="text-xs text-gray-600 mt-1">Premium Fashion & Style</p>
+</div> */}
+                <Image 
+                  src="/full-logo.png" 
+                  alt="Gulbhahar Logo" 
+                  width={300} 
+                  height={150} 
+                  className="h-16 object-cover sm:h-16  lg:mx-0"
+                />
+
+                <p className="text-[16px] text-gray-600  ">Premium Fashion & Style</p>
               </Link>
               
               <p className="text-sm sm:text-base text-gray-600 max-w-sm mx-auto lg:mx-0">
@@ -154,13 +162,13 @@ export default function Footer() {
                     <FooterTwitterX className="h-5 w-5" />
                   </Link>
                   <Link 
-                    href="#" 
+                    href="https://www.instagram.com/gulbhahar_official?igsh=MzRlODBiNWFlZA==" 
                     className="w-10 h-10 bg-red-100 hover:bg-red-900 text-red-900 hover:text-white rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110"
                   >
                     <FooterInstagram className="h-5 w-5" />
                   </Link>
                   <Link 
-                    href="#" 
+                    href="https://www.facebook.com/share/1GN5HZC6dS/" 
                     className="w-10 h-10 bg-red-100 hover:bg-red-900 text-red-900 hover:text-white rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110"
                   >
                     <Facebook className="h-5 w-5" />

@@ -118,7 +118,7 @@ const NewCollection = ({ newCollection }) => {
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={containerVariants}
-      className="relative py-6 md:py-16 overflow-hidden"
+      className="relative py-6 md:py-16 overflow-visible "
     >
       {/* Enhanced Animated Background "25" */}
       <motion.div
@@ -145,7 +145,7 @@ const NewCollection = ({ newCollection }) => {
       {/* Enhanced Animated Background "20" */}
       <motion.div
         variants={backgroundNumberVariants}
-        className="absolute left-64 -bottom-40 z-0 opacity-1 pointer-events-none select-none hidden lg:block"
+        className="absolute left-64 -bottom-[130px] z-0 opacity-1 pointer-events-none select-none hidden lg:block"
       >
         <motion.div
           animate={{
@@ -165,7 +165,7 @@ const NewCollection = ({ newCollection }) => {
         </motion.div>
       </motion.div>
 
-      <div className="max-w-[1600px] mx-auto px-2 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-[1600px] mx-auto overflow-x-hidden px-2 sm:px-6 lg:px-8 relative z-10">
         {/* Header Section - Collections Style */}
         <motion.div 
           variants={headerVariants}
@@ -338,7 +338,7 @@ const NewCollection = ({ newCollection }) => {
                     scale: [1, 1.1, 1],
                     transition: { duration: 3, repeat: Infinity }
                   }}
-                  className="w-16 h-16 text-gray-400"
+                  className="w-16 h-16  text-gray-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

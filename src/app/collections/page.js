@@ -79,7 +79,7 @@ export default function Collection() {
     queryFn: () => productApi.getAllProduct(),
   });
 
-  console.log("API Data:", apiData);
+  // console.log("API Data:", apiData);
 
   // Transform API data to match component structure
   const transformApiData = (apiProducts) => {
@@ -110,7 +110,7 @@ export default function Collection() {
 
   // Use API data if available, otherwise fallback
   const collections = apiData ? transformApiData(apiData) : fallbackCollections;
-  console.log(collections);
+  // console.log(collections);
 
   // Update price range based on actual data - Fixed to prevent infinite re-renders
   useEffect(() => {
@@ -606,7 +606,7 @@ export default function Collection() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen mt-16 bg-gradient-to-br from-red-50 to-rose-50 flex items-center justify-center">
+      <div className="min-h-screen mt-16 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-red-900 mx-auto"></div>
           <p className="mt-4 text-red-900 font-semibold">Loading products...</p>
@@ -618,7 +618,7 @@ export default function Collection() {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen mt-16 bg-gradient-to-br from-red-50 to-rose-50 flex items-center justify-center">
+      <div className="min-h-screen mt-16 flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-900 font-semibold">
             Error loading products: {error.message}
@@ -630,7 +630,7 @@ export default function Collection() {
   }
 
   return (
-    <div className="min-h-screen mt-16 bg-gradient-to-br from-red-50 to-rose-50">
+    <div className="min-h-screen mt-16 ">
       {/* Breadcrumb */}
       <div className="max-w-[1600px] mx-auto px-2 xs:px-6">
         <nav className="py-4">
