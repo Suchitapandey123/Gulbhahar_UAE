@@ -73,9 +73,9 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="w-full bg-gradient-to-br from-gray-50 to-white border-t-2 border-red-100">
+    <footer className="w-full">
       {/* Trust Badges */}
-      <div className="bg-red-50 border-b border-red-100 py-4 sm:py-6">
+      <div className=" py-4 sm:py-6">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
             <div className="flex flex-col items-center gap-2">
