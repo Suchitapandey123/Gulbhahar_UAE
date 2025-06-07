@@ -244,6 +244,9 @@ export default function Footer() {
             <h3 className="text-sm font-bold uppercase tracking-wider text-red-900 mb-4 sm:mb-6">
               Get in Touch
             </h3>
+            {/* dfscxgkljefdbgfbgkckjxbvfdasfxkjbciruebgfidub
+            dcxgknf;dln;ofdg;lk ;l;nvc;
+            fdvcs;flgcknbvfk;gndcbv;snk */}
             
             {/* Contact Info */}
             <div className="space-y-3 mb-6">
