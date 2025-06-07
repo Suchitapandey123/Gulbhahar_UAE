@@ -48,7 +48,7 @@ export default function Culture() {
               <div className="absolute inset-0 bg-gradient-to-br from-amber-400 to-orange-600" />
               <div className="absolute inset-3 bg-white shadow-2xl overflow-hidden">
                 <Image
-                  src={img1}
+                  src={"https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-6.png"}
                   alt="Cultural Heritage"
                   fill
                   className="object-cover"
@@ -60,10 +60,10 @@ export default function Culture() {
           {/* Gallery Grid */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
             {[
-              { src: "/gulbhahar-1.png", label: "Heritage" },
-              { src: "/gulbhahar2.png", label: "Tradition" },
-              { src: "/gulbhahar-3.png", label: "Artistry" },
-              { src: "/gulbhahar-4.png", label: "Legacy" },
+              { src: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-1.png", label: "Heritage" },
+              { src: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-2.png", label: "Tradition" },
+              { src: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-3.png", label: "Artistry" },
+              { src: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-4.png", label: "Legacy" },
             ].map((item, index) => (
               <motion.div
                 key={index}
@@ -75,9 +75,10 @@ export default function Culture() {
                 <div className="absolute inset-0 bg-gradient-to-br from-amber-400 to-orange-600" />
                 <div className="absolute inset-1 bg-white shadow-lg overflow-hidden">
                   <Image
-                    src={item.src}
+                    src={`https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-1.png`}
                     alt={item.label}
                     fill
+                    priority
                     className="object-cover"
                   />
                 </div>
@@ -104,7 +105,7 @@ export default function Culture() {
             >
               <div className="relative overflow-hidden h-full">
                 <Image
-                  src="/gulbhahar-20.png"
+                  src="/https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-5.png.png"
                   alt="showcase image"
                   fill
                   className="object-cover"
