@@ -8,10 +8,12 @@ import { ArrowUpRight } from "lucide-react";
 
 const seasons = [
   "all",
+  "designed by monica",
   "fall",
   "winter",
   "spring",
   "summer",
+  
 ];
 
 export default function CollectionsPage({collections}) {
