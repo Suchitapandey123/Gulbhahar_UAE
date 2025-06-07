@@ -82,7 +82,7 @@ export default function Culture() {
                     className="object-cover"
                   />
 
-
+            
 
                
 
