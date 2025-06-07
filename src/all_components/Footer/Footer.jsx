@@ -52,23 +52,23 @@ export default function Footer() {
   const currentYear = 2025;
 
   const shopLinks = [
-    { href: "/Collections", label: "All Collections" },
-    { href: "/Collections", label: "Limited Collections" },
-    { href: "#", label: "Sale & Discounts" },
-    { href: "#", label: "New Arrivals" }
+    { href: "/collections", label: "All Collections" },
+    { href: "/collections", label: "Limited Collections" },
+    { href: "/collections", label: "Sale & Discounts" },
+    { href: "/collections", label: "New Arrivals" }
   ];
 
   const companyLinks = [
     { href: "/about", label: "About Us" },
     { href: "/contact", label: "Contact" },
     { href: "/account", label: "My Account" },
-    { href: "/careers", label: "Careers" }
+    { href: "/", label: "Careers" }
   ];
 
   const supportLinks = [
     { href: "/faq", label: "FAQs" },
     { href: "/cookies-policy", label: "Cookie Policy" },
-    { href: "/terms-condition", label: "Terms of Use" },
+    { href: "/cookies-policy", label: "Terms of Use" },
     { href: "/privacy-policy", label: "Privacy Policy" }
   ];
 
@@ -246,7 +246,7 @@ export default function Footer() {
             </h3>
             {/* dfscxgkljefdbgfbgkckjxbvfdasfxkjbciruebgfidub
             dcxgknf;dln;ofdg;lk ;l;nvc;
-            fdvcs;flgcknbvfk;gndcbv;snk */}
+            fdvcs;flgcknbvfk;gndcbv;snki */}
             
             {/* Contact Info */}
             <div className="space-y-3 mb-6">
@@ -260,7 +260,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-2 justify-center lg:justify-start">
                 <Phone className="h-4 w-4 text-red-600" />
-                <span className="text-xs text-gray-600">+91 98765 43210</span>
+                <span className="text-xs text-gray-600">+91 97176 14241</span>
               </div>
             </div>
             

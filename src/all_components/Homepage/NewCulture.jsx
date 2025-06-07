@@ -96,7 +96,7 @@ const LuxuryCulture = () => {
       title: "Royal Embroidery",
       subtitle: "Zardozi & Gold Thread Work",
       description: "Intricate hand-embroidered patterns passed down through generations of master artisans, featuring gold and silver threads that tell stories of royal courts.",
-      image: "/gulbhahar-1.png",
+      image: "/https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-1.png",
       color: "from-amber-700 via-yellow-600 to-orange-500",
       accent: "border-amber-400",
       heritage: "1000+ Years",
@@ -107,7 +107,7 @@ const LuxuryCulture = () => {
       title: "Handwoven Textiles",
       subtitle: "Banarasi & Silk Weaving",
       description: "Luxurious silk fabrics woven on traditional looms, creating timeless patterns that have adorned Indian royalty for centuries.",
-      image: "/gulbhahar2.png",
+      image: "/https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-6.png",
       color: "from-purple-700 via-indigo-600 to-blue-500",
       accent: "border-purple-400",
       heritage: "800+ Years",
@@ -118,7 +118,7 @@ const LuxuryCulture = () => {
       title: "Leather Artistry",
       subtitle: "Traditional Juttiwork",
       description: "Master craftsmen shape premium leather into exquisite footwear, each pair telling a story of skill, tradition, and timeless elegance.",
-      image: "/gulbhahar-3.png",
+      image: "/https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-7.png",
       color: "from-emerald-700 via-teal-600 to-cyan-500",
       accent: "border-emerald-400",
       heritage: "500+ Years",
@@ -129,7 +129,7 @@ const LuxuryCulture = () => {
       title: "Gemstone Craft",
       subtitle: "Jadau & Kundan Work",
       description: "Precious stones and pearls meticulously set by hand, creating jewelry pieces that capture light and tradition in perfect harmony.",
-      image: "/gulbhahar-4.png",
+      image: "/https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-8.png",
       color: "from-rose-700 via-pink-600 to-red-500",
       accent: "border-rose-400",
       heritage: "600+ Years",
@@ -140,7 +140,7 @@ const LuxuryCulture = () => {
       title: "Metal Artistry",
       subtitle: "Bidriware & Damascening",
       description: "Ancient techniques of inlaying precious metals create stunning decorative pieces that showcase the pinnacle of Indian metalwork mastery.",
-      image: "/gulbhahar-1.png",
+      image: "/https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-9.png",
       color: "from-gray-700 via-slate-600 to-zinc-500",
       accent: "border-gray-400",
       heritage: "700+ Years",
@@ -225,7 +225,7 @@ const LuxuryCulture = () => {
                 <div className={`relative w-full h-full bg-gradient-to-br ${heritageElements[0].color} rounded-3xl overflow-hidden shadow-2xl ${heritageElements[0].accent} border-2`}>
                   <div className="absolute inset-0">
                     <Image
-                      src={heritageElements[0].image}
+                      src={`https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-4.png`}
                       alt={heritageElements[0].title}
                       fill
                       className="object-cover opacity-20"
@@ -267,7 +267,7 @@ const LuxuryCulture = () => {
                 <div className={`relative w-full h-full bg-gradient-to-br ${heritageElements[1].color} rounded-2xl overflow-hidden shadow-xl ${heritageElements[1].accent} border-2`}>
                   <div className="absolute inset-0">
                     <Image
-                      src={heritageElements[1].image}
+                      src={`https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-5.png`}
                       alt={heritageElements[1].title}
                       fill
                       className="object-cover opacity-30"
@@ -300,7 +300,7 @@ const LuxuryCulture = () => {
                 <div className={`relative w-full h-full bg-gradient-to-br ${heritageElements[2].color} rounded-2xl overflow-hidden shadow-xl ${heritageElements[2].accent} border-2`}>
                   <div className="absolute inset-0">
                     <Image
-                      src={heritageElements[2].image}
+                      src={`https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-3.png`}
                       alt={heritageElements[2].title}
                       fill
                       className="object-cover opacity-25"
@@ -333,7 +333,7 @@ const LuxuryCulture = () => {
                 <div className={`relative w-full h-full bg-gradient-to-br ${heritageElements[3].color} rounded-2xl overflow-hidden shadow-xl ${heritageElements[3].accent} border-2`}>
                   <div className="absolute inset-0">
                     <Image
-                      src={heritageElements[3].image}
+                      src={`https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-2.png`}
                       alt={heritageElements[3].title}
                       fill
                       className="object-cover opacity-30"
@@ -369,7 +369,7 @@ const LuxuryCulture = () => {
                 <div className={`relative w-full h-full bg-gradient-to-br ${heritageElements[4].color} rounded-2xl overflow-hidden shadow-xl ${heritageElements[4].accent} border-2`}>
                   <div className="absolute inset-0">
                     <Image
-                      src={heritageElements[4].image}
+                      src={`https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-2.png`}
                       alt={heritageElements[4].title}
                       fill
                       className="object-cover opacity-40"
@@ -468,7 +468,9 @@ const LuxuryCulture = () => {
         <motion.div 
           variants={ctaVariants}
           className="text-center mt-16 md:mt-24"
+          onClick={() => window.location.href = "/collections"}
         >
+          
           <button className="px-8 md:px-12 py-3 md:py-4 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-full font-light text-base md:text-lg shadow-2xl border border-amber-400/30 hover:bg-gradient-to-r hover:from-amber-700 hover:to-orange-700 transition-colors duration-300">
             Explore Our Heritage Collection
           </button>
