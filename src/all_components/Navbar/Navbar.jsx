@@ -81,7 +81,6 @@ const Navbar = () => {
             imageUrl: data.user.imageUrl || "",
             userId: data.user.userId || data.user._id || "",
           };
-
           setUser(userData);
 
           // Update localStorage with the latest user data
@@ -597,181 +596,134 @@ const Navbar = () => {
                 {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
               </button>
             </div>
-
             <div className="hidden md:flex items-center space-x-2 lg:space-x-12">
               <NavLink href="/collections" hasDropdown={true}>
                 Collections
               </NavLink>
               <NavLink href="/about">About</NavLink>
             </div>
+            {/* // Animated Logo Section - Removed shimmer effect */}
 
-            <div className="flex-1 flex items-center   w-full h-full justify-center md:flex-initial">
-  <Link href="/" className="relative group   w-full h-full mx-auto">
-    {/* Static Logo for Non-Home Pages with Hover Magic */}
-    {pathname !== "/" && (
-      <div className="relative z-50  flex items-center  justify-center  w-[65%] mx-auto h-[80%]">
+            <div className="flex-1 flex items-center justify-center md:flex-initial">
+  <Link href="/" className="relative group">
+    {/* Logo Container - Image + Text */}
+    <div className="relative flex items-center justify-center px-1 sm:px-6 md:px-8 sm:py-1">
+      
+      {/* Logo Image - Left Side */}
+      <div className={`
+        w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14  sm:mr-2 md:mr-3 flex items-center justify-center
+        transition-all duration-700 ease-out transform relative z-10
+        ${pathname === "/" ? "group-hover:scale-105" : ""}
+        ${pathname !== "/" 
+          ? "opacity-100 translate-y-0"     // Other pages: always visible
+          : isScrolled 
+            ? "opacity-100 translate-y-0"   // Home scrolled: visible
+            : "opacity-0 translate-y-4"     // Home not scrolled: hidden with slide up
+        }
+      `}>
         <Image
-          src="/gulbhahar.png"
-          alt="Brand Logo"
-          width={1200}
-          height={100}
+          src="/logo.png"  
+          alt="Logo"
+          fill
+          sizes="(max-width: 600px) 28px, (max-width: 708px) 36px, (max-width: 980px) 42px, 50px"
+          className="object-contain"
           priority
-          className={`
-            transition-all duration-500 object-fill ease-out
-            filter group-hover:brightness-105 group-active:scale-95 relative z-10 
-            w-full ${isScrolled ? "h-10" :"h-10"}
-          `}
         />
+      </div>
+      
+      {/* GULBHAHAR Text Logo */}
+      <h1 
+        className={`
+          text-xl sm:text-2xl md:text-4xl lg:text-5xl font-normal sm:tracking-[0.2em]
+          transition-all duration-700 ease-out transform relative z-10
+          ${pathname === "/" ? "group-hover:scale-105 group-hover:tracking-[0.2em]" : ""}
+          ${pathname !== "/" 
+            ? "text-[#800000] opacity-100 translate-y-0"     // Other pages: always visible and red
+            : isScrolled 
+              ? "text-[#800000] opacity-100 translate-y-0"  // Home scrolled: visible and red
+              : "text-white opacity-0 translate-y-4"        // Home not scrolled: hidden with slide up
+          }
+        `}
+        style={{ fontFamily: 'Old Standard TT, serif' }}
+      >
+        GULBHAHAR
+      </h1>
 
-        {/* Golden Dust Particles - Flying Above */}
-        <div className="absolute inset-0  pointer-events-none z-20">
-          {[...Array(12)].map((_, i) => (
-            <div
-              key={`dust-${i}`}
-              className="absolute w-1.5 h-1.5 bg-gradient-to-r from-red-800 to-red-900 rounded-full 
-                       opacity-0 group-hover:opacity-80 transition-all duration-1000 ease-out shadow-lg z-20"
-              style={{
-                left: `${15 + i * 7}%`,
-                top: `${-30 + (i % 4) * 20}%`,
-                transitionDelay: `${i * 80}ms`,
-              }}
-            />
-          ))}
+      {/* Magical Particles - Fixed positioning */}
+      <div className={`absolute inset-0 pointer-events-none transition-opacity duration-500 ${
+        (pathname !== "/" || isScrolled) ? "opacity-100" : "opacity-0"
+      }`}>
+        {[...Array(8)].map((_, i) => (
+          <div
+            key={`particle-${i}`}
+            className="absolute w-1 h-1 bg-red-400/60 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-1000 ease-out"
+            style={{
+              left: `${20 + i * 8}%`,
+              top: `${30 + (i % 3) * 15}%`,
+              transitionDelay: `${i * 100}ms`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Golden Dust Effect - Fixed positioning */}
+      <div className={`absolute inset-0 pointer-events-none transition-opacity duration-700 ${
+        (pathname !== "/" || isScrolled) ? "opacity-100" : "opacity-0"
+      }`}>
+        {[...Array(6)].map((_, i) => (
+          <div
+            key={`dust-${i}`}
+            className="absolute w-0.5 h-0.5 bg-yellow-400/80 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-1200 ease-out animate-pulse"
+            style={{
+              left: `${25 + i * 10}%`,
+              top: `${20 + (i % 4) * 12}%`,
+              transitionDelay: `${200 + i * 150}ms`,
+              animationDelay: `${i * 300}ms`,
+              animationDuration: "3s",
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Pulsing Glow - Contained */}
+      <div className={`absolute left-2 right-2 top-1/2 transform -translate-y-1/2 h-12 pointer-events-none transition-opacity duration-500 ${
+        (pathname !== "/" || isScrolled) ? "opacity-100" : "opacity-0"
+      }`}>
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-40 transition-all duration-800 ease-out">
+          <div className="w-full h-full bg-gradient-to-r from-red-400/10 via-red-600/20 to-red-400/10 blur-md animate-pulse"></div>
         </div>
+      </div>
 
-        {/* DNA Helix Effect */}
-        <div className="absolute inset-0  pointer-events-none z-10">
-          {[...Array(16)].map((_, i) => (
-            <div
-              key={`helix-${i}`}
-              className="absolute w-1 h-1 bg-red-400 rounded-full opacity-0 group-hover:opacity-60 transition-all duration-1200 ease-out"
+      {/* Floating Sparkles - Better positioning */}
+      <div className={`absolute inset-0 pointer-events-none transition-opacity duration-500 ${
+        (pathname !== "/" || isScrolled) ? "opacity-100" : "opacity-0"
+      }`}>
+        {[...Array(4)].map((_, i) => (
+          <div
+            key={`sparkle-${i}`}
+            className="absolute opacity-0 group-hover:opacity-100 transition-all duration-800 ease-out"
+            style={{
+              left: `${30 + i * 15}%`,
+              top: `${15 + (i % 2) * 8}%`,
+              transitionDelay: `${500 + i * 200}ms`,
+            }}
+          >
+            <div 
+              className="w-1 h-1 bg-yellow-300 rounded-full relative animate-ping"
               style={{
-                left: `${50 + 30 * Math.cos((i * Math.PI) / 8)}%`,
-                top: `${50 + 30 * Math.sin((i * Math.PI) / 8)}%`,
-                animationDelay: `${i * 100}ms`,
-                transform: `rotate(${i * 22.5}deg) translateX(20px)`,
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Prismatic Light Beams */}
-        <div className="absolute inset-0   pointer-events-none z-8">
-          {[...Array(8)].map((_, i) => (
-            <div
-              key={`beam-${i}`}
-              className="absolute opacity-0 group-hover:opacity-40  transition-all duration-1000 ease-out"
-              style={{
-                width: "200%",
-                height: "0.0px",
-                left: "-50%",
-                top: "50%",
-                background: `linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.6), transparent)`,
-                transform: `rotate(${i * 45}deg)`,
-                transformOrigin: "center",
-                transitionDelay: `${1400 + i * 75}ms`,
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Magnetic Field Lines */}
-        <div className="absolute inset-0 overflow-visible pointer-events-none z-7">
-          {[...Array(3)].map((_, i) => (
-            <div
-              key={`field-${i}`}
-              className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2
-                       opacity-0 group-hover:opacity-25 transition-all duration-1500 ease-out
-                       border border-red-300 rounded-full group-hover:animate-pulse"
-              style={{
-
-                width: `${80 + i * 60}px`,
-                height: `${40 + i * 30}px`,
-                transitionDelay: `${1500 + i * 200}ms`,
-                animationDelay: `${i * 500}ms`,
-                animationDuration: "4s",
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Quantum Particles */}
-        <div className="absolute inset-0 overflow-visible pointer-events-none z-25">
-          {[...Array(12)].map((_, i) => (
-            <div
-              key={`quantum-${i}`}
-              className="absolute opacity-0 group-hover:opacity-100 transition-all duration-600 ease-out z-25"
-              style={{
-                left: `${20 + ((i * 7) % 60)}%`,
-                top: `${-20 + ((i * 11) % 40)}%`,
-                transitionDelay: `${1600 + i * 80}ms`,
+                animationDelay: `${i * 400}ms`,
+                animationDuration: "2s",
               }}
             >
-              <div
-                className="w-1 h-1 bg-red-600 rounded-full relative group-hover:animate-ping"
-                style={{
-                  animationDelay: `${i * 150}ms`,
-                  animationDuration: "2s",
-                }}
-              >
-                <div className="absolute inset-0 bg-red-600 rounded-full animate-pulse" />
-                <div
-                  className="absolute -inset-1 bg-red-400/30 rounded-full animate-ping"
-                  style={{ animationDelay: `${i * 200}ms` }}
-                />
-              </div>
+              <div className="absolute inset-0 bg-yellow-300 rounded-full animate-pulse" />
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
-    )}
-
-    {/* Magical Logo Effect - Only on Home Page */}
-    {pathname === "/" && (
-      <div className="relative w-[65%] h-[70%] mx-auto flex justify-center">
-        <Image
-          src="/gulbhahar.png"
-          alt="Brand Logo"
-          width={700}
-          height={100}
-          priority
-          className={`
-            transition-all duration-700 ease-out 
-            filter group-hover:brightness-110 relative z-10
-            w-full max-w-full object-fill
-            ${isScrolled ? "h-10 opacity-100" : "h-10 opacity-0"}
-          `}
-        />
-
-        {/* Burst Effect on Reveal */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(8)].map((_, i) => (
-            <div
-              key={i}
-              className={`
-                absolute w-1 h-1 bg-red-400/60 rounded-full
-                transition-all duration-1000 ease-out
-                ${isScrolled ? "opacity-100 scale-100" : "opacity-0 scale-0"}
-              `}
-              style={{
-                left: `${15 + i * 10}%`,
-                top: `${20 + (i % 3) * 30}%`,
-                transitionDelay: `${200 + i * 50}ms`,
-                transform: isScrolled
-                  ? `translate(${Math.cos(i * 45) * 10}px, ${
-                      Math.sin(i * 45) * 10
-                    }px)`
-                  : "translate(0, 0)",
-              }}
-            />
-          ))}
-        </div>
-      </div>
-    )}
+    </div>
   </Link>
 </div>
-
-            <div className="hidden md:flex items-center space-x-2 lg:space-x-6">
+   <div className="hidden md:flex items-center space-x-2 lg:space-x-6">
               <button
                 onClick={toggleSearchPopup}
                 className={`
@@ -953,7 +905,6 @@ const Navbar = () => {
                 </button>
               )}
             </div>
-
             <div className="flex items-center space-x-1 sm:space-x-2 md:hidden">
               <button
                 onClick={toggleSearchPopup}

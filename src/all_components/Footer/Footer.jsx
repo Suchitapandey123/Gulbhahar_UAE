@@ -130,11 +130,11 @@ export default function Footer() {
   Gulbhahar
 </div> */}
                 <Image 
-                  src="/gulbhahar.png" 
+                  src="/full-logo.png" 
                   alt="Gulbhahar Logo" 
                   width={300} 
-                  height={50} 
-                  className="h-12 sm:h-16 mx-auto lg:mx-0"
+                  height={150} 
+                  className="h-16 object-cover sm:h-16  lg:mx-0"
                 />
 
                 <p className="text-[16px] text-gray-600  ">Premium Fashion & Style</p>
