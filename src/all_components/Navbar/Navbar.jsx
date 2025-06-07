@@ -7,6 +7,7 @@ import {
   X,
   ChevronDown,
   Search,
+
   ShoppingBag,
   User,
   LogOut,
@@ -78,6 +79,7 @@ const Navbar = () => {
             email: data.user.email || "",
             firstName: data.user.firstName || "",
             lastName: data.user.lastName || "",
+            
             imageUrl: data.user.imageUrl || "",
             userId: data.user.userId || data.user._id || "",
           };
