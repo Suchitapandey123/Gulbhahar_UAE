@@ -2,10 +2,10 @@ import React from "react";
 
 const TopTrends = () => {
   const slides = [
-    "/image/gulbhahar-11.png",
-    "/image/gulbhahar-12.png",
-    "/image/gulbhahar-13.png",
-    "/image/gulbhahar-14.png",
+    "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-6.png",
+    "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-7.png",
+    "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-8.png",
+    "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-9.png",
   ];
 
   return (
