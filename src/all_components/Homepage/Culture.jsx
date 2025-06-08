@@ -112,7 +112,7 @@ export default function Culture() {
             >
               <div className="relative overflow-hidden h-full">
                 <Image
-                  src="/https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-5.png.png"
+                  src={`https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-${i+14}.png`}
                   alt="showcase image"
                   fill
                   className="object-cover"

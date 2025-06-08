@@ -49,10 +49,10 @@ const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   
   const slides = [
-    "/image/gulbhahar-7.png",
-    "/image/gulbhahar-8.png", 
-    "/image/gulbhahar-9.png",
-    "/image/gulbhahar-10.png",
+    "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-6.png",
+    "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-7.png", 
+    "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-8.png",
+    "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-9.png",
   ];
 
   useEffect(() => {
