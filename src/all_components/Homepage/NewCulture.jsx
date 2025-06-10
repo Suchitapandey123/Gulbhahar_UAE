@@ -177,7 +177,7 @@ const LuxuryCulture = () => {
                 alt="Cultural Heritage"
                 width={600}
                 height={200}
-                className="w-full max-w-4xl h-auto drop-shadow-2xl"
+                className="w-full max-w-7xl h-auto drop-shadow-2xl"
               />
             </div>
           </motion.h1>

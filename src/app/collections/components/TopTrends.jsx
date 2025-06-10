@@ -2,10 +2,10 @@ import React from "react";
 
 const TopTrends = () => {
   const slides = [
-    "/image/gulbhahar-11.png",
-    "/image/gulbhahar-12.png",
-    "/image/gulbhahar-13.png",
-    "/image/gulbhahar-14.png",
+    "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-6.png",
+    "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-7.png",
+    "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-8.png",
+    "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-9.png",
   ];
 
   return (
@@ -16,6 +16,8 @@ const TopTrends = () => {
           <h2 className="text-5xl font-bold mb-12 text-red-900 text-center">
             Top Trends
           </h2>
+          {/* axzcjBLKDSBXIUDSBXZIJBLIJDSXLIJBVLDSJXBZCLKDJBWDFSCXZJBDLKSJAZJNDS
+          DSXVFDCDSCXVDCSVVDSX */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {slides.map((slide, i) => (
               <div
