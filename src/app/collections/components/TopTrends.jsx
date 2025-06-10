@@ -16,6 +16,8 @@ const TopTrends = () => {
           <h2 className="text-5xl font-bold mb-12 text-red-900 text-center">
             Top Trends
           </h2>
+          {/* axzcjBLKDSBXIUDSBXZIJBLIJDSXLIJBVLDSJXBZCLKDJBWDFSCXZJBDLKSJAZJNDS
+          DSXVFDCDSCXVDCSVVDSX */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {slides.map((slide, i) => (
               <div
