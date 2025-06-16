@@ -292,11 +292,11 @@ export default function ContactPage() {
                   className="inline-flex items-center gap-2 text-sm font-semibold text-red-900 hover:text-red-700 transition-colors bg-red-50 px-3 py-2 rounded-lg hover:bg-red-100 block w-full"
                 >
                   <Phone className="h-4 w-4" />
-                  +91 9876543210
+                  +91 9220927241
                 </a>
                 <a 
                   href="tel:+919876543210" 
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-red-900 hover:text-red-700 transition-colors bg-red-50 px-3 py-2 rounded-lg hover:bg-red-100 block w-full"
+                  className="inline-flex hidden items-center gap-2 text-sm font-semibold text-red-900 hover:text-red-700 transition-colors bg-red-50 px-3 py-2 rounded-lg hover:bg-red-100 block w-full"
                 >
                   <Phone className="h-4 w-4" />
                   +91 9876543210
@@ -319,11 +319,11 @@ export default function ContactPage() {
                 </div>
               </div>
               <p className="text-sm text-gray-600 mb-3">
-                S-12, Rajouri Garden, New Delhi-110079
+                S-12, Rajouri Garden, New Delhi-110027
               </p>
               <a 
                 href="#" 
-                className="inline-flex items-center gap-2 text-sm font-semibold text-red-900 hover:text-red-700 transition-colors bg-red-50 px-3 py-2 rounded-lg hover:bg-red-100"
+                className="inline-flexv hidden items-center gap-2 text-sm font-semibold text-red-900 hover:text-red-700 transition-colors bg-red-50 px-3 py-2 rounded-lg hover:bg-red-100"
               >
                 <MapPin className="h-4 w-4" />
                 Locate on Map
