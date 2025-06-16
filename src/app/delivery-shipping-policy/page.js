@@ -24,7 +24,7 @@ import {
 const TiltArrowUp = ({ className }) => <ChevronRight className={className} />;
 
 const Cookies = () => {
-  const [activeTab, setActiveTab] = useState("terms");
+  const [activeTab, setActiveTab] = useState("delivery");
 
   const tabs = [
     {
