@@ -11,6 +11,11 @@ import {
   FileText,
   Lock,
   Eye,
+  Clock,
+  RefreshCw,
+  Repeat,
+  XCircle,
+  Package,
   CheckCircle,
   AlertCircle,
   Globe,
@@ -359,73 +364,10 @@ terms: {
 
 
 delivery: {
-  title: "Delivery & shipping",
+  title: "Delivery & Shipping",
   icon: FileText,
-  content: (
+   content: (
     <div className="space-y-6 sm:space-y-8">
-      {/* Intro */}
-      <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 sm:p-6">
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0">
-            <FileText className="h-5 w-5 text-white" />
-          </div>
-          <div>
-            <h4 className="font-bold text-yellow-900 mb-2 text-lg">RETURNS & EXCHANGES</h4>
-            <div className="space-y-3">
-              <p className="text-sm sm:text-base text-gray-700">
-                We use standard EURO sizes to help you pick the perfect size. However, if you still want to swap your pairs for another size then you may return them at 
-              </p>
-              <p className="text-sm sm:text-base text-gray-700 bg-red-100 p-3 rounded-lg border border-red-200">
-                <strong> S-12 Janta Market, Rajouri Garden Delhi , 110027,</strong> India within 30 Days in its original box packing and the invoice. Please mention your desired exchange piece along with the size on the invoice as well.
-              </p>
-              <p className="text-sm sm:text-base text-gray-700">
-                You may also mail us at <span className="font-bold text-red-800">gulbhahar1@gmail.com</span> for the same. We do not entertain refund & cancellation requests.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Eligibility */}
-      <div className="bg-white border-2 border-yellow-100 rounded-xl p-4 sm:p-6 hover:shadow-md transition-shadow">
-        <div className="space-y-4">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center flex-shrink-0">
-              <AlertCircle className="h-4 w-4 text-red-600" />
-            </div>
-            <h3 className="text-lg sm:text-xl text-gray-900 font-bold">Exchange Policy</h3>
-          </div>
-          <div className="ml-11 space-y-3">
-            <p className="text-sm sm:text-base text-gray-700"> 
-              The Pairs can be exchanged for another size of the same style only. In case your desired size is unavailable with us, you could then exchange it for another style of a similar value.
-            </p>
-            <div className="bg-red-50 border-l-4 border-red-400 p-3 rounded-r">
-              <p className="text-sm sm:text-base font-semibold text-yellow-800">
-                Pairs bought on SALE price will not be exchanged or returned.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Intellectual Property */}
-      <div className="bg-white border-2 border-yellow-100 rounded-xl p-4 sm:p-6 hover:shadow-md transition-shadow">
-        <div className="flex items-start gap-3 mb-4">
-          <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0">
-            <Globe className="h-5 w-5 text-white" />
-          </div>
-          <div>
-            <h3 className="text-lg sm:text-xl text-gray-900 font-bold">International Orders</h3>
-            <span className="inline-block bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full mt-1">
-              Important Notice
-            </span>
-          </div>
-        </div>
-        <p className="text-sm sm:text-base text-gray-700 ml-13"> 
-          We do not entertain refunds & exchanges on International orders.
-        </p>
-      </div>
-
       {/* Shipping Policy */}
       <div className="bg-white border-2 border-yellow-100 rounded-xl p-4 sm:p-6 hover:shadow-md transition-shadow">
         <div className="flex items-start gap-3 mb-4">
@@ -433,61 +375,74 @@ delivery: {
             <Truck className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h3 className="text-lg sm:text-xl text-gray-900 font-bold">SHIPPING POLICY</h3>
+            <h1 className="text-lg sm:text-xl text-gray-900 font-bold">Gulbhahar Shipping Policy</h1>
           </div>
         </div>
         <div className="ml-13 space-y-4">
           <p className="text-sm sm:text-base text-gray-700">
-            We have FREE shipping within India on prepaid orders. Once you place an order your pairs will be shipped within the stipulated time period mentioned beside each style. Though we use some of India's largest logistics companies for shipping, we are bound in coverage by their reach.
+            At Gulbhahar, we offer FREE shipping across India for all prepaid orders. Your order will be processed and shipped within the timeframe specified for each product. We partner with leading logistics providers to ensure reliable delivery service nationwide.
           </p>
-          <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-            <p className="text-sm sm:text-base text-gray-700">
-              <span className="font-bold">Please Note</span> - During festive seasons, pandemics, adverse weather conditions, or conditions beyond our control your shipment could get delayed. We assure you that we will try our best to have your parcel delivered to you in good time.
-            </p>
+          
+          <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+            <h3 className="font-bold text-green-800 mb-2">Domestic Shipping Details:</h3>
+            <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base text-gray-700">
+              <li>Standard delivery time: 3-7 business days</li>
+              <li>Express shipping options available at checkout</li>
+              <li>Order tracking provided for all shipments</li>
+              <li>Cash on delivery available (additional charges may apply)</li>
+            </ul>
           </div>
+
           <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-            <p className="text-sm sm:text-base text-red-800 font-medium">
-              <span className="font-bold">IMPORTANT for International Orders:</span> Orders with more than 1 item will be packed in a large box instead of individual boxes.
-            </p>
+            <h3 className="font-bold text-red-800 mb-2">International Shipping:</h3>
+            <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base text-gray-700">
+              <li>International shipping available to select countries</li>
+              <li>Delivery time: 7-15 business days (varies by destination)</li>
+              <li>Customs duties and taxes are the responsibility of the recipient</li>
+              <li>Orders with multiple items will be consolidated in one package</li>
+            </ul>
+          </div>
+
+          <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+            <h3 className="font-bold text-yellow-800 mb-2">Important Notes:</h3>
+            <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base text-gray-700">
+              <li>Delivery times may extend during festivals, holidays, or unforeseen circumstances</li>
+              <li>Please ensure accurate shipping address to avoid delivery delays</li>
+              <li>Contact us immediately if your package arrives damaged</li>
+              <li>Signature may be required for delivery of high-value orders</li>
+            </ul>
           </div>
         </div>
       </div>
 
-      {/* Security & Privacy */}
+      {/* Order Processing */}
       <div className="bg-white border-2 border-yellow-100 rounded-xl p-4 sm:p-6 hover:shadow-md transition-shadow">
         <div className="flex items-start gap-3 mb-4">
           <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0">
-            <Lock className="h-5 w-5 text-white" />
+            <Clock className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h3 className="text-lg sm:text-xl text-gray-900 font-bold">SECURITY & PRIVACY POLICY</h3>
+            <h2 className="text-lg sm:text-xl text-gray-900 font-bold">Order Processing Timeline</h2>
           </div>
         </div>
         <div className="ml-13 space-y-4">
-          <p className="text-sm sm:text-base text-gray-700">
-            Gulbhahar is committed to protecting the privacy of visitors to this site (SITE). At Gulbhahar, we want you to have an enjoyable shopping experience. While we must collect certain personal information, we respect and protect your right to privacy as outlined in this Privacy Policy.
-          </p>
-          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-            <p className="text-sm sm:text-base text-gray-700">
-              The nature of the information collected (if any), is simply to allow us to contact you should you choose to or for us to contact you based on a business relation you establish by purchasing or making an order online. This is solely to be able to follow up on any order that you may initiate on this site.
-            </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <h4 className="font-semibold text-gray-800 mb-2">1. Order Confirmation</h4>
+              <p className="text-sm text-gray-600">Immediate email confirmation after purchase</p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <h4 className="font-semibold text-gray-800 mb-2">2. Processing</h4>
+              <p className="text-sm text-gray-600">1-2 business days for order verification</p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <h4 className="font-semibold text-gray-800 mb-2">3. Dispatch</h4>
+              <p className="text-sm text-gray-600">Next business day after processing</p>
+            </div>
           </div>
-          <p className="text-sm sm:text-base text-gray-700">
-            The information stored does NOT include any financial details, other than details related to the purchase or interest of products by you, and is purely restricted to order, contact, and preferences. We strictly do NOT capture or store any account or card numbers.
+          <p className="text-sm sm:text-base text-gray-700 mt-4">
+            You will receive shipping confirmation with tracking information once your order is dispatched. For any delivery-related queries, please contact our customer support at <span className="font-bold text-red-800">gulbhahar1@gmail.com</span>.
           </p>
-          <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-            <p className="text-sm sm:text-base text-gray-700">
-              We may collect your session, contact, and order information on our server and your browser in the form of session storage or cookies. We will NOT share it with any third party, other than those necessary to make the delivery of the product to you, marketing material to you, and improvement purposes.
-            </p>
-          </div>
-          <p className="text-sm sm:text-base text-gray-700">
-            We may send marketing material in the form of emails or common digital mediums, to your contact information also. We may also study your spending patterns to improve our service offering. Gulbhahar reserves the right to make alterations to this policy in the future without notice.
-          </p>
-          <div className="bg-gray-100 p-4 rounded-lg">
-            <p className="text-sm sm:text-base text-gray-700 font-medium">
-              This Privacy Policy applies to the Site. You agree that your use of the Site signifies your consent to this Privacy Policy. If you do not agree with this Privacy Policy, please do not use the Site.
-            </p>
-          </div>
         </div>
       </div>
     </div>
@@ -499,129 +454,139 @@ refund: {
   icon: FileText,
   content: (
     <div className="space-y-6 sm:space-y-8">
-      {/* Intro */}
+      {/* Refund Policy */}
       <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 sm:p-6">
         <div className="flex items-start gap-3">
           <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0">
-            <FileText className="h-5 w-5 text-white" />
+            <RefreshCw className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h4 className="font-bold text-yellow-900 mb-2 text-lg">RETURNS & EXCHANGES</h4>
+            <h1 className="font-bold text-yellow-900 mb-2 text-lg">Gulbhahar Refund Policy</h1>
             <div className="space-y-3">
               <p className="text-sm sm:text-base text-gray-700">
-                We use standard EURO sizes to help you pick the perfect size. However, if you still want to swap your pairs for another size then you may return them at 
+                We strive for complete customer satisfaction. However, please note our refund policy:
               </p>
-              <p className="text-sm sm:text-base text-gray-700 bg-red-100 p-3 rounded-lg border border-red-200">
-                <strong> S-12 Janta Market, Rajouri Garden Delhi , 110027,</strong> India within 30 Days in its original box packing and the invoice. Please mention your desired exchange piece along with the size on the invoice as well.
-              </p>
-              <p className="text-sm sm:text-base text-gray-700">
-                You may also mail us at <span className="font-bold text-red-800">gulbhahar1@gmail.com</span> for the same. We do not entertain refund & cancellation requests.
-              </p>
+              <div className="bg-white p-3 rounded-lg border border-red-200">
+                <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base text-gray-700">
+                  <li>We currently do not offer refunds for purchased items</li>
+                  <li>All sales are final unless the product is defective or damaged</li>
+                  <li>Defective items must be reported within 48 hours of delivery</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Eligibility */}
+      {/* Exchange Policy */}
       <div className="bg-white border-2 border-yellow-100 rounded-xl p-4 sm:p-6 hover:shadow-md transition-shadow">
         <div className="space-y-4">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center flex-shrink-0">
-              <AlertCircle className="h-4 w-4 text-red-600" />
+              <Repeat className="h-4 w-4 text-red-600" />
             </div>
-            <h3 className="text-lg sm:text-xl text-gray-900 font-bold">Exchange Policy</h3>
+            <h2 className="text-lg sm:text-xl text-gray-900 font-bold">Exchange Policy</h2>
           </div>
           <div className="ml-11 space-y-3">
             <p className="text-sm sm:text-base text-gray-700"> 
-              The Pairs can be exchanged for another size of the same style only. In case your desired size is unavailable with us, you could then exchange it for another style of a similar value.
+              We offer size exchanges within 30 days of purchase under the following conditions:
             </p>
-            <div className="bg-red-50 border-l-4 border-red-400 p-3 rounded-r">
-              <p className="text-sm sm:text-base font-semibold text-yellow-800">
-                Pairs bought on SALE price will not be exchanged or returned.
-              </p>
+            <div className="bg-green-50 border-l-4 border-green-400 p-3 rounded-r">
+              <ul className="list-disc pl-5 space-y-1 text-sm sm:text-base text-gray-700">
+                <li>Product must be unused and in original condition</li>
+                <li>Original packaging and tags must be intact</li>
+                <li>Invoice must accompany the return</li>
+                <li>Exchange available for same style in different size</li>
+              </ul>
+            </div>
+            <div className="bg-red-50 p-3 rounded-lg border border-red-200">
+              <h3 className="font-semibold text-red-800 mb-1">Non-Exchangeable Items:</h3>
+              <ul className="list-disc pl-5 space-y-1 text-sm sm:text-base text-gray-700">
+                <li>Sale/discounted items</li>
+                <li>Customized or special order products</li>
+                <li>Items without original packaging</li>
+                <li>International orders</li>
+              </ul>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Intellectual Property */}
+      {/* Return Process */}
       <div className="bg-white border-2 border-yellow-100 rounded-xl p-4 sm:p-6 hover:shadow-md transition-shadow">
         <div className="flex items-start gap-3 mb-4">
           <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0">
-            <Globe className="h-5 w-5 text-white" />
+            <Package className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h3 className="text-lg sm:text-xl text-gray-900 font-bold">International Orders</h3>
-            <span className="inline-block bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full mt-1">
-              Important Notice
-            </span>
-          </div>
-        </div>
-        <p className="text-sm sm:text-base text-gray-700 ml-13"> 
-          We do not entertain refunds & exchanges on International orders.
-        </p>
-      </div>
-
-      {/* Shipping Policy */}
-      <div className="bg-white border-2 border-yellow-100 rounded-xl p-4 sm:p-6 hover:shadow-md transition-shadow">
-        <div className="flex items-start gap-3 mb-4">
-          <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0">
-            <Truck className="h-5 w-5 text-white" />
-          </div>
-          <div>
-            <h3 className="text-lg sm:text-xl text-gray-900 font-bold">SHIPPING POLICY</h3>
+            <h2 className="text-lg sm:text-xl text-gray-900 font-bold">Return Process</h2>
           </div>
         </div>
         <div className="ml-13 space-y-4">
-          <p className="text-sm sm:text-base text-gray-700">
-            We have FREE shipping within India on prepaid orders. Once you place an order your pairs will be shipped within the stipulated time period mentioned beside each style. Though we use some of India's largest logistics companies for shipping, we are bound in coverage by their reach.
-          </p>
-          <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-            <p className="text-sm sm:text-base text-gray-700">
-              <span className="font-bold">Please Note</span> - During festive seasons, pandemics, adverse weather conditions, or conditions beyond our control your shipment could get delayed. We assure you that we will try our best to have your parcel delivered to you in good time.
-            </p>
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+            <div className="bg-gray-50 p-3 rounded-lg border border-gray-200 text-center">
+              <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                <span className="text-red-800 font-bold">1</span>
+              </div>
+              <p className="text-xs sm:text-sm font-medium text-gray-700">Contact us within 30 days</p>
+            </div>
+            <div className="bg-gray-50 p-3 rounded-lg border border-gray-200 text-center">
+              <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                <span className="text-red-800 font-bold">2</span>
+              </div>
+              <p className="text-xs sm:text-sm font-medium text-gray-700">Pack item securely</p>
+            </div>
+            <div className="bg-gray-50 p-3 rounded-lg border border-gray-200 text-center">
+              <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                <span className="text-red-800 font-bold">3</span>
+              </div>
+              <p className="text-xs sm:text-sm font-medium text-gray-700">Ship to our address</p>
+            </div>
+            <div className="bg-gray-50 p-3 rounded-lg border border-gray-200 text-center">
+              <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                <span className="text-red-800 font-bold">4</span>
+              </div>
+              <p className="text-xs sm:text-sm font-medium text-gray-700">Receive exchanged item</p>
+            </div>
           </div>
-          <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-            <p className="text-sm sm:text-base text-red-800 font-medium">
-              <span className="font-bold">IMPORTANT for International Orders:</span> Orders with more than 1 item will be packed in a large box instead of individual boxes.
+          
+          <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+            <h3 className="font-bold text-yellow-800 mb-2">Return Address:</h3>
+            <p className="text-sm sm:text-base text-gray-700">
+              <strong>GULBHAHAR</strong><br />
+              S-12 Janta Market, Rajouri Garden<br />
+              Delhi, India - 110027<br />
+              Phone:+91 9220927241
+            </p>
+            <p className="text-sm sm:text-base text-gray-700 mt-2">
+              For return authorization, please email us at <span className="font-bold text-red-800">gulbhahar1@gmail.com</span> with your order details.
             </p>
           </div>
         </div>
       </div>
 
-      {/* Security & Privacy */}
+      {/* Cancellation Policy */}
       <div className="bg-white border-2 border-yellow-100 rounded-xl p-4 sm:p-6 hover:shadow-md transition-shadow">
         <div className="flex items-start gap-3 mb-4">
           <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0">
-            <Lock className="h-5 w-5 text-white" />
+            <XCircle className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h3 className="text-lg sm:text-xl text-gray-900 font-bold">SECURITY & PRIVACY POLICY</h3>
+            <h2 className="text-lg sm:text-xl text-gray-900 font-bold">Order Cancellation</h2>
           </div>
         </div>
-        <div className="ml-13 space-y-4">
+        <div className="ml-13 space-y-3">
           <p className="text-sm sm:text-base text-gray-700">
-            Gulbhahar is committed to protecting the privacy of visitors to this site (SITE). At Gulbhahar, we want you to have an enjoyable shopping experience. While we must collect certain personal information, we respect and protect your right to privacy as outlined in this Privacy Policy.
+            Orders can be cancelled within 24 hours of placement if they haven't entered the processing stage. To request cancellation:
           </p>
-          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-            <p className="text-sm sm:text-base text-gray-700">
-              The nature of the information collected (if any), is simply to allow us to contact you should you choose to or for us to contact you based on a business relation you establish by purchasing or making an order online. This is solely to be able to follow up on any order that you may initiate on this site.
-            </p>
-          </div>
-          <p className="text-sm sm:text-base text-gray-700">
-            The information stored does NOT include any financial details, other than details related to the purchase or interest of products by you, and is purely restricted to order, contact, and preferences. We strictly do NOT capture or store any account or card numbers.
-          </p>
-          <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-            <p className="text-sm sm:text-base text-gray-700">
-              We may collect your session, contact, and order information on our server and your browser in the form of session storage or cookies. We will NOT share it with any third party, other than those necessary to make the delivery of the product to you, marketing material to you, and improvement purposes.
-            </p>
-          </div>
-          <p className="text-sm sm:text-base text-gray-700">
-            We may send marketing material in the form of emails or common digital mediums, to your contact information also. We may also study your spending patterns to improve our service offering. Gulbhahar reserves the right to make alterations to this policy in the future without notice.
-          </p>
-          <div className="bg-gray-100 p-4 rounded-lg">
-            <p className="text-sm sm:text-base text-gray-700 font-medium">
-              This Privacy Policy applies to the Site. You agree that your use of the Site signifies your consent to this Privacy Policy. If you do not agree with this Privacy Policy, please do not use the Site.
+          <ol className="list-decimal pl-5 space-y-2 text-sm sm:text-base text-gray-700">
+            <li>Email us at <span className="font-bold text-red-800">gulbhahar1@gmail.com</span> with your order number</li>
+            <li>Include "CANCELLATION REQUEST" in the subject line</li>
+            <li>We'll confirm if cancellation is possible</li>
+          </ol>
+          <div className="bg-red-50 p-3 rounded-lg border border-red-200">
+            <p className="text-sm sm:text-base font-semibold text-red-800">
+              Note: Once the order has been processed and shipped, it cannot be cancelled. In such cases, you may return the item as per our exchange policy.
             </p>
           </div>
         </div>
