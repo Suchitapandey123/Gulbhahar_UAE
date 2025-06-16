@@ -54,8 +54,8 @@ export default function Footer() {
   const shopLinks = [
     { href: "/collections", label: "All Collections" },
     { href: "/collections", label: "Limited Collections" },
-    { href: "/collections", label: "Sale & Discounts" },
-    { href: "/collections", label: "New Arrivals" }
+    { href: "/refund-policy", label: "Refund And Cancellation Policy" },
+    { href: "/delivery-shipping-policy", label: "Delivery And Shipping Policy" }
   ];
 
   const companyLinks = [
@@ -68,7 +68,7 @@ export default function Footer() {
   const supportLinks = [
     { href: "/faq", label: "FAQs" },
     { href: "/cookies-policy", label: "Cookie Policy" },
-    { href: "/cookies-policy", label: "Terms of Use" },
+    { href: "/terms-condition", label: "Terms of Use" },
     { href: "/privacy-policy", label: "Privacy Policy" }
   ];
 
