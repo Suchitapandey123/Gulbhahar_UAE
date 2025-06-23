@@ -9,10 +9,10 @@ import { ArrowUpRight } from "lucide-react";
 const seasons = [
   "all",
   "designed by monica",
-  "fall",
-  "winter",
-  "spring",
   "summer",
+  "winter",
+  "fall",
+  "spring",
   
 ];
 
@@ -189,7 +189,7 @@ export default function CollectionsPage({collections}) {
                 }}
                 transition={{ duration: 0.2 }}
               >
-                {season !== "all" ? `${season.toUpperCase()} 2024` : season.toUpperCase()}
+                {season !== "all" ? `${season.toUpperCase()} 2025` : season.toUpperCase()}
               </motion.span>
               
               {/* Selection indicator */}
@@ -220,7 +220,7 @@ export default function CollectionsPage({collections}) {
           exit={{ opacity: 0, y: 20 }}
           className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8"
         >
-          {filteredCollections.map((collection, index) => (
+          {filteredCollections.slice(0,8).map((collection, index) => (
             <motion.div
               key={`${collection.productId}-${selectedSeason}`}
               variants={cardVariants}
