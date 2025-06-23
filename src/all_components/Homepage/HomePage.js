@@ -14,9 +14,9 @@ const HomePage = ({data}) => {
     <>
       <HeroAnimated/>
       <BrandSection />
-      <NewCollection newCollection = {data.slice(26,35)} />
+      <NewCollection newCollection = {data.slice(0,8)} />
       <AboutUsSection />
-      <CollectionsPage collections={data.slice(26,35)} />
+      <CollectionsPage collections={data} />
       <NewCulture />
       <Culture />
       <QuickSearch />
