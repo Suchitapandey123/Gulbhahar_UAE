@@ -16,7 +16,8 @@ export default function ModernHeroAnimated() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
-  const [isFirstLoad, setIsFirstLoad] = useState(true); // Track first load
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [direction, setDirection] = useState(0); // Track slide direction
   const containerRef = useRef(null);
 
   // Parallax scrolling effect
@@ -61,22 +62,23 @@ export default function ModernHeroAnimated() {
     },
   ];
 
-  // Auto-advance carousel
-
+  // Auto-advance carousel with direction tracking
   useEffect(() => {
     if (!isPlaying) return;
 
     const timer = setInterval(() => {
       setCurrentIndex((prev) => {
-        setIsFirstLoad(false); // After first transition, no longer first load
-        return (prev + 1) % heroData.length;
+        const nextIndex = (prev + 1) % heroData.length;
+        setDirection(1); // Always slide from right to left for auto-advance
+        setIsFirstLoad(false);
+        return nextIndex;
       });
     }, 6000);
 
     return () => clearInterval(timer);
   }, [isPlaying, heroData.length]);
 
-  // Enhanced slide variants with better fade-in animations
+  // Proper slide transition - current exits left, next enters from right
   const slideVariants = {
     enter: (direction) => {
       // First load: elegant center fade with subtle scale
@@ -89,30 +91,34 @@ export default function ModernHeroAnimated() {
           filter: "blur(4px) brightness(0.7)",
         };
       }
-      // Subsequent slides: come from right or left
+      // Next image: starts from right and slides to center
       return {
-        x: direction > 0 ? "100%" : "-100%",
-        opacity: 0,
-        scale: 1.1,
-        filter: "blur(8px) brightness(0.8)",
+        x: "100%", // Start from right
+        opacity: 1,
+        scale: 1,
+        filter: "blur(0px) brightness(1)",
       };
     },
     center: {
       x: "0%",
-      y: "0%",
+      y: "0%", 
       opacity: 1,
       scale: 1,
       filter: "blur(0px) brightness(1)",
       transition: {
-        duration: isFirstLoad ? 1.8 : 1.2,
+        duration: isFirstLoad ? 1.8 : 1.0,
         ease: isFirstLoad ? [0.16, 1, 0.3, 1] : [0.25, 0.46, 0.45, 0.94],
         opacity: {
-          duration: isFirstLoad ? 1.4 : 0.8,
-          ease: isFirstLoad ? [0.25, 1, 0.5, 1] : "easeOut",
+          duration: isFirstLoad ? 1.4 : 1.0,
+          ease: "easeOut",
+        },
+        x: {
+          duration: isFirstLoad ? 0 : 1.0, // Slide from right to center
+          ease: [0.25, 0.46, 0.45, 0.94],
         },
         scale: {
-          duration: isFirstLoad ? 2.0 : 1.4,
-          ease: isFirstLoad ? [0.16, 1, 0.3, 1] : [0.25, 0.46, 0.45, 0.94],
+          duration: isFirstLoad ? 2.0 : 1.0,
+          ease: isFirstLoad ? [0.16, 1, 0.3, 1] : "easeOut",
         },
         filter: {
           duration: isFirstLoad ? 1.6 : 1.0,
@@ -121,16 +127,21 @@ export default function ModernHeroAnimated() {
       },
     },
     exit: (direction) => ({
-      x: direction > 0 ? "-100%" : "100%",
-      opacity: 0,
-      scale: 0.95,
-      filter: "blur(6px) brightness(0.6)",
+      x: "-100%", // Current image slides to left
+      opacity: 1,
+      scale: 1,
+      filter: "blur(0px) brightness(1)",
       transition: {
-        duration: 0.8,
+        duration: 1.0, // Same timing as enter
         ease: [0.25, 0.46, 0.45, 0.94],
-        opacity: { duration: 0.4 },
-        scale: { duration: 0.8 },
-        filter: { duration: 0.6 },
+        opacity: { 
+          duration: 1.0,
+          ease: "easeOut" 
+        },
+        x: { 
+          duration: 1.0, // Slide to left
+          ease: [0.25, 0.46, 0.45, 0.94] 
+        },
       },
     }),
   };
@@ -170,9 +181,10 @@ export default function ModernHeroAnimated() {
 
   const currentSlide = heroData[currentIndex];
 
-  // Handle manual slide change
+  // Handle manual slide change - always right to left for consistency
   const handleSlideChange = (index) => {
     setIsFirstLoad(false);
+    setDirection(1); // Always slide from right to left
     setCurrentIndex(index);
   };
 
@@ -191,20 +203,24 @@ export default function ModernHeroAnimated() {
         animate="visible"
         variants={textContainerVariants}
       >
-        {/* Animated background with parallax + seamless transitions */}
+        {/* Animated background - should not show with proper overlap */}
         <motion.div
           className="absolute top-0 left-0 w-screen h-screen bg-red-900 -z-10"
           style={{ y: backgroundY }}
         >
-          <AnimatePresence mode="wait" custom={1}>
+          <AnimatePresence mode="sync" custom={direction}>
             <motion.div
               key={currentIndex}
-              custom={1}
+              custom={direction}
               variants={slideVariants}
               initial="enter"
               animate="center"
               exit="exit"
-              className="absolute top-0 left-0 w-screen h-screen bg-black"
+              className="absolute top-0 left-0 w-screen h-screen"
+              style={{ 
+                backgroundColor: '#000000',
+                zIndex: 1,
+              }}
             >
               {/* Desktop Image */}
               <div className="hidden md:block relative w-full h-full">
