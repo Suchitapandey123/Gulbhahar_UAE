@@ -1147,7 +1147,7 @@ const Navbar = () => {
           {/* Mobile Menu Header */}
           <div className="flex items-center justify-between p-3 xs:p-4 sm:p-6 border-b border-gray-100">
             <Image
-              src="/ful-gulbhaharlogo.png"
+              src="/Image/ful-gulbhaharlogo.png"
               alt="Brand Logo"
               width={80}
               height={24}
@@ -1280,7 +1280,7 @@ const Navbar = () => {
                            shadow-md hover:shadow-lg w-[90%] xs:w-[80%] sm:w-[70%] cursor-pointer"
                   style={{ pointerEvents: "auto" }}
                 >
-                  <span>View All Collections</span>
+                  <span className="text-nowrap">View All Collections</span>
                 </button>
               </div>
 
