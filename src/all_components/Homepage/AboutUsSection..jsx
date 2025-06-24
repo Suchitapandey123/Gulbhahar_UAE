@@ -7,9 +7,9 @@ import { motion, useInView } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
 // Import your images
-import A1 from '../../../public/assets/Image/About1.png';
-import A2 from '../../../public/assets/Image/About2.png';
-import A3 from '../../../public/assets/Image/About3.png';
+import A1 from '../../../public/assets/Image/001.jpg';
+import A2 from '../../../public/assets/Image/002.jpg';
+import A3 from '../../../public/assets/Image/003.jpg';
 
 export default function AlternatingAbout() {
   const ref = useRef(null);
@@ -116,14 +116,14 @@ export default function AlternatingAbout() {
                 } order-1 lg:order-none`}
               >
                 <div className="relative h-64 sm:h-80 lg:h-96 xl:h-[500px] overflow-hidden">
-                  <Image
-                    src={story.image}
-                    alt={story.title}
-                    fill
-                    className="object-cover scale-150"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    priority={index === 0}
-                  />
+                <Image
+    src={story.image}
+    alt={story.title}
+    fill
+    className="object-cover hover:scale-105 transition-transform duration-300" // Subtle zoom on hover
+    sizes="(max-width: 1024px) 100vw, 50vw"
+    priority={index === 0}
+  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                   
                   {/* Category Badge */}

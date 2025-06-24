@@ -6,24 +6,38 @@ import Image from "next/image";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
+// Updated seasons array with your custom names
 const seasons = [
   "all",
   "designed by monica",
-  "summer",
-  "winter",
-  "fall",
-  "spring",
-  
+  "casual juttis",        // Changed from "summer"
+  "festive collection",   // Changed from "winter"
+  "designer collection",  // Changed from "fall"
+  // "spring",
 ];
+
+// Season mapping for filtering (maps display names to your data structure)
+const seasonMapping = {
+  "casual juttis": "summer",
+  "festive collection": "winter", 
+  "designer collection": "fall",
+  "designed by monica": "designed by monica",
+  "spring": "spring",
+  "all": "all"
+};
 
 export default function CollectionsPage({collections}) {
   const [selectedSeason, setSelectedSeason] = useState("all");
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
 
+  // Updated filtering logic to handle the mapping
   const filteredCollections = selectedSeason === "all"
     ? collections
-    : collections.filter(collection => collection.season === selectedSeason);
+    : collections.filter(collection => {
+        const mappedSeason = seasonMapping[selectedSeason] || selectedSeason;
+        return collection.season === mappedSeason;
+      });
 
   // Animation variants
   const containerVariants = {
@@ -131,7 +145,6 @@ export default function CollectionsPage({collections}) {
           <Link href="/collections">
             <motion.button 
               variants={buttonVariants}
-
               initial="rest"
               whileHover="hover"
               whileTap="tap"
@@ -189,7 +202,7 @@ export default function CollectionsPage({collections}) {
                 }}
                 transition={{ duration: 0.2 }}
               >
-                {season !== "all" ? `${season.toUpperCase()} 2025` : season.toUpperCase()}
+                {season !== "all" ? `${season.toUpperCase()}` : season.toUpperCase()}
               </motion.span>
               
               {/* Selection indicator */}
@@ -404,7 +417,7 @@ export default function CollectionsPage({collections}) {
               <span className="font-semibold text-red-600 bg-red-50 px-2 py-1 rounded-lg">
                 {selectedSeason}
               </span>{" "}
-              season right now.
+              right now.
             </motion.p>
           </motion.div>
 
@@ -436,7 +449,7 @@ export default function CollectionsPage({collections}) {
             className="mt-8 pt-8 border-t border-gray-100"
           >
             <p className="text-sm text-gray-500 font-raleway">
-              Try browsing other seasons or{" "}
+              Try browsing other collections or{" "}
               <span className="text-red-500 hover:text-red-600 cursor-pointer underline">
                 contact us
               </span>{" "}
