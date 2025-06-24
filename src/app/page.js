@@ -25,7 +25,7 @@ export default async function Home() {
     cacheTime: 0,
   });
   
-  console.log('Fresh Server Response:', data);
+  // console.log('Fresh Server Response:', data);
 
   return (
     <HomePage data={data} />
