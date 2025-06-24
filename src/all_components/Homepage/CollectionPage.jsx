@@ -137,7 +137,7 @@ export default function CollectionsPage({collections}) {
               whileTap="tap"
               className="flex items-center text-nowrap lg:gap-3 text-gray-900 hover:text-customRed text-sm sm:text-xl lg:text-2xl transition-colors font-raleway tracking-wider lg:w-[215] lg:h-[33px] uppercase group"
             >
-              Visit shop
+              Show More
               <motion.div
                 initial={{ x: 0, y: 0 }}
                 animate={isInView ? { x: 2, y: -1 } : { x: 0, y: 0 }}
@@ -255,7 +255,7 @@ export default function CollectionsPage({collections}) {
                         alt={`${collection.name} - collection image`}
                         fill
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                        priority={index < 4} // Only prioritize first 4 images
+                        priority={index < 9} // Only prioritize first 4 images
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
                       />
                       

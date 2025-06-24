@@ -6,9 +6,9 @@ import {
   useTransform,
 } from "framer-motion";
 import Image from "next/image";
-import MB1 from "../../../public/assets/Image/Mb-1.png";
+import MB1 from "../../../public/assets/Image/S-002.jpg";
 import MB2 from "../../../public/assets/Image/mb-2.png";
-import Mb3 from "../../../public/assets/Image/mb3.png";
+import Mb3 from "../../../public/assets/Image/mb-3.jpg";
 import { useEffect, useState, useRef } from "react";
 import { ArrowUpRight, Play, Volume2 } from "lucide-react";
 
