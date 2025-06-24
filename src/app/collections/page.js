@@ -36,7 +36,7 @@ const fallbackCollections = [
   },
 ];
 
-const seasons = ["all", "spring", "summer", "monsoon", "Autumn", "winter"];
+const seasons = ["all", "spring", "summer", "monsoon", "autumn", "winter"];
 
 const sortOptions = [
   { label: "Price: high to low", value: "price-desc" },
@@ -45,7 +45,7 @@ const sortOptions = [
   { label: "Relevance", value: "relevance" },
 ];
 
-const ITEMS_PER_PAGE = 9;
+const ITEMS_PER_PAGE = 24;
 
 export default function Collection() {
   const [currentImageIndices, setCurrentImageIndices] = useState({});
@@ -96,7 +96,7 @@ export default function Collection() {
         product.images && product.images.length > 0
           ? product.images
           : ["/Image/About1.png", "/Image/About1.png", "/Image/About1.png"],
-      season: "Winter",
+          season: product.season?.toLowerCase() || "winter",
       stock: product.stock || Math.floor(Math.random() * 15) + 6,
       size: product.sizes && product.sizes.length > 0 ? product.sizes[0] : "M",
       sizes: product.sizes || ["M"],
@@ -328,7 +328,8 @@ export default function Collection() {
       if (item.isActive === false) return false;
 
       const matchesSeason =
-        selectedSeason === "all" || item.season === selectedSeason;
+      selectedSeason === "all" || 
+      item.season?.toLowerCase() === selectedSeason.toLowerCase()
       const matchesPrice =
         item.price >= priceRange[0] && item.price <= priceRange[1];
       const matchesSize =
@@ -744,7 +745,7 @@ export default function Collection() {
           </div>
 
           {/* Season Filters */}
-          <div className="flex flex-nowrap gap-2 sm:gap-3 mb-8 overflow-x-auto pb-2">
+          <div className="flex flex-nowrap gap-2 sm:gap-3 mb-8 overflow-x-auto pb-2 xs:px-1">
             {seasons.map((season) => (
               <button
                 key={season}
@@ -759,17 +760,17 @@ export default function Collection() {
                 }`}
               >
                 {season !== "all"
-                  ? `${season.toUpperCase()} 2024`
+                  ? `${season.toUpperCase()} 2025`
                   : season.toUpperCase()}
               </button>
             ))}
           </div>
 
           {/* Product Grid/List with ViewMode Support */}
-<div className={`${
+<div className={`px-1 ${
   viewMode === "grid"
     ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8"
-    : "flex flex-col gap-4"
+    : "flex flex-col gap-4" 
 }`}>
   {paginatedCollections.map((item, index) => (
     <div
@@ -799,41 +800,27 @@ export default function Collection() {
               const currentImageIndex = currentImageIndices[item.id] || 0;
               
               return (
-                <div className="relative w-full h-full overflow-hidden">
-                  {/* Image Slider Container */}
-                  <div
-                    className="flex h-full transition-transform duration-500 ease-in-out"
-                    style={{
-                      transform: `translateX(-${currentImageIndex * 100}%)`,
-                      width: `${imagesToShow.length * 100}%`,
+                <div className="relative w-full h-full bg-gray-100">
+                {/* Stack all images and show current one with fade */}
+                {imagesToShow.map((image, idx) => (
+                  <Image
+                  width={200}
+                  height={450}
+                    key={idx}
+                    src={image || "/Image/About1.png"}
+                    alt={`${item.title} - ${idx + 1}`}
+                    className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-700 ease-in-out ${
+                      currentImageIndex === idx ? 'opacity-100' : 'opacity-0'
+                    } ${viewMode === "list" ? "rounded-lg" : ""}`}
+                    onError={(e) => {
+                      e.target.src = "/Image/About1.png";
                     }}
-                  >
-                    {imagesToShow.map((image, idx) => (
-                      <div key={idx} className="w-full flex-shrink-0 h-full relative">
-                        <Image
-                          src={image || "/Image/About1.png"}
-                          alt={`${item.title} - ${idx + 1}`}
-                          height={500}
-                          width={500}
-                          sizes={viewMode === "grid" 
-                            ? "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                            : "(max-width: 640px) 128px, 160px"
-                          }
-                          priority={index < 4}
-                          className={`object-cover transition-transform duration-300 group-hover:scale-105 ${
-                            viewMode === "list" ? "rounded-lg" : ""
-                          }`}
-                          onError={(e) => {
-                            e.target.src = "/Image/About1.png";
-                          }}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
-                </div>
+                  />
+                ))}
+                
+                {/* Hover Overlay */}
+                <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+              </div>
               );
             })()}
 
