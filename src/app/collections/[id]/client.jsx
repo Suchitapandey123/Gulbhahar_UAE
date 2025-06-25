@@ -566,7 +566,7 @@ export function ProductClient({ product, similarProducts }) {
           </div>
 
           <div className="flex overflow-x-auto pb-4 gap-4 lg:grid lg:grid-cols-4 lg:gap-6 no-scrollbar">
-            {similarProducts.slice(31,35).map((product, i) => (
+            {similarProducts.map((product, i) => (
               <div
                 key={i}
                 className="flex-shrink-0 w-60 sm:w-72 lg:w-auto aspect-[3/4] relative hover:shadow-lg transition-shadow duration-200 bg-gray-100 rounded-lg flex items-center justify-center"
@@ -585,7 +585,7 @@ export function ProductClient({ product, similarProducts }) {
         </div>
 
         {/* Content Section */}
-        <div className="mt-16 lg:mt-20 prose max-w-none mb-16">
+        {/* <div className="mt-16 lg:mt-20 prose max-w-none mb-16">
           <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-6">
             Women's Casual Shoes You Need To Own
           </h2>
@@ -632,7 +632,7 @@ export function ProductClient({ product, similarProducts }) {
               dark skinny jeans and an off-shoulder Bardot top.
             </p>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
