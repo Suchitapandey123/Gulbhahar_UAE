@@ -5,6 +5,7 @@ import "./globals.css";
 import Footer from "@/all_components/Footer/Footer";
 import Navbar from "@/all_components/Navbar/Navbar";
 import ReactQueryProvider from "@/Providers/ReactQueryProvider/ReactQueryProvider";
+import Script from "next/script";
 
 // Configure fonts
 const poppins = Poppins({
