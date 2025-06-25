@@ -33,29 +33,50 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        {/* Preconnect for performance */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        
+        {/* Google Fonts */}
         <link
           href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&display=swap"
           rel="stylesheet"
         />
+        
+        {/* Microsoft Clarity - Inline script for immediate loading */}
+        <script
+          type="text/javascript"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(c,l,a,r,i,t,y){
+                  c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                  t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                  y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+              })(window, document, "clarity", "script", "s4y81yz4rh");
+            `
+          }}
+        />
+      </head>
 
-        {/* Google Analytics */}
+      <body className={`${poppins.variable} ${jetbrainsMono.variable} antialiased`}>
+        {/* Google Analytics - Using Next.js Script component properly */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-NR9HQHE5F4"
           strategy="afterInteractive"
         />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-           window.dataLayer = window.dataLayer || [];
-           function gtag(){dataLayer.push(arguments);}
-           gtag('js', new Date());
-           gtag('config', 'G-NR9HQHE5F4');
-          `}
-        </Script>
-      </head>
+        <Script 
+          id="google-analytics" 
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-NR9HQHE5F4');
+            `
+          }}
+        />
 
-      <body
-        className={`${poppins.variable} ${jetbrainsMono.variable} antialiased`}
-      >
         <ReactQueryProvider>
           <Navbar />
           {children}
