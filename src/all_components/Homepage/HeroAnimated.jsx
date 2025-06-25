@@ -289,7 +289,7 @@ export default function ModernHeroAnimated() {
                 {/* Left side - Main text - BETTER MOBILE SPACING */}
                 <div className="lg:col-span-7 space-y-4 sm:space-y-6 md:space-y-8 text-center lg:text-left">
                   {/* Accent badge */}
-                  <motion.div
+                  {/* <motion.div
                     variants={textVariants}
                     className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/20"
                   >
@@ -300,7 +300,7 @@ export default function ModernHeroAnimated() {
                     <span className="text-white/90 text-xs sm:text-sm tracking-wider uppercase font-light">
                       {currentSlide.accent}
                     </span>
-                  </motion.div>
+                  </motion.div> */}
 
                   {/* Main title - IMPROVED RESPONSIVE SIZING */}
                   <motion.div

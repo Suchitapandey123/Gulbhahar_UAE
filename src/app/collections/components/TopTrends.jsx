@@ -1,12 +1,12 @@
 import React from "react";
+import MB9 from "../../../../public/assets/Image/009.jpg";
+import MB7 from "../../../../public/assets/Image/007.jpg";
+import MB8 from "../../../../public/assets/Image/008.jpg";
+import MB2 from "../../../../public/assets/Image/002.jpg";
+import Image from "next/image";
 
+const slides = [MB2, MB7, MB8, MB9];
 const TopTrends = () => {
-  const slides = [
-    "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-6.png",
-    "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-7.png",
-    "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-8.png",
-    "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-9.png",
-  ];
 
   return (
     <>
@@ -25,12 +25,16 @@ const TopTrends = () => {
                 className="bg-white shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-red-200 group"
               >
                 <div className="relative w-full h-[510px] xs:h-[470px] overflow-hidden">
-                  <img
+                  <Image
+                  priority
+                    width={500}
+                    height={500}
+                    quality={100}
                     src={slide}
                     alt={`Trend item ${i + 1}`}
                     className="w-full h-full object-cover transition-transform duration-500 scale-150 group-hover:scale-150"
                   />
-                  <div className="absolute bottom-0 left-0 w-full bg-white text-black p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                  <div className="absolute hidden bottom-0 left-0 w-full bg-white text-black p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                     <h3 className="font-bold text-lg mb-1">
                       Trending Style {i + 1}
                     </h3>

@@ -84,7 +84,7 @@ export default function Footer() {
               </div>
               <div>
                 <p className="text-xs sm:text-sm font-bold text-gray-900">Free Shipping</p>
-                <p className="text-xs text-gray-600">On orders over ₹999</p>
+                <p className="text-xs text-gray-600">On orders over ₹5000</p>
               </div>
             </div>
             <div className="flex flex-col items-center gap-2">
