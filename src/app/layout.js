@@ -32,8 +32,24 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&display=swap"
+          rel="stylesheet"
+        />
 
-      <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&display=swap" rel="stylesheet" />
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-NR9HQHE5F4"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+           window.dataLayer = window.dataLayer || [];
+           function gtag(){dataLayer.push(arguments);}
+           gtag('js', new Date());
+           gtag('config', 'G-NR9HQHE5F4');
+          `}
+        </Script>
       </head>
 
       <body
