@@ -631,9 +631,9 @@ export default function Collection() {
   }
 
   return (
-    <div className="min-h-screen mt-16 ">
+    <div className="min-h-screen mt-16 lg:mt-24  ">
       {/* Breadcrumb */}
-      <div className="max-w-[1600px] mx-auto px-2 xs:px-6">
+      <div className="max-w-[1600px] mx-auto px-2 lg:px-6 ">
         <nav className="py-4">
           <span className="text-red-700 hover:text-red-900 transition-colors cursor-pointer">
             Home
@@ -644,7 +644,7 @@ export default function Collection() {
       </div>
 
       <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row">
-        {/* Sidebar - Visible only on lg screens and larger */}
+        {/* Sidebar - Visible only  lg:mt-4on lg screens and larger */}
         <div className="hidden xl:flex xl:flex-row max-w-[360px] mb-8">
           <p className="font-bold text-2xl text-red-900 pl-5 mb-6">
             {/* {filteredCollections.length} Results */}
@@ -684,39 +684,39 @@ export default function Collection() {
         )}
 
         {/* Main Content */}
-        <div className="w-full px-2 xs:px-0 lg:px-6">
+        <div className="w-full px-2 lg:px-6 ">
           {/* Controls */}
           <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center justify-between border-b-2 border-red-200 pb-4 mb-6 gap-4">
             <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
-              <p className="font-bold text-xl text-red-900 lg:hidden">
+              <p className="font-bold text-xl text-red-900 hidden">
                 {filteredCollections.length} Results
               </p>
 
               <div className="flex bg-white border-2 border-red-200 rounded-lg p-1 shadow-sm">
                 <button
-                  className={`p-3 rounded-md transition-all ${
+                  className={`p-2 rounded-md transition-all ${
                     viewMode === "grid"
                       ? "bg-red-900 text-white shadow-md"
                       : "text-red-900 hover:bg-red-50"
                   }`}
                   onClick={() => setViewMode("grid")}
                 >
-                  <Grid size={18} />
+                  <Grid size={15} />
                 </button>
                 <button
-                  className={`p-3 rounded-md transition-all ${
+                  className={`p-2 rounded-md transition-all ${
                     viewMode === "list"
                       ? "bg-red-900 text-white shadow-md"
                       : "text-red-900 hover:bg-red-50"
                   }`}
                   onClick={() => setViewMode("list")}
                 >
-                  <List size={18} />
+                  <List size={15} />
                 </button>
               </div>
             </div>
 
-            <div className="flex items-center px-2 xs:px-0 gap-3 w-full sm:w-auto justify-between sm:justify-start">
+            <div className="flex items-center px-1 xs:px-0 gap-3 w-full sm:w-auto justify-between sm:justify-start">
               <button
                 className="flex lg:hidden items-center justify-center p-[6.5px] border-2 border-red-300 rounded-lg bg-white hover:bg-red-50 transition-colors"
                 onClick={toggleModal}
@@ -745,7 +745,7 @@ export default function Collection() {
           </div>
 
           {/* Season Filters */}
-          <div className="flex flex-nowrap gap-2 sm:gap-3 mb-8 overflow-x-auto pb-2 xs:px-1">
+          <div className="flex flex-nowrap gap-2 sm:gap-3 mb-8 overflow-x-auto pb-2">
             {seasons.map((season) => (
               <button
                 key={season}
@@ -1217,7 +1217,7 @@ export default function Collection() {
 
       <TopTrends />
 
-      <ContentSection />
+      {/* <ContentSection /> */}
     </div>
   );
 }

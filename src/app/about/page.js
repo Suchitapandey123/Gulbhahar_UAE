@@ -2,6 +2,11 @@
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
+import MB9 from "../../../public/assets/Image/001.jpg";
+import MB7 from "../../../public/assets/Image/002.jpg";
+import MB8 from "../../../public/assets/Image/002.jpg";
+import MB2 from "../../../public/assets/Image/004.jpg";
+import MB1 from "../../../public/assets/Image/005.jpg";
 
 // Immersive Hero Section
 const HeroSection = () => {
@@ -189,17 +194,17 @@ const StorySection = () => {
     { 
       name: 'Facebook', 
       url: 'https://www.facebook.com/share/1GN5HZC6dS/',
-      followers: '12K'
+      // followers: '12K'
     },
     { 
       name: 'Instagram', 
       url: 'https://www.instagram.com/gulbhahar_official?igsh=MzRlODBiNWFlZA==',
-      followers: '28K'
+      // followers: '28K'
     },
     { 
       name: 'Twitter', 
       url: 'https://twitter.com/yourhandle',
-      followers: '8K'
+      // followers: '8K'
     },
   ];
 
@@ -240,7 +245,7 @@ const StorySection = () => {
                       <span className="font-semibold text-sm sm:text-base text-gray-900 group-hover:text-[#7f0001]">
                         {platform.name}
                       </span>
-                      <p className="text-xs sm:text-sm text-gray-500">{platform.followers} followers</p>
+                      {/* <p className="text-xs sm:text-sm text-gray-500">{platform.followers} followers</p> */}
                     </div>
                     <motion.div
                       className="w-2 h-2 bg-[#7f0001]/40 rounded-full group-hover:bg-[#7f0001]"
@@ -682,31 +687,36 @@ const ProcessSection = () => {
       number: "01",
       title: "Design & Inspiration",
       description: "Our journey begins with traditional motifs and contemporary influences merging into unique designs",
-      detail: "Sketching, pattern creation, and cultural research form the foundation of every collection"
+      detail: "Sketching, pattern creation, and cultural research form the foundation of every collection",
+      img:MB1
     },
     {
       number: "02", 
       title: "Material Selection",
       description: "Only the finest leathers and fabrics are chosen, sourced from trusted suppliers across India",
-      detail: "Quality control ensures every material meets our exacting standards for durability and beauty"
+      detail: "Quality control ensures every material meets our exacting standards for durability and beauty",
+      img:MB9
     },
     {
       number: "03",
       title: "Master Craftsmanship",
       description: "Skilled artisans hand-cut, stitch, and embellish each piece using time-honored techniques",
-      detail: "15-20 hours of dedicated work goes into creating each pair of premium juttis"
+      detail: "15-20 hours of dedicated work goes into creating each pair of premium juttis",
+      img:MB8
     },
     {
       number: "04",
       title: "Quality Assurance",
       description: "Every finished piece undergoes rigorous inspection to ensure it meets our heritage standards",
-      detail: "Multiple quality checkpoints guarantee that only perfect pieces reach our customers"
+      detail: "Multiple quality checkpoints guarantee that only perfect pieces reach our customers",
+      img:MB7
     },
     {
       number: "05",
       title: "Final Finishing",
       description: "The final touches bring each piece to life, ready to carry forward our legacy",
-      detail: "Hand-polishing, packaging, and certification complete the artisanal journey"
+      detail: "Hand-polishing, packaging, and certification complete the artisanal journey",
+      img:MB9
     }
   ];
 
@@ -821,7 +831,7 @@ const ProcessSection = () => {
               >
                 <div className="relative h-[250px] xs:h-[300px] sm:h-[350px] lg:h-[400px] rounded-lg sm:rounded-xl lg:rounded-2xl overflow-hidden shadow-2xl border border-[#7f0001]/20">
                   <Image
-                    src="https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-19.png"
+                    src={step.img}
                     alt={step.title}
                     fill
                     className="object-cover"
