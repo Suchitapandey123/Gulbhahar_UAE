@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -142,7 +142,8 @@ const AnimatedCounter = ({ target, duration = 2000 }) => {
   return <span>₹{count.toLocaleString()}</span>;
 };
 
-export default function TransactionStatus() {
+// Main component that uses useSearchParams
+const TransactionStatusContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { cart, clearCart } = useCart();
@@ -670,5 +671,26 @@ export default function TransactionStatus() {
         .hover\\:scale-102:hover { transform: scale(1.02); }
       `}</style>
     </div>
+  );
+};
+
+// Loading component for Suspense fallback
+const TransactionStatusLoading = () => {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-16 h-16 border-4 border-red-900 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+        <p className="text-gray-600 font-medium">Loading transaction status...</p>
+      </div>
+    </div>
+  );
+};
+
+// Main export component with Suspense wrapper
+export default function TransactionStatus() {
+  return (
+    <Suspense fallback={<TransactionStatusLoading />}>
+      <TransactionStatusContent />
+    </Suspense>
   );
 }
