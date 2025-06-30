@@ -567,7 +567,7 @@ const ArtisanSection = () => {
   return (
     <motion.div 
       ref={containerRef}
-      className="relative py-8 sm:py-16 lg:py-20 overflow-hidden bg-transparent"
+      className="relative hidden py-8 sm:py-16 lg:py-20 overflow-hidden bg-transparent"
     >
       <div className="max-w-7xl mx-auto px-2 xs:px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}

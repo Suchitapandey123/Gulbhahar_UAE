@@ -4,6 +4,33 @@ import { useEffect, useState } from 'react';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { FiUser, FiLock, FiEye, FiEyeOff, FiMail, FiShield, FiCheck } from 'react-icons/fi';
 import { ChevronRight } from 'lucide-react';
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+
+// API configuration
+const API_BASE_URL = 'https://api.gulbhahar.com/api';
+
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// API functions
+const forgotPasswordAPI = async (email) => {
+  const response = await api.post('/users/forgot-password', { email });
+  return response.data;
+};
+
+const resetPasswordAPI = async ({ email, verificationCode, newPassword }) => {
+  const response = await api.post('/users/reset-password', { 
+    email, 
+    verificationCode,
+    newPassword
+  });
+  return response.data;
+};
 
 // Step indicators component
 const StepIndicator = ({ currentStep }) => {
@@ -120,7 +147,20 @@ const Carousel = () => {
 const EmailConfirmationStep = ({ email, setEmail, goToNextStep }) => {
   const [emailError, setEmailError] = useState('');
   const [touched, setTouched] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+
+  // React Query mutation for forgot password
+  const forgotPasswordMutation = useMutation({
+    mutationFn: forgotPasswordAPI,
+    onSuccess: (data) => {
+      console.log('Email sent successfully:', data);
+      goToNextStep();
+    },
+    onError: (error) => {
+      console.error('Error sending email:', error);
+      const errorMessage = error.response?.data?.message || 'Failed to send verification email. Please try again.';
+      setEmailError(errorMessage);
+    },
+  });
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -155,12 +195,7 @@ const EmailConfirmationStep = ({ email, setEmail, goToNextStep }) => {
     setTouched(true);
     
     if (isEmailValid) {
-      setIsLoading(true);
-      // Simulate API call
-      setTimeout(() => {
-        setIsLoading(false);
-        goToNextStep();
-      }, 1500);
+      forgotPasswordMutation.mutate(email);
     }
   };
 
@@ -197,7 +232,7 @@ const EmailConfirmationStep = ({ email, setEmail, goToNextStep }) => {
                 onBlur={handleBlur}
               />
             </div>
-            {touched && emailError && (
+            {(touched && emailError) && (
               <p className="mt-2 text-sm text-red-600 flex items-center">
                 <span className="w-1 h-1 bg-red-600 rounded-full mr-2"></span>
                 {emailError}
@@ -208,10 +243,10 @@ const EmailConfirmationStep = ({ email, setEmail, goToNextStep }) => {
           <button
             type="button"
             onClick={handleSubmit}
-            disabled={isLoading}
+            disabled={forgotPasswordMutation.isPending}
             className="w-full rounded-xl bg-gradient-to-r from-red-900 to-red-800 py-4 text-lg font-bold text-white shadow-xl hover:from-red-800 hover:to-red-700 focus:outline-none focus:ring-4 focus:ring-red-200 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center"
           >
-            {isLoading ? (
+            {forgotPasswordMutation.isPending ? (
               <div className="flex items-center">
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-3"></div>
                 Sending verification...
@@ -230,7 +265,7 @@ const EmailConfirmationStep = ({ email, setEmail, goToNextStep }) => {
 };
 
 // Step 2: Verification Code
-const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep }) => {
+const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificationCode: setParentVerificationCode }) => {
   const [verificationCode, setVerificationCode] = useState(['', '', '', '']);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -263,11 +298,45 @@ const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep }) => {
       return;
     }
     
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      goToNextStep();
-    }, 1500);
+    const code = verificationCode.join('');
+    
+    // Store the verification code for the final step
+    setParentVerificationCode(code);
+    
+    // Since verification code is default 1234, we check against it
+    if (code === '1234') {
+      setIsLoading(true);
+      setTimeout(() => {
+        setIsLoading(false);
+        goToNextStep();
+      }, 1500);
+    } else {
+      setError('Invalid verification code. Please try again.');
+    }
+  };
+
+  // Mutation for resending verification email
+  const resendEmailMutation = useMutation({
+    mutationFn: forgotPasswordAPI,
+    onSuccess: (data) => {
+      console.log('Email resent successfully:', data);
+      setError('');
+      // Show success message
+      const successMessage = document.createElement('div');
+      successMessage.textContent = 'Verification code resent successfully!';
+      successMessage.className = 'text-green-600 text-sm text-center mt-2';
+      setTimeout(() => successMessage.remove(), 3000);
+      document.querySelector('.resend-container').appendChild(successMessage);
+    },
+    onError: (error) => {
+      console.error('Error resending email:', error);
+      const errorMessage = error.response?.data?.message || 'Failed to resend verification email.';
+      setError(errorMessage);
+    },
+  });
+
+  const handleResendCode = () => {
+    resendEmailMutation.mutate(email);
   };
   
   return (
@@ -286,6 +355,7 @@ const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep }) => {
           <div>
             <p className="text-red-900 font-semibold text-lg mb-2">Verification code sent to:</p>
             <p className="text-red-700 font-medium bg-red-50 px-4 py-2 rounded-lg inline-block">{email}</p>
+            <p className="text-red-600 text-sm mt-2">Default code: 1234</p>
           </div>
           
           <div>
@@ -340,10 +410,14 @@ const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep }) => {
             </button>
           </div>
           
-          <div className="text-center">
+          <div className="text-center resend-container">
             <p className="text-red-600">Didn't receive the code?</p>
-            <button className="text-red-900 font-semibold underline hover:text-red-700 transition-colors mt-2">
-              Resend verification code
+            <button 
+              onClick={handleResendCode}
+              disabled={resendEmailMutation.isPending}
+              className="text-red-900 font-semibold underline hover:text-red-700 transition-colors mt-2 disabled:opacity-50"
+            >
+              {resendEmailMutation.isPending ? 'Resending...' : 'Resend verification code'}
             </button>
           </div>
         </div>
@@ -353,7 +427,7 @@ const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep }) => {
 };
 
 // Step 3: Create New Password
-const CreatePasswordStep = ({ goToHomePage }) => {
+const CreatePasswordStep = ({ email, verificationCode, goToHomePage }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -361,7 +435,20 @@ const CreatePasswordStep = ({ goToHomePage }) => {
   const [touched, setTouched] = useState({ password: false, confirm: false });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+
+  // React Query mutation for password reset
+  const resetPasswordMutation = useMutation({
+    mutationFn: resetPasswordAPI,
+    onSuccess: (data) => {
+      console.log('Password reset successful:', data);
+      goToHomePage();
+    },
+    onError: (error) => {
+      console.error('Error resetting password:', error);
+      const errorMessage = error.response?.data?.message || 'Failed to reset password. Please try again.';
+      setPasswordError(errorMessage);
+    },
+  });
 
   const validatePassword = (password) => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -425,11 +512,11 @@ const CreatePasswordStep = ({ goToHomePage }) => {
     setTouched({ password: true, confirm: true });
     
     if (isPasswordValid && isConfirmValid) {
-      setIsLoading(true);
-      setTimeout(() => {
-        setIsLoading(false);
-        goToHomePage();
-      }, 2000);
+      resetPasswordMutation.mutate({ 
+        email, 
+        verificationCode, 
+        newPassword: password 
+      });
     }
   };
 
@@ -519,10 +606,10 @@ const CreatePasswordStep = ({ goToHomePage }) => {
           <button
             type="button"
             onClick={handleSubmit}
-            disabled={isLoading}
+            disabled={resetPasswordMutation.isPending}
             className="w-full rounded-xl bg-gradient-to-r from-red-900 to-red-800 py-4 text-lg font-bold text-white shadow-xl hover:from-red-800 hover:to-red-700 focus:outline-none focus:ring-4 focus:ring-red-200 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center"
           >
-            {isLoading ? (
+            {resetPasswordMutation.isPending ? (
               <div className="flex items-center">
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-3"></div>
                 Updating password...
@@ -544,6 +631,7 @@ const CreatePasswordStep = ({ goToHomePage }) => {
 const RecoverAccountPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [email, setEmail] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
   
   const goToNextStep = () => {
     setCurrentStep(prev => Math.min(prev + 1, 3));
@@ -562,9 +650,18 @@ const RecoverAccountPage = () => {
       case 1:
         return <EmailConfirmationStep email={email} setEmail={setEmail} goToNextStep={goToNextStep} />;
       case 2:
-        return <VerificationCodeStep email={email} goToNextStep={goToNextStep} goToPrevStep={goToPrevStep} />;
+        return <VerificationCodeStep 
+          email={email} 
+          goToNextStep={goToNextStep} 
+          goToPrevStep={goToPrevStep} 
+          setVerificationCode={setVerificationCode}
+        />;
       case 3:
-        return <CreatePasswordStep goToHomePage={goToHomePage} />;
+        return <CreatePasswordStep 
+          email={email} 
+          verificationCode={verificationCode}
+          goToHomePage={goToHomePage} 
+        />;
       default:
         return <EmailConfirmationStep email={email} setEmail={setEmail} goToNextStep={goToNextStep} />;
     }
@@ -611,25 +708,6 @@ const RecoverAccountPage = () => {
           </div>
         </div>
       </div>
-
-      {/* Success Message for completed recovery */}
-      {currentStep === 4 && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-8 max-w-md mx-4 text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <FiCheck className="w-8 h-8 text-green-600" />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Password Updated!</h2>
-            <p className="text-gray-600 mb-6">Your password has been successfully updated.</p>
-            <button 
-              onClick={goToHomePage}
-              className="w-full bg-red-900 text-white py-3 rounded-lg hover:bg-red-800 transition-colors"
-            >
-              Continue to Login
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

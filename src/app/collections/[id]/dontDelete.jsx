@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   ShoppingCart,
   Heart,
@@ -15,14 +16,38 @@ import {
   ChevronRight,
   Home,
 } from "lucide-react";
-import { useAuth } from "../../../Providers/ContextProviders/AuthContext";
-import { useToast } from "../../../hooks/useToast";
+import { useAuth } from "../../../Providers/ContextProviders/AuthContext"; // Adjust path as needed
+import { useToast } from "../../../hooks/useToast"; // Import toast hook
+import ProductApi_v1 from "@/app/api/v1/product-service";
 
-import { useCart } from "../../../Providers/ContextProviders/CartContext"; // 🔥 ADD CART CONTEXT
+// API function to add item to cart
+const addToCartAPI = async (cartData, authToken) => {
+  console.log("Adding to cart:", cartData, authToken);  
+  if (!authToken) {
+    throw new Error('Please login to add items to cart');
+  }
 
+  const response = await fetch('https://api.gulbhahar.com/api/cart/add', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${authToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(cartData),
+  });
 
-// 🔥 REMOVE API FUNCTION - We're using localStorage now
-// const addToCartAPI = async (cartData, authToken) => { ... }
+  if (!response.ok) {
+    if (response.status === 401) {
+      throw new Error('Please login again to add items to cart');
+    }
+    if (response.status === 409) {
+      throw new Error('Item already exists in cart');
+    }
+    throw new Error(`Failed to add to cart: ${response.status}`);
+  }
+
+  return response.json();
+};
 
 const reviews = {
   rating: 4.8,
@@ -51,21 +76,39 @@ const reviews = {
 
 export function ProductClient({ product, similarProducts }) {
   const router = useRouter();
-  const { isAuthenticated } = useAuth(); // 🔥 REMOVED authToken - not needed anymore
+  const { authToken, isAuthenticated } = useAuth();
   const { showToast, ToastContainer } = useToast();
+  const queryClient = useQueryClient();
   
-  // 🔥 ADD CART CONTEXT HOOK
-  const { addToCart, addingToCart } = useCart();
-  
-  const [selectedSize, setSelectedSize] = useState(product.sizes?.[0] || "");
+  const [selectedSize, setSelectedSize] = useState("");
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [mainImageIndex, setMainImageIndex] = useState(0);
   const [pincode, setPincode] = useState("");
   const [userRating, setUserRating] = useState(4);
   const [sortOrder, setSortOrder] = useState("Newest");
 
-  // 🔥 REMOVE OLD MUTATION - We're using cart context now
-  // const addToCartMutation = useMutation({ ... });
+  // Add to cart mutation
+  const addToCartMutation = useMutation({
+    mutationFn: (cartData) => ProductApi_v1.addToCart(cartData, authToken),
+    onSuccess: (data) => {
+      // Invalidate cart queries to refetch updated data
+      queryClient.invalidateQueries(['cartItems']);
+      
+      // Show success toast
+      showToast(`${product.name} added to cart successfully!`, 'success');
+      console.log('Success:', data);
+      
+      // Optional: Navigate to cart after a delay
+      // setTimeout(() => {
+      //   router.push("/cart");
+      // }, 1500);
+    },
+    onError: (error) => {
+      // Show error toast
+      showToast(error.message, 'error');
+      console.error('Cart error:', error);
+    }
+  });
 
   // Get current color and its images
   const currentColor = product.colors[selectedColorIndex];
@@ -75,60 +118,39 @@ export function ProductClient({ product, similarProducts }) {
   // Calculate discount percentage
   const discountPercentage = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
 
-  // 🔥 UPDATED handleAddToCart FUNCTION
-  const handleAddToCart = async () => {
-    console.log('🛒 Product Detail - Adding to cart:', product);
-    
-    // Check authentication if needed
-    // if (!isAuthenticated) {
-    //   showToast("Please login to add items to cart", "warning");
-    //   return;
-    // }
-  
-    if (!product.productId && !product.id) {
+  const handleAddToCart = () => {
+    // Check if user is authenticated
+    if (!isAuthenticated) {
+      showToast("Please login to add items to cart", "warning");
+      // router.push("/login");
+      return;
+    }
+
+    // Check if size is selected
+    if (!selectedSize) {
+      showToast("Please select a size", "warning");
+      return;
+    }
+
+    // Check if product ID exists
+    if (!product.productId) {
       showToast("Product ID not found", "error");
       return;
     }
-  
-    try {
-      // 🔥 FIX: Use different variable names to avoid conflict
-      const cartSelectedColor = currentColor || product.colors?.[0] || 'default';
-      const cartSelectedSize = selectedSize || product.sizes?.[0] || 'default';
-      
-      console.log('🎨 Selected variants:', { 
-        color: cartSelectedColor, 
-        size: cartSelectedSize 
-      });
-  
-      // 🔥 STANDARDIZED cart item structure
-      const cartItem = {
-        ...product,
-        // Use productId consistently
-        id: product.productId || product.id,
-        productId: product.productId || product.id,
-        selectedColor: cartSelectedColor,
-        selectedSize: cartSelectedSize,
-        selectedColorIndex: selectedColorIndex || 0,
-        // Remove custom cartId - let context generate it
-        addedAt: new Date().toISOString()
-      };
-  
-      console.log("🔍 Standardized cart item:", cartItem);
-  
-      const result = await addToCart(cartItem);
-      
-      if (result.success) {
-        console.log('✅ Item added successfully to cart');
-        showToast(`${product.name} (${cartSelectedSize}, ${cartSelectedColor}) added to cart!`, 'success');
-      } else {
-        console.log('❌ Failed to add item to cart');
-        showToast(result.message || "Failed to add item to cart", "error");
-      }
-    } catch (error) {
-      console.error('❌ Error adding to cart:', error);
-      showToast("Failed to add item to cart. Please try again.", "error");
-    }
+
+    // Prepare cart data according to API specification
+    const cartData = {
+      productId: product.productId,
+      color: currentColor,
+      size: selectedSize
+    };
+
+    console.log("Cart Data:", cartData);
+
+    // Trigger the mutation
+    addToCartMutation.mutate(cartData);
   };
+
   const handleColorChange = (colorIndex) => {
     setSelectedColorIndex(colorIndex);
     setMainImageIndex(0); // Reset to first image of new color
@@ -359,12 +381,12 @@ export function ProductClient({ product, similarProducts }) {
                 <div className="flex gap-3 sm:gap-4">
                   <button
                     onClick={handleAddToCart}
-                    disabled={addingToCart === (product.productId || product.id)}
+                    disabled={addToCartMutation.isLoading}
                     className={`flex-1 bg-black text-white rounded-[15px] h-16 sm:h-20 shadow-lg hover:bg-gray-800 transition-colors duration-200 flex items-center justify-center ${
-                      addingToCart === (product.productId || product.id) ? 'opacity-75 cursor-not-allowed' : ''
+                      addToCartMutation.isLoading ? 'opacity-75 cursor-not-allowed' : ''
                     }`}
                   >
-                    {addingToCart === (product.productId || product.id) ? (
+                    {addToCartMutation.isLoading ? (
                       <>
                         <div className="w-6 h-6 sm:w-8 sm:h-8 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
                         <span className="text-base sm:text-lg">Adding...</span>
