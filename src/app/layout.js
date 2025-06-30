@@ -6,6 +6,8 @@ import Footer from "@/all_components/Footer/Footer";
 import Navbar from "@/all_components/Navbar/Navbar";
 import ReactQueryProvider from "@/Providers/ReactQueryProvider/ReactQueryProvider";
 import Script from "next/script";
+import { AuthProvider } from "@/Providers/ContextProviders/AuthContext";
+import { CartProvider } from "@/Providers/ContextProviders/CartContext";
 
 // Configure fonts
 const poppins = Poppins({
@@ -76,12 +78,15 @@ export default function RootLayout({ children }) {
             `
           }}
         />
-
+        <AuthProvider >
         <ReactQueryProvider>
+          <CartProvider >
           <Navbar />
           {children}
           <Footer />
+          </CartProvider>
         </ReactQueryProvider>
+        </AuthProvider>
       </body>
     </html>
   );

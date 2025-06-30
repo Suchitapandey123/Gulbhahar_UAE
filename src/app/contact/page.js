@@ -12,12 +12,32 @@ import {
   ChevronDown,
   Clock,
   Users,
-  Star
+  Star,
+  CheckCircle
 } from "lucide-react";
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+
+// API configuration
+const API_BASE_URL = 'https://api.gulbhahar.com/api';
+
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// API function
+const createContactSupportAPI = async (contactData) => {
+  const response = await api.post('/contactSupport/createContactSupport', contactData);
+  return response.data;
+};
 
 export default function ContactPage() {
   const [queryType, setQueryType] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -26,10 +46,75 @@ export default function ContactPage() {
     message: ""
   });
 
+  // React Query mutation for contact support
+  const contactSupportMutation = useMutation({
+    mutationFn: createContactSupportAPI,
+    onSuccess: (data) => {
+      console.log('Contact form submitted successfully:', data);
+      setShowSuccessMessage(true);
+      // Reset form
+      setFormData({
+        fullName: "",
+        email: "",
+        phone: "",
+        location: "",
+        message: ""
+      });
+      setQueryType("");
+      // Hide success message after 5 seconds
+      setTimeout(() => {
+        setShowSuccessMessage(false);
+      }, 5000);
+    },
+    onError: (error) => {
+      console.error('Error submitting contact form:', error);
+      alert(error.response?.data?.message || 'Failed to submit contact form. Please try again.');
+    },
+  });
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form submitted:", { queryType, ...formData });
-    // Handle form submission logic here
+    
+    if (!queryType) {
+      alert('Please select a query type');
+      return;
+    }
+
+    // Map query type to API format
+    let contactusValue;
+    switch (queryType) {
+      case "General Question":
+        contactusValue = "general";
+        break;
+      case "Technical Support":
+        contactusValue = "technical";
+        break;
+      case "Sales Inquiry":
+        contactusValue = "sales";
+        break;
+      case "Customer Support":
+        contactusValue = "support";
+        break;
+      case "Feedback":
+        contactusValue = "feedback";
+        break;
+      case "Other":
+        contactusValue = "other";
+        break;
+      default:
+        contactusValue = "general";
+    }
+    
+    const contactData = {
+      contactus: contactusValue,
+      fullName: formData.fullName,
+      email: formData.email,
+      phone: formData.phone,
+      location: formData.location,
+      message: formData.message
+    };
+
+    contactSupportMutation.mutate(contactData);
   };
 
   const handleInputChange = (e) => {
@@ -45,15 +130,26 @@ export default function ContactPage() {
   };
 
   const queryOptions = [
-    { value: "Sales Inquiry", icon: "💼", description: "Business sales inquiries" },
-    { value: "Technical Support", icon: "🔧", description: "Technical help and support" },
-    { value: "General Question", icon: "❓", description: "General questions and info" }
+    { value: "General Question", icon: "❓", description: "General questions and info", apiValue: "general" },
+    { value: "Technical Support", icon: "🔧", description: "Technical help and support", apiValue: "technical" },
+    { value: "Sales Inquiry", icon: "💼", description: "Business sales inquiries", apiValue: "sales" },
+    { value: "Customer Support", icon: "🎧", description: "Customer service and assistance", apiValue: "support" },
+    { value: "Feedback", icon: "💬", description: "Share your feedback with us", apiValue: "feedback" },
+    { value: "Other", icon: "📋", description: "Other inquiries not listed above", apiValue: "other" }
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-20">
         
+        {/* Success Message */}
+        {showSuccessMessage && (
+          <div className="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 animate-fade-in">
+            <CheckCircle className="h-5 w-5" />
+            <span className="font-medium">Message sent successfully! We'll get back to you within 24 hours.</span>
+          </div>
+        )}
+
         {/* Header Section */}
         <div className="text-center mb-12 lg:mb-16">
           <div className="inline-flex items-center gap-3 bg-red-50 px-4 py-2 rounded-full mb-4">
@@ -205,10 +301,20 @@ export default function ContactPage() {
 
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-red-900 to-red-800 text-white py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:from-red-800 hover:to-red-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                  disabled={contactSupportMutation.isPending}
+                  className="w-full bg-gradient-to-r from-red-900 to-red-800 text-white py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:from-red-800 hover:to-red-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
                 >
-                  <Send className="h-4 w-4 sm:h-5 sm:w-5" />
-                  Send Message
+                  {contactSupportMutation.isPending ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Sending Message...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="h-4 w-4 sm:h-5 sm:w-5" />
+                      Send Message
+                    </>
+                  )}
                 </button>
               </form>
             </div>
@@ -288,18 +394,11 @@ export default function ContactPage() {
               </p>
               <div className="space-y-2">
                 <a 
-                  href="tel:+919876543210" 
+                  href="tel:+919220927241" 
                   className="inline-flex items-center gap-2 text-sm font-semibold text-red-900 hover:text-red-700 transition-colors bg-red-50 px-3 py-2 rounded-lg hover:bg-red-100 block w-full"
                 >
                   <Phone className="h-4 w-4" />
                   +91 9220927241
-                </a>
-                <a 
-                  href="tel:+919876543210" 
-                  className="inline-flex hidden items-center gap-2 text-sm font-semibold text-red-900 hover:text-red-700 transition-colors bg-red-50 px-3 py-2 rounded-lg hover:bg-red-100 block w-full"
-                >
-                  <Phone className="h-4 w-4" />
-                  +91 9876543210
                 </a>
               </div>
             </div>
@@ -321,13 +420,6 @@ export default function ContactPage() {
               <p className="text-sm text-gray-600 mb-3">
                 S-12, Rajouri Garden, New Delhi-110027
               </p>
-              <a 
-                href="#" 
-                className="inline-flexv hidden items-center gap-2 text-sm font-semibold text-red-900 hover:text-red-700 transition-colors bg-red-50 px-3 py-2 rounded-lg hover:bg-red-100"
-              >
-                <MapPin className="h-4 w-4" />
-                Locate on Map
-              </a>
             </div>
 
             {/* Additional Info */}

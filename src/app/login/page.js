@@ -3,48 +3,9 @@ import { useEffect, useState } from 'react';
 import { FaGoogle, FaFacebook } from 'react-icons/fa';
 import { FiUser, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { IoIosArrowBack } from 'react-icons/io';
+import { useAuth } from '../../Providers/ContextProviders/AuthContext'; // Import the auth context
 
-// Utility functions for token storage
-const setAuthToken = (token) => {
-  // Store in localStorage
-  localStorage.setItem('authToken', token);
-  
-  // Store in cookie with 30 days expiration
-  const expirationDate = new Date();
-  expirationDate.setDate(expirationDate.getDate() + 30);
-  document.cookie = `authToken=${token}; expires=${expirationDate.toUTCString()}; path=/; secure; samesite=strict`;
-};
-
-const setUserData = (userData) => {
-  // Store user data in localStorage
-  localStorage.setItem('userData', JSON.stringify(userData));
-  
-  // Store essential user info in cookies
-  const expirationDate = new Date();
-  expirationDate.setDate(expirationDate.getDate() + 30);
-  
-  if (userData.email) {
-    document.cookie = `userEmail=${userData.email}; expires=${expirationDate.toUTCString()}; path=/; secure; samesite=strict`;
-  }
-  if (userData.firstName || userData.lastName) {
-    const userName = `${userData.firstName || ''} ${userData.lastName || ''}`.trim();
-    document.cookie = `userName=${userName}; expires=${expirationDate.toUTCString()}; path=/; secure; samesite=strict`;
-  }
-  if (userData.userId || userData.id) {
-    document.cookie = `userId=${userData.userId || userData.id}; expires=${expirationDate.toUTCString()}; path=/; secure; samesite=strict`;
-  }
-};
-
-const setLoginTimestamp = () => {
-  const timestamp = new Date().toISOString();
-  localStorage.setItem('loginTimestamp', timestamp);
-  
-  const expirationDate = new Date();
-  expirationDate.setDate(expirationDate.getDate() + 30);
-  document.cookie = `loginTimestamp=${timestamp}; expires=${expirationDate.toUTCString()}; path=/; secure; samesite=strict`;
-};
-
-// Carousel component
+// Carousel component (unchanged)
 const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   
@@ -109,6 +70,8 @@ const Carousel = () => {
 };
 
 const LoginPage = () => {
+  const { login, isAuthenticated, isLoading: authLoading } = useAuth();
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -118,6 +81,33 @@ const LoginPage = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [touched, setTouched] = useState({ email: false, password: false });
   const [isLoading, setIsLoading] = useState(false);
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      window.location.href = '/';
+    }
+  }, [isAuthenticated, authLoading]);
+
+  // Don't render login form if user is already authenticated
+  if (authLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-900"></div>
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-red-900 mb-4">Redirecting...</h2>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-900 mx-auto"></div>
+        </div>
+      </div>
+    );
+  }
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -193,7 +183,6 @@ const LoginPage = () => {
       });
 
       console.log('📡 Response status:', response.status);
-      console.log('📡 Response headers:', response.headers);
       
       const data = await response.json();
       console.log('📦 Full API Response:', data);
@@ -201,11 +190,12 @@ const LoginPage = () => {
       if (response.ok) {
         console.log('✅ Login successful:', data);
         
-        // Store authentication token
-        if (data.token || data.accessToken || data.authToken) {
-          const token = data.token || data.accessToken || data.authToken;
-          setAuthToken(token);
-          console.log('Token stored successfully');
+        // Extract token
+        const token = data.token || data.accessToken || data.authToken;
+        
+        if (!token) {
+          setGeneralError('Login successful but no token received. Please try again.');
+          return;
         }
         
         // Prepare user data object
@@ -222,29 +212,29 @@ const LoginPage = () => {
           ...data.user // Include any additional user data from response
         };
         
-        // Store user data
-        setUserData(userData);
-        console.log('User data stored successfully');
+        // Use context login function
+        const loginSuccess = await login(token, userData);
         
-        // Store login timestamp
-        setLoginTimestamp();
-        
-        // Check verification status and redirect accordingly
-        if (data.emailVerified === false) {
-          setSuccessMessage('Please verify your email to continue.');
-          setTimeout(() => {
-            window.location.href = '/verify-email';
-          }, 1500);
-        } else if (data.phoneVerified === false) {
-          setSuccessMessage('Please verify your phone number to continue.');
-          setTimeout(() => {
-            window.location.href = '/verify-phone';
-          }, 1500);
+        if (loginSuccess) {
+          // Check verification status and redirect accordingly
+          if (data.emailVerified === false) {
+            setSuccessMessage('Please verify your email to continue.');
+            setTimeout(() => {
+              window.location.href = '/verify-email';
+            }, 1500);
+          } else if (data.phoneVerified === false) {
+            setSuccessMessage('Please verify your phone number to continue.');
+            setTimeout(() => {
+              window.location.href = '/verify-phone';
+            }, 1500);
+          } else {
+            setSuccessMessage('Login successful! Redirecting to Homepage...');
+            setTimeout(() => {
+              window.location.href = '/';
+            }, 1500);
+          }
         } else {
-          setSuccessMessage('Login successful! Redirecting to Homepage...');
-          setTimeout(() => {
-            window.location.href = '/'; // Redirect to homepage
-          }, 1500);
+          setGeneralError('Failed to save login data. Please try again.');
         }
       } else {
         console.log('❌ Login failed. Status:', response.status);
@@ -263,11 +253,6 @@ const LoginPage = () => {
       }
     } catch (error) {
       console.error('🚨 Login error:', error);
-      console.error('🚨 Error details:', {
-        name: error.name,
-        message: error.message,
-        stack: error.stack
-      });
       
       if (error.name === 'TypeError' && error.message.includes('fetch')) {
         setGeneralError('Network error. Please check your connection and try again.');
@@ -504,7 +489,6 @@ const LoginPage = () => {
               </div>
             </div>
           </div>
-          
           <div className="hidden md:block md:w-1/2">
             <div className="h-full min-h-[600px]">
               <Carousel />
