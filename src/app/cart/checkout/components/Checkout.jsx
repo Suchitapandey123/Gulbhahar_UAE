@@ -1,0 +1,905 @@
+"use client";
+import { useState, useEffect } from "react";
+import { MapPin, User, Package, ShoppingBag, CreditCard, Shield, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import axios from "axios";
+import { useCart } from "@/Providers/ContextProviders/CartContext";
+import { useToast } from "@/hooks/useToast";
+
+const Breadcrumb = () => (
+  <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-8">
+    <span className="hover:text-red-900 transition-colors cursor-pointer">Home</span>
+    <span className="text-red-900">/</span>
+    <span className="hover:text-red-900 transition-colors cursor-pointer">Cart</span>
+    <span className="text-red-900">/</span>
+    <span className="text-red-900 font-semibold bg-red-50 px-3 py-1 rounded-md">Checkout</span>
+  </nav>
+);
+
+export default function CheckoutComponent() {
+  const router = useRouter();
+  const { cart, getCartTotal } = useCart();
+  const { showToast, ToastContainer } = useToast();
+  const [isLoading, setIsLoading] = useState(true);
+  const [shippingMethod, setShippingMethod] = useState("free");
+  const [postalCodeValidation, setPostalCodeValidation] = useState({
+    isValidating: false,
+    isValid: null,
+    error: null,
+    deliveryInfo: null
+  });
+  const [formData, setFormData] = useState({
+    country: "",
+    fullName: "",
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+    region: "",
+    postalCode: ""
+  });
+
+  // Handle initial loading and cart state
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Check if cart is empty after loading
+  const isCartEmpty = !isLoading && (!cart || cart.length === 0);
+
+  // Validate postal code with Delhivery API
+  const validatePostalCode = async (postalCode) => {
+    if (!postalCode || postalCode.length < 6) {
+      setPostalCodeValidation({
+        isValidating: false,
+        isValid: null,
+        error: null,
+        deliveryInfo: null
+      });
+      return;
+    }
+
+    // Check if Delhivery API token is available
+    // const DELHIVERY_TOKEN = process.env.NEXT_PUBLIC_DELHIVERY_TOKEN;
+    const DELHIVERY_TOKEN = "82967ff67a00c9b0d71ccc50f205a62b404281b0";
+    if (!DELHIVERY_TOKEN) {
+      console.warn('Delhivery API token not configured');
+      setPostalCodeValidation({
+        isValidating: false,
+        isValid: null,
+        error: 'Postal code validation temporarily unavailable',
+        deliveryInfo: null
+      });
+      return;
+    }
+
+    setPostalCodeValidation(prev => ({
+      ...prev,
+      isValidating: true,
+      error: null
+    }));
+
+    try {
+      console.log('Making API call to Delhivery with postal code:', postalCode);
+      console.log('API URL:', `https://track.delhivery.com/c/api/pin-codes/json/?filter_codes=${postalCode}`);
+      console.log('Using token:', DELHIVERY_TOKEN);
+
+      const response = await axios.get(
+        `https://track.delhivery.com/c/api/pin-codes/json/?filter_codes=${postalCode}`,
+        {
+          timeout: 10000, // 10 seconds timeout
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `Token ${DELHIVERY_TOKEN}`
+          }
+        }
+      );
+
+      console.log('API Response:', response);
+      console.log('Response Data:', response.data);
+      console.log('Response Status:', response.status);
+
+      if (response.data && response.data.delivery_codes && response.data.delivery_codes.length > 0) {
+        const deliveryData = response.data.delivery_codes[0].postal_code;
+        
+        setPostalCodeValidation({
+          isValidating: false,
+          isValid: true,
+          error: null,
+          deliveryInfo: {
+            city: deliveryData.city,
+            district: deliveryData.district,
+            state: deliveryData.state_code,
+            cod: deliveryData.cod === 'Y',
+            prepaid: deliveryData.pre_paid === 'Y',
+            pickup: deliveryData.pickup === 'Y',
+            covidZone: deliveryData.covid_zone,
+            isODA: deliveryData.is_oda === 'Y' // Out of Delivery Area
+          }
+        });
+
+        // Auto-fill city and region if available
+        setFormData(prev => ({
+          ...prev,
+          city: deliveryData.city || prev.city,
+          region: deliveryData.district || prev.region
+        }));
+
+        showToast(
+          `✅ Postal code valid for ${deliveryData.city}, ${deliveryData.district}`,
+          'success'
+        );
+      } else {
+        setPostalCodeValidation({
+          isValidating: false,
+          isValid: false,
+          error: 'Postal code not serviceable',
+          deliveryInfo: null
+        });
+
+        showToast(
+          'This postal code is not serviceable in our delivery network',
+          'error'
+        );
+      }
+    } catch (error) {
+      console.error('Error validating postal code:', error);
+      console.error('Error details:', {
+        message: error.message,
+        code: error.code,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        headers: error.response?.headers
+      });
+      
+      let errorMessage = 'Unable to validate postal code';
+      if (error.code === 'ECONNABORTED') {
+        errorMessage = 'Validation timeout - please try again';
+      } else if (error.response?.status === 401) {
+        errorMessage = 'Authentication failed - please contact support';
+        console.error('401 Error - Check if token is valid');
+      } else if (error.response?.status === 403) {
+        errorMessage = 'Access denied - please contact support';
+        console.error('403 Error - Token may not have permissions');
+      } else if (error.response?.status === 404) {
+        errorMessage = 'Postal code not found';
+      } else if (error.response?.status === 429) {
+        errorMessage = 'Too many requests - please wait and try again';
+      } else if (!navigator.onLine) {
+        errorMessage = 'No internet connection';
+      } else if (error.code === 'ERR_NETWORK') {
+        errorMessage = 'Network error - check CORS settings';
+        console.error('Network error - this might be a CORS issue');
+      }
+
+      setPostalCodeValidation({
+        isValidating: false,
+        isValid: false,
+        error: errorMessage,
+        deliveryInfo: null
+      });
+
+      showToast(errorMessage, 'error');
+    }
+  };
+
+  // Debounced postal code validation
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (formData.postalCode && formData.country === 'india') {
+        validatePostalCode(formData.postalCode);
+      }
+    }, 1000); // 1 second delay
+
+    return () => clearTimeout(timeoutId);
+  }, [formData.postalCode, formData.country]);
+
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handlePayment = () => {
+    // Basic form validation
+    const requiredFields = ['country', 'fullName', 'email', 'phone'];
+    const missingFields = requiredFields.filter(field => !formData[field]);
+    
+    if (missingFields.length > 0) {
+      showToast(`Please fill in all required fields: ${missingFields.join(', ')}`, 'error');
+      return;
+    }
+
+    // Validate postal code for India
+    if (formData.country === 'india' && formData.postalCode) {
+      if (postalCodeValidation.isValidating) {
+        showToast('Please wait for postal code validation to complete', 'warning');
+        return;
+      }
+      
+      if (postalCodeValidation.isValid === false) {
+        showToast('Please enter a valid postal code for delivery', 'error');
+        return;
+      }
+    }
+
+    // Check for ODA (Out of Delivery Area) surcharge
+    if (postalCodeValidation.deliveryInfo?.isODA) {
+      showToast('Note: This location may have additional delivery charges (ODA)', 'warning');
+    }
+    
+    // Save form data to localStorage for payment page
+    try {
+      const checkoutData = {
+        ...formData,
+        deliveryInfo: postalCodeValidation.deliveryInfo,
+        shippingMethod
+      };
+      localStorage.setItem('checkoutFormData', JSON.stringify(checkoutData));
+    } catch (error) {
+      console.warn('Could not save checkout data:', error);
+    }
+    
+    console.log("Proceeding to payment...", { 
+      formData, 
+      shippingMethod, 
+      deliveryInfo: postalCodeValidation.deliveryInfo 
+    });
+    router.push('/cart/checkout/payment');
+  };
+
+  // Get the current image for display with proper error handling
+  const getCurrentImage = (item) => {
+    console.log(item)
+    if (!item)
+       return '/Image/About1.png';
+    
+    try {
+      if (item.images && Array.isArray(item.images) && item.images.length > 0) {
+        if (Array.isArray(item.images[0])) {
+          const colorIndex = item.selectedColorIndex || 0;
+          const colorImages = item.images[colorIndex];
+          if (colorImages && Array.isArray(colorImages) && colorImages.length > 0) {
+            return colorImages[0] || '/Image/About1.png';
+          }
+          if (item.images[0] && Array.isArray(item.images[0]) && item.images[0].length > 0) {
+            return item.images[0][0] || '/Image/About1.png';
+          }
+        } else {
+          return item.images[0] || '/Image/About1.png';
+        }
+      }
+      
+      if (item.image) {
+        return Array.isArray(item.image) ? item.image[0] || '/Image/About1.png' : item.image;
+      }
+      
+      if (item.currentMainImage) {
+        return item.currentMainImage;
+      }
+      
+      return '/Image/About1.png';
+    } catch (error) {
+      console.warn('Error getting image for item:', item?.id, error);
+      return '/Image/About1.png';
+    }
+  };
+
+  const shippingOptions = {
+    free: { price: 0, days: "5-7 business days", icon: "🚛", name: "Free Shipping" },
+    standard: { price: 350, days: "3-5 business days", icon: "📦", name: "Standard Shipping" },
+    express: { price: 750, days: "1-2 business days", icon: "⚡", name: "Express Shipping" },
+  };
+
+  // Calculate totals from cart - with safety checks
+  const subtotal = cart && Array.isArray(cart) ? cart.reduce((sum, item) => {
+    if (!item || typeof item.price !== 'number' || typeof item.quantity !== 'number') {
+      return sum;
+    }
+    return sum + (item.price * item.quantity);
+  }, 0) : 0;
+
+  const isFreeShippingEligible = subtotal >= 5000;
+  
+  // Calculate shipping cost based on eligibility and ODA
+  let shipping = shippingOptions[shippingMethod]?.price || 0;
+  if (isFreeShippingEligible && shippingMethod !== 'express') {
+    shipping = 0;
+  }
+  
+  // Add ODA surcharge if applicable
+  const odaSurcharge = postalCodeValidation.deliveryInfo?.isODA ? 50 : 0;
+  shipping += odaSurcharge;
+  
+  const total = subtotal + shipping;
+
+  // Show loading state (keeping existing loading UI)
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex items-center space-x-2 text-sm text-gray-400 mb-8">
+            <div className="h-4 w-12 bg-gray-200 rounded animate-pulse"></div>
+            <span>/</span>
+            <div className="h-4 w-8 bg-gray-200 rounded animate-pulse"></div>
+            <span>/</span>
+            <div className="h-6 w-20 bg-red-200 rounded animate-pulse"></div>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-6">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="bg-white rounded-2xl shadow-lg border border-red-100 p-6">
+                  <div className="flex items-center mb-6">
+                    <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse mr-4"></div>
+                    <div>
+                      <div className="h-6 w-32 bg-gray-200 rounded animate-pulse mb-2"></div>
+                      <div className="h-4 w-24 bg-gray-100 rounded animate-pulse"></div>
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="h-12 bg-gray-100 rounded-xl animate-pulse"></div>
+                    <div className="h-12 bg-gray-100 rounded-xl animate-pulse"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="lg:col-span-1">
+              <div className="bg-white rounded-2xl shadow-lg border border-red-100 p-6">
+                <div className="flex items-center mb-6">
+                  <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse mr-4"></div>
+                  <div className="h-6 w-28 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+                
+                <div className="space-y-4">
+                  {[1, 2].map((i) => (
+                    <div key={i} className="bg-red-50/50 rounded-xl border border-red-100 p-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-12 h-12 bg-gray-200 rounded-md animate-pulse"></div>
+                        <div className="flex-1">
+                          <div className="h-4 w-20 bg-gray-200 rounded animate-pulse mb-2"></div>
+                          <div className="h-3 w-16 bg-gray-100 rounded animate-pulse mb-2"></div>
+                          <div className="h-3 w-12 bg-gray-100 rounded animate-pulse"></div>
+                        </div>
+                        <div className="h-5 w-16 bg-gray-200 rounded animate-pulse"></div>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  <div className="border-t-2 border-red-100 pt-4 space-y-3">
+                    <div className="flex justify-between">
+                      <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="h-4 w-20 bg-gray-200 rounded animate-pulse"></div>
+                    </div>
+                    <div className="flex justify-between">
+                      <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="h-4 w-12 bg-green-200 rounded animate-pulse"></div>
+                    </div>
+                    <div className="border-t-2 border-red-200 pt-3 bg-red-50 p-4 rounded-lg">
+                      <div className="flex justify-between">
+                        <div className="h-6 w-12 bg-red-200 rounded animate-pulse"></div>
+                        <div className="h-6 w-24 bg-red-200 rounded animate-pulse"></div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="h-12 bg-gray-200 rounded-xl animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-center mt-8">
+            <div className="flex items-center gap-3 text-gray-600">
+              <div className="w-5 h-5 border-2 border-red-900 border-t-transparent rounded-full animate-spin"></div>
+              <span className="text-sm font-medium">Loading checkout...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect if cart is empty (after loading)
+  if (isCartEmpty) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white flex items-center justify-center">
+        <div className="text-center">
+          <ShoppingBag size={64} className="text-gray-300 mb-4 mx-auto" />
+          <h2 className="text-2xl font-bold text-gray-600 mb-4">Your cart is empty</h2>
+          <button 
+            onClick={() => router.push('/')}
+            className="bg-red-900 text-white px-6 py-3 rounded-lg hover:bg-red-800 transition-colors"
+          >
+            Continue Shopping
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white">
+      <ToastContainer />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Breadcrumb />
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column - Forms */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Shipping Country Card */}
+            <div className="bg-white rounded-2xl shadow-lg border border-red-100 p-6 hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center mb-6">
+                <div className="w-10 h-10 bg-red-900 rounded-full flex items-center justify-center mr-4">
+                  <MapPin className="text-white h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900">Shipping Destination</h3>
+                  <p className="text-sm text-gray-600">Choose your delivery location</p>
+                </div>
+              </div>
+              
+              <div className="relative">
+                <label htmlFor="country" className="block text-sm font-semibold text-gray-700 mb-3">
+                  Select Country *
+                </label>
+                <select
+                  id="country"
+                  name="country"
+                  value={formData.country}
+                  onChange={handleInputChange}
+                  className="w-full border-2 border-red-200 rounded-xl p-4 text-gray-700 focus:border-red-900 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30"
+                  required
+                >
+                  <option value="">Choose your country</option>
+                  <option value="india">🇮🇳 India</option>
+                  <option value="usa">🇺🇸 United States</option>
+                  <option value="uk">🇬🇧 United Kingdom</option>
+                  <option value="canada">🇨🇦 Canada</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Shipping Address Card */}
+            <div className="bg-white rounded-2xl shadow-lg border border-red-100 p-6 hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center mb-6">
+                <div className="w-10 h-10 bg-red-900 rounded-full flex items-center justify-center mr-4">
+                  <User className="text-white h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900">Shipping Address</h3>
+                  <p className="text-sm text-gray-600">Enter your delivery details</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="md:col-span-2">
+                  <label htmlFor="fullName" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Full Name *
+                  </label>
+                  <input
+                    id="fullName"
+                    name="fullName"
+                    type="text"
+                    value={formData.fullName}
+                    onChange={handleInputChange}
+                    className="w-full border-2 border-red-200 rounded-xl p-4 text-gray-700 focus:border-red-900 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30"
+                    placeholder="Enter your full name"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Email Address *
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full border-2 border-red-200 rounded-xl p-4 text-gray-700 focus:border-red-900 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30"
+                    placeholder="your@email.com"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Phone Number *
+                  </label>
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    className="w-full border-2 border-red-200 rounded-xl p-4 text-gray-700 focus:border-red-900 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30"
+                    placeholder="+91 12345 67890"
+                    required
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <label htmlFor="address" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Street Address
+                  </label>
+                  <input
+                    id="address"
+                    name="address"
+                    type="text"
+                    value={formData.address}
+                    onChange={handleInputChange}
+                    className="w-full border-2 border-red-200 rounded-xl p-4 text-gray-700 focus:border-red-900 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30"
+                    placeholder="House number and street name"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="city" className="block text-sm font-semibold text-gray-700 mb-2">
+                    City
+                  </label>
+                  <input
+                    id="city"
+                    name="city"
+                    type="text"
+                    value={formData.city}
+                    onChange={handleInputChange}
+                    className="w-full border-2 border-red-200 rounded-xl p-4 text-gray-700 focus:border-red-900 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30"
+                    placeholder="City"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="region" className="block text-sm font-semibold text-gray-700 mb-2">
+                    State/Region
+                  </label>
+                  <select
+                    id="region"
+                    name="region"
+                    value={formData.region}
+                    onChange={handleInputChange}
+                    className="w-full border-2 border-red-200 rounded-xl p-4 text-gray-700 focus:border-red-900 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30"
+                  >
+                    <option value="">Select Region</option>
+                    <option value="delhi">Delhi</option>
+                    <option value="mumbai">Mumbai</option>
+                    <option value="bangalore">Bangalore</option>
+                    <option value="chennai">Chennai</option>
+                    <option value="kolkata">Kolkata</option>
+                  </select>
+                </div>
+
+                <div className="md:col-span-1">
+                  <label htmlFor="postalCode" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Postal Code
+                    {formData.country === 'india' && (
+                      <span className="text-xs text-gray-500 ml-1">(Auto-validated)</span>
+                    )}
+                  </label>
+                  <div className="relative">
+                    <input
+                      id="postalCode"
+                      name="postalCode"
+                      type="text"
+                      value={formData.postalCode}
+                      onChange={handleInputChange}
+                      className={`w-full border-2 rounded-xl p-4 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${
+                        postalCodeValidation.isValid === true
+                          ? 'border-green-500 focus:border-green-500'
+                          : postalCodeValidation.isValid === false
+                          ? 'border-red-500 focus:border-red-500'
+                          : 'border-red-200 focus:border-red-900'
+                      }`}
+                      placeholder="110001"
+                    />
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      {postalCodeValidation.isValidating && formData.country === 'india' && (
+                        <Loader2 className="h-5 w-5 text-blue-500 animate-spin" />
+                      )}
+                      {postalCodeValidation.isValid === true && (
+                        <CheckCircle className="h-5 w-5 text-green-500" />
+                      )}
+                      {postalCodeValidation.isValid === false && (
+                        <AlertCircle className="h-5 w-5 text-red-500" />
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Postal Code Validation Feedback */}
+                  {formData.country === 'india' && postalCodeValidation.deliveryInfo && (
+                    <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                      <div className="flex items-center gap-2 mb-2">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span className="text-sm font-semibold text-green-800">Delivery Available</span>
+                      </div>
+                      <div className="text-xs text-green-700 space-y-1">
+                        <p>📍 {postalCodeValidation.deliveryInfo.city}, {postalCodeValidation.deliveryInfo.district}</p>
+                        <div className="flex gap-4">
+                          {postalCodeValidation.deliveryInfo.cod && (
+                            <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">
+                              💰 COD Available
+                            </span>
+                          )}
+                          {postalCodeValidation.deliveryInfo.isODA && (
+                            <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs">
+                              🚛 Remote Area (+₹50)
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {postalCodeValidation.error && formData.country === 'india' && (
+                    <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                      <div className="flex items-center gap-2">
+                        <AlertCircle className="h-4 w-4 text-red-600" />
+                        <span className="text-sm text-red-800">{postalCodeValidation.error}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Shipping Method Card */}
+            <div className="bg-white rounded-2xl shadow-lg border border-red-100 p-6 hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center mb-6">
+                <div className="w-10 h-10 bg-red-900 rounded-full flex items-center justify-center mr-4">
+                  <Package className="text-white h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900">Shipping Method</h3>
+                  <p className="text-sm text-gray-600">Choose your preferred delivery speed</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {Object.entries(shippingOptions).map(([key, { price, days, icon, name }]) => {
+                  const displayPrice = (isFreeShippingEligible && key !== 'express') ? 0 : price;
+                  const isFreeUpgraded = isFreeShippingEligible && key !== 'express' && price > 0;
+                  const finalPrice = displayPrice + (postalCodeValidation.deliveryInfo?.isODA ? 50 : 0);
+                  
+                  return (
+                    <label
+                      key={key}
+                      className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all duration-200 hover:bg-red-50 ${
+                        shippingMethod === key
+                          ? 'border-red-900 bg-red-50 ring-2 ring-red-200'
+                          : 'border-red-200 hover:border-red-300'
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="shipping"
+                        value={key}
+                        checked={shippingMethod === key}
+                        onChange={(e) => setShippingMethod(e.target.value)}
+                        className="w-4 h-4 text-red-900 focus:ring-red-500 focus:ring-2"
+                      />
+                      <div className="ml-4 flex-1">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <span className="text-2xl">{icon}</span>
+                            <div>
+                              <p className="font-bold text-gray-900">{name}</p>
+                              <p className="text-sm text-gray-600">{days}</p>
+                              {isFreeUpgraded && (
+                                <p className="text-xs text-green-600 font-semibold">
+                                  🎉 Free upgrade - ₹5000+ order
+                                </p>
+                              )}
+                              {postalCodeValidation.deliveryInfo?.isODA && (
+                                <p className="text-xs text-orange-600 font-medium">
+                                  +₹50 Remote area surcharge
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <span className="font-bold text-lg text-red-900">
+                              {finalPrice === 0 ? 'FREE' : `₹${finalPrice}`}
+                            </span>
+                            {isFreeUpgraded && !postalCodeValidation.deliveryInfo?.isODA && (
+                              <p className="text-xs text-gray-500 line-through">₹{price}</p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column - Order Summary */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-2xl shadow-lg border border-red-100 p-6 lg:sticky lg:top-8 hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center mb-6">
+                <div className="w-10 h-10 bg-red-900 rounded-full flex items-center justify-center mr-4">
+                  <ShoppingBag className="text-white h-5 w-5" />
+                </div>
+                <h2 className="text-xl font-bold text-gray-900">Order Summary</h2>
+              </div>
+
+              <div className="space-y-4">
+                {/* Cart Items */}
+                {cart && cart.length > 0 && cart.map((item) => {
+                  if (!item || !item.id) return null;
+                  
+                  return (
+                    <div key={item.id} className="bg-red-50/50 rounded-xl border border-red-100 p-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-12 h-12 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
+                          <Image
+                            src={getCurrentImage(item.image[0]) || null}
+                            alt={item.name || 'Product'}
+                            width={48}
+                            height={48}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              console.warn('Image failed to load for item:', item.id);
+                              if (e.target) {
+                                e.target.src = '/Image/About1.png';
+                              }
+                            }}
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-bold text-gray-900">{item.name || 'Product'}</h3>
+                          <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
+                            {item.selectedColor && (
+                              <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full font-medium">
+                                {item.selectedColor}
+                              </span>
+                            )}
+                            {item.selectedSize && (
+                              <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full font-medium">
+                                Size {item.selectedSize}
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-sm text-gray-600 mt-1 font-medium">
+                            Qty: <span className="text-red-900">{item.quantity || 1}</span>
+                          </div>
+                        </div>
+                        <span className="font-bold text-lg text-red-900">
+                          ₹{((item.price || 0) * (item.quantity || 1)).toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {/* Summary Section */}
+                <div className="border-t-2 border-red-100 pt-4 space-y-3">
+                  {/* Free Shipping Notification */}
+                  {!isFreeShippingEligible && subtotal > 0 && (
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                      <p className="text-sm text-blue-800">
+                        💡 <strong>Add ₹{(5000 - subtotal).toLocaleString()} more</strong> to qualify for free shipping!
+                      </p>
+                    </div>
+                  )}
+                  
+                  {isFreeShippingEligible && (
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
+                      <p className="text-sm text-green-800">
+                        🎉 <strong>Congratulations!</strong> You qualify for free shipping on orders ₹5000+
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Delivery Info Summary */}
+                  {postalCodeValidation.deliveryInfo && (
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <MapPin className="h-4 w-4 text-red-600" />
+                        <span className="text-sm font-semibold text-red-800">Delivery Details</span>
+                      </div>
+                      <div className="text-xs text-red-700 space-y-1">
+                        <p>📍 {postalCodeValidation.deliveryInfo.city}, {postalCodeValidation.deliveryInfo.district}</p>
+                        <div className="flex gap-2 flex-wrap">
+                          {postalCodeValidation.deliveryInfo.cod && (
+                            <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">
+                              COD ✓
+                            </span>
+                          )}
+                          {postalCodeValidation.deliveryInfo.isODA && (
+                            <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs">
+                              Remote Area
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex justify-between text-gray-700">
+                    <span className="font-medium">Subtotal</span>
+                    <span className="font-bold">₹{subtotal.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between text-gray-700">
+                    <span className="font-medium">Shipping</span>
+                    <div className="text-right">
+                      <span className="font-bold text-green-600">
+                        {shipping === 0 ? 'FREE' : `₹${shipping.toLocaleString()}`}
+                      </span>
+                      {isFreeShippingEligible && shippingMethod !== 'free' && shippingOptions[shippingMethod]?.price > 0 && !postalCodeValidation.deliveryInfo?.isODA && (
+                        <p className="text-xs text-gray-500 line-through">
+                          ₹{shippingOptions[shippingMethod].price}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* ODA Surcharge */}
+                  {odaSurcharge > 0 && (
+                    <div className="flex justify-between text-gray-700">
+                      <span className="font-medium text-orange-600">Remote Area Surcharge</span>
+                      <span className="font-bold text-orange-600">₹{odaSurcharge}</span>
+                    </div>
+                  )}
+                  
+                  <div className="border-t-2 border-red-200 pt-3 bg-red-50 p-4 rounded-lg">
+                    <div className="flex justify-between text-xl font-bold text-red-900">
+                      <span>Total</span>
+                      <span>₹{total.toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Payment Button */}
+                <button
+                  onClick={handlePayment}
+                  disabled={postalCodeValidation.isValidating}
+                  className={`w-full py-4 rounded-xl font-bold text-lg transform transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 ${
+                    postalCodeValidation.isValidating
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-red-900 to-red-800 text-white hover:from-red-800 hover:to-red-700 hover:scale-105'
+                  }`}
+                >
+                  {postalCodeValidation.isValidating ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      Validating...
+                    </>
+                  ) : (
+                    <>
+                      <CreditCard className="h-5 w-5" />
+                      Continue to Payment →
+                    </>
+                  )}
+                </button>
+
+                {/* Security Notice */}
+                <div className="text-center text-sm text-gray-600 bg-red-50 p-4 rounded-xl border border-red-100">
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    <Shield className="h-4 w-4 text-red-600" />
+                    <span className="font-semibold text-red-900">Secure Checkout</span>
+                  </div>
+                  <p className="text-xs">Your payment information is encrypted and secure</p>
+                  {postalCodeValidation.deliveryInfo?.cod && (
+                    <p className="text-xs text-green-700 mt-1">💰 Cash on Delivery available</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
