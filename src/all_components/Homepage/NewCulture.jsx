@@ -4,6 +4,7 @@ import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import Image from 'next/image';
 import culture from "../../../public/assets/Svg/culture.svg";
+import Link from 'next/link';
 
 const LuxuryCulture = () => {
   const ref = useRef(null);
@@ -215,9 +216,12 @@ const LuxuryCulture = () => {
           className="max-w-8xl mx-auto"
         >
           {/* Desktop - Premium grid layout */}
-          <div className="hidden lg:block">
-            <div className="grid grid-cols-12 grid-rows-8 gap-6 h-[900px]">
+          <div className="hidden lg:block "   >
+             <Link href="/culture">
+            <div className="grid grid-cols-12  grid-rows-8 gap-6 h-[900px]">
+             
               {/* Featured Royal Embroidery */}
+              
               <motion.div 
                 variants={cardVariants}
                 className="col-span-6 row-span-5 relative group cursor-pointer"
@@ -395,6 +399,7 @@ const LuxuryCulture = () => {
                 </div>
               </motion.div>
             </div>
+            </Link>
           </div>
 
           {/* Tablet layout */}

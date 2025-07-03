@@ -295,8 +295,8 @@ export default function CheckoutComponent() {
 
   const shippingOptions = {
     free: { price: 0, days: "5-7 business days", icon: "🚛", name: "Free Shipping" },
-    standard: { price: 350, days: "3-5 business days", icon: "📦", name: "Standard Shipping" },
-    express: { price: 750, days: "1-2 business days", icon: "⚡", name: "Express Shipping" },
+    standard: { price: 250, days: "3-5 business days", icon: "📦", name: "Standard Shipping" },
+    express: { price: 300, days: "1-2 business days", icon: "⚡", name: "Express Shipping" },
   };
 
   // Calculate totals from cart - with safety checks
@@ -311,7 +311,7 @@ export default function CheckoutComponent() {
   
   // Calculate shipping cost based on eligibility and ODA
   let shipping = shippingOptions[shippingMethod]?.price || 0;
-  if (isFreeShippingEligible && shippingMethod !== 'express') {
+  if (isFreeShippingEligible && shippingMethod === 'Free ') {
     shipping = 0;
   }
   
@@ -667,8 +667,8 @@ export default function CheckoutComponent() {
 
               <div className="space-y-4">
                 {Object.entries(shippingOptions).map(([key, { price, days, icon, name }]) => {
-                  const displayPrice = (isFreeShippingEligible && key !== 'express') ? 0 : price;
-                  const isFreeUpgraded = isFreeShippingEligible && key !== 'express' && price > 0;
+                  const displayPrice = (isFreeShippingEligible && key === 'free') ? 0 : price;
+                  const isFreeUpgraded = isFreeShippingEligible && key === 'free' ;
                   const finalPrice = displayPrice + (postalCodeValidation.deliveryInfo?.isODA ? 50 : 0);
                   
                   return (
@@ -697,7 +697,7 @@ export default function CheckoutComponent() {
                               <p className="text-sm text-gray-600">{days}</p>
                               {isFreeUpgraded && (
                                 <p className="text-xs text-green-600 font-semibold">
-                                  🎉 Free upgrade - ₹5000+ order
+                                  🎉 Free upgrade - On <strong>prepaid</strong> orders above  ₹5000+ 
                                 </p>
                               )}
                               {postalCodeValidation.deliveryInfo?.isODA && (
@@ -725,9 +725,9 @@ export default function CheckoutComponent() {
           </div>
 
           {/* Right Column - Order Summary */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 ">
             <div className="bg-white rounded-2xl shadow-lg border border-red-100 p-6 lg:sticky lg:top-8 hover:shadow-xl transition-all duration-300">
-              <div className="flex items-center mb-6">
+              <div className="flex items-center mt-6 mb-6">
                 <div className="w-10 h-10 bg-red-900 rounded-full flex items-center justify-center mr-4">
                   <ShoppingBag className="text-white h-5 w-5" />
                 </div>
@@ -786,6 +786,8 @@ export default function CheckoutComponent() {
                 {/* Summary Section */}
                 <div className="border-t-2 border-red-100 pt-4 space-y-3">
                   {/* Free Shipping Notification */}
+                  {shippingMethod=== 'free' && (
+                    <>
                   {!isFreeShippingEligible && subtotal > 0 && (
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
                       <p className="text-sm text-blue-800">
@@ -800,6 +802,8 @@ export default function CheckoutComponent() {
                         🎉 <strong>Congratulations!</strong> You qualify for free shipping on orders ₹5000+
                       </p>
                     </div>
+                  )}
+                  </>
                   )}
 
                   {/* Delivery Info Summary */}
@@ -837,7 +841,7 @@ export default function CheckoutComponent() {
                       <span className="font-bold text-green-600">
                         {shipping === 0 ? 'FREE' : `₹${shipping.toLocaleString()}`}
                       </span>
-                      {isFreeShippingEligible && shippingMethod !== 'free' && shippingOptions[shippingMethod]?.price > 0 && !postalCodeValidation.deliveryInfo?.isODA && (
+                      {isFreeShippingEligible && shippingMethod === 'free' && shippingOptions[shippingMethod]?.price > 0 && !postalCodeValidation.deliveryInfo?.isODA && (
                         <p className="text-xs text-gray-500 line-through">
                           ₹{shippingOptions[shippingMethod].price}
                         </p>
