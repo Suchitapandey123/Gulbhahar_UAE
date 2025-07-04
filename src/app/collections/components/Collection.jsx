@@ -880,6 +880,7 @@ const handleAddToCart = async (e, item) => {
                               <Image
                                 width={200}
                                 height={450}
+                                priority
                                 key={idx}
                                 src={image || "/Image/About1.png"}
                                 alt={`${item.title} - ${idx + 1}`}

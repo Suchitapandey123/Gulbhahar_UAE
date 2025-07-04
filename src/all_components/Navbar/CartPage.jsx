@@ -126,17 +126,24 @@ const CartPage = () => {
 
   // Get the current image for display
   const getCurrentImage = (item) => {
+    // Check if it's images (plural) - array of arrays
+    // console.log(item)
     if (item.images && Array.isArray(item.images)) {
-      // Handle nested array structure [colorIndex][imageIndex]
-      if (Array.isArray(item.images[0])) {
-        const colorIndex = item.selectedColorIndex || 0;
-        return item.images[colorIndex]?.[0] || item.images[0]?.[0] || '/Image/About1.png';
+      // console.log("object")
+      if (item.images.length > 0 && Array.isArray(item.images[0])) {
+        return item.images[0][0]; // First image from first array
       }
-      // Handle flat array structure
-      return item.images[0] || '/Image/About1.png';
     }
-    return item.image || '/Image/About1.png';
+    
+    // Check if it's image (singular) - single array
+    if (item.image && Array.isArray(item.image)) {
+      // console.log(item.image[0])
+      return item.image[0][0]; // First image from array
+    }
+    // console.log("object")
+    return null;
   };
+
 
   return (
     <>
