@@ -20,14 +20,32 @@ export default function ModernHeroAnimated() {
   const [direction, setDirection] = useState(0); // Track slide direction
   const containerRef = useRef(null);
 
-  // Parallax scrolling effect
+  // Add effect to prevent horizontal scroll on mount
+  useEffect(() => {
+    // Temporarily hide horizontal overflow on document body
+    const originalOverflow = document.body.style.overflowX;
+    document.body.style.overflowX = 'hidden';
+    
+    // Reset after component mounts and layout stabilizes
+    const timer = setTimeout(() => {
+      document.body.style.overflowX = originalOverflow;
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      document.body.style.overflowX = originalOverflow;
+    };
+  }, []);
+
+  // Parallax scrolling effect - SMOOTHED
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
   });
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  // Reduced parallax intensity to prevent jitter
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
+  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
 
   const heroData = [
     {
@@ -190,33 +208,53 @@ export default function ModernHeroAnimated() {
 
   return (
     <>
-      {/* Modern glassmorphism hero section - FIXED FULL WIDTH */}
-      <motion.section
-        ref={containerRef}
-        className="relative min-h-screen overflow-hidden"
+      {/* Add global style to prevent horizontal scroll AND improve scroll performance */}
+      <style jsx global>{`
+        html, body {
+          overflow-x: hidden;
+          max-width: 100vw;
+        }
+        
+        /* Optimize scroll performance */
+        * {
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
+        }
+        
+        /* Smooth scrolling for better performance */
+        html {
+          scroll-behavior: smooth;
+        }
+      `}</style>
+      
+      {/* Modern glassmorphism hero section - CLEAN FULL WIDTH APPROACH */}
+      <div
+        className="relative w-full"
         style={{
-          // More reliable full-width approach
+          // Clean breakout method that doesn't cause horizontal scroll
           width: '100vw',
-          maxWidth: '100vw',
+          position: 'relative',
           left: '50%',
           right: '50%',
           marginLeft: '-50vw',
           marginRight: '-50vw',
-          position: 'relative',
         }}
-        initial="hidden"
-        animate="visible"
-        variants={textContainerVariants}
       >
-        {/* Animated background - FIXED DIMENSIONS */}
+        <motion.section
+          ref={containerRef}
+          className="relative min-h-screen overflow-hidden"
+          initial="hidden"
+          animate="visible"
+          variants={textContainerVariants}
+        >
+        {/* Animated background - OPTIMIZED FOR SMOOTH SCROLL */}
         <motion.div
           className="absolute inset-0 w-full h-full bg-red-900"
           style={{ 
             y: backgroundY,
-            width: '100vw',
-            height: '100vh',
-            left: 0,
-            top: 0,
+            // Add GPU acceleration for smoother transforms
+            transform: 'translateZ(0)',
+            willChange: 'transform',
           }}
         >
           <AnimatePresence mode="sync" custom={direction}>
@@ -231,45 +269,41 @@ export default function ModernHeroAnimated() {
               style={{ 
                 backgroundColor: '#000000',
                 zIndex: 1,
-                width: '100vw',
-                height: '100vh',
               }}
             >
-              {/* Desktop Image - FIXED FILL */}
+              {/* Desktop Image - GPU OPTIMIZED */}
               <div className="hidden md:block absolute inset-0 w-full h-full">
                 <Image
                   src={currentSlide.image}
                   alt={currentSlide.title}
                   fill
                   sizes="100vw"
-                  className="object-cover w-full h-full"
+                  className="object-cover"
                   priority
-                  style={{ 
-                    objectFit: 'cover',
-                    width: '100%',
-                    height: '100%',
+                  style={{
+                    transform: 'translateZ(0)',
+                    willChange: 'transform',
                   }}
                 />
               </div>
 
-              {/* Mobile Image - FIXED FILL */}
+              {/* Mobile Image - GPU OPTIMIZED */}
               <div className="md:hidden absolute inset-0 w-full h-full">
                 <Image
                   src={currentSlide.mobileImage}
                   alt={currentSlide.title}
                   fill
                   sizes="100vw"
-                  className="object-cover w-full h-full"
+                  className="object-cover"
                   priority
-                  style={{ 
-                    objectFit: 'cover',
-                    width: '100%',
-                    height: '100%',
+                  style={{
+                    transform: 'translateZ(0)',
+                    willChange: 'transform',
                   }}
                 />
               </div>
 
-              {/* Modern gradient overlay - FULL COVERAGE */}
+              {/* Modern gradient overlay */}
               <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-black/50 via-black/50 to-transparent" />
               <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-black/40 via-transparent to-transparent" />
             </motion.div>
@@ -281,7 +315,12 @@ export default function ModernHeroAnimated() {
           {/* FIXED: Better responsive padding and positioning */}
           <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20 mt-16 sm:mt-20 md:mt-16">
             <motion.div
-              style={{ y: textY }}
+              style={{ 
+                y: textY,
+                // Add GPU acceleration for text transforms
+                transform: 'translateZ(0)',
+                willChange: 'transform',
+              }}
               className="max-w-[1500px] mx-auto w-full"
             >
               {/* Main content grid - IMPROVED RESPONSIVE */}
@@ -427,19 +466,25 @@ export default function ModernHeroAnimated() {
           </div>
         </div>
 
-        {/* Bottom scroll indicator - IMPROVED MOBILE POSITIONING */}
+        {/* Bottom scroll indicator - ADJUSTED LEFT FOR PERFECT CENTER */}
         <motion.div
           variants={textVariants}
-          className="absolute bottom-6 sm:bottom-8 md:bottom-10 left-1/2 transform -translate-x-1/2 text-center text-white/60"
+          className="absolute bottom-6 sm:bottom-8 md:bottom-10 text-white/60"
+          style={{
+            // Adjust slightly left to compensate for container offset
+            left: 'calc(50vw - 60px)',
+            transform: 'translateX(-50%)',
+            zIndex: 50,
+          }}
         >
-          <div className="space-y-2 sm:space-y-3">
-            <div className="text-xs sm:text-sm tracking-widest uppercase">
+          <div className="flex flex-col items-center space-y-2 sm:space-y-3">
+            <div className="text-xs sm:text-sm tracking-widest uppercase text-center whitespace-nowrap">
               Scroll to explore
             </div>
             <motion.div
               animate={{ y: [0, 8, 0] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              className="w-6 h-10 sm:w-7 sm:h-12 border border-white/30 rounded-full flex justify-center mx-auto"
+              className="w-6 h-10 sm:w-7 sm:h-12 border border-white/30 rounded-full flex justify-center items-start mx-auto"
             >
               <motion.div
                 animate={{ y: [0, 12, 0] }}
@@ -453,7 +498,8 @@ export default function ModernHeroAnimated() {
             </motion.div>
           </div>
         </motion.div>
-      </motion.section>
+              </motion.section>
+      </div>
     </>
   );
 }

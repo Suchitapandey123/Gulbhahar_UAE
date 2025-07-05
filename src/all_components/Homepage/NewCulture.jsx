@@ -161,7 +161,7 @@ const LuxuryCulture = () => {
       <div className="absolute inset-0 bg-gradient-to-br from-transparent via-amber-50/30 to-orange-50/20" />
 
       {/* Main content */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-16">
+      <div className="relative z-10 container mx-auto px-1 sm:px-6 lg:px-8 py-8 md:py-16">
         {/* Header */}
         <motion.div 
           variants={headerVariants}
@@ -437,9 +437,9 @@ const LuxuryCulture = () => {
               <motion.div
                 key={element.id}
                 variants={cardVariants}
-                className={`relative h-80 bg-gradient-to-br ${element.color} rounded-2xl overflow-hidden mx-4 shadow-xl border-2 ${element.accent}`}
+                className={`relative  aspect-[3/4] bg-gradient-to-br ${element.color} rounded-2xl overflow-hidden  shadow-xl border-2 ${element.accent}`}
               >
-                <div className="absolute inset-0">
+                <div className="absolute  inset-0">
                   <Image
                     src={element.image}
                     alt={element.title}
@@ -447,10 +447,10 @@ const LuxuryCulture = () => {
                     className="object-cover opacity-20"
                   />
                 </div>
-                <div className="relative z-10 p-4 md:p-6 h-full flex flex-col justify-between">
+                <div className="relative z-10 sm:p-4 md:p-6 h-full flex flex-col justify-between">
                   <div className="flex items-start justify-between">
                     <div className="text-right">
-                      <div className="bg-white/20 backdrop-blur-sm rounded-lg px-2 py-1 mb-1">
+                      <div className="bg-white/20 backdrop-blur-sm rounded-lg px-1 py-1 mb-1">
                         <span className="text-white/90 text-xs">{element.region}</span>
                       </div>
                       <div className="bg-amber-500/30 backdrop-blur-sm rounded-lg px-2 py-1">
