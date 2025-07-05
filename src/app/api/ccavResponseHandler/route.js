@@ -1,8 +1,6 @@
 // app/api/ccavResponseHandler/route.js
+import { decrypt } from '@/utils/cavutil';
 import crypto from 'crypto';
-import { decrypt } from '../../../lib/ccavutil.js';
-import { NextRequest } from 'next/server';
-
 export async function POST(request) {
     try {
         // CCAvenue credentials

@@ -1,6 +1,7 @@
 // app/api/ccavRequestHandler/route.js
+import { encrypt } from '@/utils/cavutil';
 import crypto from 'crypto';
-import { encrypt } from '../../../lib/ccavutil.js';
+
 
 export async function POST(request) {
     try {
