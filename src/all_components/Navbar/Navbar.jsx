@@ -592,7 +592,7 @@ const Navbar = () => {
                       alt="Logo"
                       fill
                       sizes="(max-width: 600px) 28px, (max-width: 708px) 36px, (max-width: 980px) 42px, 50px"
-                      className="object-contain"
+                      className="object-contain w"
                       priority
                     />
                   </div>
@@ -1188,19 +1188,23 @@ const Navbar = () => {
         <div className="flex flex-col h-full">
           {/* Mobile Menu Header */}
           <div className="flex items-center justify-between p-3 xs:p-4 sm:p-6 border-b border-gray-100">
+            <div className=" w-[70%] flex ">
             <Image
               src="/Image/ful-gulbhaharlogo.png"
               alt="Brand Logo"
               width={80}
               height={24}
-              className="h-4 xs:h-5 sm:h-6 w-auto object-contain"
+              className="h-[38px] xs:h-[38px] w-full sm:h-8 "
             />
+
+            </div>
+            
             <button
               onClick={toggleMenu}
               className="p-1.5 xs:p-2 text-gray-600 hover:text-[#800000] transition-colors duration-200 
                        rounded-full hover:bg-gray-100 flex-shrink-0"
             >
-              <X size={16} className="xs:w-4 xs:h-4 sm:w-5 sm:h-5" />
+              <X size={16} className="w-7 h-7 sm:w-8 sm:h-8" />
             </button>
           </div>
 
