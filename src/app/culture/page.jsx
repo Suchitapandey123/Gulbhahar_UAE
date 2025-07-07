@@ -163,9 +163,8 @@ const LuxuryCulturePage = () => {
         </div>
 
         <div className="relative z-10 text-center max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-8">
-            <Sparkles className="w-16 h-16 mx-auto text-amber-600 mb-4" />
-            <h1 className="text-4xl sm:text-6xl lg:text-8xl font-light bg-gradient-to-r from-amber-800 via-orange-700 to-red-700 bg-clip-text text-transparent mb-6 tracking-wide">
+          <div className="mb-8 flex itrms-center justify-center flex-col">
+            <h1 className="text-4xl sm:text-6xl py-2 lg:text-8xl font-light border bg-gradient-to-r from-amber-800 via-orange-700 to-red-700 bg-clip-text text-transparent mb-6 tracking-wide">
               Heritage Culture
             </h1>
             <p className="text-xl sm:text-2xl lg:text-3xl text-amber-900 font-light mb-8 max-w-4xl mx-auto leading-relaxed">
