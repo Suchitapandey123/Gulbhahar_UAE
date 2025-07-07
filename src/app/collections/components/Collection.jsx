@@ -1340,7 +1340,7 @@ const handleAddToCart = async (e, item) => {
         </div>
       </div>
 
-      <TopTrends />
+      {/* <TopTrends /> */}
 
       {/* <ContentSection /> */}
     </div>

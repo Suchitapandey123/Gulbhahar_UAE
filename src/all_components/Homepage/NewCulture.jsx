@@ -96,7 +96,7 @@ const LuxuryCulture = () => {
       id: 1,
       title: "Royal Embroidery",
       subtitle: "Zardozi & Gold Thread Work",
-      description: "Intricate hand-embroidered patterns passed down through generations of master artisans, featuring gold and silver threads that tell stories of royal courts.",
+      description: "Royal embroidery is a classic form with beautiful detailing and a rich finish. It is associated with India's royal heritage, often using zardozi. It is a traditional embroidery technique using gold and silver threads to form frequently elaborate patterns. It is most popularly used on lush and opulent fabrics, like silk and velvet.",
       image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-1.png",
       color: "from-amber-700 via-yellow-600 to-orange-500",
       accent: "border-amber-400",
@@ -107,7 +107,7 @@ const LuxuryCulture = () => {
       id: 2,
       title: "Handwoven Textiles",
       subtitle: "Banarasi & Silk Weaving",
-      description: "Luxurious silk fabrics woven on traditional looms, creating timeless patterns that have adorned Indian royalty for centuries.",
+      description: "Handwoven textiles embody the essence of true Indian craftsmanship. They are a confluence of tradition and artistic expression. Banarasi textiles are among the finest celebrated in India. They are well known for their opulent silk weaving and intricate motifs reflecting the splendour of Indo-Persian art.",
       image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-6.png",
       color: "from-purple-700 via-indigo-600 to-blue-500",
       accent: "border-purple-400",
@@ -128,8 +128,8 @@ const LuxuryCulture = () => {
     {
       id: 4,
       title: "Gemstone Craft",
-      subtitle: "Jadau & Kundan Work",
-      description: "Precious stones and pearls meticulously set by hand, creating jewelry pieces that capture light and tradition in perfect harmony.",
+      subtitle: "Crystal Embellishment & Kundan Work ",
+      description: "Gemstone Craft is a sparkling display of India’s ornamental legacy, highlighting the encrustation of stones through various intricate techniques such as crystal embellishment and Kundan work. Crystal embellishment is when sparkling stones are added to give an effect of twinkle or shine.",
       image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-8.png",
       color: "from-rose-700 via-pink-600 to-red-500",
       accent: "border-rose-400",
@@ -138,9 +138,9 @@ const LuxuryCulture = () => {
     },
     {
       id: 5,
-      title: "Metal Artistry",
-      subtitle: "Bidriware & Damascening",
-      description: "Ancient techniques of inlaying precious metals create stunning decorative pieces that showcase the pinnacle of Indian metalwork mastery.",
+      title: "Ornate Metals",
+      subtitle: "Gota Patti, Sequins & Foil Work",
+      description: "Ornate Metals offers juttis bathed in timeless glimmer with a unique Gota Patti, sequins and foil work that pair traditional metallic artistry with a contemporary design approach. Juttis are a unique pair of footwear to enjoy the festive spirit. Wear them to any occasion and can feel the glam! Ornate metals + juttis = elegance and pride in heritage. We bring culture straight to your feet and a moment of traditional Indian luxury to the everyday!",
       image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-9.png",
       color: "from-gray-700 via-slate-600 to-zinc-500",
       accent: "border-gray-400",
@@ -240,10 +240,6 @@ const LuxuryCulture = () => {
                   
                   <div className="relative z-10 p-6 md:p-10 h-full flex flex-col justify-between">
                     <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-2 md:gap-4">
-                        <span className="text-4xl md:text-6xl">✨</span>
-                        <span className="text-3xl md:text-5xl">🧵</span>
-                      </div>
                       <div className="text-right">
                         <div className="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1 mb-2">
                           <span className="text-white/90 text-sm font-medium">{heritageElements[0].region}</span>
@@ -279,10 +275,7 @@ const LuxuryCulture = () => {
                   </div>
                   <div className="relative z-10 p-4 md:p-6 h-full flex flex-col justify-between">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1 md:gap-2">
-                        <span className="text-3xl md:text-4xl">🕸️</span>
-                        <span className="text-2xl md:text-3xl">🧶</span>
-                      </div>
+        
                       <span className="text-purple-200 text-xs bg-purple-500/20 px-2 py-1 rounded-full">
                         {heritageElements[1].heritage}
                       </span>
@@ -290,6 +283,7 @@ const LuxuryCulture = () => {
                     <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 md:p-4">
                       <h3 className="text-xl md:text-2xl font-light text-white mb-1 md:mb-2">{heritageElements[1].title}</h3>
                       <p className="text-white/80 text-sm">{heritageElements[1].subtitle}</p>
+                      <p className="text-white/80 my-1 text-sm leading-relaxed line-clamp-3">{heritageElements[1].description}</p>
                       <p className="text-white/70 text-xs mt-2">{heritageElements[1].region}</p>
                     </div>
                   </div>
@@ -312,10 +306,6 @@ const LuxuryCulture = () => {
                   </div>
                   <div className="relative z-10 p-4 md:p-6 h-full flex flex-col justify-between">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1 md:gap-2">
-                        <span className="text-3xl md:text-4xl">👞</span>
-                        <span className="text-2xl md:text-3xl">🛠️</span>
-                      </div>
                       <span className="text-emerald-200 text-xs bg-emerald-500/20 px-2 py-1 rounded-full">
                         {heritageElements[2].heritage}
                       </span>
@@ -323,6 +313,7 @@ const LuxuryCulture = () => {
                     <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 md:p-4">
                       <h3 className="text-xl md:text-2xl font-light text-white mb-1 md:mb-2">{heritageElements[2].title}</h3>
                       <p className="text-white/80 text-sm">{heritageElements[2].subtitle}</p>
+                      <p className="text-white/80 my-1 text-sm leading-relaxed line-clamp-3">{heritageElements[1].description}</p>
                       <p className="text-white/70 text-xs mt-2">{heritageElements[2].region}</p>
                     </div>
                   </div>
@@ -345,10 +336,6 @@ const LuxuryCulture = () => {
                   </div>
                   <div className="relative z-10 p-4 md:p-6 h-full flex flex-col justify-between">
                     <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-2 md:gap-3">
-                        <span className="text-4xl md:text-5xl">💎</span>
-                        <span className="text-3xl md:text-4xl">⚜️</span>
-                      </div>
                       <div className="text-right">
                         <span className="text-rose-200 text-sm bg-rose-500/20 px-3 py-1 rounded-full">
                           {heritageElements[3].heritage}
@@ -381,10 +368,6 @@ const LuxuryCulture = () => {
                   </div>
                   <div className="relative z-10 p-4 md:p-6 h-full flex flex-col justify-between">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 md:gap-3">
-                        <span className="text-4xl md:text-5xl">🔱</span>
-                        <span className="text-3xl md:text-4xl">🔨</span>
-                      </div>
                       <span className="text-gray-200 text-sm bg-gray-500/20 px-3 py-1 rounded-full">
                         {heritageElements[4].heritage}
                       </span>
@@ -404,6 +387,7 @@ const LuxuryCulture = () => {
 
           {/* Tablet layout */}
           <div className="hidden md:block lg:hidden">
+          <Link href="/culture">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {heritageElements.map((element, index) => (
                 <motion.div 
@@ -429,10 +413,12 @@ const LuxuryCulture = () => {
                 </motion.div>
               ))}
             </div>
+          </Link>
           </div>
 
           {/* Mobile layout */}
           <div className="md:hidden space-y-8">
+          <Link href="/culture">
             {heritageElements.map((element, index) => (
               <motion.div
                 key={element.id}
@@ -466,6 +452,7 @@ const LuxuryCulture = () => {
                 </div>
               </motion.div>
             ))}
+          </Link>
           </div>
         </motion.div>
 
