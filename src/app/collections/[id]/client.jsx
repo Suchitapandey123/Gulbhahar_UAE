@@ -23,6 +23,7 @@ import { useAuth } from "../../../Providers/ContextProviders/AuthContext";
 import { useToast } from "../../../hooks/useToast";
 import { useCart } from "../../../Providers/ContextProviders/CartContext";
 import Link from "next/link";
+import ImageModal from "./components/ImageModal";
 
 const reviews = {
   rating: 4.8,
@@ -205,90 +206,24 @@ export function ProductClient({ product, similarProducts }) {
       {/* Toast Container */}
       <ToastContainer />
       
-      {/* Image Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center">
-          <div 
-            ref={modalRef}
-            className="relative w-full h-full flex items-center justify-center"
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-          >
-            {/* Close Button */}
-            <button
-              onClick={closeModal}
-              className="absolute top-4 right-4 z-10 w-12 h-12 bg-white bg-opacity-20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-opacity-30 transition-all duration-200"
-            >
-              <X className="w-6 h-6 text-white" />
-            </button>
-
-            {/* Navigation Buttons */}
-            {currentImages.length > 1 && (
-              <>
-                <button
-                  onClick={prevImage}
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-white bg-opacity-20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-opacity-30 transition-all duration-200"
-                >
-                  <ChevronLeft className="w-6 h-6 text-white" />
-                </button>
-                <button
-                  onClick={nextImage}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-white bg-opacity-20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-opacity-30 transition-all duration-200"
-                >
-                  <ChevronRightIcon className="w-6 h-6 text-white" />
-                </button>
-              </>
-            )}
-
-            {/* Main Modal Image */}
-            <div className="relative max-w-4xl max-h-screen p-4">
-              <Image
-                src={currentImages[modalImageIndex] || currentMainImage}
-                alt={`${product.name} - ${currentColor} - Image ${modalImageIndex + 1}`}
-                className="max-w-full max-h-full object-contain select-none"
-                width={1200}
-                height={800}
-                priority
-              />
-            </div>
-
-            {/* Image Counter */}
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white bg-opacity-20 backdrop-blur-sm rounded-full px-4 py-2">
-              <span className="text-white text-sm font-medium">
-                {modalImageIndex + 1} / {currentImages.length}
-              </span>
-            </div>
-
-            {/* Thumbnail Strip */}
-            <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex gap-2 max-w-screen-sm overflow-x-auto px-4">
-              {currentImages.map((img, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setModalImageIndex(idx)}
-                  className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
-                    modalImageIndex === idx
-                      ? "border-white shadow-lg scale-110"
-                      : "border-transparent opacity-70 hover:opacity-100"
-                  }`}
-                >
-                  <Image
-                    src={img}
-                    alt={`Thumbnail ${idx + 1}`}
-                    className="object-cover w-full h-full"
-                    width={100}
-                    height={100}
-                    priority
-                  />
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
+      {isModalOpen && 
+      
+      (<ImageModal
+        isModalOpen={isModalOpen}
+        closeModal={closeModal}
+        images={currentImages}
+        modalImageIndex={modalImageIndex}
+        setModalImageIndex={setModalImageIndex}
+        product={product}
+        currentMainImage={currentMainImage}
+        handleMouseDown={handleMouseDown}
+        handleMouseMove={handleMouseMove}
+        handleMouseUp={handleMouseUp}
+        handleTouchStart={handleTouchStart}
+        handleTouchMove={handleTouchMove}
+        handleTouchEnd={handleTouchEnd}
+        currentImages={currentImages}
+      />
       )}
       
       <div className="min-h-screen bg-white py-4 mt-10 sm:mt-0 px-4 sm:py-6 sm:px-6 lg:py-8 lg:px-8 font-raleway">
@@ -431,7 +366,7 @@ export function ProductClient({ product, similarProducts }) {
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
-                      className={`py-2 px-1 text-sm border rounded transition-all duration-200 hover:bg-red-50 ${
+                      className={`py-2 px-1 text-sm border rounded transition-all duration-200 ${
                         selectedSize === size
                           ? "border-red-900 bg-red-900 text-white shadow-md"
                           : "border-gray-200 hover:border-red-300"
@@ -441,9 +376,9 @@ export function ProductClient({ product, similarProducts }) {
                     </button>
                   ))}
                 </div>
-                <p className="text-red-900 text-sm mt-2 cursor-pointer hover:underline">
+                {/* <p className="text-red-900 text-sm mt-2 cursor-pointer hover:underline">
                   Size Guide
-                </p>
+                </p> */}
               </div>
 
               {/* Delivery Section */}
