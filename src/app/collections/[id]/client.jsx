@@ -366,7 +366,7 @@ export function ProductClient({ product, similarProducts }) {
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
-                      className={`py-2 px-1 text-sm border rounded transition-all duration-200 hover:bg-red-50 ${
+                      className={`py-2 px-1 text-sm border rounded transition-all duration-200 ${
                         selectedSize === size
                           ? "border-red-900 bg-red-900 text-white shadow-md"
                           : "border-gray-200 hover:border-red-300"
@@ -376,9 +376,9 @@ export function ProductClient({ product, similarProducts }) {
                     </button>
                   ))}
                 </div>
-                <p className="text-red-900 text-sm mt-2 cursor-pointer hover:underline">
+                {/* <p className="text-red-900 text-sm mt-2 cursor-pointer hover:underline">
                   Size Guide
-                </p>
+                </p> */}
               </div>
 
               {/* Delivery Section */}
