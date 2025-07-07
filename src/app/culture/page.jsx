@@ -188,7 +188,8 @@ const LuxuryCulturePage = () => {
             className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-full font-light text-lg shadow-2xl border border-amber-400/30 hover:from-amber-700 hover:to-orange-700 transition-all duration-300 group"
           >
             Explore Our Heritage
-            <ChevronDown className="ml-2 w-5 h-5 group-hover:translate-y-1 transition-transform" />
+            <ChevronDown classNa
+            me="ml-2 w-5 h-5 group-hover:translate-y-1 transition-transform" />
           </button>
         </div>
       </section>

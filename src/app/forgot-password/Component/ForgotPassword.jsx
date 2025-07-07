@@ -6,6 +6,7 @@ import { FiUser, FiLock, FiEye, FiEyeOff, FiMail, FiShield, FiCheck } from 'reac
 import { ChevronRight } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
+import { useToast } from '@/hooks/useToast';
 
 // API configuration
 const API_BASE_URL = 'https://api.gulbhahar.com/api';
@@ -23,8 +24,16 @@ const forgotPasswordAPI = async (email) => {
   return response.data;
 };
 
+const verifyEmailAPI = async ({ email, verificationCode }) => {
+  const response = await api.post('/users/verify-email', { 
+    email, 
+    verificationCode 
+  });
+  return response.data;
+};
+
 const resetPasswordAPI = async ({ email, verificationCode, newPassword }) => {
-  const response = await api.post('/users/reset-password', { 
+  const response = await api.put('/users/reset-password', { 
     email, 
     verificationCode,
     newPassword
@@ -266,9 +275,52 @@ const EmailConfirmationStep = ({ email, setEmail, goToNextStep }) => {
 
 // Step 2: Verification Code
 const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificationCode: setParentVerificationCode }) => {
-  const [verificationCode, setVerificationCode] = useState(['', '', '', '']);
+  const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
   const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  
+  // React Query mutation for email verification
+  const verifyEmailMutation = useMutation({
+    mutationFn: verifyEmailAPI,
+    onSuccess: (data) => {
+      console.log('Email verified successfully:', data);
+      setError('');
+      setSuccessMessage('Email verified successfully!');
+      
+      // Store the verification code for the final step
+      const code = verificationCode.join('');
+      setParentVerificationCode(code);
+      
+      // Move to next step after a brief delay
+      setTimeout(() => {
+        goToNextStep();
+      }, 1000);
+    },
+    onError: (error) => {
+      console.error('Error verifying email:', error);
+      const errorMessage = error.response?.data?.message || 'Invalid verification code. Please try again.';
+      setError(errorMessage);
+      setSuccessMessage('');
+    },
+  });
+
+  // Mutation for resending verification email
+  const resendEmailMutation = useMutation({
+    mutationFn: forgotPasswordAPI,
+    onSuccess: (data) => {
+      console.log('Email resent successfully:', data);
+      setError('');
+      setSuccessMessage('Verification code resent successfully!');
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccessMessage(''), 3000);
+    },
+    onError: (error) => {
+      console.error('Error resending email:', error);
+      const errorMessage = error.response?.data?.message || 'Failed to resend verification email.';
+      setError(errorMessage);
+      setSuccessMessage('');
+    },
+  });
   
   const handleCodeChange = (index, value) => {
     if (value.length > 1) return;
@@ -277,7 +329,7 @@ const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificati
     newCode[index] = value;
     setVerificationCode(newCode);
     
-    if (value !== '' && index < 3) {
+    if (value !== '' && index < 5) {
       const nextInput = document.getElementById(`code-${index + 1}`);
       if (nextInput) nextInput.focus();
     }
@@ -300,40 +352,9 @@ const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificati
     
     const code = verificationCode.join('');
     
-    // Store the verification code for the final step
-    setParentVerificationCode(code);
-    
-    // Since verification code is default 1234, we check against it
-    if (code === '1234') {
-      setIsLoading(true);
-      setTimeout(() => {
-        setIsLoading(false);
-        goToNextStep();
-      }, 1500);
-    } else {
-      setError('Invalid verification code. Please try again.');
-    }
+    // Call the verify email API
+    verifyEmailMutation.mutate({ email, verificationCode: code });
   };
-
-  // Mutation for resending verification email
-  const resendEmailMutation = useMutation({
-    mutationFn: forgotPasswordAPI,
-    onSuccess: (data) => {
-      console.log('Email resent successfully:', data);
-      setError('');
-      // Show success message
-      const successMessage = document.createElement('div');
-      successMessage.textContent = 'Verification code resent successfully!';
-      successMessage.className = 'text-green-600 text-sm text-center mt-2';
-      setTimeout(() => successMessage.remove(), 3000);
-      document.querySelector('.resend-container').appendChild(successMessage);
-    },
-    onError: (error) => {
-      console.error('Error resending email:', error);
-      const errorMessage = error.response?.data?.message || 'Failed to resend verification email.';
-      setError(errorMessage);
-    },
-  });
 
   const handleResendCode = () => {
     resendEmailMutation.mutate(email);
@@ -355,28 +376,35 @@ const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificati
           <div>
             <p className="text-red-900 font-semibold text-lg mb-2">Verification code sent to:</p>
             <p className="text-red-700 font-medium bg-red-50 px-4 py-2 rounded-lg inline-block">{email}</p>
-            <p className="text-red-600 text-sm mt-2">Default code: 1234</p>
           </div>
           
           <div>
-            <div className="flex justify-center space-x-4 mb-4">
+            <div className="flex justify-center space-x-3 mb-4">
               {verificationCode.map((code, index) => (
                 <input
                   key={index}
                   id={`code-${index}`}
                   type="text"
                   maxLength={1}
-                  className="w-16 h-16 text-center border-2 border-red-300 rounded-xl text-2xl font-bold text-red-900 focus:border-red-900 focus:outline-none focus:ring-4 focus:ring-red-100 transition-all duration-200 bg-red-50/30"
+                  className="w-12 h-12 text-center border-2 border-red-300 rounded-xl text-xl font-bold text-red-900 focus:border-red-900 focus:outline-none focus:ring-4 focus:ring-red-100 transition-all duration-200 bg-red-50/30"
                   value={code}
                   onChange={(e) => handleCodeChange(index, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(index, e)}
                 />
               ))}
             </div>
+            
             {error && (
-              <p className="text-sm text-red-600 flex items-center justify-center">
+              <p className="text-sm text-red-600 flex items-center justify-center mb-2">
                 <span className="w-1 h-1 bg-red-600 rounded-full mr-2"></span>
                 {error}
+              </p>
+            )}
+            
+            {successMessage && (
+              <p className="text-sm text-green-600 flex items-center justify-center mb-2">
+                <FiCheck className="w-4 h-4 mr-2" />
+                {successMessage}
               </p>
             )}
           </div>
@@ -385,10 +413,10 @@ const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificati
             <button
               type="button"
               onClick={handleSubmit}
-              disabled={isLoading}
+              disabled={verifyEmailMutation.isPending}
               className="px-8 py-3 rounded-xl bg-gradient-to-r from-red-900 to-red-800 text-white font-bold shadow-xl hover:from-red-800 hover:to-red-700 focus:outline-none focus:ring-4 focus:ring-red-200 transition-all duration-200 transform hover:scale-105 disabled:opacity-70 flex items-center justify-center"
             >
-              {isLoading ? (
+              {verifyEmailMutation.isPending ? (
                 <div className="flex items-center">
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-3"></div>
                   Verifying...
@@ -410,7 +438,7 @@ const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificati
             </button>
           </div>
           
-          <div className="text-center resend-container">
+          <div className="text-center">
             <p className="text-red-600">Didn't receive the code?</p>
             <button 
               onClick={handleResendCode}
@@ -441,7 +469,13 @@ const CreatePasswordStep = ({ email, verificationCode, goToHomePage }) => {
     mutationFn: resetPasswordAPI,
     onSuccess: (data) => {
       console.log('Password reset successful:', data);
-      goToHomePage();
+      // Show success message briefly before redirecting
+      const successMessage = 'Password reset successfully! Redirecting to login...';
+      alert(successMessage); // You can replace this with a proper toast/notification
+      
+      setTimeout(() => {
+        goToHomePage();
+      }, 2000);
     },
     onError: (error) => {
       console.error('Error resetting password:', error);
@@ -629,6 +663,7 @@ const CreatePasswordStep = ({ email, verificationCode, goToHomePage }) => {
 
 // Main Account Recovery Page
 const RecoverAccountPage = () => {
+  const {showToast , ToastContainer} = useToast()
   const [currentStep, setCurrentStep] = useState(1);
   const [email, setEmail] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
@@ -668,28 +703,18 @@ const RecoverAccountPage = () => {
   };
 
   return (
-    <div className='w-full min-h-screen bg-gradient-to-br from-red-50 via-rose-50 to-red-100'>
-      {/* Header */}
-      <header className="relative z-10 bg-white/80 backdrop-blur-sm border-b border-red-100 shadow-sm">
-        <div className="flex items-center justify-center py-6">
-          <div className="max-w-[1600px] mx-auto flex justify-center items-center">
-            <div className="text-3xl font-bold bg-gradient-to-r from-red-900 to-rose-700 bg-clip-text text-transparent">
-              LOGO
-            </div>
-          </div>
-        </div>
-      </header>
-
+    <div className='w-full min-h-screen mt-20 bg-gradient-to-br from-red-50 via-rose-50 to-red-100'>
+      <ToastContainer />
       {/* Back to Home */}
       <div className="max-w-[1600px] mx-auto px-6 pt-6">
-        <button className="group flex items-center text-red-700 hover:text-red-900 transition-all duration-200 transform hover:scale-105">
+        <button onClick={() => window.location.href = "/login"} className="group  flex items-center text-red-700 hover:text-red-900 transition-all duration-200 transform hover:scale-105">
           <IoIosArrowBack className="mr-3 group-hover:-translate-x-1 transition-transform" />
           <span className='font-medium'>Back to login</span>
         </button>
       </div>
       
       {/* Main content */}
-      <div className="flex min-h-[calc(100vh-120px)] w-full items-center justify-center py-8">
+      <div className="flex min-h-[calc(100vh-190px)] w-full items-center justify-center">
         <div className="mx-auto flex w-full max-w-[1600px] flex-col-reverse md:flex-row gap-8 px-6">
           {/* Form Section */}
           <div className="w-full md:w-1/2 flex flex-col justify-center">

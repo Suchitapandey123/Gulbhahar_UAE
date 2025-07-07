@@ -82,7 +82,7 @@ const Navbar = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: authToken,
+            'Authorization': `Bearer ${authToken}`
           },
         }
       );
@@ -111,7 +111,7 @@ const Navbar = () => {
         console.error("❌ Failed to fetch profile:", response.status);
         // If token is invalid, logout through context
         if (response.status === 401 || response.status === 403) {
-          logout();
+          // logout();
         }
       }
     } catch (error) {
