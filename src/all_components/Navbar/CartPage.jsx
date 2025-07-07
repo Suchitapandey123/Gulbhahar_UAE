@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import {useRouter} from "next/navigation";
 import {
   X,
   ShoppingBag,
@@ -20,13 +21,22 @@ const CartPage = () => {
     cart,
     getCartItemsCount,
     getCartTotal,
-    isCartOpen,
     toggleCart,
     removeFromCart,
     updateQuantity,
     clearCart,
-    addToCart, // We'll use this to update variants
+    addToCart,
   } = useCart();
+  const router = useRouter();
+
+  const handleNavigateToProduct = (itemId) => {
+    // Close the cart first
+    toggleCart(); 
+    // Small delay to allow cart closing animation, then navigate
+    setTimeout(() => {
+      router.push(`/collections/${itemId}`);
+    }, 200); // Adjust delay as needed for your animation
+  };
 
   const itemsCount = getCartItemsCount();
   const total = getCartTotal();
@@ -38,7 +48,7 @@ const CartPage = () => {
 
   // Toggle variant selector for an item
   const toggleVariantSelector = (itemId) => {
-    setExpandedItems(prev => {
+    setExpandedItems((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(itemId)) {
         newSet.delete(itemId);
@@ -51,36 +61,37 @@ const CartPage = () => {
 
   // Handle color change with loading state
   const handleColorChange = async (item, newColor, newColorIndex) => {
-    console.log('🎨 Changing color for item:', item.id, 'to:', newColor);
-    
+    console.log("🎨 Changing color for item:", item.id, "to:", newColor);
+
     try {
       // Set loading state
-      setLoadingItems(prev => new Set(prev).add(item.id));
-      
+      setLoadingItems((prev) => new Set(prev).add(item.id));
+
       // Small delay to show loading state
-      await new Promise(resolve => setTimeout(resolve, 300));
-      
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
       // Remove the current item
       removeFromCart(item.id);
-      
+
       // Add the same item with new color
       const updatedItem = {
         ...item,
         selectedColor: newColor,
         selectedColorIndex: newColorIndex,
         // Update the main image to the new color's first image
-        currentMainImage: item.images?.[newColorIndex]?.[0] || item.image?.[newColorIndex]?.[0],
+        currentMainImage:
+          item.images?.[newColorIndex]?.[0] || item.image?.[newColorIndex]?.[0],
       };
-      
+
       // Add back with new color
       await addToCart(updatedItem);
-      
-      console.log('✅ Color updated successfully');
+
+      console.log("✅ Color updated successfully");
     } catch (error) {
-      console.error('❌ Error updating color:', error);
+      console.error("❌ Error updating color:", error);
     } finally {
       // Remove loading state
-      setLoadingItems(prev => {
+      setLoadingItems((prev) => {
         const newSet = new Set(prev);
         newSet.delete(item.id);
         return newSet;
@@ -90,33 +101,33 @@ const CartPage = () => {
 
   // Handle size change with loading state
   const handleSizeChange = async (item, newSize) => {
-    console.log('📏 Changing size for item:', item.id, 'to:', newSize);
-    
+    console.log("📏 Changing size for item:", item.id, "to:", newSize);
+
     try {
       // Set loading state
-      setLoadingItems(prev => new Set(prev).add(item.id));
-      
+      setLoadingItems((prev) => new Set(prev).add(item.id));
+
       // Small delay to show loading state
-      await new Promise(resolve => setTimeout(resolve, 300));
-      
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
       // Remove the current item
       removeFromCart(item.id);
-      
+
       // Add the same item with new size
       const updatedItem = {
         ...item,
         selectedSize: newSize,
       };
-      
+
       // Add back with new size
       await addToCart(updatedItem);
-      
-      console.log('✅ Size updated successfully');
+
+      console.log("✅ Size updated successfully");
     } catch (error) {
-      console.error('❌ Error updating size:', error);
+      console.error("❌ Error updating size:", error);
     } finally {
       // Remove loading state
-      setLoadingItems(prev => {
+      setLoadingItems((prev) => {
         const newSet = new Set(prev);
         newSet.delete(item.id);
         return newSet;
@@ -134,7 +145,7 @@ const CartPage = () => {
         return item.images[0][0]; // First image from first array
       }
     }
-    
+
     // Check if it's image (singular) - single array
     if (item.image && Array.isArray(item.image)) {
       // console.log(item.image[0])
@@ -144,7 +155,6 @@ const CartPage = () => {
     return null;
   };
 
-
   return (
     <>
       {/* Backdrop */}
@@ -152,7 +162,7 @@ const CartPage = () => {
         className="fixed inset-0 bg-black bg-opacity-50 z-40"
         onClick={toggleCart}
       />
-      
+
       {/* Cart Sidebar */}
       <div className="fixed mt-[88px] right-0 top-0 h-[calc(100%-88px)] w-full max-w-md bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out">
         <div className="flex  flex-col h-full">
@@ -185,11 +195,14 @@ const CartPage = () => {
               <div className="space-y-4">
                 {/* Show loading placeholders for items being updated */}
                 {Array.from(loadingItems).map((loadingId) => (
-                  <div key={`loading-${loadingId}`} className="border border-gray-200 rounded-lg">
+                  <div
+                    key={`loading-${loadingId}`}
+                    className="border border-gray-200 rounded-lg"
+                  >
                     <div className="flex gap-3 p-3 animate-pulse">
                       {/* Loading Image */}
                       <div className="w-16 h-16 bg-gray-200 rounded-md flex-shrink-0"></div>
-                      
+
                       {/* Loading Content */}
                       <div className="flex-1 min-w-0">
                         <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
@@ -204,14 +217,14 @@ const CartPage = () => {
                           <div className="h-8 w-8 bg-gray-200 rounded"></div>
                         </div>
                       </div>
-                      
+
                       {/* Loading Price */}
                       <div className="text-right">
                         <div className="h-4 bg-gray-200 rounded w-16 mb-2"></div>
                         <div className="h-6 w-6 bg-gray-200 rounded"></div>
                       </div>
                     </div>
-                    
+
                     {/* Loading indicator */}
                     <div className="px-3 pb-3 flex items-center justify-center">
                       <div className="flex items-center gap-2 text-sm text-gray-500">
@@ -223,177 +236,225 @@ const CartPage = () => {
                 ))}
 
                 {/* Show actual cart items (excluding those being updated) */}
-                {cart.filter(item => !loadingItems.has(item.id)).map((item) => (
-                  <div key={item.id} className="border border-gray-200 rounded-lg">
-                    {/* Main Item Row */}
-                    <div className="flex gap-3 p-3">
-                      {/* Product Image */}
-                      <div className="w-16 h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
-                        <Image
-                          src={getCurrentImage(item)}
-                          alt={item.name}
-                          width={64}
-                          height={64}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.target.src = '/Image/About1.png';
-                          }}
-                        />
-                      </div>
-
-                      {/* Product Details */}
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-semibold text-gray-900 truncate">
-                          {item.name}
-                        </h4>
-                        <p className="text-sm text-gray-600">
-                          ₹{item.price.toLocaleString()}
-                        </p>
-                        
-                        {/* Current Variants Display */}
-                        <div className="flex items-center gap-2 mt-1">
-                          {item.selectedColor && (
-                            <span className="text-xs bg-gray-100 px-2 py-1 rounded">
-                              {item.selectedColor}
-                            </span>
-                          )}
-                          {item.selectedSize && (
-                            <span className="text-xs bg-gray-100 px-2 py-1 rounded">
-                              Size: {item.selectedSize}
-                            </span>
-                          )}
+                {cart
+                  .filter((item) => !loadingItems.has(item.id))
+                  .map((item) => (
+                    <div
+                      key={item.id}
+                      className="border border-red-200 rounded-lg"
+                    >
+                      {/* Main Item Row */}
+                      <div className="flex gap-3 p-3">
+                        {/* Product Image - Clickable */}
+                        <div
+                          onClick={() => handleNavigateToProduct(item.id)}
+                          className="w-16 h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0 hover:opacity-80 transition-opacity cursor-pointer"
+                        >
+                          <Image
+                            src={getCurrentImage(item)}
+                            alt={item.name}
+                            width={64}
+                            height={64}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.target.src = "/Image/About1.png";
+                            }}
+                          />
                         </div>
 
-                        {/* Quantity Controls */}
-                        <div className="flex items-center gap-2 mt-2">
-                          <button
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                            className="p-1 hover:bg-gray-100 rounded transition-colors"
+                        {/* Product Details */}
+                        <div className="flex-1 min-w-0">
+                          {/* Product Name - Clickable */}
+                          <div
+                            onClick={() => handleNavigateToProduct(item.id)}
+                            className="block cursor-pointer"
                           >
-                            <Minus size={14} />
-                          </button>
-                          <span className="w-8 text-center text-sm font-medium">
-                            {item.quantity}
-                          </span>
-                          <button
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className="p-1 hover:bg-gray-100 rounded transition-colors"
-                          >
-                            <Plus size={14} />
-                          </button>
-                          <button
-                            onClick={() => removeFromCart(item.id)}
-                            className="p-1 hover:bg-red-100 text-red-600 rounded transition-colors ml-2"
-                          >
-                            <Trash2 size={14} />
-                          </button>
-                        </div>
-                      </div>
+                            <h4 className="text-sm font-semibold text-gray-900 truncate hover:text-red-600 transition-colors">
+                              {item.name}
+                            </h4>
+                          </div>
+                          <p className="text-sm text-gray-600">
+                            ₹{item.price.toLocaleString()}
+                          </p>
 
-                      {/* Price and Expand Button */}
-                      <div className="text-right flex flex-col justify-between">
-                        <p className="text-sm font-semibold text-gray-900">
-                          ₹{(item.price * item.quantity).toLocaleString()}
-                        </p>
-                        
-                        {/* Toggle Variant Selector Button */}
-                        {((item.colors && item.colors.length > 1) || (item.sizes && item.sizes.length > 1)) && (
-                          <button
-                            onClick={() => toggleVariantSelector(item.id)}
-                            className="p-1 hover:bg-gray-100 rounded transition-colors text-gray-500 hover:text-gray-700"
-                            title="Change color/size"
-                          >
-                            {expandedItems.has(item.id) ? (
-                              <ChevronUp size={16} />
-                            ) : (
-                              <ChevronDown size={16} />
+                          {/* Current Variants Display */}
+                          <div className="flex items-center gap-2 mt-1">
+                            {item.selectedColor && (
+                              <span className="text-xs bg-gray-100 px-2 py-1 rounded">
+                                {item.selectedColor}
+                              </span>
                             )}
-                          </button>
-                        )}
-                      </div>
-                    </div>
+                            {item.selectedSize && (
+                              <span className="text-xs bg-gray-100 px-2 py-1 rounded">
+                                Size: {item.selectedSize}
+                              </span>
+                            )}
+                          </div>
 
-                    {/* Expanded Variant Selector */}
-                    {expandedItems.has(item.id) && (
-                      <div className="px-3 pb-3 border-t border-gray-100 bg-gray-50">
-                        {/* Color Selection */}
-                        {item.colors && item.colors.length > 1 && (
-                          <div className="mb-3">
-                            <h5 className="text-xs font-semibold text-gray-700 mb-2 mt-2">
-                              Color: {item.selectedColor}
-                            </h5>
-                            <div className="flex gap-2 flex-wrap">
-                              {item.colors.map((color, colorIndex) => (
-                                <div key={color} className="flex flex-col items-center gap-1">
-                                  <button
-                                    onClick={() => handleColorChange(item, color, colorIndex)}
-                                    disabled={loadingItems.has(item.id)}
-                                    className={`w-8 h-10 rounded-md overflow-hidden border-2 transition-all duration-200 ${
-                                      item.selectedColor === color
-                                        ? "border-red-900 scale-105"
-                                        : "border-gray-200 hover:border-gray-400"
-                                    } ${loadingItems.has(item.id) ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                    title={color}
+                          {/* Quantity Controls */}
+                          <div className="flex items-center gap-2 mt-2">
+                            <button
+                              onClick={() =>
+                                updateQuantity(item.id, item.quantity - 1)
+                              }
+                              className="p-1 hover:bg-gray-100 rounded transition-colors"
+                            >
+                              <Minus size={14} />
+                            </button>
+                            <span className="w-8 text-center text-sm font-medium">
+                              {item.quantity}
+                            </span>
+                            <button
+                              onClick={() =>
+                                updateQuantity(item.id, item.quantity + 1)
+                              }
+                              className="p-1 hover:bg-gray-100 rounded transition-colors"
+                            >
+                              <Plus size={14} />
+                            </button>
+                            <button
+                              onClick={() => removeFromCart(item.id)}
+                              className="p-1 hover:bg-red-100 text-red-600 rounded transition-colors ml-2"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Price and Expand Button */}
+                        <div className="text-right flex flex-col justify-between">
+                          <p className="text-sm font-semibold text-gray-900">
+                            ₹{(item.price * item.quantity).toLocaleString()}
+                          </p>
+
+                          {/* Toggle Variant Selector Button */}
+                          {((item.colors && item.colors.length > 1) ||
+                            (item.sizes && item.sizes.length > 1)) && (
+                            <button
+                              onClick={() => toggleVariantSelector(item.id)}
+                              className="p-1 hover:bg-gray-100 rounded transition-colors text-gray-500 hover:text-gray-700"
+                              title="Change color/size"
+                            >
+                              {expandedItems.has(item.id) ? (
+                                <ChevronUp size={16} />
+                              ) : (
+                                <ChevronDown size={16} />
+                              )}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Expanded Variant Selector */}
+                      {expandedItems.has(item.id) && (
+                        <div className="px-3 pb-3 border-t border-gray-100 bg-gray-50">
+                          {/* Color Selection */}
+                          {item.colors && item.colors.length > 1 && (
+                            <div className="mb-3">
+                              <h5 className="text-xs font-semibold text-gray-700 mb-2 mt-2">
+                                Color: {item.selectedColor}
+                              </h5>
+                              <div className="flex gap-2 flex-wrap">
+                                {item.colors.map((color, colorIndex) => (
+                                  <div
+                                    key={color}
+                                    className="flex flex-col items-center gap-1"
                                   >
-                                    {item.images && item.images[colorIndex] ? (
-                                      <Image
-                                        src={item.images[colorIndex][0] || '/Image/About1.png'}
-                                        alt={color}
-                                        width={32}
-                                        height={40}
-                                        className="w-full h-full object-cover"
-                                      />
-                                    ) : (
-                                      <div 
-                                        className="w-full h-full flex items-center justify-center text-xs font-medium text-gray-600"
-                                        style={{ backgroundColor: color.toLowerCase() === 'white' ? '#f3f4f6' : color.toLowerCase() }}
-                                      >
-                                        {color.charAt(0)}
-                                      </div>
-                                    )}
-                                  </button>
-                                  {/* Color Name */}
-                                  <span className={`text-xs font-medium px-1 text-center min-w-0 max-w-[60px] truncate ${
-                                    item.selectedColor === color 
-                                      ? 'text-red-900' 
-                                      : 'text-gray-600'
-                                  }`} title={color}>
-                                    {color}
-                                  </span>
-                                </div>
-                              ))}
+                                    <button
+                                      onClick={() =>
+                                        handleColorChange(
+                                          item,
+                                          color,
+                                          colorIndex
+                                        )
+                                      }
+                                      disabled={loadingItems.has(item.id)}
+                                      className={`w-8 h-10 rounded-md overflow-hidden border-2 transition-all duration-200 ${
+                                        item.selectedColor === color
+                                          ? "border-red-900 scale-105"
+                                          : "border-gray-200 hover:border-gray-400"
+                                      } ${
+                                        loadingItems.has(item.id)
+                                          ? "opacity-50 cursor-not-allowed"
+                                          : ""
+                                      }`}
+                                      title={color}
+                                    >
+                                      {item.images &&
+                                      item.images[colorIndex] ? (
+                                        <Image
+                                          src={
+                                            item.images[colorIndex][0] ||
+                                            "/Image/About1.png"
+                                          }
+                                          alt={color}
+                                          width={32}
+                                          height={40}
+                                          className="w-full h-full object-cover"
+                                        />
+                                      ) : (
+                                        <div
+                                          className="w-full h-full flex items-center justify-center text-xs font-medium text-gray-600"
+                                          style={{
+                                            backgroundColor:
+                                              color.toLowerCase() === "white"
+                                                ? "#f3f4f6"
+                                                : color.toLowerCase(),
+                                          }}
+                                        >
+                                          {color.charAt(0)}
+                                        </div>
+                                      )}
+                                    </button>
+                                    {/* Color Name */}
+                                    <span
+                                      className={`text-xs font-medium px-1 text-center min-w-0 max-w-[60px] truncate ${
+                                        item.selectedColor === color
+                                          ? "text-red-900"
+                                          : "text-gray-600"
+                                      }`}
+                                      title={color}
+                                    >
+                                      {color}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                        )}
+                          )}
 
-                        {/* Size Selection */}
-                        {item.sizes && item.sizes.length > 1 && (
-                          <div>
-                            <h5 className="text-xs font-semibold text-gray-700 mb-2">
-                              Size: {item.selectedSize}
-                            </h5>
-                            <div className="flex gap-2 flex-wrap">
-                              {item.sizes.map((size) => (
-                                <button
-                                  key={size}
-                                  onClick={() => handleSizeChange(item, size)}
-                                  disabled={loadingItems.has(item.id)}
-                                  className={`px-3 py-1 text-xs border rounded transition-all duration-200 ${
-                                    item.selectedSize === size
-                                      ? "border-red-900 bg-red-900 text-white"
-                                      : "border-gray-200 hover:border-gray-400 hover:bg-gray-100"
-                                  } ${loadingItems.has(item.id) ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                >
-                                  {size}
-                                </button>
-                              ))}
+                          {/* Size Selection */}
+                          {item.sizes && item.sizes.length > 1 && (
+                            <div>
+                              <h5 className="text-xs font-semibold text-gray-700 mb-2">
+                                Size: {item.selectedSize}
+                              </h5>
+                              <div className="flex gap-2 flex-wrap">
+                                {item.sizes.map((size) => (
+                                  <button
+                                    key={size}
+                                    onClick={() => handleSizeChange(item, size)}
+                                    disabled={loadingItems.has(item.id)}
+                                    className={`px-3 py-1 text-xs border rounded transition-all duration-200 ${
+                                      item.selectedSize === size
+                                        ? "border-red-900 bg-red-900 text-white"
+                                        : "border-gray-200 hover:border-gray-400 hover:bg-gray-100"
+                                    } ${
+                                      loadingItems.has(item.id)
+                                        ? "opacity-50 cursor-not-allowed"
+                                        : ""
+                                    }`}
+                                  >
+                                    {size}
+                                  </button>
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ))}
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ))}
 
                 {/* Clear Cart Button */}
                 {(cart.length > 0 || loadingItems.size > 0) && (
@@ -401,7 +462,9 @@ const CartPage = () => {
                     onClick={clearCart}
                     disabled={loadingItems.size > 0}
                     className={`w-full py-2 text-sm text-red-600 hover:bg-red-50 border border-red-200 rounded-lg transition-colors ${
-                      loadingItems.size > 0 ? 'opacity-50 cursor-not-allowed' : ''
+                      loadingItems.size > 0
+                        ? "opacity-50 cursor-not-allowed"
+                        : ""
                     }`}
                   >
                     Clear All Items
@@ -424,10 +487,13 @@ const CartPage = () => {
 
               {/* Checkout Buttons */}
               <div className="space-y-2">
-                <button onClick={() => window.location.href = "/cart/checkout"} className="w-full bg-red-900 hover:bg-red-800 text-white py-3 rounded-lg font-semibold transition-colors">
+                <button
+                  onClick={() => (window.location.href = "/cart/checkout")}
+                  className="w-full bg-red-900 hover:bg-red-800 text-white py-3 rounded-lg font-semibold transition-colors"
+                >
                   Proceed to Checkout
                 </button>
-                <button 
+                <button
                   onClick={toggleCart}
                   className="w-full bg-gray-100 hover:bg-gray-200 text-gray-900 py-3 rounded-lg font-semibold transition-colors"
                 >
