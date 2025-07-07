@@ -3,7 +3,11 @@
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import img1 from "../../../public/assets/Image/C2.png";
+
+import MB9 from "../../../public/assets/Image/009.jpg";
+import MB7 from "../../../public/assets/Image/007.jpg";
+import MB8 from "../../../public/assets/Image/008.jpg";
+import MB2 from "../../../public/assets/Image/002.jpg";
 
 export default function Culture() {
   const [isVisible, setIsVisible] = useState(false);
@@ -15,7 +19,7 @@ export default function Culture() {
   return (
     <>
       {/* Hero Section */}
-      <motion.main 
+      <motion.main
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
@@ -23,7 +27,7 @@ export default function Culture() {
       >
         <div className="max-w-7xl mx-auto px-4">
           {/* Header */}
-          <motion.div 
+          <motion.div
             className="text-center mb-16"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -33,12 +37,13 @@ export default function Culture() {
               Cultural Heritage
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Discover the timeless beauty and rich traditions that define our cultural identity
+              Discover the timeless beauty and rich traditions that define our
+              cultural identity
             </p>
           </motion.div>
 
           {/* Main Image */}
-          <motion.div 
+          <motion.div
             className="relative w-full max-w-md mx-auto mb-12"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -48,7 +53,9 @@ export default function Culture() {
               <div className="absolute inset-0 bg-gradient-to-br from-amber-400 to-orange-600" />
               <div className="absolute inset-3 bg-white shadow-2xl overflow-hidden">
                 <Image
-                  src={"https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-6.png"}
+                  src={
+                    "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-6.png"
+                  }
                   alt="Cultural Heritage"
                   fill
                   className="object-cover"
@@ -60,10 +67,19 @@ export default function Culture() {
           {/* Gallery Grid */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
             {[
-              { src: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-1.png", label: "Heritage" },
-              { src: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-2.png", label: "Tradition" },
-              { src: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-3.png", label: "Artistry" },
-              { src: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-4.png", label: "Legacy" },
+              { src: "/Image/0007.jpg", label: "Heritage" },
+              {
+                src: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-2.png",
+                label: "Tradition",
+              },
+              {
+                src: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-3.png",
+                label: "Artistry",
+              },
+              {
+                src: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-4.png",
+                label: "Legacy",
+              },
             ].map((item, index) => (
               <motion.div
                 key={index}
@@ -81,13 +97,6 @@ export default function Culture() {
                     priority
                     className="object-cover"
                   />
-
-            
-
-               
-
-
-
                 </div>
                 <div className="absolute bottom-2 left-2 bg-amber-600 text-white px-2 py-1 text-xs font-semibold">
                   {item.label}
@@ -99,21 +108,21 @@ export default function Culture() {
       </motion.main>
 
       {/* Showcase Section */}
-      <section className="container mx-auto px-4 py-16">
+      <section className="container mx-auto px-1 sm:px-4 py-16">
         <h1 className="text-3xl lg:text-5xl font-bold mb-12 text-customRed">
           OUR SHOWCASE
         </h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {[...Array(4)].map((_, i) => (
-            <motion.div 
+          {[MB7, MB8, MB9, MB2].map((img, i) => (
+            <motion.div
               key={i}
               className="relative aspect-[3/4] group cursor-pointer"
             >
               <div className="relative overflow-hidden h-full">
                 <Image
-                  src={`https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-${i+14}.png`}
-                  alt="showcase image"
+                  src={img}
+                  alt={`showcase image ${i + 1}`}
                   fill
                   className="object-cover"
                 />
@@ -169,7 +178,11 @@ export default function Culture() {
                 <div className="space-y-4">
                   <div>
                     <h4 className="text-black font-semibold">Why Choose Us?</h4>
-                    <p>The Ultimate Combination of Comfort, Style, and Artistry. We believe in crafting experiences that combine the highest workmanship traditions with modern flair.</p>
+                    <p>
+                      The Ultimate Combination of Comfort, Style, and Artistry.
+                      We believe in crafting experiences that combine the
+                      highest workmanship traditions with modern flair.
+                    </p>
                   </div>
                 </div>
               </motion.div>

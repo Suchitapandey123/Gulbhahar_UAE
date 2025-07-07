@@ -7,19 +7,44 @@ import {
   X,
   ChevronDown,
   Search,
-
   ShoppingBag,
   User,
   LogOut,
   Settings,
   Package,
+  Plus, // ADD THIS
+  Minus, // ADD THIS
+  Trash2,
   Eye,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
-import SearchPopup from "./SearchPopup"; // Import the new SearchPopup component
+import SearchPopup from "./SearchPopup";
+import { useAuth } from "../../Providers/ContextProviders/AuthContext"; // 🔥 ADD THIS IMPORT
+import { useCart } from "@/Providers/ContextProviders/CartContext";
+import CartPage from "./CartPage";
 
 const Navbar = () => {
+  // 🔥 REPLACE ALL MANUAL AUTH STATE WITH CONTEXT
+  const {
+    isAuthenticated,
+    userData,
+    authToken,
+    logout,
+    updateUserData,
+    isLoading: authLoading,
+  } = useAuth();
+  const {
+    cart,
+    getCartItemsCount,
+    getCartTotal,
+    isCartOpen,
+    toggleCart,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
+  } = useCart();
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCollectionDropdownOpen, setIsCollectionDropdownOpen] =
     useState(false);
@@ -27,18 +52,11 @@ const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState({
-    name: "",
-    email: "",
-    firstName: "",
-    lastName: "",
-    imageUrl: "",
-    userId: "",
-  });
   const [isHoverMode, setIsHoverMode] = useState(true);
   const [profileImageLoading, setProfileImageLoading] = useState(false);
   const [profileImageError, setProfileImageError] = useState(false);
+  const itemsCount = getCartItemsCount();
+  const total = getCartTotal();
 
   const pathname = usePathname();
   const router = useRouter();
@@ -47,13 +65,15 @@ const Navbar = () => {
   const hoverTimeoutRef = useRef(null);
   const userHoverTimeoutRef = useRef(null);
 
-  // Function to fetch user profile data
-  const fetchUserProfile = async (token) => {
+  // 🔥 SIMPLIFIED FUNCTION - NOW USES CONTEXT TOKEN
+  const fetchUserProfile = async () => {
+    if (!authToken || !isAuthenticated) return;
+
     try {
       setProfileImageLoading(true);
       console.log(
         "🔄 Fetching user profile with token:",
-        token.substring(0, 20) + "..."
+        authToken.substring(0, 20) + "..."
       );
 
       const response = await fetch(
@@ -62,7 +82,7 @@ const Navbar = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: token,
+            Authorization: authToken,
           },
         }
       );
@@ -72,29 +92,26 @@ const Navbar = () => {
         console.log("✅ Profile data fetched successfully:", data);
 
         if (data.user) {
-          const userData = {
+          const updatedUserData = {
             name: `${data.user.firstName || ""} ${
               data.user.lastName || ""
             }`.trim(),
             email: data.user.email || "",
             firstName: data.user.firstName || "",
             lastName: data.user.lastName || "",
-            
             imageUrl: data.user.imageUrl || "",
             userId: data.user.userId || data.user._id || "",
           };
-          setUser(userData);
 
-          // Update localStorage with the latest user data
-          localStorage.setItem("userData", JSON.stringify(userData));
-
-          console.log("👤 User profile updated:", userData);
+          // 🔥 USE CONTEXT TO UPDATE USER DATA
+          updateUserData(updatedUserData);
+          console.log("👤 User profile updated:", updatedUserData);
         }
       } else {
         console.error("❌ Failed to fetch profile:", response.status);
-        // If token is invalid, clear auth data
+        // If token is invalid, logout through context
         if (response.status === 401 || response.status === 403) {
-          handleLogout();
+          logout();
         }
       }
     } catch (error) {
@@ -104,46 +121,13 @@ const Navbar = () => {
     }
   };
 
-  // Enhanced authentication check
+  // 🔥 SIMPLIFIED EFFECT - CONTEXT HANDLES AUTH STATE
   useEffect(() => {
-    const checkAuthStatus = async () => {
-      const token = localStorage.getItem("authToken");
-      const userData = localStorage.getItem("userData");
-
-      if (token) {
-        setIsLoggedIn(true);
-
-        // If we have stored user data, use it initially
-        if (userData) {
-          try {
-            const parsedUserData = JSON.parse(userData);
-            setUser(parsedUserData);
-            console.log(
-              "📱 Loaded user data from localStorage:",
-              parsedUserData
-            );
-          } catch (error) {
-            console.error("Error parsing stored user data:", error);
-          }
-        }
-
-        // Always fetch fresh profile data
-        await fetchUserProfile(token);
-      } else {
-        setIsLoggedIn(false);
-        setUser({
-          name: "",
-          email: "",
-          firstName: "",
-          lastName: "",
-          imageUrl: "",
-          userId: "",
-        });
-      }
-    };
-
-    checkAuthStatus();
-  }, []);
+    if (isAuthenticated && authToken && !authLoading) {
+      // Fetch fresh profile data when authenticated
+      fetchUserProfile();
+    }
+  }, [isAuthenticated, authToken, authLoading]);
 
   const [openCategoryIndex, setOpenCategoryIndex] = useState(null);
 
@@ -218,37 +202,11 @@ const Navbar = () => {
     router.push("/login");
   };
 
-  // Enhanced logout function
+  // 🔥 SIMPLIFIED LOGOUT - CONTEXT HANDLES EVERYTHING
   const handleLogout = () => {
-    // Clear all authentication data
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("userData");
-    localStorage.removeItem("loginTimestamp");
-
-    // Clear cookies
-    document.cookie =
-      "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie =
-      "userEmail=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie =
-      "userName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie = "userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie =
-      "loginTimestamp=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-    setIsLoggedIn(false);
-    setUser({
-      name: "",
-      email: "",
-      firstName: "",
-      lastName: "",
-      imageUrl: "",
-      userId: "",
-    });
+    logout(); // Context handles all cleanup and redirect
     setIsUserDropdownOpen(false);
     setProfileImageError(false);
-
-    router.push("/");
     console.log("🚪 User logged out successfully");
   };
 
@@ -318,7 +276,7 @@ const Navbar = () => {
 
   // Hover handlers for user dropdown
   const handleUserMouseEnter = () => {
-    if (window.innerWidth >= 768 && isLoggedIn) {
+    if (window.innerWidth >= 768 && isAuthenticated) {
       if (userHoverTimeoutRef.current) {
         clearTimeout(userHoverTimeoutRef.current);
       }
@@ -327,14 +285,14 @@ const Navbar = () => {
   };
 
   const handleUserMouseLeave = () => {
-    if (window.innerWidth >= 768 && isLoggedIn) {
+    if (window.innerWidth >= 768 && isAuthenticated) {
       userHoverTimeoutRef.current = setTimeout(() => {
         setIsUserDropdownOpen(false);
       }, 150);
     }
   };
 
-  // Enhanced Profile image component with better mobile responsiveness
+  // 🔥 UPDATED PROFILE IMAGE COMPONENT - USES CONTEXT DATA
   const ProfileImage = ({ size = "w-8 h-8", className = "" }) => {
     const handleImageError = () => {
       setProfileImageError(true);
@@ -349,7 +307,7 @@ const Navbar = () => {
     const isMedium = size.includes("w-8") || size.includes("w-10");
     const isLarge = size.includes("w-12");
 
-    if (profileImageLoading) {
+    if (profileImageLoading || authLoading) {
       return (
         <div
           className={`${size} ${className} bg-gray-200 rounded-full flex items-center justify-center animate-pulse`}
@@ -362,14 +320,14 @@ const Navbar = () => {
       );
     }
 
-    if (user.imageUrl && !profileImageError) {
+    if (userData?.imageUrl && !profileImageError) {
       return (
         <div
           className={`${size} ${className} relative overflow-hidden rounded-full bg-gray-100 flex-shrink-0`}
         >
           <Image
-            src={user.imageUrl}
-            alt={`${user.firstName || "User"}'s profile`}
+            src={userData.imageUrl}
+            alt={`${userData.firstName || "User"}'s profile`}
             fill
             className="object-cover"
             onError={handleImageError}
@@ -382,10 +340,12 @@ const Navbar = () => {
 
     // Fallback to initials or user icon
     const initials =
-      user.firstName && user.lastName
-        ? `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase()
-        : user.name
-        ? user.name
+      userData?.firstName && userData?.lastName
+        ? `${userData.firstName.charAt(0)}${userData.lastName.charAt(
+            0
+          )}`.toUpperCase()
+        : userData?.name
+        ? userData.name
             .split(" ")
             .map((n) => n.charAt(0))
             .join("")
@@ -563,6 +523,9 @@ const Navbar = () => {
     <>
       {/* Search Popup */}
       <SearchPopup isOpen={isSearchOpen} onClose={toggleSearchPopup} />
+      {isCartOpen && (
+        <CartPage />
+      )}
 
       {/* Mobile backdrop */}
       {isMenuOpen && (
@@ -604,128 +567,151 @@ const Navbar = () => {
               </NavLink>
               <NavLink href="/about">About</NavLink>
             </div>
-            {/* // Animated Logo Section - Removed shimmer effect */}
 
             <div className="flex-1 flex items-center justify-center md:flex-initial">
-  <Link href="/" className="relative group">
-    {/* Logo Container - Image + Text */}
-    <div className="relative flex items-center justify-center px-1 sm:px-6 md:px-8 sm:py-1">
-      
-      {/* Logo Image - Left Side */}
-      <div className={`
-        w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14  sm:mr-2 md:mr-3 flex items-center justify-center
-        transition-all duration-700 ease-out transform relative z-10
-        ${pathname === "/" ? "group-hover:scale-105" : ""}
-        ${pathname !== "/" 
-          ? "opacity-100 translate-y-0"     // Other pages: always visible
-          : isScrolled 
-            ? "opacity-100 translate-y-0"   // Home scrolled: visible
-            : "opacity-0 translate-y-4"     // Home not scrolled: hidden with slide up
-        }
-      `}>
-        <Image
-          src="/logo.png"  
-          alt="Logo"
-          fill
-          sizes="(max-width: 600px) 28px, (max-width: 708px) 36px, (max-width: 980px) 42px, 50px"
-          className="object-contain"
-          priority
-        />
-      </div>
-      
-      {/* GULBHAHAR Text Logo */}
-      <h1 
-        className={`
-          text-xl sm:text-2xl md:text-4xl lg:text-5xl font-normal sm:tracking-[0.2em]
-          transition-all duration-700 ease-out transform relative z-10
-          ${pathname === "/" ? "group-hover:scale-105 group-hover:tracking-[0.2em]" : ""}
-          ${pathname !== "/" 
-            ? "text-[#800000] opacity-100 translate-y-0"     // Other pages: always visible and red
-            : isScrolled 
-              ? "text-[#800000] opacity-100 translate-y-0"  // Home scrolled: visible and red
-              : "text-white opacity-0 translate-y-4"        // Home not scrolled: hidden with slide up
-          }
-        `}
-        style={{ fontFamily: 'Old Standard TT, serif' }}
-      >
-        GULBHAHAR
-      </h1>
+              <Link href="/" className="relative group">
+                {/* Logo Container - Image + Text */}
+                <div className="relative flex items-center justify-center px-1 sm:px-6 md:px-8 sm:py-1">
+                  {/* Logo Image - Left Side */}
+                  <div
+                    className={`
+                    w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14  sm:mr-2 md:mr-3 flex items-center justify-center
+                    transition-all duration-700 ease-out transform relative z-10
+                    ${pathname === "/" ? "group-hover:scale-105" : ""}
+                    ${
+                      pathname !== "/"
+                        ? "opacity-100 translate-y-0" // Other pages: always visible
+                        : isScrolled
+                        ? "opacity-100 translate-y-0" // Home scrolled: visible
+                        : "opacity-0 translate-y-4" // Home not scrolled: hidden with slide up
+                    }
+                  `}
+                  >
+                    <Image
+                      src="/logo.png"
+                      alt="Logo"
+                      fill
+                      sizes="(max-width: 600px) 28px, (max-width: 708px) 36px, (max-width: 980px) 42px, 50px"
+                      className="object-contain w"
+                      priority
+                    />
+                  </div>
 
-      {/* Magical Particles - Fixed positioning */}
-      <div className={`absolute inset-0 pointer-events-none transition-opacity duration-500 ${
-        (pathname !== "/" || isScrolled) ? "opacity-100" : "opacity-0"
-      }`}>
-        {[...Array(8)].map((_, i) => (
-          <div
-            key={`particle-${i}`}
-            className="absolute w-1 h-1 bg-red-400/60 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-1000 ease-out"
-            style={{
-              left: `${20 + i * 8}%`,
-              top: `${30 + (i % 3) * 15}%`,
-              transitionDelay: `${i * 100}ms`,
-            }}
-          />
-        ))}
-      </div>
+                  {/* GULBHAHAR Text Logo */}
+                  <h1
+                    className={`
+                      text-xl sm:text-2xl md:text-4xl lg:text-5xl font-normal sm:tracking-[0.2em]
+                      transition-all duration-700 ease-out transform relative z-10
+                      ${
+                        pathname === "/"
+                          ? "group-hover:scale-105 group-hover:tracking-[0.2em]"
+                          : ""
+                      }
+                      ${
+                        pathname !== "/"
+                          ? "text-[#800000] opacity-100 translate-y-0" // Other pages: always visible and red
+                          : isScrolled
+                          ? "text-[#800000] opacity-100 translate-y-0" // Home scrolled: visible and red
+                          : "text-white opacity-0 translate-y-4" // Home not scrolled: hidden with slide up
+                      }
+                    `}
+                    style={{ fontFamily: "Old Standard TT, serif" }}
+                  >
+                    GULBHAHAR
+                  </h1>
 
-      {/* Golden Dust Effect - Fixed positioning */}
-      <div className={`absolute inset-0 pointer-events-none transition-opacity duration-700 ${
-        (pathname !== "/" || isScrolled) ? "opacity-100" : "opacity-0"
-      }`}>
-        {[...Array(6)].map((_, i) => (
-          <div
-            key={`dust-${i}`}
-            className="absolute w-0.5 h-0.5 bg-yellow-400/80 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-1200 ease-out animate-pulse"
-            style={{
-              left: `${25 + i * 10}%`,
-              top: `${20 + (i % 4) * 12}%`,
-              transitionDelay: `${200 + i * 150}ms`,
-              animationDelay: `${i * 300}ms`,
-              animationDuration: "3s",
-            }}
-          />
-        ))}
-      </div>
+                  {/* Magical Particles - Fixed positioning */}
+                  <div
+                    className={`absolute inset-0 pointer-events-none transition-opacity duration-500 ${
+                      pathname !== "/" || isScrolled
+                        ? "opacity-100"
+                        : "opacity-0"
+                    }`}
+                  >
+                    {[...Array(8)].map((_, i) => (
+                      <div
+                        key={`particle-${i}`}
+                        className="absolute w-1 h-1 bg-red-400/60 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-1000 ease-out"
+                        style={{
+                          left: `${20 + i * 8}%`,
+                          top: `${30 + (i % 3) * 15}%`,
+                          transitionDelay: `${i * 100}ms`,
+                        }}
+                      />
+                    ))}
+                  </div>
 
-      {/* Pulsing Glow - Contained */}
-      <div className={`absolute left-2 right-2 top-1/2 transform -translate-y-1/2 h-12 pointer-events-none transition-opacity duration-500 ${
-        (pathname !== "/" || isScrolled) ? "opacity-100" : "opacity-0"
-      }`}>
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-40 transition-all duration-800 ease-out">
-          <div className="w-full h-full bg-gradient-to-r from-red-400/10 via-red-600/20 to-red-400/10 blur-md animate-pulse"></div>
-        </div>
-      </div>
+                  {/* Golden Dust Effect - Fixed positioning */}
+                  <div
+                    className={`absolute inset-0 pointer-events-none transition-opacity duration-700 ${
+                      pathname !== "/" || isScrolled
+                        ? "opacity-100"
+                        : "opacity-0"
+                    }`}
+                  >
+                    {[...Array(6)].map((_, i) => (
+                      <div
+                        key={`dust-${i}`}
+                        className="absolute w-0.5 h-0.5 bg-yellow-400/80 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-1200 ease-out animate-pulse"
+                        style={{
+                          left: `${25 + i * 10}%`,
+                          top: `${20 + (i % 4) * 12}%`,
+                          transitionDelay: `${200 + i * 150}ms`,
+                          animationDelay: `${i * 300}ms`,
+                          animationDuration: "3s",
+                        }}
+                      />
+                    ))}
+                  </div>
 
-      {/* Floating Sparkles - Better positioning */}
-      <div className={`absolute inset-0 pointer-events-none transition-opacity duration-500 ${
-        (pathname !== "/" || isScrolled) ? "opacity-100" : "opacity-0"
-      }`}>
-        {[...Array(4)].map((_, i) => (
-          <div
-            key={`sparkle-${i}`}
-            className="absolute opacity-0 group-hover:opacity-100 transition-all duration-800 ease-out"
-            style={{
-              left: `${30 + i * 15}%`,
-              top: `${15 + (i % 2) * 8}%`,
-              transitionDelay: `${500 + i * 200}ms`,
-            }}
-          >
-            <div 
-              className="w-1 h-1 bg-yellow-300 rounded-full relative animate-ping"
-              style={{
-                animationDelay: `${i * 400}ms`,
-                animationDuration: "2s",
-              }}
-            >
-              <div className="absolute inset-0 bg-yellow-300 rounded-full animate-pulse" />
+                  {/* Pulsing Glow - Contained */}
+                  <div
+                    className={`absolute left-2 right-2 top-1/2 transform -translate-y-1/2 h-12 pointer-events-none transition-opacity duration-500 ${
+                      pathname !== "/" || isScrolled
+                        ? "opacity-100"
+                        : "opacity-0"
+                    }`}
+                  >
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-40 transition-all duration-800 ease-out">
+                      <div className="w-full h-full bg-gradient-to-r from-red-400/10 via-red-600/20 to-red-400/10 blur-md animate-pulse"></div>
+                    </div>
+                  </div>
+
+                  {/* Floating Sparkles - Better positioning */}
+                  <div
+                    className={`absolute inset-0 pointer-events-none transition-opacity duration-500 ${
+                      pathname !== "/" || isScrolled
+                        ? "opacity-100"
+                        : "opacity-0"
+                    }`}
+                  >
+                    {[...Array(4)].map((_, i) => (
+                      <div
+                        key={`sparkle-${i}`}
+                        className="absolute opacity-0 group-hover:opacity-100 transition-all duration-800 ease-out"
+                        style={{
+                          left: `${30 + i * 15}%`,
+                          top: `${15 + (i % 2) * 8}%`,
+                          transitionDelay: `${500 + i * 200}ms`,
+                        }}
+                      >
+                        <div
+                          className="w-1 h-1 bg-yellow-300 rounded-full relative animate-ping"
+                          style={{
+                            animationDelay: `${i * 400}ms`,
+                            animationDuration: "2s",
+                          }}
+                        >
+                          <div className="absolute inset-0 bg-yellow-300 rounded-full animate-pulse" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </Link>
             </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </Link>
-</div>
-   <div className="hidden md:flex items-center space-x-2 lg:space-x-6">
+
+            <div className="hidden md:flex items-center space-x-2 lg:space-x-6">
               <button
                 onClick={toggleSearchPopup}
                 className={`
@@ -753,7 +739,7 @@ const Navbar = () => {
                 <span className="hidden lg:inline">Search</span>
               </button>
 
-              <Link
+              {/* <Link
                 href="/cart"
                 className={`
                   flex items-center space-x-1 lg:space-x-2 text-xs sm:text-sm font-semibold 
@@ -780,10 +766,42 @@ const Navbar = () => {
                   />
                 </div>
                 <span className="hidden lg:inline">Cart</span>
-              </Link>
+              </Link> */}
 
-              {/* Enhanced User Account Section */}
-              {isLoggedIn ? (
+              <button
+                onClick={toggleCart}
+                className={`
+        flex items-center space-x-1 lg:space-x-2 text-xs sm:text-sm font-semibold 
+        uppercase tracking-wide transition-all duration-300 ease-out group relative
+        ${
+          isCartOpen || pathname === "/cart"
+            ? `${
+                isScrolled || pathname !== "/" ? "text-[#800000]" : "text-white"
+              } scale-105`
+            : `${
+                isScrolled || pathname !== "/"
+                  ? "text-gray-800 hover:text-[#800000]"
+                  : "text-white/90 hover:text-white"
+              } hover:scale-105`
+        }
+      `}
+              >
+                <div className="relative">
+                  <ShoppingBag
+                    size={16}
+                    className="group-hover:scale-110 transition-transform duration-300"
+                  />
+                  {itemsCount > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-900 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold animate-pulse text-[10px]">
+                      {itemsCount > 99 ? "99+" : itemsCount}
+                    </span>
+                  )}
+                </div>
+                <span className="hidden lg:inline">Cart</span>
+              </button>
+
+              {/* 🔥 UPDATED USER ACCOUNT SECTION - USES CONTEXT */}
+              {isAuthenticated ? (
                 <div
                   className="relative"
                   ref={userDropdownRef}
@@ -818,7 +836,7 @@ const Navbar = () => {
                       className="group-hover:scale-110 transition-transform duration-300 border border-current/20"
                     />
                     <span className="hidden lg:inline">
-                      {user.firstName || "Account"}
+                      {userData?.firstName || "Account"}
                     </span>
                     <ChevronDown
                       size={12}
@@ -849,11 +867,13 @@ const Navbar = () => {
                         />
                         <div className="flex-1 min-w-0">
                           <p className="font-semibold text-gray-800 text-sm truncate">
-                            {user.name ||
-                              `${user.firstName} ${user.lastName}`.trim()}
+                            {userData?.name ||
+                              `${userData?.firstName || ""} ${
+                                userData?.lastName || ""
+                              }`.trim()}
                           </p>
                           <p className="text-xs text-gray-600 truncate">
-                            {user.email}
+                            {userData?.email}
                           </p>
                         </div>
                       </div>
@@ -907,6 +927,7 @@ const Navbar = () => {
                 </button>
               )}
             </div>
+
             <div className="flex items-center space-x-1 sm:space-x-2 md:hidden">
               <button
                 onClick={toggleSearchPopup}
@@ -920,8 +941,8 @@ const Navbar = () => {
                 <Search size={18} className="hidden sm:block" />
               </button>
 
-              {/* Enhanced Mobile User Account - Fixed Nested Button Issue */}
-              {isLoggedIn ? (
+              {/* 🔥 UPDATED MOBILE USER ACCOUNT - USES CONTEXT */}
+              {isAuthenticated ? (
                 <div className="relative">
                   <button
                     onClick={toggleUserDropdown}
@@ -937,7 +958,7 @@ const Navbar = () => {
                     />
                   </button>
 
-                  {/* Mobile User Dropdown - Fixed: No nested buttons */}
+                  {/* Mobile User Dropdown */}
                   <div
                     className={`
                       absolute right-0 top-full mt-2 w-64 sm:w-72 bg-white/95 backdrop-blur-md shadow-2xl 
@@ -958,15 +979,17 @@ const Navbar = () => {
                         />
                         <div className="flex-1 min-w-0">
                           <p className="font-semibold text-gray-800 text-sm sm:text-base truncate">
-                            {user.name ||
-                              `${user.firstName} ${user.lastName}`.trim()}
+                            {userData?.name ||
+                              `${userData?.firstName || ""} ${
+                                userData?.lastName || ""
+                              }`.trim()}
                           </p>
                           <p className="text-xs sm:text-sm text-gray-600 truncate">
-                            {user.email}
+                            {userData?.email}
                           </p>
-                          {user.userId && (
+                          {userData?.userId && (
                             <p className="text-xs text-gray-500 truncate">
-                              ID: {user.userId}
+                              ID: {userData.userId}
                             </p>
                           )}
                         </div>
@@ -1019,7 +1042,7 @@ const Navbar = () => {
                 </button>
               )}
 
-              <Link
+              {/* <Link
                 href="/cart"
                 className={`p-1.5 sm:p-2 transition-all duration-300 relative transform hover:scale-110 active:scale-95 ${
                   isScrolled || pathname !== "/"
@@ -1029,7 +1052,26 @@ const Navbar = () => {
               >
                 <ShoppingBag size={16} className="sm:hidden" />
                 <ShoppingBag size={18} className="hidden sm:block" />
-              </Link>
+              </Link> */}
+
+              <button
+                onClick={toggleCart}
+                className={`p-1.5 sm:p-2 transition-all duration-300 relative transform hover:scale-110 active:scale-95 ${
+                  isScrolled || pathname !== "/"
+                    ? "text-gray-800 hover:text-[#800000]"
+                    : "text-white hover:text-white/80"
+                }`}
+              >
+                <div className="relative">
+                  <ShoppingBag size={16} className="sm:hidden" />
+                  <ShoppingBag size={18} className="hidden sm:block" />
+                  {itemsCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-900 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold animate-pulse text-[10px]">
+                      {itemsCount > 9 ? "9+" : itemsCount}
+                    </span>
+                  )}
+                </div>
+              </button>
             </div>
           </div>
 
@@ -1134,7 +1176,7 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Mobile Menu - Enhanced Responsive */}
+      {/* 🔥 UPDATED MOBILE MENU - USES CONTEXT */}
       <div
         className={`
           md:hidden h-full overflow-x-hidden fixed inset-y-0 left-0 z-50 
@@ -1146,27 +1188,31 @@ const Navbar = () => {
         <div className="flex flex-col h-full">
           {/* Mobile Menu Header */}
           <div className="flex items-center justify-between p-3 xs:p-4 sm:p-6 border-b border-gray-100">
+            <div className=" w-[70%] flex ">
             <Image
-              src="/ful-gulbhaharlogo.png"
+              src="/Image/ful-gulbhaharlogo.png"
               alt="Brand Logo"
               width={80}
               height={24}
-              className="h-4 xs:h-5 sm:h-6 w-auto object-contain"
+              className="h-[38px] xs:h-[38px] w-full sm:h-8 "
             />
+
+            </div>
+            
             <button
               onClick={toggleMenu}
               className="p-1.5 xs:p-2 text-gray-600 hover:text-[#800000] transition-colors duration-200 
                        rounded-full hover:bg-gray-100 flex-shrink-0"
             >
-              <X size={16} className="xs:w-4 xs:h-4 sm:w-5 sm:h-5" />
+              <X size={16} className="w-7 h-7 sm:w-8 sm:h-8" />
             </button>
           </div>
 
           {/* Mobile Menu Content */}
           <div className="flex-1 overflow-y-auto p-3 xs:p-4 sm:p-6">
             <div className="space-y-3 xs:space-y-4 sm:space-y-6">
-              {/* Enhanced User Account Section in Mobile */}
-              {isLoggedIn && (
+              {/* 🔥 UPDATED USER ACCOUNT SECTION IN MOBILE - USES CONTEXT */}
+              {isAuthenticated && (
                 <div className="pb-3 xs:pb-4 border-b border-gray-100">
                   <div className="flex items-center space-x-2 xs:space-x-3 mb-3 xs:mb-4">
                     <ProfileImage
@@ -1175,15 +1221,17 @@ const Navbar = () => {
                     />
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-gray-800 text-sm xs:text-base truncate">
-                        {user.name ||
-                          `${user.firstName} ${user.lastName}`.trim()}
+                        {userData?.name ||
+                          `${userData?.firstName || ""} ${
+                            userData?.lastName || ""
+                          }`.trim()}
                       </p>
                       <p className="text-xs xs:text-sm text-gray-600 truncate">
-                        {user.email}
+                        {userData?.email}
                       </p>
-                      {user.userId && (
+                      {userData?.userId && (
                         <p className="text-xs text-gray-500 truncate">
-                          ID: {user.userId}
+                          ID: {userData.userId}
                         </p>
                       )}
                     </div>
@@ -1280,7 +1328,7 @@ const Navbar = () => {
                            shadow-md hover:shadow-lg w-[90%] xs:w-[80%] sm:w-[70%] cursor-pointer"
                   style={{ pointerEvents: "auto" }}
                 >
-                  <span>View All Collections</span>
+                  <span className="text-nowrap">View All Collections</span>
                 </button>
               </div>
 
@@ -1312,9 +1360,9 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Mobile Menu Footer */}
+          {/* 🔥 UPDATED MOBILE MENU FOOTER - USES CONTEXT */}
           <div className="border-t border-gray-100 p-3 xs:p-4">
-            {isLoggedIn ? (
+            {isAuthenticated ? (
               <div
                 onClick={() => {
                   handleLogout();
@@ -1348,4 +1396,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
