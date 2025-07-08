@@ -72,8 +72,8 @@ export async function generateMetadata({ params }) {
       title: `${product.title.slice(0,43)}... - Gulbhahar`,
       description: product.details[0],
       openGraph: {
-        title: 'Gulbhahar | Crafting Luxury – Handmade Juttis & Designer Bags', 
-        description: 'Gulbhahar offers luxury handmade juttis and designer bags crafted by skilled artisans. Shop exclusive, handcrafted collections that redefine elegance and style.',
+        title: `${product.title.slice(0,43)}... - Gulbhahar`,
+      description: product.details[0],
         type: 'website',
         locale: 'en_US',
         url : `https://gulbhahar.com/collections/${productID}`,
