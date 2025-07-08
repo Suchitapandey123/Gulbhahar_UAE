@@ -1,4 +1,5 @@
-"use client";import React, { useState, useRef } from 'react';
+"use client";
+import React, { useState, useRef } from 'react';
 import { ChevronDown, MapPin, Clock, Users, Award, Sparkles, Heart, Star } from 'lucide-react';
 
 const LuxuryCulturePage = () => {

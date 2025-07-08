@@ -1,10 +1,24 @@
 import React from 'react'
 import RefundPolicy from "@/app/refund-policy/Component/RefundPolicy"
 
-export const metadata={
-  title:"Refunds & Cancellation Policy – Gulbhahar",
-  description:"Read about Gulbhahar's straightforward return, refund, and cancellation policy regarding orders of your handcrafted mirrorwork juttis."
+export async function generateMetadata() {
+  return {
+    title:" Refund & Cancellation Policy - Gulbhahar Jutti Store",
+  description:"Understand Gulbhahar's hassle-free return and cancellation policy for jutti purchases. Customer-friendly terms with easy refund process and flexible options." ,
+    alternates: {
+      canonical: "https://gulbhahar.com/refund-policy",
+    },
+    openGraph: {
+      title:" Refund & Cancellation Policy - Gulbhahar Jutti Store",
+      description:"Understand Gulbhahar's hassle-free return and cancellation policy for jutti purchases. Customer-friendly terms with easy refund process and flexible options.",
+      type: "website",
+      locale: "en_US",
+      url: "https://gulbhahar.com/refund-policy",
+      siteName: "Gulbhahar",
+    },
+  };
 }
+
 
 const page = () => {
   return (

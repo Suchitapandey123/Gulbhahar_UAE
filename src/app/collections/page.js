@@ -1,8 +1,22 @@
 import React from 'react'
 import CollectionPage from '@/app/collections/components/Collection'
-export const metadata={
-  title:"Mirrorwork juttis collection – Gulbhahar",
-  description:" View Gulbhahar's exclusive collection of handcrafted mirrorwork juttis in exquisite designs for weddings, parties and everyday ethnic wear."
+
+export async function generateMetadata() {
+  return {
+    title:"Gulbhahar Jutti Collection - Handcrafted Traditional Footwear",
+    description:"Explore Gulbhahar's exquisite handcrafted jutti collection. Premium footwear with intricate embroidery and authentic designs. Shop traditional Indian juttis online today.",
+    alternates: {
+      canonical: "https://gulbhahar.com/collections",
+    },
+    openGraph: {
+      title:"Gulbhahar Jutti Collection - Handcrafted Traditional Footwear",
+    description:"Explore Gulbhahar's exquisite handcrafted jutti collection. Premium footwear with intricate embroidery and authentic designs. Shop traditional Indian juttis online today.",
+      type: "website",
+      locale: "en_US",
+      url: "https://gulbhahar.com/collections",
+      siteName: "Gulbhahar",
+    },
+  };
 }
 
 const page = () => {

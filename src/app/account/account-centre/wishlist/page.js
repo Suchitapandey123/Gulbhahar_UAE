@@ -1,9 +1,24 @@
 import React from 'react'
 import Wishlist from './Component/Wishlist'
 
-export const metadata={
-  title:"Wishlist – Save Your Favorite Juttis | Gulbhahar",
-  description:"View and manage your saved mirrorwork juttis for possible purchasing at Gulbhahar. Your selected juttis are only a click away!"
+export async function generateMetadata() {
+  return {
+    title: "My Wishlist - Save Your Favorite Gulbhahar Jutti Styles",
+    description:
+      "Save your favorite Gulbhahar jutti styles in your wishlist. Keep track and get notified about sales on your preferred handcrafted footwear. Your juttis are only a click away!",
+    alternates: {
+      canonical: "https://gulbhahar.com/account/account-centre/wishlist",
+    },
+    openGraph: {
+      title: "My Wishlist - Save Your Favorite Gulbhahar Jutti Styles",
+      description:
+        "Save your favorite Gulbhahar jutti styles in your wishlist. Keep track and get notified about sales on your preferred handcrafted footwear. Your juttis are only a click away!",
+      type: "website",
+      locale: "en_US",
+      url: "https://gulbhahar.com/account/account-centre/wishlist",
+      siteName: "Gulbhahar",
+    },
+  };
 }
 
 const page = () => {

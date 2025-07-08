@@ -3,7 +3,6 @@ import { ProductClient } from "./client";
 import { QueryClient } from "@tanstack/react-query";
 import productApi from "@/app/api/v0/product-service";
 
-
 async function getProductData(productID) {
   const queryClient = new QueryClient();
 

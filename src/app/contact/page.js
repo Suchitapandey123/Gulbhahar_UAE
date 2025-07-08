@@ -1,17 +1,32 @@
-import React from 'react'
-import ContactPage from './Component/contact'
+import React from "react";
+import ContactPage from "./Component/contact";
 
-export const metadata={
-  title:"Contact Us – Gulbhahar",
-  description:"Get in touch with Gulbhahar's support team for help regarding orders, products, or our mirrorwork jutti collection."
+export async function generateMetadata() {
+  return {
+    title: "Contact Us - Gulbhahar Jutti Customer Support & Inquiries",
+    description:
+      "Get in touch with Gulbhahar customer support for jutti inquiries, sizing help, or order assistance. Multiple contact options for quick resolution of your queries.",
+    alternates: {
+      canonical: "https://gulbhahar.com/contact",
+    },
+    openGraph: {
+      title: "Contact Us - Gulbhahar Jutti Customer Support & Inquiries",
+      description:
+        "Get in touch with Gulbhahar customer support for jutti inquiries, sizing help, or order assistance. Multiple contact options for quick resolution of your queries.",
+      type: "website",
+      locale: "en_US",
+      url: "https://gulbhahar.com/contact",
+      siteName: "Gulbhahar",
+    },
+  };
 }
 
 const page = () => {
   return (
     <div>
-      <ContactPage/>
+      <ContactPage />
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;

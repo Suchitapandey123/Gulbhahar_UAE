@@ -23,19 +23,34 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-export const metadata = {
-  title: "Gulbhahar | Crafting Luxury – Handmade Juttis & Designer Bags",
-  description: "Gulbhahar offers luxury handmade juttis and designer bags crafted by skilled artisans. Shop exclusive, handcrafted collections that redefine elegance and style.",
-  icons: {
-    icon: "/logo.png",
-  },
-  
-};
+export async function generateMetadata() {
+  return { 
+    title: 'Gulbhahar | Crafting Luxury – Handmade Juttis & Designer Bags',
+    description: 'Gulbhahar offers luxury handmade juttis and designer bags crafted by skilled artisans. Shop exclusive, handcrafted collections that redefine elegance and style.',
+    icons: {
+      icon: "/logo.png",
+    },
+    alternates: {
+      canonical: 'https://gulbhahar.com', // ← Fixed URL to match your brand
+    },
+    openGraph: {
+      title: 'Gulbhahar | Crafting Luxury – Handmade Juttis & Designer Bags', // ← Fixed title
+      description: 'Gulbhahar offers luxury handmade juttis and designer bags crafted by skilled artisans. Shop exclusive, handcrafted collections that redefine elegance and style.', // ← Fixed description
+      type: 'website',
+      locale: 'en_US',
+      url: 'https://gulbhahar.com', // ← Fixed URL
+      siteName: 'Gulbhahar', // ← Fixed site name
+    },
+  };
+}
+
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+      <meta name="robots" content="index, follow, noodp" />
+      <meta name="googlebot" content="index, follow, noodp" />
         {/* Preconnect for performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
