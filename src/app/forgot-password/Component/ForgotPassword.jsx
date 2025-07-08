@@ -153,7 +153,7 @@ const Carousel = () => {
 
 // Step 1: Email Confirmation
 const EmailConfirmationStep = ({ email, setEmail, goToNextStep }) => {
-  const { showToast } = useToast();
+  // const { showToast } = useToast();
   const [emailError, setEmailError] = useState('');
   const [touched, setTouched] = useState(false);
 
@@ -277,7 +277,7 @@ const EmailConfirmationStep = ({ email, setEmail, goToNextStep }) => {
 
 // Step 2: Verification Code
 const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificationCode: setParentVerificationCode }) => {
-  const { showToast } = useToast();
+  // const { showToast } = useToast();
   const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
