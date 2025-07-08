@@ -4,14 +4,14 @@ import Cookies from './components/privacy-policy'
 
 export async function generateMetadata() {
   return {
-    title:"Refunds & Cancellation Policy – Gulbhahar",
-  description:"Read about Gulbhahar's straightforward return, refund, and cancellation policy regarding orders of your handcrafted mirrorwork juttis." ,
+    title:"Privacy Policy - Your Data Protection on Gulbhahar Jutti",
+  description:"Read more about how Gulbhahar protects your personal data during jutti purchases. Learn about data collection, usage and secutiry measures for safe shopping." ,
     alternates: {
       canonical: "https://gulbhahar.com/privacy-policy",
     },
     openGraph: {
-      title:"Refunds & Cancellation Policy – Gulbhahar",
-      description:"Read about Gulbhahar's straightforward return, refund, and cancellation policy regarding orders of your handcrafted mirrorwork juttis.",
+      title:"Privacy Policy - Your Data Protection on Gulbhahar Jutti",
+      description:"Read more about how Gulbhahar protects your personal data during jutti purchases. Learn about data collection, usage and secutiry measures for safe shopping.",
       type: "website",
       locale: "en_US",
       url: "https://gulbhahar.com/privacy-policy",
