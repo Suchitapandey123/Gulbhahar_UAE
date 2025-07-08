@@ -31,14 +31,14 @@ export async function generateMetadata() {
       icon: "/logo.png",
     },
     alternates: {
-      canonical: 'https://gulbhahar.com', // ← Fixed URL to match your brand
+      canonical: 'https://www.gulbhahar.com', // ← Fixed URL to match your brand
     },
     openGraph: {
       title: 'Gulbhahar | Crafting Luxury – Handmade Juttis & Designer Bags', // ← Fixed title
       description: 'Gulbhahar offers luxury handmade juttis and designer bags crafted by skilled artisans. Shop exclusive, handcrafted collections that redefine elegance and style.', // ← Fixed description
       type: 'website',
       locale: 'en_US',
-      url: 'https://gulbhahar.com', // ← Fixed URL
+      url: 'https://www.gulbhahar.com', // ← Fixed URL
       siteName: 'Gulbhahar', // ← Fixed site name
     },
   };

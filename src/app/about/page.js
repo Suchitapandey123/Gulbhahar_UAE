@@ -9,14 +9,14 @@ export async function generateMetadata() {
       icon: "/logo.png",
     },
     alternates: {
-      canonical: 'https://gulbhahar.com/about', 
+      canonical: 'https://www.gulbhahar.com/about', 
     },
     openGraph: {
       title: ' About Gulbhahar - Handcrafted Juttis - Tradition In Every Step',
     description: "Discover Gulbhahar's heritage of crafting premium handmade jutis. Learn about our artisan tradition, quality craftsmanship, and commitment to authentic Indian footwear.",
       type: 'website',
       locale: 'en_US',
-      url: 'https://gulbhahar.com/about', 
+      url: 'https://www.gulbhahar.com/about', 
       siteName: 'Gulbhahar', 
     },
   };

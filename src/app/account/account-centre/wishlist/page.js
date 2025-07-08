@@ -7,7 +7,7 @@ export async function generateMetadata() {
     description:
       "Save your favorite Gulbhahar jutti styles in your wishlist. Keep track and get notified about sales on your preferred handcrafted footwear. Your juttis are only a click away!",
     alternates: {
-      canonical: "https://gulbhahar.com/account/account-centre/wishlist",
+      canonical: "https://www.gulbhahar.com/account/account-centre/wishlist",
     },
     openGraph: {
       title: "My Wishlist - Save Your Favorite Gulbhahar Jutti Styles",
@@ -15,7 +15,7 @@ export async function generateMetadata() {
         "Save your favorite Gulbhahar jutti styles in your wishlist. Keep track and get notified about sales on your preferred handcrafted footwear. Your juttis are only a click away!",
       type: "website",
       locale: "en_US",
-      url: "https://gulbhahar.com/account/account-centre/wishlist",
+      url: "https://www.gulbhahar.com/account/account-centre/wishlist",
       siteName: "Gulbhahar",
     },
   };

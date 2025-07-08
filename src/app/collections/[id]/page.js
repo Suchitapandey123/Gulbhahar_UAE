@@ -76,11 +76,11 @@ export async function generateMetadata({ params }) {
       description: product.details[0],
         type: 'website',
         locale: 'en_US',
-        url : `https://gulbhahar.com/collections/${productID}`,
+        url : `https://www.gulbhahar.com/collections/${productID}`,
         siteName: 'Gulbhahar',
       },
       alternates: {
-        canonical: `https://gulbhahar.com/collections/${productID}`,
+        canonical: `https://www.gulbhahar.com/collections/${productID}`,
       },
     };
   } catch (error) {
@@ -94,14 +94,14 @@ export async function generateMetadata({ params }) {
         icon: "/logo.png",
       },
       alternates: {
-        canonical: 'https://gulbhahar.com',
+        canonical: 'https://www.gulbhahar.com',
       },
       openGraph: {
         title: 'Gulbhahar | Crafting Luxury – Handmade Juttis & Designer Bags', 
         description: 'Gulbhahar offers luxury handmade juttis and designer bags crafted by skilled artisans. Shop exclusive, handcrafted collections that redefine elegance and style.',
         type: 'website',
         locale: 'en_US',
-        url: 'https://gulbhahar.com', 
+        url: 'https://www.gulbhahar.com', 
         siteName: 'Gulbhahar',
       },
     };

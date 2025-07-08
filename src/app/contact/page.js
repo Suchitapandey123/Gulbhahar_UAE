@@ -7,7 +7,7 @@ export async function generateMetadata() {
     description:
       "Get in touch with Gulbhahar customer support for jutti inquiries, sizing help, or order assistance. Multiple contact options for quick resolution of your queries.",
     alternates: {
-      canonical: "https://gulbhahar.com/contact",
+      canonical: "https://www.gulbhahar.com/contact",
     },
     openGraph: {
       title: "Contact Us - Gulbhahar Jutti Customer Support & Inquiries",
@@ -15,7 +15,7 @@ export async function generateMetadata() {
         "Get in touch with Gulbhahar customer support for jutti inquiries, sizing help, or order assistance. Multiple contact options for quick resolution of your queries.",
       type: "website",
       locale: "en_US",
-      url: "https://gulbhahar.com/contact",
+      url: "https://www.gulbhahar.com/contact",
       siteName: "Gulbhahar",
     },
   };

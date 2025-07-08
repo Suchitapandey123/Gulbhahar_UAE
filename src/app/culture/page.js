@@ -7,7 +7,7 @@ export async function generateMetadata() {
     description:
       "Discover the richness of heritage and tradition with Gulbhahar Juttis. We celebrate the craftsmanship, unique designs, and the cultural essence that inspires every handcrafted pair of juttis.",
     alternates: {
-      canonical: "https://gulbhahar.com/culture",
+      canonical: "https://www.gulbhahar.com/culture",
     },
     openGraph: {
       title: "Heritage Culture - Celebrate Tradition with Gulbhahar Juttis",
@@ -15,7 +15,7 @@ export async function generateMetadata() {
       "Discover the richness of heritage and tradition with Gulbhahar Juttis. We celebrate the craftsmanship, unique designs, and the cultural essence that inspires every handcrafted pair of juttis.",
       type: "website",
       locale: "en_US",
-      url: "https://gulbhahar.com/culture",
+      url: "https://www.gulbhahar.com/culture",
       siteName: "Gulbhahar",
     },
   };

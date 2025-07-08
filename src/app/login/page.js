@@ -6,14 +6,14 @@ export async function generateMetadata() {
     title:"Login to Your Account - Gulbhahar Jutti Online Store",
   description:"Access your Gulbhahar account to track orders, manage wishlist, and enjoy personalized shopping. Secure login to your favorite jutti destination.",
     alternates: {
-      canonical: "https://gulbhahar.com/login",
+      canonical: "https://www.gulbhahar.com/login",
     },
     openGraph: {
       title:"Login to Your Account - Gulbhahar Jutti Online Store",
   description:"Access your Gulbhahar account to track orders, manage wishlist, and enjoy personalized shopping. Secure login to your favorite jutti destination.",
       type: "website",
       locale: "en_US",
-      url: "https://gulbhahar.com/login",
+      url: "https://www.gulbhahar.com/login",
       siteName: "Gulbhahar",
     },
   };

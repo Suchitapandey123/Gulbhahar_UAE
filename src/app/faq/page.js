@@ -6,14 +6,14 @@ export async function generateMetadata() {
     title:"FAQs - Gulbhahar Jutti Size Guide & Customer Help",
   description:"Find answers to common questions about Gulbhahar jutti sizing, care, shipping, and returns. Complete guide to help you choose and maintain your juttis.",
     alternates: {
-      canonical: "https://gulbhahar.com/faq",
+      canonical: "https://www.gulbhahar.com/faq",
     },
     openGraph: {
       title:"FAQs - Gulbhahar Jutti Size Guide & Customer Help",
   description:"Find answers to common questions about Gulbhahar jutti sizing, care, shipping, and returns. Complete guide to help you choose and maintain your juttis.",
       type: "website",
       locale: "en_US",
-      url: "https://gulbhahar.com/faq",
+      url: "https://www.gulbhahar.com/faq",
       siteName: "Gulbhahar",
     },
   };

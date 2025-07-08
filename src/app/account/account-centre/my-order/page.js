@@ -7,7 +7,7 @@ export async function generateMetadata() {
     description:
       "Track your Gulbhahar jutti orders, view purchase history, and manage deliveries. Stay updated on your handcrafted footwear orders with real-time status.",
     alternates: {
-      canonical: "https://gulbhahar.com/account/account-centre/my-order",
+      canonical: "https://www.gulbhahar.com/account/account-centre/my-order",
     },
     openGraph: {
       title: "My Orders - Track Your Gulbhahar Jutti Purchase History",
@@ -15,7 +15,7 @@ export async function generateMetadata() {
         "Track your Gulbhahar jutti orders, view purchase history, and manage deliveries. Stay updated on your handcrafted footwear orders with real-time status.",
       type: "website",
       locale: "en_US",
-      url: "https://gulbhahar.com/account/account-centre/my-order",
+      url: "https://www.gulbhahar.com/account/account-centre/my-order",
       siteName: "Gulbhahar",
     },
   };

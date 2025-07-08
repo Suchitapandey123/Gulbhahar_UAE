@@ -7,14 +7,14 @@ export async function generateMetadata() {
     title:"Delivery & Shipping Policy - Gulbhahar Jutti Orders",
   description:"Learn about Gulbhahar's delivery options, shipping charges, and timelines for jutti orders. Fast nationwide delivery with secure packaging for your footwear.",
     alternates: {
-      canonical: "https://gulbhahar.com/delivery-shipping-policy",
+      canonical: "https://www.gulbhahar.com/delivery-shipping-policy",
     },
     openGraph: {
       title:"Delivery & Shipping Policy - Gulbhahar Jutti Orders",
   description:"Learn about Gulbhahar's delivery options, shipping charges, and timelines for jutti orders. Fast nationwide delivery with secure packaging for your footwear.",
       type: "website",
       locale: "en_US",
-      url: "https://gulbhahar.com/delivery-shipping-policy",
+      url: "https://www.gulbhahar.com/delivery-shipping-policy",
       siteName: "Gulbhahar",
     },
   };

@@ -6,14 +6,14 @@ export async function generateMetadata() {
     title:"My Profile - Update Your Gulbhahar Account Details",
   description:"Update your Gulbhahar profile information, preferences, and delivery details. Manage your account settings for a personalized jutti shopping experience.",
     alternates: {
-      canonical: "https://gulbhahar.com/account/account-centre/profile",
+      canonical: "https://www.gulbhahar.com/account/account-centre/profile",
     },
     openGraph: {
       title:"My Profile - Update Your Gulbhahar Account Details",
   description:"Update your Gulbhahar profile information, preferences, and delivery details. Manage your account settings for a personalized jutti shopping experience.",
       type: "website",
       locale: "en_US",
-      url: "https://gulbhahar.com/account/account-centre/profile",
+      url: "https://www.gulbhahar.com/account/account-centre/profile",
       siteName: "Gulbhahar",
     },
   };

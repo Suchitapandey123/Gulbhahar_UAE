@@ -7,7 +7,7 @@ export async function generateMetadata() {
     description:
       "Familiarise yourself with Gulbhahar’s terms and conditions for using our website, purchasing handcrafted mirrorwork juttis, and engaging in our service offerings.",
     alternates: {
-      canonical: "https://gulbhahar.com/terms-condition",
+      canonical: "https://www.gulbhahar.com/terms-condition",
     },
     openGraph: {
       title: "Terms of Use – Gulbhahar",
@@ -15,7 +15,7 @@ export async function generateMetadata() {
         "Familiarise yourself with Gulbhahar’s terms and conditions for using our website, purchasing handcrafted mirrorwork juttis, and engaging in our service offerings.",
       type: "website",
       locale: "en_US",
-      url: "https://gulbhahar.com/terms-condition",
+      url: "https://www.gulbhahar.com/terms-condition",
       siteName: "Gulbhahar",
     },
   };
