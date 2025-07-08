@@ -701,7 +701,7 @@ export function ProductClient({ product, similarProducts }) {
                 <div className="flex items-center gap-2 p-3 bg-red-50 rounded-lg">
                   <Truck className="w-6 h-6 text-red-900 flex-shrink-0" />
                   <span className="text-red-900 text-sm font-medium">
-                    Free delivery on orders above ₹500.00
+                    Free delivery on orders above ₹5000.00
                   </span>
                 </div>
               </div>
@@ -1038,7 +1038,7 @@ export function ProductClient({ product, similarProducts }) {
                   <Truck className="w-6 h-6 text-red-900 flex-shrink-0" />
                   <div>
                     <span className="text-red-900 text-sm font-semibold block">
-                      Free delivery on orders above ₹500.00
+                      Free delivery on orders above ₹5000.00
                     </span>
                     <span className="text-red-700 text-xs">
                       Save on shipping costs with minimum order value
