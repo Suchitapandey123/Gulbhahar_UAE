@@ -6,7 +6,6 @@ import { FiUser, FiLock, FiEye, FiEyeOff, FiMail, FiShield, FiCheck } from 'reac
 import { ChevronRight } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
-import { useToast } from '@/hooks/useToast';
 
 // API configuration
 const API_BASE_URL = 'https://api.gulbhahar.com/api';
@@ -154,6 +153,7 @@ const Carousel = () => {
 
 // Step 1: Email Confirmation
 const EmailConfirmationStep = ({ email, setEmail, goToNextStep }) => {
+  const { showToast } = useToast();
   const [emailError, setEmailError] = useState('');
   const [touched, setTouched] = useState(false);
 
@@ -162,12 +162,14 @@ const EmailConfirmationStep = ({ email, setEmail, goToNextStep }) => {
     mutationFn: forgotPasswordAPI,
     onSuccess: (data) => {
       console.log('Email sent successfully:', data);
+      showToast('Verification email sent successfully!', 'success');
       goToNextStep();
     },
     onError: (error) => {
       console.error('Error sending email:', error);
       const errorMessage = error.response?.data?.message || 'Failed to send verification email. Please try again.';
       setEmailError(errorMessage);
+      showToast(errorMessage, 'error');
     },
   });
 
@@ -275,6 +277,7 @@ const EmailConfirmationStep = ({ email, setEmail, goToNextStep }) => {
 
 // Step 2: Verification Code
 const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificationCode: setParentVerificationCode }) => {
+  const { showToast } = useToast();
   const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -286,6 +289,7 @@ const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificati
       console.log('Email verified successfully:', data);
       setError('');
       setSuccessMessage('Email verified successfully!');
+      showToast('Email verified successfully!', 'success');
       
       // Store the verification code for the final step
       const code = verificationCode.join('');
@@ -301,6 +305,7 @@ const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificati
       const errorMessage = error.response?.data?.message || 'Invalid verification code. Please try again.';
       setError(errorMessage);
       setSuccessMessage('');
+      showToast(errorMessage, 'error');
     },
   });
 
@@ -311,6 +316,7 @@ const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificati
       console.log('Email resent successfully:', data);
       setError('');
       setSuccessMessage('Verification code resent successfully!');
+      showToast('Verification code resent successfully!', 'success');
       // Clear success message after 3 seconds
       setTimeout(() => setSuccessMessage(''), 3000);
     },
@@ -319,6 +325,7 @@ const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificati
       const errorMessage = error.response?.data?.message || 'Failed to resend verification email.';
       setError(errorMessage);
       setSuccessMessage('');
+      showToast(errorMessage, 'error');
     },
   });
   
@@ -663,7 +670,6 @@ const CreatePasswordStep = ({ email, verificationCode, goToHomePage }) => {
 
 // Main Account Recovery Page
 const RecoverAccountPage = () => {
-  const {showToast , ToastContainer} = useToast()
   const [currentStep, setCurrentStep] = useState(1);
   const [email, setEmail] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
@@ -704,17 +710,17 @@ const RecoverAccountPage = () => {
 
   return (
     <div className='w-full min-h-screen mt-20 bg-gradient-to-br from-red-50 via-rose-50 to-red-100'>
-      <ToastContainer />
+    
       {/* Back to Home */}
       <div className="max-w-[1600px] mx-auto px-6 pt-6">
-        <button onClick={() => window.location.href = "/login"} className="group  flex items-center text-red-700 hover:text-red-900 transition-all duration-200 transform hover:scale-105">
+        <button onClick={() => window.location.href = "/login"} className="group flex items-center text-red-700 hover:text-red-900 transition-all duration-200 transform hover:scale-105">
           <IoIosArrowBack className="mr-3 group-hover:-translate-x-1 transition-transform" />
           <span className='font-medium'>Back to login</span>
         </button>
       </div>
       
       {/* Main content */}
-      <div className="flex min-h-[calc(100vh-190px)] w-full items-center justify-center">
+      <div className="flex min-h-[calc(100vh-120px)] w-full items-center justify-center py-8">
         <div className="mx-auto flex w-full max-w-[1600px] flex-col-reverse md:flex-row gap-8 px-6">
           {/* Form Section */}
           <div className="w-full md:w-1/2 flex flex-col justify-center">
