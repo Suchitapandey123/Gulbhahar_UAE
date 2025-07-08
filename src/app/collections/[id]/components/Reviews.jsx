@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Star, ThumbsUp, ThumbsDown, User, Send, X, Plus } from "lucide-react";
+import { Star, ThumbsUp, ThumbsDown, User, Send, X, Plus, Edit, Trash2, Check } from "lucide-react";
 
 export default function Reviews({ variant = "mobile", productId }) {
   const [userRating, setUserRating] = useState(0);
@@ -20,6 +20,31 @@ export default function Reviews({ variant = "mobile", productId }) {
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [newReviewRating, setNewReviewRating] = useState(0);
   const [newReviewComment, setNewReviewComment] = useState("");
+
+  // Edit review state
+  const [editingReview, setEditingReview] = useState(null);
+  const [editRating, setEditRating] = useState(0);
+  const [editComment, setEditComment] = useState("");
+  const [updating, setUpdating] = useState(false);
+  const [deleting, setDeleting] = useState(null);
+
+  // Get current user info (you might need to adjust this based on your auth system)
+  const getCurrentUserId = () => {
+    // This should return the current user's ID from your auth system
+    // You might need to get this from localStorage, context, or props
+    return localStorage.getItem('userId') || localStorage.getItem('user_id') || localStorage.getItem('currentUserId');
+  };
+
+  // Check if user has already reviewed this product
+  const checkUserReview = () => {
+    const currentUserId = getCurrentUserId();
+    if (currentUserId && reviews.length > 0) {
+      const userReview = reviews.find(review => 
+        review.userId === currentUserId || review.user_id === currentUserId
+      );
+      setHasUserReviewed(!!userReview);
+    }
+  };
 
   // Calculate average rating and statistics
   const calculateStats = () => {
@@ -133,10 +158,132 @@ export default function Reviews({ variant = "mobile", productId }) {
     }
   };
 
+  // Update review
+  const updateReview = async (reviewId) => {
+    if (!editRating || !editComment.trim()) {
+      setError('Please provide both rating and comment');
+      return;
+    }
+    
+    try {
+      setUpdating(true);
+      setError(null);
+      
+      const token = localStorage.getItem('authToken') || localStorage.getItem('token') || localStorage.getItem('accessToken');
+      
+      const response = await fetch(`https://api.gulbhahar.com/api/reviews/updateReview/${reviewId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': token ? `Bearer ${token}` : '',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          rating: editRating,
+          comment: editComment.trim()
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Failed to update review: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      // Update the review in the list
+      setReviews(prev => prev.map(review => 
+        review.reviewId === reviewId ? { ...review, ...data.review } : review
+      ));
+      
+      // Reset edit state
+      setEditingReview(null);
+      setEditRating(0);
+      setEditComment("");
+      
+      // Show success message (optional)
+      console.log('Review updated successfully');
+      
+    } catch (err) {
+      setError(`Update failed: ${err.message}`);
+      console.error('Update review error:', err);
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  // Delete review
+  const deleteReview = async (reviewId) => {
+    const confirmMessage = 'Are you sure you want to delete this review? This action cannot be undone.';
+    
+    if (!window.confirm(confirmMessage)) {
+      return;
+    }
+    
+    try {
+      setDeleting(reviewId);
+      
+      const token = localStorage.getItem('authToken') || localStorage.getItem('token') || localStorage.getItem('accessToken');
+      
+      const response = await fetch(`https://api.gulbhahar.com/api/reviews/deleteReview/${reviewId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': token ? `Bearer ${token}` : '',
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Failed to delete review: ${response.status}`);
+      }
+      
+      // Remove the review from the list
+      setReviews(prev => prev.filter(review => review.reviewId !== reviewId));
+      
+      // If this was the user's review, allow them to write a new one
+      setHasUserReviewed(false);
+      
+      // Show success message (optional)
+      console.log('Review deleted successfully');
+      
+    } catch (err) {
+      setError(`Delete failed: ${err.message}`);
+      console.error('Delete review error:', err);
+    } finally {
+      setDeleting(null);
+    }
+  };
+
+  // Start editing a review
+  const startEdit = (review) => {
+    const reviewId = review.reviewId || review._id;
+    setEditingReview(reviewId);
+    setEditRating(review.rating);
+    setEditComment(review.comment);
+  };
+
+  // Cancel editing
+  const cancelEdit = () => {
+    setEditingReview(null);
+    setEditRating(0);
+    setEditComment("");
+  };
+
+  // Check if current user can edit/delete a review
+  const canModifyReview = (review) => {
+    const currentUserId = getCurrentUserId();
+    return currentUserId && (review.userId === currentUserId || review.user_id === currentUserId);
+  };
+
   // Fetch reviews on component mount
   useEffect(() => {
     fetchReviews();
   }, [productId]);
+
+  // Check if user has already reviewed when reviews change
+  useEffect(() => {
+    checkUserReview();
+  }, [reviews]);
 
   const handleReply = (reviewIndex) => {
     if (replyText.trim()) {
@@ -388,58 +535,145 @@ export default function Reviews({ variant = "mobile", productId }) {
                           </div>
                           <div className="flex-1">
                             <p className="text-sm font-medium text-gray-900">
-                              {review.userName}
+                              {review.userName || review.name || 'Anonymous User'}
                             </p>
                             <span className="text-xs text-gray-500">
                               {formatDate(review.createdAt)}
                             </span>
                           </div>
-                        </div>
-
-                        {/* Review Rating - Mobile */}
-                        <div className="flex items-center gap-2 mb-2">
-                          <div className="flex">
-                            {[...Array(5)].map((_, idx) => (
-                              <Star
-                                key={idx}
-                                className={`w-3 h-3 ${
-                                  idx < Math.floor(review.rating)
-                                    ? "fill-yellow-400 text-yellow-400"
-                                    : "fill-gray-300 text-gray-300"
-                                }`}
-                              />
-                            ))}
-                          </div>
-                          <span className="text-xs font-medium text-gray-700">
-                            ({review.rating}/5)
-                          </span>
-                        </div>
-
-                        {/* Review Comment - Mobile */}
-                        <p className="text-xs text-gray-700 mb-3 bg-gray-50 p-2 rounded italic">
-                          "{review.comment}"
-                        </p>
-
-                        {/* Review Actions - Mobile */}
-                        <div className="flex items-center gap-3 text-xs">
-                          <button 
-                            onClick={() => setReplyingTo(replyingTo === idx ? null : idx)}
-                            className="text-red-900 hover:text-red-700 transition-colors font-medium"
-                          >
-                            {replyingTo === idx ? 'Cancel' : 'Reply'}
-                          </button>
-                          <div className="flex items-center gap-1">
-                            <ThumbsUp className="w-3 h-3 text-green-600" />
-                            <span className="text-green-600 font-medium">10</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <ThumbsDown className="w-3 h-3 text-red-500" />
-                            <span className="text-red-500 font-medium">0</span>
+                          {/* Edit/Delete buttons for user's own reviews - Mobile - ALWAYS SHOW FOR TESTING */}
+                          <div className="flex gap-1">
+                            {/* Show for all reviews temporarily for testing */}
+                            <button
+                              onClick={() => startEdit(review)}
+                              className="p-1 text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                              title="Edit review"
+                            >
+                              <Edit className="w-3 h-3" />
+                            </button>
+                            <button
+                              onClick={() => deleteReview(review.reviewId || review._id)}
+                              disabled={deleting === (review.reviewId || review._id)}
+                              className="p-1 text-red-600 hover:bg-red-50 rounded transition-colors disabled:opacity-50"
+                              title="Delete review"
+                            >
+                              {deleting === (review.reviewId || review._id) ? (
+                                <div className="w-3 h-3 border border-red-600 border-t-transparent rounded-full animate-spin" />
+                              ) : (
+                                <Trash2 className="w-3 h-3" />
+                              )}
+                            </button>
+                            {/* Show user info for debugging */}
+                            <span className="text-xs text-gray-400 ml-1">
+                              {canModifyReview(review) ? '✓' : '✗'}
+                            </span>
                           </div>
                         </div>
+
+                        {/* Edit Review Form - Mobile */}
+                        {editingReview === (review.reviewId || review._id) ? (
+                          <div className="space-y-3">
+                            {/* Edit Rating */}
+                            <div>
+                              <p className="text-xs text-gray-600 mb-1">Rating:</p>
+                              <div className="flex gap-1">
+                                {[1, 2, 3, 4, 5].map((rating) => (
+                                  <Star
+                                    key={rating}
+                                    onClick={() => setEditRating(rating)}
+                                    className={`w-5 h-5 cursor-pointer transition-all duration-200 ${
+                                      rating <= editRating
+                                        ? "fill-yellow-400 text-yellow-400"
+                                        : "fill-gray-300 text-gray-300 hover:fill-yellow-200"
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Edit Comment */}
+                            <textarea
+                              value={editComment}
+                              onChange={(e) => setEditComment(e.target.value)}
+                              className="w-full text-sm p-2 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent"
+                              rows="3"
+                            />
+
+                            {/* Edit Actions */}
+                            <div className="flex gap-2">
+                              <button
+                                onClick={cancelEdit}
+                                className="px-3 py-1 text-xs text-gray-600 hover:text-gray-800 transition-colors"
+                              >
+                                Cancel
+                              </button>
+                              <button
+                                onClick={() => updateReview(review.reviewId || review._id)}
+                                disabled={!editRating || !editComment.trim() || updating}
+                                className="px-3 py-1 text-xs bg-red-900 text-white rounded hover:bg-red-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                              >
+                                {updating ? (
+                                  <>
+                                    <div className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin" />
+                                    Updating...
+                                  </>
+                                ) : (
+                                  <>
+                                    <Check className="w-3 h-3" />
+                                    Update
+                                  </>
+                                )}
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            {/* Review Rating - Mobile */}
+                            <div className="flex items-center gap-2 mb-2">
+                              <div className="flex">
+                                {[...Array(5)].map((_, idx) => (
+                                  <Star
+                                    key={idx}
+                                    className={`w-3 h-3 ${
+                                      idx < Math.floor(review.rating)
+                                        ? "fill-yellow-400 text-yellow-400"
+                                        : "fill-gray-300 text-gray-300"
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+                              <span className="text-xs font-medium text-gray-700">
+                                ({review.rating}/5)
+                              </span>
+                            </div>
+
+                            {/* Review Comment - Mobile */}
+                            <p className="text-xs text-gray-700 mb-3 bg-gray-50 p-2 rounded italic">
+                              "{review.comment}"
+                            </p>
+
+                            {/* Review Actions - Mobile */}
+                            <div className="flex items-center gap-3 text-xs">
+                              <button 
+                                onClick={() => setReplyingTo(replyingTo === idx ? null : idx)}
+                                className="text-red-900 hover:text-red-700 transition-colors font-medium"
+                              >
+                                {replyingTo === idx ? 'Cancel' : 'Reply'}
+                              </button>
+                              <div className="flex items-center gap-1">
+                                <ThumbsUp className="w-3 h-3 text-green-600" />
+                                <span className="text-green-600 font-medium">10</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <ThumbsDown className="w-3 h-3 text-red-500" />
+                                <span className="text-red-500 font-medium">0</span>
+                              </div>
+                            </div>
+                          </>
+                        )}
 
                         {/* Reply Input - Mobile */}
-                        {replyingTo === idx && (
+                        {replyingTo === idx && editingReview !== (review.reviewId || review._id) && (
                           <div className="mt-3 p-3 bg-gray-50 rounded-lg border">
                             <div className="flex gap-2">
                               <div className="w-6 h-6 bg-red-900 rounded-full flex items-center justify-center flex-shrink-0">
@@ -717,59 +951,148 @@ export default function Reviews({ variant = "mobile", productId }) {
                             <User className="w-6 h-6 text-white" />
                           </div>
                           <p className="text-sm sm:text-base font-medium text-gray-900">
-                            {review.userName}
+                            {review.userName || review.name || 'Anonymous User'}
                           </p>
                         </div>
-                        <span className="text-sm text-gray-500 sm:ml-auto bg-gray-100 px-2 py-1 rounded">
-                          {formatDate(review.createdAt)}
-                        </span>
-                      </div>
-
-                      {/* Review Rating - Desktop */}
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="text-sm text-gray-500 font-medium">Rating:</span>
-                        <div className="flex">
-                          {[...Array(5)].map((_, idx) => (
-                            <Star
-                              key={idx}
-                              className={`w-4 h-4 sm:w-5 sm:h-5 ${
-                                idx < Math.floor(review.rating)
-                                  ? "fill-yellow-400 text-yellow-400"
-                                  : "fill-gray-300 text-gray-300"
-                              }`}
-                            />
-                          ))}
-                        </div>
-                        <span className="text-sm font-medium text-gray-700 ml-2">
-                          ({review.rating}/5)
-                        </span>
-                      </div>
-
-                      {/* Review Comment - Desktop */}
-                      <p className="text-sm text-gray-700 mb-4 bg-gray-50 p-3 rounded italic">
-                        "{review.comment}"
-                      </p>
-
-                      {/* Review Actions - Desktop */}
-                      <div className="flex items-center gap-4 text-sm">
-                        <button 
-                          onClick={() => setReplyingTo(replyingTo === idx ? null : idx)}
-                          className="text-red-900 hover:text-red-700 transition-colors font-medium hover:underline"
-                        >
-                          {replyingTo === idx ? 'Cancel Reply' : 'Reply'}
-                        </button>
-                        <div className="flex items-center gap-1 hover:bg-green-50 px-2 py-1 rounded transition-colors">
-                          <ThumbsUp className="w-4 h-4 text-green-600" />
-                          <span className="text-green-600 font-medium">10</span>
-                        </div>
-                        <div className="flex items-center gap-1 hover:bg-red-50 px-2 py-1 rounded transition-colors">
-                          <ThumbsDown className="w-3 h-3 text-red-500" />
-                          <span className="text-red-500 font-medium text-xs">0</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                            {formatDate(review.createdAt)}
+                          </span>
+                          {/* Edit/Delete buttons for user's own reviews - Desktop - ALWAYS SHOW FOR TESTING */}
+                          <div className="flex gap-1">
+                            {/* Show for all reviews temporarily for testing */}
+                            <button
+                              onClick={() => startEdit(review)}
+                              className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                              title="Edit review"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => deleteReview(review.reviewId || review._id)}
+                              disabled={deleting === (review.reviewId || review._id)}
+                              className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors disabled:opacity-50"
+                              title="Delete review"
+                            >
+                              {deleting === (review.reviewId || review._id) ? (
+                                <div className="w-4 h-4 border border-red-600 border-t-transparent rounded-full animate-spin" />
+                              ) : (
+                                <Trash2 className="w-4 h-4" />
+                              )}
+                            </button>
+                            {/* Show user info for debugging */}
+                            <span className="text-xs text-gray-400 ml-1">
+                              Current: {getCurrentUserId()} | Review: {review.userId || review.user_id || 'N/A'}
+                            </span>
+                          </div>
                         </div>
                       </div>
+
+                      {/* Edit Review Form - Desktop */}
+                      {editingReview === (review.reviewId || review._id) ? (
+                        <div className="space-y-4">
+                          {/* Edit Rating */}
+                          <div>
+                            <p className="text-sm text-gray-600 mb-2">Rating:</p>
+                            <div className="flex gap-1">
+                              {[1, 2, 3, 4, 5].map((rating) => (
+                                <Star
+                                  key={rating}
+                                  onClick={() => setEditRating(rating)}
+                                  className={`w-6 h-6 cursor-pointer transition-all duration-200 ${
+                                    rating <= editRating
+                                      ? "fill-yellow-400 text-yellow-400 hover:scale-110"
+                                      : "fill-gray-300 text-gray-300 hover:fill-yellow-200 hover:scale-110"
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Edit Comment */}
+                          <textarea
+                            value={editComment}
+                            onChange={(e) => setEditComment(e.target.value)}
+                            className="w-full text-sm p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent"
+                            rows="4"
+                          />
+
+                          {/* Edit Actions */}
+                          <div className="flex gap-3">
+                            <button
+                              onClick={cancelEdit}
+                              className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              onClick={() => updateReview(review.reviewId || review._id)}
+                              disabled={!editRating || !editComment.trim() || updating}
+                              className="px-4 py-2 text-sm bg-red-900 text-white rounded-lg hover:bg-red-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                            >
+                              {updating ? (
+                                <>
+                                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                  Updating...
+                                </>
+                              ) : (
+                                <>
+                                  <Check className="w-4 h-4" />
+                                  Update Review
+                                </>
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          {/* Review Rating - Desktop */}
+                          <div className="flex items-center gap-2 mb-3">
+                            <span className="text-sm text-gray-500 font-medium">Rating:</span>
+                            <div className="flex">
+                              {[...Array(5)].map((_, idx) => (
+                                <Star
+                                  key={idx}
+                                  className={`w-4 h-4 sm:w-5 sm:h-5 ${
+                                    idx < Math.floor(review.rating)
+                                      ? "fill-yellow-400 text-yellow-400"
+                                      : "fill-gray-300 text-gray-300"
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                            <span className="text-sm font-medium text-gray-700 ml-2">
+                              ({review.rating}/5)
+                            </span>
+                          </div>
+
+                          {/* Review Comment - Desktop */}
+                          <p className="text-sm text-gray-700 mb-4 bg-gray-50 p-3 rounded italic">
+                            "{review.comment}"
+                          </p>
+
+                          {/* Review Actions - Desktop */}
+                          <div className="flex items-center gap-4 text-sm">
+                            <button 
+                              onClick={() => setReplyingTo(replyingTo === idx ? null : idx)}
+                              className="text-red-900 hover:text-red-700 transition-colors font-medium hover:underline"
+                            >
+                              {replyingTo === idx ? 'Cancel Reply' : 'Reply'}
+                            </button>
+                            <div className="flex items-center gap-1 hover:bg-green-50 px-2 py-1 rounded transition-colors">
+                              <ThumbsUp className="w-4 h-4 text-green-600" />
+                              <span className="text-green-600 font-medium">10</span>
+                            </div>
+                            <div className="flex items-center gap-1 hover:bg-red-50 px-2 py-1 rounded transition-colors">
+                              <ThumbsDown className="w-3 h-3 text-red-500" />
+                              <span className="text-red-500 font-medium text-xs">0</span>
+                            </div>
+                          </div>
+                        </>
+                      )}
 
                       {/* Reply Input - Desktop */}
-                      {replyingTo === idx && (
+                      {replyingTo === idx && editingReview !== (review.reviewId || review._id) && (
                         <div className="mt-4 p-4 bg-gray-50 rounded-lg border">
                           <div className="flex gap-3">
                             <div className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center flex-shrink-0">
