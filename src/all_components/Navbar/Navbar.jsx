@@ -71,10 +71,10 @@ const Navbar = () => {
 
     try {
       setProfileImageLoading(true);
-      console.log(
-        "🔄 Fetching user profile with token:",
-        authToken.substring(0, 20) + "..."
-      );
+      // console.log(
+      //   "🔄 Fetching user profile with token:",
+      //   authToken.substring(0, 20) + "..."
+      // );
 
       const response = await fetch(
         "https://api.gulbhahar.com/api/users/user-by-token",
@@ -89,7 +89,7 @@ const Navbar = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("✅ Profile data fetched successfully:", data);
+        // console.log("✅ Profile data fetched successfully:", data);
 
         if (data.user) {
           const updatedUserData = {
@@ -105,7 +105,7 @@ const Navbar = () => {
 
           // 🔥 USE CONTEXT TO UPDATE USER DATA
           updateUserData(updatedUserData);
-          console.log("👤 User profile updated:", updatedUserData);
+          // console.log("👤 User profile updated:", updatedUserData);
         }
       } else {
         console.error("❌ Failed to fetch profile:", response.status);

@@ -18,33 +18,21 @@ import {
   ChevronRight as ChevronRightIcon,
   ZoomIn,
   ShoppingBag,
+  MapPin,
+  Clock,
+  CheckCircle,
+  AlertCircle,
+  Loader2,
 } from "lucide-react";
 import { useAuth } from "../../../Providers/ContextProviders/AuthContext";
 import { useToast } from "../../../hooks/useToast";
 import { useCart } from "../../../Providers/ContextProviders/CartContext";
 import Link from "next/link";
 import ImageModal from "./components/ImageModal";
-
-const reviews = {
-  rating: 4.8,
-  reviews: [
-    { stars: 5, count: 28 },
-    { stars: 4, count: 9 },
-    { stars: 3, count: 7 },
-    { stars: 2, count: 4 },
-    { stars: 1, count: 0 },
-  ],
-  reviewComments: [
-    {
-      user: "John Doe",
-      rating: 5,
-      comment: "Excellent running shoes. It was very sturdy on the foot",
-      date: "yesterday",
-    }
-  ],
-};
+import Reviews from "./components/Reviews";
 
 export function ProductClient({ product, similarProducts }) {
+  // console.log(product)
   const router = useRouter();
   const { isAuthenticated } = useAuth();
   const { showToast, ToastContainer } = useToast();
@@ -54,8 +42,12 @@ export function ProductClient({ product, similarProducts }) {
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [mainImageIndex, setMainImageIndex] = useState(0);
   const [pincode, setPincode] = useState("");
-  const [userRating, setUserRating] = useState(4);
-  const [sortOrder, setSortOrder] = useState("Newest");
+  
+  // Delivery states
+  const [deliveryInfo, setDeliveryInfo] = useState(null);
+  const [isCheckingDelivery, setIsCheckingDelivery] = useState(false);
+  const [deliveryError, setDeliveryError] = useState("");
+  const [hasCheckedDelivery, setHasCheckedDelivery] = useState(false);
   
   // Image Modal States
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -72,6 +64,83 @@ export function ProductClient({ product, similarProducts }) {
 
   // Calculate discount percentage
   const discountPercentage = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
+
+  // Delivery API function
+  const checkDelivery = async (pincodeValue = pincode) => {
+    if (!pincodeValue || pincodeValue.length !== 6) {
+      setDeliveryError("Please enter a valid 6-digit pincode");
+      return;
+    }
+
+    setIsCheckingDelivery(true);
+    setDeliveryError("");
+    setDeliveryInfo(null);
+
+    try {
+      const response = await fetch(
+        `https://staging-express.delhivery.com/c/api/pin-codes/json/?filter_codes=${pincodeValue}`,
+        {
+          headers: {
+            'Authorization': 'Token 101d6952983607b883a57570fde4c97bc4c882a1',
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch delivery information');
+      }
+
+      const data = await response.json();
+      
+      if (data.delivery_codes && data.delivery_codes.length > 0) {
+        const postalCode = data.delivery_codes[0].postal_code;
+        setDeliveryInfo(postalCode);
+        setHasCheckedDelivery(true);
+        
+        // Calculate estimated delivery date (assuming 2-3 days for prepaid)
+        const deliveryDate = new Date();
+        deliveryDate.setDate(deliveryDate.getDate() + (postalCode.pre_paid === "Y" ? 2 : 3));
+        
+        showToast(
+          `Delivery available to ${postalCode.city}, ${postalCode.district}`, 
+          'success'
+        );
+      } else {
+        setDeliveryError("Delivery not available to this pincode");
+        showToast("Delivery not available to this pincode", 'error');
+      }
+    } catch (error) {
+      console.error('Delivery check error:', error);
+      setDeliveryError("Failed to check delivery. Please try again.");
+      showToast("Failed to check delivery availability", 'error');
+    } finally {
+      setIsCheckingDelivery(false);
+    }
+  };
+
+  // Clear delivery info when pincode changes
+  useEffect(() => {
+    if (pincode.length < 6) {
+      setDeliveryInfo(null);
+      setDeliveryError("");
+      setHasCheckedDelivery(false);
+    }
+  }, [pincode]);
+
+  // Format delivery date
+  const formatDeliveryDate = () => {
+    if (!deliveryInfo) return null;
+    
+    const deliveryDate = new Date();
+    deliveryDate.setDate(deliveryDate.getDate() + (deliveryInfo.pre_paid === "Y" ? 2 : 3));
+    
+    return deliveryDate.toLocaleDateString('en-IN', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long'
+    });
+  };
 
   // Image Modal Functions
   const openModal = (imageIndex = mainImageIndex) => {
@@ -195,11 +264,120 @@ export function ProductClient({ product, similarProducts }) {
     setMainImageIndex(0);
   };
 
-  const sortedReviews = [...reviews.reviewComments].sort((a, b) => {
-    return sortOrder === "Newest"
-      ? new Date(b.date).getTime() - new Date(a.date).getTime()
-      : new Date(a.date).getTime() - new Date(b.date).getTime();
-  });
+  // Delivery Information Component
+  const DeliverySection = ({ variant = "mobile" }) => (
+    <div className="mb-8">
+      {variant === "desktop" ? (
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-1 h-4 bg-red-900 rounded-full"></div>
+          <h3 className="text-base font-semibold text-gray-900">Delivery Information</h3>
+        </div>
+      ) : (
+        <h3 className="text-sm font-medium mb-3">Delivery to</h3>
+      )}
+      
+      <div className={variant === "desktop" 
+        ? "bg-gradient-to-r from-gray-50 to-white rounded-lg p-4 border border-gray-200"
+        : ""
+      }>
+        <div className="flex gap-2 max-w-md mb-3">
+          <input
+            type="text"
+            value={pincode}
+            onChange={(e) => {
+              const value = e.target.value.replace(/\D/g, '').slice(0, 6);
+              setPincode(value);
+            }}
+            placeholder="Enter pincode"
+            className="px-3 py-2 border border-gray-300 rounded-md flex-1 focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent"
+            maxLength={6}
+            inputMode="numeric"
+            pattern="[0-9]*"
+          />
+          <button 
+            onClick={() => checkDelivery()}
+            disabled={isCheckingDelivery || pincode.length !== 6}
+            className="px-4 py-2 bg-red-900 text-white rounded-md hover:bg-red-800 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 min-w-[80px]"
+          >
+            {isCheckingDelivery ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span className="hidden sm:inline">Checking...</span>
+              </>
+            ) : (
+              "Check"
+            )}
+          </button>
+        </div>
+
+        {/* Delivery Results */}
+        <div className="space-y-2">
+          {deliveryError && (
+            <div className="flex items-center gap-2 text-red-600 text-sm">
+              <AlertCircle className="w-4 h-4" />
+              <span>{deliveryError}</span>
+            </div>
+          )}
+          
+          {deliveryInfo && (
+            <div className="space-y-2">
+              {/* Location Info */}
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-green-600" />
+                <span className="text-sm font-medium text-gray-800">
+                  {deliveryInfo.city}, {deliveryInfo.district}
+                </span>
+              </div>
+              
+              {/* Delivery Date */}
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <p className="text-red-900 text-sm font-medium">
+                  Delivery by {formatDeliveryDate()} |
+                  <span className="text-gray-400 line-through ml-2">₹60</span>
+                  <span className="text-green-600 ml-1">FREE</span>
+                </p>
+              </div>
+              
+              {/* Delivery Options */}
+              <div className="space-y-1">
+                {deliveryInfo.cod === "Y" && (
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-3 h-3 text-green-500" />
+                    <span className="text-xs text-gray-600">Cash on Delivery Available</span>
+                  </div>
+                )}
+                
+                {deliveryInfo.pre_paid === "Y" && (
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-3 h-3 text-green-500" />
+                    <span className="text-xs text-gray-600">Prepaid Orders Accepted</span>
+                  </div>
+                )}
+                
+                <div className="flex items-center gap-2">
+                  <Clock className="w-3 h-3 text-blue-500" />
+                  <span className="text-xs text-gray-600">
+                    Order before 9:30 PM for faster delivery
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {/* Default message when no pincode entered */}
+          {!hasCheckedDelivery && !deliveryError && !deliveryInfo && (
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <p className="text-gray-600 text-sm">
+                {pincode.length === 6 ? "Click 'Check' to verify delivery" : "Enter 6-digit pincode to check delivery"}
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <>
@@ -376,33 +554,105 @@ export function ProductClient({ product, similarProducts }) {
                     </button>
                   ))}
                 </div>
-                {/* <p className="text-red-900 text-sm mt-2 cursor-pointer hover:underline">
-                  Size Guide
-                </p> */}
               </div>
 
-              {/* Delivery Section */}
+              {/* Delivery Section - Mobile */}
               <div className="mb-8">
                 <h3 className="text-sm font-medium mb-3">Delivery to</h3>
-                <div className="flex gap-2 max-w-md">
+                <div className="flex gap-2 max-w-md mb-3">
                   <input
                     type="text"
                     value={pincode}
-                    onChange={(e) => setPincode(e.target.value)}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, '').slice(0, 6);
+                      setPincode(value);
+                    }}
                     placeholder="Enter pincode"
-                    className="px-3 py-2 border rounded-md flex-1 focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent"
+                    className="px-3 py-2 border border-gray-300 rounded-md flex-1 focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent"
+                    maxLength={6}
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                   />
+                  <button 
+                    onClick={() => checkDelivery()}
+                    disabled={isCheckingDelivery || pincode.length !== 6}
+                    className="px-4 py-2 bg-red-900 text-white rounded-md hover:bg-red-800 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 min-w-[80px]"
+                  >
+                    {isCheckingDelivery ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span className="hidden sm:inline">Checking...</span>
+                      </>
+                    ) : (
+                      "Check"
+                    )}
+                  </button>
                 </div>
-                <div className="mt-2 space-y-1">
-                  <p className="text-red-900 text-sm">
-                    Delivery by 31st January, Friday |
-                    <span className="text-gray-400 line-through ml-2">
-                      Free ₹60
-                    </span>
-                  </p>
-                  <p className="text-gray-400 text-sm">
-                    If order before 9:30 P.M
-                  </p>
+
+                {/* Delivery Results */}
+                <div className="space-y-2">
+                  {deliveryError && (
+                    <div className="flex items-center gap-2 text-red-600 text-sm">
+                      <AlertCircle className="w-4 h-4" />
+                      <span>{deliveryError}</span>
+                    </div>
+                  )}
+                  
+                  {deliveryInfo && (
+                    <div className="space-y-2">
+                      {/* Location Info */}
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-green-600" />
+                        <span className="text-sm font-medium text-gray-800">
+                          {deliveryInfo.city}, {deliveryInfo.district}
+                        </span>
+                      </div>
+                      
+                      {/* Delivery Date */}
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <p className="text-red-900 text-sm font-medium">
+                          Delivery by {formatDeliveryDate()} |
+                          <span className="text-gray-400 line-through ml-2">₹60</span>
+                          <span className="text-green-600 ml-1">FREE</span>
+                        </p>
+                      </div>
+                      
+                      {/* Delivery Options */}
+                      <div className="space-y-1">
+                        {deliveryInfo.cod === "Y" && (
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="w-3 h-3 text-green-500" />
+                            <span className="text-xs text-gray-600">Cash on Delivery Available</span>
+                          </div>
+                        )}
+                        
+                        {deliveryInfo.pre_paid === "Y" && (
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="w-3 h-3 text-green-500" />
+                            <span className="text-xs text-gray-600">Prepaid Orders Accepted</span>
+                          </div>
+                        )}
+                        
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-3 h-3 text-blue-500" />
+                          <span className="text-xs text-gray-600">
+                            Order before 9:30 PM for faster delivery
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Default message when no pincode entered */}
+                  {!hasCheckedDelivery && !deliveryError && !deliveryInfo && (
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <p className="text-gray-600 text-sm">
+                        {pincode.length === 6 ? "Click 'Check' to verify delivery" : "Enter 6-digit pincode to check delivery"}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -457,144 +707,7 @@ export function ProductClient({ product, similarProducts }) {
               </div>
 
               {/* Reviews Section */}
-              <div className="mt-12 lg:mt-16">
-                <h3 className="font-semibold text-xl sm:text-2xl lg:text-3xl text-gray-900 mb-6">
-                  Reviews
-                </h3>
-
-                {/* Rating Overview */}
-                <div className="border-l-2 border-gray-200 pl-4 sm:pl-6 lg:pl-8">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-gray-200">
-                    <div className="flex items-center gap-2">
-                      <div className="flex">
-                        {[...Array(5)].map((_, idx) => (
-                          <Star
-                            key={idx}
-                            onClick={() => setUserRating(idx + 1)}
-                            className={`w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 cursor-pointer ${
-                              idx < userRating
-                                ? "fill-red-900 text-red-900"
-                                : "fill-gray-300 text-gray-300"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-lg font-medium ml-2 sm:ml-4">
-                        {userRating || reviews.rating}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Rating Breakdown */}
-                  <div className="space-y-3 my-8">
-                    {reviews.reviews.map(({ stars, count }) => (
-                      <div key={stars} className="flex items-center gap-3">
-                        <span className="w-3 text-sm font-medium">{stars}</span>
-                        <div className="flex-1 h-6 bg-gray-200 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-red-900 transition-all duration-300"
-                            style={{ width: `${(count / 48) * 100}%` }}
-                          />
-                        </div>
-                        <span className="w-8 text-sm text-gray-600 font-medium">
-                          {count}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Sort Dropdown */}
-                  <div className="mb-6">
-                    <div className="relative inline-block">
-                      <select
-                        className="appearance-none border border-gray-300 rounded-lg py-2 px-3 pr-8 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent w-32 sm:w-40"
-                        value={sortOrder}
-                        onChange={(e) => setSortOrder(e.target.value)}
-                      >
-                        <option value="Newest">Newest</option>
-                        <option value="Oldest">Oldest</option>
-                      </select>
-                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
-                        <svg
-                          className="h-4 w-4 text-gray-500"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M19 9l-7 7-7-7"
-                          />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Individual Reviews */}
-                  <div className="space-y-6">
-                    {sortedReviews.map((review, idx) => (
-                      <div
-                        key={idx}
-                        className="border-b border-gray-100 pb-6 last:border-b-0"
-                      >
-                        {/* Review Header */}
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                              <User className="w-6 h-6 text-gray-600" />
-                            </div>
-                            <p className="text-sm sm:text-base font-medium text-gray-900">
-                              {review.user}
-                            </p>
-                          </div>
-                          <span className="text-sm text-gray-500 sm:ml-auto">
-                            {review.date}
-                          </span>
-                        </div>
-
-                        {/* Review Rating */}
-                        <div className="flex items-center gap-2 mb-3">
-                          <span className="text-sm text-gray-500">Rating:</span>
-                          <div className="flex">
-                            {[...Array(5)].map((_, idx) => (
-                              <Star
-                                key={idx}
-                                className={`w-4 h-4 sm:w-5 sm:h-5 ${
-                                  idx < review.rating
-                                    ? "fill-yellow-400 text-yellow-400"
-                                    : "fill-gray-300 text-gray-300"
-                                }`}
-                              />
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Review Comment */}
-                        <p className="text-sm text-gray-700 mb-4">
-                          {review.comment}
-                        </p>
-
-                        {/* Review Actions */}
-                        <div className="flex items-center gap-4 text-sm">
-                          <button className="text-red-900 hover:text-red-700 transition-colors">
-                            Reply
-                          </button>
-                          <div className="flex items-center gap-1">
-                            <ThumbsUp className="w-4 h-4" />
-                            <span>10</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <ThumbsDown className="w-4 h-4" />
-                            <span>0</span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+              <Reviews variant="mobile" productId={product.productId}/>
             </div>
 
             {/* Product Details - Desktop */}
@@ -772,7 +885,7 @@ export function ProductClient({ product, similarProducts }) {
                 </div>
               </div>
 
-              {/* Delivery Section */}
+              {/* Delivery Section - Desktop */}
               <div className="mb-8">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-1 h-4 bg-red-900 rounded-full"></div>
@@ -783,29 +896,96 @@ export function ProductClient({ product, similarProducts }) {
                     <input
                       type="text"
                       value={pincode}
-                      onChange={(e) => setPincode(e.target.value)}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, '').slice(0, 6);
+                        setPincode(value);
+                      }}
                       placeholder="Enter pincode"
                       className="px-3 py-2 border border-gray-300 rounded-md flex-1 focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent"
+                      maxLength={6}
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                     />
-                    <button className="px-4 py-2 bg-red-900 text-white rounded-md hover:bg-red-800 transition-colors text-sm font-medium">
-                      Check
+                    <button 
+                      onClick={() => checkDelivery()}
+                      disabled={isCheckingDelivery || pincode.length !== 6}
+                      className="px-4 py-2 bg-red-900 text-white rounded-md hover:bg-red-800 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 min-w-[80px]"
+                    >
+                      {isCheckingDelivery ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Checking...
+                        </>
+                      ) : (
+                        "Check"
+                      )}
                     </button>
                   </div>
+
+                  {/* Delivery Results */}
                   <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      <p className="text-red-900 text-sm font-medium">
-                        Delivery by 31st January, Friday |
-                        <span className="text-gray-400 line-through ml-2">₹60</span>
-                        <span className="text-green-600 ml-1">FREE</span>
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                      <p className="text-gray-600 text-sm">
-                        If order before 9:30 P.M
-                      </p>
-                    </div>
+                    {deliveryError && (
+                      <div className="flex items-center gap-2 text-red-600 text-sm">
+                        <AlertCircle className="w-4 h-4" />
+                        <span>{deliveryError}</span>
+                      </div>
+                    )}
+                    
+                    {deliveryInfo && (
+                      <div className="space-y-2">
+                        {/* Location Info */}
+                        <div className="flex items-center gap-2">
+                          <MapPin className="w-4 h-4 text-green-600" />
+                          <span className="text-sm font-medium text-gray-800">
+                            {deliveryInfo.city}, {deliveryInfo.district}
+                          </span>
+                        </div>
+                        
+                        {/* Delivery Date */}
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                          <p className="text-red-900 text-sm font-medium">
+                            Delivery by {formatDeliveryDate()} |
+                            <span className="text-gray-400 line-through ml-2">₹60</span>
+                            <span className="text-green-600 ml-1">FREE</span>
+                          </p>
+                        </div>
+                        
+                        {/* Delivery Options */}
+                        <div className="space-y-1">
+                          {deliveryInfo.cod === "Y" && (
+                            <div className="flex items-center gap-2">
+                              <CheckCircle className="w-3 h-3 text-green-500" />
+                              <span className="text-xs text-gray-600">Cash on Delivery Available</span>
+                            </div>
+                          )}
+                          
+                          {deliveryInfo.pre_paid === "Y" && (
+                            <div className="flex items-center gap-2">
+                              <CheckCircle className="w-3 h-3 text-green-500" />
+                              <span className="text-xs text-gray-600">Prepaid Orders Accepted</span>
+                            </div>
+                          )}
+                          
+                          <div className="flex items-center gap-2">
+                            <Clock className="w-3 h-3 text-blue-500" />
+                            <span className="text-xs text-gray-600">
+                              Order before 9:30 PM for faster delivery
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Default message when no pincode entered */}
+                    {!hasCheckedDelivery && !deliveryError && !deliveryInfo && (
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <p className="text-gray-600 text-sm">
+                          {pincode.length === 6 ? "Click 'Check' to verify delivery" : "Enter 6-digit pincode to check delivery"}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -867,154 +1047,8 @@ export function ProductClient({ product, similarProducts }) {
                 </div>
               </div>
 
-              {/* Reviews Section */}
-              <div className="mt-12 lg:mt-16">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-1 h-6 bg-red-900 rounded-full"></div>
-                  <h3 className="font-semibold text-xl sm:text-2xl lg:text-3xl text-gray-900">
-                    Customer Reviews
-                  </h3>
-                </div>
-
-                {/* Rating Overview */}
-                <div className="bg-gray-50 rounded-lg p-6 border-l-4 border-red-900 mb-6">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-gray-200">
-                    <div className="flex items-center gap-4">
-                      <div className="flex">
-                        {[...Array(5)].map((_, idx) => (
-                          <Star
-                            key={idx}
-                            onClick={() => setUserRating(idx + 1)}
-                            className={`w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 cursor-pointer transition-all duration-200 ${
-                              idx < userRating
-                                ? "fill-red-900 text-red-900 hover:scale-110"
-                                : "fill-gray-300 text-gray-300 hover:scale-110 hover:fill-red-300"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      <div className="text-center">
-                        <span className="text-2xl font-bold text-gray-900">
-                          {userRating || reviews.rating}
-                        </span>
-                        <p className="text-sm text-gray-600">out of 5</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Rating Breakdown */}
-                  <div className="space-y-3 my-8">
-                    {reviews.reviews.map(({ stars, count }) => (
-                      <div key={stars} className="flex items-center gap-3">
-                        <span className="w-3 text-sm font-medium">{stars}</span>
-                        <div className="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-gradient-to-r from-red-900 to-red-700 transition-all duration-500 rounded-full"
-                            style={{ width: `${(count / 48) * 100}%` }}
-                          />
-                        </div>
-                        <span className="w-8 text-sm text-gray-600 font-medium">
-                          {count}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Sort Dropdown */}
-                  <div className="mb-6">
-                    <div className="relative inline-block">
-                      <select
-                        className="appearance-none border border-gray-300 rounded-lg py-2 px-4 pr-8 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent w-40 font-medium"
-                        value={sortOrder}
-                        onChange={(e) => setSortOrder(e.target.value)}
-                      >
-                        <option value="Newest">Newest First</option>
-                        <option value="Oldest">Oldest First</option>
-                      </select>
-                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
-                        <svg
-                          className="h-4 w-4 text-gray-500"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M19 9l-7 7-7-7"
-                          />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Individual Reviews */}
-                  <div className="space-y-6">
-                    {sortedReviews.map((review, idx) => (
-                      <div
-                        key={idx}
-                        className="bg-white rounded-lg p-4 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200"
-                      >
-                        {/* Review Header */}
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-r from-red-900 to-red-700 rounded-full flex items-center justify-center">
-                              <User className="w-6 h-6 text-white" />
-                            </div>
-                            <p className="text-sm sm:text-base font-medium text-gray-900">
-                              {review.user}
-                            </p>
-                          </div>
-                          <span className="text-sm text-gray-500 sm:ml-auto bg-gray-100 px-2 py-1 rounded">
-                            {review.date}
-                          </span>
-                        </div>
-
-                        {/* Review Rating */}
-                        <div className="flex items-center gap-2 mb-3">
-                          <span className="text-sm text-gray-500 font-medium">Rating:</span>
-                          <div className="flex">
-                            {[...Array(5)].map((_, idx) => (
-                              <Star
-                                key={idx}
-                                className={`w-4 h-4 sm:w-5 sm:h-5 ${
-                                  idx < review.rating
-                                    ? "fill-yellow-400 text-yellow-400"
-                                    : "fill-gray-300 text-gray-300"
-                                }`}
-                              />
-                            ))}
-                          </div>
-                          <span className="text-sm font-medium text-gray-700 ml-2">
-                            ({review.rating}/5)
-                          </span>
-                        </div>
-
-                        {/* Review Comment */}
-                        <p className="text-sm text-gray-700 mb-4 bg-gray-50 p-3 rounded italic">
-                          "{review.comment}"
-                        </p>
-
-                        {/* Review Actions */}
-                        <div className="flex items-center gap-4 text-sm">
-                          <button className="text-red-900 hover:text-red-700 transition-colors font-medium hover:underline">
-                            Reply
-                          </button>
-                          <div className="flex items-center gap-1 hover:bg-green-50 px-2 py-1 rounded transition-colors">
-                            <ThumbsUp className="w-4 h-4 text-green-600" />
-                            <span className="text-green-600 font-medium">10</span>
-                          </div>
-                          <div className="flex items-center gap-1 hover:bg-red-50 px-2 py-1 rounded transition-colors">
-                            <ThumbsDown className="w-3 h-3 text-red-500" />
-                            <span className="text-red-500 font-medium text-xs">0</span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+              {/* Reviews Section desktop */}
+              <Reviews variant="desktop" productId={product.productId}/>
             </div>
           </div>
 
