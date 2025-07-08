@@ -1,9 +1,25 @@
 import React from 'react'
 import LoginPage from './Component/Login'
-export const metadata={
-  title:"Access Your Gulbhahar Account",
-  description:" Log in to your Gulbhahar account to see orders and wishlist and track your handcrafted mirrorwork juttis in one space."
+
+export async function generateMetadata() {
+  return {
+    title:"Login to Your Account - Gulbhahar Jutti Online Store",
+  description:"Access your Gulbhahar account to track orders, manage wishlist, and enjoy personalized shopping. Secure login to your favorite jutti destination.",
+    alternates: {
+      canonical: "https://www.gulbhahar.com/login",
+    },
+    openGraph: {
+      title:"Login to Your Account - Gulbhahar Jutti Online Store",
+  description:"Access your Gulbhahar account to track orders, manage wishlist, and enjoy personalized shopping. Secure login to your favorite jutti destination.",
+      type: "website",
+      locale: "en_US",
+      url: "https://www.gulbhahar.com/login",
+      siteName: "Gulbhahar",
+    },
+  };
 }
+
+
 
 const page = () => {
   return (

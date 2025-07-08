@@ -1,9 +1,27 @@
 import React from 'react'
 import Component from "@/app/about/Component/About"
-export const metadata ={
-  title:"About Gulbhahar – Tradition in every step",
-  description:"Read about Gulbhahar's journey in reviving handcrafted mirrorwork juttis. Grounded in tradition, made with love by artisans."
+
+export async function generateMetadata() {
+  return { 
+    title: ' About Gulbhahar - Handcrafted Juttis - Tradition In Every Step',
+    description: "Discover Gulbhahar's heritage of crafting premium handmade jutis. Learn about our artisan tradition, quality craftsmanship, and commitment to authentic Indian footwear.",
+    icons: {
+      icon: "/logo.png",
+    },
+    alternates: {
+      canonical: 'https://www.gulbhahar.com/about', 
+    },
+    openGraph: {
+      title: ' About Gulbhahar - Handcrafted Juttis - Tradition In Every Step',
+    description: "Discover Gulbhahar's heritage of crafting premium handmade jutis. Learn about our artisan tradition, quality craftsmanship, and commitment to authentic Indian footwear.",
+      type: 'website',
+      locale: 'en_US',
+      url: 'https://www.gulbhahar.com/about', 
+      siteName: 'Gulbhahar', 
+    },
+  };
 }
+
 
 const page = () => {
   return (

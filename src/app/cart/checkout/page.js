@@ -1,13 +1,28 @@
-import React from 'react'
-import CheckoutComponent from './components/Checkout'
-export const metadata={
-  title:"Secure Checkout – Gulbhahar",
-  description:"Purchase your handcrafted mirrorwork juttis securely and easily. Review your cart and checkout for your favourite Gulbhahar mirrorwork juttis."
+import React from "react";
+import CheckoutComponent from "./components/Checkout";
+
+
+export async function generateMetadata() {
+  return {
+    title: "Checkout - Complete Your Gulbhahar Jutti Purchase - Securely",
+    description:
+      "Complete your Gulbhahar jutti purchase securely. Fast checkout process with multiple payment options and trusted delivery. Finish your order in just a few clicks.",
+    alternates: {
+      canonical: "https://www.gulbhahar.com/cart/checkout",
+    },
+    openGraph: {
+      title: "Checkout - Complete Your Gulbhahar Jutti Purchase - Securely",
+    description:
+      "Complete your Gulbhahar jutti purchase securely. Fast checkout process with multiple payment options and trusted delivery. Finish your order in just a few clicks.",
+      type: "website",
+      locale: "en_US",
+      url: "https://www.gulbhahar.com/cart/checkout",
+      siteName: "Gulbhahar",
+    },
+  };
 }
 const page = () => {
-  return (
-    <CheckoutComponent  />
-  )
-}
+  return <CheckoutComponent />;
+};
 
-export default page
+export default page;
