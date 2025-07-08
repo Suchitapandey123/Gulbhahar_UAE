@@ -144,7 +144,6 @@ const KotakPaymentTest = () => {
     order_id: `TEST_${Date.now()}`,
     amount: '1.00',
     billing_name: 'Test User',
-    currency: 'INR',
     billing_tel: '9999999999',
     billing_email: 'test@example.com'
   });
