@@ -109,7 +109,8 @@ const LuxuryCulture = () => {
       title: "Handwoven Textiles",
       subtitle: "Banarasi & Silk Weaving",
       description: "Handwoven textiles embody the essence of true Indian craftsmanship. They are a confluence of tradition and artistic expression. Banarasi textiles are among the finest celebrated in India. They are well known for their opulent silk weaving and intricate motifs reflecting the splendour of Indo-Persian art.",
-      image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-6.png",
+      image: "/Lal-ishq/lal-ishq-2.jpg",
+      // image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-6.png",
       color: "from-purple-700 via-indigo-600 to-blue-500",
       accent: "border-purple-400",
       heritage: "800+ Years",
@@ -120,7 +121,8 @@ const LuxuryCulture = () => {
       title: "Leather Artistry",
       subtitle: "Traditional Juttiwork",
       description: "Master craftsmen shape premium leather into exquisite footwear, each pair telling a story of skill, tradition, and timeless elegance.",
-      image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-7.png",
+      image: "/Lal-ishq/lal-ishq-4.jpg",
+      // image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-7.png",
       color: "from-emerald-700 via-teal-600 to-cyan-500",
       accent: "border-emerald-400",
       heritage: "500+ Years",
@@ -131,7 +133,8 @@ const LuxuryCulture = () => {
       title: "Gemstone Craft",
       subtitle: "Crystal Embellishment & Kundan Work ",
       description: "Gemstone Craft is a sparkling display of India’s ornamental legacy, highlighting the encrustation of stones through various intricate techniques such as crystal embellishment and Kundan work. Crystal embellishment is when sparkling stones are added to give an effect of twinkle or shine.",
-      image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-8.png",
+      image: "/Lal-ishq/lal-ishq-5.jpg",
+      // image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-8.png",
       color: "from-rose-700 via-pink-600 to-red-500",
       accent: "border-rose-400",
       heritage: "600+ Years",
@@ -142,7 +145,8 @@ const LuxuryCulture = () => {
       title: "Ornate Metals",
       subtitle: "Gota Patti, Sequins & Foil Work",
       description: "Ornate Metals offers juttis bathed in timeless glimmer with a unique Gota Patti, sequins and foil work that pair traditional metallic artistry with a contemporary design approach. Juttis are a unique pair of footwear to enjoy the festive spirit. Wear them to any occasion and can feel the glam! Ornate metals + juttis = elegance and pride in heritage. We bring culture straight to your feet and a moment of traditional Indian luxury to the everyday!",
-      image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-9.png",
+      image: "/Lal-ishq/lal-ishq-6.jpg",
+      // image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-4.png",
       color: "from-gray-700 via-slate-600 to-zinc-500",
       accent: "border-gray-400",
       heritage: "700+ Years",
@@ -231,7 +235,7 @@ const LuxuryCulture = () => {
                 <div className={`relative w-full h-full bg-gradient-to-br ${heritageElements[0].color} rounded-3xl overflow-hidden shadow-2xl ${heritageElements[0].accent} border-2`}>
                   <div className="absolute inset-0">
                     <Image
-                      src={`https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-4.png`}
+                      src={`/Lal-ishq/lal-ishq-2.jpg`}
                       alt={heritageElements[0].title}
                       fill
                       priority
@@ -270,7 +274,7 @@ const LuxuryCulture = () => {
                 <div className={`relative w-full h-full bg-gradient-to-br ${heritageElements[1].color} rounded-2xl overflow-hidden shadow-xl ${heritageElements[1].accent} border-2`}>
                   <div className="absolute inset-0">
                     <Image
-                      src={`https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-5.png`}
+                      src={`/Lal-ishq/lal-ishq-1.jpg`}
                       alt={heritageElements[1].title}
                       fill
                       priority
@@ -302,7 +306,7 @@ const LuxuryCulture = () => {
                 <div className={`relative w-full h-full bg-gradient-to-br ${heritageElements[2].color} rounded-2xl overflow-hidden shadow-xl ${heritageElements[2].accent} border-2`}>
                   <div className="absolute inset-0">
                     <Image
-                      src={`https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-3.png`}
+                      src={`/Lal-ishq/lal-ishq-4.jpg`}
                       alt={heritageElements[2].title}
                       fill
                       priority
@@ -333,7 +337,7 @@ const LuxuryCulture = () => {
                 <div className={`relative w-full h-full bg-gradient-to-br ${heritageElements[3].color} rounded-2xl overflow-hidden shadow-xl ${heritageElements[3].accent} border-2`}>
                   <div className="absolute inset-0">
                     <Image
-                      src={`https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-2.png`}
+                      src={`/Lal-ishq/lal-ishq-6.jpg`}
                       alt={heritageElements[3].title}
                       fill
                       priority
@@ -366,7 +370,7 @@ const LuxuryCulture = () => {
                 <div className={`relative w-full h-full bg-gradient-to-br ${heritageElements[4].color} rounded-2xl overflow-hidden shadow-xl ${heritageElements[4].accent} border-2`}>
                   <div className="absolute inset-0">
                     <Image
-                      src={`https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-2.png`}
+                      src={`/Lal-ishq/lal-ishq-3.jpg`}
                       alt={heritageElements[4].title}
                       fill
                       priority
@@ -394,75 +398,77 @@ const LuxuryCulture = () => {
 
           {/* Tablet layout */}
           <div className="hidden md:block lg:hidden">
-          <Link href="/culture">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {heritageElements.map((element, index) => (
-                <motion.div 
-                  key={element.id} 
-                  variants={cardVariants}
-                  className={`relative aspect-[4/3] bg-gradient-to-br ${element.color} rounded-2xl overflow-hidden border-2 ${element.accent}`}
-                >
-                  <div className="absolute inset-0">
-                    <Image
-                      src={element.image}
-                      alt={element.title}
-                      fill
-                      priority
-                      className="object-cover opacity-50"
-                    />
-                  </div>
-                  <div className="relative z-10 p-4 md:p-6 h-full flex flex-col justify-end">
-                    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 md:p-4">
-                      <h3 className="text-xl md:text-2xl font-light text-white mb-1 md:mb-2">{element.title}</h3>
-                      <p className="text-white/80 text-sm">{element.subtitle}</p>
-                      <p className="text-white/70 text-xs mt-2">{element.region}</p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </Link>
+  <Link href="/culture">
+    <div className="grid grid-cols-1 sm:grid-cols-2 my-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {heritageElements.map((element, index) => (
+        <motion.div 
+          key={element.id} 
+          variants={cardVariants}
+          className={`relative aspect-[4/3] bg-gradient-to-br ${element.color} rounded-2xl overflow-hidden border-2 ${element.accent}`}
+        >
+          <div className="absolute inset-0">
+            <Image
+              src={element.image}
+              alt={element.title}
+              fill
+              priority
+              className="object-cover mt-2 opacity-50"
+            />
           </div>
+          <div className="relative z-10 p-4 md:p-6 h-full flex flex-col justify-end">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 md:p-4">
+              <h3 className="text-xl md:text-2xl font-light text-white mb-1 md:mb-2">{element.title}</h3>
+              <p className="text-white/80 text-sm">{element.subtitle}</p>
+              <p className="text-white/70 text-xs mt-2">{element.region}</p>
+            </div>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  </Link>
+</div>
 
           {/* Mobile layout */}
-          <div className="md:hidden space-y-8">
-          <Link href="/culture">
-            {heritageElements.map((element, index) => (
-              <motion.div
-                key={element.id}
-                variants={cardVariants}
-                className={`relative  aspect-[3/4] bg-gradient-to-br ${element.color} rounded-2xl overflow-hidden  shadow-xl border-2 ${element.accent}`}
-              >
-                <div className="absolute  inset-0">
-                  <Image
-                    src={element.image}
-                    alt={element.title}
-                    priority
-                    fill
-                    className="object-cover opacity-50"
-                  />
-                </div>
-                <div className="relative z-10 sm:p-4 md:p-6 h-full flex flex-col justify-between">
-                  <div className="flex items-start justify-between">
-                    <div className="text-right">
-                      <div className="bg-white/20 backdrop-blur-sm rounded-lg px-1 py-1 mb-1">
-                        <span className="text-white/90 text-xs">{element.region}</span>
-                      </div>
-                      <div className="bg-amber-500/30 backdrop-blur-sm rounded-lg px-2 py-1">
-                        <span className="text-white text-xs">{element.heritage}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 md:p-5">
-                    <h3 className="text-xl md:text-2xl font-light text-white mb-1 md:mb-2">{element.title}</h3>
-                    <p className="text-white/90 text-base md:text-lg mb-2 md:mb-3">{element.subtitle}</p>
-                    <p className="text-white/80 text-sm leading-relaxed">{element.description}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </Link>
+          <div className="md:hidden">
+  <Link href="/culture">
+    <div className="space-y-8">
+      {heritageElements.map((element, index) => (
+        <motion.div
+          key={element.id}
+          variants={cardVariants}
+          className={`relative aspect-[3/4] bg-gradient-to-br ${element.color} rounded-2xl overflow-hidden shadow-xl border-2 ${element.accent}`}
+        >
+          <div className="absolute inset-0">
+            <Image
+              src={element.image}
+              alt={element.title}
+              priority
+              fill
+              className="object-cover opacity-50"
+            />
           </div>
+          <div className="relative z-10 sm:p-4 md:p-6 h-full flex flex-col justify-between">
+            <div className="flex items-start justify-between">
+              <div className="text-right">
+                <div className="bg-white/20 backdrop-blur-sm rounded-lg px-1 py-1 mb-1">
+                  <span className="text-white/90 text-xs">{element.region}</span>
+                </div>
+                <div className="bg-amber-500/30 backdrop-blur-sm rounded-lg px-2 py-1">
+                  <span className="text-white text-xs">{element.heritage}</span>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 md:p-5">
+              <h3 className="text-xl md:text-2xl font-light text-white mb-1 md:mb-2">{element.title}</h3>
+              <p className="text-white/90 text-base md:text-lg mb-2 md:mb-3">{element.subtitle}</p>
+              <p className="text-white/80 text-sm leading-relaxed">{element.description}</p>
+            </div>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  </Link>
+</div>
         </motion.div>
 
         {/* CTA */}
