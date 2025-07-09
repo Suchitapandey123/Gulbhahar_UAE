@@ -1,4 +1,5 @@
 "use client"
+import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
 import { FaGoogle, FaFacebook, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { FiUser, FiLock, FiMail, FiMapPin, FiPhone, FiShield, FiCheck, FiCamera, FiUpload } from 'react-icons/fi';
@@ -29,10 +30,15 @@ const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   
   const slides = [
-    "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-10.png",
-    "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-11.png", 
-    "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-12.png",
-    "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-13.png",
+    // "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-10.png",
+    // "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-11.png", 
+    // "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-12.png",
+    // "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-13.png",
+    "/Anarkali/anarkali-4.jpg",
+    "/Lal-ishq/lal-ishq-2.jpg",
+    "/Gulabo/gulabo-3.jpg", 
+    // "/Laddu/laddo-3.jpg",
+    "/Lal-ishq/lal-ishq-3.jpg",
   ];
 
   useEffect(() => {
@@ -44,47 +50,49 @@ const Carousel = () => {
   }, [slides.length]);
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-gradient-to-br from-red-100 to-rose-200 rounded-2xl shadow-2xl">
-      <div className="h-full w-full">
-        {slides.map((slide, index) => (
-          <div
-            key={index}
-            className={`absolute h-full w-full transition-all duration-1000 ${
-              index === currentSlide ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
-            }`}
-          >
-            <img
-              src={slide}
-              alt={`Carousel slide ${index + 1}`}
-              className="h-full w-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-red-900/40 via-transparent to-red-900/20"></div>
-          </div>
-        ))}
+    <div className="relative h-full w-full max-h-[85vh] overflow-hidden bg-gradient-to-br from-red-100 to-rose-200 rounded-2xl shadow-2xl">
+  <div className="h-full w-full">
+    {slides.map((slide, index) => (
+      <div
+        key={index}
+        className={`absolute h-full w-full transition-all duration-1000 ${
+          index === currentSlide ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
+        }`}
+      >
+        <Image
+          src={slide}
+          alt={`Carousel slide ${index + 1}`}
+          fill
+          priority
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-red-900/40 via-transparent to-red-900/20"></div>
       </div>
-      
-      <div className="absolute inset-0 flex flex-col justify-end p-8">
-        <div className="text-white">
-          <h3 className="text-3xl font-bold mb-3">Join Our Community</h3>
-          <p className="text-red-100 text-lg">Create your account and start your journey with us</p>
-        </div>
-      </div>
-      
-      <div className="absolute bottom-6 left-0 right-0 flex justify-center space-x-3">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentSlide(index)}
-            className={`h-2 rounded-full transition-all duration-300 transform hover:scale-125 ${
-              index === currentSlide 
-                ? 'w-8 bg-white shadow-lg' 
-                : 'w-2 bg-white/50 hover:bg-white/70'
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
-      </div>
+    ))}
+  </div>
+  
+  <div className="absolute inset-0 flex flex-col justify-end p-8">
+    <div className="text-white">
+      <h3 className="text-3xl font-bold mb-3">Join Our Community</h3>
+      <p className="text-red-100 text-lg">Create your account and start your journey with us</p>
     </div>
+  </div>
+  
+  <div className="absolute bottom-6 left-0 right-0 flex justify-center space-x-3">
+    {slides.map((_, index) => (
+      <button
+        key={index}
+        onClick={() => setCurrentSlide(index)}
+        className={`h-2 rounded-full transition-all duration-300 transform hover:scale-125 ${
+          index === currentSlide 
+            ? 'w-8 bg-white shadow-lg' 
+            : 'w-2 bg-white/50 hover:bg-white/70'
+        }`}
+        aria-label={`Go to slide ${index + 1}`}
+      />
+    ))}
+  </div>
+</div>
   );
 };
 
@@ -755,7 +763,9 @@ const SignupPage = () => {
       <div className="bg-white rounded-2xl shadow-xl border border-red-100 p-8 text-center space-y-8">
         <div className="w-32 h-32 bg-red-100 rounded-full flex items-center justify-center mx-auto relative overflow-hidden border-4 border-red-200">
           {previewImage ? (
-            <img 
+            <Image
+              fill
+              priority
               src={previewImage} 
               alt="Profile preview" 
               className="w-full h-full object-cover"
@@ -936,18 +946,7 @@ const SignupPage = () => {
   );
 
   return (
-    <div className='w-full min-h-screen '>
-      {/* Header */}
-      <header className="relative z-10 bg-white/80 backdrop-blur-sm border-b border-red-100 shadow-sm">
-        <div className="flex items-center justify-center py-6">
-          <div className="max-w-[1600px] mx-auto flex justify-center items-center">
-            <div className="text-3xl font-bold bg-gradient-to-r from-red-900 to-rose-700 bg-clip-text text-transparent">
-              LOGO
-            </div>
-          </div>
-        </div>
-      </header>
-
+    <div className='w-full min-h-screen mt-20'>
       {/* Main Content */}
       <div className="flex min-h-[calc(100vh-100px)] w-full items-center justify-center py-8">
         <div className="mx-auto flex w-full max-w-[1600px] flex-col-reverse md:flex-row gap-8 px-6">

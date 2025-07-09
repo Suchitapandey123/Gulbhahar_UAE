@@ -13,7 +13,11 @@ const LuxuryCulturePage = () => {
       subtitle: "Zardozi & Gold Thread Work",
       description: "Royal embroidery is a classic form with beautiful detailing and a rich finish. It is associated with India's royal heritage, often using zardozi. It is a traditional embroidery technique using gold and silver threads to form frequently elaborate patterns. It is most popularly used on lush and opulent fabrics, like silk and velvet.",
       fullDescription: "Zardozi embroidery represents the pinnacle of Indian textile artistry, tracing its origins to the Mughal era. Master artisans spend years perfecting this intricate craft, using real gold and silver threads to create patterns that tell stories of royal courts and ancient traditions. Each piece requires hundreds of hours of meticulous hand work, making every creation a unique masterpiece.",
-      image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-1.png",
+      image: "/Anarkali/anarkali-4.jpg",
+      // image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-1.png",
+    //  
+    // 
+    // "/Lal-ishq/lal-ishq-3.jpg",
       color: "from-amber-700 via-yellow-600 to-orange-500",
       accent: "border-amber-400",
       heritage: "1000+ Years",
@@ -29,7 +33,7 @@ const LuxuryCulturePage = () => {
       subtitle: "Banarasi & Silk Weaving",
       description: "Handwoven textiles embody the essence of true Indian craftsmanship. They are a confluence of tradition and artistic expression. Banarasi textiles are among the finest celebrated in India. They are well known for their opulent silk weaving and intricate motifs reflecting the splendour of Indo-Persian art.",
       fullDescription: "Banarasi weaving is a 1,500-year-old tradition that has been passed down through generations of skilled weavers. The intricate patterns are created using a complex technique that involves multiple silk threads and gold zari work. Each saree can take anywhere from 15 days to 6 months to complete, depending on the complexity of the design.",
-      image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-6.png",
+      image: "/Lal-ishq/lal-ishq-2.jpg",
       color: "from-purple-700 via-indigo-600 to-blue-500",
       accent: "border-purple-400",
       heritage: "800+ Years",
@@ -45,7 +49,8 @@ const LuxuryCulturePage = () => {
       subtitle: "Traditional Juttiwork",
       description: "Master craftsmen shape premium leather into exquisite footwear, each pair telling a story of skill, tradition, and timeless elegance.",
       fullDescription: "Traditional juttiwork represents centuries of leather craftsmanship refined in the royal courts of Punjab and Rajasthan. Skilled artisans use time-honored techniques to create footwear that combines comfort with artistic beauty. The process involves multiple stages of leather treatment, cutting, stitching, and embellishment.",
-      image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-7.png",
+      image: "/Gulabo/gulabo-3.jpg",
+      // image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-7.png",
       color: "from-emerald-700 via-teal-600 to-cyan-500",
       accent: "border-emerald-400",
       heritage: "500+ Years",
@@ -61,7 +66,8 @@ const LuxuryCulturePage = () => {
       subtitle: "Crystal Embellishment & Kundan Work",
       description: "Gemstone Craft is a sparkling display of India's ornamental legacy, highlighting the encrustation of stones through various intricate techniques such as crystal embellishment and Kundan work. Crystal embellishment is when sparkling stones are added to give an effect of twinkle or shine.",
       fullDescription: "Kundan work is a traditional form of Indian gemstone jewelry that involves setting uncut diamonds and precious stones in gold foil. This ancient technique, dating back to the Mughal era, creates stunning pieces that catch and reflect light beautifully. The process requires exceptional skill and patience from master craftsmen.",
-      image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-8.png",
+      image: "/Laddu/laddo-3.jpg",
+      // image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-8.png",
       color: "from-rose-700 via-pink-600 to-red-500",
       accent: "border-rose-400",
       heritage: "600+ Years",
@@ -189,8 +195,7 @@ const LuxuryCulturePage = () => {
             className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-full font-light text-lg shadow-2xl border border-amber-400/30 hover:from-amber-700 hover:to-orange-700 transition-all duration-300 group"
           >
             Explore Our Heritage
-            <ChevronDown classNa
-            me="ml-2 w-5 h-5 group-hover:translate-y-1 transition-transform" />
+            <ChevronDown className="ml-2 w-5 h-5 group-hover:translate-y-1 transition-transform" />
           </button>
         </div>
       </section>
