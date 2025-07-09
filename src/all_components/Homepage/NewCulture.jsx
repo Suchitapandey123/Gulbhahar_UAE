@@ -97,7 +97,8 @@ const LuxuryCulture = () => {
       title: "Royal Embroidery",
       subtitle: "Zardozi & Gold Thread Work",
       description: "Royal embroidery is a classic form with beautiful detailing and a rich finish. It is associated with India's royal heritage, often using zardozi. It is a traditional embroidery technique using gold and silver threads to form frequently elaborate patterns. It is most popularly used on lush and opulent fabrics, like silk and velvet.",
-      image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-1.png",
+      image: "/Lal-ishq/lal-ishq-1.jpg",
+      // image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-1.png",
       color: "from-amber-700 via-yellow-600 to-orange-500",
       accent: "border-amber-400",
       heritage: "1000+ Years",
@@ -178,6 +179,7 @@ const LuxuryCulture = () => {
                 alt="Cultural Heritage"
                 width={600}
                 height={200}
+                priority
                 className="w-full max-w-7xl h-auto drop-shadow-2xl"
               />
             </div>
@@ -232,7 +234,8 @@ const LuxuryCulture = () => {
                       src={`https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-4.png`}
                       alt={heritageElements[0].title}
                       fill
-                      className="object-cover opacity-20"
+                      priority
+                      className="object-cover opacity-50"
                     />
                   </div>
                   
@@ -270,7 +273,8 @@ const LuxuryCulture = () => {
                       src={`https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-5.png`}
                       alt={heritageElements[1].title}
                       fill
-                      className="object-cover opacity-30"
+                      priority
+                      className="object-cover opacity-50"
                     />
                   </div>
                   <div className="relative z-10 p-4 md:p-6 h-full flex flex-col justify-between">
@@ -301,7 +305,8 @@ const LuxuryCulture = () => {
                       src={`https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-3.png`}
                       alt={heritageElements[2].title}
                       fill
-                      className="object-cover opacity-25"
+                      priority
+                      className="object-cover opacity-50"
                     />
                   </div>
                   <div className="relative z-10 p-4 md:p-6 h-full flex flex-col justify-between">
@@ -331,7 +336,8 @@ const LuxuryCulture = () => {
                       src={`https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-2.png`}
                       alt={heritageElements[3].title}
                       fill
-                      className="object-cover opacity-30"
+                      priority
+                      className="object-cover opacity-50"
                     />
                   </div>
                   <div className="relative z-10 p-4 md:p-6 h-full flex flex-col justify-between">
@@ -345,7 +351,7 @@ const LuxuryCulture = () => {
                     <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 md:p-5">
                       <h3 className="text-2xl md:text-3xl font-light text-white mb-2 md:mb-3">{heritageElements[3].title}</h3>
                       <p className="text-white/80 text-base md:text-lg mb-2 md:mb-3">{heritageElements[3].subtitle}</p>
-                      <p className="text-white/70 text-sm leading-relaxed">{heritageElements[3].description}</p>
+                      <p className="text-white/70 text-sm leading-relaxed line-clamp-3">{heritageElements[3].description}</p>
                       <p className="text-white/60 text-xs mt-2">{heritageElements[3].region}</p>
                     </div>
                   </div>
@@ -363,7 +369,8 @@ const LuxuryCulture = () => {
                       src={`https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-2.png`}
                       alt={heritageElements[4].title}
                       fill
-                      className="object-cover opacity-40"
+                      priority
+                      className="object-cover opacity-50"
                     />
                   </div>
                   <div className="relative z-10 p-4 md:p-6 h-full flex flex-col justify-between">
@@ -375,7 +382,7 @@ const LuxuryCulture = () => {
                     <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 md:p-5">
                       <h3 className="text-xl md:text-2xl font-light text-white mb-1 md:mb-2">{heritageElements[4].title}</h3>
                       <p className="text-white/80 text-base md:text-lg mb-2 md:mb-3">{heritageElements[4].subtitle}</p>
-                      <p className="text-white/70 text-sm">{heritageElements[4].description}</p>
+                      <p className="text-white/70 text-sm line-clamp-3">{heritageElements[4].description}</p>
                       <p className="text-white/60 text-xs mt-2">{heritageElements[4].region}</p>
                     </div>
                   </div>
@@ -400,7 +407,8 @@ const LuxuryCulture = () => {
                       src={element.image}
                       alt={element.title}
                       fill
-                      className="object-cover opacity-20"
+                      priority
+                      className="object-cover opacity-50"
                     />
                   </div>
                   <div className="relative z-10 p-4 md:p-6 h-full flex flex-col justify-end">
@@ -429,8 +437,9 @@ const LuxuryCulture = () => {
                   <Image
                     src={element.image}
                     alt={element.title}
+                    priority
                     fill
-                    className="object-cover opacity-20"
+                    className="object-cover opacity-50"
                   />
                 </div>
                 <div className="relative z-10 sm:p-4 md:p-6 h-full flex flex-col justify-between">

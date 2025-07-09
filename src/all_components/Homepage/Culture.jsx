@@ -18,95 +18,6 @@ export default function Culture() {
 
   return (
     <>
-      {/* Hero Section */}
-      <motion.main
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        className="min-h-screen w-full hidden bg-gradient-to-br from-slate-50 to-amber-50/30 py-20"
-      >
-        <div className="max-w-7xl mx-auto px-4">
-          {/* Header */}
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h2 className="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-amber-600 to-red-600 bg-clip-text text-transparent mb-6">
-              Cultural Heritage
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Discover the timeless beauty and rich traditions that define our
-              cultural identity
-            </p>
-          </motion.div>
-
-          {/* Main Image */}
-          <motion.div
-            className="relative w-full max-w-md mx-auto mb-12"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-          >
-            <div className="relative aspect-square">
-              <div className="absolute inset-0 bg-gradient-to-br from-amber-400 to-orange-600" />
-              <div className="absolute inset-3 bg-white shadow-2xl overflow-hidden">
-                <Image
-                  src={
-                    "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-6.png"
-                  }
-                  alt="Cultural Heritage"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Gallery Grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
-            {[
-              { src: "/Image/0007.jpg", label: "Heritage" },
-              {
-                src: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-2.png",
-                label: "Tradition",
-              },
-              {
-                src: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-3.png",
-                label: "Artistry",
-              },
-              {
-                src: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-4.png",
-                label: "Legacy",
-              },
-            ].map((item, index) => (
-              <motion.div
-                key={index}
-                className="relative aspect-square group cursor-pointer"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-amber-400 to-orange-600" />
-                <div className="absolute inset-1 bg-white shadow-lg overflow-hidden">
-                  <Image
-                    src={`https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-1.png`}
-                    alt={item.label}
-                    fill
-                    priority
-                    className="object-cover"
-                  />
-                </div>
-                <div className="absolute bottom-2 left-2 bg-amber-600 text-white px-2 py-1 text-xs font-semibold">
-                  {item.label}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.main>
-
       {/* Showcase Section */}
       <section className="container mx-auto px-1 sm:px-4 py-16">
         <h1 className="text-3xl lg:text-5xl font-bold mb-12 text-customRed">
@@ -122,6 +33,7 @@ export default function Culture() {
               <div className="relative overflow-hidden h-full">
                 <Image
                   src={img}
+                  priority
                   alt={`showcase image ${i + 1}`}
                   fill
                   className="object-cover"
