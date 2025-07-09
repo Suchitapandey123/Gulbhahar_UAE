@@ -248,6 +248,7 @@ export default function Footer() {
                   alt="Gulbhahar Logo"
                   width={300}
                   height={150}
+                  priority
                   className="h-16 object-cover sm:h-16  lg:mx-0"
                 />
 
@@ -395,12 +396,14 @@ export default function Footer() {
                   src="/payment-cards/master-card-icon.png"
                   alt="Mastercard"
                   width={96}
+                  priority
                   height={32}
                   className="h-12 w-12 object-contain"
                 />
                 <Image
                   src="/payment-cards/visa-icon.png"
                   alt="Visa"
+                  priority
                   width={48}
                   height={32}
                   className="h-10 w-12 object-contain"
@@ -409,6 +412,7 @@ export default function Footer() {
                   src="/payment-cards/bhim-upi.png"
                   alt="UPI"
                   width={48}
+                  priority
                   height={32}
                   className="h-10 w-12 object-contain"
                 />

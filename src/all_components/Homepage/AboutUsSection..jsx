@@ -123,7 +123,7 @@ export default function AlternatingAbout() {
                     fill
                     className="object-cover hover:scale-105 transition-transform duration-300" // Subtle zoom on hover
                     sizes="(max-width: 1024px) 100vw, 50vw"
-                    priority={index === 0}
+                    priority
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
 
