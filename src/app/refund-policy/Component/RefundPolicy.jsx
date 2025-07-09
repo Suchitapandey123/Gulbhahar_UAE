@@ -333,7 +333,7 @@ terms: {
         </div>
         <div className="ml-13 space-y-4">
           <p className="text-sm sm:text-base text-gray-700">
-            Gulbhahar is committed to protecting the privacy of visitors to this site (SITE). At Gulbhahar, we want you to have an enjoyable shopping experience. While we must collect certain personal information, we respect and protect your right to privacy as outlined in this Privacy Policy.
+            Gulbhahar is committed to protecting the privacy of visitors to this site (gulbhahar.com). At Gulbhahar, we want you to have an enjoyable shopping experience. While we must collect certain personal information, we respect and protect your right to privacy as outlined in this Privacy Policy.
           </p>
           <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
             <p className="text-sm sm:text-base text-gray-700">

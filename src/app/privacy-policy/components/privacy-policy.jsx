@@ -29,6 +29,11 @@ import {
 // Mock TiltArrowUp component
 const TiltArrowUp = ({ className }) => <ChevronRight className={className} />;
 
+
+const RightArrow = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" className={className} height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-chevron-right-icon lucide-circle-chevron-right"><circle cx="12" cy="12" r="10"/><path d="m10 8 4 4-4 4"/></svg>
+);
+
 const Cookies = () => {
   const [activeTab, setActiveTab] = useState("privacy-policy");
 
@@ -334,7 +339,7 @@ terms: {
         </div>
         <div className="ml-13 space-y-4">
           <p className="text-sm sm:text-base text-gray-700">
-            Gulbhahar is committed to protecting the privacy of visitors to this site (SITE). At Gulbhahar, we want you to have an enjoyable shopping experience. While we must collect certain personal information, we respect and protect your right to privacy as outlined in this Privacy Policy.
+            Gulbhahar is committed to protecting the privacy of visitors to this site (gulbhahar.com). At Gulbhahar, we want you to have an enjoyable shopping experience. While we must collect certain personal information, we respect and protect your right to privacy as outlined in this Privacy Policy.
           </p>
           <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
             <p className="text-sm sm:text-base text-gray-700">
@@ -471,7 +476,7 @@ refund: {
                 <strong> S-12 Janta Market, Rajouri Garden Delhi , 110027,</strong> India within 30 Days in its original box packing and the invoice. Please mention your desired exchange piece along with the size on the invoice as well.
               </p>
               <p className="text-sm sm:text-base text-gray-700">
-                You may also mail us at <span className="font-bold text-red-800">gulbhahar1@gmail.com</span> for the same. We do not entertain refund & cancellation requests.
+                You may also mail us at <span className="font-bold text-red-800">support@gulbhahar.com</span> for the same. We do not entertain refund & cancellation requests.
               </p>
             </div>
           </div>
@@ -492,8 +497,11 @@ refund: {
               The Pairs can be exchanged for another size of the same style only. In case your desired size is unavailable with us, you could then exchange it for another style of a similar value.
             </p>
             <div className="bg-red-50 border-l-4 border-red-400 p-3 rounded-r">
-              <p className="text-sm sm:text-base font-semibold text-yellow-800">
-                Pairs bought on SALE price will not be exchanged or returned.
+              <p className="text-sm sm:text-base mb-1 flex gap-2 font-semibold text-yellow-800">
+              <RightArrow /> NO EXCHANGE OF ANY PRODUCTS
+              </p>
+              <p className="text-sm flex gap-2 sm:text-base font-semibold text-yellow-800">
+              <RightArrow /> NO RETURNS ON SALE PRODUCTS.
               </p>
             </div>
           </div>
@@ -513,8 +521,11 @@ refund: {
             </span>
           </div>
         </div>
-        <p className="text-sm sm:text-base text-gray-700 ml-13"> 
-          We do not entertain refunds & exchanges on International orders.
+        <p className="text-sm flex mb-1 gap-2 sm:text-base text-gray-700 ml-13"> 
+        <RightArrow /> Pairs bought at SALE price will not be exchanged or returned.
+        </p>
+        <p className="text-sm flex gap-2 sm:text-base text-gray-700 ml-13"> 
+          <RightArrow /> We do not entertain refunds & exchanges on International orders.
         </p>
       </div>
 
@@ -557,7 +568,7 @@ refund: {
         </div>
         <div className="ml-13 space-y-4">
           <p className="text-sm sm:text-base text-gray-700">
-            Gulbhahar is committed to protecting the privacy of visitors to this site (SITE). At Gulbhahar, we want you to have an enjoyable shopping experience. While we must collect certain personal information, we respect and protect your right to privacy as outlined in this Privacy Policy.
+            Gulbhahar is committed to protecting the privacy of visitors to this site (gulbhahar.com). At Gulbhahar, we want you to have an enjoyable shopping experience. While we must collect certain personal information, we respect and protect your right to privacy as outlined in this Privacy Policy.
           </p>
           <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
             <p className="text-sm sm:text-base text-gray-700">
@@ -585,57 +596,6 @@ refund: {
     </div>
   )
 },
-
-
-      
-
-
-      // terms: {
-      //   title: "Terms of Service",
-      //   icon: FileText,
-      //   content: (
-      //     <div className="space-y-6 sm:space-y-8">
-      //       <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 sm:p-6">
-      //         <div className="flex items-start gap-3">
-      //           <FileText className="h-5 w-5 text-blue-600 mt-1 flex-shrink-0" />
-      //           <div>
-      //             <h4 className="font-bold text-blue-900 mb-2">RETURNS & EXCHANGES</h4>
-      //             <p className="text-sm sm:text-base text-gray-700">
-
-      //             We use standard EURO sizes to help you pick the perfect size. However, if you still want to swap your pairs for another size then you may return them at 
-      //             </p>
-      //           </div>
-      //         </div>
-      //       </div>
-      //       <p className="text-gray-600">
-      //         <strong>  S-12 Janta Market, Rajouri Garden Delhi , 110027,</strong> India within 30 Days in its original box packing and the invoice. Please mention your desired exchange piece along with the size on the invoice as well. You may also mail us at <b> gulbhahar1@gmail.com </b>for the same. We do not entertain refund & cancellation requests.
-      //         </p>
-      //       <p className="text-gray-600">
-      //         The Pairs can be exchanged for another size of the same style only. In case your desired size is unavailable with us, you could then exchange it for another style of a similar value.
-      //       </p>
-      //     </div>
-      //   )
-      // },
-      // privacy: {
-      //   title: "Privacy Policy", 
-      //   icon: Lock,
-      //   content: (
-      //     <div className="space-y-6 sm:space-y-8">
-      //       <div className="bg-green-50 border-2 border-green-200 rounded-xl p-4 sm:p-6">
-      //         <div className="flex items-start gap-3">
-      //           <Lock className="h-5 w-5 text-green-600 mt-1 flex-shrink-0" />
-      //           <div>
-      //             <h4 className="font-bold text-green-900 mb-2">Privacy Policy</h4>
-      //             <p className="text-sm sm:text-base text-gray-700">
-      //               We take your privacy seriously. Learn how we collect, use, and protect your data.
-      //             </p>
-      //           </div>
-      //         </div>
-      //       </div>
-      //       <p className="text-gray-600">Privacy Policy content would go here...</p>
-      //     </div>
-      //   )
-      // }
       'privacy-policy': {
   title: "Privacy Policy", 
   icon: Lock,
