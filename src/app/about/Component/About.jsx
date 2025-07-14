@@ -27,7 +27,6 @@ const HeroSection = () => {
       style={{ scale, opacity }}
       className="relative min-h-screen mt-16 flex  justify-center overflow- px-2"
     >
-
       <div className="max-w-[1600px] mx-auto px-2 xs:px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
           <motion.div 
@@ -1262,7 +1261,7 @@ const UltimateHomePage = () => {
       <HeroSection />
       <StorySection />
       <TraditionSection />
-      <ArtisanSection />
+      {/* <ArtisanSection /> */}
       <ProcessSection />
       <CollectionsSection />
       <TestimonialsSection />
