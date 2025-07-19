@@ -1261,7 +1261,7 @@ const UltimateHomePage = () => {
       <HeroSection />
       <StorySection />
       <TraditionSection />
-      <ArtisanSection />
+      {/* <ArtisanSection /> */}
       <ProcessSection />
       <CollectionsSection />
       <TestimonialsSection />
