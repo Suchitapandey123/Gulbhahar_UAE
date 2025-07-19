@@ -66,12 +66,15 @@ const indianStates = [
   // Union Territories
   { value: "andaman-nicobar", label: "Andaman and Nicobar Islands" },
   { value: "chandigarh", label: "Chandigarh" },
-  { value: "dadra-nagar-haveli-daman-diu", label: "Dadra and Nagar Haveli and Daman and Diu" },
+  {
+    value: "dadra-nagar-haveli-daman-diu",
+    label: "Dadra and Nagar Haveli and Daman and Diu",
+  },
   { value: "delhi", label: "Delhi" },
   { value: "jammu-kashmir", label: "Jammu and Kashmir" },
   { value: "ladakh", label: "Ladakh" },
   { value: "lakshadweep", label: "Lakshadweep" },
-  { value: "puducherry", label: "Puducherry" }
+  { value: "puducherry", label: "Puducherry" },
 ];
 
 export default function CheckoutComponent() {
@@ -80,6 +83,8 @@ export default function CheckoutComponent() {
   const { showToast, ToastContainer } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const [shippingMethod, setShippingMethod] = useState("free");
+  const [isProcessing, setIsProcessing] = useState(false);
+
   const [postalCodeValidation, setPostalCodeValidation] = useState({
     isValidating: false,
     isValid: null,
@@ -272,61 +277,148 @@ export default function CheckoutComponent() {
     });
   };
 
-  const handlePayment = () => {
-    // Basic form validation
-    const requiredFields = ["fullName", "email", "phone"];
-    const missingFields = requiredFields.filter((field) => !formData[field]);
-
-    if (missingFields.length > 0) {
-      showToast(
-        `Please fill in all required fields: ${missingFields.join(", ")}`,
-        "error"
-      );
-      return;
-    }
-
-    // Validate postal code
-    if (formData.postalCode) {
-      if (postalCodeValidation.isValidating) {
-        showToast(
-          "Please wait for postal code validation to complete",
-          "warning"
-        );
-        return;
-      }
-
-      if (postalCodeValidation.isValid === false) {
-        showToast("Please enter a valid postal code for delivery", "error");
-        return;
-      }
-    }
-
-    // Check for ODA (Out of Delivery Area) surcharge
-    if (postalCodeValidation.deliveryInfo?.isODA) {
-      showToast(
-        "Note: This location may have additional delivery charges (ODA)",
-        "warning"
-      );
-    }
-
-    // Save form data to localStorage for payment page
+  const handlePayment = async () => {
     try {
+      setIsProcessing(true);
+
+      // Your existing validation code...
+      const requiredFields = ["fullName", "email", "phone"];
+      const missingFields = requiredFields.filter((field) => !formData[field]);
+
+      if (missingFields.length > 0) {
+        showToast(
+          `Please fill in all required fields: ${missingFields.join(", ")}`,
+          "error"
+        );
+        setIsProcessing(false);
+        return;
+      }
+
+      // Validate postal code
+      if (formData.postalCode) {
+        if (postalCodeValidation.isValidating) {
+          showToast(
+            "Please wait for postal code validation to complete",
+            "warning"
+          );
+          setIsProcessing(false);
+          return;
+        }
+
+        if (postalCodeValidation.isValid === false) {
+          showToast("Please enter a valid postal code for delivery", "error");
+          setIsProcessing(false);
+          return;
+        }
+      }
+
+      // Generate unique order ID
+      const generateOrderId = () => {
+        const timestamp = Date.now();
+        const random = Math.random().toString(36).substring(2, 8);
+        return `ORDER_${timestamp}_${random}`.toUpperCase();
+      };
+
+      // Generate transaction ID for internal tracking
+      const generateTransactionId = () => {
+        const timestamp = Date.now();
+        const random = Math.random().toString(36).substring(2, 8);
+        return `TXN_${timestamp}_${random}`.toUpperCase();
+      };
+
+      // Generate session ID
+      const generateSessionId = () => {
+        const timestamp = Date.now();
+        const random = Math.random().toString(36).substring(2, 8);
+        return `SESSION_${timestamp}_${random}`.toUpperCase();
+      };
+
+      // Generate fingerprint
+      const generateFingerprint = () => {
+        try {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          ctx.textBaseline = "top";
+          ctx.font = "14px Arial";
+          ctx.fillText("Browser fingerprint", 2, 2);
+
+          const screen = `${window.screen.width}x${window.screen.height}`;
+          const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+          const language = navigator.language;
+          const platform = navigator.platform;
+
+          const fingerprint = btoa(
+            `${canvas.toDataURL()}_${screen}_${timezone}_${language}_${platform}`
+          );
+          return `FP_${fingerprint.substring(0, 16)}`;
+        } catch (error) {
+          return `FP_${Date.now()}_${Math.random()
+            .toString(36)
+            .substring(2, 8)}`;
+        }
+      };
+
+      const orderId = generateOrderId();
+      const transactionId = generateTransactionId();
+      const sessionId = generateSessionId();
+      const fingerprint = generateFingerprint();
+
+      // Store complete checkout data in localStorage for transaction-status page to use
       const checkoutData = {
+        // Form data
         ...formData,
+
+        // Generated IDs
+        orderId: orderId,
+        transactionId: transactionId,
+        sessionId: sessionId,
+        fingerprint: fingerprint,
+
+        // Order details
         deliveryInfo: postalCodeValidation.deliveryInfo,
         shippingMethod,
-      };
-      localStorage.setItem("checkoutFormData", JSON.stringify(checkoutData));
-    } catch (error) {
-      console.warn("Could not save checkout data:", error);
-    }
+        orderTotal: total,
+        orderSubtotal: subtotal,
+        orderShipping: shipping,
+        orderItems: cart,
 
-    console.log("Proceeding to payment...", {
-      formData,
-      shippingMethod,
-      deliveryInfo: postalCodeValidation.deliveryInfo,
-    });
-    router.push("/cart/checkout/payment");
+        // Timestamps
+        checkoutCompletedAt: new Date().toISOString(),
+
+        // Additional metadata
+        userAgent:
+          typeof window !== "undefined" ? window.navigator.userAgent : "",
+        browserInfo: {
+          language: typeof navigator !== "undefined" ? navigator.language : "",
+          platform: typeof navigator !== "undefined" ? navigator.platform : "",
+        },
+      };
+
+      // Save to localStorage for transaction-status page to pick up
+      try {
+        localStorage.setItem("checkoutFormData", JSON.stringify(checkoutData));
+        console.log(
+          "✅ Checkout data saved to localStorage for transaction-status page"
+        );
+      } catch (error) {
+        console.warn("Could not save checkout data:", error);
+      }
+
+      showToast("Redirecting to payment...", "success");
+
+      // Add a small delay to show the success message
+      setTimeout(() => {
+        // Redirect to payment page with order details
+        router.push(
+          `/cart/checkout/payment?orderId=${orderId}&amount=${total}`
+        );
+      }, 1000);
+    } catch (error) {
+      console.error("Error processing checkout:", error);
+      showToast("Something went wrong. Please try again.", "error");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   // Get the current image for display with proper error handling
@@ -382,6 +474,12 @@ export default function CheckoutComponent() {
       : 0;
 
   const isFreeShippingEligible = subtotal >= 5000;
+  useEffect(() => {
+    // If free shipping is selected but not eligible, switch to standard shipping
+    if (shippingMethod === "free" && !isFreeShippingEligible) {
+      setShippingMethod("standard");
+    }
+  }, [isFreeShippingEligible, shippingMethod]);
 
   // Calculate shipping cost based on eligibility and ODA
   let shipping = shippingOptions[shippingMethod]?.price || 0;
@@ -661,7 +759,7 @@ export default function CheckoutComponent() {
                       (Auto-validated)
                     </span>
                   </label>
-                  
+
                   {/* Input and Validation Icons Container */}
                   <div className="relative mb-3">
                     <input
@@ -679,7 +777,7 @@ export default function CheckoutComponent() {
                       }`}
                       placeholder="110001"
                     />
-                    
+
                     {/* Validation Icons - Positioned absolutely within input */}
                     <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                       {postalCodeValidation.isValidating && (
@@ -697,34 +795,34 @@ export default function CheckoutComponent() {
                   {/* Delivery Info - Full width and responsive */}
                   {postalCodeValidation.deliveryInfo && (
                     <div className="mb-3 p-3 bg-green-50 border border-green-200 rounded-lg">
-                    <div className="flex items-center gap-2 mb-2">
-                      <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
-                      <span className="text-sm font-semibold text-green-800">
-                        Delivery Available
-                      </span>
-                    </div>
-                    <div className="text-xs text-green-700 space-y-2">
-                      {/* Location Info - Hidden on mobile for space */}
-                      {/* <p className="hidden sm:block">
+                      <div className="flex items-center gap-2 mb-2">
+                        <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
+                        <span className="text-sm font-semibold text-green-800">
+                          Delivery Available
+                        </span>
+                      </div>
+                      <div className="text-xs text-green-700 space-y-2">
+                        {/* Location Info - Hidden on mobile for space */}
+                        {/* <p className="hidden sm:block">
                         📍 {postalCodeValidation.deliveryInfo.city},{" "}
                         {postalCodeValidation.deliveryInfo.district}
                       </p> */}
-                      
-                      {/* Badges - Responsive flex */}
-                      <div className="flex flex-col sm:flex-row gap-2">
-                        {postalCodeValidation.deliveryInfo.cod && (
-                          <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs inline-flex items-center gap-1 w-fit">
-                            💰 COD Available
-                          </span>
-                        )}
-                        {postalCodeValidation.deliveryInfo.isODA && (
-                          <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs inline-flex items-center gap-1 w-fit">
-                            🚛 Remote Area (+₹50)
-                          </span>
-                        )}
+
+                        {/* Badges - Responsive flex */}
+                        <div className="flex flex-col sm:flex-row gap-2">
+                          {postalCodeValidation.deliveryInfo.cod && (
+                            <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs inline-flex items-center gap-1 w-fit">
+                              💰 COD Available
+                            </span>
+                          )}
+                          {postalCodeValidation.deliveryInfo.isODA && (
+                            <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs inline-flex items-center gap-1 w-fit">
+                              🚛 Remote Area (+₹50)
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
                   )}
                 </div>
               </div>
@@ -749,10 +847,13 @@ export default function CheckoutComponent() {
               <div className="space-y-4">
                 {Object.entries(shippingOptions).map(
                   ([key, { price, days, icon, name }]) => {
+                    const isFreeShippingOption = key === "free";
+                    const isDisabled =
+                      isFreeShippingOption && !isFreeShippingEligible;
                     const displayPrice =
-                      isFreeShippingEligible && key === "free" ? 0 : price;
-                    const isFreeUpgraded =
-                      isFreeShippingEligible && key === "free";
+                      isFreeShippingEligible && isFreeShippingOption
+                        ? 0
+                        : price;
                     const finalPrice =
                       displayPrice +
                       (postalCodeValidation.deliveryInfo?.isODA ? 50 : 0);
@@ -760,10 +861,12 @@ export default function CheckoutComponent() {
                     return (
                       <label
                         key={key}
-                        className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all duration-200 hover:bg-red-50 ${
-                          shippingMethod === key
-                            ? "border-red-900 bg-red-50 ring-2 ring-red-200"
-                            : "border-red-200 hover:border-red-300"
+                        className={`flex items-center p-4 border-2 rounded-xl transition-all duration-200 ${
+                          isDisabled
+                            ? "border-gray-200 bg-gray-50 cursor-not-allowed opacity-60"
+                            : shippingMethod === key
+                            ? "border-red-900 bg-red-50 ring-2 ring-red-200 cursor-pointer"
+                            : "border-red-200 hover:border-red-300 hover:bg-red-50 cursor-pointer"
                         }`}
                       >
                         <input
@@ -771,36 +874,82 @@ export default function CheckoutComponent() {
                           name="shipping"
                           value={key}
                           checked={shippingMethod === key}
-                          onChange={(e) => setShippingMethod(e.target.value)}
-                          className="w-4 h-4 text-red-900 focus:ring-red-500 focus:ring-2"
+                          onChange={(e) => {
+                            if (!isDisabled) {
+                              setShippingMethod(e.target.value);
+                            }
+                          }}
+                          disabled={isDisabled}
+                          className={`w-4 h-4 focus:ring-2 ${
+                            isDisabled
+                              ? "text-gray-400 cursor-not-allowed"
+                              : "text-red-900 focus:ring-red-500 cursor-pointer"
+                          }`}
                         />
                         <div className="ml-4 flex-1">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                              <span className="text-2xl">{icon}</span>
+                              <span
+                                className={`text-2xl ${
+                                  isDisabled ? "opacity-50" : ""
+                                }`}
+                              >
+                                {icon}
+                              </span>
                               <div>
-                                <p className="font-bold text-gray-900">
+                                <p
+                                  className={`font-bold ${
+                                    isDisabled
+                                      ? "text-gray-400"
+                                      : "text-gray-900"
+                                  }`}
+                                >
                                   {name}
+                                  {isDisabled && (
+                                    <span className="ml-2 text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded-full">
+                                      Requires ₹5000+ order
+                                    </span>
+                                  )}
                                 </p>
-                                <p className="text-sm text-gray-600">{days}</p>
-                                {isFreeUpgraded && (
-                                  <p className="text-xs text-green-600 font-semibold">
-                                    🎉 Free upgrade - On{" "}
-                                    <strong>prepaid</strong> orders above ₹5000+
-                                  </p>
-                                )}
-                                {postalCodeValidation.deliveryInfo?.isODA && (
-                                  <p className="text-xs text-orange-600 font-medium">
-                                    +₹50 Remote area surcharge
-                                  </p>
-                                )}
+                                <p
+                                  className={`text-sm ${
+                                    isDisabled
+                                      ? "text-gray-400"
+                                      : "text-gray-600"
+                                  }`}
+                                >
+                                  {days}
+                                </p>
+                                {isFreeShippingEligible &&
+                                  isFreeShippingOption && (
+                                    <p className="text-xs text-green-600 font-semibold">
+                                      🎉 Free upgrade - On{" "}
+                                      <strong>prepaid</strong> orders above
+                                      ₹5000+
+                                    </p>
+                                  )}
+                                {postalCodeValidation.deliveryInfo?.isODA &&
+                                  !isDisabled && (
+                                    <p className="text-xs text-orange-600 font-medium">
+                                      +₹50 Remote area surcharge
+                                    </p>
+                                  )}
                               </div>
                             </div>
                             <div className="text-right">
-                              <span className="font-bold text-lg text-red-900">
-                                {finalPrice === 0 ? "FREE" : `₹${finalPrice}`}
+                              <span
+                                className={`font-bold text-lg ${
+                                  isDisabled ? "text-gray-400" : "text-red-900"
+                                }`}
+                              >
+                                {isDisabled
+                                  ? `₹${price}`
+                                  : finalPrice === 0
+                                  ? "FREE"
+                                  : `₹${finalPrice}`}
                               </span>
-                              {isFreeUpgraded &&
+                              {isFreeShippingEligible &&
+                                isFreeShippingOption &&
                                 !postalCodeValidation.deliveryInfo?.isODA && (
                                   <p className="text-xs text-gray-500 line-through">
                                     ₹{price}
@@ -814,6 +963,19 @@ export default function CheckoutComponent() {
                   }
                 )}
               </div>
+
+              {/* Helper text for free shipping eligibility */}
+              {!isFreeShippingEligible && subtotal > 0 && (
+                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-sm text-blue-800">
+                    💡{" "}
+                    <strong>
+                      Add ₹{(5000 - subtotal).toLocaleString()} more
+                    </strong>{" "}
+                    to unlock free shipping!
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -988,12 +1150,11 @@ export default function CheckoutComponent() {
                   </div>
                 </div>
 
-                {/* Payment Button */}
                 <button
                   onClick={handlePayment}
-                  disabled={postalCodeValidation.isValidating}
+                  disabled={postalCodeValidation.isValidating || isProcessing}
                   className={`w-full py-4 rounded-xl font-bold text-lg transform transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 ${
-                    postalCodeValidation.isValidating
+                    postalCodeValidation.isValidating || isProcessing
                       ? "bg-gray-400 cursor-not-allowed"
                       : "bg-gradient-to-r from-red-900 to-red-800 text-white hover:from-red-800 hover:to-red-700 hover:scale-105"
                   }`}
@@ -1002,6 +1163,11 @@ export default function CheckoutComponent() {
                     <>
                       <Loader2 className="h-5 w-5 animate-spin" />
                       Validating...
+                    </>
+                  ) : isProcessing ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      Processing...
                     </>
                   ) : (
                     <>

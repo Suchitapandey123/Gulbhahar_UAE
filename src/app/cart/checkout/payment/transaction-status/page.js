@@ -1,680 +1,545 @@
+// Updated transaction-status page that sends complete checkout data format
+
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
-import Image from "next/image";
-import Link from "next/link";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { CheckCircle, Calendar, CreditCard, Package, ShoppingBag, Star, ArrowRight, XCircle, AlertTriangle } from "lucide-react";
-import { useCart } from "@/Providers/ContextProviders/CartContext";
+import { CheckCircle, XCircle, AlertTriangle, ArrowRight, ShoppingBag, Package, Loader2 } from "lucide-react";
 
-// Confetti component
-const Confetti = () => {
-  const [confetti, setConfetti] = useState([]);
-
-  useEffect(() => {
-    const colors = ['#dc2626', '#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6'];
-    const newConfetti = [];
-    
-    for (let i = 0; i < 50; i++) {
-      newConfetti.push({
-        id: i,
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        delay: Math.random() * 3,
-        duration: 3 + Math.random() * 2,
-      });
-    }
-    
-    setConfetti(newConfetti);
-  }, []);
-
-  return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden z-50">
-      {confetti.map((piece) => (
-        <div
-          key={piece.id}
-          className="absolute w-2 h-2 opacity-80"
-          style={{
-            left: `${piece.x}%`,
-            top: `-10px`,
-            backgroundColor: piece.color,
-            animation: `confetti-fall ${piece.duration}s ease-out ${piece.delay}s forwards`,
-          }}
-        />
-      ))}
-      <style jsx>{`
-        @keyframes confetti-fall {
-          0% {
-            transform: translateY(-10px) rotate(0deg);
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(100vh) rotate(720deg);
-            opacity: 0;
-          }
-        }
-      `}</style>
-    </div>
-  );
-};
-
-// Animated Success/Error Icon
-const AnimatedStatusIcon = ({ status }) => {
-  const [showIcon, setShowIcon] = useState(false);
-  const [showPulse, setShowPulse] = useState(false);
-
-  useEffect(() => {
-    const timer1 = setTimeout(() => setShowIcon(true), 500);
-    const timer2 = setTimeout(() => setShowPulse(true), 1000);
-    
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-    };
-  }, []);
-
-  const getStatusConfig = () => {
-    switch (status) {
-      case 'success':
-        return {
-          icon: CheckCircle,
-          bgColor: 'from-green-500 to-green-600',
-          textColor: 'text-green-600'
-        };
-      case 'failed':
-        return {
-          icon: XCircle,
-          bgColor: 'from-red-500 to-red-600',
-          textColor: 'text-red-600'
-        };
-      case 'pending':
-        return {
-          icon: AlertTriangle,
-          bgColor: 'from-yellow-500 to-yellow-600',
-          textColor: 'text-yellow-600'
-        };
-      default:
-        return {
-          icon: CheckCircle,
-          bgColor: 'from-green-500 to-green-600',
-          textColor: 'text-green-600'
-        };
-    }
-  };
-
-  const config = getStatusConfig();
-  const IconComponent = config.icon;
-
-  return (
-    <div className="relative">
-      <div className={`w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 mx-auto bg-gradient-to-br ${config.bgColor} rounded-full flex items-center justify-center shadow-lg transform transition-all duration-700 ${showIcon ? 'scale-100 rotate-0' : 'scale-0 rotate-180'}`}>
-        <IconComponent className={`w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white transform transition-all duration-500 ${showIcon ? 'scale-100' : 'scale-0'}`} />
-      </div>
-    </div>
-  );
-};
-
-// Animated Counter
-const AnimatedCounter = ({ target, duration = 2000 }) => {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    let startTime;
-    const animate = (currentTime) => {
-      if (!startTime) startTime = currentTime;
-      const progress = Math.min((currentTime - startTime) / duration, 1);
-      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-      setCount(Math.floor(easeOutQuart * target));
-      
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      }
-    };
-    
-    const timer = setTimeout(() => {
-      requestAnimationFrame(animate);
-    }, 1000);
-    
-    return () => clearTimeout(timer);
-  }, [target, duration]);
-
-  return <span>₹{count.toLocaleString()}</span>;
-};
-
-// Main component that uses useSearchParams
 const TransactionStatusContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { cart, clearCart } = useCart();
-  
+  const [paymentStatus, setPaymentStatus] = useState('processing');
+  const [paymentData, setPaymentData] = useState(null);
   const [showContent, setShowContent] = useState(false);
-  const [showConfetti, setShowConfetti] = useState(false);
-  const [transactionData, setTransactionData] = useState(null);
-
-  // Get transaction details from URL params
-  const status = searchParams.get('status') || 'success';
-  const txnId = searchParams.get('txnId') || '';
-  const error = searchParams.get('error') || '';
-
-  // Get current image for cart items
-  const getCurrentImage = (item) => {
-    if (!item) return '/Image/About1.png';
-    
-    try {
-      if (item.images && Array.isArray(item.images) && item.images.length > 0) {
-        if (Array.isArray(item.images[0])) {
-          const colorIndex = item.selectedColorIndex || 0;
-          const colorImages = item.images[colorIndex];
-          if (colorImages && Array.isArray(colorImages) && colorImages.length > 0) {
-            return colorImages[0] || '/Image/About1.png';
-          }
-          if (item.images[0] && Array.isArray(item.images[0]) && item.images[0].length > 0) {
-            return item.images[0][0] || '/Image/About1.png';
-          }
-        } else {
-          return item.images[0] || '/Image/About1.png';
-        }
-      }
-      
-      if (item.image) {
-        return Array.isArray(item.image) ? item.image[0] || '/Image/About1.png' : item.image;
-      }
-      
-      if (item.currentMainImage) {
-        return item.currentMainImage;
-      }
-      
-      return '/Image/About1.png';
-    } catch (error) {
-      console.warn('Error getting image for item:', item?.id, error);
-      return '/Image/About1.png';
-    }
-  };
-
-  // Get customer data from localStorage
-  const getCustomerData = () => {
-    try {
-      const checkoutData = localStorage.getItem('checkoutFormData');
-      if (checkoutData) {
-        return JSON.parse(checkoutData);
-      }
-    } catch (error) {
-      console.warn('Could not retrieve customer data:', error);
-    }
-    return { email: 'customer@example.com', fullName: 'Customer' };
-  };
-
-  // Calculate totals
-  const subtotal = cart && Array.isArray(cart) ? cart.reduce((sum, item) => {
-    if (!item || typeof item.price !== 'number' || typeof item.quantity !== 'number') {
-      return sum;
-    }
-    return sum + (item.price * item.quantity);
-  }, 0) : 0;
-
-  const isFreeShippingEligible = subtotal >= 5000;
-  const shipping = isFreeShippingEligible ? 0 : 350;
-  const discount = 0;
-  const total = subtotal + shipping - discount;
-
+  const [isLoading, setIsLoading] = useState(true);
+  const [backendSent, setBackendSent] = useState(false);
+  
   useEffect(() => {
-    const timer1 = setTimeout(() => setShowContent(true), 300);
-    const timer2 = setTimeout(() => {
-      if (status === 'success') {
-        setShowConfetti(true);
-      }
-    }, 800);
-    const timer3 = setTimeout(() => setShowConfetti(false), 5000);
-    
-    // Set transaction data
-    const customerData = getCustomerData();
-    setTransactionData({
-      id: txnId,
-      date: new Date().toLocaleDateString('en-US', { 
-        weekday: 'long', 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-      }),
-      customer: customerData,
-      paymentMethod: 'Credit Card', // This could be retrieved from payment data
-      shippingMethod: isFreeShippingEligible ? 'Free Shipping' : 'Standard Shipping',
-      items: cart || []
+    // Get parameters from URL
+    const status = searchParams.get('status');
+    const orderId = searchParams.get('orderId') || searchParams.get('order_id');
+    const amount = searchParams.get('amount');
+    const trackingId = searchParams.get('transactionId');
+    const error = searchParams.get('error');
+    const bankRefNo = searchParams.get('bank_ref_no');
+    const statusMessage = searchParams.get('status_message');
+
+    console.log('🎯 Transaction Status Page - URL Parameters:', {
+      status,
+      orderId,
+      amount,
+      trackingId,
+      error,
+      bankRefNo,
+      statusMessage
     });
 
-    // Clear cart on successful payment
-    if (status === 'success') {
-      // Clear cart after a delay to allow user to see the items
+    if (status && orderId && trackingId) {
+      const transactionData = {
+        status: status.toLowerCase(),
+        orderId,
+        amount,
+        trackingId,
+        error,
+        bankRefNo,
+        statusMessage,
+        receivedAt: new Date().toISOString()
+      };
+
+      setPaymentStatus(status.toLowerCase());
+      setPaymentData(transactionData);
+
+      // Send complete checkout data to backend
+      sendCompleteOrderDataToBackend(transactionData);
+    } else {
+      console.warn('❌ Missing required parameters:', { status, orderId, trackingId });
+      setPaymentStatus('unknown');
+    }
+
+    // Show content with animation delay
+    setTimeout(() => {
+      setShowContent(true);
+      setIsLoading(false);
+    }, 500);
+  }, [searchParams]);
+
+  // Function to send complete order data (same format as planned for checkout)
+  const sendCompleteOrderDataToBackend = async (transactionData) => {
+    if (backendSent) {
+      console.log('⏭️ Backend data already sent, skipping...');
+      return;
+    }
+
+    // 🎯 ONLY send data to backend if payment is successful
+    if (transactionData.status !== 'success') {
+      console.log('❌ Payment not successful, NOT sending data to backend');
+      console.log('📊 Payment Status:', transactionData.status);
+      setBackendSent(true); // Mark as "sent" to stop trying
+      return;
+    }
+
+    console.log('✅ Payment successful! Sending complete order data to backend...');
+
+    try {
+      // Get checkout data from localStorage
+      const savedCheckoutData = localStorage.getItem('checkoutFormData');
+      let checkoutData = {};
+      
+      if (savedCheckoutData) {
+        try {
+          checkoutData = JSON.parse(savedCheckoutData);
+        } catch (e) {
+          console.warn('Could not parse checkout data from localStorage');
+        }
+      }
+
+      // Generate unique IDs if not available
+      const generateTransactionId = () => {
+        const timestamp = Date.now();
+        const random = Math.random().toString(36).substring(2, 8);
+        return `TXN_${timestamp}_${random}`.toUpperCase();
+      };
+
+      const generateSessionId = () => {
+        const timestamp = Date.now();
+        const random = Math.random().toString(36).substring(2, 8);
+        return `SESSION_${timestamp}_${random}`.toUpperCase();
+      };
+
+      const generateFingerprint = () => {
+        try {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          ctx.textBaseline = 'top';
+          ctx.font = '14px Arial';
+          ctx.fillText('Browser fingerprint', 2, 2);
+          
+          const screen = `${window.screen.width}x${window.screen.height}`;
+          const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+          const language = navigator.language;
+          const platform = navigator.platform;
+          
+          const fingerprint = btoa(`${canvas.toDataURL()}_${screen}_${timezone}_${language}_${platform}`);
+          return `FP_${fingerprint.substring(0, 16)}`;
+        } catch (error) {
+          return `FP_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+        }
+      };
+
+      // Helper function to format phone number
+      const formatPhoneNumber = (phone) => {
+        if (!phone) return '';
+        let cleanPhone = phone.replace(/\D/g, '');
+        if (cleanPhone.startsWith('91') && cleanPhone.length === 12) {
+          cleanPhone = cleanPhone.substring(2);
+        }
+        return cleanPhone;
+      };
+
+      // Helper function to get product images
+      const getProductImages = (item) => {
+        if (!item) return [];
+        
+        try {
+          if (item.images && Array.isArray(item.images)) {
+            if (item.images.length > 0 && Array.isArray(item.images[0])) {
+              const colorIndex = item.selectedColorIndex || 0;
+              const colorImages = item.images[colorIndex];
+              if (colorImages && Array.isArray(colorImages)) {
+                return colorImages;
+              }
+              return item.images[0] || [];
+            } else {
+              return item.images;
+            }
+          }
+          
+          if (item.image) {
+            return Array.isArray(item.image) ? item.image : [item.image];
+          }
+          
+          if (item.currentMainImage) {
+            return [item.currentMainImage];
+          }
+          
+          return [];
+        } catch (error) {
+          console.warn('Error getting product images:', error);
+          return [];
+        }
+      };
+
+      // Prepare complete order data in your backend format
+      const completeOrderData = {
+        tracking_id: transactionData.trackingId, // 🎯 Use trackingId from URL as transactionId
+        timestamp: new Date().toISOString(),
+        
+        order: {
+          orderId: transactionData.orderId,
+          items: (checkoutData.orderItems || []).map(item => ({
+            productId: item.id,
+            productName: item.name,
+            quantity: item.quantity,
+            unitPrice: item.price,
+            totalPrice: item.price * item.quantity,
+            selectedColor: item.selectedColor || null,
+            selectedSize: item.selectedSize || null,
+            productImage: getProductImages(item)
+          })),
+          itemCount: (checkoutData.orderItems || []).length,
+          totalQuantity: (checkoutData.orderItems || []).reduce((sum, item) => sum + item.quantity, 0),
+          subtotal: checkoutData.orderSubtotal || (transactionData.amount ? parseFloat(transactionData.amount) : 0),
+          shipping: checkoutData.orderShipping || 0,
+          discount: 0,
+          total: transactionData.amount ? parseFloat(transactionData.amount) : (checkoutData.orderTotal || 0),
+          currency: "INR"
+        },
+
+        customer: {
+          fullName: checkoutData.fullName || "Guest Customer",
+          email: checkoutData.email || "",
+          phone: formatPhoneNumber(checkoutData.phone || ""),
+          userId: null
+        },
+
+        shippingAddress: {
+          fullName: checkoutData.fullName || "Guest Customer",
+          phone: formatPhoneNumber(checkoutData.phone || ""),
+          addressLine1: checkoutData.address || "",
+          city: checkoutData.city || "",
+          state: checkoutData.region || "",
+          postalCode: checkoutData.postalCode || "",
+          country: checkoutData.country || "India",
+          isDefault: false
+        },
+
+        billingAddress: {
+          fullName: checkoutData.fullName || "Guest Customer",
+          phone: formatPhoneNumber(checkoutData.phone || ""),
+          addressLine1: checkoutData.address || "",
+          city: checkoutData.city || "",
+          state: checkoutData.region || "",
+          postalCode: checkoutData.postalCode || "",
+          country: checkoutData.country || "India",
+          sameAsShipping: true
+        },
+
+        payment: {
+          method: "CCAvenue",
+          amount: transactionData.amount ? parseFloat(transactionData.amount) : 0,
+          currency: "INR",
+          trackingId: transactionData.trackingId, // CCAvenue tracking ID
+          bankRefNo: transactionData.bankRefNo,
+          status: transactionData.status,
+          statusMessage: transactionData.statusMessage,
+          errorMessage: transactionData.error,
+          gateway: "CCAvenue"
+        },
+
+        shipping: {
+          method: checkoutData.shippingMethod || "Standard Shipping",
+          cost: checkoutData.orderShipping || 0,
+          estimatedDelivery: "3-5 business days",
+          isFreeShippingApplied: (checkoutData.orderShipping || 0) === 0
+        },
+
+        metadata: {
+          source: "transaction_status_page",
+          userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : '',
+          saveInfo: false,
+          promocode: null,
+          referralCode: null,
+          notes: null,
+          paymentCompletedAt: new Date().toISOString()
+        },
+
+        security: {
+          ipAddress: null, // Backend will capture this
+          sessionId: checkoutData.sessionId || generateSessionId(),
+          fingerprint: checkoutData.fingerprint || generateFingerprint()
+        },
+
+        // Additional transaction status specific data
+        transactionStatus: {
+          finalStatus: transactionData.status,
+          receivedAt: transactionData.receivedAt,
+          source: "transaction_status_page",
+          isPaymentComplete: transactionData.status === 'success',
+          processingSource: "frontend_transaction_status"
+        }
+      };
+
+      console.log('📤 Sending complete order data to backend:', JSON.stringify(completeOrderData, null, 2));
+
+      // Send to your backend endpoint (same endpoint as checkout would use)
+      const response = await fetch('https://api.gulbhahar.com/guestorderRoutes/order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(completeOrderData)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+        throw new Error(errorData.message || 'Failed to send order data');
+      }
+
+      const result = await response.json();
+      console.log('✅ Backend response:', result);
+
+      setBackendSent(true);
+
+      // Clear localStorage after successful send
+      try {
+        localStorage.removeItem('checkoutFormData');
+        console.log('🗑️ Checkout data cleared from localStorage');
+      } catch (e) {
+        console.warn('Could not clear localStorage');
+      }
+
+      console.log('🎉 Complete order data sent to backend successfully');
+
+    } catch (error) {
+      console.error('❌ Error sending complete order data to backend:', error);
+      
+      // Retry logic (optional)
       setTimeout(() => {
-        clearCart();
+        console.log('🔄 Retrying backend request...');
+        sendCompleteOrderDataToBackend(transactionData);
       }, 5000);
     }
-    
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
-    };
-  }, [status, txnId, cart, clearCart, subtotal, isFreeShippingEligible]);
+  };
 
-  const getStatusConfig = () => {
-    switch (status) {
+  // Function to manually retry sending to backend
+  const retryBackendRequest = () => {
+    // Only allow retry if payment is successful
+    if (paymentData && paymentData.status === 'success') {
+      setBackendSent(false);
+      sendCompleteOrderDataToBackend(paymentData);
+    } else {
+      console.log('❌ Cannot retry - payment not successful');
+    }
+  };
+
+  const getStatusIcon = () => {
+    switch (paymentStatus) {
+      case 'success':
+        return <CheckCircle className="w-20 h-20 text-green-500 animate-bounce" />;
+      case 'failed':
+      case 'failure':
+        return <XCircle className="w-20 h-20 text-red-500 animate-pulse" />;
+      case 'cancelled':
+      case 'aborted':
+        return <AlertTriangle className="w-20 h-20 text-yellow-500 animate-pulse" />;
+      default:
+        return <AlertTriangle className="w-20 h-20 text-gray-500" />;
+    }
+  };
+
+  const getStatusMessage = () => {
+    switch (paymentStatus) {
       case 'success':
         return {
           title: 'Payment Successful! 🎉',
-          subtitle: 'Your order has been confirmed',
-          bgColor: 'from-green-50 to-white',
-          borderColor: 'border-green-200'
+          message: 'Your payment has been processed successfully. Your order is confirmed!',
+          color: 'text-green-600',
+          bgColor: 'from-green-50 to-white'
         };
       case 'failed':
+      case 'failure':
         return {
           title: 'Payment Failed 😞',
-          subtitle: 'There was an issue processing your payment',
-          bgColor: 'from-red-50 to-white',
-          borderColor: 'border-red-200'
+          message: 'Your payment could not be processed. Please try again or use a different payment method.',
+          color: 'text-red-600',
+          bgColor: 'from-red-50 to-white'
         };
-      case 'pending':
+      case 'cancelled':
+      case 'aborted':
         return {
-          title: 'Payment Pending ⏳',
-          subtitle: 'Your payment is being processed',
-          bgColor: 'from-yellow-50 to-white',
-          borderColor: 'border-yellow-200'
+          title: 'Payment Cancelled ⏹️',
+          message: 'You have cancelled the payment process. Your order has not been placed.',
+          color: 'text-yellow-600',
+          bgColor: 'from-yellow-50 to-white'
         };
       default:
         return {
-          title: 'Transaction Status',
-          subtitle: 'Please check your payment status',
-          bgColor: 'from-gray-50 to-white',
-          borderColor: 'border-gray-200'
+          title: 'Payment Status Unknown',
+          message: 'We could not determine your payment status. Please contact support.',
+          color: 'text-gray-600',
+          bgColor: 'from-gray-50 to-white'
         };
     }
   };
 
-  const statusConfig = getStatusConfig();
+  const statusInfo = getStatusMessage();
 
-  // Redirect if no cart items and not success status
-  if ((!cart || cart.length === 0) && status !== 'success') {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white flex items-center justify-center">
         <div className="text-center">
-          <ShoppingBag size={64} className="text-gray-300 mb-4 mx-auto" />
-          <h2 className="text-2xl font-bold text-gray-600 mb-4">No transaction found</h2>
-          <Link href="/" className="bg-red-900 text-white px-6 py-3 rounded-lg hover:bg-red-800 transition-colors">
-            Continue Shopping
-          </Link>
+          <div className="w-16 h-16 border-4 border-red-900 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600 font-medium">Loading transaction status...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white">
-      {showConfetti && status === 'success' && <Confetti />}
-      
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-20">
-        <div className={`bg-white rounded-2xl shadow-2xl border-2 border-red-100 overflow-hidden transform transition-all duration-1000 ${showContent ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-8'}`}>
-          
-          {/* Status Header */}
-          <div className={`text-center px-6 sm:px-10 lg:px-16 py-8 sm:py-12 lg:py-16 bg-gradient-to-br ${statusConfig.bgColor} relative overflow-hidden`}>
-            {/* Animated background elements */}
-            <div className="absolute top-0 left-0 w-32 h-32 bg-red-200 rounded-full opacity-20 animate-float" style={{animationDelay: '0s'}} />
-            <div className="absolute top-10 right-0 w-24 h-24 bg-green-200 rounded-full opacity-20 animate-float" style={{animationDelay: '1s'}} />
-            <div className="absolute bottom-0 left-1/4 w-20 h-20 bg-yellow-200 rounded-full opacity-20 animate-float" style={{animationDelay: '2s'}} />
-            
-            <AnimatedStatusIcon status={status} />
-            
-            <div className={`transform transition-all duration-1000 delay-700 ${showContent ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-3 animate-bounce-in">
-                {statusConfig.title}
-              </h1>
-              <p className="text-sm sm:text-base text-gray-600 mb-6">
-                {status === 'success' && transactionData ? (
-                  <>
-                    Your order confirmation has been sent to{' '}
-                    <span className="font-semibold text-red-900">
-                      {transactionData.customer.email}
-                    </span>
-                  </>
-                ) : status === 'failed' ? (
-                  <>
-                    {error ? `Error: ${error}` : 'Please try again or contact support'}
-                  </>
-                ) : (
-                  statusConfig.subtitle
-                )}
-              </p>
-              
-              {txnId && (
-                <p className="text-xs sm:text-sm text-gray-500 mb-4">
-                  Transaction ID: <span className="font-mono font-semibold">{txnId}</span>
-                </p>
+    <div className={`min-h-screen mt-6 sm:mt-12 bg-gradient-to-br ${statusInfo.bgColor} flex items-center justify-center p-0 sm:p-3 lg:p-8`}>
+      <div className={`bg-white rounded-2xl shadow-2xl border-2 border-red-100 p-6 sm:p-8 w-full max-w-sm sm:max-w-md lg:max-w-[600px] text-center transform transition-all duration-1000 ${showContent ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-8'}`}>
+        
+        {/* Status Icon */}
+        <div className="mb-4 sm:mb-6 flex justify-center">
+          {getStatusIcon()}
+        </div>
+
+        {/* Status Title */}
+        <h1 className={`text-xl sm:text-2xl lg:text-3xl font-bold mb-3 sm:mb-4 ${statusInfo.color} animate-fade-in`}>
+          {statusInfo.title}
+        </h1>
+
+        {/* Status Message */}
+        <p className="text-gray-600 mb-4 sm:mb-6 text-base sm:text-lg leading-relaxed px-2">
+          {statusInfo.message}
+        </p>
+
+        {/* Transaction Details */}
+        {paymentData && (
+          <div className="bg-gray-50 rounded-xl p-4 sm:p-6 mb-4 sm:mb-6 text-left">
+            <h3 className="font-bold text-gray-900 mb-3 sm:mb-4 text-center text-sm sm:text-base">Transaction Details</h3>
+            <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
+              {paymentData.orderId && (
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-200 gap-1 sm:gap-0">
+                  <span className="text-gray-600 font-medium">Order ID:</span>
+                  <span className="font-mono text-gray-900 bg-white px-2 py-1 rounded text-xs break-all">{paymentData.orderId}</span>
+                </div>
+              )}
+              {paymentData.trackingId && (
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-200 gap-1 sm:gap-0">
+                  <span className="text-gray-600 font-medium">Tracking ID:</span>
+                  <span className="font-mono text-gray-900 bg-white px-2 py-1 rounded text-xs break-all">{paymentData.trackingId}</span>
+                </div>
+              )}
+              {paymentData.bankRefNo && (
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-200 gap-1 sm:gap-0">
+                  <span className="text-gray-600 font-medium">Bank Ref:</span>
+                  <span className="font-mono text-gray-900 bg-white px-2 py-1 rounded text-xs break-all">{paymentData.bankRefNo}</span>
+                </div>
+              )}
+              {paymentData.amount && (
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2">
+                  <span className="text-gray-600 font-medium">Amount:</span>
+                  <span className="font-bold text-base sm:text-lg text-red-900">₹{parseFloat(paymentData.amount).toLocaleString()}</span>
+                </div>
               )}
             </div>
-            
-            <div className={`w-24 h-1 bg-gradient-to-r from-red-900 to-red-600 rounded-full mx-auto transform transition-all duration-1000 delay-1000 ${showContent ? 'scale-x-100' : 'scale-x-0'}`}></div>
           </div>
+        )}
 
-          <div className={`px-6 sm:px-10 lg:px-16 py-6 sm:py-8 lg:py-10 space-y-6 sm:space-y-8 transform transition-all duration-1000 delay-300 ${showContent ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-            
-            {/* Transaction Details */}
-            {transactionData && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                
-                {/* Transaction Date */}
-                <div className="bg-red-50 rounded-xl p-3 sm:p-6 border border-red-200 hover:shadow-md transition-all duration-300 transform hover:scale-105 animate-slide-up" style={{animationDelay: '0.5s'}}>
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center animate-spin-once">
-                      <Calendar className="w-4 h-4 text-white" />
-                    </div>
-                    <h2 className="text-base sm:text-lg font-bold text-gray-900">Transaction Date</h2>
-                  </div>
-                  <p className="text-sm sm:text-base text-gray-700 font-medium">
-                    {transactionData.date}
-                  </p>
-                </div>
+        {/* Error Details */}
+        {paymentData?.error && (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-3 sm:p-4 mb-4 sm:mb-6">
+            <h3 className="font-bold text-red-800 mb-2 text-sm sm:text-base">Error Details</h3>
+            <p className="text-xs sm:text-sm text-red-600 break-words">{paymentData.error}</p>
+          </div>
+        )}
 
-                {/* Payment Method */}
-                <div className="bg-red-50 rounded-xl p-4 sm:p-6 border border-red-200 hover:shadow-md transition-all duration-300 transform hover:scale-105 animate-slide-up" style={{animationDelay: '0.7s'}}>
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center animate-spin-once">
-                      <CreditCard className="w-4 h-4 text-white" />
-                    </div>
-                    <h2 className="text-base sm:text-lg font-bold text-gray-900">Payment Method</h2>
-                  </div>
-                  <p className="text-sm sm:text-base text-gray-700 font-medium">
-                    {transactionData.paymentMethod}
-                  </p>
-                </div>
-
-                {/* Shipping Method */}
-                <div className="bg-red-50 rounded-xl p-4 sm:p-6 border border-red-200 hover:shadow-md transition-all duration-300 transform hover:scale-105 animate-slide-up sm:col-span-2 lg:col-span-1" style={{animationDelay: '0.9s'}}>
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center animate-spin-once">
-                      <Package className="w-4 h-4 text-white" />
-                    </div>
-                    <h2 className="text-base sm:text-lg font-bold text-gray-900">Shipping Method</h2>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm sm:text-base text-gray-700 font-medium">
-                      {transactionData.shippingMethod} ({isFreeShippingEligible ? '5-7' : '3-5'} business days)
-                    </p>
-                    {isFreeShippingEligible && (
-                      <div className="flex items-center text-xs text-green-600">
-                        <Star className="h-3 w-3 mr-1 fill-current" />
-                        <span className="hidden sm:inline">Free</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Order Items Section */}
-            {transactionData && transactionData.items.length > 0 && (
-              <div className="bg-gradient-to-br from-red-50 to-white rounded-xl p-4 sm:p-6 lg:p-8 border-2 border-red-200 animate-fade-in" style={{animationDelay: '1.1s'}}>
-                <div className="flex items-center gap-3 mb-4 sm:mb-6">
-                  <div className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center">
-                    <ShoppingBag className="w-4 h-4 text-white" />
-                  </div>
-                  <h2 className="text-lg sm:text-xl font-bold text-gray-900">Your Order</h2>
-                </div>
-
-                {transactionData.items.map((item, index) => (
-                  <div key={item.id} className="bg-white rounded-xl p-4 sm:p-6 border border-red-200 shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-102 animate-slide-up mb-4" style={{animationDelay: `${1.3 + index * 0.2}s`}}>
-                    
-                    {/* Mobile Layout */}
-                    <div className="block sm:hidden">
-                      <div className="flex items-start space-x-3 mb-3">
-                        <div className="w-12 h-12 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
-                          <Image
-                            src={getCurrentImage(item)}
-                            alt={item.name || 'Product'}
-                            width={48}
-                            height={48}
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                              if (e.target) {
-                                e.target.src = '/Image/About1.png';
-                              }
-                            }}
-                          />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-bold text-base text-gray-900">{item.name}</h3>
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {item.selectedColor && (
-                              <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full font-medium text-xs">
-                                {item.selectedColor}
-                              </span>
-                            )}
-                            {item.selectedSize && (
-                              <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full font-medium text-xs">
-                                Size {item.selectedSize}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <div className="text-sm text-gray-600 font-medium">
-                          Qty: <span className="text-red-900 font-bold">{item.quantity}</span>
-                        </div>
-                        <p className="font-bold text-lg text-red-900">
-                          <AnimatedCounter target={item.price * item.quantity} />
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Desktop Layout */}
-                    <div className="hidden sm:flex items-center space-x-4">
-                      <div className="w-16 h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
-                        <Image
-                          src={getCurrentImage(item)}
-                          alt={item.name || 'Product'}
-                          width={64}
-                          height={64}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            if (e.target) {
-                              e.target.src = '/Image/About1.png';
-                            }
-                          }}
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-bold text-lg text-gray-900">{item.name}</h3>
-                        <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
-                          {item.selectedColor && (
-                            <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full font-medium">
-                              {item.selectedColor}
-                            </span>
-                          )}
-                          {item.selectedSize && (
-                            <>
-                              <span>•</span>
-                              <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full font-medium">
-                                Size {item.selectedSize}
-                              </span>
-                            </>
-                          )}
-                        </div>
-                        <div className="text-sm text-gray-600 mt-2 font-medium">
-                          Quantity: <span className="text-red-900 font-bold">{item.quantity}</span>
-                        </div>
-                      </div>
-                      <p className="font-bold text-xl text-red-900 flex-shrink-0">
-                        <AnimatedCounter target={item.price * item.quantity} />
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Order Summary */}
-            {status === 'success' && (
-              <div className="bg-white rounded-xl border-2 border-red-200 p-4 sm:p-6 lg:p-8 animate-fade-in" style={{animationDelay: '1.5s'}}>
-                <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">Order Summary</h3>
-                
-                <div className="space-y-3 sm:space-y-4">
-                  <div className="flex justify-between py-2 border-b border-red-100 transform transition-all duration-300 hover:scale-105">
-                    <span className="text-sm sm:text-base text-gray-700 font-medium">Subtotal</span>
-                    <span className="text-sm sm:text-base font-bold text-gray-900">₹{subtotal.toLocaleString()}</span>
-                  </div>
-                  
-                  <div className="flex justify-between py-2 border-b border-red-100 transform transition-all duration-300 hover:scale-105">
-                    <span className="text-sm sm:text-base text-gray-700 font-medium">Applied Discount</span>
-                    <span className="text-sm sm:text-base font-bold text-green-600">₹{discount}</span>
-                  </div>
-                  
-                  <div className="flex justify-between py-2 border-b border-red-100 transform transition-all duration-300 hover:scale-105">
-                    <span className="text-sm sm:text-base text-gray-700 font-medium">Shipping Cost</span>
-                    <span className="text-sm sm:text-base font-bold text-green-600">
-                      {shipping === 0 ? 'FREE' : `₹${shipping}`}
-                    </span>
-                  </div>
-                  
-                  <div className="bg-red-50 p-4 sm:p-6 rounded-lg border border-red-200">
-                    <div className="flex justify-between items-center">
-                      <span className="text-lg sm:text-xl font-bold text-gray-900">Grand Total</span>
-                      <span className="text-xl sm:text-2xl font-bold text-red-900">
-                        <AnimatedCounter target={total} duration={2500} />
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 pt-4 sm:pt-6 animate-slide-up" style={{animationDelay: '1.7s'}}>
-              {status === 'success' ? (
+        {/* Order Status Message */}
+        {paymentStatus === 'success' && (
+          <div className="bg-green-50 border border-green-200 rounded-xl p-3 sm:p-4 mb-4 sm:mb-6">
+            <div className="flex items-center justify-center gap-2">
+              {backendSent ? (
                 <>
-                  <Link href="/" className="flex-1">
-                    <button className="w-full bg-gradient-to-r from-red-900 to-red-800 text-white py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:from-red-800 hover:to-red-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 animate-pulse-button">
-                      <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
-                      Continue Shopping
-                      <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
-                    </button>
-                  </Link>
-                  
-                  <Link href="/orders" className="flex-1">
-                    <button className="w-full bg-white border-2 border-red-900 text-red-900 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:bg-red-50 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 transform hover:scale-105">
-                      <Package className="w-4 h-4 sm:w-5 sm:h-5" />
-                      Track Order
-                    </button>
-                  </Link>
-                </>
-              ) : status === 'failed' ? (
-                <>
-                  <button 
-                    onClick={() => router.back()}
-                    className="flex-1 bg-gradient-to-r from-red-900 to-red-800 text-white py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:from-red-800 hover:to-red-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
-                  >
-                    <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
-                    Try Again
-                  </button>
-                  
-                  <Link href="/" className="flex-1">
-                    <button className="w-full bg-white border-2 border-red-900 text-red-900 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:bg-red-50 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 transform hover:scale-105">
-                      <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
-                      Continue Shopping
-                    </button>
-                  </Link>
+                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0" />
+                  <span className="text-xs sm:text-sm text-green-800 font-medium text-center">Order Created Successfully</span>
                 </>
               ) : (
-                <Link href="/" className="flex-1">
-                  <button className="w-full bg-gradient-to-r from-red-900 to-red-800 text-white py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:from-red-800 hover:to-red-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
-                    <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
-                    Continue Shopping
-                  </button>
-                </Link>
+                <>
+                  <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 animate-spin flex-shrink-0" />
+                  <span className="text-xs sm:text-sm text-green-800 font-medium text-center">Creating Your Order...</span>
+                </>
               )}
             </div>
-
-            {/* Thank You Message */}
-            {status === 'success' && (
-              <div className="text-center bg-gradient-to-r from-red-50 to-red-100 p-4 sm:p-6 rounded-xl border border-red-200 animate-fade-in" style={{animationDelay: '1.9s'}}>
-                <p className="text-sm sm:text-base text-gray-700 font-medium">
-                  🎊 Thank you for choosing us! We hope you love your new purchase. 
-                  <br className="hidden sm:block" />
-                  <span className="text-red-900 font-bold">Your order will be processed within 24 hours.</span>
-                </p>
-              </div>
-            )}
-
-            {/* Error Message */}
-            {status === 'failed' && (
-              <div className="text-center bg-gradient-to-r from-red-50 to-red-100 p-4 sm:p-6 rounded-xl border border-red-200 animate-fade-in" style={{animationDelay: '1.9s'}}>
-                <p className="text-sm sm:text-base text-gray-700 font-medium">
-                  😞 We're sorry your payment couldn't be processed. 
-                  <br className="hidden sm:block" />
-                  <span className="text-red-900 font-bold">Please try again or contact our support team.</span>
-                </p>
-              </div>
-            )}
-
-            {/* Pending Message */}
-            {status === 'pending' && (
-              <div className="text-center bg-gradient-to-r from-yellow-50 to-yellow-100 p-4 sm:p-6 rounded-xl border border-yellow-200 animate-fade-in" style={{animationDelay: '1.9s'}}>
-                <p className="text-sm sm:text-base text-gray-700 font-medium">
-                  ⏳ Your payment is being processed. 
-                  <br className="hidden sm:block" />
-                  <span className="text-yellow-900 font-bold">You will receive a confirmation email shortly.</span>
-                </p>
-              </div>
-            )}
           </div>
+        )}
+
+        {/* Action Buttons */}
+        <div className="flex flex-col gap-3 sm:gap-4 mb-4 sm:mb-6">
+          {paymentStatus === 'success' ? (
+            <>
+              <button
+                onClick={() => router.push('/')}
+                className="w-full bg-gradient-to-r from-red-900 to-red-800 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-bold hover:from-red-800 hover:to-red-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 text-sm sm:text-base"
+              >
+                <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                <span>Continue Shopping</span>
+                <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+              </button>
+              <button
+                onClick={() => router.push('/orders')}
+                className="w-full bg-white border-2 border-red-900 text-red-900 py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-bold hover:bg-red-50 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 text-sm sm:text-base"
+              >
+                <Package className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                <span>Track Order</span>
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => router.push('/cart/checkout')}
+                className="w-full bg-gradient-to-r from-red-900 to-red-800 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-bold hover:from-red-800 hover:to-red-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 text-sm sm:text-base"
+              >
+                <span>Try Again</span>
+              </button>
+              <button
+                onClick={() => router.push('/')}
+                className="w-full bg-white border-2 border-red-900 text-red-900 py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-bold hover:bg-red-50 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 text-sm sm:text-base"
+              >
+                <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                <span>Continue Shopping</span>
+              </button>
+            </>
+          )}
         </div>
+
+        {/* Support Link */}
+        <div className="text-center mb-4 sm:mb-6">
+          <p className="text-xs sm:text-sm text-gray-500">
+            Having issues?{' '}
+            <a href="/contact" className="text-red-600 hover:underline font-medium">
+              Contact Support
+            </a>
+          </p>
+        </div>
+
+        {/* Success Message */}
+        {paymentStatus === 'success' && (
+          <div className="text-center bg-gradient-to-r from-green-50 to-green-100 p-3 sm:p-4 rounded-xl border border-green-200">
+            <p className="text-xs sm:text-sm text-green-800 leading-relaxed">
+              🎊 <strong>Thank you for your order!</strong>
+              <br />
+              You will receive an order confirmation email shortly.
+            </p>
+          </div>
+        )}
       </div>
 
       <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(180deg); }
-        }
-        
-        @keyframes bounce-in {
-          0% { transform: scale(0.3) translateY(-100px); opacity: 0; }
-          50% { transform: scale(1.05) translateY(0); }
-          70% { transform: scale(0.9); }
-          100% { transform: scale(1) translateY(0); opacity: 1; }
-        }
-        
-        @keyframes slide-up {
-          0% { transform: translateY(30px); opacity: 0; }
-          100% { transform: translateY(0); opacity: 1; }
-        }
-        
         @keyframes fade-in {
-          0% { opacity: 0; }
-          100% { opacity: 1; }
+          0% { opacity: 0; transform: translateY(-20px); }
+          100% { opacity: 1; transform: translateY(0); }
         }
         
-        @keyframes spin-once {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
+        .animate-fade-in {
+          animation: fade-in 0.8s ease-out;
         }
-        
-        @keyframes pulse-button {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.02); }
-        }
-        
-        .animate-float { animation: float 6s ease-in-out infinite; }
-        .animate-bounce-in { animation: bounce-in 1s ease-out; }
-        .animate-slide-up { animation: slide-up 0.6s ease-out both; }
-        .animate-fade-in { animation: fade-in 0.8s ease-out both; }
-        .animate-spin-once { animation: spin-once 1s ease-out; }
-        .animate-pulse-button { animation: pulse-button 2s ease-in-out infinite; }
-        .hover\\:scale-102:hover { transform: scale(1.02); }
       `}</style>
     </div>
   );
 };
 
-// Loading component for Suspense fallback
 const TransactionStatusLoading = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white flex items-center justify-center">
@@ -686,7 +551,6 @@ const TransactionStatusLoading = () => {
   );
 };
 
-// Main export component with Suspense wrapper
 export default function TransactionStatus() {
   return (
     <Suspense fallback={<TransactionStatusLoading />}>

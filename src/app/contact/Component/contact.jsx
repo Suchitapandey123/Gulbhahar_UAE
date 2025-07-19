@@ -390,7 +390,7 @@ export default function ContactPage() {
                 </div>
               </div>
               <p className="text-sm text-gray-600 mb-3">
-                Mon - Fri, 9:00 AM - 5:00 PM (UTC/GMT + 05:30)
+                Mon - Sat, 9:00 AM - 9:00 PM (UTC/GMT + 05:30)
               </p>
               <div className="space-y-2">
                 <a 

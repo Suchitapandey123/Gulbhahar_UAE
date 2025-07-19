@@ -247,7 +247,7 @@ terms: {
                 <strong> S-12 Janta Market, Rajouri Garden Delhi , 110027,</strong> India within 30 Days in its original box packing and the invoice. Please mention your desired exchange piece along with the size on the invoice as well.
               </p>
               <p className="text-sm sm:text-base text-gray-700">
-                You may also mail us at <span className="font-bold text-red-800">gulbhahar1@gmail.com</span> for the same. We do not entertain refund & cancellation requests.
+                You may also mail us at <span className="font-bold text-red-800">support@gulbhahar.com</span> for the same. We do not entertain refund & cancellation requests.
               </p>
             </div>
           </div>
@@ -441,7 +441,7 @@ delivery: {
             </div>
           </div>
           <p className="text-sm sm:text-base text-gray-700 mt-4">
-            You will receive shipping confirmation with tracking information once your order is dispatched. For any delivery-related queries, please contact our customer support at <span className="font-bold text-red-800">gulbhahar1@gmail.com</span>.
+            You will receive shipping confirmation with tracking information once your order is dispatched. For any delivery-related queries, please contact our customer support at <span className="font-bold text-red-800">support@gulbhahar.com</span>.
           </p>
         </div>
       </div>
@@ -559,7 +559,7 @@ refund: {
               Phone:+91 9220927241
             </p>
             <p className="text-sm sm:text-base text-gray-700 mt-2">
-              For return authorization, please email us at <span className="font-bold text-red-800">gulbhahar1@gmail.com</span> with your order details.
+              For return authorization, please email us at <span className="font-bold text-red-800">support@gulbhahar.com</span> with your order details.
             </p>
           </div>
         </div>
@@ -580,7 +580,7 @@ refund: {
             Orders can be cancelled within 24 hours of placement if they haven't entered the processing stage. To request cancellation:
           </p>
           <ol className="list-decimal pl-5 space-y-2 text-sm sm:text-base text-gray-700">
-            <li>Email us at <span className="font-bold text-red-800">gulbhahar1@gmail.com</span> with your order number</li>
+            <li>Email us at <span className="font-bold text-red-800">support@gulbhahar.com</span> with your order number</li>
             <li>Include "CANCELLATION REQUEST" in the subject line</li>
             <li>We'll confirm if cancellation is possible</li>
           </ol>
@@ -617,7 +617,7 @@ refund: {
       //         </div>
       //       </div>
       //       <p className="text-gray-600">
-      //         <strong>  S-12 Janta Market, Rajouri Garden Delhi , 110027,</strong> India within 30 Days in its original box packing and the invoice. Please mention your desired exchange piece along with the size on the invoice as well. You may also mail us at <b> gulbhahar1@gmail.com </b>for the same. We do not entertain refund & cancellation requests.
+      //         <strong>  S-12 Janta Market, Rajouri Garden Delhi , 110027,</strong> India within 30 Days in its original box packing and the invoice. Please mention your desired exchange piece along with the size on the invoice as well. You may also mail us at <b> support@gulbhahar.com </b>for the same. We do not entertain refund & cancellation requests.
       //         </p>
       //       <p className="text-gray-600">
       //         The Pairs can be exchanged for another size of the same style only. In case your desired size is unavailable with us, you could then exchange it for another style of a similar value.

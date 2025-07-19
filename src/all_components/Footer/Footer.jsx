@@ -276,12 +276,6 @@ export default function Footer() {
                     href="#"
                     className="w-10 h-10 bg-red-100 hover:bg-red-900 text-red-900 hover:text-white rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110"
                   >
-                    <FooterYouTube className="h-5 w-5" />
-                  </Link>
-                  <Link
-                    href="#"
-                    className="w-10 h-10 bg-red-100 hover:bg-red-900 text-red-900 hover:text-white rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110"
-                  >
                     <FooterTwitterX className="h-5 w-5" />
                   </Link>
                   <Link
@@ -384,7 +378,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-2 justify-center lg:justify-start">
                 <Phone className="h-4 w-4 text-red-600" />
-                <span className="text-xs text-gray-600">+91 97176 14241</span>
+                <span className="text-xs text-gray-600">+91 92209 27241</span>
               </div>
             </div>
 

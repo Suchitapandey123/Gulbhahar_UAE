@@ -253,7 +253,7 @@ terms: {
                 <strong> S-12 Janta Market, Rajouri Garden Delhi , 110027,</strong> India within 30 Days in its original box packing and the invoice. Please mention your desired exchange piece along with the size on the invoice as well.
               </p>
               <p className="text-sm sm:text-base text-gray-700">
-                You may also mail us at <span className="font-bold text-red-800">gulbhahar1@gmail.com</span> for the same. We do not entertain refund & cancellation requests.
+                You may also mail us at <span className="font-bold text-red-800">support@gulbhahar.com</span> for the same. We do not entertain refund & cancellation requests.
               </p>
             </div>
           </div>
@@ -447,7 +447,7 @@ delivery: {
             </div>
           </div>
           <p className="text-sm sm:text-base text-gray-700 mt-4">
-            You will receive shipping confirmation with tracking information once your order is dispatched. For any delivery-related queries, please contact our customer support at <span className="font-bold text-red-800">gulbhahar1@gmail.com</span>.
+            You will receive shipping confirmation with tracking information once your order is dispatched. For any delivery-related queries, please contact our customer support at <span className="font-bold text-red-800">support@gulbhahar.com</span>.
           </p>
         </div>
       </div>
