@@ -1,16 +1,17 @@
-// Updated transaction-status page that sends complete checkout data format
+// Enhanced transaction-status page that handles both Online Payment and COD
 
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { CheckCircle, XCircle, AlertTriangle, ArrowRight, ShoppingBag, Package, Loader2 } from "lucide-react";
+import { CheckCircle, XCircle, AlertTriangle, ArrowRight, ShoppingBag, Package, Loader2, Banknote, CreditCard } from "lucide-react";
 
 const TransactionStatusContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [paymentStatus, setPaymentStatus] = useState('processing');
   const [paymentData, setPaymentData] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState('online'); // 'online' or 'cod'
   const [showContent, setShowContent] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [backendSent, setBackendSent] = useState(false);
@@ -20,10 +21,11 @@ const TransactionStatusContent = () => {
     const status = searchParams.get('status');
     const orderId = searchParams.get('orderId') || searchParams.get('order_id');
     const amount = searchParams.get('amount');
-    const trackingId = searchParams.get('transactionId');
+    const trackingId = searchParams.get('transactionId') || searchParams.get('tracking_id');
     const error = searchParams.get('error');
     const bankRefNo = searchParams.get('bank_ref_no');
     const statusMessage = searchParams.get('status_message');
+    const method = searchParams.get('payment_method'); // 'online' or 'cod'
 
     console.log('🎯 Transaction Status Page - URL Parameters:', {
       status,
@@ -32,25 +34,39 @@ const TransactionStatusContent = () => {
       trackingId,
       error,
       bankRefNo,
-      statusMessage
+      statusMessage,
+      method
     });
+
+    // Determine payment method
+    let detectedMethod = 'online'; // default
+    if (method) {
+      detectedMethod = method.toLowerCase();
+    } else if (trackingId && trackingId.startsWith('COD_')) {
+      detectedMethod = 'cod';
+    } else if (bankRefNo || statusMessage?.toLowerCase().includes('bank')) {
+      detectedMethod = 'online';
+    }
+
+    setPaymentMethod(detectedMethod);
 
     if (status && orderId && trackingId) {
       const transactionData = {
         status: status.toLowerCase(),
         orderId,
         amount,
-        trackingId,
+        trackingId, // Same trackingID logic as before
         error,
         bankRefNo,
         statusMessage,
+        paymentMethod: detectedMethod,
         receivedAt: new Date().toISOString()
       };
 
       setPaymentStatus(status.toLowerCase());
       setPaymentData(transactionData);
 
-      // Send complete checkout data to backend
+      // Send complete checkout data to backend (only for successful payments)
       sendCompleteOrderDataToBackend(transactionData);
     } else {
       console.warn('❌ Missing required parameters:', { status, orderId, trackingId });
@@ -64,7 +80,7 @@ const TransactionStatusContent = () => {
     }, 500);
   }, [searchParams]);
 
-  // Function to send complete order data (same format as planned for checkout)
+  // Function to send complete order data (enhanced for both payment methods)
   const sendCompleteOrderDataToBackend = async (transactionData) => {
     if (backendSent) {
       console.log('⏭️ Backend data already sent, skipping...');
@@ -75,11 +91,13 @@ const TransactionStatusContent = () => {
     if (transactionData.status !== 'success') {
       console.log('❌ Payment not successful, NOT sending data to backend');
       console.log('📊 Payment Status:', transactionData.status);
+      console.log('💳 Payment Method:', transactionData.paymentMethod);
       setBackendSent(true); // Mark as "sent" to stop trying
       return;
     }
 
     console.log('✅ Payment successful! Sending complete order data to backend...');
+    console.log('💳 Payment Method:', transactionData.paymentMethod);
 
     try {
       // Get checkout data from localStorage
@@ -95,12 +113,6 @@ const TransactionStatusContent = () => {
       }
 
       // Generate unique IDs if not available
-      const generateTransactionId = () => {
-        const timestamp = Date.now();
-        const random = Math.random().toString(36).substring(2, 8);
-        return `TXN_${timestamp}_${random}`.toUpperCase();
-      };
-
       const generateSessionId = () => {
         const timestamp = Date.now();
         const random = Math.random().toString(36).substring(2, 8);
@@ -170,9 +182,37 @@ const TransactionStatusContent = () => {
         }
       };
 
+      // Prepare payment object based on method
+      const preparePaymentObject = () => {
+        const basePayment = {
+          amount: transactionData.amount ? parseFloat(transactionData.amount) : 0,
+          currency: "INR",
+          trackingId: transactionData.trackingId, // 🎯 Same trackingId logic as before
+          status: transactionData.status,
+          statusMessage: transactionData.statusMessage,
+          errorMessage: transactionData.error
+        };
+
+        if (transactionData.paymentMethod === 'cod') {
+          return {
+            ...basePayment,
+            method: "COD",
+            bankRefNo: null,
+            gateway: "COD"
+          };
+        } else {
+          return {
+            ...basePayment,
+            method: "CCAvenue",
+            bankRefNo: transactionData.bankRefNo,
+            gateway: "CCAvenue"
+          };
+        }
+      };
+
       // Prepare complete order data in your backend format
       const completeOrderData = {
-        tracking_id: transactionData.trackingId, // 🎯 Use trackingId from URL as transactionId
+        tracking_id: transactionData.trackingId, // 🎯 Use trackingId from URL as transactionId (same logic)
         timestamp: new Date().toISOString(),
         
         order: {
@@ -225,17 +265,7 @@ const TransactionStatusContent = () => {
           sameAsShipping: true
         },
 
-        payment: {
-          method: "CCAvenue",
-          amount: transactionData.amount ? parseFloat(transactionData.amount) : 0,
-          currency: "INR",
-          trackingId: transactionData.trackingId, // CCAvenue tracking ID
-          bankRefNo: transactionData.bankRefNo,
-          status: transactionData.status,
-          statusMessage: transactionData.statusMessage,
-          errorMessage: transactionData.error,
-          gateway: "CCAvenue"
-        },
+        payment: preparePaymentObject(), // Dynamic payment object based on method
 
         shipping: {
           method: checkoutData.shippingMethod || "Standard Shipping",
@@ -250,7 +280,7 @@ const TransactionStatusContent = () => {
           saveInfo: false,
           promocode: null,
           referralCode: null,
-          notes: null,
+          notes: transactionData.paymentMethod === 'cod' ? 'COD Order - OTP Verified' : null,
           paymentCompletedAt: new Date().toISOString()
         },
 
@@ -266,7 +296,7 @@ const TransactionStatusContent = () => {
           receivedAt: transactionData.receivedAt,
           source: "transaction_status_page",
           isPaymentComplete: transactionData.status === 'success',
-          processingSource: "frontend_transaction_status"
+          processingSource: `frontend_transaction_status_${transactionData.paymentMethod}`
         }
       };
 
@@ -299,7 +329,7 @@ const TransactionStatusContent = () => {
         console.warn('Could not clear localStorage');
       }
 
-      console.log('🎉 Complete order data sent to backend successfully');
+      console.log(`🎉 Complete ${transactionData.paymentMethod.toUpperCase()} order data sent to backend successfully`);
 
     } catch (error) {
       console.error('❌ Error sending complete order data to backend:', error);
@@ -338,35 +368,69 @@ const TransactionStatusContent = () => {
     }
   };
 
+  const getPaymentMethodIcon = () => {
+    if (paymentMethod === 'cod') {
+      return <Banknote className="h-5 w-5 text-green-600" />;
+    } else {
+      return <CreditCard className="h-5 w-5 text-blue-600" />;
+    }
+  };
+
+  const getPaymentMethodText = () => {
+    if (paymentMethod === 'cod') {
+      return {
+        text: 'Cash on Delivery',
+        color: 'text-green-600',
+        bgColor: 'bg-green-50',
+        borderColor: 'border-green-200'
+      };
+    } else {
+      return {
+        text: 'Online Payment',
+        color: 'text-blue-600',
+        bgColor: 'bg-blue-50',
+        borderColor: 'border-blue-200'
+      };
+    }
+  };
+
   const getStatusMessage = () => {
+    const methodInfo = getPaymentMethodText();
+    
     switch (paymentStatus) {
       case 'success':
         return {
-          title: 'Payment Successful! 🎉',
-          message: 'Your payment has been processed successfully. Your order is confirmed!',
+          title: paymentMethod === 'cod' ? 'COD Order Confirmed! 🎉' : 'Payment Successful! 🎉',
+          message: paymentMethod === 'cod' 
+            ? 'Your COD order has been confirmed. Pay when your order is delivered to your doorstep!'
+            : 'Your payment has been processed successfully. Your order is confirmed!',
           color: 'text-green-600',
           bgColor: 'from-green-50 to-white'
         };
       case 'failed':
       case 'failure':
         return {
-          title: 'Payment Failed 😞',
-          message: 'Your payment could not be processed. Please try again or use a different payment method.',
+          title: paymentMethod === 'cod' ? 'COD Order Failed 😞' : 'Payment Failed 😞',
+          message: paymentMethod === 'cod'
+            ? 'Your COD order could not be processed. Please try again or contact support.'
+            : 'Your payment could not be processed. Please try again or use a different payment method.',
           color: 'text-red-600',
           bgColor: 'from-red-50 to-white'
         };
       case 'cancelled':
       case 'aborted':
         return {
-          title: 'Payment Cancelled ⏹️',
-          message: 'You have cancelled the payment process. Your order has not been placed.',
+          title: paymentMethod === 'cod' ? 'COD Order Cancelled ⏹️' : 'Payment Cancelled ⏹️',
+          message: paymentMethod === 'cod'
+            ? 'You have cancelled the COD order process. Your order has not been placed.'
+            : 'You have cancelled the payment process. Your order has not been placed.',
           color: 'text-yellow-600',
           bgColor: 'from-yellow-50 to-white'
         };
       default:
         return {
-          title: 'Payment Status Unknown',
-          message: 'We could not determine your payment status. Please contact support.',
+          title: 'Order Status Unknown',
+          message: 'We could not determine your order status. Please contact support.',
           color: 'text-gray-600',
           bgColor: 'from-gray-50 to-white'
         };
@@ -374,6 +438,7 @@ const TransactionStatusContent = () => {
   };
 
   const statusInfo = getStatusMessage();
+  const methodInfo = getPaymentMethodText();
 
   if (isLoading) {
     return (
@@ -405,6 +470,14 @@ const TransactionStatusContent = () => {
           {statusInfo.message}
         </p>
 
+        {/* Payment Method Badge */}
+        <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl ${methodInfo.bgColor} ${methodInfo.borderColor} border-2 mb-4 sm:mb-6`}>
+          {getPaymentMethodIcon()}
+          <span className={`font-bold text-sm ${methodInfo.color}`}>
+            {methodInfo.text}
+          </span>
+        </div>
+
         {/* Transaction Details */}
         {paymentData && (
           <div className="bg-gray-50 rounded-xl p-4 sm:p-6 mb-4 sm:mb-6 text-left">
@@ -422,12 +495,19 @@ const TransactionStatusContent = () => {
                   <span className="font-mono text-gray-900 bg-white px-2 py-1 rounded text-xs break-all">{paymentData.trackingId}</span>
                 </div>
               )}
-              {paymentData.bankRefNo && (
+              {paymentData.bankRefNo && paymentMethod === 'online' && (
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-200 gap-1 sm:gap-0">
                   <span className="text-gray-600 font-medium">Bank Ref:</span>
                   <span className="font-mono text-gray-900 bg-white px-2 py-1 rounded text-xs break-all">{paymentData.bankRefNo}</span>
                 </div>
               )}
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-200 gap-1 sm:gap-0">
+                <span className="text-gray-600 font-medium">Payment Method:</span>
+                <div className="flex items-center gap-2">
+                  {getPaymentMethodIcon()}
+                  <span className={`font-bold text-sm ${methodInfo.color}`}>{methodInfo.text}</span>
+                </div>
+              </div>
               {paymentData.amount && (
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2">
                   <span className="text-gray-600 font-medium">Amount:</span>
@@ -448,17 +528,21 @@ const TransactionStatusContent = () => {
 
         {/* Order Status Message */}
         {paymentStatus === 'success' && (
-          <div className="bg-green-50 border border-green-200 rounded-xl p-3 sm:p-4 mb-4 sm:mb-6">
+          <div className={`${methodInfo.bgColor} border ${methodInfo.borderColor} rounded-xl p-3 sm:p-4 mb-4 sm:mb-6`}>
             <div className="flex items-center justify-center gap-2">
               {backendSent ? (
                 <>
                   <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0" />
-                  <span className="text-xs sm:text-sm text-green-800 font-medium text-center">Order Created Successfully</span>
+                  <span className="text-xs sm:text-sm text-green-800 font-medium text-center">
+                    {paymentMethod === 'cod' ? 'COD Order Created Successfully' : 'Order Created Successfully'}
+                  </span>
                 </>
               ) : (
                 <>
                   <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 animate-spin flex-shrink-0" />
-                  <span className="text-xs sm:text-sm text-green-800 font-medium text-center">Creating Your Order...</span>
+                  <span className="text-xs sm:text-sm text-green-800 font-medium text-center">
+                    {paymentMethod === 'cod' ? 'Creating Your COD Order...' : 'Creating Your Order...'}
+                  </span>
                 </>
               )}
             </div>
@@ -520,7 +604,10 @@ const TransactionStatusContent = () => {
             <p className="text-xs sm:text-sm text-green-800 leading-relaxed">
               🎊 <strong>Thank you for your order!</strong>
               <br />
-              You will receive an order confirmation email shortly.
+              {paymentMethod === 'cod' 
+                ? 'Your COD order is confirmed. Pay when delivered!'
+                : 'You will receive an order confirmation email shortly.'
+              }
             </p>
           </div>
         )}

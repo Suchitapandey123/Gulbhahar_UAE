@@ -189,7 +189,7 @@ const BrandSection = () => {
                 className="text-[14px] sm:text-lg md:text-xl lg:text-2xl font-light tracking-wide"
                 style={{ fontFamily: "'Old Standard TT', serif" }}
               >
-                tailored with love
+                Tailored with Love
               </h3>
             </motion.div>
 
@@ -202,7 +202,7 @@ const BrandSection = () => {
                 className="text-[14px] sm:text-lg md:text-xl lg:text-2xl font-light tracking-wide"
                 style={{ fontFamily: "'Old Standard TT', serif" }}
               >
-                piece by piece
+                Piece by Piece
               </h3>
             </motion.div>
           </motion.div>

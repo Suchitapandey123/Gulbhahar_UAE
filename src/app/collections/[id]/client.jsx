@@ -540,9 +540,9 @@ export function ProductClient({ product, similarProducts }) {
               <div className="mb-8">
                 <h3 className="text-sm font-medium mb-3">Size</h3>
                 <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 max-w-sm">
-                  {product.sizes.map((size) => (
+                  {product.sizes.map((size , idx) => (
                     <button
-                      key={size}
+                      key={idx}
                       onClick={() => setSelectedSize(size)}
                       className={`py-2 px-1 text-sm border rounded transition-all duration-200 ${
                         selectedSize === size
@@ -865,9 +865,9 @@ export function ProductClient({ product, similarProducts }) {
                 </div>
                 <div className="bg-gray-50 rounded-lg p-4 border-l-2 border-red-900">
                   <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 max-w-sm mb-3">
-                    {product.sizes.map((size) => (
+                    {product.sizes.map((size , idx) => (
                       <button
-                        key={size}
+                        key={idx}
                         onClick={() => setSelectedSize(size)}
                         className={`py-3 px-1 text-sm border rounded-lg transition-all duration-200 font-medium ${
                           selectedSize === size
