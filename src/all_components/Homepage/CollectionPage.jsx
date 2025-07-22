@@ -16,15 +16,6 @@ const seasons = [
   // "spring",
 ];
 
-// Season mapping for filtering (maps display names to your data structure)
-const seasonMapping = {
-  "casual juttis": "summer",
-  "festive collection": "winter", 
-  "designer collection": "fall",
-  "designed by monica": "designed by monica",
-  "spring": "spring",
-  "all": "all"
-};
 
 export default function CollectionsPage({collections}) {
   const [selectedSeason, setSelectedSeason] = useState("all");
@@ -57,7 +48,7 @@ export default function CollectionsPage({collections}) {
   const filteredCollections = selectedSeason === "all"
     ? collections
     : collections.filter(collection => {
-        const mappedSeason = seasonMapping[selectedSeason] || selectedSeason;
+        const mappedSeason = seasons[selectedSeason] || selectedSeason;
         return collection.season === mappedSeason;
       });
 

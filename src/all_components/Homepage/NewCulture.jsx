@@ -223,7 +223,7 @@ const LuxuryCulture = () => {
         >
           {/* Desktop - Premium grid layout */}
           <div className="hidden lg:block "   >
-             <Link href="/culture">
+             <Link href="/heritage-culture">
             <div className="grid grid-cols-12  grid-rows-8 gap-6 h-[900px]">
              
               {/* Featured Royal Embroidery */}
@@ -398,7 +398,7 @@ const LuxuryCulture = () => {
 
           {/* Tablet layout */}
           <div className="hidden md:block lg:hidden">
-  <Link href="/culture">
+  <Link href="/heritage-culture">
     <div className="grid grid-cols-1 sm:grid-cols-2 my-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {heritageElements.map((element, index) => (
         <motion.div 
@@ -430,7 +430,7 @@ const LuxuryCulture = () => {
 
           {/* Mobile layout */}
           <div className="md:hidden">
-  <Link href="/culture">
+  <Link href="/heritage-culture">
     <div className="space-y-8">
       {heritageElements.map((element, index) => (
         <motion.div

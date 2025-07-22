@@ -38,7 +38,7 @@ const fallbackCollections = [
   },
 ];
 
-const seasons = ["all", "spring", "summer", "monsoon", "autumn", "winter"];
+const seasons = [ "all","designed by monica", "casual juttis", "festive collection", "designer collection"];
 
 const sortOptions = [
   { label: "Price: high to low", value: "price-desc" },
@@ -826,7 +826,7 @@ const handleAddToCart = async (e, item) => {
                 }`}
               >
                 {season !== "all"
-                  ? `${season.toUpperCase()} 2025`
+                  ? `${season.toUpperCase()}`
                   : season.toUpperCase()}
               </button>
             ))}

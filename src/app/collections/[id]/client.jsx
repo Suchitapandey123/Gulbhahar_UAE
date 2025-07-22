@@ -358,7 +358,7 @@ export function ProductClient({ product, similarProducts }) {
                 <div className="flex items-center gap-2">
                   <Clock className="w-3 h-3 text-blue-500" />
                   <span className="text-xs text-gray-600">
-                    Order before 9:30 PM for faster delivery
+                  Delivery within 5-7 business days (Monday-Friday, excluding holidays)
                   </span>
                 </div>
               </div>
@@ -637,7 +637,7 @@ export function ProductClient({ product, similarProducts }) {
                         <div className="flex items-center gap-2">
                           <Clock className="w-3 h-3 text-blue-500" />
                           <span className="text-xs text-gray-600">
-                            Order before 9:30 PM for faster delivery
+                           Delivery within 5-7 business days (Monday-Friday, excluding holidays)
                           </span>
                         </div>
                       </div>
@@ -970,7 +970,7 @@ export function ProductClient({ product, similarProducts }) {
                           <div className="flex items-center gap-2">
                             <Clock className="w-3 h-3 text-blue-500" />
                             <span className="text-xs text-gray-600">
-                              Order before 9:30 PM for faster delivery
+                            Delivery within 5-7 business days (Monday-Friday, excluding holidays)
                             </span>
                           </div>
                         </div>

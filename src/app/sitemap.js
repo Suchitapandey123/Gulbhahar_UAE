@@ -34,7 +34,7 @@ export default async function sitemap() {
         priority: 0.7,
       },
       {
-        url: `${baseUrl}/culture`,
+        url: `${baseUrl}/heritage-collection`,
         lastModified: new Date(),
         changeFrequency: 'monthly',
         priority: 0.6,

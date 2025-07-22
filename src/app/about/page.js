@@ -3,7 +3,7 @@ import Component from "@/app/about/Component/About"
 
 export async function generateMetadata() {
   return { 
-    title: ' About Gulbhahar - Handcrafted Juttis - Tradition In Every Step',
+    title: ' About Gulbhahar | Handcrafted Juttis | Tradition In Every Step',
     description: "Discover Gulbhahar's heritage of crafting premium handmade jutis. Learn about our artisan tradition, quality craftsmanship, and commitment to authentic Indian footwear.",
     icons: {
       icon: "/logo.png",

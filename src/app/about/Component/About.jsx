@@ -117,7 +117,7 @@ const HeroSection = () => {
               <div className="relative w-full h-[300px] xs:h-[350px] sm:h-[400px] md:h-[500px] lg:h-[600px] xl:h-[700px] rounded-lg sm:rounded-xl lg:rounded-[2rem] overflow-hidden shadow-2xl">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent z-10" />
                 <Image
-                  src="https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-16.png"
+                  src="/Safa2/safa-1.jpg"
                   alt="Heritage Craftsmanship"
                   fill
                   className="object-cover transition-transform duration-1000 group-hover:scale-105"
@@ -405,7 +405,7 @@ const TraditionSection = () => {
           >
             <div className="relative h-[250px] xs:h-[300px] sm:h-[350px] md:h-[400px] lg:h-[500px] rounded-lg sm:rounded-xl lg:rounded-3xl overflow-hidden shadow-2xl border border-[#7f0001]/20">
               <Image
-                src="https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-17.png"
+                src="/Safa2/safa-2.jpg"
                 alt="Traditional Craftsmanship"
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-110"
@@ -420,7 +420,7 @@ const TraditionSection = () => {
                 viewport={{ once: true }}
               >
                 <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-1 sm:mb-2">Traditional Methods</h3>
-                <p className="text-sm sm:text-base lg:text-lg opacity-90">Centuries-old techniques preserved</p>
+                <p className="text-sm sm:text-base lg:text-lg opacity-90">Our juttis celebrate India's rich handcrafted legacy, and our soulful design in juttis is woven with traditional expertise.</p>
               </motion.div>
             </div>
           </motion.div>
@@ -433,9 +433,7 @@ const TraditionSection = () => {
             viewport={{ once: true }}
           >
             <blockquote className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl italic text-gray-700 leading-relaxed">
-              "We bring centuries of Indian craftsmanship to your feet through our exquisitely 
-              handcrafted juttis. Each pair tells a story of tradition, artistry, and cultural 
-              excellence that has been passed down through generations."
+            Each jutti we craft carries the soul of Indian heritage. Gulbhahar juttis are woven by hands that have passed down their artistry for generations. We bring centuries of tradition right to you.
             </blockquote>
             
             <motion.div 
@@ -461,8 +459,7 @@ const TraditionSection = () => {
             viewport={{ once: true }}
           >
             <blockquote className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl italic text-gray-700 leading-relaxed">
-              "Each step you take in our juttis carries forward a legacy of Indian craftsmanship, 
-              connecting you to centuries of artisanal excellence and cultural heritage."
+            Each pair of juttis shares a story; our juttis weave together the past and present. Gulbhahar gives you an unbroken thread of Indian craftsmanship passed down through time.
             </blockquote>
             
             <motion.div 
@@ -487,7 +484,7 @@ const TraditionSection = () => {
           >
             <div className="relative h-[250px] xs:h-[300px] sm:h-[350px] md:h-[400px] lg:h-[500px] rounded-lg sm:rounded-xl lg:rounded-3xl overflow-hidden shadow-2xl border border-[#7f0001]/20">
               <Image
-                src="https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-18.png"
+                src="/Sheen/sheen-1.jpg"
                 alt="Contemporary Design"
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-110"
@@ -502,7 +499,7 @@ const TraditionSection = () => {
                 viewport={{ once: true }}
               >
                 <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-1 sm:mb-2">Modern Innovation</h3>
-                <p className="text-sm sm:text-base lg:text-lg opacity-90">Contemporary design philosophy</p>
+                <p className="text-sm sm:text-base lg:text-lg opacity-90">Innovation breathes new life into heritage; our juttis fuse artisanal craft with modern flair and function.                </p>
               </motion.div>
             </div>
           </motion.div>
@@ -544,22 +541,22 @@ const ArtisanSection = () => {
       name: "Adda Master",
       experience: "35 Years",
       specialty: "Traditional Embroidery",
-      quote: "Every stitch carries the wisdom of my ancestors",
-      image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-17.png"
+      quote: "Each hand-stitched creativity generates amazing textile creations through the weaving together of cultural identities and stories.",
+      image: "/website/about-us/adda-master/adda-1.jpg"
     },
     {
-      name: "Dhinchak Pooja",
+      name: "Hastkalaakar",
       experience: "28 Years", 
       specialty: "Pattern Design",
-      quote: "Innovation blooms from the roots of tradition",
-      image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-18.png"
+      quote: "The artistic process of composing elements in symmetry and harmony, to create a totality for each jutti.",
+      image: "/website/about-us/Pattern/pattern-1.png"
     },
     {
-      name: "Tamancha Master",
+      name: "Shilpkar",
       experience: "42 Years",
       specialty: "Leather Crafting",
-      quote: "Each piece tells a story through my hands",
-      image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-19.png"
+      quote: "The intricate process of working with leather in an artistic craft that has tooling, cutting, moulding, and stitching leather to create bespoke pieces of lasting quality.",
+      image: "/website/about-us/Pattern/jai.jpg"
     }
   ];
 
@@ -633,7 +630,7 @@ const ArtisanSection = () => {
                   src={artisan.image}
                   alt={artisan.name}
                   fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  className=" transition-transform duration-700 group-hover:scale-110"
                 />
                 
                 {/* Overlay */}
@@ -654,7 +651,7 @@ const ArtisanSection = () => {
                     </div>
                     <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2 sm:mb-4">{artisan.name}</h3>
                     <blockquote className="text-sm sm:text-base lg:text-lg italic text-gray-100 leading-relaxed">
-                      "{artisan.quote}"
+                      {artisan.quote}
                     </blockquote>
                   </motion.div>
                 </div>
@@ -862,18 +859,20 @@ const CollectionsSection = () => {
   
   const collections = [
     {
-      name: "Heritage Classic",
+      name: "Ada (Jutti)",
       description: "Timeless designs rooted in traditional Indian aesthetics",
-      price: "₹2,499 - ₹4,999",
+      price: "₹5799",
       features: ["Hand-embroidered", "Premium leather", "Traditional motifs"],
-      image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-16.png"
+      image: "/Noorani/Noorani-1.jpg",
+      link : "/collections/P04172723114"
     },
     {
-      name: "Contemporary Fusion",
+      name: "Lal Ishq (Jutti)",
       description: "Modern silhouettes with traditional craftsmanship",
-      price: "₹3,999 - ₹7,999", 
+      price: "₹5490", 
       features: ["Contemporary design", "Comfort padding", "Versatile styling"],
-      image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-17.png"
+      image: "/Lal-ishq/lal-ishq-1.jpg",
+      link : "/collections/P45482609607"
     },
   ];
 
@@ -953,6 +952,7 @@ const CollectionsSection = () => {
 
           {/* Collection Display */}
           <motion.div 
+          onClick={() => window.open(collections[activeCollection].link, "_blank")}
             className="lg:col-span-8 order-1 lg:order-2"
             initial={{ opacity: 0, x: 100 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -1192,11 +1192,12 @@ const CtaSection = () => {
             viewport={{ once: true }}
           >
             <motion.button 
+            onClick={() => window.open("/heritage-culture", "_blank")}
               className="group relative px-6 sm:px-8 lg:px-12 py-3 sm:py-4 lg:py-6 bg-[#7f0001] text-white rounded-full font-bold text-sm sm:text-base lg:text-xl hover:bg-[#a50003] transition-all duration-300 shadow-2xl overflow-hidden w-full sm:w-auto"
               whileHover={{ scale: 1.05, y: -5 }}
               whileTap={{ scale: 0.95 }}
             >
-              <span className="relative z-10">Discover Our Collection</span>
+              <span className="relative z-10">Discover Our Heritage Culture</span>
             </motion.button>
             
             <motion.button 
@@ -1249,6 +1250,418 @@ const CtaSection = () => {
   );
 };
 
+// Brand Story Section Component
+const BrandStorySection = () => {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const textY = useTransform(scrollYProgress, [0, 1], [0, -50]);
+
+  return (
+    <motion.div 
+      ref={containerRef}
+      className="relative py-8 sm:py-16 lg:py-20 overflow-hidden bg-transparent"
+    >
+      <div className="max-w-7xl mx-auto px-2 xs:px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Main Brand Story */}
+        <motion.div 
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 lg:gap-16 items-center mb-16 sm:mb-24 lg:mb-32"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+          viewport={{ once: true }}
+        >
+          {/* Story Content */}
+          <motion.div 
+            className="lg:col-span-7 mt-4 order-2 lg:order-1"
+            style={{ y: textY }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 100 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <motion.span 
+                className="absolute -top-8 sm:-top-12 lg:-top-16 -left-2 mt-4 sm:-left-4 lg:-left-8 text-6xl sm:text-8xl lg:text-[12rem] font-black text-[#7f0001]/10 leading-none select-none"
+                initial={{ opacity: 0, scale: 0, rotate: -30 }}
+                whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+                transition={{ duration: 1.5 }}
+                viewport={{ once: true }}
+              >
+                "
+              </motion.span>
+              
+              <div className="pl-4 sm:pl-8 lg:pl-16 space-y-6 sm:space-y-8 lg:space-y-10">
+                <motion.h2 
+                  className="text-3xl flex gap-3 xs:text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl font-black leading-tight"
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  viewport={{ once: true }}
+                >
+                  <motion.span
+                    className="block bg-gradient-to-r from-[#7f0001] to-[#a50003] bg-clip-text text-transparent"
+                    initial={{ opacity: 0, rotateX: 90 }}
+                    whileInView={{ opacity: 1, rotateX: 0 }}
+                    transition={{ delay: 0.3 }}
+                    viewport={{ once: true }}
+                  >
+                    BRAND
+                  </motion.span>
+                  <motion.span
+                    className="block text-gray-700"
+                    initial={{ opacity: 0, rotateX: 90 }}
+                    whileInView={{ opacity: 1, rotateX: 0 }}
+                    transition={{ delay: 0.5 }}
+                    viewport={{ once: true }}
+                  >
+                    STORY
+                  </motion.span>
+                </motion.h2>
+                
+                <motion.div 
+                  className="space-y-4 sm:space-y-6 text-sm xs:text-base sm:text-lg md:text-xl lg:text-xl xl:text-2xl text-gray-700 leading-relaxed"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7 }}
+                  viewport={{ once: true }}
+                >
+                  <p>
+                    It started with an inclination towards the art of <span className="text-[#7f0001] font-semibold">hand embroidery and its artisans</span>. 
+                    With a passion for promoting handicrafts intertwined with comfortable footwear, visionary couple 
+                    <span className="font-bold text-gray-900"> Pulkit Gulati and Monica Gulati (née Bhardwaj)</span> launched 
+                    Gulbhahar in <span className="text-[#7f0001] font-bold">January 2025</span>.
+                  </p>
+                  
+                  <motion.div 
+                    className="bg-gradient-to-r from-[#7f0001]/10 to-transparent p-4 sm:p-6 lg:p-8 rounded-lg sm:rounded-xl lg:rounded-2xl border-l-4 border-[#7f0001]"
+                    initial={{ opacity: 0, x: -50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.9 }}
+                    viewport={{ once: true }}
+                  >
+                    <p className="italic">
+                      The brand's name itself is an amalgamation of their last names. Partners in life and partners in business, 
+                      '<span className="text-[#7f0001] font-bold">Gul</span>' is taken from 'Gulati', and 
+                      '<span className="text-[#7f0001] font-bold">Bhar</span>' is derived from 'Bhardwaj'.
+                    </p>
+                  </motion.div>
+                  
+                  <p>
+                    They were drawn to innovative handiwork, hard work, and the art of the artisans. 
+                    <span className="font-semibold text-gray-900"> Each pair takes time and dedication, as they are handmade</span>, 
+                    and utmost importance is given to hand embroidery.
+                  </p>
+                </motion.div>
+              </div>
+            </motion.div>
+          </motion.div>
+
+          {/* Founders Image */}
+          <motion.div 
+            className="lg:col-span-5 order-1 lg:order-2"
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.3 }}
+            viewport={{ once: true }}
+          >
+            <motion.div 
+              className="relative group"
+              whileHover={{ 
+                scale: 1.02,
+                rotateY: -5,
+                transition: { duration: 0.6 }
+              }}
+            >
+              <div className="relative w-full h-[300px] xs:h-[350px] sm:h-[400px] md:h-[500px] lg:h-[600px] rounded-lg sm:rounded-xl lg:rounded-[2rem] overflow-hidden shadow-2xl border border-[#7f0001]/20">
+                <div className="absolute inset-0 bg-gradient-to-t from-[#7f0001]/30 via-transparent to-transparent z-10" />
+                {/* Placeholder for founders image - replace with actual image */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#7f0001]/20 to-[#a50003]/30 flex items-center justify-center">
+                  <div className="text-center text-white">
+                    <div className="text-4xl sm:text-6xl font-bold mb-2">P & M</div>
+                    <div className="text-lg sm:text-xl">Founders</div>
+                    <div className="text-sm sm:text-base opacity-80 mt-2">Pulkit & Monica Gulati</div>
+                  </div>
+                </div>
+                
+                {/* Floating Elements */}
+                <motion.div
+                  className="absolute top-3 sm:top-4 lg:top-8 right-3 sm:right-4 lg:right-8 bg-transparent border-2 border-white backdrop-blur-md px-3 sm:px-4 lg:px-6 py-2 sm:py-2 lg:py-3 rounded-lg sm:rounded-xl lg:rounded-2xl shadow-xl z-20"
+                  initial={{ opacity: 0, x: 50, y: -50 }}
+                  whileInView={{ opacity: 1, x: 0, y: 0 }}
+                  transition={{ delay: 1.5 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                >
+                  <span className="text-xs sm:text-sm font-bold text-white tracking-wide">JAN 2025</span>
+                </motion.div>
+
+                <motion.div
+                  className="absolute bottom-3 sm:bottom-4 lg:bottom-8 left-3 sm:left-4 lg:left-8 bg-transparent border-2 border-[#7f0001] backdrop-blur-md px-3 sm:px-4 lg:px-6 py-2 sm:py-2 lg:py-3 rounded-lg sm:rounded-xl lg:rounded-2xl shadow-xl z-20"
+                  initial={{ opacity: 0, x: -50, y: 50 }}
+                  whileInView={{ opacity: 1, x: 0, y: 0 }}
+                  transition={{ delay: 1.7 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                >
+                  <span className="text-xs sm:text-sm font-bold text-[#7f0001] tracking-wide">EST.</span>
+                </motion.div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+
+        {/* About Us Section */}
+        <motion.div 
+          className="mb-16 sm:mb-24 lg:mb-32"
+          initial={{ opacity: 0, y: 100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-20 items-center">
+            <motion.div 
+              className="space-y-6 sm:space-y-8 lg:space-y-10"
+              initial={{ opacity: 0, x: -100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <motion.h3 
+                className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold text-[#7f0001] mb-4 sm:mb-6"
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.4 }}
+                viewport={{ once: true }}
+              >
+                About Us
+              </motion.h3>
+              
+              <div className="space-y-4 sm:space-y-6 text-sm xs:text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed">
+                <p>
+                  <span className="font-semibold text-gray-900">Handcrafted by artisans honing the shoemaking trade for generations</span>, 
+                  each pair of juttis is unique. Gulbhahar ensures everything about each jutti is flawless.
+                </p>
+                
+                <p>
+                  We make our juttis in beautiful fabrics, and they have <span className="text-[#7f0001] font-semibold">meticulous threadwork</span>. 
+                  We take every detail seriously. Everything from Gulbhahar is carefully crafted.
+                </p>
+                
+                <motion.div 
+                  className="bg-gradient-to-r from-[#7f0001]/5 to-transparent p-4 sm:p-6 rounded-lg sm:rounded-xl border border-[#7f0001]/20"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 }}
+                  viewport={{ once: true }}
+                >
+                  <p className="font-medium text-gray-800 italic">
+                    The intention was to reevaluate the traditional jutti craft form but add more of a 
+                    <span className="text-[#7f0001] font-bold"> modern and stylish feel</span>.
+                  </p>
+                </motion.div>
+              </div>
+            </motion.div>
+
+            <motion.div 
+              className="space-y-4 sm:space-y-6 text-sm xs:text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed"
+              initial={{ opacity: 0, x: 100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              viewport={{ once: true }}
+            >
+              <motion.blockquote 
+                className="text-lg sm:text-xl md:text-2xl lg:text-2xl xl:text-3xl italic text-gray-600 border-l-4 border-[#7f0001] pl-4 sm:pl-6 lg:pl-8 mb-6 sm:mb-8"
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.6 }}
+                viewport={{ once: true }}
+              >
+                "Our handcrafted shoes are more than a pair of shoes. They are a representation of 
+                <span className="text-[#7f0001] font-bold"> comfort, style and integrity</span>."
+              </motion.blockquote>
+              
+              <p>
+                Wearing our juttis connects you to a <span className="font-semibold text-gray-900">rich history of elegance, tradition, and custom</span>. 
+                Whether it's weddings, festive holiday parties, or just everyday glamour.
+              </p>
+              
+              <p>
+                The handmade designer juttis and accessories for women celebrate rich diversity. 
+                Each piece is made with <span className="text-[#7f0001] font-semibold">craftsmanship and creativity</span>. 
+                Gulbhahar wants to be a part of every special occasion that you celebrate.
+              </p>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* Mission Section */}
+        <motion.div 
+          className="text-center mb-16 sm:mb-24 lg:mb-32"
+          initial={{ opacity: 0, y: 100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          <motion.h3 
+            className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl font-black mb-8 sm:mb-12 lg:mb-16 text-[#7f0001]"
+            initial={{ opacity: 0, scale: 0.5 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.2, type: "spring", stiffness: 100 }}
+            viewport={{ once: true }}
+          >
+            OUR MISSION
+          </motion.h3>
+          
+          <motion.p 
+            className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 mb-8 sm:mb-12 lg:mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            viewport={{ once: true }}
+          >
+            We are dedicated to:
+          </motion.p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 max-w-5xl mx-auto">
+            {[
+              { title: "Preserving Heritage", icon: "🏛️", description: "Keeping traditional craftsmanship alive through modern innovation" },
+              { title: "Responsible Fashion", icon: "🌱", description: "Creating sustainable, ethically-made products with care for our environment" },
+              { title: "Unparalleled Comfort", icon: "✨", description: "Ensuring every step is as comfortable as it is beautiful" }
+            ].map((mission, index) => (
+              <motion.div
+                key={mission.title}
+                className="group p-6 sm:p-8 lg:p-10 bg-transparent border border-[#7f0001]/20 rounded-lg sm:rounded-xl lg:rounded-2xl hover:border-[#7f0001] hover:shadow-2xl transition-all duration-300"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 + index * 0.2 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.05, y: -10 }}
+              >
+                <div className="text-4xl sm:text-5xl lg:text-6xl mb-4 sm:mb-6">{mission.icon}</div>
+                <h4 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#7f0001] mb-3 sm:mb-4">{mission.title}</h4>
+                <p className="text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed">{mission.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Stay Connected & Closing */}
+        <motion.div 
+          className="text-center"
+          initial={{ opacity: 0, y: 100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          <motion.h3 
+            className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold mb-6 sm:mb-8 lg:mb-12 text-[#7f0001]"
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            Stay Connected
+          </motion.h3>
+          
+          <motion.div 
+            className="space-y-4 sm:space-y-6 text-base sm:text-lg md:text-xl lg:text-2xl text-gray-700 leading-relaxed max-w-4xl mx-auto mb-8 sm:mb-12"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            viewport={{ once: true }}
+          >
+            <p>
+              Follow us on <motion.a 
+                href="https://www.instagram.com/gulbhahar_official?igsh=MzRlODBiNWFlZA==" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#7f0001] font-bold hover:underline"
+                whileHover={{ scale: 1.05 }}
+              >
+                Gulbhahar Official
+              </motion.a> on social media and be a part of the Gulbhahar family!
+            </p>
+          </motion.div>
+
+          <motion.div 
+            className="space-y-4 sm:space-y-6 text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-light text-gray-600 max-w-4xl mx-auto"
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.6, type: "spring", stiffness: 100 }}
+            viewport={{ once: true }}
+          >
+            <motion.p 
+              className="italic"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <span className="text-[#7f0001] font-semibold">This is Gulbhahar.</span>{" "}
+              <span className="text-gray-700 font-semibold">This is our story.</span>{" "}
+              <span className="text-[#7f0001] font-bold">And now, it becomes yours.</span>
+            </motion.p>
+          </motion.div>
+
+          {/* Decorative Elements */}
+          <motion.div 
+            className="flex justify-center items-center space-x-4 sm:space-x-8 mt-12 sm:mt-16 lg:mt-20"
+            initial={{ opacity: 0, scale: 0 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.8, type: "spring", stiffness: 200 }}
+            viewport={{ once: true }}
+          >
+            <div className="w-12 sm:w-16 lg:w-24 h-0.5 bg-gradient-to-r from-transparent to-[#7f0001]" />
+            <motion.div 
+              className="w-2 sm:w-3 h-2 sm:h-3 bg-[#7f0001] rounded-full"
+              animate={{ 
+                scale: [1, 1.2, 1],
+                opacity: [0.7, 1, 0.7]
+              }}
+              transition={{ 
+                duration: 2, 
+                repeat: Infinity, 
+                ease: "easeInOut" 
+              }}
+            />
+            <div className="w-12 sm:w-16 lg:w-24 h-0.5 bg-gradient-to-l from-transparent to-[#7f0001]" />
+          </motion.div>
+        </motion.div>
+      </div>
+
+      {/* Background Decorative Elements */}
+      <motion.div 
+        className="absolute top-1/4 left-1/4 w-32 sm:w-48 lg:w-64 h-32 sm:h-48 lg:h-64 bg-gradient-to-br from-[#7f0001]/10 to-[#7f0001]/20 rounded-full opacity-30 blur-3xl"
+        animate={{ 
+          rotate: 360,
+          scale: [1, 1.2, 1]
+        }}
+        transition={{ 
+          duration: 20, 
+          repeat: Infinity, 
+          ease: "linear" 
+        }}
+      />
+      <motion.div 
+        className="absolute bottom-1/4 right-1/4 w-40 sm:w-56 lg:w-72 h-40 sm:h-56 lg:h-72 bg-gradient-to-tl from-[#7f0001]/15 to-[#7f0001]/25 rounded-full opacity-25 blur-3xl"
+        animate={{ 
+          rotate: -360,
+          scale: [1, 1.3, 1]
+        }}
+        transition={{ 
+          duration: 25, 
+          repeat: Infinity, 
+          ease: "linear" 
+        }}
+      />
+    </motion.div>
+  );
+};
+
 // Main Component
 const UltimateHomePage = () => {
   return (
@@ -1259,9 +1672,10 @@ const UltimateHomePage = () => {
       transition={{ duration: 1 }}
     >
       <HeroSection />
+      <BrandStorySection  />
       <StorySection />
       <TraditionSection />
-      {/* <ArtisanSection /> */}
+      <ArtisanSection />
       <ProcessSection />
       <CollectionsSection />
       <TestimonialsSection />
