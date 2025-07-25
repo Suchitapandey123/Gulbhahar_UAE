@@ -31,6 +31,14 @@ import Link from "next/link";
 import ImageModal from "./components/ImageModal";
 import Reviews from "./components/Reviews";
 
+const generateSizeRange = (availableSizes) => {
+  const allSizes = ["35", "36", "37", "38", "39", "40", "41"];
+  return allSizes.map((size) => ({
+    size,
+    available: availableSizes.includes(size),
+  }));
+};
+
 export function ProductClient({ product, similarProducts }) {
   // console.log(product)
   const router = useRouter();
@@ -570,23 +578,58 @@ export function ProductClient({ product, similarProducts }) {
                 {/* Size Selection */}
                 <div className="mb-8">
                   <h3 className="text-sm font-medium mb-3">Size</h3>
-                  <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 max-w-sm">
-                    {product.sizes.map((size, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => setSelectedSize(size)}
-                        className={`py-2 px-1 text-sm border rounded transition-all duration-200 ${
-                          selectedSize === size
-                            ? "border-red-900 bg-red-900 text-white shadow-md"
-                            : "border-gray-200 hover:border-red-300"
-                        }`}
-                      >
-                        {size}
-                      </button>
-                    ))}
+                  <div className="grid grid-cols-4 sm:grid-cols-7 gap-2 max-w-md">
+                    {generateSizeRange(product.sizes).map(
+                      ({ size, available }, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => available && setSelectedSize(size)}
+                          disabled={!available}
+                          className={`py-2 px-1 text-sm border rounded transition-all duration-200 relative ${
+                            selectedSize === size && available
+                              ? "border-red-900 bg-red-900 text-white shadow-md"
+                              : available
+                              ? "border-gray-200 hover:border-red-300 bg-white text-gray-900"
+                              : "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
+                          }`}
+                        >
+                          <span
+                            className={`${
+                              !available
+                                ? "  decoration-2 decoration-red-900"
+                                : ""
+                            }`}
+                          >
+                            {size}
+                          </span>
+                          {!available && (
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="w-10 h-0.5 bg-red-900 transform -rotate-45"></div>
+                            </div>
+                          )}
+                        </button>
+                      )
+                    )}
+                  </div>
+
+                  {/* Size availability info */}
+                  <div className="mt-3 text-xs text-gray-600">
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-1">
+                        <div className="w-3 h-3 bg-red-900 rounded"></div>
+                        <span>Available</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <div className="w-3 h-3 bg-gray-300 rounded relative">
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-full h-0.5 bg-red-900 transform -rotate-45"></div>
+                          </div>
+                        </div>
+                        <span>Out of stock</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-
                 {/* Delivery Section - Mobile */}
                 <div className="mb-8">
                   <h3 className="text-sm font-medium mb-3">Delivery to</h3>
@@ -946,24 +989,89 @@ export function ProductClient({ product, similarProducts }) {
                   </h3>
                 </div>
                 <div className="bg-gray-50 rounded-lg p-4 border-l-2 border-red-900">
-                  <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 max-w-sm mb-3">
-                    {product.sizes.map((size, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => setSelectedSize(size)}
-                        className={`py-3 px-1 text-sm border rounded-lg transition-all duration-200 font-medium ${
-                          selectedSize === size
-                            ? "border-red-900 bg-red-900 text-white shadow-md transform scale-105"
-                            : "border-gray-300 hover:border-red-300 hover:bg-red-50 bg-white"
-                        }`}
-                      >
-                        {size}
-                      </button>
-                    ))}
+                  {/* Selected size display */}
+                  {selectedSize &&
+                    generateSizeRange(product.sizes).find(
+                      (s) => s.size === selectedSize
+                    )?.available && (
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-sm font-medium text-gray-700">
+                          Selected:
+                        </span>
+                        <span className="text-sm text-red-900 font-medium bg-red-50 px-2 py-1 rounded">
+                          Size {selectedSize}
+                        </span>
+                      </div>
+                    )}
+
+                  <div className="grid grid-cols-4 sm:grid-cols-7 gap-2 max-w-md mb-4">
+                    {generateSizeRange(product.sizes).map(
+                      ({ size, available }, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => available && setSelectedSize(size)}
+                          disabled={!available}
+                          className={`py-3 px-1 text-sm border rounded-lg transition-all duration-200 font-medium relative ${
+                            selectedSize === size && available
+                              ? "border-red-900 bg-red-900 text-white shadow-md transform scale-105"
+                              : available
+                              ? "border-gray-300 hover:border-red-300 hover:bg-red-50 bg-white text-gray-900"
+                              : "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
+                          }`}
+                        >
+                          <span
+                            className={`${
+                              !available
+                                ? " decoration-2 decoration-red-900"
+                                : ""
+                            }`}
+                          >
+                            {size}
+                          </span>
+                          {!available && (
+                            <>
+                              {/* Diagonal strike line */}
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="w-full h-0.5 bg-gray-400 transform -rotate-45"></div>
+                              </div>
+                              {/* Small "X" indicator */}
+                              {/* <div className="absolute -top-2 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                                <span className="text-white text-sm font-bold">
+                                  ×
+                                </span>
+                              </div> */}
+                            </>
+                          )}
+                        </button>
+                      )
+                    )}
                   </div>
-                  {/* <p className="text-red-900 text-sm cursor-pointer hover:underline font-medium">
-                    📏 Size Guide
-                  </p> */}
+
+                  {/* Size availability legend */}
+                  <div className="flex items-center gap-6 text-xs text-gray-600 bg-white p-3 rounded border">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-red-900 rounded flex items-center justify-center">
+                        <span className="text-white text-xs">✓</span>
+                      </div>
+                      <span className="font-medium">Available sizes</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-gray-300 rounded relative flex items-center justify-center">
+                        <span className="text-gray-500 -mt-[2px] -mr-[2px] text-xs rotate-45">
+                          |
+                        </span>
+                      </div>
+                      <span className="font-medium">Out of stock</span>
+                    </div>
+                  </div>
+
+                  {/* Size guide link */}
+                  <div className="mt-3">
+                    <button className="text-red-900 text-sm cursor-pointer hover:underline font-medium flex items-center gap-1">
+                      <span>📏</span>
+                      <span>Size Guide</span>
+                    </button>
+                  </div>
                 </div>
               </div>
 
