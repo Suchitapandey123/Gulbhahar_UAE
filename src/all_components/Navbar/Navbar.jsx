@@ -332,6 +332,7 @@ const Navbar = () => {
             className="object-cover"
             onError={handleImageError}
             onLoad={handleImageLoad}
+            priority
             sizes="(max-width: 640px) 32px, (max-width: 768px) 40px, 48px"
           />
         </div>
@@ -1194,6 +1195,7 @@ const Navbar = () => {
               alt="Brand Logo"
               width={80}
               height={24}
+              priority
               className="h-[38px] xs:h-[38px] w-full sm:h-8 "
             />
 

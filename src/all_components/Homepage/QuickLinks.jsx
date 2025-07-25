@@ -81,7 +81,7 @@ export default function QuickSearch() {
     "Best Sellers",
     "Sale Items",
     "Gift Cards",
-    "Size Guide",
+    // "Size Guide",
     "Care Instructions",
     "Custom Orders",
     "Track Order",

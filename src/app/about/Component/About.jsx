@@ -408,6 +408,7 @@ const TraditionSection = () => {
                 src="/Safa2/safa-2.jpg"
                 alt="Traditional Craftsmanship"
                 fill
+                priority
                 className="object-cover transition-transform duration-700 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#7f0001]/50 via-transparent to-transparent" />
@@ -487,6 +488,7 @@ const TraditionSection = () => {
                 src="/Sheen/sheen-1.jpg"
                 alt="Contemporary Design"
                 fill
+                priority
                 className="object-cover transition-transform duration-700 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#7f0001]/50 via-transparent to-transparent" />
@@ -630,6 +632,7 @@ const ArtisanSection = () => {
                   src={artisan.image}
                   alt={artisan.name}
                   fill
+                  priority
                   className=" transition-transform duration-700 group-hover:scale-110"
                 />
                 
@@ -830,6 +833,7 @@ const ProcessSection = () => {
                     src={step.img}
                     alt={step.title}
                     fill
+                    priority
                     className="object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#7f0001]/30 via-transparent to-transparent" />
@@ -1108,6 +1112,7 @@ const TestimonialsSection = () => {
                       className="w-full h-full object-cover rounded-full"
                       width={48}
                       height={48}
+                      priority
                     />
                   </div>
                   <div>

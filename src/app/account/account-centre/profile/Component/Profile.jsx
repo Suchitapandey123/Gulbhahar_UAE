@@ -146,6 +146,7 @@ const Profile = () => {
             alt={`${formData.firstName || 'User'}'s profile`}
             fill
             className="object-cover"
+            priority
             onError={handleImageError}
             onLoad={handleImageLoad}
           />

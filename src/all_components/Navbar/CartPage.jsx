@@ -254,6 +254,7 @@ const CartPage = () => {
                             src={getCurrentImage(item)}
                             alt={item.name}
                             width={64}
+                            priority
                             height={64}
                             className="w-full h-full object-cover"
                             onError={(e) => {
@@ -388,6 +389,7 @@ const CartPage = () => {
                                             "/Image/About1.png"
                                           }
                                           alt={color}
+                                          priority
                                           width={32}
                                           height={40}
                                           className="w-full h-full object-cover"

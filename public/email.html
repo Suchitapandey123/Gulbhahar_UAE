@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification - Secure Access</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #722f37 0%, #8b1538 50%, #a01d42 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .email-container {
+            max-width: 650px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(139, 21, 56, 0.3);
+            position: relative;
+            border: 3px solid #722f37;
+        }
+        
+        .security-badge {
+            position: absolute;
+            top: -5px;
+            right: 20px;
+            background: linear-gradient(135deg, #722f37 0%, #8b1538 100%);
+            color: #ffffff;
+            padding: 8px 20px;
+            border-radius: 0 0 15px 15px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            z-index: 10;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .security-badge::before {
+            content: '🔒';
+            margin-right: 8px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #722f37 0%, #8b1538 50%, #a0226e 100%);
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: secureRotate 15s linear infinite;
+        }
+        
+        @keyframes secureRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .brand-logo {
+            font-size: 42px;
+            font-weight: 300;
+            color: #ffffff;
+            letter-spacing: 6px;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.4);
+        }
+        
+        .brand-tagline {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 300;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .content {
+            padding: 60px 50px;
+            background: linear-gradient(to bottom, #ffffff 0%, #fdf8f9 100%);
+        }
+        
+        .greeting {
+            font-size: 32px;
+            color: #722f37;
+            margin-bottom: 25px;
+            font-weight: 300;
+            text-align: center;
+        }
+        
+        .main-message {
+            font-size: 18px;
+            color: #5d1a1d;
+            margin-bottom: 40px;
+            text-align: center;
+            line-height: 1.8;
+        }
+        
+        .highlight-text {
+            color: #8b1538;
+            font-weight: 600;
+        }
+        
+        .divider {
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #722f37, transparent);
+            margin: 40px auto;
+            position: relative;
+        }
+        
+        .divider::before {
+            content: '◆';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffffff;
+            color: #722f37;
+            padding: 0 12px;
+            font-size: 18px;
+        }
+        
+        .otp-section {
+            background: linear-gradient(145deg, #ffffff 0%, #fef7f8 100%);
+            border: 3px solid #722f37;
+            border-radius: 20px;
+            padding: 50px 40px;
+            margin: 40px 0;
+            text-align: center;
+            position: relative;
+            box-shadow: inset 0 2px 10px rgba(114, 47, 55, 0.1), 0 10px 30px rgba(114, 47, 55, 0.15);
+        }
+        
+        .otp-section::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 2px dashed rgba(114, 47, 55, 0.3);
+            border-radius: 15px;
+        }
+        
+        .otp-label {
+            font-size: 20px;
+            color: #722f37;
+            margin-bottom: 25px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+        
+        .otp-code {
+            font-size: 48px;
+            font-weight: 700;
+            color: #8b1538;
+            letter-spacing: 12px;
+            margin: 30px 0;
+            text-shadow: 0 2px 8px rgba(139, 21, 56, 0.2);
+            background: linear-gradient(135deg, #fdf8f9 0%, #f9f0f2 100%);
+            border: 3px solid #722f37;
+            border-radius: 15px;
+            padding: 25px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .otp-instructions {
+            font-size: 16px;
+            color: #5d1a1d;
+            line-height: 1.6;
+            margin-top: 20px;
+            font-style: italic;
+        }
+        
+        .validity-info {
+            background: linear-gradient(135deg, #fff8dc 0%, #ffeaa7 100%);
+            border: 2px solid #fdcb6e;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 30px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            box-shadow: 0 5px 15px rgba(253, 203, 110, 0.2);
+        }
+        
+        .timer-icon {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .validity-text {
+            font-size: 16px;
+            color: #d63031;
+            font-weight: 600;
+        }
+        
+        .security-notice {
+            background: linear-gradient(135deg, #e8f4f8 0%, #d1ecf1 100%);
+            border-left: 6px solid #00b894;
+            border-radius: 0 12px 12px 0;
+            padding: 25px;
+            margin: 40px 0;
+            position: relative;
+        }
+        
+        .security-notice::before {
+            content: '🛡️';
+            position: absolute;
+            top: 15px;
+            left: -15px;
+            background: #00b894;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        
+        .security-title {
+            font-size: 18px;
+            color: #00b894;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .security-text {
+            font-size: 15px;
+            color: #2d3436;
+            line-height: 1.6;
+        }
+        
+        .help-section {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .help-title {
+            font-size: 20px;
+            color: #e17055;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .help-text {
+            font-size: 16px;
+            color: #d63031;
+            line-height: 1.6;
+        }
+        
+        .footer {
+            background: linear-gradient(135deg, #722f37 0%, #8b1538 100%);
+            padding: 40px 50px;
+            text-align: center;
+            color: #ffffff;
+        }
+        
+        .footer-brand {
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+        }
+        
+        .footer-text {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.8;
+        }
+        
+        .footer-security {
+            margin-top: 20px;
+            font-size: 12px;
+            opacity: 0.7;
+            font-style: italic;
+        }
+        
+        @media (max-width: 600px) {
+            .content { padding: 40px 30px; }
+            .header { padding: 40px 30px; }
+            .brand-logo { font-size: 32px; letter-spacing: 3px; }
+            .greeting { font-size: 26px; }
+            .otp-code { font-size: 36px; letter-spacing: 8px; padding: 20px; }
+            .otp-section { padding: 35px 25px; }
+            .footer { padding: 30px; }
+            .validity-info { flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="security-badge">Secure Verification</div>
+        
+        <div class="header">
+            <div class="brand-logo">YOUR BRAND</div>
+            <div class="brand-tagline">Secure & Trusted</div>
+        </div>
+        
+        <div class="content">
+            <div class="greeting">Verification Required</div>
+            
+            <div class="main-message">
+                We've received a request to access your account. To ensure your <span class="highlight-text">security and privacy</span>, please use the verification code below to complete your login process.
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="otp-section">
+                <div class="otp-label">Your Verification Code</div>
+                <div class="otp-code">123456</div>
+                <div class="otp-instructions">
+                    Enter this 6-digit code in the verification field to proceed securely.
+                </div>
+            </div>
+            
+            <div class="validity-info">
+                <div class="timer-icon">⏱</div>
+                <div class="validity-text">This code expires in <strong>10 minutes</strong></div>
+            </div>
+            
+            <div class="security-notice">
+                <div class="security-title">Security First</div>
+                <div class="security-text">
+                    If you didn't request this verification code, please ignore this email and ensure your account remains secure. Never share this code with anyone.
+                </div>
+            </div>
+            
+            <div class="help-section">
+                <div class="help-title">Need Help?</div>
+                <div class="help-text">
+                    If you're having trouble with verification, contact our support team immediately for assistance.
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-brand">YOUR BRAND</div>
+            <div class="footer-text">
+                Thank you for keeping your account secure.<br>
+                This is an automated security message.<br>
+                <strong>Do not reply to this email.</strong>
+            </div>
+            <div class="footer-security">
+                🔐 Protected by advanced encryption • Sent via secure servers
+            </div>
+        </div>
+    </div>
+</body>
+</html>

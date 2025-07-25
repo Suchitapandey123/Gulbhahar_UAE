@@ -1,3 +1,4 @@
+import Image from "next/image";
 import * as React from "react";
 const Logo = (props) => (
   <svg
@@ -22,8 +23,9 @@ const Logo = (props) => (
           transform="matrix(0.00078125 0 0 0.00362535 0 -1.82022)"
         />
       </pattern>
-      <image
+      <Image
         id="image0_386_2381"
+        priority
         width={1280}
         height={1280}
         preserveAspectRatio="none"

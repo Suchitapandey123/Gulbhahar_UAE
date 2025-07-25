@@ -879,9 +879,9 @@ export function ProductClient({ product, similarProducts }) {
                       </button>
                     ))}
                   </div>
-                  <p className="text-red-900 text-sm cursor-pointer hover:underline font-medium">
+                  {/* <p className="text-red-900 text-sm cursor-pointer hover:underline font-medium">
                     📏 Size Guide
-                  </p>
+                  </p> */}
                 </div>
               </div>
 

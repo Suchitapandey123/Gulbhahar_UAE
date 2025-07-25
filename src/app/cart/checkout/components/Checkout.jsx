@@ -1029,6 +1029,7 @@ export default function CheckoutComponent() {
                               alt={item.name || "Product"}
                               width={200}
                               height={200}
+                              priority
                               className="w-full object-cover scale-y-[1.15] h-full"
                             />
                           </div>

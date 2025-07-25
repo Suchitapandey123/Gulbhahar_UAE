@@ -168,6 +168,7 @@ const CartPage = () => {
                           src={OrderImage}
                           alt={item.name}
                           width={76}
+                          priority
                           height={80}
                           className="h-20 w-20 object-cover rounded-lg border-2 border-red-100"
                         />
@@ -238,6 +239,7 @@ const CartPage = () => {
                         alt={item.name}
                         width={96}
                         height={96}
+                        priority
                         className="h-24 w-24 object-cover rounded-lg border-2 border-red-100"
                       />
                       {item.selected && (

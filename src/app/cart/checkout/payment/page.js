@@ -56,10 +56,10 @@ const AnimatedCounter = ({ target, duration = 2000 }) => {
   return count;
 };
 
-// Email Verification Modal Component
-const EmailVerificationModal = ({ isOpen, onClose, onVerify, email, isVerifying, error }) => {
-  const [verificationCode, setVerificationCode] = useState(['', '', '', '','','']);
-  const [timeLeft, setTimeLeft] = useState(30);
+// Phone OTP Verification Modal Component
+const PhoneOTPModal = ({ isOpen, onClose, onVerify, phone, isVerifying, error, sessionId }) => {
+  const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
+  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes = 600 seconds
   const [canResend, setCanResend] = useState(false);
   const [isResending, setIsResending] = useState(false);
 
@@ -80,7 +80,7 @@ const EmailVerificationModal = ({ isOpen, onClose, onVerify, email, isVerifying,
       
       // Auto-focus next input
       if (value && index < 5) {
-        const nextInput = document.getElementById(`code-${index + 1}`);
+        const nextInput = document.getElementById(`otp-${index + 1}`);
         if (nextInput) nextInput.focus();
       }
     }
@@ -88,42 +88,49 @@ const EmailVerificationModal = ({ isOpen, onClose, onVerify, email, isVerifying,
 
   const handleKeyDown = (index, e) => {
     if (e.key === 'Backspace' && !verificationCode[index] && index > 0) {
-      const prevInput = document.getElementById(`code-${index - 1}`);
+      const prevInput = document.getElementById(`otp-${index - 1}`);
       if (prevInput) prevInput.focus();
     }
   };
 
   const handleVerify = () => {
     const codeString = verificationCode.join('');
-    if (codeString.length ===6) {
-      onVerify(codeString);
+    if (codeString.length === 6) {
+      onVerify(codeString, sessionId, false); // Pass OTP, sessionId, and isResend=false
     }
   };
 
   const handleResend = async () => {
     setIsResending(true);
     try {
-      // Call your resend verification API
-      const response = await fetch('https://api.gulbhahar.com/api/users/resend-verification-code', {
+      // Call the same initiate API for resending OTP
+      const response = await fetch('https://api.gulbhahar.com/codRoutes/initiate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: email
+          phone: phone.replace(/\D/g, '') // Remove non-digits from phone number
         })
       });
 
       if (response.ok) {
-        setTimeLeft(30);
-        setCanResend(false);
-        setVerificationCode(['', '', '', '']);
-        console.log('✅ Verification code resent successfully');
+        const result = await response.json();
+        if (result.success) {
+          setTimeLeft(600); // Reset to 10 minutes
+          setCanResend(false);
+          setVerificationCode(['', '', '', '', '', '']);
+          console.log('✅ OTP resent successfully:', result.message);
+          // Update sessionId in parent component
+          onVerify(null, result.sessionId, true); // Pass isResend=true
+        } else {
+          throw new Error(result.message || 'Failed to resend OTP');
+        }
       } else {
-        console.error('❌ Failed to resend verification code');
+        throw new Error('Failed to resend OTP');
       }
     } catch (error) {
-      console.error('❌ Error resending verification code:', error);
+      console.error('❌ Error resending OTP:', error);
     } finally {
       setIsResending(false);
     }
@@ -142,13 +149,13 @@ const EmailVerificationModal = ({ isOpen, onClose, onVerify, email, isVerifying,
         </button>
         
         <div className="text-center mb-6">
-          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Mail className="w-8 h-8 text-blue-600" />
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Phone className="w-8 h-8 text-green-600" />
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-2">Verify Your Email</h3>
+          <h3 className="text-2xl font-bold text-gray-900 mb-2">Verify Your Phone</h3>
           <p className="text-gray-600">
-            We've sent a 6-digit verification code to<br />
-            <span className="font-semibold text-blue-900">{email}</span>
+            We've sent a 6-digit verification code via WhatsApp to<br />
+            <span className="font-semibold text-green-900">{phone}</span>
           </p>
         </div>
 
@@ -157,12 +164,12 @@ const EmailVerificationModal = ({ isOpen, onClose, onVerify, email, isVerifying,
             {verificationCode.map((digit, index) => (
               <input
                 key={index}
-                id={`code-${index}`}
+                id={`otp-${index}`}
                 type="text"
                 value={digit}
                 onChange={(e) => handleCodeChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
-                className="w-12 h-12 text-center text-xl font-bold border-2 border-blue-200 rounded-xl focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all"
+                className="w-12 h-12 text-center text-xl font-bold border-2 border-green-200 rounded-xl focus:border-green-600 focus:ring-2 focus:ring-green-200 transition-all"
                 maxLength="1"
               />
             ))}
@@ -180,15 +187,15 @@ const EmailVerificationModal = ({ isOpen, onClose, onVerify, email, isVerifying,
           <div className="text-center">
             {!canResend ? (
               <p className="text-gray-600">
-                Resend code in <span className="font-bold text-blue-600">{timeLeft}s</span>
+                Resend OTP in <span className="font-bold text-green-600">{Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}</span>
               </p>
             ) : (
               <button
                 onClick={handleResend}
                 disabled={isResending}
-                className="text-blue-600 font-semibold hover:text-blue-700 transition-colors disabled:opacity-50"
+                className="text-green-600 font-semibold hover:text-green-700 transition-colors disabled:opacity-50"
               >
-                {isResending ? 'Resending...' : 'Resend Code'}
+                {isResending ? 'Resending...' : 'Resend OTP'}
               </button>
             )}
           </div>
@@ -198,7 +205,7 @@ const EmailVerificationModal = ({ isOpen, onClose, onVerify, email, isVerifying,
             disabled={verificationCode.join('').length !== 6 || isVerifying}
             className={`w-full py-3 rounded-xl font-bold text-lg transition-all duration-200 flex items-center justify-center gap-2 ${
               verificationCode.join('').length === 6 && !isVerifying
-                ? 'bg-blue-600 text-white hover:bg-blue-700'
+                ? 'bg-green-600 text-white hover:bg-green-700'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >
@@ -226,11 +233,12 @@ function PaymentContent() {
   const [showContent, setShowContent] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('online'); // 'online' or 'cod'
   const [isProcessingCOD, setIsProcessingCOD] = useState(false);
-  const [showEmailVerificationModal, setShowEmailVerificationModal] = useState(false);
-  const [emailVerification, setEmailVerification] = useState({
+  const [showPhoneOTPModal, setShowPhoneOTPModal] = useState(false);
+  const [phoneVerification, setPhoneVerification] = useState({
     isVerifying: false,
     error: null
   });
+  const [otpSessionId, setOtpSessionId] = useState(null);
   const [countdown, setCountdown] = useState(null);
 
   const orderId = searchParams.get('orderId');
@@ -331,69 +339,83 @@ function PaymentContent() {
 
     setIsProcessingCOD(true);
     
-    // Send verification code to email
+    // Send OTP to phone
     try {
-      console.log('📧 Sending verification code to:', checkoutData.email);
+      console.log('📱 Sending OTP to phone:', checkoutData.phone);
       
-      const response = await fetch('https://api.gulbhahar.com/api/users/resend-verification-code', {
+      // Clean phone number - remove all non-digits
+      const cleanPhone = checkoutData.phone.replace(/\D/g, '');
+      
+      const response = await fetch('https://api.gulbhahar.com/codRoutes/initiate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: checkoutData.email,
-          verificationCode : "1234" // You might want to generate this dynamically
+          phone: cleanPhone
         })
       });
 
       if (response.ok) {
         const result = await response.json();
-        console.log('✅ Verification code sent:', result.message);
-        setShowEmailVerificationModal(true);
+        if (result.success) {
+          console.log('✅ OTP sent:', result.message);
+          setOtpSessionId(result.sessionId);
+          setShowPhoneOTPModal(true);
+        } else {
+          throw new Error(result.message || 'Failed to send OTP');
+        }
       } else {
-        throw new Error('Failed to send verification code');
+        throw new Error('Failed to send OTP');
       }
       
       setIsProcessingCOD(false);
     } catch (error) {
-      console.error('❌ Error sending verification code:', error);
-      alert('Failed to send verification code. Please try again.');
+      console.error('❌ Error sending OTP:', error);
+      alert('Failed to send OTP. Please try again.');
       setIsProcessingCOD(false);
     }
   };
 
-  const handleEmailVerify = async (verificationCode) => {
-    setEmailVerification({ isVerifying: true, error: null });
+  const handlePhoneVerify = async (verificationCode, sessionId, isResend = false) => {
+    // If this is a resend operation, just update the sessionId
+    if (isResend) {
+      setOtpSessionId(sessionId);
+      return;
+    }
+
+    setPhoneVerification({ isVerifying: true, error: null });
     
     try {
-      console.log('🔍 Verifying email with code:', verificationCode);
+      console.log('🔍 Verifying phone with OTP:', verificationCode);
+      console.log('🔑 Using sessionId:', sessionId);
       
-      const response = await fetch('https://api.gulbhahar.com/api/users/verify-email', {
+      const response = await fetch('https://api.gulbhahar.com/codRoutes/verify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: checkoutData.email,
-          verificationCode: verificationCode
+          sessionId: sessionId,
+          otp: verificationCode
         })
       });
 
       if (response.ok) {
         const result = await response.json();
-        console.log('✅ Email verified:', result.message);
+        console.log('✅ Phone verified:', result.message);
         
-        // Email verified successfully, process COD order
+        // Phone verified successfully, process COD order
         await processCODOrder();
       } else {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Invalid verification code');
+        const errorData = await response.json().catch(() => ({ message: 'Invalid OTP' }));
+        throw new Error(errorData.message || 'Invalid OTP');
       }
     } catch (error) {
-      console.error('❌ Email verification failed:', error);
-      setEmailVerification({ 
+      console.error('❌ Phone verification failed:', error);
+      setPhoneVerification({ 
         isVerifying: false, 
-        error: error.message || 'Email verification failed. Please try again.' 
+        error: error.message || 'Phone verification failed. Please try again.' 
       });
     }
   };
@@ -623,7 +645,7 @@ function PaymentContent() {
 
     } catch (error) {
       console.error('❌ Error processing COD order:', error);
-      setOtpVerification({ 
+      setPhoneVerification({ 
         isVerifying: false, 
         error: 'Failed to place order. Please try again.' 
       });
@@ -768,7 +790,7 @@ function PaymentContent() {
                               {checkoutData?.deliveryInfo?.cod ? (
                                 <div className="flex items-center gap-2 mt-1">
                                   <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
-                                    OTP Verification Required
+                                    Phone OTP Verification
                                   </span>
                                   <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">
                                     Available
@@ -875,13 +897,13 @@ function PaymentContent() {
 
                       <div className="bg-gradient-to-r from-green-50 to-green-100 border-2 border-green-200 rounded-2xl p-6 mb-8">
                         <div className="flex items-center justify-center gap-3 mb-4">
-                          <Mail className="h-6 w-6 text-green-700" />
+                          <Phone className="h-6 w-6 text-green-700" />
                           <span className="text-xl font-bold text-green-800">
-                            Email Verification Required
+                            Phone OTP Verification Required
                           </span>
                         </div>
                         <p className="text-sm text-green-600 font-medium">
-                          We'll send a verification code to {checkoutData?.email || 'your email'} to confirm your order
+                          We'll send a verification code to {checkoutData?.phone || 'your phone'} to confirm your order
                         </p>
                       </div>
 
@@ -894,7 +916,7 @@ function PaymentContent() {
                           {isProcessingCOD ? (
                             <>
                               <Loader2 className="h-5 w-5 animate-spin" />
-                              Sending Verification Code...
+                              Sending WhatsApp OTP...
                             </>
                           ) : (
                             <>
@@ -1037,7 +1059,7 @@ function PaymentContent() {
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle className="h-4 w-4" />
-                      Email verification for security
+                      WhatsApp OTP verification for security
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle className="h-4 w-4" />
@@ -1120,14 +1142,15 @@ function PaymentContent() {
           </form>
         )}
 
-        {/* Email Verification Modal */}
-        <EmailVerificationModal
-          isOpen={showEmailVerificationModal}
-          onClose={() => setShowEmailVerificationModal(false)}
-          onVerify={handleEmailVerify}
-          email={checkoutData?.email || 'test@example.com'}
-          isVerifying={emailVerification.isVerifying}
-          error={emailVerification.error}
+        {/* Phone OTP Verification Modal */}
+        <PhoneOTPModal
+          isOpen={showPhoneOTPModal}
+          onClose={() => setShowPhoneOTPModal(false)}
+          onVerify={handlePhoneVerify}
+          phone={checkoutData?.phone || '+919876543210'}
+          isVerifying={phoneVerification.isVerifying}
+          error={phoneVerification.error}
+          sessionId={otpSessionId}
         />
       </div>
 

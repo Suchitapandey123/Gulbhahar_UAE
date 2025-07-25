@@ -193,7 +193,7 @@ const ImageModal = ({
                 width={64}
                 height={64}
                 quality={60}
-                loading="lazy"
+                priority
                 onLoadingComplete={() => handleThumbnailLoad(idx)}
                 onLoadStart={() => handleThumbnailLoadStart(idx)}
                 placeholder="blur"
