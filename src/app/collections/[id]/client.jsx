@@ -22,6 +22,7 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
+  Ruler,
   Loader2,
 } from "lucide-react";
 import { useAuth } from "../../../Providers/ContextProviders/AuthContext";
@@ -45,6 +46,7 @@ export function ProductClient({ product, similarProducts }) {
   const { isAuthenticated } = useAuth();
   const { showToast, ToastContainer } = useToast();
   const { addToCart, addingToCart } = useCart();
+  const [showSizeGuide, setShowSizeGuide] = useState(false);
 
   const [selectedSize, setSelectedSize] = useState(product.sizes?.[0] || "");
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
@@ -285,132 +287,221 @@ export function ProductClient({ product, similarProducts }) {
     setMainImageIndex(0);
   };
 
-  // Delivery Information Component
-  const DeliverySection = ({ variant = "mobile" }) => (
-    <div className="mb-8">
-      {variant === "desktop" ? (
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-1 h-4 bg-red-900 rounded-full"></div>
-          <h3 className="text-base font-semibold text-gray-900">
-            Delivery Information
-          </h3>
-        </div>
-      ) : (
-        <h3 className="text-sm font-medium mb-3">Delivery to</h3>
-      )}
+  // Size Guide Modal Component (add this before your return statement)
+const SizeGuideModal = ({ isOpen, onClose }) => {
+  const [activeTab, setActiveTab] = useState('sizing');
 
-      <div
-        className={
-          variant === "desktop"
-            ? "bg-gradient-to-r from-gray-50 to-white rounded-lg p-4 border border-gray-200"
-            : ""
-        }
-      >
-        <div className="flex gap-2 max-w-md mb-3">
-          <input
-            type="text"
-            value={pincode}
-            onChange={(e) => {
-              const value = e.target.value.replace(/\D/g, "").slice(0, 6);
-              setPincode(value);
-            }}
-            placeholder="Enter pincode"
-            className="px-3 py-2 border border-gray-300 rounded-md flex-1 focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent"
-            maxLength={6}
-            inputMode="numeric"
-            pattern="[0-9]*"
-          />
-          <button
-            onClick={() => checkDelivery()}
-            disabled={isCheckingDelivery || pincode.length !== 6}
-            className="px-4 py-2 bg-red-900 text-white rounded-md hover:bg-red-800 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 min-w-[80px]"
-          >
-            {isCheckingDelivery ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span className="hidden sm:inline">Checking...</span>
-              </>
-            ) : (
-              "Check"
-            )}
-          </button>
-        </div>
+  // Size chart data for footwear
+  const footwearSizeChart = [
+    { eu: '35', uk: '2.5', us: '5', cm: '22.5', inches: '8.9' },
+    { eu: '36', uk: '3.5', us: '6', cm: '23.0', inches: '9.1' },
+    { eu: '37', uk: '4', us: '6.5', cm: '23.5', inches: '9.3' },
+    { eu: '38', uk: '5', us: '7.5', cm: '24.0', inches: '9.4' },
+    { eu: '39', uk: '6', us: '8.5', cm: '24.5', inches: '9.6' },
+    { eu: '40', uk: '6.5', us: '9', cm: '25.0', inches: '9.8' },
+    { eu: '41', uk: '7.5', us: '10', cm: '25.5', inches: '10.0' },
+  ];
 
-        {/* Delivery Results */}
-        <div className="space-y-2">
-          {deliveryError && (
-            <div className="flex items-center gap-2 text-red-600 text-sm">
-              <AlertCircle className="w-4 h-4" />
-              <span>{deliveryError}</span>
+  const howToMeasure = [
+    {
+      step: 1,
+      title: "Prepare",
+      description: "Place a piece of paper on a hard floor against a wall. Wear the socks you plan to wear with the shoes."
+    },
+    {
+      step: 2,
+      title: "Position", 
+      description: "Stand on the paper with your heel against the wall. Keep your full weight on the foot you're measuring."
+    },
+    {
+      step: 3,
+      title: "Mark",
+      description: "Mark the end of your longest toe on the paper. This might not be your big toe!"
+    },
+    {
+      step: 4,
+      title: "Measure",
+      description: "Use a ruler to measure the distance from the wall to the mark. This is your foot length."
+    },
+    {
+      step: 5,
+      title: "Repeat",
+      description: "Repeat for the other foot and use the larger measurement to find your size in our chart."
+    }
+  ];
+
+  const fitTips = [
+    "There should be about a thumb's width (1/2 inch) between your longest toe and the front of the shoe",
+    "The shoe should feel snug but not tight around the widest part of your foot",
+    "Your heel should not slip when walking",
+    "You should be able to wiggle your toes freely",
+    "If you're between sizes, consider the shoe style - go larger for thick socks or athletic shoes"
+  ];
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-1 sm:p-4">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className="sticky top-0 bg-white border-b border-gray-200 p-6 rounded-t-2xl">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                <Ruler className="w-5 h-5 text-red-600" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Size Guide</h2>
+                <p className="text-gray-600">Find your perfect fit</p>
+              </div>
             </div>
-          )}
+            <button
+              onClick={onClose}
+              className="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors"
+            >
+              <X className="w-5 h-5 text-gray-600" />
+            </button>
+          </div>
+        </div>
 
-          {deliveryInfo && (
-            <div className="space-y-2">
-              {/* Location Info */}
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-green-600" />
-                <span className="text-sm font-medium text-gray-800">
-                  {deliveryInfo.city}, {deliveryInfo.district}
-                </span>
-              </div>
+        {/* Tab Navigation */}
+        <div className="border-b border-gray-200">
+          <div className="flex px-6">
+            {[
+              { id: 'sizing', label: 'Size Chart', icon: '📏' },
+              { id: 'measure', label: 'How to Measure', icon: '📐' },
+              { id: 'tips', label: 'Fit Tips', icon: '💡' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                  activeTab === tab.id
+                    ? 'border-red-600 text-red-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                <span className="mr-2">{tab.icon}</span>
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
 
-              {/* Delivery Date */}
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <p className="text-red-900 text-sm font-medium">
-                  Delivery by {formatDeliveryDate()} |
-                  <span className="text-gray-400 line-through ml-2">₹60</span>
-                  <span className="text-green-600 ml-1">FREE</span>
-                </p>
-              </div>
-
-              {/* Delivery Options */}
-              <div className="space-y-1">
-                {deliveryInfo.cod === "Y" && (
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-3 h-3 text-green-500" />
-                    <span className="text-xs text-gray-600">
-                      Cash on Delivery Available
-                    </span>
+        {/* Content */}
+        <div className="p-6">
+          {/* Size Chart Tab */}
+          {activeTab === 'sizing' && (
+            <div className="space-y-6">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <h3 className="font-semibold text-blue-900 mb-1">Important Note</h3>
+                    <p className="text-blue-800 text-sm">
+                      Our sizes are in EU format. Use the chart below to convert to your preferred sizing system.
+                      When in doubt, measure your foot length in centimeters for the most accurate fit.
+                    </p>
                   </div>
-                )}
-
-                {deliveryInfo.pre_paid === "Y" && (
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-3 h-3 text-green-500" />
-                    <span className="text-xs text-gray-600">
-                      Prepaid Orders Accepted
-                    </span>
-                  </div>
-                )}
-
-                <div className="flex items-center gap-2">
-                  <Clock className="w-3 h-3 text-blue-500" />
-                  <span className="text-xs text-gray-600">
-                    Delivery within 5-7 business days (Monday-Friday, excluding
-                    holidays)
-                  </span>
                 </div>
               </div>
+
+              {/* Size Chart Table */}
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse bg-white rounded-lg shadow-sm">
+                  <thead>
+                    <tr className="bg-gray-50">
+                      <th className="border border-gray-200 px-4 py-3 text-left font-semibold text-gray-900">EU Size</th>
+                      <th className="border border-gray-200 px-4 py-3 text-left font-semibold text-gray-900">UK Size</th>
+                      <th className="border border-gray-200 px-4 py-3 text-left font-semibold text-gray-900">US Size</th>
+                      <th className="border border-gray-200 px-4 py-3 text-left font-semibold text-gray-900">Foot Length (cm)</th>
+                      <th className="border border-gray-200 px-4 py-3 text-left font-semibold text-gray-900">Foot Length (inches)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {footwearSizeChart.map((size, index) => (
+                      <tr key={size.eu} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-25'}>
+                        <td className="border border-gray-200 px-4 py-3 font-semibold text-red-600">{size.eu}</td>
+                        <td className="border border-gray-200 px-4 py-3 text-gray-700">{size.uk}</td>
+                        <td className="border border-gray-200 px-4 py-3 text-gray-700">{size.us}</td>
+                        <td className="border border-gray-200 px-4 py-3 text-gray-700 font-medium">{size.cm}</td>
+                        <td className="border border-gray-200 px-4 py-3 text-gray-700">{size.inches}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
 
-          {/* Default message when no pincode entered */}
-          {!hasCheckedDelivery && !deliveryError && !deliveryInfo && (
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-              <p className="text-gray-600 text-sm">
-                {pincode.length === 6
-                  ? "Click 'Check' to verify delivery"
-                  : "Enter 6-digit pincode to check delivery"}
-              </p>
+          {/* How to Measure Tab */}
+          {activeTab === 'measure' && (
+            <div className="space-y-6">
+              <div className="text-center mb-8">
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">How to Measure Your Feet</h3>
+                <p className="text-gray-600">Follow these simple steps for the most accurate measurement</p>
+              </div>
+
+              <div className="space-y-4">
+                {howToMeasure.map((step) => (
+                  <div key={step.step} className="flex gap-4 p-4 bg-gray-50 rounded-lg">
+                    <div className="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+                      {step.step}
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-1">{step.title}</h4>
+                      <p className="text-gray-600 text-sm">{step.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
+
+          {/* Fit Tips Tab */}
+          {activeTab === 'tips' && (
+            <div className="space-y-6">
+              <div className="text-center mb-8">
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">Perfect Fit Tips</h3>
+                <p className="text-gray-600">Expert advice for finding your ideal shoe fit</p>
+              </div>
+
+              <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+                <h4 className="font-semibold text-green-900 mb-4 flex items-center gap-2">
+                  <span>✅</span>
+                  What to Look For in a Good Fit
+                </h4>
+                <ul className="space-y-3">
+                  {fitTips.map((tip, index) => (
+                    <li key={index} className="flex items-start gap-3 text-green-800">
+                      <div className="w-2 h-2 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
+                      <span className="text-sm">{tip}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-3 sm:p-6 rounded-b-2xl">
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-gray-600">
+              <p>Need more help? <a href="/contact" className="text-red-600 hover:underline">Contact Us</a></p>
+            </div>
+            <button
+              onClick={onClose}
+              className="bg-red-600 w-32 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors font-medium"
+            >
+              Got it!
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
+};
 
   return (
     <>
@@ -435,6 +526,11 @@ export function ProductClient({ product, similarProducts }) {
           currentImages={currentImages}
         />
       )}
+
+<SizeGuideModal 
+      isOpen={showSizeGuide} 
+      onClose={() => setShowSizeGuide(false)}
+    />
 
       <div className="min-h-screen bg-white py-4 mt-10 sm:mt-0 px-4 sm:py-6 sm:px-6 lg:py-8 lg:px-8 font-raleway">
         <div className="max-w-[1600px] mx-auto mt-6 sm:mt-10 md:mt-24">
@@ -577,7 +673,16 @@ export function ProductClient({ product, similarProducts }) {
 
                 {/* Size Selection */}
                 <div className="mb-8">
-                  <h3 className="text-sm font-medium mb-3">Size</h3>
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-sm font-medium">Size</h3>
+                    <button
+                      onClick={() => setShowSizeGuide(true)}
+                      className="text-red-900 text-xs cursor-pointer hover:underline font-medium flex items-center gap-1"
+                    >
+                      <Ruler className="w-3 h-3" />
+                      <span>Size Guide</span>
+                    </button>
+                  </div>
                   <div className="grid grid-cols-4 sm:grid-cols-7 gap-2 max-w-md">
                     {generateSizeRange(product.sizes).map(
                       ({ size, available }, idx) => (
@@ -1048,29 +1153,31 @@ export function ProductClient({ product, similarProducts }) {
                   </div>
 
                   {/* Size availability legend */}
-                  <div className="flex items-center gap-6 text-xs text-gray-600 bg-white p-3 rounded border">
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 bg-red-900 rounded flex items-center justify-center">
-                        <span className="text-white text-xs">✓</span>
-                      </div>
-                      <span className="font-medium">Available sizes</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 bg-gray-300 rounded relative flex items-center justify-center">
-                        <span className="text-gray-500 -mt-[2px] -mr-[2px] text-xs rotate-45">
-                          |
-                        </span>
-                      </div>
-                      <span className="font-medium">Out of stock</span>
-                    </div>
-                  </div>
-
-                  {/* Size guide link */}
-                  <div className="mt-3">
-                    <button className="text-red-900 text-sm cursor-pointer hover:underline font-medium flex items-center gap-1">
-                      <span>📏</span>
+                  {/* Size guide link and legend */}
+                  <div className="flex items-center justify-between">
+                    <button
+                      onClick={() => setShowSizeGuide(true)}
+                      className="text-red-900 text-sm cursor-pointer hover:underline font-medium flex items-center gap-1 transition-colors hover:text-red-700"
+                    >
+                      <Ruler className="w-4 h-4" />
                       <span>Size Guide</span>
                     </button>
+
+                    {/* Size availability legend */}
+                    <div className="flex items-center gap-4 text-xs text-gray-600">
+                      <div className="flex items-center gap-1">
+                        <div className="w-3 h-3 bg-red-900 rounded"></div>
+                        <span>Available</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <div className="w-3 h-3 bg-gray-300 rounded relative">
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-full h-0.5 bg-red-500 transform rotate-12"></div>
+                          </div>
+                        </div>
+                        <span>Out of stock</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -69,10 +69,7 @@ export default function QuickSearch() {
     "Designer Juttis",
     "Wedding Footwear",
     "Punjabi Juttis",
-    "Ethnic Sandals",
-    "Handcrafted Shoes",
     "Festive Collection",
-    "Bridal Footwear",
     "Traditional Mojaris",
   ];
 

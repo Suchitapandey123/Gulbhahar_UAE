@@ -366,21 +366,32 @@ export default function Footer() {
 
             {/* Contact Info */}
             <div className="space-y-3 mb-6">
-              <div className="flex items-center gap-2 justify-center lg:justify-start">
-                <MapPin className="h-4 w-4 text-red-600" />
-                <span className="text-xs text-gray-600">Delhi, India</span>
-              </div>
-              <div className="flex items-center gap-2 justify-center lg:justify-start">
-                <Mail className="h-4 w-4 text-red-600" />
-                <span className="text-xs text-gray-600">
-                  support@gulbhahar.com
-                </span>
-              </div>
-              <div className="flex items-center gap-2 justify-center lg:justify-start">
-                <Phone className="h-4 w-4 text-red-600" />
-                <span className="text-xs text-gray-600">+91 92209 27241</span>
-              </div>
-            </div>
+  <div className="flex items-center gap-2 justify-center lg:justify-start">
+    <MapPin className="h-4 w-4 text-red-600" />
+    <span className="text-xs text-gray-600">Delhi, India</span>
+  </div>
+
+  <div className="flex items-center gap-2 justify-center lg:justify-start">
+    <Mail className="h-4 w-4 text-red-600" />
+    <a
+      href="mailto:support@gulbhahar.com"
+      className="text-xs text-gray-600 hover:underline"
+    >
+      support@gulbhahar.com
+    </a>
+  </div>
+
+  <div className="flex items-center gap-2 justify-center lg:justify-start">
+    <Phone className="h-4 w-4 text-red-600" />
+    <a
+      href="tel:+919220927241"
+      className="text-xs text-gray-600 hover:underline"
+    >
+      +91 92209 27241
+    </a>
+  </div>
+</div>
+
 
             {/* Payment Methods */}
             <div>

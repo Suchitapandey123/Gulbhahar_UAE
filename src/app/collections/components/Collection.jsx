@@ -486,7 +486,7 @@ const handleAddToCart = async (e, item) => {
                 className="overflow-hidden origin-top"
                 layout
               >
-                <motion.div className="mt-6 space-y-4" layout>
+                <motion.div className="mx-3 mt-6 space-y-4" layout>
                   {/* Range Slider */}
                   <motion.div
                     className="relative h-2 bg-red-100 rounded-full mb-6 shadow-inner"

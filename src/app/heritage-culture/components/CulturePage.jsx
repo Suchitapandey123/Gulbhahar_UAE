@@ -25,7 +25,7 @@ const LuxuryCulturePage = () => {
         ],
       artisans: 18,
       avgTime: "A single piece takes between 180 and 220 hours to complete",
-      significance: "The artisans design these pairs to display the traditional textile heritage which belongs to Indian culture."
+      significance: "Each pair of juttis functions as a detailed representation of complex storytelling and artistic sophistication."
     },
     {
       id: 2,
@@ -94,7 +94,7 @@ const LuxuryCulturePage = () => {
       subtitle: "Gota Patti, Sequins & Foil Work",
       description: "Ornate Metals offers juttis bathed in timeless glimmer with a unique Gota Patti, sequins and foil work that pair traditional metallic artistry with a contemporary design approach.",
       fullDescription: "The intricate metalwork on juttis showcases the enduring beauty of traditional Indian craftsmanship. The Gota Patti, foil work, and sequins of each pair add a colorful festive, and royal quality to the footwear. Gota Patti's technique of metallic ribbon appliqué began on the fashion at royal courts. The sequins, and foil, provide shiny highlights that glisten across the complete .Each metallic embellishment is completed by an artisan by hand, catering to juttis and adornments into stunning pieces of art. Juttis was once reserved for ceremonial events, weddings and sometimes festive occasions. Now juttis are utilized to add glamour and finish to any normal traditional outfit. Every jutti is a direct result of heritage, and a pleasant aesthetic carry over from heritage to modern jutti design. The craftsmanship depicts the traditions of more than one hundred years ago, while embellishing the traditional look of the juttis.",
-      image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-9.png",
+      image: "/Anarkali/anarkali-4.jpg",
       color: "from-gray-700 via-slate-600 to-zinc-500",
       accent: "border-gray-400",
       heritage: "700+ Years",

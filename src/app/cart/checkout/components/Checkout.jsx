@@ -1,3 +1,4 @@
+// Enhanced Checkout Component with Email and Phone Validation
 "use client";
 import { useState, useEffect } from "react";
 import {
@@ -32,6 +33,31 @@ const Breadcrumb = () => (
     </span>
   </nav>
 );
+
+// Validation utilities
+const validateEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+const validatePhone = (phone) => {
+  // Remove all non-digits
+  const cleanPhone = phone.replace(/\D/g, '');
+  
+  // Check for valid Indian phone number - must be exactly 10 digits starting with 6, 7, 8, or 9
+  return cleanPhone.length === 10 && /^[6-9]\d{9}$/.test(cleanPhone);
+};
+
+const formatPhoneNumber = (phone) => {
+  // Remove all non-digits
+  const cleanPhone = phone.replace(/\D/g, '');
+  
+  // Format as +91 XXXXX XXXXX for 10-digit numbers only
+  if (cleanPhone.length === 10 && /^[6-9]\d{9}$/.test(cleanPhone)) {
+    return `+91 ${cleanPhone.slice(0, 5)} ${cleanPhone.slice(5)}`;
+  }
+  return phone; // Return original if can't format
+};
 
 // Indian States and Union Territories
 const indianStates = [
@@ -85,12 +111,20 @@ export default function CheckoutComponent() {
   const [shippingMethod, setShippingMethod] = useState("free");
   const [isProcessing, setIsProcessing] = useState(false);
 
+  // Field validation states
+  const [fieldValidation, setFieldValidation] = useState({
+    email: { isValid: null, error: null },
+    phone: { isValid: null, error: null },
+    fullName: { isValid: null, error: null }
+  });
+
   const [postalCodeValidation, setPostalCodeValidation] = useState({
     isValidating: false,
     isValid: null,
     error: null,
     deliveryInfo: null,
   });
+
   const [formData, setFormData] = useState({
     country: "india", // Default to India
     fullName: "",
@@ -114,6 +148,101 @@ export default function CheckoutComponent() {
   // Check if cart is empty after loading
   const isCartEmpty = !isLoading && (!cart || cart.length === 0);
 
+  // Real-time field validation
+  const validateField = (name, value) => {
+    let isValid = null;
+    let error = null;
+
+    switch (name) {
+      case 'fullName':
+        if (value.trim().length === 0) {
+          isValid = false;
+          error = "Full name is required";
+        } else if (value.trim().length < 2) {
+          isValid = false;
+          error = "Name must be at least 2 characters";
+        } else if (!/^[a-zA-Z\s]+$/.test(value.trim())) {
+          isValid = false;
+          error = "Name can only contain letters and spaces";
+        } else {
+          isValid = true;
+          error = null;
+        }
+        break;
+
+      case 'email':
+        if (value.trim().length === 0) {
+          isValid = false;
+          error = "Email is required";
+        } else if (!validateEmail(value)) {
+          isValid = false;
+          error = "Please enter a valid email address";
+        } else {
+          isValid = true;
+          error = null;
+        }
+        break;
+
+      case 'phone':
+        if (value.trim().length === 0) {
+          isValid = false;
+          error = "Phone number is required";
+        } else {
+          const cleanPhone = value.replace(/\D/g, '');
+          if (cleanPhone.length < 10) {
+            isValid = false;
+            error = "Phone number must be 10 digits";
+          } else if (cleanPhone.length > 10) {
+            isValid = false;
+            error = "Phone number must be exactly 10 digits";
+          } else if (!validatePhone(value)) {
+            isValid = false;
+            error = "Phone number must start with 6, 7, 8, or 9";
+          } else {
+            isValid = true;
+            error = null;
+          }
+        }
+        break;
+
+      default:
+        return;
+    }
+
+    setFieldValidation(prev => ({
+      ...prev,
+      [name]: { isValid, error }
+    }));
+  };
+
+  // Debounced validation effect
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (formData.fullName) {
+        validateField('fullName', formData.fullName);
+      }
+    }, 500);
+    return () => clearTimeout(timeoutId);
+  }, [formData.fullName]);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (formData.email) {
+        validateField('email', formData.email);
+      }
+    }, 500);
+    return () => clearTimeout(timeoutId);
+  }, [formData.email]);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (formData.phone) {
+        validateField('phone', formData.phone);
+      }
+    }, 500);
+    return () => clearTimeout(timeoutId);
+  }, [formData.phone]);
+
   // Validate postal code with Delhivery API
   const validatePostalCode = async (postalCode) => {
     if (!postalCode || postalCode.length < 6) {
@@ -126,8 +255,6 @@ export default function CheckoutComponent() {
       return;
     }
 
-    // Check if Delhivery API token is available
-    // const DELHIVERY_TOKEN = process.env.NEXT_PUBLIC_DELHIVERY_TOKEN;
     const DELHIVERY_TOKEN = "101d6952983607b883a57570fde4c97bc4c882a1";
     if (!DELHIVERY_TOKEN) {
       console.warn("Delhivery API token not configured");
@@ -147,17 +274,10 @@ export default function CheckoutComponent() {
     }));
 
     try {
-      console.log("Making API call to Delhivery with postal code:", postalCode);
-      console.log(
-        "API URL:",
-        `https://track.delhivery.com/c/api/pin-codes/json/?filter_codes=${postalCode}`
-      );
-      console.log("Using token:", DELHIVERY_TOKEN);
-
       const response = await axios.get(
         `https://staging-express.delhivery.com/c/api/pin-codes/json/?filter_codes=${postalCode}`,
         {
-          timeout: 10000, // 10 seconds timeout
+          timeout: 10000,
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
@@ -165,10 +285,6 @@ export default function CheckoutComponent() {
           },
         }
       );
-
-      console.log("API Response:", response);
-      console.log("Response Data:", response.data);
-      console.log("Response Status:", response.status);
 
       if (
         response.data &&
@@ -189,16 +305,9 @@ export default function CheckoutComponent() {
             prepaid: deliveryData.pre_paid === "Y",
             pickup: deliveryData.pickup === "Y",
             covidZone: deliveryData.covid_zone,
-            isODA: deliveryData.is_oda === "Y", // Out of Delivery Area
+            isODA: deliveryData.is_oda === "Y",
           },
         });
-
-        // Auto-fill disabled - user can manually enter city and region
-        // setFormData((prev) => ({
-        //   ...prev,
-        //   city: deliveryData.city || prev.city,
-        //   region: deliveryData.district || prev.region,
-        // }));
 
         showToast(
           `✅ Postal code valid for ${deliveryData.city}, ${deliveryData.district}`,
@@ -218,34 +327,17 @@ export default function CheckoutComponent() {
         );
       }
     } catch (error) {
-      console.error("Error validating postal code:", error);
-      console.error("Error details:", {
-        message: error.message,
-        code: error.code,
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        data: error.response?.data,
-        headers: error.response?.headers,
-      });
-
       let errorMessage = "Unable to validate postal code";
       if (error.code === "ECONNABORTED") {
         errorMessage = "Validation timeout - please try again";
       } else if (error.response?.status === 401) {
         errorMessage = "Authentication failed - please contact support";
-        console.error("401 Error - Check if token is valid");
       } else if (error.response?.status === 403) {
         errorMessage = "Access denied - please contact support";
-        console.error("403 Error - Token may not have permissions");
       } else if (error.response?.status === 404) {
         errorMessage = "Postal code not found";
       } else if (error.response?.status === 429) {
         errorMessage = "Too many requests - please wait and try again";
-      } else if (!navigator.onLine) {
-        errorMessage = "No internet connection";
-      } else if (error.code === "ERR_NETWORK") {
-        errorMessage = "Network error - check CORS settings";
-        console.error("Network error - this might be a CORS issue");
       }
 
       setPostalCodeValidation({
@@ -265,35 +357,82 @@ export default function CheckoutComponent() {
       if (formData.postalCode) {
         validatePostalCode(formData.postalCode);
       }
-    }, 1000); // 1 second delay
+    }, 1000);
 
     return () => clearTimeout(timeoutId);
   }, [formData.postalCode]);
 
   const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    
+    // Special handling for phone number - only allow digits and limit to 10
+    if (name === 'phone') {
+      // Allow only digits and limit to 10 characters
+      const cleanValue = value.replace(/\D/g, '').slice(0, 10);
+      setFormData({
+        ...formData,
+        [name]: cleanValue,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
+
+    // Clear validation state when user starts typing
+    if (fieldValidation[name]) {
+      setFieldValidation(prev => ({
+        ...prev,
+        [name]: { isValid: null, error: null }
+      }));
+    }
   };
 
   const handlePayment = async () => {
     try {
       setIsProcessing(true);
-  
-      // Your existing validation code...
+
+      // Validate all required fields
       const requiredFields = ["fullName", "email", "phone"];
+      const validationErrors = [];
+
+      // Check if fields are filled
       const missingFields = requiredFields.filter((field) => !formData[field]);
-  
       if (missingFields.length > 0) {
-        showToast(
-          `Please fill in all required fields: ${missingFields.join(", ")}`,
-          "error"
-        );
+        validationErrors.push(`Please fill in: ${missingFields.join(", ")}`);
+      }
+
+      // Check field validations
+      requiredFields.forEach(field => {
+        if (formData[field]) {
+          validateField(field, formData[field]);
+        }
+      });
+
+      // Wait a bit for validation to complete
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Check if any field validation failed
+      const hasValidationErrors = requiredFields.some(field => 
+        fieldValidation[field]?.isValid === false
+      );
+
+      if (hasValidationErrors) {
+        const errorMessages = requiredFields
+          .filter(field => fieldValidation[field]?.isValid === false)
+          .map(field => fieldValidation[field]?.error)
+          .filter(Boolean);
+        
+        validationErrors.push(...errorMessages);
+      }
+
+      if (validationErrors.length > 0) {
+        showToast(validationErrors[0], "error");
         setIsProcessing(false);
         return;
       }
-  
+
       // Validate postal code
       if (formData.postalCode) {
         if (postalCodeValidation.isValidating) {
@@ -304,36 +443,33 @@ export default function CheckoutComponent() {
           setIsProcessing(false);
           return;
         }
-  
+
         if (postalCodeValidation.isValid === false) {
           showToast("Please enter a valid postal code for delivery", "error");
           setIsProcessing(false);
           return;
         }
       }
-  
-      // Generate unique order ID
+
+      // Generate unique IDs (keeping your existing logic)
       const generateOrderId = () => {
         const timestamp = Date.now();
         const random = Math.random().toString(36).substring(2, 8);
         return `ORDER_${timestamp}_${random}`.toUpperCase();
       };
-  
-      // Generate transaction ID for internal tracking
+
       const generateTransactionId = () => {
         const timestamp = Date.now();
         const random = Math.random().toString(36).substring(2, 8);
         return `TXN_${timestamp}_${random}`.toUpperCase();
       };
-  
-      // Generate session ID
+
       const generateSessionId = () => {
         const timestamp = Date.now();
         const random = Math.random().toString(36).substring(2, 8);
         return `SESSION_${timestamp}_${random}`.toUpperCase();
       };
-  
-      // Generate fingerprint
+
       const generateFingerprint = () => {
         try {
           const canvas = document.createElement("canvas");
@@ -341,12 +477,12 @@ export default function CheckoutComponent() {
           ctx.textBaseline = "top";
           ctx.font = "14px Arial";
           ctx.fillText("Browser fingerprint", 2, 2);
-  
+
           const screen = `${window.screen.width}x${window.screen.height}`;
           const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
           const language = navigator.language;
           const platform = navigator.platform;
-  
+
           const fingerprint = btoa(
             `${canvas.toDataURL()}_${screen}_${timezone}_${language}_${platform}`
           );
@@ -357,45 +493,57 @@ export default function CheckoutComponent() {
             .substring(2, 8)}`;
         }
       };
-  
+
       const orderId = generateOrderId();
       const transactionId = generateTransactionId();
       const sessionId = generateSessionId();
       const fingerprint = generateFingerprint();
-  
-      // 🎯 COMPLETE checkout data with ALL user information and delivery info
+
+      // Format phone number for storage
+      const formattedPhone = formatPhoneNumber(formData.phone);
+
+      // Complete checkout data with validated information
       const checkoutData = {
-        // 📝 Form data (User Information)
-        ...formData, // This includes: fullName, email, phone, address, city, region, postalCode, country
-  
-        // 🆔 Generated IDs
+        // Form data with formatted phone
+        ...formData,
+        phone: formattedPhone,
+
+        // Generated IDs
         orderId: orderId,
         transactionId: transactionId,
         sessionId: sessionId,
         fingerprint: fingerprint,
-  
-        // 📦 Order details
-        deliveryInfo: postalCodeValidation.deliveryInfo, // 🎯 IMPORTANT: Include delivery info with COD availability
+
+        // Order details
+        deliveryInfo: postalCodeValidation.deliveryInfo,
         shippingMethod,
         orderTotal: total,
         orderSubtotal: subtotal,
         orderShipping: shipping,
-        orderItems: cart, // 🛒 Cart items
-  
-        // ⏰ Timestamps
+        orderItems: cart,
+
+        // Timestamps
         checkoutCompletedAt: new Date().toISOString(),
-  
-        // 🔍 Additional metadata
+
+        // Additional metadata
         userAgent: typeof window !== "undefined" ? window.navigator.userAgent : "",
         browserInfo: {
           language: typeof navigator !== "undefined" ? navigator.language : "",
           platform: typeof navigator !== "undefined" ? navigator.platform : "",
         },
+
+        // Validation status
+        validationStatus: {
+          email: fieldValidation.email?.isValid === true,
+          phone: fieldValidation.phone?.isValid === true,
+          fullName: fieldValidation.fullName?.isValid === true,
+          postalCode: postalCodeValidation.isValid === true
+        }
       };
-  
-      console.log('💾 Saving complete checkout data to localStorage:', checkoutData);
-  
-      // 🎯 Save to localStorage for payment page to pick up
+
+      console.log('💾 Saving validated checkout data to localStorage:', checkoutData);
+
+      // Save to localStorage
       try {
         localStorage.setItem("checkoutFormData", JSON.stringify(checkoutData));
         console.log("✅ Checkout data saved to localStorage successfully");
@@ -405,16 +553,6 @@ export default function CheckoutComponent() {
         if (savedData) {
           const parsedSavedData = JSON.parse(savedData);
           console.log("✅ Verified saved data:", parsedSavedData);
-          
-          // Check if critical fields are present
-          const criticalFields = ['fullName', 'email', 'phone', 'orderId', 'orderTotal', 'orderItems'];
-          const missingCriticalFields = criticalFields.filter(field => !parsedSavedData[field]);
-          
-          if (missingCriticalFields.length > 0) {
-            console.warn('⚠️ Missing critical fields in saved data:', missingCriticalFields);
-          } else {
-            console.log('✅ All critical fields saved successfully');
-          }
         }
       } catch (error) {
         console.error("❌ Error saving checkout data:", error);
@@ -422,12 +560,11 @@ export default function CheckoutComponent() {
         setIsProcessing(false);
         return;
       }
-  
-      showToast("Redirecting to payment...", "success");
-  
+
+      showToast("✅ Information validated! Redirecting to payment...", "success");
+
       // Add a small delay to ensure localStorage is written
       setTimeout(() => {
-        // Redirect to payment page with order details
         router.push(
           `/cart/checkout/payment?orderId=${orderId}&amount=${total}`
         );
@@ -442,16 +579,13 @@ export default function CheckoutComponent() {
 
   // Get the current image for display with proper error handling
   const getCurrentImage = (item) => {
-    // Check if it's images (plural) - array of arrays
     if (item.images && Array.isArray(item.images)) {
       if (item.images.length > 0 && Array.isArray(item.images[0])) {
-        return item.images[0][0]; // First image from first array
+        return item.images[0][0];
       }
     }
-
-    // Check if it's image (singular) - single array
     if (item.image && Array.isArray(item.image)) {
-      return item.image[0][0]; // First image from array
+      return item.image[0][0];
     }
     return null;
   };
@@ -494,7 +628,6 @@ export default function CheckoutComponent() {
 
   const isFreeShippingEligible = subtotal >= 5000;
   useEffect(() => {
-    // If free shipping is selected but not eligible, switch to standard shipping
     if (shippingMethod === "free" && !isFreeShippingEligible) {
       setShippingMethod("standard");
     }
@@ -506,95 +639,16 @@ export default function CheckoutComponent() {
     shipping = 0;
   }
 
-  // Add ODA surcharge if applicable
   const odaSurcharge = postalCodeValidation.deliveryInfo?.isODA ? 50 : 0;
   shipping += odaSurcharge;
 
   const total = subtotal + shipping;
 
-  // Show loading state (keeping existing loading UI)
+  // Show loading state
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex items-center space-x-2 text-sm text-gray-400 mb-8">
-            <div className="h-4 w-12 bg-gray-200 rounded animate-pulse"></div>
-            <span>/</span>
-            <div className="h-4 w-8 bg-gray-200 rounded animate-pulse"></div>
-            <span>/</span>
-            <div className="h-6 w-20 bg-red-200 rounded animate-pulse"></div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-6">
-              {[1, 2, 3].map((i) => (
-                <div
-                  key={i}
-                  className="bg-white rounded-2xl shadow-lg border border-red-100 p-6"
-                >
-                  <div className="flex items-center mb-6">
-                    <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse mr-4"></div>
-                    <div>
-                      <div className="h-6 w-32 bg-gray-200 rounded animate-pulse mb-2"></div>
-                      <div className="h-4 w-24 bg-gray-100 rounded animate-pulse"></div>
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    <div className="h-12 bg-gray-100 rounded-xl animate-pulse"></div>
-                    <div className="h-12 bg-gray-100 rounded-xl animate-pulse"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="lg:col-span-1">
-              <div className="bg-white rounded-2xl shadow-lg border border-red-100 p-6">
-                <div className="flex items-center mb-6">
-                  <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse mr-4"></div>
-                  <div className="h-6 w-28 bg-gray-200 rounded animate-pulse"></div>
-                </div>
-
-                <div className="space-y-4">
-                  {[1, 2].map((i) => (
-                    <div
-                      key={i}
-                      className="bg-red-50/50 rounded-xl border border-red-100 p-4"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <div className="w-12 h-12 bg-gray-200 rounded-md animate-pulse"></div>
-                        <div className="flex-1">
-                          <div className="h-4 w-20 bg-gray-200 rounded animate-pulse mb-2"></div>
-                          <div className="h-3 w-16 bg-gray-100 rounded animate-pulse mb-2"></div>
-                          <div className="h-3 w-12 bg-gray-100 rounded animate-pulse"></div>
-                        </div>
-                        <div className="h-5 w-16 bg-gray-200 rounded animate-pulse"></div>
-                      </div>
-                    </div>
-                  ))}
-
-                  <div className="border-t-2 border-red-100 pt-4 space-y-3">
-                    <div className="flex justify-between">
-                      <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
-                      <div className="h-4 w-20 bg-gray-200 rounded animate-pulse"></div>
-                    </div>
-                    <div className="flex justify-between">
-                      <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
-                      <div className="h-4 w-12 bg-green-200 rounded animate-pulse"></div>
-                    </div>
-                    <div className="border-t-2 border-red-200 pt-3 bg-red-50 p-4 rounded-lg">
-                      <div className="flex justify-between">
-                        <div className="h-6 w-12 bg-red-200 rounded animate-pulse"></div>
-                        <div className="h-6 w-24 bg-red-200 rounded animate-pulse"></div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="h-12 bg-gray-200 rounded-xl animate-pulse"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <div className="flex items-center justify-center mt-8">
             <div className="flex items-center gap-3 text-gray-600">
               <div className="w-5 h-5 border-2 border-red-900 border-t-transparent rounded-full animate-spin"></div>
@@ -606,7 +660,7 @@ export default function CheckoutComponent() {
     );
   }
 
-  // Redirect if cart is empty (after loading)
+  // Redirect if cart is empty
   if (isCartEmpty) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white flex items-center justify-center">
@@ -652,6 +706,7 @@ export default function CheckoutComponent() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Full Name */}
                 <div className="md:col-span-2">
                   <label
                     htmlFor="fullName"
@@ -659,18 +714,43 @@ export default function CheckoutComponent() {
                   >
                     Full Name *
                   </label>
-                  <input
-                    id="fullName"
-                    name="fullName"
-                    type="text"
-                    value={formData.fullName}
-                    onChange={handleInputChange}
-                    className="w-full border-2 border-red-200 rounded-xl p-4 text-gray-700 focus:border-red-900 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30"
-                    placeholder="Enter your full name"
-                    required
-                  />
+                  <div className="relative">
+                    <input
+                      id="fullName"
+                      name="fullName"
+                      type="text"
+                      value={formData.fullName}
+                      onChange={handleInputChange}
+                      className={`w-full border-2 rounded-xl p-4 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${
+                        fieldValidation.fullName?.isValid === true
+                          ? "border-green-500 focus:border-green-500"
+                          : fieldValidation.fullName?.isValid === false
+                          ? "border-red-500 focus:border-red-500"
+                          : "border-red-200 focus:border-red-900"
+                      }`}
+                      placeholder="Enter your full name"
+                      required
+                    />
+                    {/* Validation Icon */}
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      {fieldValidation.fullName?.isValid === true && (
+                        <CheckCircle className="h-5 w-5 text-green-500" />
+                      )}
+                      {fieldValidation.fullName?.isValid === false && (
+                        <AlertCircle className="h-5 w-5 text-red-500" />
+                      )}
+                    </div>
+                  </div>
+                  {/* Error Message */}
+                  {fieldValidation.fullName?.error && (
+                    <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                      <AlertCircle className="h-4 w-4" />
+                      {fieldValidation.fullName.error}
+                    </p>
+                  )}
                 </div>
 
+                {/* Email */}
                 <div>
                   <label
                     htmlFor="email"
@@ -678,18 +758,43 @@ export default function CheckoutComponent() {
                   >
                     Email Address *
                   </label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="w-full border-2 border-red-200 rounded-xl p-4 text-gray-700 focus:border-red-900 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30"
-                    placeholder="your@email.com"
-                    required
-                  />
+                  <div className="relative">
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className={`w-full border-2 rounded-xl p-4 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${
+                        fieldValidation.email?.isValid === true
+                          ? "border-green-500 focus:border-green-500"
+                          : fieldValidation.email?.isValid === false
+                          ? "border-red-500 focus:border-red-500"
+                          : "border-red-200 focus:border-red-900"
+                      }`}
+                      placeholder="your@email.com"
+                      required
+                    />
+                    {/* Validation Icon */}
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      {fieldValidation.email?.isValid === true && (
+                        <CheckCircle className="h-5 w-5 text-green-500" />
+                      )}
+                      {fieldValidation.email?.isValid === false && (
+                        <AlertCircle className="h-5 w-5 text-red-500" />
+                      )}
+                    </div>
+                  </div>
+                  {/* Error Message */}
+                  {fieldValidation.email?.error && (
+                    <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                      <AlertCircle className="h-4 w-4" />
+                      {fieldValidation.email.error}
+                    </p>
+                  )}
                 </div>
 
+                {/* Phone */}
                 <div>
                   <label
                     htmlFor="phone"
@@ -697,18 +802,56 @@ export default function CheckoutComponent() {
                   >
                     Phone Number *
                   </label>
-                  <input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className="w-full border-2 border-red-200 rounded-xl p-4 text-gray-700 focus:border-red-900 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30"
-                    placeholder="+91 12345 67890"
-                    required
-                  />
+                  <div className="relative">
+                    {/* Country Code Prefix */}
+                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-700 font-medium bg-gray-100 px-2 py-1 rounded text-sm border-r border-gray-300">
+                      +91
+                    </div>
+                    <input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      className={`w-full border-2 rounded-xl p-4 pl-16 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${
+                        fieldValidation.phone?.isValid === true
+                          ? "border-green-500 focus:border-green-500"
+                          : fieldValidation.phone?.isValid === false
+                          ? "border-red-500 focus:border-red-500"
+                          : "border-red-200 focus:border-red-900"
+                      }`}
+                      placeholder="9876543210"
+                      maxLength="10"
+                      pattern="[6-9][0-9]{9}"
+                      inputMode="numeric"
+                      required
+                    />
+                    {/* Validation Icon */}
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      {fieldValidation.phone?.isValid === true && (
+                        <CheckCircle className="h-5 w-5 text-green-500" />
+                      )}
+                      {fieldValidation.phone?.isValid === false && (
+                        <AlertCircle className="h-5 w-5 text-red-500" />
+                      )}
+                    </div>
+                  </div>
+                  {/* Error Message */}
+                  {fieldValidation.phone?.error && (
+                    <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                      <AlertCircle className="h-4 w-4" />
+                      {fieldValidation.phone.error}
+                    </p>
+                  )}
+                  {/* Helper text for phone format */}
+                  {!fieldValidation.phone?.error && formData.phone && fieldValidation.phone?.isValid !== true && (
+                    <p className="mt-1 text-xs text-gray-500">
+                      Enter 10-digit mobile number starting with 6, 7, 8, or 9
+                    </p>
+                  )}
                 </div>
 
+                {/* Address */}
                 <div className="md:col-span-2">
                   <label
                     htmlFor="address"
@@ -727,6 +870,7 @@ export default function CheckoutComponent() {
                   />
                 </div>
 
+                {/* City */}
                 <div>
                   <label
                     htmlFor="city"
@@ -745,6 +889,7 @@ export default function CheckoutComponent() {
                   />
                 </div>
 
+                {/* State */}
                 <div>
                   <label
                     htmlFor="region"
@@ -768,6 +913,7 @@ export default function CheckoutComponent() {
                   </select>
                 </div>
 
+                {/* Postal Code */}
                 <div className="md:col-span-2 col-span-1">
                   <label
                     htmlFor="postalCode"
@@ -795,6 +941,9 @@ export default function CheckoutComponent() {
                           : "border-red-200 focus:border-red-900"
                       }`}
                       placeholder="110001"
+                      maxLength="6"
+                      pattern="[0-9]*"
+                      inputMode="numeric"
                     />
 
                     {/* Validation Icons - Positioned absolutely within input */}
@@ -821,12 +970,6 @@ export default function CheckoutComponent() {
                         </span>
                       </div>
                       <div className="text-xs text-green-700 space-y-2">
-                        {/* Location Info - Hidden on mobile for space */}
-                        {/* <p className="hidden sm:block">
-                        📍 {postalCodeValidation.deliveryInfo.city},{" "}
-                        {postalCodeValidation.deliveryInfo.district}
-                      </p> */}
-
                         {/* Badges - Responsive flex */}
                         <div className="flex flex-col sm:flex-row gap-2">
                           {postalCodeValidation.deliveryInfo.cod && (
@@ -842,6 +985,14 @@ export default function CheckoutComponent() {
                         </div>
                       </div>
                     </div>
+                  )}
+
+                  {/* Postal code error */}
+                  {postalCodeValidation.error && (
+                    <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                      <AlertCircle className="h-4 w-4" />
+                      {postalCodeValidation.error}
+                    </p>
                   )}
                 </div>
               </div>
@@ -867,15 +1018,9 @@ export default function CheckoutComponent() {
                 {Object.entries(shippingOptions).map(
                   ([key, { price, days, icon, name }]) => {
                     const isFreeShippingOption = key === "free";
-                    const isDisabled =
-                      isFreeShippingOption && !isFreeShippingEligible;
-                    const displayPrice =
-                      isFreeShippingEligible && isFreeShippingOption
-                        ? 0
-                        : price;
-                    const finalPrice =
-                      displayPrice +
-                      (postalCodeValidation.deliveryInfo?.isODA ? 50 : 0);
+                    const isDisabled = isFreeShippingOption && !isFreeShippingEligible;
+                    const displayPrice = isFreeShippingEligible && isFreeShippingOption ? 0 : price;
+                    const finalPrice = displayPrice + (postalCodeValidation.deliveryInfo?.isODA ? 50 : 0);
 
                     return (
                       <label
@@ -908,21 +1053,11 @@ export default function CheckoutComponent() {
                         <div className="ml-4 flex-1">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                              <span
-                                className={`text-2xl ${
-                                  isDisabled ? "opacity-50" : ""
-                                }`}
-                              >
+                              <span className={`text-2xl ${isDisabled ? "opacity-50" : ""}`}>
                                 {icon}
                               </span>
                               <div>
-                                <p
-                                  className={`font-bold ${
-                                    isDisabled
-                                      ? "text-gray-400"
-                                      : "text-gray-900"
-                                  }`}
-                                >
+                                <p className={`font-bold ${isDisabled ? "text-gray-400" : "text-gray-900"}`}>
                                   {name}
                                   {isDisabled && (
                                     <span className="ml-2 text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded-full">
@@ -930,50 +1065,28 @@ export default function CheckoutComponent() {
                                     </span>
                                   )}
                                 </p>
-                                <p
-                                  className={`text-sm ${
-                                    isDisabled
-                                      ? "text-gray-400"
-                                      : "text-gray-600"
-                                  }`}
-                                >
+                                <p className={`text-sm ${isDisabled ? "text-gray-400" : "text-gray-600"}`}>
                                   {days}
                                 </p>
-                                {isFreeShippingEligible &&
-                                  isFreeShippingOption && (
-                                    <p className="text-xs text-green-600 font-semibold">
-                                      🎉 Free upgrade - On{" "}
-                                      <strong>prepaid</strong> orders above
-                                      ₹5000+
-                                    </p>
-                                  )}
-                                {postalCodeValidation.deliveryInfo?.isODA &&
-                                  !isDisabled && (
-                                    <p className="text-xs text-orange-600 font-medium">
-                                      +₹50 Remote area surcharge
-                                    </p>
-                                  )}
+                                {isFreeShippingEligible && isFreeShippingOption && (
+                                  <p className="text-xs text-green-600 font-semibold">
+                                    🎉 Free upgrade - On <strong>prepaid</strong> orders above ₹5000+
+                                  </p>
+                                )}
+                                {postalCodeValidation.deliveryInfo?.isODA && !isDisabled && (
+                                  <p className="text-xs text-orange-600 font-medium">
+                                    +₹50 Remote area surcharge
+                                  </p>
+                                )}
                               </div>
                             </div>
                             <div className="text-right">
-                              <span
-                                className={`font-bold text-lg ${
-                                  isDisabled ? "text-gray-400" : "text-red-900"
-                                }`}
-                              >
-                                {isDisabled
-                                  ? `₹${price}`
-                                  : finalPrice === 0
-                                  ? "FREE"
-                                  : `₹${finalPrice}`}
+                              <span className={`font-bold text-lg ${isDisabled ? "text-gray-400" : "text-red-900"}`}>
+                                {isDisabled ? `₹${price}` : finalPrice === 0 ? "FREE" : `₹${finalPrice}`}
                               </span>
-                              {isFreeShippingEligible &&
-                                isFreeShippingOption &&
-                                !postalCodeValidation.deliveryInfo?.isODA && (
-                                  <p className="text-xs text-gray-500 line-through">
-                                    ₹{price}
-                                  </p>
-                                )}
+                              {isFreeShippingEligible && isFreeShippingOption && !postalCodeValidation.deliveryInfo?.isODA && (
+                                <p className="text-xs text-gray-500 line-through">₹{price}</p>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -987,11 +1100,7 @@ export default function CheckoutComponent() {
               {!isFreeShippingEligible && subtotal > 0 && (
                 <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                   <p className="text-sm text-blue-800">
-                    💡{" "}
-                    <strong>
-                      Add ₹{(5000 - subtotal).toLocaleString()} more
-                    </strong>{" "}
-                    to unlock free shipping!
+                    💡 <strong>Add ₹{(5000 - subtotal).toLocaleString()} more</strong> to unlock free shipping!
                   </p>
                 </div>
               )}
@@ -999,87 +1108,127 @@ export default function CheckoutComponent() {
           </div>
 
           {/* Right Column - Order Summary */}
-          <div className="lg:col-span-1 ">
+          <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl shadow-lg border border-red-100 p-6 lg:sticky lg:top-8 hover:shadow-xl transition-all duration-300">
               <div className="flex items-center mt-6 mb-6">
                 <div className="w-10 h-10 bg-red-900 rounded-full flex items-center justify-center mr-4">
                   <ShoppingBag className="text-white h-5 w-5" />
                 </div>
-                <h2 className="text-xl font-bold text-gray-900">
-                  Order Summary
-                </h2>
+                <h2 className="text-xl font-bold text-gray-900">Order Summary</h2>
               </div>
 
               <div className="space-y-4">
                 {/* Cart Items */}
-                {cart &&
-                  cart.length > 0 &&
-                  cart.map((item) => {
-                    if (!item || !item.id) return null;
+                {cart && cart.length > 0 && cart.map((item) => {
+                  if (!item || !item.id) return null;
 
-                    return (
-                      <div
-                        key={item.id}
-                        className="bg-red-50/50 rounded-xl border border-red-100 p-4"
-                      >
-                        <div className="flex items-center space-x-3">
-                          <div className="w-12 h-12 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
-                            <Image
-                              src={getCurrentImage(item) || "/placeholder.jpg"}
-                              alt={item.name || "Product"}
-                              width={200}
-                              height={200}
-                              priority
-                              className="w-full object-cover scale-y-[1.15] h-full"
-                            />
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="font-bold text-gray-900">
-                              {item.name || "Product"}
-                            </h3>
-                            <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
-                              {item.selectedColor && (
-                                <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full font-medium">
-                                  {item.selectedColor}
-                                </span>
-                              )}
-                              {item.selectedSize && (
-                                <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full font-medium">
-                                  Size {item.selectedSize}
-                                </span>
-                              )}
-                            </div>
-                            <div className="text-sm text-gray-600 mt-1 font-medium">
-                              Qty:{" "}
-                              <span className="text-red-900">
-                                {item.quantity || 1}
-                              </span>
-                            </div>
-                          </div>
-                          <span className="font-bold text-lg text-red-900">
-                            ₹
-                            {(
-                              (item.price || 0) * (item.quantity || 1)
-                            ).toLocaleString()}
-                          </span>
+                  return (
+                    <div key={item.id} className="bg-red-50/50 rounded-xl border border-red-100 p-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-12 h-12 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
+                          <Image
+                            src={getCurrentImage(item) || "/placeholder.jpg"}
+                            alt={item.name || "Product"}
+                            width={200}
+                            height={200}
+                            priority
+                            className="w-full object-cover scale-y-[1.15] h-full"
+                          />
                         </div>
+                        <div className="flex-1">
+                          <h3 className="font-bold text-gray-900">{item.name || "Product"}</h3>
+                          <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
+                            {item.selectedColor && (
+                              <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full font-medium">
+                                {item.selectedColor}
+                              </span>
+                            )}
+                            {item.selectedSize && (
+                              <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full font-medium">
+                                Size {item.selectedSize}
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-sm text-gray-600 mt-1 font-medium">
+                            Qty: <span className="text-red-900">{item.quantity || 1}</span>
+                          </div>
+                        </div>
+                        <span className="font-bold text-lg text-red-900">
+                          ₹{((item.price || 0) * (item.quantity || 1)).toLocaleString()}
+                        </span>
                       </div>
-                    );
-                  })}
+                    </div>
+                  );
+                })}
 
                 {/* Summary Section */}
                 <div className="border-t-2 border-red-100 pt-4 space-y-3">
+                  {/* Form Validation Status */}
+                  <div className="bg-gray-50 rounded-lg p-3 mb-4">
+                    <h4 className="text-sm font-semibold text-gray-800 mb-2">Form Status</h4>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2 text-xs">
+                        {fieldValidation.fullName?.isValid === true ? (
+                          <CheckCircle className="h-3 w-3 text-green-500" />
+                        ) : fieldValidation.fullName?.isValid === false ? (
+                          <AlertCircle className="h-3 w-3 text-red-500" />
+                        ) : (
+                          <div className="h-3 w-3 rounded-full border border-gray-300" />
+                        )}
+                        <span className={fieldValidation.fullName?.isValid === true ? "text-green-700" : 
+                               fieldValidation.fullName?.isValid === false ? "text-red-700" : "text-gray-600"}>
+                          Full Name
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs">
+                        {fieldValidation.email?.isValid === true ? (
+                          <CheckCircle className="h-3 w-3 text-green-500" />
+                        ) : fieldValidation.email?.isValid === false ? (
+                          <AlertCircle className="h-3 w-3 text-red-500" />
+                        ) : (
+                          <div className="h-3 w-3 rounded-full border border-gray-300" />
+                        )}
+                        <span className={fieldValidation.email?.isValid === true ? "text-green-700" : 
+                               fieldValidation.email?.isValid === false ? "text-red-700" : "text-gray-600"}>
+                          Email Address
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs">
+                        {fieldValidation.phone?.isValid === true ? (
+                          <CheckCircle className="h-3 w-3 text-green-500" />
+                        ) : fieldValidation.phone?.isValid === false ? (
+                          <AlertCircle className="h-3 w-3 text-red-500" />
+                        ) : (
+                          <div className="h-3 w-3 rounded-full border border-gray-300" />
+                        )}
+                        <span className={fieldValidation.phone?.isValid === true ? "text-green-700" : 
+                               fieldValidation.phone?.isValid === false ? "text-red-700" : "text-gray-600"}>
+                          Phone Number
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs">
+                        {postalCodeValidation.isValid === true ? (
+                          <CheckCircle className="h-3 w-3 text-green-500" />
+                        ) : postalCodeValidation.isValid === false ? (
+                          <AlertCircle className="h-3 w-3 text-red-500" />
+                        ) : (
+                          <div className="h-3 w-3 rounded-full border border-gray-300" />
+                        )}
+                        <span className={postalCodeValidation.isValid === true ? "text-green-700" : 
+                               postalCodeValidation.isValid === false ? "text-red-700" : "text-gray-600"}>
+                          Postal Code
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Free Shipping Notification */}
                   {shippingMethod === "free" && (
                     <>
                       {!isFreeShippingEligible && subtotal > 0 && (
                         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
                           <p className="text-sm text-blue-800">
-                            💡{" "}
-                            <strong>
-                              Add ₹{(5000 - subtotal).toLocaleString()} more
-                            </strong>{" "}
-                            to qualify for free shipping!
+                            💡 <strong>Add ₹{(5000 - subtotal).toLocaleString()} more</strong> to qualify for free shipping!
                           </p>
                         </div>
                       )}
@@ -1087,8 +1236,7 @@ export default function CheckoutComponent() {
                       {isFreeShippingEligible && (
                         <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
                           <p className="text-sm text-green-800">
-                            🎉 <strong>Congratulations!</strong> You qualify for
-                            free shipping on orders ₹5000+
+                            🎉 <strong>Congratulations!</strong> You qualify for free shipping on orders ₹5000+
                           </p>
                         </div>
                       )}
@@ -1100,25 +1248,15 @@ export default function CheckoutComponent() {
                     <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
                       <div className="flex items-center gap-2 mb-2">
                         <MapPin className="h-4 w-4 text-red-600" />
-                        <span className="text-sm font-semibold text-red-800">
-                          Delivery Details
-                        </span>
+                        <span className="text-sm font-semibold text-red-800">Delivery Details</span>
                       </div>
                       <div className="text-xs text-red-700 space-y-1">
-                        {/* <p>
-                          📍 {postalCodeValidation.deliveryInfo.city},{" "}
-                          {postalCodeValidation.deliveryInfo.district}
-                        </p> */}
                         <div className="flex gap-2 flex-wrap">
                           {postalCodeValidation.deliveryInfo.cod && (
-                            <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">
-                              COD ✓
-                            </span>
+                            <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">COD ✓</span>
                           )}
                           {postalCodeValidation.deliveryInfo.isODA && (
-                            <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs">
-                              Remote Area
-                            </span>
+                            <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs">Remote Area</span>
                           )}
                         </div>
                       </div>
@@ -1127,38 +1265,27 @@ export default function CheckoutComponent() {
 
                   <div className="flex justify-between text-gray-700">
                     <span className="font-medium">Subtotal</span>
-                    <span className="font-bold">
-                      ₹{subtotal.toLocaleString()}
-                    </span>
+                    <span className="font-bold">₹{subtotal.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between text-gray-700">
                     <span className="font-medium">Shipping</span>
                     <div className="text-right">
                       <span className="font-bold text-green-600">
-                        {shipping === 0
-                          ? "FREE"
-                          : `₹${shipping.toLocaleString()}`}
+                        {shipping === 0 ? "FREE" : `₹${shipping.toLocaleString()}`}
                       </span>
-                      {isFreeShippingEligible &&
-                        shippingMethod === "free" &&
-                        shippingOptions[shippingMethod]?.price > 0 &&
-                        !postalCodeValidation.deliveryInfo?.isODA && (
-                          <p className="text-xs text-gray-500 line-through">
-                            ₹{shippingOptions[shippingMethod].price}
-                          </p>
-                        )}
+                      {isFreeShippingEligible && shippingMethod === "free" && 
+                       shippingOptions[shippingMethod]?.price > 0 && 
+                       !postalCodeValidation.deliveryInfo?.isODA && (
+                        <p className="text-xs text-gray-500 line-through">₹{shippingOptions[shippingMethod].price}</p>
+                      )}
                     </div>
                   </div>
 
                   {/* ODA Surcharge */}
                   {odaSurcharge > 0 && (
                     <div className="flex justify-between text-gray-700">
-                      <span className="font-medium text-orange-600">
-                        Remote Area Surcharge
-                      </span>
-                      <span className="font-bold text-orange-600">
-                        ₹{odaSurcharge}
-                      </span>
+                      <span className="font-medium text-orange-600">Remote Area Surcharge</span>
+                      <span className="font-bold text-orange-600">₹{odaSurcharge}</span>
                     </div>
                   )}
 
@@ -1201,17 +1328,11 @@ export default function CheckoutComponent() {
                 <div className="text-center text-sm text-gray-600 bg-red-50 p-4 rounded-xl border border-red-100">
                   <div className="flex items-center justify-center gap-2 mb-2">
                     <Shield className="h-4 w-4 text-red-600" />
-                    <span className="font-semibold text-red-900">
-                      Secure Checkout
-                    </span>
+                    <span className="font-semibold text-red-900">Secure Checkout</span>
                   </div>
-                  <p className="text-xs">
-                    Your payment information is encrypted and secure
-                  </p>
+                  <p className="text-xs">Your payment information is encrypted and secure</p>
                   {postalCodeValidation.deliveryInfo?.cod && (
-                    <p className="text-xs text-green-700 mt-1">
-                      💰 Cash on Delivery available
-                    </p>
+                    <p className="text-xs text-green-700 mt-1">💰 Cash on Delivery available</p>
                   )}
                 </div>
               </div>

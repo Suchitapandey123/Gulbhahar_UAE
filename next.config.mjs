@@ -11,7 +11,9 @@ const nextConfig = {
           protocol: "https",
           hostname: "imgs.search.brave.com",
         },
+
       ],
+      unoptimized: true,
     },
     // async rewrites() {
     //   return [
