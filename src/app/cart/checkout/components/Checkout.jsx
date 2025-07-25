@@ -52,9 +52,9 @@ const formatPhoneNumber = (phone) => {
   // Remove all non-digits
   const cleanPhone = phone.replace(/\D/g, '');
   
-  // Format as +91 XXXXX XXXXX for 10-digit numbers only
+  // Return only the 10-digit number for storage (no +91 prefix)
   if (cleanPhone.length === 10 && /^[6-9]\d{9}$/.test(cleanPhone)) {
-    return `+91 ${cleanPhone.slice(0, 5)} ${cleanPhone.slice(5)}`;
+    return cleanPhone; // Just return the 10 digits
   }
   return phone; // Return original if can't format
 };
@@ -499,14 +499,14 @@ export default function CheckoutComponent() {
       const sessionId = generateSessionId();
       const fingerprint = generateFingerprint();
 
-      // Format phone number for storage
+      // Format phone number for storage (without +91)
       const formattedPhone = formatPhoneNumber(formData.phone);
 
-      // Complete checkout data with validated information
+      // Complete checkout data with clean phone number
       const checkoutData = {
-        // Form data with formatted phone
+        // Form data with clean phone number (no +91)
         ...formData,
-        phone: formattedPhone,
+        phone: formattedPhone, // This will be just the 10 digits
 
         // Generated IDs
         orderId: orderId,

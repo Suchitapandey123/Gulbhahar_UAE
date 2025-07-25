@@ -980,10 +980,7 @@ export default function Reviews({ variant = "mobile", productId }) {
                                 <Trash2 className="w-4 h-4" />
                               )}
                             </button>
-                            {/* Show user info for debugging */}
-                            <span className="text-xs text-gray-400 ml-1">
-                              Current: {getCurrentUserId()} | Review: {review.userId || review.user_id || 'N/A'}
-                            </span>
+                            
                           </div>
                         </div>
                       </div>
