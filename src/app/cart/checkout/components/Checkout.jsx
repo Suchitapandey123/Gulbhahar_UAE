@@ -598,7 +598,7 @@ export default function CheckoutComponent() {
       name: "Free Shipping",
     },
     standard: {
-      price: 250,
+      price: 0,
       days: "3-5 business days",
       icon: "📦",
       name: "Standard Shipping",

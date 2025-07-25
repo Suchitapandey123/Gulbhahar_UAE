@@ -59,7 +59,7 @@ const AnimatedCounter = ({ target, duration = 2000 }) => {
 // Phone OTP Verification Modal Component
 const PhoneOTPModal = ({ isOpen, onClose, onVerify, phone, isVerifying, error, sessionId }) => {
   const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
-  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes = 600 seconds
+  const [timeLeft, setTimeLeft] = useState(120); // 10 minutes = 600 seconds
   const [canResend, setCanResend] = useState(false);
   const [isResending, setIsResending] = useState(false);
 
