@@ -1,8 +1,6 @@
-// Enhanced transaction-status page that handles both Online Payment and COD
-
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, Suspense, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircle, XCircle, AlertTriangle, ArrowRight, ShoppingBag, Package, Loader2, Banknote, CreditCard } from "lucide-react";
 
@@ -11,10 +9,16 @@ const TransactionStatusContent = () => {
   const searchParams = useSearchParams();
   const [paymentStatus, setPaymentStatus] = useState('processing');
   const [paymentData, setPaymentData] = useState(null);
-  const [paymentMethod, setPaymentMethod] = useState('online'); // 'online' or 'cod'
+  const [paymentMethod, setPaymentMethod] = useState('online');
   const [showContent, setShowContent] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [backendSent, setBackendSent] = useState(false);
+  const [backendProcessing, setBackendProcessing] = useState(false);
+  
+  // 🎯 Refs to prevent duplicate API calls
+  const apiCallInProgress = useRef(false);
+  const apiCallCompleted = useRef(false);
+  const processedTransactionId = useRef(null);
   
   useEffect(() => {
     // Get parameters from URL
@@ -25,7 +29,7 @@ const TransactionStatusContent = () => {
     const error = searchParams.get('error');
     const bankRefNo = searchParams.get('bank_ref_no');
     const statusMessage = searchParams.get('status_message');
-    const method = searchParams.get('payment_method'); // 'online' or 'cod'
+    const method = searchParams.get('payment_method');
 
     console.log('🎯 Transaction Status Page - URL Parameters:', {
       status,
@@ -38,8 +42,16 @@ const TransactionStatusContent = () => {
       method
     });
 
+    // 🛡️ Prevent processing the same transaction multiple times
+    if (trackingId && processedTransactionId.current === trackingId) {
+      console.log('⏭️ Transaction already processed, skipping...', trackingId);
+      setIsLoading(false);
+      setTimeout(() => setShowContent(true), 500);
+      return;
+    }
+
     // Determine payment method
-    let detectedMethod = 'online'; // default
+    let detectedMethod = 'online';
     if (method) {
       detectedMethod = method.toLowerCase();
     } else if (trackingId && trackingId.startsWith('COD_')) {
@@ -55,7 +67,7 @@ const TransactionStatusContent = () => {
         status: status.toLowerCase(),
         orderId,
         amount,
-        trackingId, // Same trackingID logic as before
+        trackingId,
         error,
         bankRefNo,
         statusMessage,
@@ -65,6 +77,9 @@ const TransactionStatusContent = () => {
 
       setPaymentStatus(status.toLowerCase());
       setPaymentData(transactionData);
+
+      // 🎯 Mark this transaction as processed
+      processedTransactionId.current = trackingId;
 
       // Send complete checkout data to backend (only for successful payments)
       sendCompleteOrderDataToBackend(transactionData);
@@ -78,10 +93,21 @@ const TransactionStatusContent = () => {
       setShowContent(true);
       setIsLoading(false);
     }, 500);
-  }, [searchParams]);
+  }, []); // 🎯 Empty dependency array - only run once on mount
 
-  // Function to send complete order data (enhanced for both payment methods)
+  // 🛡️ Enhanced function to prevent duplicate API calls
   const sendCompleteOrderDataToBackend = async (transactionData) => {
+    // 🎯 Multiple protection layers
+    if (apiCallInProgress.current) {
+      console.log('⏭️ API call already in progress, skipping...');
+      return;
+    }
+
+    if (apiCallCompleted.current) {
+      console.log('⏭️ API call already completed, skipping...');
+      return;
+    }
+
     if (backendSent) {
       console.log('⏭️ Backend data already sent, skipping...');
       return;
@@ -92,9 +118,13 @@ const TransactionStatusContent = () => {
       console.log('❌ Payment not successful, NOT sending data to backend');
       console.log('📊 Payment Status:', transactionData.status);
       console.log('💳 Payment Method:', transactionData.paymentMethod);
-      setBackendSent(true); // Mark as "sent" to stop trying
+      apiCallCompleted.current = true; // Mark as completed (no retry needed)
       return;
     }
+
+    // 🛡️ Set flags to prevent duplicate calls
+    apiCallInProgress.current = true;
+    setBackendProcessing(true);
 
     console.log('✅ Payment successful! Sending complete order data to backend...');
     console.log('💳 Payment Method:', transactionData.paymentMethod);
@@ -187,7 +217,7 @@ const TransactionStatusContent = () => {
         const basePayment = {
           amount: transactionData.amount ? parseFloat(transactionData.amount) : 0,
           currency: "INR",
-          trackingId: transactionData.trackingId, // 🎯 Same trackingId logic as before
+          trackingId: transactionData.trackingId,
           status: transactionData.status,
           statusMessage: transactionData.statusMessage,
           errorMessage: transactionData.error
@@ -210,9 +240,9 @@ const TransactionStatusContent = () => {
         }
       };
 
-      // Prepare complete order data in your backend format
+      // Prepare complete order data
       const completeOrderData = {
-        tracking_id: transactionData.trackingId, // 🎯 Use trackingId from URL as transactionId (same logic)
+        tracking_id: transactionData.trackingId,
         timestamp: new Date().toISOString(),
         
         order: {
@@ -265,7 +295,7 @@ const TransactionStatusContent = () => {
           sameAsShipping: true
         },
 
-        payment: preparePaymentObject(), // Dynamic payment object based on method
+        payment: preparePaymentObject(),
 
         shipping: {
           method: checkoutData.shippingMethod || "Standard Shipping",
@@ -285,12 +315,11 @@ const TransactionStatusContent = () => {
         },
 
         security: {
-          ipAddress: null, // Backend will capture this
+          ipAddress: null,
           sessionId: checkoutData.sessionId || generateSessionId(),
           fingerprint: checkoutData.fingerprint || generateFingerprint()
         },
 
-        // Additional transaction status specific data
         transactionStatus: {
           finalStatus: transactionData.status,
           receivedAt: transactionData.receivedAt,
@@ -302,14 +331,20 @@ const TransactionStatusContent = () => {
 
       console.log('📤 Sending complete order data to backend:', JSON.stringify(completeOrderData, null, 2));
 
-      // Send to your backend endpoint (same endpoint as checkout would use)
+      // Send to backend with timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
       const response = await fetch('https://api.gulbhahar.com/guestorderRoutes/order', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(completeOrderData)
+        body: JSON.stringify(completeOrderData),
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
@@ -319,7 +354,10 @@ const TransactionStatusContent = () => {
       const result = await response.json();
       console.log('✅ Backend response:', result);
 
+      // 🎯 Mark as successfully completed
+      apiCallCompleted.current = true;
       setBackendSent(true);
+      setBackendProcessing(false);
 
       // Clear localStorage after successful send
       try {
@@ -334,19 +372,38 @@ const TransactionStatusContent = () => {
     } catch (error) {
       console.error('❌ Error sending complete order data to backend:', error);
       
-      // Retry logic (optional)
-      setTimeout(() => {
-        console.log('🔄 Retrying backend request...');
-        sendCompleteOrderDataToBackend(transactionData);
-      }, 5000);
+      // 🛡️ Reset flags on error, but don't automatically retry
+      apiCallInProgress.current = false;
+      setBackendProcessing(false);
+      
+      // Only set as completed if it's a permanent error (not network issues)
+      if (error.name === 'AbortError' || error.message.includes('network')) {
+        console.log('🔄 Network error - manual retry available');
+      } else {
+        console.log('❌ Permanent error - marking as completed');
+        apiCallCompleted.current = true;
+      }
     }
   };
 
-  // Function to manually retry sending to backend
+  // 🎯 Manual retry function with better protection
   const retryBackendRequest = () => {
-    // Only allow retry if payment is successful
+    if (apiCallInProgress.current) {
+      console.log('⏭️ API call already in progress, cannot retry');
+      return;
+    }
+
+    if (apiCallCompleted.current) {
+      console.log('⏭️ API call already completed successfully, no retry needed');
+      return;
+    }
+    
     if (paymentData && paymentData.status === 'success') {
+      console.log('🔄 Manual retry initiated');
+      // Reset only the necessary flags for retry
+      apiCallInProgress.current = false;
       setBackendSent(false);
+      setBackendProcessing(false);
       sendCompleteOrderDataToBackend(paymentData);
     } else {
       console.log('❌ Cannot retry - payment not successful');
@@ -356,23 +413,23 @@ const TransactionStatusContent = () => {
   const getStatusIcon = () => {
     switch (paymentStatus) {
       case 'success':
-        return <CheckCircle className="w-20 h-20 text-green-500 animate-bounce" />;
+        return <CheckCircle className="w-16 h-16 sm:w-20 sm:w-20 lg:w-24 lg:h-24 text-green-500 animate-bounce-gentle status-icon" />;
       case 'failed':
       case 'failure':
-        return <XCircle className="w-20 h-20 text-red-500 animate-pulse" />;
+        return <XCircle className="w-16 h-16 sm:w-20 sm:w-20 lg:w-24 lg:h-24 text-red-500 animate-pulse status-icon" />;
       case 'cancelled':
       case 'aborted':
-        return <AlertTriangle className="w-20 h-20 text-yellow-500 animate-pulse" />;
+        return <AlertTriangle className="w-16 h-16 sm:w-20 sm:w-20 lg:w-24 lg:h-24 text-yellow-500 animate-pulse status-icon" />;
       default:
-        return <AlertTriangle className="w-20 h-20 text-gray-500" />;
+        return <AlertTriangle className="w-16 h-16 sm:w-20 sm:w-20 lg:w-24 lg:h-24 text-gray-500 status-icon" />;
     }
   };
 
   const getPaymentMethodIcon = () => {
     if (paymentMethod === 'cod') {
-      return <Banknote className="h-5 w-5 text-green-600" />;
+      return <Banknote className="h-5 w-5 text-red-900" />;
     } else {
-      return <CreditCard className="h-5 w-5 text-blue-600" />;
+      return <CreditCard className="h-5 w-5 text-red-900" />;
     }
   };
 
@@ -380,23 +437,21 @@ const TransactionStatusContent = () => {
     if (paymentMethod === 'cod') {
       return {
         text: 'Cash on Delivery',
-        color: 'text-green-600',
-        bgColor: 'bg-green-50',
-        borderColor: 'border-green-200'
+        color: 'text-red-900',
+        bgColor: 'bg-red-50',
+        borderColor: 'border-red-200'
       };
     } else {
       return {
         text: 'Online Payment',
-        color: 'text-blue-600',
-        bgColor: 'bg-blue-50',
-        borderColor: 'border-blue-200'
+        color: 'text-red-900',
+        bgColor: 'bg-red-50',
+        borderColor: 'border-red-200'
       };
     }
   };
 
   const getStatusMessage = () => {
-    const methodInfo = getPaymentMethodText();
-    
     switch (paymentStatus) {
       case 'success':
         return {
@@ -442,130 +497,172 @@ const TransactionStatusContent = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-red-900 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 font-medium">Loading transaction status...</p>
+      <div className="min-h-screen mt-20 bg-gradient-to-br from-red-50/30 to-white flex items-center justify-center px-4">
+        <div className="text-center bg-white rounded-3xl shadow-2xl border border-red-100 p-8 max-w-md w-full">
+          <div className="relative mb-6">
+            <div className="w-16 h-16 border-4 border-red-200 rounded-full animate-spin mx-auto"></div>
+            <div className="absolute inset-0 w-16 h-16 border-4 border-red-900 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          </div>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">Processing Transaction</h3>
+          <p className="text-gray-600 font-medium">Please wait while we verify your payment...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={`min-h-screen mt-6 sm:mt-12 bg-gradient-to-br ${statusInfo.bgColor} flex items-center justify-center p-0 sm:p-3 lg:p-8`}>
-      <div className={`bg-white rounded-2xl shadow-2xl border-2 border-red-100 p-6 sm:p-8 w-full max-w-sm sm:max-w-md lg:max-w-[600px] text-center transform transition-all duration-1000 ${showContent ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-8'}`}>
+    <div className={`min-h-screen mt-14 sm:mt-[72px] bg-gradient-to-br ${statusInfo.bgColor} flex items-center justify-center px-4 py-8`}>
+      <div className={`bg-white rounded-3xl shadow-2xl border border-red-100 p-6 sm:p-8 lg:p-10 w-full max-w-md sm:max-w-lg lg:max-w-2xl text-center transform transition-all duration-1000 ${showContent ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-8'}`}>
         
-        {/* Status Icon */}
-        <div className="mb-4 sm:mb-6 flex justify-center">
-          {getStatusIcon()}
+        {/* Status Icon with Enhanced Animation */}
+        <div className="mb-8 flex justify-center relative">
+          <div className="relative">
+            {getStatusIcon()}
+            {paymentStatus === 'success' && (
+              <div className="absolute inset-0 rounded-full bg-green-200 animate-ping opacity-20"></div>
+            )}
+          </div>
         </div>
 
-        {/* Status Title */}
-        <h1 className={`text-xl sm:text-2xl lg:text-3xl font-bold mb-3 sm:mb-4 ${statusInfo.color} animate-fade-in`}>
+        {/* Status Title with Better Typography */}
+        <h1 className={`text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 ${statusInfo.color} animate-fade-in leading-tight`}>
           {statusInfo.title}
         </h1>
 
-        {/* Status Message */}
-        <p className="text-gray-600 mb-4 sm:mb-6 text-base sm:text-lg leading-relaxed px-2">
+        {/* Status Message with Better Spacing */}
+        <p className="text-gray-600 mb-8 text-base sm:text-lg lg:text-xl leading-relaxed px-2 max-w-lg mx-auto">
           {statusInfo.message}
         </p>
 
-        {/* Payment Method Badge */}
-        <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl ${methodInfo.bgColor} ${methodInfo.borderColor} border-2 mb-4 sm:mb-6`}>
-          {getPaymentMethodIcon()}
-          <span className={`font-bold text-sm ${methodInfo.color}`}>
+        {/* Enhanced Payment Method Badge */}
+        <div className={`inline-flex items-center gap-3 px-6 py-3 rounded-2xl ${methodInfo.bgColor} ${methodInfo.borderColor} border-2 mb-8 shadow-lg hover:shadow-xl transition-all duration-300`}>
+          <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm">
+            {getPaymentMethodIcon()}
+          </div>
+          <span className={`font-bold text-base ${methodInfo.color}`}>
             {methodInfo.text}
           </span>
         </div>
 
-        {/* Transaction Details */}
+        {/* Enhanced Transaction Details Card */}
         {paymentData && (
-          <div className="bg-gray-50 rounded-xl p-4 sm:p-6 mb-4 sm:mb-6 text-left">
-            <h3 className="font-bold text-gray-900 mb-3 sm:mb-4 text-center text-sm sm:text-base">Transaction Details</h3>
-            <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
+          <div className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 mb-8 text-left shadow-inner border border-gray-100">
+            <div className="flex items-center justify-center mb-6">
+              <div className="w-8 h-8 bg-red-900 rounded-lg flex items-center justify-center mr-3">
+                <Package className="h-5 w-5 text-white" />
+              </div>
+              <h3 className="font-bold text-gray-900 text-lg">Transaction Details</h3>
+            </div>
+            <div className="space-y-4 text-sm sm:text-base">
               {paymentData.orderId && (
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-200 gap-1 sm:gap-0">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 border-b border-gray-200 gap-2">
                   <span className="text-gray-600 font-medium">Order ID:</span>
-                  <span className="font-mono text-gray-900 bg-white px-2 py-1 rounded text-xs break-all">{paymentData.orderId}</span>
+                  <span className="font-mono text-gray-900 bg-white px-3 py-2 rounded-lg shadow-sm text-sm break-all">{paymentData.orderId}</span>
                 </div>
               )}
               {paymentData.trackingId && (
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-200 gap-1 sm:gap-0">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 border-b border-gray-200 gap-2">
                   <span className="text-gray-600 font-medium">Tracking ID:</span>
-                  <span className="font-mono text-gray-900 bg-white px-2 py-1 rounded text-xs break-all">{paymentData.trackingId}</span>
+                  <span className="font-mono text-gray-900 bg-white px-3 py-2 rounded-lg shadow-sm text-sm break-all">{paymentData.trackingId}</span>
                 </div>
               )}
               {paymentData.bankRefNo && paymentMethod === 'online' && (
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-200 gap-1 sm:gap-0">
-                  <span className="text-gray-600 font-medium">Bank Ref:</span>
-                  <span className="font-mono text-gray-900 bg-white px-2 py-1 rounded text-xs break-all">{paymentData.bankRefNo}</span>
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 border-b border-gray-200 gap-2">
+                  <span className="text-gray-600 font-medium">Bank Reference:</span>
+                  <span className="font-mono text-gray-900 bg-white px-3 py-2 rounded-lg shadow-sm text-sm break-all">{paymentData.bankRefNo}</span>
                 </div>
               )}
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-200 gap-1 sm:gap-0">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 border-b border-gray-200 gap-2">
                 <span className="text-gray-600 font-medium">Payment Method:</span>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg shadow-sm">
                   {getPaymentMethodIcon()}
                   <span className={`font-bold text-sm ${methodInfo.color}`}>{methodInfo.text}</span>
                 </div>
               </div>
               {paymentData.amount && (
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2">
-                  <span className="text-gray-600 font-medium">Amount:</span>
-                  <span className="font-bold text-base sm:text-lg text-red-900">₹{parseFloat(paymentData.amount).toLocaleString()}</span>
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-3">
+                  <span className="text-gray-600 font-medium">Total Amount:</span>
+                  <span className="font-bold text-xl text-red-900 bg-white px-3 py-2 rounded-lg shadow-sm">₹{parseFloat(paymentData.amount).toLocaleString()}</span>
                 </div>
               )}
             </div>
           </div>
         )}
 
-        {/* Error Details */}
+        {/* Enhanced Error Details */}
         {paymentData?.error && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-3 sm:p-4 mb-4 sm:mb-6">
-            <h3 className="font-bold text-red-800 mb-2 text-sm sm:text-base">Error Details</h3>
-            <p className="text-xs sm:text-sm text-red-600 break-words">{paymentData.error}</p>
+          <div className="bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-200 rounded-2xl p-6 mb-8 shadow-lg">
+            <div className="flex items-center justify-center mb-4">
+              <XCircle className="h-6 w-6 text-red-600 mr-2" />
+              <h3 className="font-bold text-red-800 text-lg">Error Details</h3>
+            </div>
+            <div className="bg-white rounded-xl p-4 shadow-inner">
+              <p className="text-sm sm:text-base text-red-700 break-words leading-relaxed">{paymentData.error}</p>
+            </div>
           </div>
         )}
 
-        {/* Order Status Message */}
+        {/* Enhanced Order Status Message with Retry Option */}
         {paymentStatus === 'success' && (
-          <div className={`${methodInfo.bgColor} border ${methodInfo.borderColor} rounded-xl p-3 sm:p-4 mb-4 sm:mb-6`}>
-            <div className="flex items-center justify-center gap-2">
-              {backendSent ? (
-                <>
-                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0" />
-                  <span className="text-xs sm:text-sm text-green-800 font-medium text-center">
+          <div className={`${methodInfo.bgColor} border-2 ${methodInfo.borderColor} rounded-2xl p-6 mb-8 shadow-lg`}>
+            <div className="flex flex-col items-center gap-4">
+              {backendSent && apiCallCompleted.current ? (
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                  </div>
+                  <span className="text-sm sm:text-base text-green-800 font-semibold">
                     {paymentMethod === 'cod' ? 'COD Order Created Successfully' : 'Order Created Successfully'}
                   </span>
-                </>
-              ) : (
-                <>
-                  <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 animate-spin flex-shrink-0" />
-                  <span className="text-xs sm:text-sm text-green-800 font-medium text-center">
+                </div>
+              ) : backendProcessing || apiCallInProgress.current ? (
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
+                    <Loader2 className="h-5 w-5 text-red-900 animate-spin" />
+                  </div>
+                  <span className="text-sm sm:text-base text-red-900 font-semibold">
                     {paymentMethod === 'cod' ? 'Creating Your COD Order...' : 'Creating Your Order...'}
                   </span>
-                </>
+                </div>
+              ) : (
+                <div className="text-center">
+                  <div className="flex items-center justify-center gap-3 mb-3">
+                    <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                      <AlertTriangle className="h-5 w-5 text-yellow-600" />
+                    </div>
+                    <span className="text-sm sm:text-base text-yellow-800 font-semibold">
+                      Order Creation Pending
+                    </span>
+                  </div>
+                  <button
+                    onClick={retryBackendRequest}
+                    className="bg-red-900 text-white px-6 py-2 rounded-xl hover:bg-red-800 transition-all duration-300 font-semibold text-sm shadow-lg hover:shadow-xl transform hover:scale-105"
+                  >
+                    Retry Order Creation
+                  </button>
+                </div>
               )}
             </div>
           </div>
         )}
 
-        {/* Action Buttons */}
-        <div className="flex flex-col gap-3 sm:gap-4 mb-4 sm:mb-6">
+        {/* Enhanced Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-8">
           {paymentStatus === 'success' ? (
             <>
               <button
                 onClick={() => router.push('/')}
-                className="w-full bg-gradient-to-r from-red-900 to-red-800 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-bold hover:from-red-800 hover:to-red-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 text-sm sm:text-base"
+                className="flex-1 bg-gradient-to-r from-red-900 to-red-800 text-white py-4 px-6 rounded-2xl font-bold hover:from-red-800 hover:to-red-700 transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl flex items-center justify-center gap-3 text-base group"
               >
-                <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                <ShoppingBag className="w-5 h-5 group-hover:animate-bounce" />
                 <span>Continue Shopping</span>
-                <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
               <button
                 onClick={() => router.push('/orders')}
-                className="w-full bg-white border-2 border-red-900 text-red-900 py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-bold hover:bg-red-50 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 text-sm sm:text-base"
+                className="flex-1 bg-white border-2 border-red-900 text-red-900 py-4 px-6 rounded-2xl font-bold hover:bg-red-50 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-base group"
               >
-                <Package className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                <Package className="w-5 h-5 group-hover:animate-pulse" />
                 <span>Track Order</span>
               </button>
             </>
@@ -573,42 +670,59 @@ const TransactionStatusContent = () => {
             <>
               <button
                 onClick={() => router.push('/cart/checkout')}
-                className="w-full bg-gradient-to-r from-red-900 to-red-800 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-bold hover:from-red-800 hover:to-red-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 text-sm sm:text-base"
+                className="w-full bg-gradient-to-r from-red-900 to-red-800 text-white py-4 px-6 rounded-2xl font-bold hover:from-red-800 hover:to-red-700 transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl flex items-center justify-center gap-3 text-base"
               >
                 <span>Try Again</span>
               </button>
               <button
                 onClick={() => router.push('/')}
-                className="w-full bg-white border-2 border-red-900 text-red-900 py-3 sm:py-4 px-4 sm:px-6 rounded-xl font-bold hover:bg-red-50 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 text-sm sm:text-base"
+                className="w-full bg-white border-2 border-red-900 text-red-900 py-4 px-6 rounded-2xl font-bold hover:bg-red-50 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-base group"
               >
-                <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                <ShoppingBag className="w-5 h-5 group-hover:animate-bounce" />
                 <span>Continue Shopping</span>
               </button>
             </>
           )}
         </div>
 
-        {/* Support Link */}
-        <div className="text-center mb-4 sm:mb-6">
-          <p className="text-xs sm:text-sm text-gray-500">
-            Having issues?{' '}
-            <a href="/contact" className="text-red-600 hover:underline font-medium">
-              Contact Support
+        {/* Enhanced Support Link */}
+        <div className="text-center mb-8">
+          <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100">
+            <p className="text-sm sm:text-base text-gray-600 mb-2">
+              <span className="font-semibold">Need Help?</span>
+            </p>
+            <a 
+              href="/contact" 
+              className="inline-flex items-center gap-2 text-red-900 hover:text-red-700 font-semibold text-sm sm:text-base transition-colors duration-300 hover:underline"
+            >
+              📞 Contact Support Team
             </a>
-          </p>
+          </div>
         </div>
 
-        {/* Success Message */}
+        {/* Enhanced Success Message */}
         {paymentStatus === 'success' && (
-          <div className="text-center bg-gradient-to-r from-green-50 to-green-100 p-3 sm:p-4 rounded-xl border border-green-200">
-            <p className="text-xs sm:text-sm text-green-800 leading-relaxed">
-              🎊 <strong>Thank you for your order!</strong>
+          <div className="text-center bg-gradient-to-r from-green-50 via-green-100 to-green-50 p-6 rounded-2xl border-2 border-green-200 shadow-lg">
+            <div className="mb-4">
+              <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                <CheckCircle className="w-6 h-6 text-white" />
+              </div>
+            </div>
+            <p className="text-sm sm:text-base text-green-800 leading-relaxed font-medium">
+              🎊 <strong className="text-green-900">Thank you for your order!</strong>
               <br />
-              {paymentMethod === 'cod' 
-                ? 'Your COD order is confirmed. Pay when delivered!'
-                : 'You will receive an order confirmation email shortly.'
-              }
+              <span className="text-green-700">
+                {paymentMethod === 'cod' 
+                  ? '💰 Your COD order is confirmed. Pay when it\'s delivered to your doorstep!'
+                  : '📧 You will receive an order confirmation email shortly.'
+                }
+              </span>
             </p>
+            {paymentMethod !== 'cod' && (
+              <div className="mt-4 text-xs text-green-600 bg-white rounded-lg p-3 border border-green-200">
+                💡 <strong>Pro Tip:</strong> Check your email (including spam folder) for order updates
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -619,8 +733,49 @@ const TransactionStatusContent = () => {
           100% { opacity: 1; transform: translateY(0); }
         }
         
+        @keyframes bounce-gentle {
+          0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+          40% { transform: translateY(-5px); }
+          60% { transform: translateY(-3px); }
+        }
+        
+        @keyframes pulse-glow {
+          0%, 100% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.3); }
+          50% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.6); }
+        }
+        
         .animate-fade-in {
           animation: fade-in 0.8s ease-out;
+        }
+        
+        .animate-bounce-gentle {
+          animation: bounce-gentle 2s infinite;
+        }
+        
+        .animate-pulse-glow {
+          animation: pulse-glow 2s infinite;
+        }
+        
+        /* Mobile-first responsive improvements */
+        @media (max-width: 640px) {
+          .status-icon {
+            width: 4rem;
+            height: 4rem;
+          }
+        }
+        
+        @media (min-width: 641px) and (max-width: 1024px) {
+          .status-icon {
+            width: 5rem;
+            height: 5rem;
+          }
+        }
+        
+        @media (min-width: 1025px) {
+          .status-icon {
+            width: 6rem;
+            height: 6rem;
+          }
         }
       `}</style>
     </div>
@@ -629,10 +784,21 @@ const TransactionStatusContent = () => {
 
 const TransactionStatusLoading = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white flex items-center justify-center">
-      <div className="text-center">
-        <div className="w-16 h-16 border-4 border-red-900 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-gray-600 font-medium">Loading transaction status...</p>
+    <div className="min-h-screen mt-16 bg-gradient-to-br from-red-50/30 to-white flex items-center justify-center px-4">
+      <div className="text-center bg-white rounded-3xl shadow-2xl border border-red-100 p-8 max-w-md w-full">
+        <div className="relative mb-6">
+          <div className="w-16 h-16 border-4 border-red-200 rounded-full animate-spin mx-auto"></div>
+          <div className="absolute inset-0 w-16 h-16 border-4 border-red-900 border-t-transparent rounded-full animate-spin mx-auto"></div>
+        </div>
+        <h3 className="text-xl font-bold text-gray-900 mb-2">Loading Transaction Status</h3>
+        <p className="text-gray-600 font-medium">Please wait while we verify your payment...</p>
+        <div className="mt-6 flex justify-center">
+          <div className="flex space-x-1">
+            <div className="w-2 h-2 bg-red-900 rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-red-900 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+            <div className="w-2 h-2 bg-red-900 rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
+          </div>
+        </div>
       </div>
     </div>
   );

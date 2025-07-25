@@ -518,7 +518,7 @@ function PaymentContent() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50/30 via-white to-red-50/20 flex items-center justify-center">
+      <div className="min-h-screen mt-18 bg-gradient-to-br from-red-50/30 via-white to-red-50/20 flex items-center justify-center">
         <div className="text-center">
           <div className="relative">
             <div className="w-16 h-16 border-4 border-red-200 rounded-full animate-spin mx-auto mb-6"></div>
@@ -668,7 +668,7 @@ function PaymentContent() {
                         ) : (
                           <>
                             <Banknote className="h-5 w-5 text-nowrap" />
-                            Place COD Order
+                            Place Order
                           </>
                         )}
                       </button>
@@ -756,7 +756,7 @@ function PaymentContent() {
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">Shipping:</span>
                       <span className={`font-semibold ${(checkoutData?.orderShipping || 100) === 0 ? 'text-green-600' : 'text-gray-900'}`}>
-                        {(checkoutData?.orderShipping || 100) === 0 ? 'FREE' : `₹${(checkoutData?.orderShipping || 100).toLocaleString()}`}
+                        {(checkoutData?.orderShipping ) === 0 ? 'FREE' : `₹${(checkoutData?.orderShipping).toLocaleString()}`}
                       </span>
                     </div>
                     <div className="border-t pt-3">

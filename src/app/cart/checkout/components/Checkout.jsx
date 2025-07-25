@@ -126,7 +126,7 @@ export default function CheckoutComponent() {
   });
 
   const [formData, setFormData] = useState({
-    country: "india", // Default to India
+    country: "India", // Default to India
     fullName: "",
     email: "",
     phone: "",
@@ -890,7 +890,7 @@ export default function CheckoutComponent() {
                 </div>
 
                 {/* State */}
-                <div>
+                <div className="border">
                   <label
                     htmlFor="region"
                     className="block text-sm font-semibold text-gray-700 mb-2"
@@ -902,9 +902,9 @@ export default function CheckoutComponent() {
                     name="region"
                     value={formData.region}
                     onChange={handleInputChange}
-                    className="w-full border-2 border-red-200 rounded-xl p-4 text-gray-700 focus:border-red-900 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30"
+                    className="w-full py-4 px-2 border-2 border-red-200 rounded-xl p-4 text-gray-700 focus:border-red-900 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30"
                   >
-                    <option value="">Select State/UT</option>
+                    <option className="bg-red-300" value="">Select State/UT</option>
                     {indianStates.map((state) => (
                       <option key={state.value} value={state.value}>
                         {state.label}
