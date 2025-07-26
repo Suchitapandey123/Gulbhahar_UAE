@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { 
   CreditCard, 
@@ -26,7 +26,9 @@ import {
   Globe,
   Eye,
   EyeOff,
-  Wallet
+  Wallet,
+  X,
+  RefreshCw
 } from "lucide-react";
 
 const Breadcrumb = () => (
@@ -41,13 +43,23 @@ const Breadcrumb = () => (
   </nav>
 );
 
-// Phone OTP Verification Modal Component
+// Enhanced Phone OTP Verification Modal Component - MOBILE KEYBOARD FIXED
 const PhoneOTPModal = ({ isOpen, onClose, onVerify, phone, isVerifying, error, sessionId }) => {
   const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
   const [timeLeft, setTimeLeft] = useState(120);
   const [canResend, setCanResend] = useState(false);
   const [isResending, setIsResending] = useState(false);
+  const [localError, setLocalError] = useState('');
+  const inputRefs = useRef([]);
 
+  // Clear local error when external error changes
+  useEffect(() => {
+    if (error) {
+      setLocalError('');
+    }
+  }, [error]);
+
+  // Timer effect
   useEffect(() => {
     if (isOpen && timeLeft > 0) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
@@ -57,35 +69,117 @@ const PhoneOTPModal = ({ isOpen, onClose, onVerify, phone, isVerifying, error, s
     }
   }, [isOpen, timeLeft]);
 
+  // Auto-focus first input when modal opens
+  useEffect(() => {
+    if (isOpen && inputRefs.current[0]) {
+      setTimeout(() => {
+        inputRefs.current[0]?.focus();
+      }, 300);
+    }
+  }, [isOpen]);
+
+  // Enhanced input change handler
   const handleCodeChange = (index, value) => {
-    if (value.length <= 1 && /^\d*$/.test(value)) {
-      const newCode = [...verificationCode];
-      newCode[index] = value;
-      setVerificationCode(newCode);
-      
-      if (value && index < 5) {
-        const nextInput = document.getElementById(`otp-${index + 1}`);
-        if (nextInput) nextInput.focus();
-      }
+    // Clear any local errors when user starts typing
+    if (localError) setLocalError('');
+    
+    // Only allow single digit
+    if (value.length > 1) {
+      value = value.slice(-1);
+    }
+    
+    // Only allow digits
+    if (!/^\d*$/.test(value)) {
+      return;
+    }
+
+    const newCode = [...verificationCode];
+    newCode[index] = value;
+    setVerificationCode(newCode);
+    
+    // Auto-focus next input
+    if (value && index < 5) {
+      inputRefs.current[index + 1]?.focus();
     }
   };
 
+  // Enhanced keyboard handler
   const handleKeyDown = (index, e) => {
-    if (e.key === 'Backspace' && !verificationCode[index] && index > 0) {
-      const prevInput = document.getElementById(`otp-${index - 1}`);
-      if (prevInput) prevInput.focus();
+    // Handle backspace
+    if (e.key === 'Backspace') {
+      if (!verificationCode[index] && index > 0) {
+        // Move to previous input if current is empty
+        inputRefs.current[index - 1]?.focus();
+      }
+      return;
+    }
+    
+    // Handle paste
+    if (e.key === 'v' && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      handlePaste(index);
+      return;
+    }
+    
+    // Handle Enter key
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (verificationCode.join('').length === 6) {
+        handleVerify();
+      }
+      return;
+    }
+    
+    // Handle arrow keys
+    if (e.key === 'ArrowLeft' && index > 0) {
+      e.preventDefault();
+      inputRefs.current[index - 1]?.focus();
+    } else if (e.key === 'ArrowRight' && index < 5) {
+      e.preventDefault();
+      inputRefs.current[index + 1]?.focus();
     }
   };
 
+  // Enhanced paste handler
+  const handlePaste = async (startIndex) => {
+    try {
+      const clipboardText = await navigator.clipboard.readText();
+      const digits = clipboardText.replace(/\D/g, '').slice(0, 6);
+      
+      if (digits.length > 0) {
+        const newCode = [...verificationCode];
+        for (let i = 0; i < digits.length && (startIndex + i) < 6; i++) {
+          newCode[startIndex + i] = digits[i];
+        }
+        setVerificationCode(newCode);
+        
+        // Focus the next empty input or the last filled input
+        const nextIndex = Math.min(startIndex + digits.length, 5);
+        inputRefs.current[nextIndex]?.focus();
+      }
+    } catch (err) {
+      console.log('Paste not supported or denied');
+    }
+  };
+
+  // Enhanced verification handler
   const handleVerify = () => {
     const codeString = verificationCode.join('');
-    if (codeString.length === 6) {
-      onVerify(codeString, sessionId, false);
+    if (codeString.length !== 6) {
+      setLocalError('Please enter complete 6-digit code');
+      return;
     }
+    
+    // Clear any errors
+    setLocalError('');
+    onVerify(codeString, sessionId, false);
   };
 
+  // Enhanced resend handler
   const handleResend = async () => {
     setIsResending(true);
+    setLocalError('');
+    
     try {
       const response = await fetch('https://api.gulbhahar.com/codRoutes/initiate', {
         method: 'POST',
@@ -103,6 +197,10 @@ const PhoneOTPModal = ({ isOpen, onClose, onVerify, phone, isVerifying, error, s
           setTimeLeft(120);
           setCanResend(false);
           setVerificationCode(['', '', '', '', '', '']);
+          // Focus first input after resend
+          setTimeout(() => {
+            inputRefs.current[0]?.focus();
+          }, 100);
           onVerify(null, result.sessionId, true);
         } else {
           throw new Error(result.message || 'Failed to resend OTP');
@@ -112,81 +210,115 @@ const PhoneOTPModal = ({ isOpen, onClose, onVerify, phone, isVerifying, error, s
       }
     } catch (error) {
       console.error('❌ Error resending OTP:', error);
+      setLocalError('Failed to resend OTP. Please try again.');
     } finally {
       setIsResending(false);
     }
   };
 
+  // Format time display
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
   if (!isOpen) return null;
+
+  const displayError = error || localError;
+  const isCodeComplete = verificationCode.join('').length === 6;
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative animate-in slide-in-from-bottom-4 duration-300">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8 relative animate-in slide-in-from-bottom-4 duration-300 mx-4">
+        {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all duration-200"
+          aria-label="Close modal"
         >
-          ✕
+          <X className="w-5 h-5" />
         </button>
         
-        <div className="text-center mb-8">
+        {/* Header */}
+        <div className="text-center mb-6 sm:mb-8">
           <div className="w-16 h-16 bg-gradient-to-br from-red-800 to-red-900 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
             <Smartphone className="w-8 h-8 text-white" />
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">Verify Your Phone</h3>
-          <p className="text-gray-600 leading-relaxed">
+          <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">Verify Your Phone</h3>
+          <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
             We've sent a 6-digit verification code via WhatsApp to<br />
             <span className="font-semibold text-red-900">{phone}</span>
           </p>
         </div>
 
         <div className="space-y-6">
-          <div className="flex justify-center gap-2">
+          {/* OTP Input Fields - MOBILE KEYBOARD OPTIMIZED */}
+          <div className="flex justify-center gap-2 sm:gap-3">
             {verificationCode.map((digit, index) => (
               <input
                 key={index}
-                id={`otp-${index}`}
-                type="text"
+                ref={(el) => (inputRefs.current[index] = el)}
+                type="tel"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 value={digit}
                 onChange={(e) => handleCodeChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
-                className="w-12 h-12 text-center text-xl font-bold border-2 border-gray-200 rounded-lg focus:border-red-900 focus:ring-2 focus:ring-red-200 transition-all outline-none"
+                onPaste={(e) => {
+                  e.preventDefault();
+                  handlePaste(index);
+                }}
+                className={`w-10 h-12 sm:w-12 sm:h-12 text-center text-lg sm:text-xl font-bold border-2 rounded-lg transition-all outline-none ${
+                  digit 
+                    ? 'border-red-900 bg-red-50 text-red-900' 
+                    : 'border-gray-200 focus:border-red-900 focus:ring-2 focus:ring-red-200'
+                } ${displayError ? 'border-red-500' : ''}`}
                 maxLength="1"
+                autoComplete="one-time-code"
+                aria-label={`Digit ${index + 1}`}
               />
             ))}
           </div>
 
-          {error && (
+          {/* Error Display */}
+          {displayError && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4">
               <div className="flex items-center gap-2">
                 <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0" />
-                <span className="text-red-800 font-medium">{error}</span>
+                <span className="text-red-800 font-medium text-sm">{displayError}</span>
               </div>
             </div>
           )}
 
+          {/* Timer and Resend */}
           <div className="text-center">
             {!canResend ? (
-              <p className="text-gray-600">
-                Resend OTP in <span className="font-bold text-red-900">{Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}</span>
-              </p>
+              <div className="flex items-center justify-center gap-2">
+                <div className="w-2 h-2 bg-red-900 rounded-full animate-pulse"></div>
+                <p className="text-gray-600 text-sm">
+                  Resend OTP in <span className="font-bold text-red-900">{formatTime(timeLeft)}</span>
+                </p>
+              </div>
             ) : (
               <button
                 onClick={handleResend}
                 disabled={isResending}
-                className="text-red-900 font-semibold hover:text-red-700 transition-colors disabled:opacity-50"
+                className="inline-flex items-center gap-2 text-red-900 font-semibold hover:text-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
+                <RefreshCw className={`h-4 w-4 ${isResending ? 'animate-spin' : ''}`} />
                 {isResending ? 'Resending...' : 'Resend OTP'}
               </button>
             )}
           </div>
 
+          {/* Verify Button */}
           <button
             onClick={handleVerify}
-            disabled={verificationCode.join('').length !== 6 || isVerifying}
-            className={`w-full py-3 rounded-lg font-semibold text-lg transition-all duration-200 flex items-center justify-center gap-2 ${
-              verificationCode.join('').length === 6 && !isVerifying
-                ? 'bg-red-900 text-white hover:bg-red-800 shadow-lg'
+            disabled={!isCodeComplete || isVerifying}
+            className={`w-full py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all duration-200 flex items-center justify-center gap-2 ${
+              isCodeComplete && !isVerifying
+                ? 'bg-red-900 text-white hover:bg-red-800 shadow-lg hover:shadow-xl transform hover:scale-[1.02]'
                 : 'bg-gray-200 text-gray-400 cursor-not-allowed'
             }`}
           >
@@ -195,10 +327,28 @@ const PhoneOTPModal = ({ isOpen, onClose, onVerify, phone, isVerifying, error, s
                 <Loader2 className="h-5 w-5 animate-spin" />
                 Verifying...
               </>
+            ) : isCodeComplete ? (
+              <>
+                <CheckCircle className="h-5 w-5" />
+                Verify & Place Order
+              </>
             ) : (
-              'Verify & Place Order'
+              <>
+                <Smartphone className="h-5 w-5" />
+                Enter 6-digit code
+              </>
             )}
           </button>
+
+          {/* Help Text */}
+          <div className="text-center space-y-2">
+            <p className="text-xs text-gray-500">
+              💡 Tip: You can paste the OTP code directly into any field
+            </p>
+            <p className="text-xs text-gray-500">
+              Didn't receive the code? Check your WhatsApp messages
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -562,7 +712,6 @@ function PaymentContent() {
                   badges={[
                     { text: "Instant Confirmation", type: "success" },
                     { text: "SSL Encrypted", type: "info" },
-                    // { text: "Multiple Options", type: "info" }
                   ]}
                   isSelected={paymentMethod === 'online'}
                   onClick={() => setPaymentMethod('online')}
@@ -790,13 +939,6 @@ function PaymentContent() {
             </div>
           </div>
         </div>
-
-        {/* Payment Form Data - Prepared for submission */}
-        {paymentMethod === 'online' && (
-          <div style={{ display: 'none' }}>
-            {/* Form data will be prepared and submitted programmatically */}
-          </div>
-        )}
 
         {/* Phone OTP Verification Modal */}
         <PhoneOTPModal

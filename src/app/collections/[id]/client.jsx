@@ -91,11 +91,12 @@ export function ProductClient({ product, similarProducts }) {
 
     try {
       const response = await fetch(
-        `https://staging-express.delhivery.com/c/api/pin-codes/json/?filter_codes=${pincodeValue}`,
+        `https://track.delhivery.com/c/api/pin-codes/json/?filter_codes=${pincodeValue}`,
         {
           headers: {
-            Authorization: "Token 101d6952983607b883a57570fde4c97bc4c882a1",
+            Authorization: "Token 8b87d5828c527795c255d318d5582bfc6f8e25de",
             "Content-Type": "application/json",
+            "User-Agent": "www.gulbhahar.com"
           },
         }
       );
@@ -105,6 +106,7 @@ export function ProductClient({ product, similarProducts }) {
       }
 
       const data = await response.json();
+      console.log("Delivery check response:", data);
 
       if (data.delivery_codes && data.delivery_codes.length > 0) {
         const postalCode = data.delivery_codes[0].postal_code;

@@ -11,7 +11,7 @@ import {
   CheckCircle,
   AlertCircle,
   Loader2,
-  ChevronDown, // Add this
+  ChevronDown,
   Search,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -79,7 +79,6 @@ const CustomStateDropdown = ({ value, onChange, className = "" }) => {
   // Focus search input when dropdown opens
   useEffect(() => {
     if (isOpen && searchInputRef.current) {
-      // Small delay to ensure the dropdown is rendered
       setTimeout(() => {
         searchInputRef.current?.focus();
       }, 100);
@@ -133,18 +132,7 @@ const CustomStateDropdown = ({ value, onChange, className = "" }) => {
           />
 
           {/* Dropdown Content */}
-          <div
-            className={`
-            absolute z-50 w-full mt-1 bg-white border-2 border-red-200 rounded-xl shadow-2xl
-            max-h-80 overflow-hidden
-            md:max-h-64
-            ${
-              window.innerWidth < 768
-                ? "fixed left-4 right-4 top-1/2 transform -translate-y-1/2 w-auto max-h-96"
-                : ""
-            }
-          `}
-          >
+          <div className="absolute z-50 w-full mt-1 bg-white border-2 border-red-200 rounded-xl shadow-2xl max-h-80 overflow-hidden md:max-h-64">
             {/* Search Input */}
             <div className="p-3 border-b border-red-100 bg-red-50/50 sticky top-0">
               <div className="relative">
@@ -287,6 +275,9 @@ export default function CheckoutComponent() {
   const [shippingMethod, setShippingMethod] = useState("free");
   const [isProcessing, setIsProcessing] = useState(false);
 
+  // 🔧 TOGGLE FOR PINCODE API VALIDATION
+  const ENABLE_PINCODE_API = false; // ⚠️ Set to true to enable API validation
+
   // Field validation states
   const [fieldValidation, setFieldValidation] = useState({
     email: { isValid: null, error: null },
@@ -419,7 +410,7 @@ export default function CheckoutComponent() {
     return () => clearTimeout(timeoutId);
   }, [formData.phone]);
 
-  // Validate postal code with Delhivery API
+  // 🎯 MODIFIED: Default validation without API (can be easily switched back)
   const validatePostalCode = async (postalCode) => {
     if (!postalCode || postalCode.length < 6) {
       setPostalCodeValidation({
@@ -431,6 +422,43 @@ export default function CheckoutComponent() {
       return;
     }
 
+    // 🔧 CHECK IF API IS ENABLED
+    if (!ENABLE_PINCODE_API) {
+      // ✅ DEFAULT VALIDATION WITHOUT API
+      console.log("📍 Pincode API disabled - using default validation");
+      
+      // Simulate a brief validation delay
+      setPostalCodeValidation(prev => ({
+        ...prev,
+        isValidating: true,
+        error: null,
+      }));
+
+      setTimeout(() => {
+        // Default to valid with COD available
+        setPostalCodeValidation({
+          isValidating: false,
+          isValid: true,
+          error: null,
+          deliveryInfo: {
+            city: "Default City",
+            district: "Default District", 
+            state: "Default State",
+            cod: true, // ✅ COD available by default
+            prepaid: true,
+            pickup: true,
+            covidZone: "Green",
+            isODA: false, // ✅ No ODA charges by default
+          },
+        });
+
+        showToast(`✅ Postal code ${postalCode} - Default validation (API disabled)`, "success");
+      }, 500);
+      
+      return;
+    }
+
+    // 🚀 ORIGINAL API VALIDATION CODE (kept intact)
     const DELHIVERY_TOKEN = "8b87d5828c527795c255d318d5582bfc6f8e25de";
     if (!DELHIVERY_TOKEN) {
       console.warn("Delhivery API token not configured");
@@ -869,6 +897,18 @@ export default function CheckoutComponent() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb />
 
+        {/* 🔧 API STATUS INDICATOR */}
+        {/* {!ENABLE_PINCODE_API && (
+          <div className="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <div className="flex items-center gap-2">
+              <AlertCircle className="h-5 w-5 text-yellow-600" />
+              <span className="text-yellow-800 font-medium">
+                📍 Pincode API is currently disabled - using default validation
+              </span>
+            </div>
+          </div>
+        )} */}
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Forms */}
           <div className="lg:col-span-2 space-y-6">
@@ -1085,6 +1125,7 @@ export default function CheckoutComponent() {
                     className="w-full"
                   />
                 </div>
+
                 {/* Postal Code */}
                 <div className="md:col-span-2 col-span-1">
                   <label
@@ -1093,7 +1134,7 @@ export default function CheckoutComponent() {
                   >
                     Postal Code
                     <span className="text-xs text-gray-500 ml-1">
-                      (Auto-validated)
+                      {ENABLE_PINCODE_API ? "(Auto-validated)" : "(Default validation)"}
                     </span>
                   </label>
 
@@ -1138,7 +1179,7 @@ export default function CheckoutComponent() {
                       <div className="flex items-center gap-2 mb-2">
                         <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
                         <span className="text-sm font-semibold text-green-800">
-                          Delivery Available
+                          Delivery Available {!ENABLE_PINCODE_API && "(Default)"}
                         </span>
                       </div>
                       <div className="text-xs text-green-700 space-y-2">
@@ -1475,7 +1516,7 @@ export default function CheckoutComponent() {
                               : "text-gray-600"
                           }
                         >
-                          Postal Code
+                          Postal Code {!ENABLE_PINCODE_API && "(Default)"}
                         </span>
                       </div>
                     </div>
@@ -1513,7 +1554,7 @@ export default function CheckoutComponent() {
                       <div className="flex items-center gap-2 mb-2">
                         <MapPin className="h-4 w-4 text-red-600" />
                         <span className="text-sm font-semibold text-red-800">
-                          Delivery Details
+                          Delivery Details {!ENABLE_PINCODE_API && "(Default)"}
                         </span>
                       </div>
                       <div className="text-xs text-red-700 space-y-1">
