@@ -3,53 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OTP Verification - Secure Access</title>
+    <title>Order Confirmation - GULBHAHAR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         
         body {
-            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #722f37 0%, #8b1538 50%, #a01d42 100%);
-            min-height: 100vh;
-            padding: 20px;
+            font-family: 'Inter', Arial, sans-serif;
             line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
         }
         
         .email-container {
-            max-width: 650px;
+            max-width: 600px;
             margin: 0 auto;
-            background: #ffffff;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 25px 50px rgba(139, 21, 56, 0.3);
-            position: relative;
-            border: 3px solid #722f37;
-        }
-        
-        .security-badge {
-            position: absolute;
-            top: -5px;
-            right: 20px;
-            background: linear-gradient(135deg, #722f37 0%, #8b1538 100%);
-            color: #ffffff;
-            padding: 8px 20px;
-            border-radius: 0 0 15px 15px;
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            z-index: 10;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .security-badge::before {
-            content: '🔒';
-            margin-right: 8px;
+            background-color: #ffffff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
         
         .header {
-            background: linear-gradient(135deg, #722f37 0%, #8b1538 50%, #a0226e 100%);
-            padding: 50px 40px;
+            background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 50%, #7f1d1d 100%);
+            padding: 50px 20px;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -58,332 +37,971 @@
         .header::before {
             content: '';
             position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: headerShimmer 3s ease-in-out infinite;
+        }
+        
+        .logo-container {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-space {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: logoGlow 3s ease-in-out infinite alternate;
+        }
+        
+        .logo-placeholder {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            text-align: center;
+            font-weight: 300;
+        }
+        
+        .logo {
+            font-family: 'Old Standard TT', serif;
+            font-size: 42px;
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+            letter-spacing: 3px;
+            margin-bottom: 8px;
+        }
+        
+        .tagline {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 15px;
+            font-weight: 300;
+            letter-spacing: 1.5px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Floating Geometric Shapes Animation */
+        .geometric-animation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.4;
+            animation: floatShape 12s linear infinite;
+        }
+
+        .shape-diamond {
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.6);
+            transform: rotate(45deg);
+            border-radius: 2px;
+        }
+
+        .shape-circle {
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .shape-triangle {
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 10px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .shape-hexagon {
+            width: 10px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.5);
+            position: relative;
+        }
+
+        .shape-hexagon::before,
+        .shape-hexagon::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+        }
+
+        .shape-hexagon::before {
+            bottom: 100%;
+            border-bottom: 3px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .shape-hexagon::after {
+            top: 100%;
+            border-top: 3px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .shape:nth-child(1) {
+            left: 5%;
+            animation-delay: 0s;
+            animation-duration: 15s;
+        }
+
+        .shape:nth-child(2) {
+            left: 15%;
+            animation-delay: 2s;
+            animation-duration: 12s;
+        }
+
+        .shape:nth-child(3) {
+            left: 25%;
+            animation-delay: 4s;
+            animation-duration: 18s;
+        }
+
+        .shape:nth-child(4) {
+            left: 35%;
+            animation-delay: 1s;
+            animation-duration: 14s;
+        }
+
+        .shape:nth-child(5) {
+            left: 45%;
+            animation-delay: 6s;
+            animation-duration: 16s;
+        }
+
+        .shape:nth-child(6) {
+            left: 55%;
+            animation-delay: 3s;
+            animation-duration: 13s;
+        }
+
+        .shape:nth-child(7) {
+            left: 65%;
+            animation-delay: 5s;
+            animation-duration: 17s;
+        }
+
+        .shape:nth-child(8) {
+            left: 75%;
+            animation-delay: 7s;
+            animation-duration: 11s;
+        }
+
+        .shape:nth-child(9) {
+            left: 85%;
+            animation-delay: 8s;
+            animation-duration: 19s;
+        }
+
+        .shape:nth-child(10) {
+            left: 95%;
+            animation-delay: 9s;
+            animation-duration: 20s;
+        }
+
+        @keyframes floatShape {
+            0% {
+                transform: translateY(120%) rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 0.4;
+                transform: translateY(50%) rotate(180deg) scale(1);
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-120%) rotate(360deg) scale(0.8);
+                opacity: 0;
+            }
+        }
+
+        @keyframes gradientBorderFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes headerShimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        @keyframes logoGlow {
+            0% {
+                box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            }
+            100% {
+                box-shadow: 0 0 30px rgba(255, 255, 255, 0.5), 0 0 40px rgba(255, 255, 255, 0.2);
+            }
+        }
+
+        /* Boom Effect */
+        .boom-container {
+            position: relative;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .boom-text {
+            font-size: 28px;
+            font-weight: 700;
+            color: #7f1d1d;
+            display: inline-block;
+            position: relative;
+            animation: boomPulse 2s ease-in-out infinite;
+        }
+
+        .boom-particles {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #7f1d1d;
+            border-radius: 50%;
+            animation: explode 2s ease-out infinite;
+        }
+
+        .particle:nth-child(1) { animation-delay: 0s; transform: rotate(0deg) translateX(40px); }
+        .particle:nth-child(2) { animation-delay: 0.1s; transform: rotate(45deg) translateX(35px); }
+        .particle:nth-child(3) { animation-delay: 0.2s; transform: rotate(90deg) translateX(45px); }
+        .particle:nth-child(4) { animation-delay: 0.3s; transform: rotate(135deg) translateX(38px); }
+        .particle:nth-child(5) { animation-delay: 0.4s; transform: rotate(180deg) translateX(42px); }
+        .particle:nth-child(6) { animation-delay: 0.5s; transform: rotate(225deg) translateX(36px); }
+        .particle:nth-child(7) { animation-delay: 0.6s; transform: rotate(270deg) translateX(44px); }
+        .particle:nth-child(8) { animation-delay: 0.7s; transform: rotate(315deg) translateX(39px); }
+
+        @keyframes boomPulse {
+            0%, 100% {
+                transform: scale(1);
+                text-shadow: 2px 2px 4px rgba(127, 29, 29, 0.3);
+            }
+            50% {
+                transform: scale(1.1);
+                text-shadow: 4px 4px 8px rgba(127, 29, 29, 0.5);
+            }
+        }
+
+        @keyframes explode {
+            0% {
+                opacity: 1;
+                transform: scale(1) translateX(0);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.2) translateX(20px);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.5) translateX(50px);
+            }
+        }
+
+        @keyframes floatFlower {
+            0% {
+                transform: translateY(120%) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-120%) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes floatShape {
+            0% {
+                transform: translateY(120%) rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 0.4;
+                transform: translateY(50%) rotate(180deg) scale(1);
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-120%) rotate(360deg) scale(0.8);
+                opacity: 0;
+            }
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .thank-you {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .thank-you h1 {
+            font-size: 28px;
+            color: #7f1d1d;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .thank-you p {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .order-card {
+            background: #ffffff;
+            border: 2px solid #7f1d1d;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 4px 15px rgba(127, 29, 29, 0.1);
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f3f4f6;
+        }
+        
+        .order-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #7f1d1d;
+        }
+        
+        .order-id {
+            background: #7f1d1d;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        
+        .item-row {
+            display: flex;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #f3f4f6;
+            position: relative;
+            animation: slideInProduct 0.8s ease-out;
+        }
+        
+        .item-row:last-child {
+            border-bottom: none;
+        }
+
+        .item-image {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            position: relative;
+            overflow: hidden;
+            animation: imageGlow 3s ease-in-out infinite alternate;
+        }
+
+        .item-image::before {
+            content: '👠';
+            font-size: 32px;
+            animation: productFloat 2s ease-in-out infinite alternate;
+        }
+
+        .item-image::after {
+            content: '';
+            position: absolute;
             top: -50%;
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: secureRotate 15s linear infinite;
+            background: linear-gradient(45deg, transparent, rgba(127, 29, 29, 0.1), transparent);
+            animation: shimmer 3s ease-in-out infinite;
         }
         
-        @keyframes secureRotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .item-details {
+            flex: 1;
+            margin-right: 15px;
         }
         
-        .brand-logo {
-            font-size: 42px;
-            font-weight: 300;
-            color: #ffffff;
-            letter-spacing: 6px;
-            margin-bottom: 10px;
-            position: relative;
-            z-index: 2;
-            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.4);
-        }
-        
-        .brand-tagline {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 14px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-weight: 300;
-            position: relative;
-            z-index: 2;
-        }
-        
-        .content {
-            padding: 60px 50px;
-            background: linear-gradient(to bottom, #ffffff 0%, #fdf8f9 100%);
-        }
-        
-        .greeting {
-            font-size: 32px;
-            color: #722f37;
-            margin-bottom: 25px;
-            font-weight: 300;
-            text-align: center;
-        }
-        
-        .main-message {
+        .item-name {
+            font-weight: 600;
+            color: #333;
             font-size: 18px;
-            color: #5d1a1d;
-            margin-bottom: 40px;
-            text-align: center;
-            line-height: 1.8;
+            margin-bottom: 8px;
+        }
+
+        .item-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+
+        .item-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .feature-tag {
+            background: rgba(127, 29, 29, 0.1);
+            color: #7f1d1d;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
         }
         
-        .highlight-text {
-            color: #8b1538;
+        .item-quantity {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .item-pricing {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        
+        .item-price {
+            font-weight: 700;
+            color: #7f1d1d;
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .item-original-price {
+            font-size: 14px;
+            color: #999;
+            text-decoration: line-through;
+            margin-bottom: 4px;
+        }
+
+        .item-discount {
+            background: #10b981;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 11px;
             font-weight: 600;
         }
-        
-        .divider {
-            width: 200px;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #722f37, transparent);
-            margin: 40px auto;
-            position: relative;
+
+        @keyframes slideInProduct {
+            0% {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes imageGlow {
+            0% {
+                box-shadow: 0 4px 15px rgba(127, 29, 29, 0.1);
+            }
+            100% {
+                box-shadow: 0 8px 25px rgba(127, 29, 29, 0.2);
+            }
+        }
+
+        @keyframes productFloat {
+            0% {
+                transform: translateY(0px);
+            }
+            100% {
+                transform: translateY(-3px);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
         }
         
-        .divider::before {
-            content: '◆';
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #ffffff;
-            color: #722f37;
-            padding: 0 12px;
-            font-size: 18px;
-        }
-        
-        .otp-section {
-            background: linear-gradient(145deg, #ffffff 0%, #fef7f8 100%);
-            border: 3px solid #722f37;
-            border-radius: 20px;
-            padding: 50px 40px;
-            margin: 40px 0;
-            text-align: center;
-            position: relative;
-            box-shadow: inset 0 2px 10px rgba(114, 47, 55, 0.1), 0 10px 30px rgba(114, 47, 55, 0.15);
-        }
-        
-        .otp-section::before {
-            content: '';
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            right: 10px;
-            bottom: 10px;
-            border: 2px dashed rgba(114, 47, 55, 0.3);
-            border-radius: 15px;
-        }
-        
-        .otp-label {
-            font-size: 20px;
-            color: #722f37;
-            margin-bottom: 25px;
-            font-weight: 500;
-            letter-spacing: 1px;
-        }
-        
-        .otp-code {
-            font-size: 48px;
-            font-weight: 700;
-            color: #8b1538;
-            letter-spacing: 12px;
-            margin: 30px 0;
-            text-shadow: 0 2px 8px rgba(139, 21, 56, 0.2);
-            background: linear-gradient(135deg, #fdf8f9 0%, #f9f0f2 100%);
-            border: 3px solid #722f37;
-            border-radius: 15px;
-            padding: 25px;
-            position: relative;
-            z-index: 2;
-        }
-        
-        .otp-instructions {
-            font-size: 16px;
-            color: #5d1a1d;
-            line-height: 1.6;
+        .totals {
             margin-top: 20px;
-            font-style: italic;
+            padding-top: 20px;
+            border-top: 2px solid #f3f4f6;
         }
         
-        .validity-info {
-            background: linear-gradient(135deg, #fff8dc 0%, #ffeaa7 100%);
-            border: 2px solid #fdcb6e;
-            border-radius: 12px;
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .total-row.final {
+            font-size: 18px;
+            font-weight: 600;
+            color: #7f1d1d;
+            padding-top: 10px;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 10px;
+        }
+        
+        .address-section {
+            margin: 40px 0;
+        }
+        
+        .address-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .address-card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .address-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #7f1d1d;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .address-title::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #7f1d1d;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .address-details {
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .customer-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        /* Sparkle Animation */
+        .sparkle-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Pulse Ring Animation */
+        .pulse-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 120px;
+            height: 120px;
+            border: 2px solid rgba(127, 29, 29, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulseRing 2s ease-out infinite;
+        }
+
+        .pulse-ring:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .pulse-ring:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        @keyframes pulseRing {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.4);
+                opacity: 0;
+            }
+        }
+
+        /* Enhanced Status Badge */
+        .status-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Payment Method Section */
+        .payment-section {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
             padding: 20px;
             margin: 30px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            box-shadow: 0 5px 15px rgba(253, 203, 110, 0.2);
         }
-        
-        .timer-icon {
-            width: 35px;
-            height: 35px;
-            background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ffffff;
-            font-weight: bold;
+
+        @keyframes cardBorderFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes paymentBorderFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .payment-title {
             font-size: 16px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-        
-        .validity-text {
-            font-size: 16px;
-            color: #d63031;
             font-weight: 600;
-        }
-        
-        .security-notice {
-            background: linear-gradient(135deg, #e8f4f8 0%, #d1ecf1 100%);
-            border-left: 6px solid #00b894;
-            border-radius: 0 12px 12px 0;
-            padding: 25px;
-            margin: 40px 0;
-            position: relative;
-        }
-        
-        .security-notice::before {
-            content: '🛡️';
-            position: absolute;
-            top: 15px;
-            left: -15px;
-            background: #00b894;
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
+            color: #7f1d1d;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 14px;
         }
-        
-        .security-title {
+
+        .payment-title::before {
+            content: '💳';
+            margin-right: 8px;
             font-size: 18px;
-            color: #00b894;
-            font-weight: 600;
-            margin-bottom: 10px;
         }
-        
-        .security-text {
-            font-size: 15px;
-            color: #2d3436;
-            line-height: 1.6;
-        }
-        
-        .help-section {
-            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
-            border-radius: 15px;
-            padding: 30px;
-            margin: 30px 0;
-            text-align: center;
-        }
-        
-        .help-title {
-            font-size: 20px;
-            color: #e17055;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-        
-        .help-text {
+
+        .payment-method {
+            display: flex;
+            align-items: center;
             font-size: 16px;
-            color: #d63031;
-            line-height: 1.6;
+            color: #333;
+        }
+
+        .payment-icon {
+            width: 24px;
+            height: 24px;
+            background: #7f1d1d;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .payment-cod {
+            background: #f59e0b;
+        }
+
+        .payment-online {
+            background: #10b981;
+        }
+        
+        .support-section {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .support-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .support-email {
+            color: #7f1d1d;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .support-email:hover {
+            text-decoration: underline;
         }
         
         .footer {
-            background: linear-gradient(135deg, #722f37 0%, #8b1538 100%);
-            padding: 40px 50px;
+            background: #1f2937;
+            color: #d1d5db;
             text-align: center;
-            color: #ffffff;
+            padding: 30px 20px;
         }
         
-        .footer-brand {
+        .footer-logo {
+            font-family: 'Old Standard TT', serif;
             font-size: 24px;
-            font-weight: 300;
-            letter-spacing: 3px;
-            margin-bottom: 15px;
+            font-weight: 700;
+            color: #7f1d1d;
+            margin-bottom: 8px;
         }
         
-        .footer-text {
+        .copyright {
             font-size: 14px;
-            opacity: 0.9;
-            line-height: 1.8;
+            color: #9ca3af;
         }
         
-        .footer-security {
-            margin-top: 20px;
-            font-size: 12px;
-            opacity: 0.7;
-            font-style: italic;
-        }
-        
-        @media (max-width: 600px) {
-            .content { padding: 40px 30px; }
-            .header { padding: 40px 30px; }
-            .brand-logo { font-size: 32px; letter-spacing: 3px; }
-            .greeting { font-size: 26px; }
-            .otp-code { font-size: 36px; letter-spacing: 8px; padding: 20px; }
-            .otp-section { padding: 35px 25px; }
-            .footer { padding: 30px; }
-            .validity-info { flex-direction: column; gap: 10px; }
+        @media (max-width: 640px) {
+            .email-container {
+                margin: 0;
+                box-shadow: none;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .order-card {
+                padding: 20px;
+            }
+            
+            .address-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .logo {
+                font-size: 36px;
+                letter-spacing: 2px;
+            }
+            
+            .logo-space {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .boom-text {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="email-container">
-        <div class="security-badge">Secure Verification</div>
-        
+        <!-- Header -->
         <div class="header">
-            <div class="brand-logo">YOUR BRAND</div>
-            <div class="brand-tagline">Secure & Trusted</div>
+            <div class="geometric-animation">
+                <div class="shape shape-diamond"></div>
+                <div class="shape shape-circle"></div>
+                <div class="shape shape-triangle"></div>
+                <div class="shape shape-hexagon"></div>
+                <div class="shape shape-diamond"></div>
+                <div class="shape shape-circle"></div>
+                <div class="shape shape-triangle"></div>
+                <div class="shape shape-hexagon"></div>
+                <div class="shape shape-diamond"></div>
+                <div class="shape shape-circle"></div>
+            </div>
+            
+            <div class="logo-container">
+                <div class="logo-space">
+                    <div class="logo-placeholder">LOGO<br>SPACE</div>
+                </div>
+                <div class="logo">GULBHAHAR</div>
+                <div class="tagline">Traditional Elegance</div>
+            </div>
         </div>
-        
+
+        <!-- Main Content -->
         <div class="content">
-            <div class="greeting">Verification Required</div>
-            
-            <div class="main-message">
-                We've received a request to access your account. To ensure your <span class="highlight-text">security and privacy</span>, please use the verification code below to complete your login process.
+            <!-- Thank You Section -->
+            <div class="thank-you">
+                <div class="boom-container">
+                    <div class="boom-text">Thank You!</div>
+                </div>
+                <h1>Your Order is Confirmed, Akash!</h1>
+                <p>We have received your order and are getting it ready for you. Your traditional style journey begins now!</p>
+                
+                <div class="status-badge">✓ Order Confirmed</div>
             </div>
-            
-            <div class="divider"></div>
-            
-            <div class="otp-section">
-                <div class="otp-label">Your Verification Code</div>
-                <div class="otp-code">123456</div>
-                <div class="otp-instructions">
-                    Enter this 6-digit code in the verification field to proceed securely.
+
+            <!-- Order Details -->
+            <div class="order-card">
+                <div class="order-header">
+                    <div class="order-title">Order Summary</div>
+                    <div class="order-id">#ORDER_1753445161408_N7YHJN</div>
+                </div>
+
+                <div class="order-items">
+                    <div class="item-row">
+                        <div class="item-image"></div>
+                        <div class="item-details">
+                            <div class="item-name">Firoza (Jutti)</div>
+                            <div class="item-description">Traditional handcrafted leather jutti with intricate embroidery and comfortable sole</div>
+                            <div class="item-features">
+                                <span class="feature-tag">Handcrafted</span>
+                                <span class="feature-tag">Leather</span>
+                                <span class="feature-tag">Embroidered</span>
+                                <span class="feature-tag">Comfortable</span>
+                            </div>
+                            <div class="item-quantity">Size: 7 • Quantity: 1 • Color: Firoza Blue</div>
+                        </div>
+                        <div class="item-pricing">
+                            <div class="item-original-price">₹299.00</div>
+                            <div class="item-price">₹2.00</div>
+                            <div class="item-discount">99% OFF</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="totals">
+                    <div class="total-row">
+                        <span>Subtotal:</span>
+                        <span>₹299.00</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Discount (99% OFF):</span>
+                        <span style="color: #10b981; font-weight: 600;">-₹297.00</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Shipping:</span>
+                        <span style="color: #10b981; font-weight: 500;">FREE</span>
+                    </div>
+                    <div class="total-row final">
+                        <span>Total:</span>
+                        <span>₹2.00</span>
+                    </div>
                 </div>
             </div>
-            
-            <div class="validity-info">
-                <div class="timer-icon">⏱</div>
-                <div class="validity-text">This code expires in <strong>10 minutes</strong></div>
-            </div>
-            
-            <div class="security-notice">
-                <div class="security-title">Security First</div>
-                <div class="security-text">
-                    If you didn't request this verification code, please ignore this email and ensure your account remains secure. Never share this code with anyone.
+
+            <!-- Payment Method Section -->
+            <div class="payment-section">
+                <div class="payment-title">Payment Method</div>
+                <div class="payment-method">
+                    <div class="payment-icon payment-cod">COD</div>
+                    <span>Cash on Delivery</span>
+                </div>
+                <div style="font-size: 14px; color: #666; margin-top: 8px;">
+                    Pay when your order arrives at your doorstep
                 </div>
             </div>
-            
-            <div class="help-section">
-                <div class="help-title">Need Help?</div>
-                <div class="help-text">
-                    If you're having trouble with verification, contact our support team immediately for assistance.
+            <div class="address-section">
+                <div class="address-grid">
+                    <div class="address-card">
+                        <div class="address-title">Shipping Address</div>
+                        <div class="address-details">
+                            <div class="customer-name">Akash Pandey</div>
+                            House No. 42, Pardhan Chowk<br>
+                            Uttam Nagar East<br>
+                            Delhi, Delhi 110059<br>
+                            India
+                        </div>
+                    </div>
+                    
+                    <div class="address-card">
+                        <div class="address-title">Billing Address</div>
+                        <div class="address-details">
+                            <div class="customer-name">Akash Pandey</div>
+                            House No. 42, Pardhan Chowk<br>
+                            Uttam Nagar East<br>
+                            Delhi, Delhi 110059<br>
+                            India
+                        </div>
+                    </div>
                 </div>
+            </div>
+
+            <!-- Support Section -->
+            <div class="support-section">
+                <div class="support-title">Need Help?</div>
+                <p>If you have any questions about your order, we're here to help!</p>
+                <p>Contact us at <a href="mailto:support@gulbhahar.com" class="support-email">support@gulbhahar.com</a></p>
             </div>
         </div>
-        
+
+        <!-- Footer -->
         <div class="footer">
-            <div class="footer-brand">YOUR BRAND</div>
-            <div class="footer-text">
-                Thank you for keeping your account secure.<br>
-                This is an automated security message.<br>
-                <strong>Do not reply to this email.</strong>
-            </div>
-            <div class="footer-security">
-                🔐 Protected by advanced encryption • Sent via secure servers
-            </div>
+            <div class="footer-logo">GULBHAHAR</div>
+            <div class="copyright">© 2025 GULBHAHAR. All Rights Reserved.</div>
         </div>
     </div>
 </body>
