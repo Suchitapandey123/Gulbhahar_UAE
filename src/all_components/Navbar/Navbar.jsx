@@ -454,7 +454,7 @@ const Navbar = () => {
     {
       title: "Designed By Monica",
       subtitle: "Exclusive Collection",
-      items: ["Juttis", "Heels", "Purses"],
+      items: ["Juttis"],
     },
     {
       title: "Casual Juttis",
