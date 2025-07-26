@@ -1,6 +1,6 @@
 // Enhanced Checkout Component with Email and Phone Validation
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   MapPin,
   User,
@@ -11,6 +11,8 @@ import {
   CheckCircle,
   AlertCircle,
   Loader2,
+  ChevronDown, // Add this
+  Search,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -34,6 +36,180 @@ const Breadcrumb = () => (
   </nav>
 );
 
+const CustomStateDropdown = ({ value, onChange, className = "" }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredStates, setFilteredStates] = useState(indianStates);
+  const dropdownRef = useRef(null);
+  const searchInputRef = useRef(null);
+
+  // Get the display label for the selected value
+  const selectedState = indianStates.find((state) => state.value === value);
+  const displayLabel = selectedState ? selectedState.label : "Select State/UT";
+
+  // Filter states based on search term
+  useEffect(() => {
+    if (searchTerm) {
+      const filtered = indianStates.filter((state) =>
+        state.label.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredStates(filtered);
+    } else {
+      setFilteredStates(indianStates);
+    }
+  }, [searchTerm]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+        setSearchTerm("");
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, []);
+
+  // Focus search input when dropdown opens
+  useEffect(() => {
+    if (isOpen && searchInputRef.current) {
+      // Small delay to ensure the dropdown is rendered
+      setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 100);
+    }
+  }, [isOpen]);
+
+  // Handle state selection
+  const handleStateSelect = (stateValue) => {
+    onChange({ target: { name: "region", value: stateValue } });
+    setIsOpen(false);
+    setSearchTerm("");
+  };
+
+  // Handle keyboard navigation
+  const handleKeyDown = (event) => {
+    if (event.key === "Escape") {
+      setIsOpen(false);
+      setSearchTerm("");
+    }
+  };
+
+  return (
+    <div className={`relative ${className}`} ref={dropdownRef}>
+      {/* Main Button */}
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className={`w-full border-2 border-red-200 rounded-xl p-4 text-left text-gray-700 focus:border-red-900 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 flex items-center justify-between ${
+          isOpen ? "border-red-900 ring-2 ring-red-200" : ""
+        }`}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+      >
+        <span className={value ? "text-gray-900" : "text-gray-500"}>
+          {displayLabel}
+        </span>
+        <ChevronDown
+          className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
+      </button>
+
+      {/* Dropdown Menu */}
+      {isOpen && (
+        <>
+          {/* Mobile Backdrop */}
+          <div
+            className="fixed inset-0 bg-black bg-opacity-25 z-40 md:hidden"
+            onClick={() => setIsOpen(false)}
+          />
+
+          {/* Dropdown Content */}
+          <div
+            className={`
+            absolute z-50 w-full mt-1 bg-white border-2 border-red-200 rounded-xl shadow-2xl
+            max-h-80 overflow-hidden
+            md:max-h-64
+            ${
+              window.innerWidth < 768
+                ? "fixed left-4 right-4 top-1/2 transform -translate-y-1/2 w-auto max-h-96"
+                : ""
+            }
+          `}
+          >
+            {/* Search Input */}
+            <div className="p-3 border-b border-red-100 bg-red-50/50 sticky top-0">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  placeholder="Search states..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  className="w-full pl-10 pr-4 py-2 border border-red-200 rounded-lg focus:border-red-900 focus:ring-1 focus:ring-red-200 outline-none text-sm"
+                />
+              </div>
+            </div>
+
+            {/* States List */}
+            <div className="overflow-y-auto max-h-60 md:max-h-48">
+              {filteredStates.length === 0 ? (
+                <div className="p-4 text-center text-gray-500 text-sm">
+                  No states found matching "{searchTerm}"
+                </div>
+              ) : (
+                <div className="py-1">
+                  {filteredStates.map((state) => (
+                    <button
+                      key={state.value}
+                      type="button"
+                      onClick={() => handleStateSelect(state.value)}
+                      className={`w-full text-left px-4 py-3 hover:bg-red-50 focus:bg-red-50 focus:outline-none transition-colors duration-150 flex items-center justify-between group ${
+                        value === state.value
+                          ? "bg-red-100 text-red-900 font-semibold"
+                          : "text-gray-700"
+                      }`}
+                    >
+                      <span className="flex items-center gap-2">
+                        <MapPin className="h-4 w-4 text-gray-400 group-hover:text-red-500" />
+                        {state.label}
+                      </span>
+                      {value === state.value && (
+                        <CheckCircle className="h-4 w-4 text-red-900" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Footer for mobile */}
+            <div className="md:hidden border-t border-red-100 p-3 bg-red-50/50">
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="w-full py-2 px-4 bg-red-900 text-white rounded-lg font-medium hover:bg-red-800 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
 // Validation utilities
 const validateEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -42,16 +218,16 @@ const validateEmail = (email) => {
 
 const validatePhone = (phone) => {
   // Remove all non-digits
-  const cleanPhone = phone.replace(/\D/g, '');
-  
+  const cleanPhone = phone.replace(/\D/g, "");
+
   // Check for valid Indian phone number - must be exactly 10 digits starting with 6, 7, 8, or 9
   return cleanPhone.length === 10 && /^[6-9]\d{9}$/.test(cleanPhone);
 };
 
 const formatPhoneNumber = (phone) => {
   // Remove all non-digits
-  const cleanPhone = phone.replace(/\D/g, '');
-  
+  const cleanPhone = phone.replace(/\D/g, "");
+
   // Return only the 10-digit number for storage (no +91 prefix)
   if (cleanPhone.length === 10 && /^[6-9]\d{9}$/.test(cleanPhone)) {
     return cleanPhone; // Just return the 10 digits
@@ -115,7 +291,7 @@ export default function CheckoutComponent() {
   const [fieldValidation, setFieldValidation] = useState({
     email: { isValid: null, error: null },
     phone: { isValid: null, error: null },
-    fullName: { isValid: null, error: null }
+    fullName: { isValid: null, error: null },
   });
 
   const [postalCodeValidation, setPostalCodeValidation] = useState({
@@ -154,7 +330,7 @@ export default function CheckoutComponent() {
     let error = null;
 
     switch (name) {
-      case 'fullName':
+      case "fullName":
         if (value.trim().length === 0) {
           isValid = false;
           error = "Full name is required";
@@ -170,7 +346,7 @@ export default function CheckoutComponent() {
         }
         break;
 
-      case 'email':
+      case "email":
         if (value.trim().length === 0) {
           isValid = false;
           error = "Email is required";
@@ -183,12 +359,12 @@ export default function CheckoutComponent() {
         }
         break;
 
-      case 'phone':
+      case "phone":
         if (value.trim().length === 0) {
           isValid = false;
           error = "Phone number is required";
         } else {
-          const cleanPhone = value.replace(/\D/g, '');
+          const cleanPhone = value.replace(/\D/g, "");
           if (cleanPhone.length < 10) {
             isValid = false;
             error = "Phone number must be 10 digits";
@@ -209,9 +385,9 @@ export default function CheckoutComponent() {
         return;
     }
 
-    setFieldValidation(prev => ({
+    setFieldValidation((prev) => ({
       ...prev,
-      [name]: { isValid, error }
+      [name]: { isValid, error },
     }));
   };
 
@@ -219,7 +395,7 @@ export default function CheckoutComponent() {
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (formData.fullName) {
-        validateField('fullName', formData.fullName);
+        validateField("fullName", formData.fullName);
       }
     }, 500);
     return () => clearTimeout(timeoutId);
@@ -228,7 +404,7 @@ export default function CheckoutComponent() {
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (formData.email) {
-        validateField('email', formData.email);
+        validateField("email", formData.email);
       }
     }, 500);
     return () => clearTimeout(timeoutId);
@@ -237,7 +413,7 @@ export default function CheckoutComponent() {
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (formData.phone) {
-        validateField('phone', formData.phone);
+        validateField("phone", formData.phone);
       }
     }, 500);
     return () => clearTimeout(timeoutId);
@@ -255,7 +431,7 @@ export default function CheckoutComponent() {
       return;
     }
 
-    const DELHIVERY_TOKEN = "101d6952983607b883a57570fde4c97bc4c882a1";
+    const DELHIVERY_TOKEN = "8b87d5828c527795c255d318d5582bfc6f8e25de";
     if (!DELHIVERY_TOKEN) {
       console.warn("Delhivery API token not configured");
       setPostalCodeValidation({
@@ -275,7 +451,7 @@ export default function CheckoutComponent() {
 
     try {
       const response = await axios.get(
-        `https://staging-express.delhivery.com/c/api/pin-codes/json/?filter_codes=${postalCode}`,
+        `https://track.delhivery.com/c/api/pin-codes/json/?filter_codes=${postalCode}`,
         {
           timeout: 10000,
           headers: {
@@ -364,11 +540,11 @@ export default function CheckoutComponent() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
+
     // Special handling for phone number - only allow digits and limit to 10
-    if (name === 'phone') {
+    if (name === "phone") {
       // Allow only digits and limit to 10 characters
-      const cleanValue = value.replace(/\D/g, '').slice(0, 10);
+      const cleanValue = value.replace(/\D/g, "").slice(0, 10);
       setFormData({
         ...formData,
         [name]: cleanValue,
@@ -382,9 +558,9 @@ export default function CheckoutComponent() {
 
     // Clear validation state when user starts typing
     if (fieldValidation[name]) {
-      setFieldValidation(prev => ({
+      setFieldValidation((prev) => ({
         ...prev,
-        [name]: { isValid: null, error: null }
+        [name]: { isValid: null, error: null },
       }));
     }
   };
@@ -404,26 +580,26 @@ export default function CheckoutComponent() {
       }
 
       // Check field validations
-      requiredFields.forEach(field => {
+      requiredFields.forEach((field) => {
         if (formData[field]) {
           validateField(field, formData[field]);
         }
       });
 
       // Wait a bit for validation to complete
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Check if any field validation failed
-      const hasValidationErrors = requiredFields.some(field => 
-        fieldValidation[field]?.isValid === false
+      const hasValidationErrors = requiredFields.some(
+        (field) => fieldValidation[field]?.isValid === false
       );
 
       if (hasValidationErrors) {
         const errorMessages = requiredFields
-          .filter(field => fieldValidation[field]?.isValid === false)
-          .map(field => fieldValidation[field]?.error)
+          .filter((field) => fieldValidation[field]?.isValid === false)
+          .map((field) => fieldValidation[field]?.error)
           .filter(Boolean);
-        
+
         validationErrors.push(...errorMessages);
       }
 
@@ -526,7 +702,8 @@ export default function CheckoutComponent() {
         checkoutCompletedAt: new Date().toISOString(),
 
         // Additional metadata
-        userAgent: typeof window !== "undefined" ? window.navigator.userAgent : "",
+        userAgent:
+          typeof window !== "undefined" ? window.navigator.userAgent : "",
         browserInfo: {
           language: typeof navigator !== "undefined" ? navigator.language : "",
           platform: typeof navigator !== "undefined" ? navigator.platform : "",
@@ -537,17 +714,20 @@ export default function CheckoutComponent() {
           email: fieldValidation.email?.isValid === true,
           phone: fieldValidation.phone?.isValid === true,
           fullName: fieldValidation.fullName?.isValid === true,
-          postalCode: postalCodeValidation.isValid === true
-        }
+          postalCode: postalCodeValidation.isValid === true,
+        },
       };
 
-      console.log('💾 Saving validated checkout data to localStorage:', checkoutData);
+      console.log(
+        "💾 Saving validated checkout data to localStorage:",
+        checkoutData
+      );
 
       // Save to localStorage
       try {
         localStorage.setItem("checkoutFormData", JSON.stringify(checkoutData));
         console.log("✅ Checkout data saved to localStorage successfully");
-        
+
         // Verify the data was saved correctly
         const savedData = localStorage.getItem("checkoutFormData");
         if (savedData) {
@@ -561,7 +741,10 @@ export default function CheckoutComponent() {
         return;
       }
 
-      showToast("✅ Information validated! Redirecting to payment...", "success");
+      showToast(
+        "✅ Information validated! Redirecting to payment...",
+        "success"
+      );
 
       // Add a small delay to ensure localStorage is written
       setTimeout(() => {
@@ -844,11 +1027,13 @@ export default function CheckoutComponent() {
                     </p>
                   )}
                   {/* Helper text for phone format */}
-                  {!fieldValidation.phone?.error && formData.phone && fieldValidation.phone?.isValid !== true && (
-                    <p className="mt-1 text-xs text-gray-500">
-                      Enter 10-digit mobile number starting with 6, 7, 8, or 9
-                    </p>
-                  )}
+                  {!fieldValidation.phone?.error &&
+                    formData.phone &&
+                    fieldValidation.phone?.isValid !== true && (
+                      <p className="mt-1 text-xs text-gray-500">
+                        Enter 10-digit mobile number starting with 6, 7, 8, or 9
+                      </p>
+                    )}
                 </div>
 
                 {/* Address */}
@@ -890,29 +1075,16 @@ export default function CheckoutComponent() {
                 </div>
 
                 {/* State */}
-                <div className="border">
-                  <label
-                    htmlFor="region"
-                    className="block text-sm font-semibold text-gray-700 mb-2"
-                  >
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
                     State/Union Territory
                   </label>
-                  <select
-                    id="region"
-                    name="region"
+                  <CustomStateDropdown
                     value={formData.region}
                     onChange={handleInputChange}
-                    className="w-full py-4 px-2 border-2 border-red-200 rounded-xl p-4 text-gray-700 focus:border-red-900 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30"
-                  >
-                    <option className="bg-red-300" value="">Select State/UT</option>
-                    {indianStates.map((state) => (
-                      <option key={state.value} value={state.value}>
-                        {state.label}
-                      </option>
-                    ))}
-                  </select>
+                    className="w-full"
+                  />
                 </div>
-
                 {/* Postal Code */}
                 <div className="md:col-span-2 col-span-1">
                   <label
@@ -1018,9 +1190,15 @@ export default function CheckoutComponent() {
                 {Object.entries(shippingOptions).map(
                   ([key, { price, days, icon, name }]) => {
                     const isFreeShippingOption = key === "free";
-                    const isDisabled = isFreeShippingOption && !isFreeShippingEligible;
-                    const displayPrice = isFreeShippingEligible && isFreeShippingOption ? 0 : price;
-                    const finalPrice = displayPrice + (postalCodeValidation.deliveryInfo?.isODA ? 50 : 0);
+                    const isDisabled =
+                      isFreeShippingOption && !isFreeShippingEligible;
+                    const displayPrice =
+                      isFreeShippingEligible && isFreeShippingOption
+                        ? 0
+                        : price;
+                    const finalPrice =
+                      displayPrice +
+                      (postalCodeValidation.deliveryInfo?.isODA ? 50 : 0);
 
                     return (
                       <label
@@ -1053,11 +1231,21 @@ export default function CheckoutComponent() {
                         <div className="ml-4 flex-1">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                              <span className={`text-2xl ${isDisabled ? "opacity-50" : ""}`}>
+                              <span
+                                className={`text-2xl ${
+                                  isDisabled ? "opacity-50" : ""
+                                }`}
+                              >
                                 {icon}
                               </span>
                               <div>
-                                <p className={`font-bold ${isDisabled ? "text-gray-400" : "text-gray-900"}`}>
+                                <p
+                                  className={`font-bold ${
+                                    isDisabled
+                                      ? "text-gray-400"
+                                      : "text-gray-900"
+                                  }`}
+                                >
                                   {name}
                                   {isDisabled && (
                                     <span className="ml-2 text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded-full">
@@ -1065,28 +1253,50 @@ export default function CheckoutComponent() {
                                     </span>
                                   )}
                                 </p>
-                                <p className={`text-sm ${isDisabled ? "text-gray-400" : "text-gray-600"}`}>
+                                <p
+                                  className={`text-sm ${
+                                    isDisabled
+                                      ? "text-gray-400"
+                                      : "text-gray-600"
+                                  }`}
+                                >
                                   {days}
                                 </p>
-                                {isFreeShippingEligible && isFreeShippingOption && (
-                                  <p className="text-xs text-green-600 font-semibold">
-                                    🎉 Free upgrade - On <strong>prepaid</strong> orders above ₹5000+
-                                  </p>
-                                )}
-                                {postalCodeValidation.deliveryInfo?.isODA && !isDisabled && (
-                                  <p className="text-xs text-orange-600 font-medium">
-                                    +₹50 Remote area surcharge
-                                  </p>
-                                )}
+                                {isFreeShippingEligible &&
+                                  isFreeShippingOption && (
+                                    <p className="text-xs text-green-600 font-semibold">
+                                      🎉 Free upgrade - On{" "}
+                                      <strong>prepaid</strong> orders above
+                                      ₹5000+
+                                    </p>
+                                  )}
+                                {postalCodeValidation.deliveryInfo?.isODA &&
+                                  !isDisabled && (
+                                    <p className="text-xs text-orange-600 font-medium">
+                                      +₹50 Remote area surcharge
+                                    </p>
+                                  )}
                               </div>
                             </div>
                             <div className="text-right">
-                              <span className={`font-bold text-lg ${isDisabled ? "text-gray-400" : "text-red-900"}`}>
-                                {isDisabled ? `₹${price}` : finalPrice === 0 ? "FREE" : `₹${finalPrice}`}
+                              <span
+                                className={`font-bold text-lg ${
+                                  isDisabled ? "text-gray-400" : "text-red-900"
+                                }`}
+                              >
+                                {isDisabled
+                                  ? `₹${price}`
+                                  : finalPrice === 0
+                                  ? "FREE"
+                                  : `₹${finalPrice}`}
                               </span>
-                              {isFreeShippingEligible && isFreeShippingOption && !postalCodeValidation.deliveryInfo?.isODA && (
-                                <p className="text-xs text-gray-500 line-through">₹{price}</p>
-                              )}
+                              {isFreeShippingEligible &&
+                                isFreeShippingOption &&
+                                !postalCodeValidation.deliveryInfo?.isODA && (
+                                  <p className="text-xs text-gray-500 line-through">
+                                    ₹{price}
+                                  </p>
+                                )}
                             </div>
                           </div>
                         </div>
@@ -1100,7 +1310,11 @@ export default function CheckoutComponent() {
               {!isFreeShippingEligible && subtotal > 0 && (
                 <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                   <p className="text-sm text-blue-800">
-                    💡 <strong>Add ₹{(5000 - subtotal).toLocaleString()} more</strong> to unlock free shipping!
+                    💡{" "}
+                    <strong>
+                      Add ₹{(5000 - subtotal).toLocaleString()} more
+                    </strong>{" "}
+                    to unlock free shipping!
                   </p>
                 </div>
               )}
@@ -1114,58 +1328,75 @@ export default function CheckoutComponent() {
                 <div className="w-10 h-10 bg-red-900 rounded-full flex items-center justify-center mr-4">
                   <ShoppingBag className="text-white h-5 w-5" />
                 </div>
-                <h2 className="text-xl font-bold text-gray-900">Order Summary</h2>
+                <h2 className="text-xl font-bold text-gray-900">
+                  Order Summary
+                </h2>
               </div>
 
               <div className="space-y-4">
                 {/* Cart Items */}
-                {cart && cart.length > 0 && cart.map((item) => {
-                  if (!item || !item.id) return null;
+                {cart &&
+                  cart.length > 0 &&
+                  cart.map((item) => {
+                    if (!item || !item.id) return null;
 
-                  return (
-                    <div key={item.id} className="bg-red-50/50 rounded-xl border border-red-100 p-4">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-12 h-12 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
-                          <Image
-                            src={getCurrentImage(item) || "/placeholder.jpg"}
-                            alt={item.name || "Product"}
-                            width={200}
-                            height={200}
-                            priority
-                            className="w-full object-cover scale-y-[1.15] h-full"
-                          />
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="font-bold text-gray-900">{item.name || "Product"}</h3>
-                          <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
-                            {item.selectedColor && (
-                              <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full font-medium">
-                                {item.selectedColor}
-                              </span>
-                            )}
-                            {item.selectedSize && (
-                              <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full font-medium">
-                                Size {item.selectedSize}
-                              </span>
-                            )}
+                    return (
+                      <div
+                        key={item.id}
+                        className="bg-red-50/50 rounded-xl border border-red-100 p-4"
+                      >
+                        <div className="flex items-center space-x-3">
+                          <div className="w-12 h-12 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
+                            <Image
+                              src={getCurrentImage(item) || "/placeholder.jpg"}
+                              alt={item.name || "Product"}
+                              width={200}
+                              height={200}
+                              priority
+                              className="w-full object-cover scale-y-[1.15] h-full"
+                            />
                           </div>
-                          <div className="text-sm text-gray-600 mt-1 font-medium">
-                            Qty: <span className="text-red-900">{item.quantity || 1}</span>
+                          <div className="flex-1">
+                            <h3 className="font-bold text-gray-900">
+                              {item.name || "Product"}
+                            </h3>
+                            <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
+                              {item.selectedColor && (
+                                <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full font-medium">
+                                  {item.selectedColor}
+                                </span>
+                              )}
+                              {item.selectedSize && (
+                                <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full font-medium">
+                                  Size {item.selectedSize}
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-sm text-gray-600 mt-1 font-medium">
+                              Qty:{" "}
+                              <span className="text-red-900">
+                                {item.quantity || 1}
+                              </span>
+                            </div>
                           </div>
+                          <span className="font-bold text-lg text-red-900">
+                            ₹
+                            {(
+                              (item.price || 0) * (item.quantity || 1)
+                            ).toLocaleString()}
+                          </span>
                         </div>
-                        <span className="font-bold text-lg text-red-900">
-                          ₹{((item.price || 0) * (item.quantity || 1)).toLocaleString()}
-                        </span>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
 
                 {/* Summary Section */}
                 <div className="border-t-2 border-red-100 pt-4 space-y-3">
                   {/* Form Validation Status */}
                   <div className="bg-gray-50 rounded-lg p-3 mb-4">
-                    <h4 className="text-sm font-semibold text-gray-800 mb-2">Form Status</h4>
+                    <h4 className="text-sm font-semibold text-gray-800 mb-2">
+                      Form Status
+                    </h4>
                     <div className="space-y-1">
                       <div className="flex items-center gap-2 text-xs">
                         {fieldValidation.fullName?.isValid === true ? (
@@ -1175,8 +1406,15 @@ export default function CheckoutComponent() {
                         ) : (
                           <div className="h-3 w-3 rounded-full border border-gray-300" />
                         )}
-                        <span className={fieldValidation.fullName?.isValid === true ? "text-green-700" : 
-                               fieldValidation.fullName?.isValid === false ? "text-red-700" : "text-gray-600"}>
+                        <span
+                          className={
+                            fieldValidation.fullName?.isValid === true
+                              ? "text-green-700"
+                              : fieldValidation.fullName?.isValid === false
+                              ? "text-red-700"
+                              : "text-gray-600"
+                          }
+                        >
                           Full Name
                         </span>
                       </div>
@@ -1188,8 +1426,15 @@ export default function CheckoutComponent() {
                         ) : (
                           <div className="h-3 w-3 rounded-full border border-gray-300" />
                         )}
-                        <span className={fieldValidation.email?.isValid === true ? "text-green-700" : 
-                               fieldValidation.email?.isValid === false ? "text-red-700" : "text-gray-600"}>
+                        <span
+                          className={
+                            fieldValidation.email?.isValid === true
+                              ? "text-green-700"
+                              : fieldValidation.email?.isValid === false
+                              ? "text-red-700"
+                              : "text-gray-600"
+                          }
+                        >
                           Email Address
                         </span>
                       </div>
@@ -1201,8 +1446,15 @@ export default function CheckoutComponent() {
                         ) : (
                           <div className="h-3 w-3 rounded-full border border-gray-300" />
                         )}
-                        <span className={fieldValidation.phone?.isValid === true ? "text-green-700" : 
-                               fieldValidation.phone?.isValid === false ? "text-red-700" : "text-gray-600"}>
+                        <span
+                          className={
+                            fieldValidation.phone?.isValid === true
+                              ? "text-green-700"
+                              : fieldValidation.phone?.isValid === false
+                              ? "text-red-700"
+                              : "text-gray-600"
+                          }
+                        >
                           Phone Number
                         </span>
                       </div>
@@ -1214,8 +1466,15 @@ export default function CheckoutComponent() {
                         ) : (
                           <div className="h-3 w-3 rounded-full border border-gray-300" />
                         )}
-                        <span className={postalCodeValidation.isValid === true ? "text-green-700" : 
-                               postalCodeValidation.isValid === false ? "text-red-700" : "text-gray-600"}>
+                        <span
+                          className={
+                            postalCodeValidation.isValid === true
+                              ? "text-green-700"
+                              : postalCodeValidation.isValid === false
+                              ? "text-red-700"
+                              : "text-gray-600"
+                          }
+                        >
                           Postal Code
                         </span>
                       </div>
@@ -1228,7 +1487,11 @@ export default function CheckoutComponent() {
                       {!isFreeShippingEligible && subtotal > 0 && (
                         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
                           <p className="text-sm text-blue-800">
-                            💡 <strong>Add ₹{(5000 - subtotal).toLocaleString()} more</strong> to qualify for free shipping!
+                            💡{" "}
+                            <strong>
+                              Add ₹{(5000 - subtotal).toLocaleString()} more
+                            </strong>{" "}
+                            to qualify for free shipping!
                           </p>
                         </div>
                       )}
@@ -1236,7 +1499,8 @@ export default function CheckoutComponent() {
                       {isFreeShippingEligible && (
                         <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
                           <p className="text-sm text-green-800">
-                            🎉 <strong>Congratulations!</strong> You qualify for free shipping on orders ₹5000+
+                            🎉 <strong>Congratulations!</strong> You qualify for
+                            free shipping on orders ₹5000+
                           </p>
                         </div>
                       )}
@@ -1248,15 +1512,21 @@ export default function CheckoutComponent() {
                     <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
                       <div className="flex items-center gap-2 mb-2">
                         <MapPin className="h-4 w-4 text-red-600" />
-                        <span className="text-sm font-semibold text-red-800">Delivery Details</span>
+                        <span className="text-sm font-semibold text-red-800">
+                          Delivery Details
+                        </span>
                       </div>
                       <div className="text-xs text-red-700 space-y-1">
                         <div className="flex gap-2 flex-wrap">
                           {postalCodeValidation.deliveryInfo.cod && (
-                            <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">COD ✓</span>
+                            <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">
+                              COD ✓
+                            </span>
                           )}
                           {postalCodeValidation.deliveryInfo.isODA && (
-                            <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs">Remote Area</span>
+                            <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs">
+                              Remote Area
+                            </span>
                           )}
                         </div>
                       </div>
@@ -1265,27 +1535,38 @@ export default function CheckoutComponent() {
 
                   <div className="flex justify-between text-gray-700">
                     <span className="font-medium">Subtotal</span>
-                    <span className="font-bold">₹{subtotal.toLocaleString()}</span>
+                    <span className="font-bold">
+                      ₹{subtotal.toLocaleString()}
+                    </span>
                   </div>
                   <div className="flex justify-between text-gray-700">
                     <span className="font-medium">Shipping</span>
                     <div className="text-right">
                       <span className="font-bold text-green-600">
-                        {shipping === 0 ? "FREE" : `₹${shipping.toLocaleString()}`}
+                        {shipping === 0
+                          ? "FREE"
+                          : `₹${shipping.toLocaleString()}`}
                       </span>
-                      {isFreeShippingEligible && shippingMethod === "free" && 
-                       shippingOptions[shippingMethod]?.price > 0 && 
-                       !postalCodeValidation.deliveryInfo?.isODA && (
-                        <p className="text-xs text-gray-500 line-through">₹{shippingOptions[shippingMethod].price}</p>
-                      )}
+                      {isFreeShippingEligible &&
+                        shippingMethod === "free" &&
+                        shippingOptions[shippingMethod]?.price > 0 &&
+                        !postalCodeValidation.deliveryInfo?.isODA && (
+                          <p className="text-xs text-gray-500 line-through">
+                            ₹{shippingOptions[shippingMethod].price}
+                          </p>
+                        )}
                     </div>
                   </div>
 
                   {/* ODA Surcharge */}
                   {odaSurcharge > 0 && (
                     <div className="flex justify-between text-gray-700">
-                      <span className="font-medium text-orange-600">Remote Area Surcharge</span>
-                      <span className="font-bold text-orange-600">₹{odaSurcharge}</span>
+                      <span className="font-medium text-orange-600">
+                        Remote Area Surcharge
+                      </span>
+                      <span className="font-bold text-orange-600">
+                        ₹{odaSurcharge}
+                      </span>
                     </div>
                   )}
 
@@ -1328,11 +1609,17 @@ export default function CheckoutComponent() {
                 <div className="text-center text-sm text-gray-600 bg-red-50 p-4 rounded-xl border border-red-100">
                   <div className="flex items-center justify-center gap-2 mb-2">
                     <Shield className="h-4 w-4 text-red-600" />
-                    <span className="font-semibold text-red-900">Secure Checkout</span>
+                    <span className="font-semibold text-red-900">
+                      Secure Checkout
+                    </span>
                   </div>
-                  <p className="text-xs">Your payment information is encrypted and secure</p>
+                  <p className="text-xs">
+                    Your payment information is encrypted and secure
+                  </p>
                   {postalCodeValidation.deliveryInfo?.cod && (
-                    <p className="text-xs text-green-700 mt-1">💰 Cash on Delivery available</p>
+                    <p className="text-xs text-green-700 mt-1">
+                      💰 Cash on Delivery available
+                    </p>
                   )}
                 </div>
               </div>
