@@ -5,7 +5,6 @@ import { useRef, useState } from 'react';
 import MB9 from "../../../../public/assets/Image/001.jpg";
 import MB7 from "../../../../public/assets/Image/002.jpg";
 import MB8 from "../../../../public/assets/Image/002.jpg";
-import MB2 from "../../../../public/assets/Image/004.jpg";
 import MB1 from "../../../../public/assets/Image/005.jpg";
 
 // Immersive Hero Section
@@ -1339,7 +1338,7 @@ const BrandStorySection = () => {
                   <p>
                     It started with an inclination towards the art of <span className="text-[#7f0001] font-semibold">hand embroidery and its artisans</span>. 
                     With a passion for promoting handicrafts intertwined with comfortable footwear, visionary couple 
-                    <span className="font-bold text-gray-900"> Pulkit Gulati and Monica Gulati (née Bhardwaj)</span> launched 
+                    <span className="font-bold text-gray-900"> Monica Bhardwaj Gulati</span> launched 
                     Gulbhahar in <span className="text-[#7f0001] font-bold">January 2025</span>.
                   </p>
                   
@@ -1351,16 +1350,16 @@ const BrandStorySection = () => {
                     viewport={{ once: true }}
                   >
                     <p className="italic">
-                      The brand's name itself is an amalgamation of their last names. Partners in life and partners in business, 
+                      The brand's name itself is an amalgamation of their last names.Together, Pulkit and Monica Gulati, partners in life and partners in business,, 
                       '<span className="text-[#7f0001] font-bold">Gul</span>' is taken from 'Gulati', and 
-                      '<span className="text-[#7f0001] font-bold">Bhar</span>' is derived from 'Bhardwaj'.
+                      '<span className="text-[#7f0001] font-bold">Bhahar</span>' is derived from 'Bhardwaj'.
                     </p>
                   </motion.div>
                   
                   <p>
                     They were drawn to innovative handiwork, hard work, and the art of the artisans. 
-                    <span className="font-semibold text-gray-900"> Each pair takes time and dedication, as they are handmade</span>, 
-                    and utmost importance is given to hand embroidery.
+                    <span className="font-semibold text-gray-900"> Each pair takes several hours to create with dedication.</span> 
+                    They are handmade, and the utmost importance is given to the craft itself. 
                   </p>
                 </motion.div>
               </div>

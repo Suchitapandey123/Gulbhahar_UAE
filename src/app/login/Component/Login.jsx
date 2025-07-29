@@ -10,16 +10,11 @@ const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   
   const slides = [
-    // "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-6.png",
-    // "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-7.png", 
-    // "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-8.png",
-    // "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-9.png",
 
-    "/Anarkali/anarkali-4.jpg",
-    "/Lal-ishq/lal-ishq-2.jpg",
-    "/Gulabo/gulabo-3.jpg", 
-    // "/Laddu/laddo-3.jpg",
-    "/Lal-ishq/lal-ishq-3.jpg",
+    "/login/002.jpg",
+    "/login/003.jpg",
+    "/login/IMG_1810.jpg",
+    "/login/0004compress.jpg"
   ];
 
   useEffect(() => {
