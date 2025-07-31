@@ -276,7 +276,7 @@ export default function CheckoutComponent() {
   const [isProcessing, setIsProcessing] = useState(false);
 
   // 🔧 TOGGLE FOR PINCODE API VALIDATION
-  const ENABLE_PINCODE_API = false; // ⚠️ Set to true to enable API validation
+  const ENABLE_PINCODE_API = true; // ⚠️ Set to true to enable API validation
 
   // Field validation states
   const [fieldValidation, setFieldValidation] = useState({
@@ -459,7 +459,7 @@ export default function CheckoutComponent() {
     }
 
     // 🚀 ORIGINAL API VALIDATION CODE (kept intact)
-    const DELHIVERY_TOKEN = "8b87d5828c527795c255d318d5582bfc6f8e25de";
+    const DELHIVERY_TOKEN = "8225de";
     if (!DELHIVERY_TOKEN) {
       console.warn("Delhivery API token not configured");
       setPostalCodeValidation({
@@ -479,23 +479,23 @@ export default function CheckoutComponent() {
 
     try {
       const response = await axios.get(
-        `https://track.delhivery.com/c/api/pin-codes/json/?filter_codes=${postalCode}`,
+        `https://api.gulbhahar.com/delhiveryRoutes/v0/checkAvalibility?pincode=${postalCode}`,
         {
           timeout: 10000,
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-            Authorization: `Token ${DELHIVERY_TOKEN}`,
+            Authorization: `${DELHIVERY_TOKEN}`,
           },
         }
       );
 
       if (
-        response.data &&
-        response.data.delivery_codes &&
-        response.data.delivery_codes.length > 0
+        response.data.msg &&
+        response.data.msg.delivery_codes &&
+        response.data.msg.delivery_codes.length > 0
       ) {
-        const deliveryData = response.data.delivery_codes[0].postal_code;
+        const deliveryData = response.data.msg.delivery_codes[0].postal_code;
 
         setPostalCodeValidation({
           isValidating: false,
