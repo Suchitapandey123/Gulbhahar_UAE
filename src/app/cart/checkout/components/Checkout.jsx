@@ -457,7 +457,6 @@ export default function CheckoutComponent() {
       
       return;
     }
-
     // 🚀 ORIGINAL API VALIDATION CODE (kept intact)
     const DELHIVERY_TOKEN = "8225de";
     if (!DELHIVERY_TOKEN) {
@@ -476,7 +475,7 @@ export default function CheckoutComponent() {
       isValidating: true,
       error: null,
     }));
-
+    
     try {
       const response = await axios.get(
         `https://api.gulbhahar.com/delhiveryRoutes/v0/checkAvalibility?pincode=${postalCode}`,
