@@ -1,13 +1,18 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Star, ThumbsUp, ThumbsDown, User, Send, X, Plus, Edit, Trash2, Check } from "lucide-react";
+import { Plus } from "lucide-react";
+import { ReviewForm } from "./reviews/ReviewForm";
+import { ReviewStats } from "./reviews/ReviewStats";
+import { RatingBreakdown } from "./reviews/RatingBreakdown";
+import { SortDropdown } from "./reviews/SortDropdown";
+import { ReviewItem } from "./reviews/ReviewItem";
+import { useAuth } from "@/Providers/ContextProviders/AuthContext";
 
 export default function Reviews({ variant = "mobile", productId }) {
-  const [userRating, setUserRating] = useState(0);
   const [sortOrder, setSortOrder] = useState("Newest");
-  const [replyingTo, setReplyingTo] = useState(null);
-  const [replyText, setReplyText] = useState("");
-  const [replies, setReplies] = useState({});
+  
+  // Use Auth Context
+  const { isAuthenticated, getUserId, authToken } = useAuth();
   
   // API-related state
   const [reviews, setReviews] = useState([]);
@@ -15,32 +20,20 @@ export default function Reviews({ variant = "mobile", productId }) {
   const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [hasUserReviewed, setHasUserReviewed] = useState(false);
-  
-  // New review form state
-  const [showReviewForm, setShowReviewForm] = useState(false);
-  const [newReviewRating, setNewReviewRating] = useState(0);
-  const [newReviewComment, setNewReviewComment] = useState("");
-
-  // Edit review state
-  const [editingReview, setEditingReview] = useState(null);
-  const [editRating, setEditRating] = useState(0);
-  const [editComment, setEditComment] = useState("");
   const [updating, setUpdating] = useState(false);
   const [deleting, setDeleting] = useState(null);
-
-  // Get current user info (you might need to adjust this based on your auth system)
-  const getCurrentUserId = () => {
-    // This should return the current user's ID from your auth system
-    // You might need to get this from localStorage, context, or props
-    return localStorage.getItem('userId') || localStorage.getItem('user_id') || localStorage.getItem('currentUserId');
-  };
+  
+  // Form state
+  const [showReviewForm, setShowReviewForm] = useState(false);
 
   // Check if user has already reviewed this product
   const checkUserReview = () => {
-    const currentUserId = getCurrentUserId();
+    const currentUserId = getUserId();
     if (currentUserId && reviews.length > 0) {
       const userReview = reviews.find(review => 
-        review.userId === currentUserId || review.user_id === currentUserId
+        (review.userId?.toString() === currentUserId?.toString()) || 
+        (review.user_id?.toString() === currentUserId?.toString()) ||
+        (review.authorId?.toString() === currentUserId?.toString())
       );
       setHasUserReviewed(!!userReview);
     }
@@ -62,7 +55,7 @@ export default function Reviews({ variant = "mobile", productId }) {
 
   const { avgRating, breakdown } = calculateStats();
 
-  // Fetch reviews from API
+  // API functions
   const fetchReviews = async () => {
     if (!productId) {
       setLoading(false);
@@ -73,14 +66,12 @@ export default function Reviews({ variant = "mobile", productId }) {
       setLoading(true);
       setError(null);
       
-      const token = localStorage.getItem('authToken') || localStorage.getItem('token') || localStorage.getItem('accessToken');
-      
       const url = `https://api.gulbhahar.com/api/reviews/allReviews/${productId}`;
       
       const response = await fetch(url, {
         method: 'POST',
         headers: {
-          'Authorization': token ? `Bearer ${token}` : '',
+          'Authorization': authToken ? `Bearer ${authToken}` : '',
           'Content-Type': 'application/json'
         }
       });
@@ -100,38 +91,31 @@ export default function Reviews({ variant = "mobile", productId }) {
     }
   };
 
-  // Submit new review
-  const submitReview = async () => {
-    if (!newReviewRating || !newReviewComment.trim() || !productId) {
-      return;
-    }
+  const submitReview = async ({ rating, comment }) => {
+    if (!productId) return;
     
     try {
       setSubmitting(true);
       
-      const token = localStorage.getItem('authToken') || localStorage.getItem('token') || localStorage.getItem('accessToken');
-      
       const response = await fetch('https://api.gulbhahar.com/api/reviews/createReview', {
         method: 'POST',
         headers: {
-          'Authorization': token ? `Bearer ${token}` : '',
+          'Authorization': authToken ? `Bearer ${authToken}` : '',
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          rating: newReviewRating,
-          comment: newReviewComment.trim(),
-          productId: productId
+          rating,
+          comment,
+          productId
         })
       });
 
       if (!response.ok) {
         const errorData = await response.json();
         
-        // Check if user has already reviewed
         if (errorData.message === "You have already reviewed this product") {
           setHasUserReviewed(true);
           setShowReviewForm(false);
-          // Don't set this as a general error since reviews should still load
           return;
         }
         
@@ -139,17 +123,10 @@ export default function Reviews({ variant = "mobile", productId }) {
       }
 
       const data = await response.json();
-      
-      // Add the new review to the list
       setReviews(prev => [data.review, ...prev]);
-      
-      // Reset form
-      setNewReviewRating(0);
-      setNewReviewComment("");
       setShowReviewForm(false);
       
     } catch (err) {
-      // Only set error for actual submission errors, not "already reviewed"
       if (!err.message.includes("already reviewed")) {
         setError(err.message);
       }
@@ -158,29 +135,18 @@ export default function Reviews({ variant = "mobile", productId }) {
     }
   };
 
-  // Update review
-  const updateReview = async (reviewId) => {
-    if (!editRating || !editComment.trim()) {
-      setError('Please provide both rating and comment');
-      return;
-    }
-    
+  const updateReview = async (reviewId, { rating, comment }) => {
     try {
       setUpdating(true);
       setError(null);
       
-      const token = localStorage.getItem('authToken') || localStorage.getItem('token') || localStorage.getItem('accessToken');
-      
       const response = await fetch(`https://api.gulbhahar.com/api/reviews/updateReview/${reviewId}`, {
         method: 'PUT',
         headers: {
-          'Authorization': token ? `Bearer ${token}` : '',
+          'Authorization': authToken ? `Bearer ${authToken}` : '',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          rating: editRating,
-          comment: editComment.trim()
-        })
+        body: JSON.stringify({ rating, comment })
       });
 
       if (!response.ok) {
@@ -190,39 +156,24 @@ export default function Reviews({ variant = "mobile", productId }) {
 
       const data = await response.json();
       
-      // Update the review in the list
       setReviews(prev => prev.map(review => 
         review.reviewId === reviewId ? { ...review, ...data.review } : review
       ));
       
-      // Reset edit state
-      setEditingReview(null);
-      setEditRating(0);
-      setEditComment("");
-      
-      // Show success message (optional)
-      console.log('Review updated successfully');
-      
     } catch (err) {
       setError(`Update failed: ${err.message}`);
-      console.error('Update review error:', err);
     } finally {
       setUpdating(false);
     }
   };
 
-  // Delete review
   const deleteReview = async (reviewId) => {
-    const confirmMessage = 'Are you sure you want to delete this review? This action cannot be undone.';
-    
-    if (!window.confirm(confirmMessage)) {
-      return;
-    }
-    
     try {
       setDeleting(reviewId);
       
-      const token = localStorage.getItem('authToken') || localStorage.getItem('token') || localStorage.getItem('accessToken');
+      const token = typeof window !== 'undefined' 
+        ? (localStorage.getItem('authToken') || localStorage.getItem('token') || localStorage.getItem('accessToken'))
+        : '';
       
       const response = await fetch(`https://api.gulbhahar.com/api/reviews/deleteReview/${reviewId}`, {
         method: 'DELETE',
@@ -237,76 +188,44 @@ export default function Reviews({ variant = "mobile", productId }) {
         throw new Error(errorData.message || `Failed to delete review: ${response.status}`);
       }
       
-      // Remove the review from the list
       setReviews(prev => prev.filter(review => review.reviewId !== reviewId));
-      
-      // If this was the user's review, allow them to write a new one
       setHasUserReviewed(false);
-      
-      // Show success message (optional)
-      console.log('Review deleted successfully');
       
     } catch (err) {
       setError(`Delete failed: ${err.message}`);
-      console.error('Delete review error:', err);
     } finally {
       setDeleting(null);
     }
   };
 
-  // Start editing a review
-  const startEdit = (review) => {
-    const reviewId = review.reviewId || review._id;
-    setEditingReview(reviewId);
-    setEditRating(review.rating);
-    setEditComment(review.comment);
-  };
-
-  // Cancel editing
-  const cancelEdit = () => {
-    setEditingReview(null);
-    setEditRating(0);
-    setEditComment("");
-  };
-
-  // Check if current user can edit/delete a review
   const canModifyReview = (review) => {
-    const currentUserId = getCurrentUserId();
-    return currentUserId && (review.userId === currentUserId || review.user_id === currentUserId);
-  };
-
-  // Fetch reviews on component mount
-  useEffect(() => {
-    fetchReviews();
-  }, [productId]);
-
-  // Check if user has already reviewed when reviews change
-  useEffect(() => {
-    checkUserReview();
-  }, [reviews]);
-
-  const handleReply = (reviewIndex) => {
-    if (replyText.trim()) {
-      const newReply = {
-        user: "You",
-        text: replyText.trim(),
-        date: "just now",
-        timestamp: new Date().toISOString()
-      };
-
-      setReplies(prev => ({
-        ...prev,
-        [reviewIndex]: [...(prev[reviewIndex] || []), newReply]
-      }));
-
-      setReplyText("");
-      setReplyingTo(null);
+    // Check if user is authenticated
+    if (!isAuthenticated) {
+      return false;
     }
-  };
-
-  const cancelReply = () => {
-    setReplyingTo(null);
-    setReplyText("");
+    
+    // Get current user ID from Auth Context
+    const currentUserId = getUserId();
+    if (!currentUserId) {
+      return false;
+    }
+    
+    // Get review user ID and compare
+    const reviewUserId = (review.userId || review.user_id || review.authorId)?.toString();
+    const currentUserIdStr = currentUserId.toString();
+    
+    const canModify = reviewUserId === currentUserIdStr;
+    
+    // Debug logging
+    console.log('=== AUTH CONTEXT MODIFY CHECK ===');
+    console.log('Is Authenticated:', isAuthenticated);
+    console.log('Current User ID (from context):', currentUserIdStr);
+    console.log('Review User ID:', reviewUserId);
+    console.log('Can Modify:', canModify);
+    console.log('Review object:', review);
+    console.log('================================');
+    
+    return canModify;
   };
 
   const formatDate = (dateString) => {
@@ -331,528 +250,84 @@ export default function Reviews({ variant = "mobile", productId }) {
       : new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
   });
 
-  // Mobile/Tablet Version
-  if (variant === "mobile") {
-    return (
-      <div className="lg:hidden mt-8">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-1 h-5 bg-red-900 rounded-full"></div>
-          <h3 className="font-bold text-lg text-gray-900">Customer Reviews</h3>
-          {!hasUserReviewed ? (
-            <button
-              onClick={() => setShowReviewForm(!showReviewForm)}
-              className="ml-auto p-2 bg-red-900 text-white rounded-full hover:bg-red-800 transition-colors"
-            >
-              <Plus className="w-4 h-4" />
-            </button>
-          ) : (
-            <div className="ml-auto px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">
-              Already Reviewed
-            </div>
-          )}
-        </div>
+  // Effects
+  useEffect(() => {
+    fetchReviews();
+  }, [productId]);
 
-        {/* Already Reviewed Message - Mobile */}
-        {hasUserReviewed && (
-          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-800 font-medium">
-              ✓ You have already reviewed this product
-            </p>
-            <p className="text-xs text-blue-600 mt-1">
-              Thank you for your feedback! You can only review each product once.
-            </p>
-          </div>
-        )}
+  useEffect(() => {
+    checkUserReview();
+  }, [reviews, isAuthenticated]); // Added isAuthenticated dependency
 
-        {/* New Review Form - Mobile */}
-        {showReviewForm && !hasUserReviewed && (
-          <div className="mb-6 p-4 bg-gray-50 rounded-lg border">
-            <h4 className="font-medium text-sm mb-3">Write a Review</h4>
-            
-            {/* Rating Selection */}
-            <div className="mb-3">
-              <p className="text-xs text-gray-600 mb-2">Rating:</p>
-              <div className="flex gap-1">
-                {[1, 2, 3, 4, 5].map((rating) => (
-                  <Star
-                    key={rating}
-                    onClick={() => setNewReviewRating(rating)}
-                    className={`w-6 h-6 cursor-pointer transition-all duration-200 ${
-                      rating <= newReviewRating
-                        ? "fill-yellow-400 text-yellow-400"
-                        : "fill-gray-300 text-gray-300 hover:fill-yellow-200"
-                    }`}
-                  />
-                ))}
-              </div>
-            </div>
+  const isMobile = variant === "mobile";
+  const containerClass = isMobile ? "lg:hidden mt-8" : "hidden lg:block mt-12 lg:mt-16";
 
-            {/* Comment Input */}
-            <textarea
-              value={newReviewComment}
-              onChange={(e) => setNewReviewComment(e.target.value)}
-              placeholder="Share your experience with this product..."
-              className="w-full text-sm p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent mb-3"
-              rows="4"
-            />
-
-            {/* Submit Buttons */}
-            <div className="flex gap-2">
-              <button
-                onClick={() => setShowReviewForm(false)}
-                className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={submitReview}
-                disabled={!newReviewRating || !newReviewComment.trim() || submitting}
-                className="px-4 py-2 text-sm bg-red-900 text-white rounded-lg hover:bg-red-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-              >
-                {submitting ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Submitting...
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-4 h-4" />
-                    Submit Review
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Rating Overview - Mobile */}
-        <div className="bg-gray-50 rounded-lg p-4 sm:p-6 border-l-4 border-red-900 mb-6">
-          {loading ? (
-            <div className="text-center py-8">
-              <div className="w-8 h-8 border-2 border-red-900 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-              <p className="text-sm text-gray-600">Loading reviews...</p>
-            </div>
-          ) : error ? (
-            <div className="text-center py-8">
-              <p className="text-sm text-red-600 mb-2">{error}</p>
-              <button
-                onClick={fetchReviews}
-                className="text-sm text-red-900 hover:underline"
-              >
-                Try again
-              </button>
-            </div>
-          ) : (
-            <>
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-gray-200">
-                <div className="flex items-center gap-4">
-                  <div className="flex">
-                    {[...Array(5)].map((_, idx) => (
-                      <Star
-                        key={idx}
-                        className={`w-5 h-5 sm:w-6 sm:h-6 ${
-                          idx < Math.floor(avgRating)
-                            ? "fill-yellow-400 text-yellow-400"
-                            : "fill-gray-300 text-gray-300"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <div className="text-center">
-                    <span className="text-xl font-bold text-gray-900">
-                      {avgRating}
-                    </span>
-                    <p className="text-xs text-gray-600">out of 5</p>
-                    <p className="text-xs text-gray-500">({reviews.length} reviews)</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Rating Breakdown - Mobile */}
-              {breakdown.length > 0 && (
-                <div className="space-y-2 my-6">
-                  {breakdown.map(({ stars, count }) => (
-                    <div key={stars} className="flex items-center gap-2">
-                      <span className="w-3 text-xs font-medium">{stars}</span>
-                      <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-gradient-to-r from-red-900 to-red-700 transition-all duration-500 rounded-full"
-                          style={{ width: `${reviews.length > 0 ? (count / reviews.length) * 100 : 0}%` }}
-                        />
-                      </div>
-                      <span className="w-6 text-xs text-gray-600 font-medium">
-                        {count}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Sort Dropdown - Mobile */}
-              {reviews.length > 0 && (
-                <div className="mb-4">
-                  <div className="relative inline-block">
-                    <select
-                      className="appearance-none border border-gray-300 rounded-lg py-2 px-3 pr-8 bg-white text-xs focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent w-36 font-medium"
-                      value={sortOrder}
-                      onChange={(e) => setSortOrder(e.target.value)}
-                    >
-                      <option value="Newest">Newest First</option>
-                      <option value="Oldest">Oldest First</option>
-                    </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
-                      <svg
-                        className="h-3 w-3 text-gray-500"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M19 9l-7 7-7-7"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Individual Reviews - Mobile - Scrollable Container */}
-              {reviews.length > 0 ? (
-                <div className="h-80 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-red-900 scrollbar-track-gray-100">
-                  <div className="space-y-4">
-                    {sortedReviews.map((review, idx) => (
-                      <div
-                        key={review._id || idx}
-                        className="bg-white rounded-lg p-3 border border-gray-100 shadow-sm"
-                      >
-                        {/* Review Header - Mobile */}
-                        <div className="flex items-center gap-2 mb-2">
-                          <div className="w-8 h-8 bg-gradient-to-r from-red-900 to-red-700 rounded-full flex items-center justify-center">
-                            <User className="w-4 h-4 text-white" />
-                          </div>
-                          <div className="flex-1">
-                            <p className="text-sm font-medium text-gray-900">
-                              {review.userName || review.name || 'Anonymous User'}
-                            </p>
-                            <span className="text-xs text-gray-500">
-                              {formatDate(review.createdAt)}
-                            </span>
-                          </div>
-                          {/* Edit/Delete buttons for user's own reviews - Mobile - ALWAYS SHOW FOR TESTING */}
-                          <div className="flex gap-1">
-                            {/* Show for all reviews temporarily for testing */}
-                            <button
-                              onClick={() => startEdit(review)}
-                              className="p-1 text-blue-600 hover:bg-blue-50 rounded transition-colors"
-                              title="Edit review"
-                            >
-                              <Edit className="w-3 h-3" />
-                            </button>
-                            <button
-                              onClick={() => deleteReview(review.reviewId || review._id)}
-                              disabled={deleting === (review.reviewId || review._id)}
-                              className="p-1 text-red-600 hover:bg-red-50 rounded transition-colors disabled:opacity-50"
-                              title="Delete review"
-                            >
-                              {deleting === (review.reviewId || review._id) ? (
-                                <div className="w-3 h-3 border border-red-600 border-t-transparent rounded-full animate-spin" />
-                              ) : (
-                                <Trash2 className="w-3 h-3" />
-                              )}
-                            </button>
-                            {/* Show user info for debugging */}
-                            <span className="text-xs text-gray-400 ml-1">
-                              {canModifyReview(review) ? '✓' : '✗'}
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Edit Review Form - Mobile */}
-                        {editingReview === (review.reviewId || review._id) ? (
-                          <div className="space-y-3">
-                            {/* Edit Rating */}
-                            <div>
-                              <p className="text-xs text-gray-600 mb-1">Rating:</p>
-                              <div className="flex gap-1">
-                                {[1, 2, 3, 4, 5].map((rating) => (
-                                  <Star
-                                    key={rating}
-                                    onClick={() => setEditRating(rating)}
-                                    className={`w-5 h-5 cursor-pointer transition-all duration-200 ${
-                                      rating <= editRating
-                                        ? "fill-yellow-400 text-yellow-400"
-                                        : "fill-gray-300 text-gray-300 hover:fill-yellow-200"
-                                    }`}
-                                  />
-                                ))}
-                              </div>
-                            </div>
-
-                            {/* Edit Comment */}
-                            <textarea
-                              value={editComment}
-                              onChange={(e) => setEditComment(e.target.value)}
-                              className="w-full text-sm p-2 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent"
-                              rows="3"
-                            />
-
-                            {/* Edit Actions */}
-                            <div className="flex gap-2">
-                              <button
-                                onClick={cancelEdit}
-                                className="px-3 py-1 text-xs text-gray-600 hover:text-gray-800 transition-colors"
-                              >
-                                Cancel
-                              </button>
-                              <button
-                                onClick={() => updateReview(review.reviewId || review._id)}
-                                disabled={!editRating || !editComment.trim() || updating}
-                                className="px-3 py-1 text-xs bg-red-900 text-white rounded hover:bg-red-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
-                              >
-                                {updating ? (
-                                  <>
-                                    <div className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin" />
-                                    Updating...
-                                  </>
-                                ) : (
-                                  <>
-                                    <Check className="w-3 h-3" />
-                                    Update
-                                  </>
-                                )}
-                              </button>
-                            </div>
-                          </div>
-                        ) : (
-                          <>
-                            {/* Review Rating - Mobile */}
-                            <div className="flex items-center gap-2 mb-2">
-                              <div className="flex">
-                                {[...Array(5)].map((_, idx) => (
-                                  <Star
-                                    key={idx}
-                                    className={`w-3 h-3 ${
-                                      idx < Math.floor(review.rating)
-                                        ? "fill-yellow-400 text-yellow-400"
-                                        : "fill-gray-300 text-gray-300"
-                                    }`}
-                                  />
-                                ))}
-                              </div>
-                              <span className="text-xs font-medium text-gray-700">
-                                ({review.rating}/5)
-                              </span>
-                            </div>
-
-                            {/* Review Comment - Mobile */}
-                            <p className="text-xs text-gray-700 mb-3 bg-gray-50 p-2 rounded italic">
-                              "{review.comment}"
-                            </p>
-
-                            {/* Review Actions - Mobile */}
-                            <div className="flex items-center gap-3 text-xs">
-                              <button 
-                                onClick={() => setReplyingTo(replyingTo === idx ? null : idx)}
-                                className="text-red-900 hover:text-red-700 transition-colors font-medium"
-                              >
-                                {replyingTo === idx ? 'Cancel' : 'Reply'}
-                              </button>
-                              <div className="flex items-center gap-1">
-                                <ThumbsUp className="w-3 h-3 text-green-600" />
-                                <span className="text-green-600 font-medium">10</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <ThumbsDown className="w-3 h-3 text-red-500" />
-                                <span className="text-red-500 font-medium">0</span>
-                              </div>
-                            </div>
-                          </>
-                        )}
-
-                        {/* Reply Input - Mobile */}
-                        {replyingTo === idx && editingReview !== (review.reviewId || review._id) && (
-                          <div className="mt-3 p-3 bg-gray-50 rounded-lg border">
-                            <div className="flex gap-2">
-                              <div className="w-6 h-6 bg-red-900 rounded-full flex items-center justify-center flex-shrink-0">
-                                <User className="w-3 h-3 text-white" />
-                              </div>
-                              <div className="flex-1">
-                                <textarea
-                                  value={replyText}
-                                  onChange={(e) => setReplyText(e.target.value)}
-                                  placeholder="Write your reply..."
-                                  className="w-full text-xs p-2 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent"
-                                  rows="3"
-                                />
-                                <div className="flex justify-end gap-2 mt-2">
-                                  <button
-                                    onClick={cancelReply}
-                                    className="px-3 py-1 text-xs text-gray-600 hover:text-gray-800 transition-colors"
-                                  >
-                                    Cancel
-                                  </button>
-                                  <button
-                                    onClick={() => handleReply(idx)}
-                                    disabled={!replyText.trim()}
-                                    className="px-3 py-1 text-xs bg-red-900 text-white rounded hover:bg-red-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
-                                  >
-                                    <Send className="w-3 h-3" />
-                                    Reply
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Display Replies - Mobile */}
-                        {replies[idx] && replies[idx].length > 0 && (
-                          <div className="mt-3 space-y-2">
-                            {replies[idx].map((reply, replyIdx) => (
-                              <div key={replyIdx} className="ml-4 p-2 bg-blue-50 rounded-lg border-l-2 border-blue-300">
-                                <div className="flex items-center gap-2 mb-1">
-                                  <div className="w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center">
-                                    <User className="w-3 h-3 text-white" />
-                                  </div>
-                                  <span className="text-xs font-medium text-gray-900">{reply.user}</span>
-                                  <span className="text-xs text-gray-500">{reply.date}</span>
-                                </div>
-                                <p className="text-xs text-gray-700 ml-7">{reply.text}</p>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <p className="text-sm text-gray-600">No reviews yet</p>
-                  <p className="text-xs text-gray-500">Be the first to review this product!</p>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  // Desktop Version
   return (
-    <div className="hidden lg:block mt-12 lg:mt-16">
+    <div className={containerClass}>
+      {/* Header */}
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-1 h-6 bg-red-900 rounded-full"></div>
-        <h3 className="font-semibold text-xl sm:text-2xl lg:text-3xl text-gray-900">
+        <div className={`w-1 h-${isMobile ? '5' : '6'} bg-red-900 rounded-full`}></div>
+        <h3 className={`font-${isMobile ? 'bold text-lg' : 'semibold text-xl sm:text-2xl lg:text-3xl'} text-gray-900`}>
           Customer Reviews
         </h3>
-        {!hasUserReviewed ? (
+        {/* Only show "Write Review" button if user is logged in and hasn't reviewed */}
+        {isAuthenticated && !hasUserReviewed ? (
           <button
             onClick={() => setShowReviewForm(!showReviewForm)}
-            className="ml-auto px-4 py-2 bg-red-900 text-white rounded-lg hover:bg-red-800 transition-colors flex items-center gap-2"
+            className={`ml-auto ${isMobile ? 'p-2' : 'px-4 py-2'} bg-red-900 text-white rounded${isMobile ? '-full' : '-lg'} hover:bg-red-800 transition-colors flex items-center gap-2`}
           >
-            <Plus className="w-5 h-5" />
-            Write Review
+            <Plus className={`w-${isMobile ? '4' : '5'} h-${isMobile ? '4' : '5'}`} />
+            {!isMobile && 'Write Review'}
           </button>
-        ) : (
-          <div className="ml-auto px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm flex items-center gap-2">
+        ) : isAuthenticated && hasUserReviewed ? (
+          <div className={`ml-auto px-${isMobile ? '3' : '4'} py-${isMobile ? '1' : '2'} bg-gray-100 text-gray-600 rounded${isMobile ? '-full' : '-lg'} text-${isMobile ? 'xs' : 'sm'} flex items-center gap-2`}>
             <span>✓</span>
-            Already Reviewed
+            {isMobile ? 'Already Reviewed' : 'Already Reviewed'}
+          </div>
+        ) : (
+          <div className={`ml-auto px-${isMobile ? '3' : '4'} py-${isMobile ? '1' : '2'} bg-yellow-100 text-yellow-800 rounded${isMobile ? '-full' : '-lg'} text-${isMobile ? 'xs' : 'sm'} flex items-center gap-2`}>
+            <span>👤</span>
+            {isMobile ? 'Login to Review' : 'Login to Write Review'}
           </div>
         )}
       </div>
 
-      {/* Already Reviewed Message - Desktop */}
-      {hasUserReviewed && (
-        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <p className="text-blue-800 font-medium mb-1">
+      {/* Already Reviewed Message */}
+      {isAuthenticated && hasUserReviewed && (
+        <div className={`mb-${isMobile ? '4' : '6'} p-${isMobile ? '3' : '4'} bg-blue-50 border border-blue-200 rounded-lg`}>
+          <p className={`text-${isMobile ? 'sm' : 'base'} text-blue-800 font-medium ${!isMobile && 'mb-1'}`}>
             ✓ You have already reviewed this product
           </p>
-          <p className="text-sm text-blue-600">
+          <p className={`text-${isMobile ? 'xs' : 'sm'} text-blue-600 ${isMobile && 'mt-1'}`}>
             Thank you for your feedback! You can only review each product once.
           </p>
         </div>
       )}
 
-      {/* New Review Form - Desktop */}
-      {showReviewForm && !hasUserReviewed && (
-        <div className="mb-6 p-6 bg-gray-50 rounded-lg border">
-          <h4 className="font-semibold text-lg mb-4">Write a Review</h4>
-          
-          {/* Rating Selection */}
-          <div className="mb-4">
-            <p className="text-sm text-gray-600 mb-3">Rating:</p>
-            <div className="flex gap-1">
-              {[1, 2, 3, 4, 5].map((rating) => (
-                <Star
-                  key={rating}
-                  onClick={() => setNewReviewRating(rating)}
-                  className={`w-8 h-8 cursor-pointer transition-all duration-200 ${
-                    rating <= newReviewRating
-                      ? "fill-yellow-400 text-yellow-400 hover:scale-110"
-                      : "fill-gray-300 text-gray-300 hover:fill-yellow-200 hover:scale-110"
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Comment Input */}
-          <textarea
-            value={newReviewComment}
-            onChange={(e) => setNewReviewComment(e.target.value)}
-            placeholder="Share your experience with this product..."
-            className="w-full text-sm p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent mb-4"
-            rows="5"
-          />
-
-          {/* Submit Buttons */}
-          <div className="flex gap-3">
-            <button
-              onClick={() => setShowReviewForm(false)}
-              className="px-6 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={submitReview}
-              disabled={!newReviewRating || !newReviewComment.trim() || submitting}
-              className="px-6 py-2 text-sm bg-red-900 text-white rounded-lg hover:bg-red-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-            >
-              {submitting ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Submitting...
-                </>
-              ) : (
-                <>
-                  <Send className="w-5 h-5" />
-                  Submit Review
-                </>
-              )}
-            </button>
-          </div>
-        </div>
+      {/* Review Form - Only show if user is logged in */}
+      {isAuthenticated && (
+        <ReviewForm
+          showForm={showReviewForm}
+          onClose={() => setShowReviewForm(false)}
+          onSubmit={submitReview}
+          submitting={submitting}
+          variant={variant}
+        />
       )}
 
-      {/* Rating Overview - Desktop */}
-      <div className="bg-gray-50 rounded-lg p-6 border-l-4 border-red-900 mb-6">
+      {/* Main Content */}
+      <div className={`bg-gray-50 rounded-lg p-${isMobile ? '4 sm:p-6' : '6'} border-l-4 border-red-900 mb-6`}>
         {loading ? (
-          <div className="text-center py-12">
-            <div className="w-12 h-12 border-2 border-red-900 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-gray-600">Loading reviews...</p>
-          </div>
+          <ReviewStats loading={true} variant={variant} />
         ) : error ? (
-          <div className="text-center py-12">
-            <p className="text-red-600 mb-4">{error}</p>
+          <div className={`text-center py-${isMobile ? '8' : '12'}`}>
+            <p className={`text-${isMobile ? 'sm' : 'base'} text-red-600 mb-${isMobile ? '2' : '4'}`}>
+              {error}
+            </p>
             {error !== "You have already reviewed this product" && (
               <button
                 onClick={fetchReviews}
-                className="text-red-900 hover:underline font-medium"
+                className={`text-${isMobile ? 'sm' : 'base'} text-red-900 hover:underline ${!isMobile && 'font-medium'}`}
               >
                 Try again
               </button>
@@ -860,295 +335,54 @@ export default function Reviews({ variant = "mobile", productId }) {
           </div>
         ) : (
           <>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-gray-200">
-              <div className="flex items-center gap-4">
-                <div className="flex">
-                  {[...Array(5)].map((_, idx) => (
-                    <Star
-                      key={idx}
-                      className={`w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 ${
-                        idx < Math.floor(avgRating)
-                          ? "fill-yellow-400 text-yellow-400"
-                          : "fill-gray-300 text-gray-300"
-                      }`}
-                    />
-                  ))}
-                </div>
-                <div className="text-center">
-                  <span className="text-2xl font-bold text-gray-900">
-                    {avgRating}
-                  </span>
-                  <p className="text-sm text-gray-600">out of 5</p>
-                  <p className="text-sm text-gray-500">({reviews.length} reviews)</p>
-                </div>
-              </div>
-            </div>
+            <ReviewStats
+              avgRating={avgRating}
+              totalReviews={reviews.length}
+              breakdown={breakdown}
+              variant={variant}
+            />
 
-            {/* Rating Breakdown - Desktop */}
-            {breakdown.length > 0 && (
-              <div className="space-y-3 my-8">
-                {breakdown.map(({ stars, count }) => (
-                  <div key={stars} className="flex items-center gap-3">
-                    <span className="w-3 text-sm font-medium">{stars}</span>
-                    <div className="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-red-900 to-red-700 transition-all duration-500 rounded-full"
-                        style={{ width: `${reviews.length > 0 ? (count / reviews.length) * 100 : 0}%` }}
-                      />
-                    </div>
-                    <span className="w-8 text-sm text-gray-600 font-medium">
-                      {count}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
+            <RatingBreakdown
+              breakdown={breakdown}
+              totalReviews={reviews.length}
+              variant={variant}
+            />
 
-            {/* Sort Dropdown - Desktop */}
             {reviews.length > 0 && (
-              <div className="mb-6">
-                <div className="relative inline-block">
-                  <select
-                    className="appearance-none border border-gray-300 rounded-lg py-2 px-4 pr-8 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent w-40 font-medium"
-                    value={sortOrder}
-                    onChange={(e) => setSortOrder(e.target.value)}
-                  >
-                    <option value="Newest">Newest First</option>
-                    <option value="Oldest">Oldest First</option>
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
-                    <svg
-                      className="h-4 w-4 text-gray-500"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
+              <SortDropdown
+                sortOrder={sortOrder}
+                onSortChange={setSortOrder}
+                variant={variant}
+              />
             )}
 
-            {/* Individual Reviews - Desktop - Scrollable Container */}
+            {/* Reviews List */}
             {reviews.length > 0 ? (
-              <div className="h-96 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-red-900 scrollbar-track-gray-100">
-                <div className="space-y-6">
+              <div className={`h-${isMobile ? '80' : '96'} overflow-y-auto pr-${isMobile ? '1' : '2'} scrollbar-thin scrollbar-thumb-red-900 scrollbar-track-gray-100`}>
+                <div className={`space-y-${isMobile ? '4' : '6'}`}>
                   {sortedReviews.map((review, idx) => (
-                    <div
+                    <ReviewItem
                       key={review._id || idx}
-                      className="bg-white rounded-lg p-4 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200"
-                    >
-                      {/* Review Header - Desktop */}
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-gradient-to-r from-red-900 to-red-700 rounded-full flex items-center justify-center">
-                            <User className="w-6 h-6 text-white" />
-                          </div>
-                          <p className="text-sm sm:text-base font-medium text-gray-900">
-                            {review.userName || review.name || 'Anonymous User'}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                            {formatDate(review.createdAt)}
-                          </span>
-                          {/* Edit/Delete buttons for user's own reviews - Desktop - ALWAYS SHOW FOR TESTING */}
-                          <div className="flex gap-1">
-                            {/* Show for all reviews temporarily for testing */}
-                            <button
-                              onClick={() => startEdit(review)}
-                              className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
-                              title="Edit review"
-                            >
-                              <Edit className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={() => deleteReview(review.reviewId || review._id)}
-                              disabled={deleting === (review.reviewId || review._id)}
-                              className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors disabled:opacity-50"
-                              title="Delete review"
-                            >
-                              {deleting === (review.reviewId || review._id) ? (
-                                <div className="w-4 h-4 border border-red-600 border-t-transparent rounded-full animate-spin" />
-                              ) : (
-                                <Trash2 className="w-4 h-4" />
-                              )}
-                            </button>
-                            
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Edit Review Form - Desktop */}
-                      {editingReview === (review.reviewId || review._id) ? (
-                        <div className="space-y-4">
-                          {/* Edit Rating */}
-                          <div>
-                            <p className="text-sm text-gray-600 mb-2">Rating:</p>
-                            <div className="flex gap-1">
-                              {[1, 2, 3, 4, 5].map((rating) => (
-                                <Star
-                                  key={rating}
-                                  onClick={() => setEditRating(rating)}
-                                  className={`w-6 h-6 cursor-pointer transition-all duration-200 ${
-                                    rating <= editRating
-                                      ? "fill-yellow-400 text-yellow-400 hover:scale-110"
-                                      : "fill-gray-300 text-gray-300 hover:fill-yellow-200 hover:scale-110"
-                                  }`}
-                                />
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* Edit Comment */}
-                          <textarea
-                            value={editComment}
-                            onChange={(e) => setEditComment(e.target.value)}
-                            className="w-full text-sm p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent"
-                            rows="4"
-                          />
-
-                          {/* Edit Actions */}
-                          <div className="flex gap-3">
-                            <button
-                              onClick={cancelEdit}
-                              className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
-                            >
-                              Cancel
-                            </button>
-                            <button
-                              onClick={() => updateReview(review.reviewId || review._id)}
-                              disabled={!editRating || !editComment.trim() || updating}
-                              className="px-4 py-2 text-sm bg-red-900 text-white rounded-lg hover:bg-red-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                            >
-                              {updating ? (
-                                <>
-                                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                  Updating...
-                                </>
-                              ) : (
-                                <>
-                                  <Check className="w-4 h-4" />
-                                  Update Review
-                                </>
-                              )}
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
-                        <>
-                          {/* Review Rating - Desktop */}
-                          <div className="flex items-center gap-2 mb-3">
-                            <span className="text-sm text-gray-500 font-medium">Rating:</span>
-                            <div className="flex">
-                              {[...Array(5)].map((_, idx) => (
-                                <Star
-                                  key={idx}
-                                  className={`w-4 h-4 sm:w-5 sm:h-5 ${
-                                    idx < Math.floor(review.rating)
-                                      ? "fill-yellow-400 text-yellow-400"
-                                      : "fill-gray-300 text-gray-300"
-                                  }`}
-                                />
-                              ))}
-                            </div>
-                            <span className="text-sm font-medium text-gray-700 ml-2">
-                              ({review.rating}/5)
-                            </span>
-                          </div>
-
-                          {/* Review Comment - Desktop */}
-                          <p className="text-sm text-gray-700 mb-4 bg-gray-50 p-3 rounded italic">
-                            "{review.comment}"
-                          </p>
-
-                          {/* Review Actions - Desktop */}
-                          <div className="flex items-center gap-4 text-sm">
-                            <button 
-                              onClick={() => setReplyingTo(replyingTo === idx ? null : idx)}
-                              className="text-red-900 hover:text-red-700 transition-colors font-medium hover:underline"
-                            >
-                              {replyingTo === idx ? 'Cancel Reply' : 'Reply'}
-                            </button>
-                            <div className="flex items-center gap-1 hover:bg-green-50 px-2 py-1 rounded transition-colors">
-                              <ThumbsUp className="w-4 h-4 text-green-600" />
-                              <span className="text-green-600 font-medium">10</span>
-                            </div>
-                            <div className="flex items-center gap-1 hover:bg-red-50 px-2 py-1 rounded transition-colors">
-                              <ThumbsDown className="w-3 h-3 text-red-500" />
-                              <span className="text-red-500 font-medium text-xs">0</span>
-                            </div>
-                          </div>
-                        </>
-                      )}
-
-                      {/* Reply Input - Desktop */}
-                      {replyingTo === idx && editingReview !== (review.reviewId || review._id) && (
-                        <div className="mt-4 p-4 bg-gray-50 rounded-lg border">
-                          <div className="flex gap-3">
-                            <div className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center flex-shrink-0">
-                              <User className="w-4 h-4 text-white" />
-                            </div>
-                            <div className="flex-1">
-                              <textarea
-                                value={replyText}
-                                onChange={(e) => setReplyText(e.target.value)}
-                                placeholder="Write your reply..."
-                                className="w-full text-sm p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent"
-                                rows="3"
-                              />
-                              <div className="flex justify-end gap-3 mt-3">
-                                <button
-                                  onClick={cancelReply}
-                                  className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
-                                >
-                                  Cancel
-                                </button>
-                                <button
-                                  onClick={() => handleReply(idx)}
-                                  disabled={!replyText.trim()}
-                                  className="px-4 py-2 text-sm bg-red-900 text-white rounded-lg hover:bg-red-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                                >
-                                  <Send className="w-4 h-4" />
-                                  Post Reply
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Display Replies - Desktop */}
-                      {replies[idx] && replies[idx].length > 0 && (
-                        <div className="mt-4 space-y-3">
-                          {replies[idx].map((reply, replyIdx) => (
-                            <div key={replyIdx} className="ml-6 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-300">
-                              <div className="flex items-center gap-3 mb-2">
-                                <div className="w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center">
-                                  <User className="w-4 h-4 text-white" />
-                                </div>
-                                <span className="text-sm font-medium text-gray-900">{reply.user}</span>
-                                <span className="text-sm text-gray-500">{reply.date}</span>
-                              </div>
-                              <p className="text-sm text-gray-700 ml-10">{reply.text}</p>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
+                      review={review}
+                      index={idx}
+                      onEdit={updateReview}
+                      onDelete={deleteReview}
+                      canModify={canModifyReview(review)}
+                      formatDate={formatDate}
+                      variant={variant}
+                      deleting={deleting === (review.reviewId || review._id)}
+                    />
                   ))}
                 </div>
               </div>
             ) : (
-              <div className="text-center py-12">
-                <p className="text-gray-600 mb-2">No reviews yet</p>
-                <p className="text-sm text-gray-500">Be the first to review this product!</p>
+              <div className={`text-center py-${isMobile ? '8' : '12'}`}>
+                <p className={`text-${isMobile ? 'sm' : 'base'} text-gray-600 ${isMobile ? 'mb-0' : 'mb-2'}`}>
+                  No reviews yet
+                </p>
+                <p className={`text-${isMobile ? 'xs' : 'sm'} text-gray-500`}>
+                  Be the first to review this product!
+                </p>
               </div>
             )}
           </>
