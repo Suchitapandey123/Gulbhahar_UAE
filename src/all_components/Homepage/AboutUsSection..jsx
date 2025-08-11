@@ -6,10 +6,6 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
-// Import your images
-import A1 from "../../../public/assets/Image/001.jpg";
-import A2 from "../../../public/assets/Image/002.jpg";
-import A3 from "../../../public/assets/Image/003.jpg";
 
 export default function AlternatingAbout() {
   const ref = useRef(null);
@@ -18,7 +14,7 @@ export default function AlternatingAbout() {
   const stories = [
     {
       id: 1,
-      image: A1,
+      image: "/home-page/Crafted-Through-Generations-optimized.webp",
       category: "HERITAGE",
       title: "Crafted Through Generations",
       description:
@@ -26,7 +22,7 @@ export default function AlternatingAbout() {
     },
     {
       id: 2,
-      image: A2,
+      image: "/home-page/Where-Tradition-Meets-Tomorrow-optimized.webp",
       category: "INNOVATION",
       title: "Where Tradition Meets Tomorrow",
       description:
@@ -34,7 +30,7 @@ export default function AlternatingAbout() {
     },
     {
       id: 3,
-      image: A3,
+      image: "/home-page/Conscious-Luxury-optimized.webp",
       category: "SUSTAINABILITY",
       title: "Conscious Luxury",
       description:

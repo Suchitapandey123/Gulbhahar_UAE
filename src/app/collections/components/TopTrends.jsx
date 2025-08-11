@@ -1,8 +1,8 @@
 import React from "react";
-import MB9 from "../../../../public/assets/Image/009.jpg";
-import MB7 from "../../../../public/assets/Image/007.jpg";
-import MB8 from "../../../../public/assets/Image/008.jpg";
-import MB2 from "../../../../public/assets/Image/002.jpg";
+import MB9 from "../../../../public/home-page/showcase-001-optimized.webp";
+import MB7 from "../../../../public/home-page/showcase-002-optimized.webp";
+import MB8 from "../../../../public/home-page/showcase-003-optimized.webp";
+import MB2 from "../../../../public/home-page/showcase-004-optimized.webp";
 import Image from "next/image";
 
 const slides = [MB2, MB7, MB8, MB9];

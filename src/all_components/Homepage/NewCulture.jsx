@@ -3,7 +3,7 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import Image from 'next/image';
-import culture from "../../../public/assets/Svg/culture.svg";
+import culture from "../../../public/home-page/culture.svg";
 import Link from 'next/link';
 
 const LuxuryCulture = () => {
@@ -97,7 +97,7 @@ const LuxuryCulture = () => {
       title: "Royal Embroidery",
       subtitle: "Zardozi & Gold Thread Work",
       description: "Royal embroidery is a classic form with beautiful detailing and a rich finish. It is associated with India's royal heritage, often using zardozi. It is a traditional embroidery technique using gold and silver threads to form frequently elaborate patterns. It is most popularly used on lush and opulent fabrics, like silk and velvet.",
-      image: "/Lal-ishq/lal-ishq-1.jpg",
+      image: "/home-page/royal-embroidery-optimized.webp",
       // image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-1.png",
       color: "from-amber-700 via-yellow-600 to-orange-500",
       accent: "border-amber-400",
@@ -109,7 +109,7 @@ const LuxuryCulture = () => {
       title: "Handwoven Textiles",
       subtitle: "Banarasi & Silk Weaving",
       description: "Handwoven textiles embody the essence of true Indian craftsmanship. They are a confluence of tradition and artistic expression. Banarasi textiles are among the finest celebrated in India. They are well known for their opulent silk weaving and intricate motifs reflecting the splendour of Indo-Persian art.",
-      image: "/Lal-ishq/lal-ishq-2.jpg",
+      image: "/home-page/handwoven-optimized.webp",
       // image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-6.png",
       color: "from-purple-700 via-indigo-600 to-blue-500",
       accent: "border-purple-400",
@@ -121,7 +121,7 @@ const LuxuryCulture = () => {
       title: "Leather Artistry",
       subtitle: "Traditional Juttiwork",
       description: "Master craftsmen shape premium leather into exquisite footwear, each pair telling a story of skill, tradition, and timeless elegance.",
-      image: "/Lal-ishq/lal-ishq-4.jpg",
+      image: "/home-page/leather-artistry-2-optimized.webp",
       // image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-7.png",
       color: "from-emerald-700 via-teal-600 to-cyan-500",
       accent: "border-emerald-400",
@@ -133,7 +133,7 @@ const LuxuryCulture = () => {
       title: "Gemstone Craft",
       subtitle: "Crystal Embellishment & Kundan Work ",
       description: "Gemstone Craft is a sparkling display of India’s ornamental legacy, highlighting the encrustation of stones through various intricate techniques such as crystal embellishment and Kundan work. Crystal embellishment is when sparkling stones are added to give an effect of twinkle or shine.",
-      image: "/Lal-ishq/lal-ishq-5.jpg",
+      image: "/home-page/gemstone-craft2-optimized.webp",
       // image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-8.png",
       color: "from-rose-700 via-pink-600 to-red-500",
       accent: "border-rose-400",
@@ -145,7 +145,7 @@ const LuxuryCulture = () => {
       title: "Ornate Metals",
       subtitle: "Gota Patti, Sequins & Foil Work",
       description: "Ornate Metals offers juttis bathed in timeless glimmer with a unique Gota Patti, sequins and foil work that pair traditional metallic artistry with a contemporary design approach. Juttis are a unique pair of footwear to enjoy the festive spirit. Wear them to any occasion and can feel the glam! Ornate metals + juttis = elegance and pride in heritage. We bring culture straight to your feet and a moment of traditional Indian luxury to the everyday!",
-      image: "/Lal-ishq/lal-ishq-6.jpg",
+      image: "/home-page/ornate-metals-optimized.webp",
       // image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-4.png",
       color: "from-gray-700 via-slate-600 to-zinc-500",
       accent: "border-gray-400",
@@ -235,7 +235,7 @@ const LuxuryCulture = () => {
                 <div className={`relative w-full h-full bg-gradient-to-br ${heritageElements[0].color} rounded-3xl overflow-hidden shadow-2xl ${heritageElements[0].accent} border-2`}>
                   <div className="absolute inset-0">
                     <Image
-                      src={`/Lal-ishq/lal-ishq-2.jpg`}
+                      src={heritageElements[0].image}
                       alt={heritageElements[0].title}
                       fill
                       priority
@@ -274,7 +274,7 @@ const LuxuryCulture = () => {
                 <div className={`relative w-full h-full bg-gradient-to-br ${heritageElements[1].color} rounded-2xl overflow-hidden shadow-xl ${heritageElements[1].accent} border-2`}>
                   <div className="absolute inset-0">
                     <Image
-                      src={`/Lal-ishq/lal-ishq-1.jpg`}
+                      src={heritageElements[1].image}
                       alt={heritageElements[1].title}
                       fill
                       priority
@@ -306,7 +306,7 @@ const LuxuryCulture = () => {
                 <div className={`relative w-full h-full bg-gradient-to-br ${heritageElements[2].color} rounded-2xl overflow-hidden shadow-xl ${heritageElements[2].accent} border-2`}>
                   <div className="absolute inset-0">
                     <Image
-                      src={`/Lal-ishq/lal-ishq-4.jpg`}
+                      src={heritageElements[2].image}
                       alt={heritageElements[2].title}
                       fill
                       priority
@@ -337,7 +337,7 @@ const LuxuryCulture = () => {
                 <div className={`relative w-full h-full bg-gradient-to-br ${heritageElements[3].color} rounded-2xl overflow-hidden shadow-xl ${heritageElements[3].accent} border-2`}>
                   <div className="absolute inset-0">
                     <Image
-                      src={`/Lal-ishq/lal-ishq-6.jpg`}
+                      src={heritageElements[3].image}
                       alt={heritageElements[3].title}
                       fill
                       priority
@@ -370,7 +370,7 @@ const LuxuryCulture = () => {
                 <div className={`relative w-full h-full bg-gradient-to-br ${heritageElements[4].color} rounded-2xl overflow-hidden shadow-xl ${heritageElements[4].accent} border-2`}>
                   <div className="absolute inset-0">
                     <Image
-                      src={`/Lal-ishq/lal-ishq-3.jpg`}
+                      src={heritageElements[4].image}
                       alt={heritageElements[4].title}
                       fill
                       priority

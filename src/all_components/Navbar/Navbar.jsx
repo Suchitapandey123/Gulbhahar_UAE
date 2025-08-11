@@ -1191,7 +1191,7 @@ const Navbar = () => {
           <div className="flex items-center justify-between p-3 xs:p-4 sm:p-6 border-b border-gray-100">
             <div className=" w-[70%] flex ">
             <Image
-              src="/Image/ful-gulbhaharlogo.png"
+              src="/ful-gulbhaharlogo.png"
               alt="Brand Logo"
               width={80}
               height={24}

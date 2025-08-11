@@ -6,9 +6,7 @@ import {
   useTransform,
 } from "framer-motion";
 import Image from "next/image";
-import MB1 from "../../../public/assets/Image/006.jpg";
-import MB2 from "../../../public/assets/Image/005.jpg";
-import Mb3 from "../../../public/assets/Image/S-002.jpg";
+
 import { useEffect, useState, useRef } from "react";
 import { ArrowUpRight, Play, Volume2 } from "lucide-react";
 
@@ -50,8 +48,8 @@ export default function ModernHeroAnimated() {
   const heroData = [
     {
       id: 1,
-      image: Mb3,
-      mobileImage: Mb3,
+      image: "/home-page/hero-1.webp",
+      mobileImage: "/home-page/hero-1.webp",
       title: "GULBHAHAR",
       subtitle: "Heritage Reimagined",
       description: "Where traditional craftsmanship meets contemporary design",
@@ -60,8 +58,8 @@ export default function ModernHeroAnimated() {
     },
     {
       id: 2,
-      image: MB2,
-      mobileImage: MB2,
+      image: "/home-page/hero-2.webp",
+      mobileImage: "/home-page/hero-1.webp",
       title: "ARTISAN",
       subtitle: "Handcrafted Excellence",
       description: "Each piece tells a story of generations of artistry",
@@ -70,8 +68,8 @@ export default function ModernHeroAnimated() {
     },
     {
       id: 3,
-      image: MB1,
-      mobileImage: MB1,
+      image: "/home-page/hero-3.webp",
+      mobileImage: "/home-page/hero-1.webp",
       title: "LEGACY",
       subtitle: "Timeless Elegance",
       description: "Preserving tradition while embracing innovation",

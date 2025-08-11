@@ -11,10 +11,10 @@ const Carousel = () => {
   
   const slides = [
 
-    "/login/002.jpg",
-    "/login/003.jpg",
-    "/login/IMG_1810.jpg",
-    "/login/0004compress.jpg"
+    "/login/001.webp",
+    "/login/002.webp",
+    "/login/003.webp",
+    "/login/004.webp"
   ];
 
   useEffect(() => {

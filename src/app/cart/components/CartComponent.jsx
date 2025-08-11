@@ -4,8 +4,8 @@ import { useState } from "react";
 import { Trash2, Minus, Plus, ShoppingCart, Tag } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import CartImage from "../../../../public/assets/Svg/cart.svg";
-import OrderImage from "../../../../public/assets/Svg/order.svg";
+import CartImage from "../../../../public/cart/cart.svg";
+import OrderImage from "../../../../public/cart/order.svg";
 
 const Breadcrumb = () => (
   <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-8">

@@ -2,10 +2,6 @@
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
-import MB9 from "../../../../public/assets/Image/001.jpg";
-import MB7 from "../../../../public/assets/Image/002.jpg";
-import MB8 from "../../../../public/assets/Image/002.jpg";
-import MB1 from "../../../../public/assets/Image/005.jpg";
 
 // Immersive Hero Section
 const HeroSection = () => {
@@ -116,7 +112,7 @@ const HeroSection = () => {
               <div className="relative w-full h-[300px] xs:h-[350px] sm:h-[400px] md:h-[500px] lg:h-[600px] xl:h-[700px] rounded-lg sm:rounded-xl lg:rounded-[2rem] overflow-hidden shadow-2xl">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent z-10" />
                 <Image
-                  src="/Safa2/safa-1.jpg"
+                  src="/about/crafting-stories-optimized.webp"
                   alt="Heritage Craftsmanship"
                   fill
                   className="object-cover transition-transform duration-1000 group-hover:scale-105"
@@ -404,7 +400,7 @@ const TraditionSection = () => {
           >
             <div className="relative h-[250px] xs:h-[300px] sm:h-[350px] md:h-[400px] lg:h-[500px] rounded-lg sm:rounded-xl lg:rounded-3xl overflow-hidden shadow-2xl border border-[#7f0001]/20">
               <Image
-                src="/Safa2/safa-2.jpg"
+                src="/about/adda-master-optimized.webp"
                 alt="Traditional Craftsmanship"
                 fill
                 priority
@@ -484,7 +480,7 @@ const TraditionSection = () => {
           >
             <div className="relative h-[250px] xs:h-[300px] sm:h-[350px] md:h-[400px] lg:h-[500px] rounded-lg sm:rounded-xl lg:rounded-3xl overflow-hidden shadow-2xl border border-[#7f0001]/20">
               <Image
-                src="/Sheen/sheen-1.jpg"
+                src="/about/modern-innovation-optimized.webp"
                 alt="Contemporary Design"
                 fill
                 priority
@@ -543,21 +539,21 @@ const ArtisanSection = () => {
       experience: "35 Years",
       specialty: "Traditional Embroidery",
       quote: "Each hand-stitched creativity generates amazing textile creations through the weaving together of cultural identities and stories.",
-      image: "/website/about-us/adda-master/adda-1.jpg"
+      image: "/about/traditional-methods-optimized.webp"
     },
     {
       name: "Hastkalaakar",
       experience: "28 Years", 
       specialty: "Pattern Design",
       quote: "The artistic process of composing elements in symmetry and harmony, to create a totality for each jutti.",
-      image: "/website/about-us/Pattern/pattern-1.png"
+      image: "/about/pattern-design-optimized.webp"
     },
     {
       name: "Shilpkar",
       experience: "42 Years",
       specialty: "Leather Crafting",
       quote: "The intricate process of working with leather in an artistic craft that has tooling, cutting, moulding, and stitching leather to create bespoke pieces of lasting quality.",
-      image: "/website/about-us/Pattern/jai.jpg"
+      image: "/about/leatherwork-optimized.webp"
     }
   ];
 
@@ -686,35 +682,35 @@ const ProcessSection = () => {
       title: "Design & Inspiration",
       description: "Our journey begins with traditional motifs and contemporary influences merging into unique designs",
       detail: "Sketching, pattern creation, and cultural research form the foundation of every collection",
-      img:MB1
+      img:"/about/craft-1-optimized.webp"
     },
     {
       number: "02", 
       title: "Material Selection",
       description: "Only the finest leathers and fabrics are chosen, sourced from trusted suppliers across India",
       detail: "Quality control ensures every material meets our exacting standards for durability and beauty",
-      img:MB9
+      img:"/about/craft-2-optimized.webp"
     },
     {
       number: "03",
       title: "Master Craftsmanship",
       description: "Skilled artisans hand-cut, stitch, and embellish each piece using time-honored techniques",
       detail: "15-20 hours of dedicated work goes into creating each pair of premium juttis",
-      img:MB8
+      img:"/about/craft-3-optimized.webp"
     },
     {
       number: "04",
       title: "Quality Assurance",
       description: "Every finished piece undergoes rigorous inspection to ensure it meets our heritage standards",
       detail: "Multiple quality checkpoints guarantee that only perfect pieces reach our customers",
-      img:MB7
+      img:"/about/craft-4-optimized.webp"
     },
     {
       number: "05",
       title: "Final Finishing",
       description: "The final touches bring each piece to life, ready to carry forward our legacy",
       detail: "Hand-polishing, packaging, and certification complete the artisanal journey",
-      img:MB9
+      img:"/about/craft-5-optimized.webp"
     }
   ];
 
@@ -866,7 +862,7 @@ const CollectionsSection = () => {
       description: "Timeless designs rooted in traditional Indian aesthetics",
       price: "₹5799",
       features: ["Hand-embroidered", "Premium leather", "Traditional motifs"],
-      image: "/Noorani/Noorani-1.jpg",
+      image: "/about/noorani-1.jpg",
       link : "/collections/P04172723114"
     },
     {
@@ -874,7 +870,7 @@ const CollectionsSection = () => {
       description: "Modern silhouettes with traditional craftsmanship",
       price: "₹5490", 
       features: ["Contemporary design", "Comfort padding", "Versatile styling"],
-      image: "/Lal-ishq/lal-ishq-1.jpg",
+      image: "/about/lal-ishq-1.jpg",
       link : "/collections/P45482609607"
     },
   ];
@@ -1013,21 +1009,21 @@ const TestimonialsSection = () => {
       location: "Delhi",
       review: "The craftsmanship is absolutely incredible. Each detail shows the love and skill that went into making these beautiful juttis.",
       rating: 5,
-      image: "/Image/hhe.webp"
+      image: "/C3.png"
     },
     {
       name: "Khushi Soni", 
       location: "Delhi",
       review: "I've never owned footwear that combines traditional beauty with such comfort. These juttis are truly special.",
       rating: 5,
-      image: "/Image/hhe.webp"
+      image: "/C3.png"
     },
     {
       name: "Madhurima Khanduja",
       location: "Delhi", 
       review: "Perfect for my wedding! The quality exceeded my expectations and the designs are absolutely stunning.",
       rating: 5,
-      image: "/Image/C2.png"
+      image: "/C3.png"
     }
   ];
 

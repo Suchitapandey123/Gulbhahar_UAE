@@ -4,11 +4,6 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
-import MB9 from "../../../public/assets/Image/009.jpg";
-import MB7 from "../../../public/assets/Image/007.jpg";
-import MB8 from "../../../public/assets/Image/008.jpg";
-import MB2 from "../../../public/assets/Image/002.jpg";
-
 export default function Culture() {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -25,7 +20,7 @@ export default function Culture() {
         </h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {[MB7, MB8, MB9, MB2].map((img, i) => (
+          {["/home-page/showcase-001-optimized.webp", "/home-page/showcase-002-optimized.webp", "/home-page/showcase-003-optimized.webp", "/home-page/showcase-003-optimized.webp"].map((img, i) => (
             <motion.div
               key={i}
               className="relative aspect-[3/4] group cursor-pointer"
