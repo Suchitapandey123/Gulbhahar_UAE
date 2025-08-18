@@ -9,7 +9,11 @@ import QuickSearch from './QuickLinks'
 import NewCulture from './NewCulture'
 
 const HomePage = ({data}) => {
-  // console.log(data)
+  console.log(process.env.GOOGLE_CLIENT_ID)
+  console.log(process.env.GOOGLE_CLIENT_SECRET)
+  console.log(process.env.NEXT_PUBLIC_GOOGLE_ID)
+  console.log(process.env.NEXT_PUBLIC_GOOGLE_SECRET)
+  
   return (
     <>
       <HeroAnimated/>
