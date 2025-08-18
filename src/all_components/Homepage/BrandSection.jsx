@@ -114,33 +114,6 @@ const BrandSection = () => {
         viewport={{ once: true, amount: 0.3 }}
       >
         <div className="relative">
-          {/* Learn More Button (Top Right) with enhanced animation */}
-          <motion.div 
-            className="absolute -top-6 md:-top-8 right-0"
-            variants={learnMoreVariants}
-          >
-            <motion.div
-              variants={buttonHoverVariants}
-              whileHover="hover"
-              whileTap="tap"
-            >
-              <Link
-                href="/about"
-                className="group flex items-center text-black hover:text-[#8B0000] transition-colors duration-300"
-                style={{ fontFamily: "'Old Standard TT', serif" }}
-              >
-                <span className="mr-2 text-sm md:text-lg tracking-wide">
-                  LEARN MORE
-                </span>
-                <motion.div
-                  className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300"
-                >
-                  <ArrowUpRight size={16} className="md:w-[18px] md:h-[18px]" />
-                </motion.div>
-              </Link>
-            </motion.div>
-          </motion.div>
-
           {/* Main Brand Name with letter-by-letter animation */}
           <motion.div 
             className="text-center"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, use } from "react";
 import Link from "next/link";
 import {
   Menu,
@@ -12,9 +12,6 @@ import {
   LogOut,
   Settings,
   Package,
-  Plus, // ADD THIS
-  Minus, // ADD THIS
-  Trash2,
   Eye,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
@@ -23,6 +20,7 @@ import SearchPopup from "./SearchPopup";
 import { useAuth } from "../../Providers/ContextProviders/AuthContext"; // 🔥 ADD THIS IMPORT
 import { useCart } from "@/Providers/ContextProviders/CartContext";
 import CartPage from "./CartPage";
+import { signOut } from "next-auth/react";
 
 const Navbar = () => {
   // 🔥 REPLACE ALL MANUAL AUTH STATE WITH CONTEXT
@@ -64,14 +62,33 @@ const Navbar = () => {
   const userDropdownRef = useRef(null);
   const hoverTimeoutRef = useRef(null);
   const userHoverTimeoutRef = useRef(null);
+  const [iimageUrl, setiImageUrl] = useState(null);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedUserData = localStorage.getItem("userData");
+      try {
+        const parsedData = JSON.parse(storedUserData);
+        setiImageUrl(parsedData); // store full object
+      } catch {
+        setiImageUrl({ profilePicture: storedUserData }); // fallback if string
+      }
+    }
+  }, []);
+  
+
+  // console.log("Image URL from localStorage:", iimageUrl);
+
 
   // 🔥 SIMPLIFIED FUNCTION - NOW USES CONTEXT TOKEN
   const fetchUserProfile = async () => {
+
+
+
     if (!authToken || !isAuthenticated) return;
 
     try {
       setProfileImageLoading(true);
-      // console.log(
+      // // console.log(
       //   "🔄 Fetching user profile with token:",
       //   authToken.substring(0, 20) + "..."
       // );
@@ -89,7 +106,7 @@ const Navbar = () => {
 
       if (response.ok) {
         const data = await response.json();
-        // console.log("✅ Profile data fetched successfully:", data);
+        // // console.log("✅ Profile data fetched successfully:", data);
 
         if (data.user) {
           const updatedUserData = {
@@ -105,14 +122,10 @@ const Navbar = () => {
 
           // 🔥 USE CONTEXT TO UPDATE USER DATA
           updateUserData(updatedUserData);
-          // console.log("👤 User profile updated:", updatedUserData);
+          // // console.log("👤 User profile updated:", updatedUserData);
         }
       } else {
         console.error("❌ Failed to fetch profile:", response.status);
-        // If token is invalid, logout through context
-        if (response.status === 401 || response.status === 403) {
-          // logout();
-        }
       }
     } catch (error) {
       console.error("🚨 Error fetching user profile:", error);
@@ -205,9 +218,10 @@ const Navbar = () => {
   // 🔥 SIMPLIFIED LOGOUT - CONTEXT HANDLES EVERYTHING
   const handleLogout = () => {
     logout(); // Context handles all cleanup and redirect
+    signOut()
     setIsUserDropdownOpen(false);
     setProfileImageError(false);
-    console.log("🚪 User logged out successfully");
+    // console.log("🚪 User logged out successfully");
   };
 
   // Enhanced Collections click handler
@@ -233,16 +247,16 @@ const Navbar = () => {
 
   // View All Collections handler
   const handleViewAllCollections = (e) => {
-    console.log("handleViewAllCollections called");
+    // console.log("handleViewAllCollections called");
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
 
     try {
-      console.log("Attempting to navigate to /collections");
+      // console.log("Attempting to navigate to /collections");
       router.push("/collections");
-      console.log("Router.push called successfully");
+      // console.log("Router.push called successfully");
     } catch (error) {
       console.error("Router.push failed:", error);
     }
@@ -320,13 +334,13 @@ const Navbar = () => {
       );
     }
 
-    if (userData?.imageUrl && !profileImageError) {
+    if ( ((iimageUrl?.profilePicture ||userData?.imageUrl) && !profileImageError)) {
       return (
         <div
           className={`${size} ${className} relative overflow-hidden rounded-full bg-gray-100 flex-shrink-0`}
         >
           <Image
-            src={userData.imageUrl}
+            src={iimageUrl?.profilePicture || userData.imageUrl}
             alt={`${userData.firstName || "User"}'s profile`}
             fill
             className="object-cover"
@@ -1104,7 +1118,7 @@ const Navbar = () => {
                   onMouseDown={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log("Button clicked!");
+                    // console.log("Button clicked!");
                     router.push("/collections");
                     setIsCollectionDropdownOpen(false);
                     setIsHoverMode(true);

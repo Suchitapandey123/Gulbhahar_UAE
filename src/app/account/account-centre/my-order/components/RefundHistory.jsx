@@ -67,11 +67,11 @@ import {
     ];
   
     const handleViewDetails = (refundId) => {
-      console.log(`View details for refund ${refundId}`);
+      // console.log(`View details for refund ${refundId}`);
     };
   
     const handleDownloadReceipt = (refundId) => {
-      console.log(`Download receipt for refund ${refundId}`);
+      // console.log(`Download receipt for refund ${refundId}`);
     };
   
     return (

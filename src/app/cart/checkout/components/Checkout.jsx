@@ -425,7 +425,7 @@ export default function CheckoutComponent() {
     // 🔧 CHECK IF API IS ENABLED
     if (!ENABLE_PINCODE_API) {
       // ✅ DEFAULT VALIDATION WITHOUT API
-      console.log("📍 Pincode API disabled - using default validation");
+      // console.log("📍 Pincode API disabled - using default validation");
       
       // Simulate a brief validation delay
       setPostalCodeValidation(prev => ({
@@ -745,21 +745,21 @@ export default function CheckoutComponent() {
         },
       };
 
-      console.log(
-        "💾 Saving validated checkout data to localStorage:",
-        checkoutData
-      );
+      // console.log(
+      //   "💾 Saving validated checkout data to localStorage:",
+      //   checkoutData
+      // );
 
       // Save to localStorage
       try {
         localStorage.setItem("checkoutFormData", JSON.stringify(checkoutData));
-        console.log("✅ Checkout data saved to localStorage successfully");
+        // console.log("✅ Checkout data saved to localStorage successfully");
 
         // Verify the data was saved correctly
         const savedData = localStorage.getItem("checkoutFormData");
         if (savedData) {
           const parsedSavedData = JSON.parse(savedData);
-          console.log("✅ Verified saved data:", parsedSavedData);
+          // console.log("✅ Verified saved data:", parsedSavedData);
         }
       } catch (error) {
         console.error("❌ Error saving checkout data:", error);

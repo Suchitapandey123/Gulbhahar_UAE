@@ -20,7 +20,7 @@ const SearchPopup = ({ isOpen, onClose }) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       // Implement your search logic here
-      console.log('Searching for:', searchQuery);
+      // console.log('Searching for:', searchQuery);
       setSearchQuery('');
       onClose();
     }

@@ -56,7 +56,7 @@ const Profile = () => {
         return;
       }
 
-      console.log('🔄 Fetching user profile...');
+      // // console.log('🔄 Fetching user profile...');
       
       const response = await fetch('https://api.gulbhahar.com/api/users/user-by-token', {
         method: 'POST',
@@ -68,7 +68,7 @@ const Profile = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('✅ Profile data fetched:', data);
+        // // console.log('✅ Profile data fetched:', data);
         
         if (data.user) {
           const userData = data.user;
@@ -112,7 +112,7 @@ const Profile = () => {
     setSaving(true);
     
     try {
-      console.log("Saving profile data:", formData);
+      // // console.log("Saving profile data:", formData);
       
       // Here you would typically make an API call to update the user profile
       // await updateUserProfile(formData);
@@ -120,7 +120,7 @@ const Profile = () => {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      console.log("Profile updated successfully");
+      // // console.log("Profile updated successfully");
     } catch (error) {
       console.error("Error updating profile:", error);
     } finally {

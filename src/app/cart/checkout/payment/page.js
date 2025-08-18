@@ -158,7 +158,7 @@ const PhoneOTPModal = ({ isOpen, onClose, onVerify, phone, isVerifying, error, s
         inputRefs.current[nextIndex]?.focus();
       }
     } catch (err) {
-      console.log('Paste not supported or denied');
+      // console.log('Paste not supported or denied');
     }
   };
 
@@ -464,7 +464,7 @@ function PaymentContent() {
 
     try {
       const parsedData = JSON.parse(savedCheckoutData);
-      console.log('📋 Loaded checkout data:', parsedData);
+      // console.log('📋 Loaded checkout data:', parsedData);
       setCheckoutData(parsedData);
     } catch (e) {
       console.error('❌ Error parsing checkout data:', e);

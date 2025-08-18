@@ -42,12 +42,12 @@ export const CartProvider = ({ children }) => {
 
 const addToCart = async (product) => {
   try {
-    console.log('🛒 Adding to cart:', product);
+    // console.log('🛒 Adding to cart:', product);
     
     // 🔥 STANDARDIZED CART ID GENERATION
     const standardizedCartId = `${product.productId || product.id}-${product.selectedColor || product.colors?.[0] || 'default'}-${product.selectedSize || product.sizes?.[0] || 'default'}`;
     
-    console.log('🔑 Standardized Cart ID:', standardizedCartId);
+    // console.log('🔑 Standardized Cart ID:', standardizedCartId);
     
     setAddingToCart(product.productId || product.id);
     
@@ -55,7 +55,7 @@ const addToCart = async (product) => {
     await new Promise(resolve => setTimeout(resolve, 500));
     
     setCart(prevCart => {
-      console.log('📦 Current cart before adding:', prevCart);
+      // console.log('📦 Current cart before adding:', prevCart);
       
       // Find existing item using standardized matching
       const existingItem = prevCart.find(item => {
@@ -64,7 +64,7 @@ const addToCart = async (product) => {
       });
       
       if (existingItem) {
-        console.log('📈 Found existing item, updating quantity');
+        // console.log('📈 Found existing item, updating quantity');
         return prevCart.map(item => {
           const itemCartId = `${item.productId || item.id}-${item.selectedColor || item.colors?.[0] || 'default'}-${item.selectedSize || item.sizes?.[0] || 'default'}`;
           return itemCartId === standardizedCartId
@@ -72,7 +72,7 @@ const addToCart = async (product) => {
             : item;
         });
       } else {
-        console.log('➕ Adding new item to cart');
+        // console.log('➕ Adding new item to cart');
         const newCartItem = {
           ...product,
           quantity: 1,
@@ -86,12 +86,12 @@ const addToCart = async (product) => {
           addedAt: new Date().toISOString()
         };
         
-        console.log('🆕 New cart item:', newCartItem);
+        // console.log('🆕 New cart item:', newCartItem);
         return [...prevCart, newCartItem];
       }
     });
     
-    console.log('✅ Item added to cart successfully');
+    // console.log('✅ Item added to cart successfully');
     return { 
       success: true, 
       message: `${product.name}${product.selectedSize ? ` (${product.selectedSize})` : ''}${product.selectedColor ? ` (${product.selectedColor})` : ''} added to cart!` 
@@ -155,7 +155,7 @@ const addToCart = async (product) => {
         }
       });
       
-      console.log('🧹 Cleaned up cart:', uniqueItems);
+      // console.log('🧹 Cleaned up cart:', uniqueItems);
       return uniqueItems;
     });
   };

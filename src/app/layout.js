@@ -3,11 +3,12 @@
 import { Poppins, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Footer from "@/all_components/Footer/Footer";
-import Navbar from "@/all_components/Navbar/Navbar";
+import Navbar from "@/all_components/Navbar/Main";
 import ReactQueryProvider from "@/Providers/ReactQueryProvider/ReactQueryProvider";
 import Script from "next/script";
 import { AuthProvider } from "@/Providers/ContextProviders/AuthContext";
 import { CartProvider } from "@/Providers/ContextProviders/CartContext";
+import SessionWrapper from "@/Providers/GoogleSessionProvider/SessionWrapper";
 
 // Configure fonts
 const poppins = Poppins({
@@ -86,37 +87,38 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-
-      <body
-        className={`${poppins.variable} ${jetbrainsMono.variable} antialiased`}
-      >
-        {/* Google Analytics - Using Next.js Script component properly */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-NR9HQHE5F4"
-          strategy="afterInteractive"
-        />
-        <Script
-          id="google-analytics"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
+      <SessionWrapper>
+        <body
+          className={`${poppins.variable} ${jetbrainsMono.variable} antialiased`}
+        >
+          {/* Google Analytics - Using Next.js Script component properly */}
+          <Script
+            src="https://www.googletagmanager.com/gtag/js?id=G-NR9HQHE5F4"
+            strategy="afterInteractive"
+          />
+          <Script
+            id="google-analytics"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
               gtag('config', 'G-NR9HQHE5F4');
             `,
-          }}
-        />
-        <AuthProvider>
-          <ReactQueryProvider>
-            <CartProvider>
-              <Navbar />
-              {children}
-              <Footer />
-            </CartProvider>
-          </ReactQueryProvider>
-        </AuthProvider>
-      </body>
+            }}
+          />
+          <AuthProvider>
+            <ReactQueryProvider>
+              <CartProvider>
+                <Navbar />
+                {children}
+                <Footer />
+              </CartProvider>
+            </ReactQueryProvider>
+          </AuthProvider>
+        </body>
+      </SessionWrapper>
     </html>
   );
 }

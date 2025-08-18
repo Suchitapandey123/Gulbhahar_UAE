@@ -161,7 +161,7 @@ const EmailConfirmationStep = ({ email, setEmail, goToNextStep }) => {
   const forgotPasswordMutation = useMutation({
     mutationFn: forgotPasswordAPI,
     onSuccess: (data) => {
-      console.log('Email sent successfully:', data);
+      // console.log('Email sent successfully:', data);
       showToast('Verification email sent successfully!', 'success');
       goToNextStep();
     },
@@ -286,7 +286,7 @@ const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificati
   const verifyEmailMutation = useMutation({
     mutationFn: verifyEmailAPI,
     onSuccess: (data) => {
-      console.log('Email verified successfully:', data);
+      // console.log('Email verified successfully:', data);
       setError('');
       setSuccessMessage('Email verified successfully!');
       showToast('Email verified successfully!', 'success');
@@ -313,7 +313,7 @@ const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificati
   const resendEmailMutation = useMutation({
     mutationFn: forgotPasswordAPI,
     onSuccess: (data) => {
-      console.log('Email resent successfully:', data);
+      // console.log('Email resent successfully:', data);
       setError('');
       setSuccessMessage('Verification code resent successfully!');
       showToast('Verification code resent successfully!', 'success');
@@ -475,7 +475,7 @@ const CreatePasswordStep = ({ email, verificationCode, goToHomePage }) => {
   const resetPasswordMutation = useMutation({
     mutationFn: resetPasswordAPI,
     onSuccess: (data) => {
-      console.log('Password reset successful:', data);
+      // console.log('Password reset successful:', data);
       // Show success message briefly before redirecting
       const successMessage = 'Password reset successfully! Redirecting to login...';
       alert(successMessage); // You can replace this with a proper toast/notification

@@ -4,11 +4,12 @@ import { FaGoogle, FaFacebook } from 'react-icons/fa';
 import { FiUser, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { IoIosArrowBack } from 'react-icons/io';
 import { useAuth } from '../../../Providers/ContextProviders/AuthContext'; // Import the auth context
+import { signIn, useSession } from 'next-auth/react';
+import axios from 'axios';
 
 // Carousel component (unchanged)
 const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  
   const slides = [
 
     "/login/001.webp",
@@ -24,6 +25,7 @@ const Carousel = () => {
     
     return () => clearInterval(interval);
   }, [slides.length]);
+
 
   return (
     <div className="relative h-full w-full overflow-hidden bg-gradient-to-br from-red-100 to-rose-200 rounded-2xl shadow-2xl">
@@ -82,6 +84,9 @@ const LoginPage = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [touched, setTouched] = useState({ email: false, password: false });
   const [isLoading, setIsLoading] = useState(false);
+  const { data: session } = useSession()
+  let token = null;
+  // // console.log("Session data:", session);
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -170,7 +175,7 @@ const LoginPage = () => {
     setSuccessMessage('');
     
     try {
-      console.log('🔄 Attempting login with:', { email, password: '***' });
+      // // console.log('🔄 Attempting login with:', { email, password: '***' });
       
       const response = await fetch('https://api.gulbhahar.com/api/users/login', {
         method: 'POST',
@@ -183,16 +188,16 @@ const LoginPage = () => {
         }),
       });
 
-      console.log('📡 Response status:', response.status);
+      // console.log('📡 Response status:', response.status);
       
       const data = await response.json();
-      console.log('📦 Full API Response:', data);
+      // console.log('📦 Full API Response:', data);
       
       if (response.ok) {
-        console.log('✅ Login successful:', data);
+        // console.log('✅ Login successful:', data);
         
         // Extract token
-        const token = data.token || data.accessToken || data.authToken;
+         token = data.token || data.accessToken || data.authToken;
         
         if (!token) {
           setGeneralError('Login successful but no token received. Please try again.');
@@ -232,14 +237,14 @@ const LoginPage = () => {
             setSuccessMessage('Login successful! Redirecting to Homepage...');
             setTimeout(() => {
               window.location.href = '/';
-            }, 1500);
+            }, 500);
           }
         } else {
           setGeneralError('Failed to save login data. Please try again.');
         }
       } else {
-        console.log('❌ Login failed. Status:', response.status);
-        console.log('❌ Error response:', data);
+        // console.log('❌ Login failed. Status:', response.status);
+        // console.log('❌ Error response:', data);
         
         // Handle different error statuses
         if (response.status === 401) {
@@ -277,12 +282,42 @@ const LoginPage = () => {
       await handleLogin();
     }
   };
-
-  const handleSocialLogin = (provider) => {
-    console.log(`Login with ${provider}`);
-    setGeneralError(`${provider} login is not implemented yet.`);
+//  // console.log("Session data:", session);
+  const handleSocialLogin = async(provider) => {
+    // console.log(`Logging with ${provider}`);
+    signIn(provider)
+    // console.log("sessiion data :", session)
+     token = session?.id_token
+     const response = await axios.post(`https://api.gulbhahar.com/api/users/user-by-token`, {},{
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+     }}
+    );
+    // console.log(response.data.user)
+    const data  = response.data.user
+    // // console.log("Response from backend:", response.data);
+     
+     const userData = {
+      email: data.email,
+      name : data.name,
+      firstName: data.firstName || data.first_name || data.user?.firstName || '',
+      lastName: data.lastName || data.last_name || data.user?.lastName || '',
+      userId: data.userId || data.id || data.user?.id || '',
+      location: data.location || data.user?.location || '',
+      phoneNumber: data.phoneNumber || data.phone || data.user?.phoneNumber || '',
+      profilePicture: data.profilePicture || data.avatar || data.user?.profilePicture || data?.image || '',
+      emailVerified: data.emailVerified !== undefined ? data.emailVerified : true,
+      phoneVerified: data.phoneVerified !== undefined ? data.phoneVerified : true,
+      ...data.user // Include any additional user data from response
+    };
+    const loginSuccess = login(token, userData)
+    if (loginSuccess) {
+      setSuccessMessage('Login successful! Redirecting to Homepage...');
+    } else {
+      setGeneralError('Failed to log in with social account. Please try again.');
+    }
   };
-
   const handleGoHome = () => {
     window.location.href = '/';
   };
@@ -455,7 +490,7 @@ const LoginPage = () => {
                   <div className="mt-6 grid grid-cols-2 gap-4">
                     <button
                       type="button"
-                      onClick={() => handleSocialLogin('Google')}
+                      onClick={() => handleSocialLogin('google')}
                       disabled={isLoading}
                       className="flex w-full items-center justify-center rounded-xl border-2 border-red-200 bg-white py-3 px-4 text-sm font-medium text-red-900 shadow-sm hover:bg-red-50 hover:border-red-300 focus:outline-none focus:ring-4 focus:ring-red-100 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:transform-none"
                     >
@@ -464,7 +499,7 @@ const LoginPage = () => {
                     </button>
                     <button
                       type="button"
-                      onClick={() => handleSocialLogin('Facebook')}
+                      onClick={() => handleSocialLogin('facebook')}
                       disabled={isLoading}
                       className="flex w-full items-center justify-center rounded-xl border-2 border-red-200 bg-white py-3 px-4 text-sm font-medium text-red-900 shadow-sm hover:bg-red-50 hover:border-red-300 focus:outline-none focus:ring-4 focus:ring-red-100 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:transform-none"
                     >

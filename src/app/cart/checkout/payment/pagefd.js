@@ -403,7 +403,7 @@ export default function PaymentPage() {
       const paymentPayload = preparePaymentData();
       
       // Log the payment data for debugging (remove in production)
-      console.log('Payment Data to be sent to backend:', JSON.stringify(paymentPayload, null, 2));
+      // console.log('Payment Data to be sent to backend:', JSON.stringify(paymentPayload, null, 2));
 
       // Here you would typically send to your backend
       // Example API call:

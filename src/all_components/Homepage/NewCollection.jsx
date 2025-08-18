@@ -5,11 +5,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
+import { useSession } from "next-auth/react";
 
 const NewCollection = ({ newCollection }) => {
   const [hoveredCard, setHoveredCard] = useState(null);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  // const {data : session} = useSession();
+  // console.log("Session Data Token:", session.id_token);
 
   // Helper function to get safe image URL
   const getSafeImageUrl = (product) => {

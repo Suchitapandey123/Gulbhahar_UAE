@@ -1,10 +1,6 @@
-import React from 'react'
-import CartPage from './components/CartComponent'
+import { redirect } from "next/navigation";
 
-const page = () => {
-  return (
-   <CartPage />
-  )
+export default function Page() {
+  redirect("/"); // redirects to homepage
+  return null;
 }
-
-export default page

@@ -218,7 +218,7 @@ export const AuthProvider = ({ children }) => {
   // Auto logout if token is expired
   useEffect(() => {
     if (isAuthenticated && isTokenExpired()) {
-      console.log('Token expired, logging out...');
+      // console.log('Token expired, logging out...');
       logout();
     }
   }, [isAuthenticated, loginTimestamp]);

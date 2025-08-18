@@ -58,15 +58,15 @@ import {
     ];
   
     const handleRequestReturn = (orderId) => {
-      console.log(`Request return for order ${orderId}`);
+      // // console.log(`Request return for order ${orderId}`);
     };
   
     const handleRequestExchange = (orderId) => {
-      console.log(`Request exchange for order ${orderId}`);
+      // // console.log(`Request exchange for order ${orderId}`);
     };
   
     const handleSearch = (e) => {
-      console.log(`Search for: ${e.target.value}`);
+      // // console.log(`Search for: ${e.target.value}`);
     };
   
     const getStatusBadge = (status) => {
