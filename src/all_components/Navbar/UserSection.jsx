@@ -73,7 +73,7 @@ const UserSection = ({
             {...props}
           />
           <span className="hidden lg:inline">
-            {userData?.firstName || userData.name.split(" ")[0] || "Acc"}
+            {userData?.firstName || userData?.name?.split(" ")[0] || "Account"}
           </span>
           <ChevronDown
             size={12}

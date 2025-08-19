@@ -287,7 +287,7 @@ const LoginPage = () => {
     // console.log(`Logging with ${provider}`);
     signIn(provider)
     // console.log("sessiion data :", session)
-     token = session?.id_token
+     token = session?.backendToken
      const response = await axios.post(`https://api.gulbhahar.com/api/users/user-by-token`, {},{
       headers: {
         'Content-Type': 'application/json',

@@ -11,8 +11,9 @@ const NewCollection = ({ newCollection }) => {
   const [hoveredCard, setHoveredCard] = useState(null);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  // const {data : session} = useSession();
-  // console.log("Session Data Token:", session.id_token);
+  const {data : session} = useSession();
+  console.log("Session Data Token:", session);
+  console.log("Backend Token:", session)
 
   // Helper function to get safe image URL
   const getSafeImageUrl = (product) => {
