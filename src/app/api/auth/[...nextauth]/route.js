@@ -4,6 +4,7 @@ import GoogleProvider from 'next-auth/providers/google'
 
 const handler = NextAuth({
   secret: process.env.NEXTAUTH_SECRET || "gulbhahar",
+  
   providers: [
     FacebookProvider({
       clientId: process.env.FACEBOOK_ID,
