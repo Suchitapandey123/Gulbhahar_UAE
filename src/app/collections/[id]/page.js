@@ -2,7 +2,7 @@ import React from "react";
 import { ProductClient } from "./client";
 import { QueryClient } from "@tanstack/react-query";
 import productApi from "@/app/api/v0/product-service";
-import { url } from "inspector";
+import ProductNotAvailable from "./components/ProductNotFound/ProductNotFound";
 
 async function getProductData(productID) {
   const queryClient = new QueryClient();
@@ -31,7 +31,7 @@ async function getProductData(productID) {
   }
 }
 
-// Fallback similar products in case the API fails
+
 const fallbackSimilarProducts = [
   {
     id: 1,
@@ -129,9 +129,8 @@ export default async function CollectionPage({ params }) {
     console.error('Error in CollectionPage:', error);
     
     return (
-      <div className="error-container">
-        <h2>Error loading product</h2>
-        <p>Unable to load product details. Please try again later.</p>
+      <div className="error-container mt-2 lg:mt-24">
+        <ProductNotAvailable />
       </div>
     );
   }

@@ -4,20 +4,17 @@ import Link from "next/link";
 import {
   ChevronDown,
   ChevronUp,
-  Grid,
-  List,
-  SlidersHorizontal,
-  X,
   ShoppingBag,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
-import productApi from "../../api/v0/product-service";
 
-import TopTrends from "./TopTrends";
 import Image from "next/image";
 import { useToast } from "@/hooks/useToast";
-import { useCart } from "../../../Providers/ContextProviders/CartContext"; // 🔥 ADD THIS IMPORT
+import { useCart } from "@/Providers/ContextProviders/CartContext";
+import productApi from "@/app/api/v0/product-service";
+
+
 
 // Keep fallback data for when API is loading or fails
 const fallbackCollections = [
@@ -38,18 +35,9 @@ const fallbackCollections = [
   },
 ];
 
-const seasons = [ "all","designed by monica", "casual juttis", "festive collection", "designer collection"];
-
-const sortOptions = [
-  { label: "Price: high to low", value: "price-desc" },
-  { label: "Price: low to high", value: "price-asc" },
-  { label: "Newest", value: "newest" },
-  { label: "Relevance", value: "relevance" },
-];
-
 const ITEMS_PER_PAGE = 24;
 
-export default function Collection() {
+export default function AvailableProducts() {
   const [currentImageIndices, setCurrentImageIndices] = useState({});
   const [hoveredProduct, setHoveredProduct] = useState(null);
   const [viewMode, setViewMode] = useState("grid");
@@ -200,6 +188,18 @@ const handleAddToCart = async (e, item) => {
     return () => clearTimeout(timeoutId);
   }, [selectedSeason, selectedSizes, sortBy]);
 
+  const histogramData = [
+    { range: "0-500", count: 3 },
+    { range: "500-1k", count: 5 },
+    { range: "1k-1.5k", count: 8 },
+    { range: "1.5k-2k", count: 12 },
+    { range: "2k-2.5k", count: 10 },
+    { range: "2.5k-3k", count: 7 },
+    { range: "3k-3.5k", count: 5 },
+    { range: "3.5k-4k", count: 4 },
+    { range: "4k-4.5k", count: 3 },
+    { range: "4.5k-5k", count: 2 },
+  ];
 
   // Extract unique sizes from API data
   const sizes = [
@@ -253,6 +253,17 @@ const handleAddToCart = async (e, item) => {
     };
   }, []);
 
+  const toggleFavorite = (id) => {
+    setFavorites((prev) => {
+      const newFavorites = new Set(prev);
+      if (newFavorites.has(id)) {
+        newFavorites.delete(id);
+      } else {
+        newFavorites.add(id);
+      }
+      return newFavorites;
+    });
+  };
 
   const toggleSection = (section) => {
     setOpenSections((prev) => ({
@@ -348,10 +359,6 @@ const handleAddToCart = async (e, item) => {
 
   const minPosition = ((priceRange[0] - MIN_PRICE) / PRICE_RANGE) * 100;
   const maxPosition = ((priceRange[1] - MIN_PRICE) / PRICE_RANGE) * 100;
-
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
-  };
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -669,29 +676,10 @@ const handleAddToCart = async (e, item) => {
   }
 
   return (
-    <div className="min-h-screen mt-20 lg:mt-24 pt-4">
+    <div className="min-h-screen mt-16 lg:mt-24">
       <ToastContainer />
 
-      <div className="max-w-[1600px] mx-auto  flex flex-col lg:flex-row">
-        
-        {/* Sidebar - Visible only on lg screens and larger */}
-        <div className="hidden xl:flex mt-5 flex-col max-w-[360px] mb-8">
-           {/* Breadcrumb */}
-      <div className="max-w-[400px] px-2 lg:px-2">
-        <nav className="py-2">
-          <span className="text-red-700 hover:text-red-900 transition-colors cursor-pointer">
-            Home
-          </span>
-          <span className="mx-2 text-red-400">/</span>
-          <span className="text-red-900 font-semibold">Collections</span>
-        </nav>
-      </div>
-
-          <div className="bg-white border-2 border-red-200 h-[890px] w-[280px] rounded-xl shadow-lg">
-            <FilterContent />
-          </div>
-        </div>
-
+      <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row">
         {/* Mobile Filter Modal */}
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm lg:hidden">
@@ -721,87 +709,37 @@ const handleAddToCart = async (e, item) => {
         )}
 
         {/* Main Content */}
-        <div className="w-full px-2 lg:px-6">
-          {/* Controls */}
-          <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center justify-between border-b-2 border-red-200 pb-4 mb-6 gap-4">
-            <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
-              <p className="font-bold text-xl text-red-900 hidden">
-                {filteredCollections.length} Results
-              </p>
-
-              <div className="flex bg-white border-2 border-red-200 rounded-lg p-1 shadow-sm">
-                <button
-                  className={`p-2 rounded-md transition-all ${
-                    viewMode === "grid"
-                      ? "bg-red-900 text-white shadow-md"
-                      : "text-red-900 hover:bg-red-50"
-                  }`}
-                  onClick={() => setViewMode("grid")}
-                >
-                  <Grid size={15} />
-                </button>
-                <button
-                  className={`p-2 rounded-md transition-all ${
-                    viewMode === "list"
-                      ? "bg-red-900 text-white shadow-md"
-                      : "text-red-900 hover:bg-red-50"
-                  }`}
-                  onClick={() => setViewMode("list")}
-                >
-                  <List size={15} />
-                </button>
-              </div>
-            </div>
-
-            <div className="flex items-center px-1 xs:px-0 gap-3 w-full sm:w-auto justify-between sm:justify-start">
-              <button
-                className="flex lg:hidden items-center justify-center p-[6.5px] border-2 border-red-300 rounded-lg bg-white hover:bg-red-50 transition-colors"
-                onClick={toggleModal}
-              >
-                <SlidersHorizontal size={18} className="text-red-900 mr-2" />
-                <span className="text-red-900 font-medium">Filters</span>
-              </button>
-
-              <div className="flex items-center gap-2">
-                <span className="text-red-900 font-semibold hidden sm:inline">
-                  Sort by:
-                </span>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="px-2 py-2 border-2 border-red-300 rounded-lg bg-white text-red-900 font-medium focus:border-red-900 focus:ring-2 focus:ring-red-100 transition-all"
-                >
-                  {sortOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
-
-          {/* Season Filters */}
-          <div className="flex flex-nowrap gap-2 sm:gap-3 mb-8 overflow-x-auto pb-2">
-            {seasons.map((season) => (
-              <button
-                key={season}
-                onClick={() => {
-                  setSelectedSeason(season);
-                  setCurrentPage(1);
-                }}
-                className={`px-4 sm:px-6 py-2 sm:py-3 border-2 font-bold text-xs sm:text-sm rounded-lg transition-all duration-200 transform hover:scale-105 whitespace-nowrap flex-shrink-0 ${
-                  selectedSeason === season
-                    ? "bg-red-900 text-white border-red-900 shadow-lg"
-                    : "bg-white text-red-900 border-red-300 hover:bg-red-50 hover:border-red-900"
-                }`}
-              >
-                {season !== "all"
-                  ? `${season.toUpperCase()}`
-                  : season.toUpperCase()}
-              </button>
-            ))}
-          </div>
+        <div className="w-full px-2 lg:px-6"> 
+         
+        <div className="text-center mb-8 relative">
+  {/* Background accent */}
+  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-maroon-50 to-transparent rounded-xl opacity-60"></div>
+  
+  {/* Content */}
+  <div className="relative py-6 px-4">
+    {/* Icon */}
+    <div className="w-12 h-12 bg-red-900 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-md">
+      <ShoppingBag className="h-6 w-6 text-white" />
+    </div>
+    
+    {/* Title */}
+    <h2 className=  "text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+      Available Products
+    </h2>
+    
+    {/* Subtitle */}
+    <p className="text-gray-600 max-w-md mx-auto">
+      Discover our featured collection of premium products
+    </p>
+    
+    {/* Decorative line */}
+    <div className="flex items-center justify-center mt-4">
+      <div className="h-0.5 w-12 bg-maroon-600"></div>
+      <div className="w-2 h-2 bg-maroon-600 rounded-full mx-3"></div>
+      <div className="h-0.5 w-12 bg-maroon-600"></div>
+    </div>
+  </div>
+</div>
 
           {/* Product Grid/List with ViewMode Support */}
           <div
@@ -1310,10 +1248,6 @@ const handleAddToCart = async (e, item) => {
           )}
         </div>
       </div>
-
-      {/* <TopTrends /> */}
-
-      {/* <ContentSection /> */}
     </div>
   );
 }

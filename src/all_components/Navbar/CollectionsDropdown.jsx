@@ -13,22 +13,110 @@ const CollectionsDropdown = ({
     {
       title: "Designed By Monica",
       subtitle: "Exclusive Collection",
-      items: ["Juttis"],
+       items : [
+        {
+          name: "Juttis",
+          slug: "/collections/juttis"
+        },
+        {
+          name: "Punjabi Juttis",
+          slug: "/collections/punjabi-juttis"
+        },
+        {
+          name: "Bridal Juttis",
+          slug: "/collections/bridal-juttis"
+        },
+        {
+          name: "Punjabi Juttis For Ladies",
+          slug: "/collections/punjabi-juttis-for-ladies"
+        },
+        {
+          name: "Juttis For Women",
+          slug: "/collections/juttis-for-women"
+        }
+      ]
+      
     },
     {
       title: "Casual Juttis",
       subtitle: "Everyday Comfort",
-      items: ["Minimalist Designs", "Comfortable Daily Wear", "Light Embroidery", "Versatile Styles"],
+      items : [
+        {
+          name: "Juttis",
+          slug: "/collections/juttis"
+        },
+        {
+          name: "Punjabi Juttis",
+          slug: "/collections/punjabi-juttis"
+        },
+        {
+          name: "Bridal Juttis",
+          slug: "/collections/bridal-juttis"
+        },
+        {
+          name: "Punjabi Juttis For Ladies",
+          slug: "/collections/punjabi-juttis-for-ladies"
+        },
+        {
+          name: "Juttis For Women",
+          slug: "/collections/juttis-for-women"
+        }
+      ]
+      
     },
     {
       title: "Festive Collection",
       subtitle: "Celebration Ready",
-      items: ["Vibrant Festival Colors", "Traditional Patterns", "Statement Pieces", "Cultural Designs"],
+      items : [
+        {
+          name: "Juttis",
+          slug: "/collections/juttis"
+        },
+        {
+          name: "Punjabi Juttis",
+          slug: "/collections/punjabi-juttis"
+        },
+        {
+          name: "Bridal Juttis",
+          slug: "/collections/bridal-juttis"
+        },
+        {
+          name: "Punjabi Juttis For Ladies",
+          slug: "/collections/punjabi-juttis-for-ladies"
+        },
+        {
+          name: "Juttis For Women",
+          slug: "/collections/juttis-for-women"
+        }
+      ]
+      
     },
     {
       title: "Designer Collection",
       subtitle: "Luxury Edition",
-      items: ["Limited Edition", "Premium Materials", "Artistic Designs", "Exclusive Craftsmanship"],
+      items : [
+        {
+          name: "Juttis",
+          slug: "/collections/juttis"
+        },
+        {
+          name: "Punjabi Juttis",
+          slug: "/collections/punjabi-juttis"
+        },
+        {
+          name: "Bridal Juttis",
+          slug: "/collections/bridal-juttis"
+        },
+        {
+          name: "Punjabi Juttis For Ladies",
+          slug: "/collections/punjabi-juttis-for-ladies"
+        },
+        {
+          name: "Juttis For Women",
+          slug: "/collections/juttis-for-women"
+        }
+      ]
+      
     },
   ];
 
@@ -51,7 +139,7 @@ const CollectionsDropdown = ({
   };
 
   const handleCategoryClick = (category) => {
-    router.push(`/collections/`);
+    router.push(`${category}`);
     setIsCollectionDropdownOpen(false);
     setIsHoverMode(true);
   };
@@ -142,14 +230,14 @@ const CollectionCategory = ({ category, onCategoryClick }) => (
           <div
             onClick={(e) => {
               e.stopPropagation();
-              onCategoryClick(`${category.title} ${item}`);
+              window.location.href = item.slug;
             }}
             className="text-gray-600 hover:text-[#800000] transition-all duration-300 
                      cursor-pointer text-xs lg:text-sm font-medium 
                      transform hover:translate-x-2 hover:font-semibold
                      py-1 px-2 rounded hover:bg-[#800000]/5"
           >
-            {item}
+            {item.name}
           </div>
         </li>
       ))}

@@ -36,13 +36,94 @@ const handler = NextAuth({
             const data = await resp.json()
             console.log("Backend response:", data) // 👈 check actual shape
     
-            // adjust depending on API
+            // Store backend token
             token.backendToken = data.token || data.accessToken || data?.data?.token
+            
+            // Fetch user data from backend using the token
+            if (token.backendToken) {
+              try {
+                const userResp = await fetch('https://api.gulbhahar.com/api/users/user-by-token', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token.backendToken}`
+                  },
+                  body: JSON.stringify({})
+                })
+                
+                const userResponse = await userResp.json()
+                const userData = userResponse.user
+                
+                // Store processed user data in token
+                token.userData = {
+                  email: userData.email,
+                  name: userData.name,
+                  firstName: userData.firstName || userData.first_name || userData.user?.firstName || '',
+                  lastName: userData.lastName || userData.last_name || userData.user?.lastName || '',
+                  userId: userData.userId || userData.id || userData.user?.id || '',
+                  location: userData.location || userData.user?.location || '',
+                  phoneNumber: userData.phoneNumber || userData.phone || userData.user?.phoneNumber || '',
+                  profilePicture: userData.profilePicture || userData.avatar || userData.user?.profilePicture || userData?.image || '',
+                  emailVerified: userData.emailVerified !== undefined ? userData.emailVerified : true,
+                  phoneVerified: userData.phoneVerified !== undefined ? userData.phoneVerified : true,
+                  ...userData.user // Include any additional user data from response
+                }
+              } catch (userErr) {
+                console.error('Error fetching user data:', userErr)
+              }
+            }
           } catch (err) {
             console.error('login-with-google error', err)
           }
-        } else if (account.provider === 'facebook') {
-          console.log('Facebook sign-in detected.')
+        } else if (account.provider === 'facebook' && account.access_token) {
+          try {
+            // Handle Facebook login similarly
+            const resp = await fetch('https://api.gulbhahar.com/api/users/login-with-facebook', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ accessToken: account.access_token }),
+            })
+    
+            const data = await resp.json()
+            console.log("Facebook backend response:", data)
+    
+            token.backendToken = data.token || data.accessToken || data?.data?.token
+            
+            // Fetch user data for Facebook too
+            if (token.backendToken) {
+              try {
+                const userResp = await fetch('https://api.gulbhahar.com/api/users/user-by-token', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token.backendToken}`
+                  },
+                  body: JSON.stringify({})
+                })
+                
+                const userResponse = await userResp.json()
+                const userData = userResponse.user
+                
+                token.userData = {
+                  email: userData.email,
+                  name: userData.name,
+                  firstName: userData.firstName || userData.first_name || userData.user?.firstName || '',
+                  lastName: userData.lastName || userData.last_name || userData.user?.lastName || '',
+                  userId: userData.userId || userData.id || userData.user?.id || '',
+                  location: userData.location || userData.user?.location || '',
+                  phoneNumber: userData.phoneNumber || userData.phone || userData.user?.phoneNumber || '',
+                  profilePicture: userData.profilePicture || userData.avatar || userData.user?.profilePicture || userData?.image || '',
+                  emailVerified: userData.emailVerified !== undefined ? userData.emailVerified : true,
+                  phoneVerified: userData.phoneVerified !== undefined ? userData.phoneVerified : true,
+                  ...userData.user
+                }
+              } catch (userErr) {
+                console.error('Error fetching Facebook user data:', userErr)
+              }
+            }
+          } catch (err) {
+            console.error('login-with-facebook error', err)
+          }
         }
       }
       return token
@@ -55,6 +136,9 @@ const handler = NextAuth({
       }
       if (token.googleIdToken) {
         session.googleIdToken = token.googleIdToken
+      }
+      if (token.userData) {
+        session.userData = token.userData
       }
       return session
     },

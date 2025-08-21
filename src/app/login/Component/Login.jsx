@@ -285,7 +285,9 @@ const LoginPage = () => {
 //  // console.log("Session data:", session);
   const handleSocialLogin = async(provider) => {
     // console.log(`Logging with ${provider}`);
-    signIn(provider)
+    await signIn(provider)
+
+    console.log("done")
     // console.log("sessiion data :", session)
      token = session?.backendToken
      const response = await axios.post(`https://api.gulbhahar.com/api/users/user-by-token`, {},{
