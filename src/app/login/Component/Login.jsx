@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { FaGoogle, FaFacebook } from 'react-icons/fa';
 import { FiUser, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { IoIosArrowBack } from 'react-icons/io';
-import { useAuth } from '../../../Providers/ContextProviders/AuthContext'; // Import the auth context
+import { useAuth } from '../../../Providers/ContextProviders/AuthContext';
 import { signIn, useSession } from 'next-auth/react';
 import axios from 'axios';
 
@@ -11,7 +11,6 @@ import axios from 'axios';
 const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const slides = [
-
     "/login/001.webp",
     "/login/002.webp",
     "/login/003.webp",
@@ -25,7 +24,6 @@ const Carousel = () => {
     
     return () => clearInterval(interval);
   }, [slides.length]);
-
 
   return (
     <div className="relative h-full w-full overflow-hidden bg-gradient-to-br from-red-100 to-rose-200 rounded-2xl shadow-2xl">
@@ -84,9 +82,11 @@ const LoginPage = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [touched, setTouched] = useState({ email: false, password: false });
   const [isLoading, setIsLoading] = useState(false);
-  const { data: session } = useSession()
-  let token = null;
-  // // console.log("Session data:", session);
+  const [socialLoginLoading, setSocialLoginLoading] = useState(false);
+  const { data: session, status } = useSession();
+
+  console.log("Session status:", status);
+  console.log("Session data:", session);
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -95,11 +95,16 @@ const LoginPage = () => {
     }
   }, [isAuthenticated, authLoading]);
 
-  // Don't render login form if user is already authenticated
-  if (authLoading) {
+  // Show loading state during OAuth or if already authenticated
+  if (authLoading || (status === 'authenticated' && !isAuthenticated) || socialLoginLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-900"></div>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-900 mx-auto mb-4"></div>
+          <p className="text-red-900 font-medium">
+            {socialLoginLoading ? 'Completing social login...' : 'Loading...'}
+          </p>
+        </div>
       </div>
     );
   }
@@ -175,7 +180,7 @@ const LoginPage = () => {
     setSuccessMessage('');
     
     try {
-      // // console.log('🔄 Attempting login with:', { email, password: '***' });
+      console.log('🔄 Attempting login with:', { email, password: '***' });
       
       const response = await fetch('https://api.gulbhahar.com/api/users/login', {
         method: 'POST',
@@ -188,23 +193,21 @@ const LoginPage = () => {
         }),
       });
 
-      // console.log('📡 Response status:', response.status);
+      console.log('📡 Response status:', response.status);
       
       const data = await response.json();
-      // console.log('📦 Full API Response:', data);
+      console.log('📦 Full API Response:', data);
       
       if (response.ok) {
-        // console.log('✅ Login successful:', data);
+        console.log('✅ Login successful:', data);
         
-        // Extract token
-         token = data.token || data.accessToken || data.authToken;
+        const token = data.token || data.accessToken || data.authToken;
         
         if (!token) {
           setGeneralError('Login successful but no token received. Please try again.');
           return;
         }
         
-        // Prepare user data object
         const userData = {
           email: email,
           firstName: data.firstName || data.first_name || data.user?.firstName || '',
@@ -215,14 +218,12 @@ const LoginPage = () => {
           profilePicture: data.profilePicture || data.avatar || data.user?.profilePicture || '',
           emailVerified: data.emailVerified !== undefined ? data.emailVerified : true,
           phoneVerified: data.phoneVerified !== undefined ? data.phoneVerified : true,
-          ...data.user // Include any additional user data from response
+          ...data.user
         };
         
-        // Use context login function
         const loginSuccess = await login(token, userData);
         
         if (loginSuccess) {
-          // Check verification status and redirect accordingly
           if (data.emailVerified === false) {
             setSuccessMessage('Please verify your email to continue.');
             setTimeout(() => {
@@ -243,10 +244,6 @@ const LoginPage = () => {
           setGeneralError('Failed to save login data. Please try again.');
         }
       } else {
-        // console.log('❌ Login failed. Status:', response.status);
-        // console.log('❌ Error response:', data);
-        
-        // Handle different error statuses
         if (response.status === 401) {
           setGeneralError('Invalid email or password. Please try again.');
         } else if (response.status === 404) {
@@ -282,42 +279,22 @@ const LoginPage = () => {
       await handleLogin();
     }
   };
-//  // console.log("Session data:", session);
-  const handleSocialLogin = async(provider) => {
-    // console.log(`Logging with ${provider}`);
-    await signIn(provider)
 
-    console.log("done")
-    // console.log("sessiion data :", session)
-     token = session?.backendToken
-     const response = await axios.post(`https://api.gulbhahar.com/api/users/user-by-token`, {},{
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-     }}
-    );
-    // console.log(response.data.user)
-    const data  = response.data.user
-    // // console.log("Response from backend:", response.data);
-     
-     const userData = {
-      email: data.email,
-      name : data.name,
-      firstName: data.firstName || data.first_name || data.user?.firstName || '',
-      lastName: data.lastName || data.last_name || data.user?.lastName || '',
-      userId: data.userId || data.id || data.user?.id || '',
-      location: data.location || data.user?.location || '',
-      phoneNumber: data.phoneNumber || data.phone || data.user?.phoneNumber || '',
-      profilePicture: data.profilePicture || data.avatar || data.user?.profilePicture || data?.image || '',
-      emailVerified: data.emailVerified !== undefined ? data.emailVerified : true,
-      phoneVerified: data.phoneVerified !== undefined ? data.phoneVerified : true,
-      ...data.user // Include any additional user data from response
-    };
-    const loginSuccess = login(token, userData)
-    if (loginSuccess) {
-      setSuccessMessage('Login successful! Redirecting to Homepage...');
-    } else {
-      setGeneralError('Failed to log in with social account. Please try again.');
+  // Fixed social login handler - just trigger OAuth, don't try to process immediately
+  const handleSocialLogin = async (provider) => {
+    console.log(`🔄 Starting ${provider} OAuth flow...`);
+    setGeneralError('');
+    setSocialLoginLoading(true);
+    
+    try {
+      // 🔥 IMPORTANT: Redirect to callback page instead of current page
+      await signIn(provider, { 
+        callbackUrl: '/auth/callback' // This will go to your OAuth callback page
+      });
+    } catch (error) {
+      console.error(`❌ Error starting ${provider} login:`, error);
+      setGeneralError(`Failed to start ${provider} login. Please try again.`);
+      setSocialLoginLoading(false);
     }
   };
   const handleGoHome = () => {
@@ -331,6 +308,8 @@ const LoginPage = () => {
   const handleSignUp = () => {
     window.location.href = '/signup';
   };
+
+  const isButtonDisabled = isLoading || socialLoginLoading;
 
   return (
     <div className='w-full min-h-screen mt-6'>
@@ -374,7 +353,7 @@ const LoginPage = () => {
                   
                   {successMessage && (
                     <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl flex items-center">
-                      {isLoading && (
+                      {(isLoading || socialLoginLoading) && (
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-700 mr-3"></div>
                       )}
                       {successMessage}
@@ -401,7 +380,7 @@ const LoginPage = () => {
                         value={email}
                         onChange={handleEmailChange}
                         onBlur={() => handleBlur('email')}
-                        disabled={isLoading}
+                        disabled={isButtonDisabled}
                       />
                     </div>
                     {touched.email && emailError && (
@@ -432,13 +411,13 @@ const LoginPage = () => {
                         value={password}
                         onChange={handlePasswordChange}
                         onBlur={() => handleBlur('password')}
-                        disabled={isLoading}
+                        disabled={isButtonDisabled}
                       />
                       <button
                         type="button"
                         className="absolute inset-y-0 right-0 flex items-center pr-4 text-red-600 hover:text-red-900 transition-colors disabled:opacity-50"
                         onClick={() => setShowPassword(!showPassword)}
-                        disabled={isLoading}
+                        disabled={isButtonDisabled}
                       >
                         {showPassword ? <FiEyeOff /> : <FiEye />}
                       </button>
@@ -456,7 +435,7 @@ const LoginPage = () => {
                       onClick={handleForgotPassword}
                       type="button" 
                       className="text-red-700 hover:text-red-900 font-medium underline decoration-2 underline-offset-2 transition-colors disabled:opacity-50"
-                      disabled={isLoading}
+                      disabled={isButtonDisabled}
                     >
                       Forgot password?
                     </button>
@@ -465,7 +444,7 @@ const LoginPage = () => {
                   <button
                     type="button"
                     onClick={handleSubmit}
-                    disabled={isLoading}
+                    disabled={isButtonDisabled}
                     className="w-full rounded-xl bg-gradient-to-r from-red-900 to-red-800 py-4 text-lg font-bold text-white shadow-xl hover:from-red-800 hover:to-red-700 focus:outline-none focus:ring-4 focus:ring-red-200 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
                   >
                     {isLoading ? (
@@ -493,19 +472,27 @@ const LoginPage = () => {
                     <button
                       type="button"
                       onClick={() => handleSocialLogin('google')}
-                      disabled={isLoading}
+                      disabled={isButtonDisabled}
                       className="flex w-full items-center justify-center rounded-xl border-2 border-red-200 bg-white py-3 px-4 text-sm font-medium text-red-900 shadow-sm hover:bg-red-50 hover:border-red-300 focus:outline-none focus:ring-4 focus:ring-red-100 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:transform-none"
                     >
-                      <FaGoogle className='mr-3 text-red-600'/>
+                      {socialLoginLoading ? (
+                        <div className="w-4 h-4 border-2 border-red-900 border-t-transparent rounded-full animate-spin mr-2"></div>
+                      ) : (
+                        <FaGoogle className='mr-3 text-red-600'/>
+                      )}
                       Google
                     </button>
                     <button
                       type="button"
                       onClick={() => handleSocialLogin('facebook')}
-                      disabled={isLoading}
+                      disabled={isButtonDisabled}
                       className="flex w-full items-center justify-center rounded-xl border-2 border-red-200 bg-white py-3 px-4 text-sm font-medium text-red-900 shadow-sm hover:bg-red-50 hover:border-red-300 focus:outline-none focus:ring-4 focus:ring-red-100 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:transform-none"
                     >
-                      <FaFacebook className='mr-3 text-red-600'/>
+                      {socialLoginLoading ? (
+                        <div className="w-4 h-4 border-2 border-red-900 border-t-transparent rounded-full animate-spin mr-2"></div>
+                      ) : (
+                        <FaFacebook className='mr-3 text-red-600'/>
+                      )}
                       Facebook
                     </button>
                   </div>
@@ -518,7 +505,7 @@ const LoginPage = () => {
                       onClick={handleSignUp}
                       type="button"
                       className="font-bold text-red-900 hover:text-red-700 underline decoration-2 underline-offset-2 transition-colors disabled:opacity-50"
-                      disabled={isLoading}
+                      disabled={isButtonDisabled}
                     >
                       Sign Up
                     </button>

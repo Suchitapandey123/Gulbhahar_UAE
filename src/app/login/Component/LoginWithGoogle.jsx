@@ -10,6 +10,6 @@ export default function LoginWithGoogle() {
   }
   return <>
     Not signed in <br/>
-    <button onClick={() => signIn("google")}>Sign in</button>
+    <button onClick={() => signIn("google", { callbackUrl: "/" })}>Sign in</button>
   </>
 }

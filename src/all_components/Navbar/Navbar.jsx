@@ -216,12 +216,17 @@ const Navbar = () => {
   };
 
   // 🔥 SIMPLIFIED LOGOUT - CONTEXT HANDLES EVERYTHING
-  const handleLogout = () => {
-    logout(); // Context handles all cleanup and redirect
-    signOut()
+  const handleLogout = async () => {
+    console.log('🚪 Navbar logout clicked');
+    
+    // Close any open dropdowns immediately
     setIsUserDropdownOpen(false);
     setProfileImageError(false);
-    // console.log("🚪 User logged out successfully");
+    
+    // Let the context handle all the logout logic
+    await logout();
+    
+    console.log('🎉 Logout process initiated');
   };
 
   // Enhanced Collections click handler

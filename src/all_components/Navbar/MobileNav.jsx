@@ -1,7 +1,6 @@
 import { Menu, X, Search, User, LogOut, Settings } from "lucide-react";
 import ProfileImage from "./ProfileImage";
 import CartButton from "./CartButton";
-import { signOut } from "next-auth/react";
 
 const MobileNav = ({
   isMenuOpen,

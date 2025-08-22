@@ -2,11 +2,11 @@ import NextAuth from 'next-auth'
 import FacebookProvider from 'next-auth/providers/facebook'
 import GoogleProvider from 'next-auth/providers/google'
 
-export const runtime = 'nodejs' // ensure Node runtime for NextAuth
+export const runtime = 'nodejs'
 
 const handler = NextAuth({
-  secret: process.env.NEXTAUTH_SECRET, // must be set in env
-  session: { strategy: 'jwt' },        // explicit JWT strategy
+  secret: process.env.NEXTAUTH_SECRET,
+  session: { strategy: 'jwt' },
 
   providers: [
     FacebookProvider({
@@ -15,12 +15,24 @@ const handler = NextAuth({
     }),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      authorization: {
+        params: {
+          prompt: "select_account",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
     }),
   ],
 
+  // 🔥 IMPORTANT: Configure pages to use custom callback
+  pages: {
+    signIn: '/login',
+    error: '/login', // Error code passed in query string as ?error=
+  },
+
   callbacks: {
-    // Runs on sign-in and on subsequent JWT checks.
     async jwt({ token, account }) {
       if (account) {
         if (account.provider === 'google' && account.id_token) {
@@ -34,12 +46,10 @@ const handler = NextAuth({
             })
     
             const data = await resp.json()
-            console.log("Backend response:", data) // 👈 check actual shape
+            console.log("Google backend response:", data)
     
-            // Store backend token
             token.backendToken = data.token || data.accessToken || data?.data?.token
             
-            // Fetch user data from backend using the token
             if (token.backendToken) {
               try {
                 const userResp = await fetch('https://api.gulbhahar.com/api/users/user-by-token', {
@@ -54,7 +64,6 @@ const handler = NextAuth({
                 const userResponse = await userResp.json()
                 const userData = userResponse.user
                 
-                // Store processed user data in token
                 token.userData = {
                   email: userData.email,
                   name: userData.name,
@@ -66,7 +75,7 @@ const handler = NextAuth({
                   profilePicture: userData.profilePicture || userData.avatar || userData.user?.profilePicture || userData?.image || '',
                   emailVerified: userData.emailVerified !== undefined ? userData.emailVerified : true,
                   phoneVerified: userData.phoneVerified !== undefined ? userData.phoneVerified : true,
-                  ...userData.user // Include any additional user data from response
+                  ...userData.user
                 }
               } catch (userErr) {
                 console.error('Error fetching user data:', userErr)
@@ -77,7 +86,6 @@ const handler = NextAuth({
           }
         } else if (account.provider === 'facebook' && account.access_token) {
           try {
-            // Handle Facebook login similarly
             const resp = await fetch('https://api.gulbhahar.com/api/users/login-with-facebook', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -89,7 +97,6 @@ const handler = NextAuth({
     
             token.backendToken = data.token || data.accessToken || data?.data?.token
             
-            // Fetch user data for Facebook too
             if (token.backendToken) {
               try {
                 const userResp = await fetch('https://api.gulbhahar.com/api/users/user-by-token', {
@@ -129,7 +136,6 @@ const handler = NextAuth({
       return token
     },
 
-    // Runs frequently; keep it cheap. Just copy values from token → session.
     async session({ session, token }) {
       if (token.backendToken) {
         session.backendToken = token.backendToken
