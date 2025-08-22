@@ -1,4 +1,5 @@
 
+
 import { LogOut, Package, Settings, User, X } from "lucide-react";
 import Image from "next/image";
 import MobileUserSection from "./MobileUserSection";
@@ -16,18 +17,118 @@ const MobileMenuSidebar = ({
   setOpenCategoryIndex,
   ...props
 }) => {
-  const collectionCategoriesForMobile = [
+  const collectionCategoriesForMobile =
+  [
     {
       title: "Designed By Monica",
       subtitle: "Exclusive Collection",
-      items: ["Juttis", "Heels", "Purses"],
+       items : [
+        {
+          name: "Juttis",
+          slug: "/collections/juttis"
+        },
+        {
+          name: "Punjabi Juttis",
+          slug: "/collections/punjabi-juttis"
+        },
+        {
+          name: "Bridal Juttis",
+          slug: "/collections/bridal-juttis"
+        },
+        {
+          name: "Punjabi Juttis For Ladies",
+          slug: "/collections/punjabi-juttis-for-ladies"
+        },
+        {
+          name: "Juttis For Women",
+          slug: "/collections/juttis-for-women"
+        }
+      ]
+      
     },
     {
-      title: "Women",
+      title: "Casual Juttis",
       subtitle: "Everyday Comfort",
-      items: ["Juttis", "Heels", "Purses"],
+      items : [
+        {
+          name: "Juttis",
+          slug: "/collections/juttis"
+        },
+        {
+          name: "Punjabi Juttis",
+          slug: "/collections/punjabi-juttis"
+        },
+        {
+          name: "Bridal Juttis",
+          slug: "/collections/bridal-juttis"
+        },
+        {
+          name: "Punjabi Juttis For Ladies",
+          slug: "/collections/punjabi-juttis-for-ladies"
+        },
+        {
+          name: "Juttis For Women",
+          slug: "/collections/juttis-for-women"
+        }
+      ]
+      
+    },
+    {
+      title: "Festive Collection",
+      subtitle: "Celebration Ready",
+      items : [
+        {
+          name: "Juttis",
+          slug: "/collections/juttis"
+        },
+        {
+          name: "Punjabi Juttis",
+          slug: "/collections/punjabi-juttis"
+        },
+        {
+          name: "Bridal Juttis",
+          slug: "/collections/bridal-juttis"
+        },
+        {
+          name: "Punjabi Juttis For Ladies",
+          slug: "/collections/punjabi-juttis-for-ladies"
+        },
+        {
+          name: "Juttis For Women",
+          slug: "/collections/juttis-for-women"
+        }
+      ]
+      
+    },
+    {
+      title: "Designer Collection",
+      subtitle: "Luxury Edition",
+      items : [
+        {
+          name: "Juttis",
+          slug: "/collections/juttis"
+        },
+        {
+          name: "Punjabi Juttis",
+          slug: "/collections/punjabi-juttis"
+        },
+        {
+          name: "Bridal Juttis",
+          slug: "/collections/bridal-juttis"
+        },
+        {
+          name: "Punjabi Juttis For Ladies",
+          slug: "/collections/punjabi-juttis-for-ladies"
+        },
+        {
+          name: "Juttis For Women",
+          slug: "/collections/juttis-for-women"
+        }
+      ]
+      
     },
   ];
+
 
   const userMenuItems = [
     { icon: User, label: "My Profile", href: "/account/account-centre/profile" },

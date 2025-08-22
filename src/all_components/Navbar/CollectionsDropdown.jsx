@@ -9,7 +9,8 @@ const CollectionsDropdown = ({
   dropdownRef,
   hoverTimeoutRef,
 }) => {
-  const collectionCategories = [
+  const collectionCategories = 
+  [
     {
       title: "Designed By Monica",
       subtitle: "Exclusive Collection",

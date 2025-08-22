@@ -9,19 +9,6 @@ const MobileNavigationLinks = ({
     router,
   }) => (
     <div className="space-y-1">
-      {/* New section */}
-      <div
-        onClick={() => {
-          handleCategoryClick("All Products");
-          toggleMenu();
-        }}
-        className="font-medium text-gray-700 hover:text-[#800000] 
-                 transition-all duration-300 cursor-pointer p-2 xs:p-2.5 rounded-lg
-                 hover:bg-[#800000]/5 transform hover:translate-x-1 text-sm xs:text-base"
-      >
-        New
-      </div>
-  
       {/* Collection categories */}
       {collectionCategoriesForMobile.map((category, index) => (
         <div key={index} className="space-y-1 xs:space-y-2">
@@ -44,7 +31,7 @@ const MobileNavigationLinks = ({
                 <li key={itemIndex}>
                   <div
                     onClick={() => {
-                      handleCategoryClick(`${category.title} ${item}`);
+                      window.location.href = item.slug;
                       toggleMenu();
                     }}
                     className="text-xs xs:text-sm text-gray-600 hover:text-[#800000] 
@@ -52,7 +39,7 @@ const MobileNavigationLinks = ({
                              transform hover:translate-x-2 p-1.5 xs:p-2 rounded
                              hover:bg-[#800000]/5"
                   >
-                    • {item}
+                    • {item.name}
                   </div>
                 </li>
               ))}
