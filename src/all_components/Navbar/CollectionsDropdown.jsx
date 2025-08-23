@@ -1,4 +1,3 @@
-
 import { Eye } from "lucide-react";
 
 const CollectionsDropdown = ({
@@ -159,7 +158,7 @@ const CollectionsDropdown = ({
     <div
       className={`
         absolute left-0 w-full bg-white/95 backdrop-blur-md shadow-2xl z-50 
-        transition-all duration-300 ease-out border-b border-gray-100
+        transition-all duration-300 ease-out border-b rounded-b-[2.5rem] border-gray-100 overflow-hidden
         ${
           isCollectionDropdownOpen
             ? "opacity-100 visible translate-y-0"
@@ -169,7 +168,32 @@ const CollectionsDropdown = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="max-w-[1600px] mx-auto p-6 lg:p-8" style={{ pointerEvents: "auto" }}>
+      {/* Background Video */}
+      <div className="absolute inset-0 w-full h-full overflow-hidden">
+        <video
+          className="absolute top-0 left-0 w-full h-full object-cover object-center"
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center'
+          }}
+          autoPlay
+          muted
+          loop
+          playsInline
+        >
+          <source src="/video-3.mp4" type="video/mp4" />
+          {/* Fallback for browsers that don't support video */}
+          Your browser does not support the video tag.
+        </video>
+        
+        {/* Video Overlay for better text readability */}
+        <div className="absolute inset-0 bg-transparent"></div>
+      </div>
+
+      {/* Content - keeping your original layout */}
+      <div className="relative z-10 max-w-[1600px] mx-auto p-6 lg:p-8" style={{ pointerEvents: "auto" }}>
         {/* View All Collections Button */}
         <div className="flex justify-center mb-6" style={{ pointerEvents: "auto" }}>
           <button
@@ -213,10 +237,10 @@ const CollectionCategory = ({ category, onCategoryClick }) => (
     onClick={() => onCategoryClick(category.title)}
   >
     <div className="space-y-2">
-      <h3 className="font-bold text-gray-900 text-base lg:text-lg transition-colors duration-300">
+      <h3 className="font-bold text-gray-900 text-base lg:text-xl transition-colors duration-300">
         {category.title}
       </h3>
-      <p className="text-xs lg:text-sm text-gray-500 transition-colors duration-300">
+      <p className="text-xs lg:text-lg text-gray-500 transition-colors duration-300">
         {category.subtitle}
       </p>
     </div>
@@ -234,9 +258,9 @@ const CollectionCategory = ({ category, onCategoryClick }) => (
               window.location.href = item.slug;
             }}
             className="text-gray-600 hover:text-[#800000] transition-all duration-300 
-                     cursor-pointer text-xs lg:text-sm font-medium 
+                     cursor-pointer text-xs lg:text-lg font-medium 
                      transform hover:translate-x-2 hover:font-semibold
-                     py-1 px-2 rounded hover:bg-[#800000]/5"
+                     py-4 px-2 rounded hover:bg-[#800000]/5"
           >
             {item.name}
           </div>
