@@ -1,5 +1,5 @@
 import React from 'react'
-import SignupPage from './Component/Signup'
+import SignupPage from './components/Main';
 
 
 
