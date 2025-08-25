@@ -401,7 +401,7 @@ refund: {
               </p>
               <div className="bg-white p-3 rounded-lg border border-red-200">
                 <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base text-gray-700">
-                  <li>We currently do not offer refunds for purchased items</li>
+                 
                   <li>All sales are final unless the product is defective or damaged</li>
                   <li>Defective items must be reported within 48 hours of delivery</li>
                 </ul>

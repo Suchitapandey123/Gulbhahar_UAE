@@ -19,89 +19,89 @@ const MobileMenuSidebar = ({
 }) => {
   const collectionCategoriesForMobile =
   [
-    {
-      title: "Designed By Monica",
-      subtitle: "Exclusive Collection",
-       items : [
-        {
-          name: "Juttis",
-          slug: "/collections/juttis"
-        },
-        {
-          name: "Punjabi Juttis",
-          slug: "/collections/punjabi-juttis"
-        },
-        {
-          name: "Bridal Juttis",
-          slug: "/collections/bridal-juttis"
-        },
-        {
-          name: "Punjabi Juttis For Ladies",
-          slug: "/collections/punjabi-juttis-for-ladies"
-        },
-        {
-          name: "Juttis For Women",
-          slug: "/collections/juttis-for-women"
-        }
-      ]
+    // {
+    //   title: "Designed By Monica",
+    //   subtitle: "Exclusive Collection",
+    //    items : [
+    //     {
+    //       name: "Juttis",
+    //       slug: "/collections/juttis"
+    //     },
+    //     {
+    //       name: "Punjabi Juttis",
+    //       slug: "/collections/punjabi-juttis"
+    //     },
+    //     {
+    //       name: "Bridal Juttis",
+    //       slug: "/collections/bridal-juttis"
+    //     },
+    //     {
+    //       name: "Punjabi Juttis For Ladies",
+    //       slug: "/collections/punjabi-juttis-for-ladies"
+    //     },
+    //     {
+    //       name: "Juttis For Women",
+    //       slug: "/collections/juttis-for-women"
+    //     }
+    //   ]
       
-    },
-    {
-      title: "Casual Juttis",
-      subtitle: "Everyday Comfort",
-      items : [
-        {
-          name: "Juttis",
-          slug: "/collections/juttis"
-        },
-        {
-          name: "Punjabi Juttis",
-          slug: "/collections/punjabi-juttis"
-        },
-        {
-          name: "Bridal Juttis",
-          slug: "/collections/bridal-juttis"
-        },
-        {
-          name: "Punjabi Juttis For Ladies",
-          slug: "/collections/punjabi-juttis-for-ladies"
-        },
-        {
-          name: "Juttis For Women",
-          slug: "/collections/juttis-for-women"
-        }
-      ]
+    // },
+    // {
+    //   title: "Casual Juttis",
+    //   subtitle: "Everyday Comfort",
+    //   items : [
+    //     {
+    //       name: "Juttis",
+    //       slug: "/collections/juttis"
+    //     },
+    //     {
+    //       name: "Punjabi Juttis",
+    //       slug: "/collections/punjabi-juttis"
+    //     },
+    //     {
+    //       name: "Bridal Juttis",
+    //       slug: "/collections/bridal-juttis"
+    //     },
+    //     {
+    //       name: "Punjabi Juttis For Ladies",
+    //       slug: "/collections/punjabi-juttis-for-ladies"
+    //     },
+    //     {
+    //       name: "Juttis For Women",
+    //       slug: "/collections/juttis-for-women"
+    //     }
+    //   ]
       
-    },
-    {
-      title: "Festive Collection",
-      subtitle: "Celebration Ready",
-      items : [
-        {
-          name: "Juttis",
-          slug: "/collections/juttis"
-        },
-        {
-          name: "Punjabi Juttis",
-          slug: "/collections/punjabi-juttis"
-        },
-        {
-          name: "Bridal Juttis",
-          slug: "/collections/bridal-juttis"
-        },
-        {
-          name: "Punjabi Juttis For Ladies",
-          slug: "/collections/punjabi-juttis-for-ladies"
-        },
-        {
-          name: "Juttis For Women",
-          slug: "/collections/juttis-for-women"
-        }
-      ]
+    // },
+    // {
+    //   title: "Festive Collection",
+    //   subtitle: "Celebration Ready",
+    //   items : [
+    //     {
+    //       name: "Juttis",
+    //       slug: "/collections/juttis"
+    //     },
+    //     {
+    //       name: "Punjabi Juttis",
+    //       slug: "/collections/punjabi-juttis"
+    //     },
+    //     {
+    //       name: "Bridal Juttis",
+    //       slug: "/collections/bridal-juttis"
+    //     },
+    //     {
+    //       name: "Punjabi Juttis For Ladies",
+    //       slug: "/collections/punjabi-juttis-for-ladies"
+    //     },
+    //     {
+    //       name: "Juttis For Women",
+    //       slug: "/collections/juttis-for-women"
+    //     }
+    //   ]
       
-    },
+    // },
     {
-      title: "Designer Collection",
+      title: "Collections",
       subtitle: "Luxury Edition",
       items : [
         {

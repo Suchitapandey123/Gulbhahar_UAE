@@ -6,35 +6,32 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 // Sample data for recent searches and collections
 const recentSearches = [
-  "Bridal Jutti",
-  "Pearl Embellished",
-  "Wedding Special Sets",
-  "Heavy Embroidered Gold Work"
+  "Bridal Juttis",
+  "Punjabi Juttis",
+  "Juttis",
+  "Punjabi Juttis For Ladies",
+  "Designed By Monica",
+  " Juttis For Women"
 ];
 
 const collectionCategories = [
   {
-    title: "Bridal Jutti",
-    items: [
-      "Heavy Embroidered Gold Work",
-      "Pearl Embellished",
-      "Mirror Work",
-      "Wedding Special Sets"
-    ]
+    title: "Designed By Monica",
+    slug : "/collections"
+
   },
   {
-    title: "Casual Juttis",
-    items: [
-      "Heavy Embroidered Gold Work",
-      "Pearl Embellished"
-    ]
+    title: "Punjabi Juttis",
+    slug : "/collections/punjabi-juttis"
+
   },
   {
-    title: "Festive Collection",
-    items: [
-      "Heavy Embroidered Gold Work",
-      "Pearl Embellished"
-    ]
+    title: "Juttis",
+    slug : "/collections/juttis"
+  },
+  {
+    title: "Punjabi Juttis For Ladies",
+    slug : "/collections/punjabi-juttis-for-ladies"
   }
 ];
 
@@ -95,7 +92,7 @@ const SearchPopup = ({ isOpen, onClose }) => {
 
   // Utility function to create search/collection links
   const createLink = (basePath, item) => {
-    return `/${basePath}/${item.toLowerCase().replace(/\s+/g, '-')}`;
+    return `/${"collections"}/${item.toLowerCase().replace(/\s+/g, '-')}`;
   };
 
   // Animation variants for the popup
@@ -237,7 +234,7 @@ const SearchPopup = ({ isOpen, onClose }) => {
                   </div>
                 </motion.div>
 
-                {/* Recent Searches and Clear All */}
+                {/*Browse Collections */}
                 {filteredSearches.length > 0 && (
                   <motion.div 
                     className="px-4 sm:px-6 pb-4 sm:pb-6"
@@ -246,15 +243,15 @@ const SearchPopup = ({ isOpen, onClose }) => {
                     animate="visible"
                   >
                     <div className="flex justify-between items-center mb-3 sm:mb-4">
-                      <h3 className="text-sm font-semibold text-gray-700">Recent Searches</h3>
-                      <motion.button
+                      <h3 className="text-sm font-semibold text-gray-700">Browse Our Collections</h3>
+                      {/* <motion.button
                         onClick={handleClearAll}
                         className="text-sm text-[#800000] hover:underline"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
                         Clear All
-                      </motion.button>
+                      </motion.button> */}
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {filteredSearches.map((search, index) => (
@@ -274,48 +271,6 @@ const SearchPopup = ({ isOpen, onClose }) => {
                     </div>
                   </motion.div>
                 )}
-
-                {/* Collections */}
-                <motion.div 
-                  className="p-4 sm:p-6 border-t border-gray-100"
-                  variants={contentVariants}
-                  initial="hidden"
-                  animate="visible"
-                >
-                  <h3 className="text-sm font-semibold text-gray-700 mb-3 sm:mb-4">Browse Collections</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-                    {collectionCategories.map((category, index) => (
-                      <div key={index} className="space-y-2">
-                        <motion.a
-                          href={createLink('collection', category.title)}
-                          className="
-                            font-medium text-gray-800 hover:text-[#800000] 
-                            block transition-colors duration-300
-                          "
-                          whileHover={{ x: 5 }}
-                        >
-                          {category.title}
-                        </motion.a>
-                        <ul className="space-y-1">
-                          {category.items.map((item, itemIndex) => (
-                            <li key={itemIndex}>
-                              <motion.a
-                                href={`${createLink('collection', category.title)}/${item.toLowerCase().replace(/\s+/g, '-')}`}
-                                className="
-                                  text-sm text-gray-600 hover:text-[#800000] 
-                                  transition-colors duration-300 block
-                                "
-                                whileHover={{ x: 5 }}
-                              >
-                                • {item}
-                              </motion.a>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
               </div>
             </motion.div>
           </motion.div>

@@ -52,8 +52,8 @@ const MobileNavigationLinks = ({
       <button
         type="button"
         onClick={handleViewAllCollections}
-        className="inline-flex items-center justify-center space-x-2 xs:space-x-3 
-                 px-4 xs:px-6 sm:px-8 py-2 xs:py-2.5 mt-2 xs:mt-3 
+        className="inline-flex items-center text-lg justify-center space-x-2 mt-2 xs:space-x-3 
+                 px-4 xs:px-6 sm:px-8 py-2 xs:py-2.5  xs:mt-3 
                  bg-[#800000] text-white font-semibold 
                  text-xs xs:text-sm uppercase tracking-wide rounded-md
                  hover:bg-[#600000] transform hover:scale-105 transition-all duration-300
@@ -74,7 +74,7 @@ const MobileNavigationLinks = ({
                 router.push(href);
                 toggleMenu();
               }}
-              className="block p-1.5 xs:p-2 font-medium text-sm xs:text-base sm:text-lg 
+              className="block p-1.5 xs:p-2 font-medium text-lg xs:text-base sm:text-lg 
                        transition-all duration-300 transform hover:translate-x-2 rounded-lg 
                        hover:bg-gray-50 text-gray-700 hover:text-[#800000]"
             >

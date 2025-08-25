@@ -801,17 +801,11 @@ export default function CheckoutComponent() {
   };
 
   const shippingOptions = {
-    free: {
-      price: 0,
-      days: "5-7 business days",
-      icon: "🚛",
-      name: "Free Shipping",
-    },
     standard: {
       price: 0,
       days: "3-5 business days",
       icon: "📦",
-      name: "Standard Shipping",
+      name: "Free Shipping",
     },
     express: {
       price: 300,
@@ -1345,19 +1339,6 @@ export default function CheckoutComponent() {
                   }
                 )}
               </div>
-
-              {/* Helper text for free shipping eligibility */}
-              {!isFreeShippingEligible && subtotal > 0 && (
-                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                  <p className="text-sm text-blue-800">
-                    💡{" "}
-                    <strong>
-                      Add ₹{(5000 - subtotal).toLocaleString()} more
-                    </strong>{" "}
-                    to unlock free shipping!
-                  </p>
-                </div>
-              )}
             </div>
           </div>
 
@@ -1432,120 +1413,6 @@ export default function CheckoutComponent() {
 
                 {/* Summary Section */}
                 <div className="border-t-2 border-red-100 pt-4 space-y-3">
-                  {/* Form Validation Status */}
-                  <div className="bg-gray-50 rounded-lg p-3 mb-4">
-                    <h4 className="text-sm font-semibold text-gray-800 mb-2">
-                      Form Status
-                    </h4>
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2 text-xs">
-                        {fieldValidation.fullName?.isValid === true ? (
-                          <CheckCircle className="h-3 w-3 text-green-500" />
-                        ) : fieldValidation.fullName?.isValid === false ? (
-                          <AlertCircle className="h-3 w-3 text-red-500" />
-                        ) : (
-                          <div className="h-3 w-3 rounded-full border border-gray-300" />
-                        )}
-                        <span
-                          className={
-                            fieldValidation.fullName?.isValid === true
-                              ? "text-green-700"
-                              : fieldValidation.fullName?.isValid === false
-                              ? "text-red-700"
-                              : "text-gray-600"
-                          }
-                        >
-                          Full Name
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs">
-                        {fieldValidation.email?.isValid === true ? (
-                          <CheckCircle className="h-3 w-3 text-green-500" />
-                        ) : fieldValidation.email?.isValid === false ? (
-                          <AlertCircle className="h-3 w-3 text-red-500" />
-                        ) : (
-                          <div className="h-3 w-3 rounded-full border border-gray-300" />
-                        )}
-                        <span
-                          className={
-                            fieldValidation.email?.isValid === true
-                              ? "text-green-700"
-                              : fieldValidation.email?.isValid === false
-                              ? "text-red-700"
-                              : "text-gray-600"
-                          }
-                        >
-                          Email Address
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs">
-                        {fieldValidation.phone?.isValid === true ? (
-                          <CheckCircle className="h-3 w-3 text-green-500" />
-                        ) : fieldValidation.phone?.isValid === false ? (
-                          <AlertCircle className="h-3 w-3 text-red-500" />
-                        ) : (
-                          <div className="h-3 w-3 rounded-full border border-gray-300" />
-                        )}
-                        <span
-                          className={
-                            fieldValidation.phone?.isValid === true
-                              ? "text-green-700"
-                              : fieldValidation.phone?.isValid === false
-                              ? "text-red-700"
-                              : "text-gray-600"
-                          }
-                        >
-                          Phone Number
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs">
-                        {postalCodeValidation.isValid === true ? (
-                          <CheckCircle className="h-3 w-3 text-green-500" />
-                        ) : postalCodeValidation.isValid === false ? (
-                          <AlertCircle className="h-3 w-3 text-red-500" />
-                        ) : (
-                          <div className="h-3 w-3 rounded-full border border-gray-300" />
-                        )}
-                        <span
-                          className={
-                            postalCodeValidation.isValid === true
-                              ? "text-green-700"
-                              : postalCodeValidation.isValid === false
-                              ? "text-red-700"
-                              : "text-gray-600"
-                          }
-                        >
-                          Postal Code {!ENABLE_PINCODE_API && "(Default)"}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Free Shipping Notification */}
-                  {shippingMethod === "free" && (
-                    <>
-                      {!isFreeShippingEligible && subtotal > 0 && (
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
-                          <p className="text-sm text-blue-800">
-                            💡{" "}
-                            <strong>
-                              Add ₹{(5000 - subtotal).toLocaleString()} more
-                            </strong>{" "}
-                            to qualify for free shipping!
-                          </p>
-                        </div>
-                      )}
-
-                      {isFreeShippingEligible && (
-                        <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
-                          <p className="text-sm text-green-800">
-                            🎉 <strong>Congratulations!</strong> You qualify for
-                            free shipping on orders ₹5000+
-                          </p>
-                        </div>
-                      )}
-                    </>
-                  )}
 
                   {/* Delivery Info Summary */}
                   {postalCodeValidation.deliveryInfo && (

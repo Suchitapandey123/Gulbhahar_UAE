@@ -6,15 +6,15 @@ import ContentJuttis from './components/ContentPunjabiJuttis';
 
 export async function generateMetadata() {
     return {
-      title:"Gulbhahar Punjabi Juttis Collection | Handcrafted, Luxury Punjabi Juttis",
+      title:"Punjabi Juttis (New Collection)| Handcrafted Punjabi Juttis",
       description:"Explore Gulbhahar's luxury Punjabi jutti collection. Premium Punjabi Juttis with intricate embroidery and authentic designs. Shop traditional Indian juttis online today.",
       alternates: {
         canonical: "https://www.gulbhahar.com/collections/punjabi-juttis",
       },
       openGraph: {
-        title:"Gulbhahar Punjabi Juttis Collection | Handcrafted, Luxury Punjabi Juttis",
+        title:"Punjabi Juttis (New Collection)| Handcrafted Punjabi Juttis",
         description:"Explore Gulbhahar's luxury Punjabi jutti collection. Premium Punjabi Juttis with intricate embroidery and authentic designs. Shop traditional Indian juttis online today.",
-         type: "website",
+           type: "website",
         locale: "en_US",
         url: "https://www.gulbhahar.com/collections/punjabi-juttis",
         siteName: "Gulbhahar",

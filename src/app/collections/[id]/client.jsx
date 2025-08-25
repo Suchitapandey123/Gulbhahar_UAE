@@ -150,7 +150,7 @@ export function ProductClient({ product, similarProducts }) {
 
     const deliveryDate = new Date();
     deliveryDate.setDate(
-      deliveryDate.getDate() + (deliveryInfo.pre_paid === "Y" ? 2 : 3)
+      deliveryDate.getDate() + (deliveryInfo.pre_paid === "Y" ? 7 : 10)
     );
 
     return deliveryDate.toLocaleDateString("en-IN", {
@@ -794,11 +794,7 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
                         <div className="flex items-center gap-2">
                           <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                           <p className="text-red-900 text-sm font-medium">
-                            Delivery by {formatDeliveryDate()} |
-                            <span className="text-gray-400 line-through ml-2">
-                              ₹60
-                            </span>
-                            <span className="text-green-600 ml-1">FREE</span>
+                            Delivery by {formatDeliveryDate()}
                           </p>
                         </div>
 
@@ -1247,11 +1243,7 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
                         <div className="flex items-center gap-2">
                           <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                           <p className="text-red-900 text-sm font-medium">
-                            Delivery by {formatDeliveryDate()} |
-                            <span className="text-gray-400 line-through ml-2">
-                              ₹60
-                            </span>
-                            <span className="text-green-600 ml-1">FREE</span>
+                            Delivery by {formatDeliveryDate()}
                           </p>
                         </div>
 
@@ -1278,7 +1270,7 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
                           <div className="flex items-center gap-2">
                             <Clock className="w-3 h-3 text-blue-500" />
                             <span className="text-xs text-gray-600">
-                              Delivery within 5-7 business days (Monday-Friday,
+                              Expected Delivery within 5-7 business days (Monday-Friday,
                               excluding holidays)
                             </span>
                           </div>
