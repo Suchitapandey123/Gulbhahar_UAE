@@ -1329,34 +1329,6 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
                     <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-red-900" />
                   </button>
                 </div>
-
-                {/* Authentication Status Message */}
-                {!isAuthenticated && (
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                    <p className="text-sm text-gray-700 text-center">
-                      <button
-                        onClick={() => router.push("/login")}
-                        className="text-red-900 hover:underline font-medium"
-                      >
-                        Login
-                      </button>{" "}
-                      to add items to cart and track orders
-                    </p>
-                  </div>
-                )}
-
-                {/* Free Delivery Info */}
-                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-red-50 to-red-100 rounded-lg border border-red-200">
-                  <Truck className="w-6 h-6 text-red-900 flex-shrink-0" />
-                  <div>
-                    <span className="text-red-900 text-sm font-semibold block">
-                      Free delivery on orders above ₹5000.00
-                    </span>
-                    <span className="text-red-700 text-xs">
-                      Save on shipping costs with minimum order value
-                    </span>
-                  </div>
-                </div>
               </div>
 
               {/* Reviews Section desktop */}
