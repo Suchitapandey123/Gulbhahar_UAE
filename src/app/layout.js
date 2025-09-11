@@ -33,16 +33,16 @@ export async function generateMetadata() {
       icon: "/logo.png",
     },
     alternates: {
-      canonical: "https://www.gulbhahar.com", // ← Fixed URL to match your brand
+      canonical: "https://www.gulbhahar.com", 
     },
     openGraph: {
-      title: "Gulbhahar | Crafting Luxury – Handmade Juttis & Designer Bags", // ← Fixed title
+      title: "Gulbhahar | Crafting Luxury – Handmade Juttis & Designer Bags", 
       description:
         "Gulbhahar offers luxury handmade juttis and designer bags crafted by skilled artisans. Shop exclusive, handcrafted collections that redefine elegance and style.", // ← Fixed description
       type: "website",
       locale: "en_US",
-      url: "https://www.gulbhahar.com", // ← Fixed URL
-      siteName: "Gulbhahar", // ← Fixed site name
+      url: "https://www.gulbhahar.com", 
+      siteName: "Gulbhahar",
     },
   };
 }
@@ -86,6 +86,17 @@ export default function RootLayout({ children }) {
             `,
           }}
         />
+
+        {/* Meta Pixel (Facebook Pixel) - noscript fallback */}
+        <noscript>
+          <img 
+            height="1" 
+            width="1" 
+            style={{display: 'none'}}
+            src="https://www.facebook.com/tr?id=1705895113580123&ev=PageView&noscript=1"
+            alt=""
+          />
+        </noscript>
       </head>
       <SessionWrapper>
         <body
@@ -108,6 +119,27 @@ export default function RootLayout({ children }) {
             `,
             }}
           />
+
+          {/* Meta Pixel (Facebook Pixel) */}
+          <Script
+            id="meta-pixel"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                !function(f,b,e,v,n,t,s)
+                {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                n.queue=[];t=b.createElement(e);t.async=!0;
+                t.src=v;s=b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t,s)}(window, document,'script',
+                'https://connect.facebook.net/en_US/fbevents.js');
+                fbq('init', '1705895113580123');
+                fbq('track', 'PageView');
+              `,
+            }}
+          />
+
           <AuthProvider>
             <ReactQueryProvider>
               <CartProvider>
