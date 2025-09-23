@@ -32,6 +32,7 @@ import Link from "next/link";
 import ImageModal from "./components/ImageModal";
 import Reviews from "./components/Reviews";
 
+
 const generateSizeRange = (availableSizes) => {
   const allSizes = ["35", "36", "37", "38", "39", "40", "41"];
   return allSizes.map((size) => ({
@@ -41,6 +42,19 @@ const generateSizeRange = (availableSizes) => {
 };
 
 export function ProductClient({ product, similarProducts }) {
+
+  useEffect(() => {
+  if (!product || !window.fbq) return;
+
+  
+  fbq("track", "ProductView", {
+    content_ids: [product.productId || product.id],
+    content_name: product.name,
+    content_type: "product",
+    value: product.price,
+    currency: "INR",
+  });
+}, [product?.id]);
   // console.log(product)
   const router = useRouter();
   const { isAuthenticated } = useAuth();
@@ -269,6 +283,16 @@ export function ProductClient({ product, similarProducts }) {
 
       if (result.success) {
         console.log("✅ Item added successfully to cart");
+
+            if (window.fbq) {
+              fbq("track", "AddToCart", {
+                content_ids: [product.productId || product.id],
+                content_name: product.name,
+                content_type: "product",
+                value: product.price,
+                currency: "INR",
+              });
+            }
         showToast(
           `${product.name} (${cartSelectedSize}, ${cartSelectedColor}) added to cart!`,
           "success"

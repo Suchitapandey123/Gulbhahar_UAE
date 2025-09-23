@@ -50,6 +50,17 @@ const sortOptions = [
 const ITEMS_PER_PAGE = 24;
 
 export default function Collection() {
+
+   useEffect(() => {
+    if (window.fbq) {
+      fbq("track", "ViewContent", {
+        content_name: "Collection Page",
+        content_category: "Juttis",
+      });
+    }
+  }, []);
+
+  
   const [currentImageIndices, setCurrentImageIndices] = useState({});
   const [hoveredProduct, setHoveredProduct] = useState(null);
   const [viewMode, setViewMode] = useState("grid");

@@ -303,6 +303,18 @@ export default function CheckoutComponent() {
     postalCode: "",
   });
 
+   useEffect(() => {
+    if (cart && cart.length > 0) {
+      fbq('track', 'InitiateCheckout', {
+        content_ids: cart.map(item => item.id),     // product IDs
+        content_name: 'Checkout',
+        content_type: 'product',
+        value: getCartTotal(),                      // total price
+        currency: 'INR'
+      });
+    }
+  }, [cart]);
+
   // Handle initial loading and cart state
   useEffect(() => {
     const timer = setTimeout(() => {

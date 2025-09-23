@@ -602,7 +602,7 @@ function PaymentContent() {
   };
 
   const processCODOrder = async () => {
-    // COD order processing logic here
+    
     const redirectUrl = `/cart/checkout/payment/transaction-status?status=success&orderId=${checkoutData?.orderId}&amount=${checkoutData?.orderTotal}&transactionId=COD_${Date.now()}&payment_method=cod`;
     router.push(redirectUrl);
   };
