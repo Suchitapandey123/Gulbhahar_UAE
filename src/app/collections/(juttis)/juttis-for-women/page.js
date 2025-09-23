@@ -6,7 +6,7 @@ import ContentJuttisForWomen from "./components/ContentJuttisForWomen";
 
 export async function generateMetadata() {
   return {
-    title:"Juttis For Women (New Collection) | GULBHAHAR |  Premium Juttis for Women",
+    title:"Buy Juttis For Women - 30% OFF GULBHAHAR", 
     description: "Explore Gulbhahar's handcrafted juttis for women collection. Luxury Juttis with intricate embroidery and authentic designs. Shop traditional Indian juttis online today.",
     alternates: {
       canonical: "https://www.gulbhahar.com/collections/juttis-for-women",
