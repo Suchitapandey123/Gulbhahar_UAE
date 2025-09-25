@@ -6,6 +6,7 @@ import { IoIosArrowBack } from 'react-icons/io';
 import { useAuth } from '../../../Providers/ContextProviders/AuthContext';
 import { signIn, useSession } from 'next-auth/react';
 import axios from 'axios';
+import signupApi from "../../api/signup/signup";
 
 // Carousel component (unchanged)
 const Carousel = () => {
@@ -174,6 +175,7 @@ const LoginPage = () => {
     }
   };
 
+  
   const handleLogin = async () => {
     setIsLoading(true);
     setGeneralError('');
@@ -182,16 +184,18 @@ const LoginPage = () => {
     try {
       console.log('🔄 Attempting login with:', { email, password: '***' });
       
-      const response = await fetch('https://api.gulbhahar.com/api/users/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password
-        }),
-      });
+      // const response = await fetch('https://api.gulbhahar.com/api/users/login', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     email: email,
+      //     password: password
+      //   }),
+      // });
+      const response = await signupApi.login(email, password);
+      console.log('📡 Response status:', response.status);
 
       console.log('📡 Response status:', response.status);
       

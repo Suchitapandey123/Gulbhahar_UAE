@@ -11,7 +11,8 @@ const ContentBridalJuttis = () => {
           </h1>
           <div className="w-16 sm:w-24 h-1 bg-gradient-to-r from-red-900 to-red-800 mx-auto rounded-full"></div>
         </div>
-
+         
+         
         {/* Introduction */}
         <div className="prose prose-base sm:prose-lg max-w-none mb-8 sm:mb-12">
           <p className="text-gray-700 leading-relaxed text-base sm:text-lg px-2 text-center italic">

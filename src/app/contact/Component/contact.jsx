@@ -16,23 +16,9 @@ import {
   CheckCircle
 } from "lucide-react";
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
+import { contactAPI  } from '../../api/contact/contact';
 
-// API configuration
-const API_BASE_URL = 'https://api.gulbhahar.com/api';
 
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// API function
-const createContactSupportAPI = async (contactData) => {
-  const response = await api.post('/contactSupport/createContactSupport', contactData);
-  return response.data;
-};
 
 export default function ContactPage() {
   const [queryType, setQueryType] = useState("");
@@ -48,7 +34,7 @@ export default function ContactPage() {
 
   // React Query mutation for contact support
   const contactSupportMutation = useMutation({
-    mutationFn: createContactSupportAPI,
+    mutationFn: contactAPI,
     onSuccess: (data) => {
       console.log('Contact form submitted successfully:', data);
       setShowSuccessMessage(true);

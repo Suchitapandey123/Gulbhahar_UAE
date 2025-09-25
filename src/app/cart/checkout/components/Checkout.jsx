@@ -19,6 +19,7 @@ import Image from "next/image";
 import axios from "axios";
 import { useCart } from "@/Providers/ContextProviders/CartContext";
 import { useToast } from "@/hooks/useToast";
+import { checkoutApi } from '../../../api/cart/cart';
 
 const Breadcrumb = () => (
   <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-8">
@@ -302,7 +303,8 @@ export default function CheckoutComponent() {
     region: "",
     postalCode: "",
   });
-
+   
+  
    useEffect(() => {
     if (cart && cart.length > 0) {
       fbq('track', 'InitiateCheckout', {
@@ -489,59 +491,82 @@ export default function CheckoutComponent() {
     }));
     
     try {
-      const response = await axios.get(
-        `https://api.gulbhahar.com/delhiveryRoutes/v0/checkAvalibility?pincode=${postalCode}`,
-        {
-          timeout: 10000,
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: `${DELHIVERY_TOKEN}`,
-          },
-        }
-      );
+      // const response = await axios.get(
+      //   `https://api.gulbhahar.com/delhiveryRoutes/v0/checkAvalibility?pincode=${postalCode}`,
+      //   {
+      //     timeout: 10000,
+      //     headers: {
+      //       Accept: "application/json",
+      //       "Content-Type": "application/json",
+      //       Authorization: `${DELHIVERY_TOKEN}`,
+      //     },
+      //   }
+      // );
 
-      if (
-        response.data.msg &&
-        response.data.msg.delivery_codes &&
-        response.data.msg.delivery_codes.length > 0
-      ) {
-        const deliveryData = response.data.msg.delivery_codes[0].postal_code;
+      const result = await checkoutApi.validatePostalCode(postalCode);
 
-        setPostalCodeValidation({
-          isValidating: false,
-          isValid: true,
-          error: null,
-          deliveryInfo: {
-            city: deliveryData.city,
-            district: deliveryData.district,
-            state: deliveryData.state_code,
-            cod: deliveryData.cod === "Y",
-            prepaid: deliveryData.pre_paid === "Y",
-            pickup: deliveryData.pickup === "Y",
-            covidZone: deliveryData.covid_zone,
-            isODA: deliveryData.is_oda === "Y",
-          },
-        });
+      // if (
+      //   response.data.msg &&
+      //   response.data.msg.delivery_codes &&
+      //   response.data.msg.delivery_codes.length > 0
+      // ) {
+      //   const deliveryData = response.data.msg.delivery_codes[0].postal_code;
 
-        showToast(
-          `✅ Postal code valid for ${deliveryData.city}, ${deliveryData.district}`,
-          "success"
-        );
-      } else {
-        setPostalCodeValidation({
-          isValidating: false,
-          isValid: false,
-          error: "Postal code not serviceable",
-          deliveryInfo: null,
-        });
+        // setPostalCodeValidation({
+        //   isValidating: false,
+        //   isValid: true,
+        //   error: null,
+        //   deliveryInfo: {
+        //     city: deliveryData.city,
+        //     district: deliveryData.district,
+        //     state: deliveryData.state_code,
+        //     cod: deliveryData.cod === "Y",
+        //     prepaid: deliveryData.pre_paid === "Y",
+        //     pickup: deliveryData.pickup === "Y",
+        //     covidZone: deliveryData.covid_zone,
+        //     isODA: deliveryData.is_oda === "Y",
+        //   },
+        // });
 
-        showToast(
-          "This postal code is not serviceable in our delivery network",
-          "error"
-        );
-      }
-    } catch (error) {
+      //   showToast(
+      //     `✅ Postal code valid for ${deliveryData.city}, ${deliveryData.district}`,
+      //     "success"
+      //   );
+      // } else {
+      //   setPostalCodeValidation({
+      //     isValidating: false,
+      //     isValid: false,
+      //     error: "Postal code not serviceable",
+      //     deliveryInfo: null,
+      //   });
+
+      //   showToast(
+      //     "This postal code is not serviceable in our delivery network",
+      //     "error"
+      //   );
+      // }
+
+      setPostalCodeValidation(result);
+
+  if (result.isValid) {
+    showToast(
+      `✅ Postal code valid for ${result.deliveryInfo.city}, ${result.deliveryInfo.district}`,
+      "success"
+    );
+  } else {
+    showToast(result.error, "error");
+  }
+// } catch (error) {
+//   setPostalCodeValidation({
+//     isValidating: false,
+//     isValid: false,
+//     error: error.message || "Unable to validate postal code",
+//     deliveryInfo: null,
+//   });
+//   showToast(error.message || "Unable to validate postal code", "error");
+
+// }
+   } catch (error) {
       let errorMessage = "Unable to validate postal code";
       if (error.code === "ECONNABORTED") {
         errorMessage = "Validation timeout - please try again";
@@ -624,6 +649,7 @@ export default function CheckoutComponent() {
           validateField(field, formData[field]);
         }
       });
+       
 
       // Wait a bit for validation to complete
       await new Promise((resolve) => setTimeout(resolve, 100));
