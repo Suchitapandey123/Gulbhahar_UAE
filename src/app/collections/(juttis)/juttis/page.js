@@ -3,7 +3,7 @@ import React from 'react'
 import Collection from '../../components/Collection';
 import ContentJuttis from './components/ContentJuttis';
 import QuickTag from "../../components/QuickTag";
-import { popularTags, products  } from "../../tag";
+import { popularTags  } from "../../tag";
 export async function generateMetadata() {
     return {
       title:"Juttis | Gulbhahar’s Limited-Edition Juttis | Only 24 Pairs per Design",
@@ -30,7 +30,7 @@ const page = () => {
     <div className='mt-24'>
       <Collection />
       <ContentJuttis />
-      <QuickTag popularTags={popularTags["juttis"]} products={products["juttis"]} />
+      <QuickTag popularTags={popularTags["juttis"]}  />
     </div>
   )
 }

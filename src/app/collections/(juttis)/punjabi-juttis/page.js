@@ -3,7 +3,7 @@ import React from 'react'
 import Collection from '../../components/Collection';
 import ContentJuttis from './components/ContentPunjabiJuttis';
 import QuickTag from "../../components/QuickTag";
-import { popularTags, products  } from "../../tag";
+import { popularTags } from "../../tag";
 
 export async function generateMetadata() {
     return {
@@ -31,7 +31,7 @@ const page = () => {
     <div className='mt-24'>
       <Collection />
       <ContentJuttis />
-      <QuickTag popularTags={popularTags["punjabi-juttis"]} products={products["punjabi-juttis"]} />
+      <QuickTag popularTags={popularTags["punjabi-juttis"]}  />
     </div>
   )
 }
