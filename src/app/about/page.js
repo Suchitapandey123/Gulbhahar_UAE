@@ -3,8 +3,10 @@ import Component from "@/app/about/Component/About"
 
 export async function generateMetadata() {
   return { 
-    title: ' About Gulbhahar | Handcrafted Juttis | Tradition In Every Step',
-    description: "Discover Gulbhahar's heritage of crafting premium handmade jutis. Learn about our artisan tradition, quality craftsmanship, and commitment to authentic Indian footwear.",
+    title: 'About | Gulbhahar | Crafting Stories of Heritage',
+    description: "Our journey began with a vision to preserve & celebrate the timeless art of hand crafts. Our master artisans, many represent the third and fourth generations of their craft, with decades of expertise to every piece.",
+    keywords: ["About Gulbhahar","Gulbhahar Story", "Gulbhahar Background"],
+    
     icons: {
       icon: "/logo.png",
     },
@@ -12,9 +14,10 @@ export async function generateMetadata() {
       canonical: 'https://www.gulbhahar.com/about', 
     },
     openGraph: {
-      title: ' About Gulbhahar - Handcrafted Juttis - Tradition In Every Step',
-    description: "Discover Gulbhahar's heritage of crafting premium handmade jutis. Learn about our artisan tradition, quality craftsmanship, and commitment to authentic Indian footwear.",
-      type: 'website',
+      title: 'About | Gulbhahar | Crafting Stories of Heritage',
+     description: "Our journey began with a vision to preserve & celebrate the timeless art of hand crafts. Our master artisans, many represent the third and fourth generations of their craft, with decades of expertise to every piece.",
+    
+    type: 'website',
       locale: 'en_US',
       url: 'https://www.gulbhahar.com/about', 
       siteName: 'Gulbhahar', 

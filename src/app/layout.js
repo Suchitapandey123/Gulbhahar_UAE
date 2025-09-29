@@ -26,10 +26,13 @@ const jetbrainsMono = JetBrains_Mono({
 
 export async function generateMetadata() {
   return {
-    title: "Gulbhahar | Crafting Luxury – Handmade Juttis & Designer Bags",
+    title: "Gulbhahar | The Art of Handmade Luxury Ethnic Wear",
     description:
-      "Gulbhahar offers luxury handmade juttis and designer bags crafted by skilled artisans. Shop exclusive, handcrafted collections that redefine elegance and style.",
-    icons: {
+      "Experience Gulbhahar, where Indian tradition meets handmade perfection.  Ethnic Wear, Juttis, Jewellery, Bags all crafted with detail and elegance.",
+    
+      keywords: ["Gulbhahar"," Gulbhahar.com", "gulbahar","gulbahar.com",  "Ethnic Wear", "Juttis", "Jewellery", "Bags "],
+    
+      icons: {
       icon: "/logo.png",
       apple: "/apple-touch-icon.png", // Add Apple touch icon
     },
@@ -37,10 +40,11 @@ export async function generateMetadata() {
       canonical: "https://www.gulbhahar.com", 
     },
     openGraph: {
-      title: "Gulbhahar | Crafting Luxury – Handmade Juttis & Designer Bags", 
+      title: "Gulbhahar | The Art of Handmade Luxury Ethnic Wear",
       description:
-        "Gulbhahar offers luxury handmade juttis and designer bags crafted by skilled artisans. Shop exclusive, handcrafted collections that redefine elegance and style.",
-      type: "website",
+      "Experience Gulbhahar, where Indian tradition meets handmade perfection.  Ethnic Wear, Juttis, Jewellery, Bags all crafted with detail and elegance.",
+    
+        type: "website",
       locale: "en_US",
       url: "https://www.gulbhahar.com", 
       siteName: "Gulbhahar",
@@ -55,8 +59,10 @@ export async function generateMetadata() {
     },
     twitter: {
       card: "summary_large_image",
-      title: "Gulbhahar | Crafting Luxury – Handmade Juttis & Designer Bags",
-      description: "Gulbhahar offers luxury handmade juttis and designer bags crafted by skilled artisans.",
+      title: "Gulbhahar | The Art of Handmade Luxury Ethnic Wear",
+      description:
+      "Experience Gulbhahar, where Indian tradition meets handmade perfection.  Ethnic Wear, Juttis, Jewellery, Bags all crafted with detail and elegance.",
+    
       images: ["/og-image.jpg"],
     },
     robots: {
