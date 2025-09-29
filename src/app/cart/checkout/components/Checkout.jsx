@@ -268,6 +268,7 @@ const indianStates = [
   { value: "puducherry", label: "Puducherry" },
 ];
 
+
 export default function CheckoutComponent() {
   const router = useRouter();
   const { cart, getCartTotal } = useCart();
@@ -304,7 +305,7 @@ export default function CheckoutComponent() {
     postalCode: "",
   });
    
-  
+
    useEffect(() => {
     if (cart && cart.length > 0) {
       fbq('track', 'InitiateCheckout', {

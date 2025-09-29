@@ -234,7 +234,7 @@ const CollectionCategory = ({ category, onCategoryClick }) => (
              transform transition-all duration-400 ease-out
              hover:scale-105 hover:-translate-y-1 p-3 rounded-lg
              hover:bg-gray-50/50"
-    onClick={() => onCategoryClick(category.title)}
+    // onClick={() => onCategoryClick(category.title)}
   >
     <div className="space-y-2">
       <h3 className="font-bold text-gray-900 text-base lg:text-xl transition-colors duration-300">
