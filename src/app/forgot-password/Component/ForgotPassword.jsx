@@ -6,39 +6,43 @@ import { FiUser, FiLock, FiEye, FiEyeOff, FiMail, FiShield, FiCheck } from 'reac
 import { ChevronRight } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
+import { useToast  } from '../../../hooks/useToast';
+import forgotPasswordAPI from '../../api/forgotPassword/forgotPassword';
+
+
 
 // API configuration
-const API_BASE_URL = 'https://api.gulbhahar.com/api';
+// const API_BASE_URL = 'https://api.gulbhahar.com/api';
 
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+// const api = axios.create({
+//   baseURL: API_BASE_URL,
+//   headers: {
+//     'Content-Type': 'application/json',
+//   },
+// });
 
-// API functions
-const forgotPasswordAPI = async (email) => {
-  const response = await api.post('/users/forgot-password', { email });
-  return response.data;
-};
 
-const verifyEmailAPI = async ({ email, verificationCode }) => {
-  const response = await api.post('/users/verify-email', { 
-    email, 
-    verificationCode 
-  });
-  return response.data;
-};
+// const forgotPasswordAPI = async (email) => {
+//   const response = await api.post('/users/forgot-password', { email });
+//   return response.data;
+// };
 
-const resetPasswordAPI = async ({ email, verificationCode, newPassword }) => {
-  const response = await api.put('/users/reset-password', { 
-    email, 
-    verificationCode,
-    newPassword
-  });
-  return response.data;
-};
+// const verifyEmailAPI = async ({ email, verificationCode }) => {
+//   const response = await api.post('/users/verify-email', { 
+//     email, 
+//     verificationCode 
+//   });
+//   return response.data;
+// };
+
+// const resetPasswordAPI = async ({ email, verificationCode, newPassword }) => {
+//   const response = await api.put('/users/reset-password', { 
+//     email, 
+//     verificationCode,
+//     newPassword
+//   });
+//   return response.data;
+// };
 
 // Step indicators component
 const StepIndicator = ({ currentStep }) => {
@@ -154,15 +158,19 @@ const Carousel = () => {
 // Step 1: Email Confirmation
 const EmailConfirmationStep = ({ email, setEmail, goToNextStep }) => {
   // const { showToast } = useToast();
-  const [emailError, setEmailError] = useState('');
-  const [touched, setTouched] = useState(false);
-
+      
+      const { showToast, ToastContainer } = useToast();
+       const [emailError, setEmailError] = useState('');
+   const [touched, setTouched] = useState(false);
   // React Query mutation for forgot password
-  const forgotPasswordMutation = useMutation({
-    mutationFn: forgotPasswordAPI,
+  const forgotPasswordMutation = useMutation({  
+    // mutationFn: forgotPasswordAPI,
+    mutationFn: forgotPasswordAPI.forgotPassword,
     onSuccess: (data) => {
       // console.log('Email sent successfully:', data);
       showToast('Verification email sent successfully!', 'success');
+      // toast.success('Email verified successfully!');
+
       goToNextStep();
     },
     onError: (error) => {
@@ -278,13 +286,17 @@ const EmailConfirmationStep = ({ email, setEmail, goToNextStep }) => {
 // Step 2: Verification Code
 const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificationCode: setParentVerificationCode }) => {
   // const { showToast } = useToast();
+  const { showToast, ToastContainer } = useToast();
   const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   
   // React Query mutation for email verification
   const verifyEmailMutation = useMutation({
-    mutationFn: verifyEmailAPI,
+    // mutationFn: verifyEmailAPI,
+    // mutationFn: (data) => forgotPasswordAPI.verifyEmail(data.email, data.verificationCode),
+    mutationFn: ({ email, verificationCode }) => 
+    forgotPasswordAPI.verifyEmail(email, verificationCode), 
     onSuccess: (data) => {
       // console.log('Email verified successfully:', data);
       setError('');
@@ -311,7 +323,8 @@ const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificati
 
   // Mutation for resending verification email
   const resendEmailMutation = useMutation({
-    mutationFn: forgotPasswordAPI,
+    // mutationFn: forgotPasswordAPI,
+    mutationFn: forgotPasswordAPI.forgotPassword,
     onSuccess: (data) => {
       // console.log('Email resent successfully:', data);
       setError('');
@@ -473,7 +486,7 @@ const CreatePasswordStep = ({ email, verificationCode, goToHomePage }) => {
 
   // React Query mutation for password reset
   const resetPasswordMutation = useMutation({
-    mutationFn: resetPasswordAPI,
+    mutationFn: forgotPasswordAPI.resetPassword,
     onSuccess: (data) => {
       // console.log('Password reset successful:', data);
       // Show success message briefly before redirecting

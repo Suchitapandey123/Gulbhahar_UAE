@@ -11,6 +11,8 @@ import ProfileImageUpload from './ProfileImageUpload';
 import EmailVerification from './EmailVerification';
 import PhoneVerification from './PhoneVerification';
 import { useAuth } from '@/Providers/ContextProviders/AuthContext';
+import signupApi from "../../api/signup/signup";
+
 
 const SignupPage = () => {
   const [step, setStep] = useState(1);
@@ -75,13 +77,15 @@ const SignupPage = () => {
     setError('');
 
     try {
-      const response = await fetch(profileImageUrl, {
-        method: 'PUT',
-        body: selectedImage,
-        headers: {
-          'Content-Type': selectedImage.type,
-        },
-      });
+      // const response = await fetch(profileImageUrl, {
+      //   method: 'PUT',
+      //   body: selectedImage,
+      //   headers: {
+      //     'Content-Type': selectedImage.type,
+      //   },
+      // });
+      const response = await signupApi.uploadImage(profileImageUrl, selectedImage);
+
 
       if (response.ok) {
         setSuccess('Profile image uploaded successfully!');
@@ -109,16 +113,18 @@ const SignupPage = () => {
      try {
           // console.log('🔄 Attempting login with:', { email, password: '***' });
           
-          const response = await fetch('https://api.gulbhahar.com/api/users/login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              email: formData.email,
-              password: formData.password
-            }),
-          });
+          // const response = await fetch('https://api.gulbhahar.com/api/users/login', {
+          //   method: 'POST',
+          //   headers: {
+          //     'Content-Type': 'application/json',
+          //   },
+          //   body: JSON.stringify({
+          //     email: formData.email,
+          //     password: formData.password
+          //   }),
+          // });
+
+          const response = await signupApi.login(formData.email, formData.password);
     
           console.log('📡 Response status:', response.status);
           
@@ -225,16 +231,18 @@ const SignupPage = () => {
     }
     
     try {
-      const response = await fetch('https://api.gulbhahar.com/api/users/verify-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          verificationCode: verificationCode
-        }),
-      });
+      // const response = await fetch('https://api.gulbhahar.com/api/users/verify-email', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     email: formData.email,
+      //     verificationCode: verificationCode
+      //   }),
+      // });
+      const response = await signupApi.verifyEmail(formData.email, verificationCode);
+
 
       if (response.ok) {
         const data = await response.json();
@@ -263,16 +271,17 @@ const SignupPage = () => {
       setSuccess('');
       console.log('🔄 Initiating phone OTP for:', formData.phoneNumber);
       
-      const response = await fetch('https://api.gulbhahar.com/codRoutes/initiate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          phone: formData.phoneNumber
-        }),
-      });
-
+      // const response = await fetch('https://api.gulbhahar.com/codRoutes/initiate', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     phone: formData.phoneNumber
+      //   }),
+      // });
+      
+      const response = await signupApi.initiatePhoneOTP(formData.phoneNumber);
       const data = await response.json();
       console.log('📱 Phone OTP Response:', data);
 
@@ -313,17 +322,18 @@ const SignupPage = () => {
     try {
       console.log('🔍 Verifying phone OTP:', verificationCode, 'with sessionId:', phoneSessionId);
       
-      const response = await fetch('https://api.gulbhahar.com/codRoutes/verify', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          sessionId: phoneSessionId,
-          otp: verificationCode
-        }),
-      });
-
+      // const response = await fetch('https://api.gulbhahar.com/codRoutes/verify', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     sessionId: phoneSessionId,
+      //     otp: verificationCode
+      //   }),
+      // });
+      
+      const response = await signupApi.verifyPhoneOTP(phoneSessionId, verificationCode);
       const data = await response.json();
       console.log('📱 Phone OTP Verification Response:', data);
       console.log('📱 Response Status:', response.status);
@@ -360,16 +370,17 @@ const SignupPage = () => {
     try {
       console.log('🔄 Resending phone OTP for:', formData.phoneNumber);
       
-      const response = await fetch('https://api.gulbhahar.com/codRoutes/initiate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          phone: formData.phoneNumber
-        }),
-      });
-
+      // const response = await fetch('https://api.gulbhahar.com/codRoutes/initiate', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     phone: formData.phoneNumber
+      //   }),
+      // });
+       
+      const response = await signupApi.initiatePhoneOTP(formData.phoneNumber);
       const data = await response.json();
 
       if (response.ok && data.success) {
@@ -402,15 +413,16 @@ const SignupPage = () => {
     setSuccess('');
     
     try {
-      const response = await fetch('https://api.gulbhahar.com/api/users/resend-verification-code', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email
-        }),
-      });
+      // const response = await fetch('https://api.gulbhahar.com/api/users/resend-verification-code', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     email: formData.email
+      //   }),
+      // });
+      const response = await signupApi.resendVerificationCode(formData.email);
 
       if (response.ok) {
         const data = await response.json();
@@ -436,23 +448,39 @@ const SignupPage = () => {
     setLoading(true);
     setError('');
     
-    try {
-      const response = await fetch('https://api.gulbhahar.com/api/users/sign-up', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          password: formData.password,
-          location: formData.location,
-          phoneNumber: formData.phoneNumber,
-          secQues: formData.securityQuestion,
-          secAns: formData.securityAnswer
-        }),
-      });
+    // try {
+    //   const response = await fetch('https://api.gulbhahar.com/api/users/sign-up', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({
+    //       firstName: formData.firstName,
+    //       lastName: formData.lastName,
+    //       email: formData.email,
+    //       password: formData.password,
+    //       location: formData.location,
+    //       phoneNumber: formData.phoneNumber,
+    //       secQues: formData.securityQuestion,
+    //       secAns: formData.securityAnswer
+    //     }),
+    //   });
+
+            try {
+          const userData = {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            password: formData.password,
+            location: formData.location,
+            phoneNumber: formData.phoneNumber,
+            secQues: formData.securityQuestion,
+            secAns: formData.securityAnswer
+          };
+
+          const response = await signupApi.signUp(userData);
+
+
 
       if (response.ok) {
         const data = await response.json();
@@ -732,7 +760,7 @@ const SignupPage = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div>Welcome Back
     </div>
   );
 };

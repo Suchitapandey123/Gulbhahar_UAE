@@ -19,6 +19,7 @@ import {
   Upload
 } from "lucide-react";
 import Image from "next/image";
+import { profileAPI } from "../../../../api/profile/profile";
 
 const ProfileView = {
   MAIN: "main",
@@ -49,25 +50,26 @@ const Profile = () => {
   const fetchUserProfile = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("authToken");
+      const data = await profileAPI.getUserProfile();
+      // const token = localStorage.getItem("authToken");
       
-      if (!token) {
-        console.error("No auth token found");
-        return;
-      }
+      // if (!token) {
+      //   console.error("No auth token found");
+      //   return;
+      // }
 
       // // console.log('🔄 Fetching user profile...');
       
-      const response = await fetch('https://api.gulbhahar.com/api/users/user-by-token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      // const response = await fetch('https://api.gulbhahar.com/api/users/user-by-token', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': `Bearer ${token}`
+      //   }
+      // });
 
-      if (response.ok) {
-        const data = await response.json();
+      // if (response.ok) {
+      //   const data = await response.json();
         // // console.log('✅ Profile data fetched:', data);
         
         if (data.user) {
@@ -84,9 +86,9 @@ const Profile = () => {
             imageUrl: userData.imageUrl || ""
           });
         }
-      } else {
-        console.error('❌ Failed to fetch profile:', response.status);
-      }
+      // } else {
+      //   console.error('❌ Failed to fetch profile:', response.status);
+      // }
     } catch (error) {
       console.error('🚨 Error fetching user profile:', error);
     } finally {
@@ -297,7 +299,7 @@ const Profile = () => {
       </label>
     </div>
   );
-
+   
   // Enhanced ProfileBox Component
   const ProfileBox = ({
     title,
@@ -326,6 +328,7 @@ const Profile = () => {
     </div>
   );
 
+
   // Breadcrumb Component
   const Breadcrumb = ({ items }) => (
     <div className="flex items-center gap-2 mb-6 sm:mb-8">
@@ -346,7 +349,7 @@ const Profile = () => {
       ))}
     </div>
   );
-
+   
   // Loading component
   if (loading) {
     return (

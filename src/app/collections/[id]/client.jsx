@@ -31,6 +31,7 @@ import { useCart } from "../../../Providers/ContextProviders/CartContext";
 import Link from "next/link";
 import ImageModal from "./components/ImageModal";
 import Reviews from "./components/Reviews";
+import { checkDeliveryAPI } from "../../api/deliveryApi/deliveryApi";
 
 const generateSizeRange = (availableSizes) => {
   const allSizes = ["35", "36", "37", "38", "39", "40", "41"];
@@ -41,6 +42,19 @@ const generateSizeRange = (availableSizes) => {
 };
 
 export function ProductClient({ product, similarProducts }) {
+
+  useEffect(() => {
+  if (!product || !window.fbq) return;
+
+  
+  fbq("track", "ProductView", {
+    content_ids: [product.productId || product.id],
+    content_name: product.name,
+    content_type: "product",
+    value: product.price,
+    currency: "INR",
+  });
+}, [product?.id]);
   // console.log(product)
   const router = useRouter();
   const { isAuthenticated } = useAuth();
@@ -90,23 +104,25 @@ export function ProductClient({ product, similarProducts }) {
     setDeliveryInfo(null);
 
     try {
-      const response = await fetch(
-        `https://api.gulbhahar.com/delhiveryRoutes/v0/checkAvalibility?pincode=${pincodeValue}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "User-Agent": "www.gulbhahar.com"
-          },
-        }
-      );
+      const data = await checkDeliveryAPI(pincodeValue);
+      // const response = await fetch(
+      //   `https://api.gulbhahar.com/delhiveryRoutes/v0/checkAvalibility?pincode=${pincodeValue}`,
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       "User-Agent": "www.gulbhahar.com"
+      //     },
+      //   }
+      // );
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch delivery information");
-      }
+      // if (!response.ok) {
+      //   throw new Error("Failed to fetch delivery information");
+      // }
 
-      const data = await response.json();
+      // const data = await response.json();
       // console.log("Delivery check response:", data.msg);
-
+       
+      
       if (data.msg.delivery_codes && data.msg.delivery_codes.length > 0) {
         const postalCode = data.msg.delivery_codes[0].postal_code;
         setDeliveryInfo(postalCode);
@@ -269,6 +285,16 @@ export function ProductClient({ product, similarProducts }) {
 
       if (result.success) {
         console.log("✅ Item added successfully to cart");
+
+            if (window.fbq) {
+              fbq("track", "AddToCart", {
+                content_ids: [product.productId || product.id],
+                content_name: product.name,
+                content_type: "product",
+                value: product.price,
+                currency: "INR",
+              });
+            }
         showToast(
           `${product.name} (${cartSelectedSize}, ${cartSelectedColor}) added to cart!`,
           "success"

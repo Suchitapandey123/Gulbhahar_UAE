@@ -170,7 +170,7 @@ const CollectionsDropdown = ({
     >
       {/* Background Video */}
       <div className="absolute inset-0 w-full h-full overflow-hidden">
-        <video
+        {/* <video
           className="absolute top-0 left-0 w-full h-full object-cover object-center"
           style={{
             width: '100%',
@@ -184,16 +184,16 @@ const CollectionsDropdown = ({
           playsInline
         >
           <source src="/video-3.mp4" type="video/mp4" />
-          {/* Fallback for browsers that don't support video */}
+         
           Your browser does not support the video tag.
-        </video>
+        </video> */}
         
         {/* Video Overlay for better text readability */}
         <div className="absolute inset-0 bg-transparent"></div>
       </div>
 
       {/* Content - keeping your original layout */}
-      <div className="relative z-10 max-w-[1600px] mx-auto p-6 lg:p-8" style={{ pointerEvents: "auto" }}>
+      <div className="relative z-10 max-w-[1600px] mx-auto p-4 lg:p-6" style={{ pointerEvents: "auto" }}>
         {/* View All Collections Button */}
         <div className="flex justify-center mb-6" style={{ pointerEvents: "auto" }}>
           <button
@@ -214,7 +214,7 @@ const CollectionsDropdown = ({
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           {collectionCategories.map((category, index) => (
             <CollectionCategory
               key={index}
@@ -230,11 +230,11 @@ const CollectionsDropdown = ({
 
 const CollectionCategory = ({ category, onCategoryClick }) => (
   <div
-    className="group space-y-3 lg:space-y-4 cursor-pointer 
+    className="group space-y-2 lg:space-y-3 cursor-pointer 
              transform transition-all duration-400 ease-out
-             hover:scale-105 hover:-translate-y-1 p-4 rounded-lg
+             hover:scale-105 hover:-translate-y-1 p-3 rounded-lg
              hover:bg-gray-50/50"
-    onClick={() => onCategoryClick(category.title)}
+    // onClick={() => onCategoryClick(category.title)}
   >
     <div className="space-y-2">
       <h3 className="font-bold text-gray-900 text-base lg:text-xl transition-colors duration-300">
@@ -260,10 +260,13 @@ const CollectionCategory = ({ category, onCategoryClick }) => (
             className="text-gray-600 hover:text-[#800000] transition-all duration-300 
                      cursor-pointer text-xs lg:text-lg font-medium 
                      transform hover:translate-x-2 hover:font-semibold
-                     py-4 px-2 rounded hover:bg-[#800000]/5"
+                     py-2 px-2 rounded hover:bg-[#800000]/5"
           >
             {item.name}
           </div>
+          
+          
+
         </li>
       ))}
     </ul>

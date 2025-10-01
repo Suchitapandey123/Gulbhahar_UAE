@@ -14,7 +14,7 @@ import SessionWrapper from "@/Providers/GoogleSessionProvider/SessionWrapper";
 const poppins = Poppins({
   variable: "--font-sans",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"], // Customize as needed
+  weight: ["300", "400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -26,23 +26,57 @@ const jetbrainsMono = JetBrains_Mono({
 
 export async function generateMetadata() {
   return {
-    title: "Gulbhahar | Crafting Luxury – Handmade Juttis & Designer Bags",
+    title: "Gulbhahar | The Art of Handmade Luxury Ethnic Wear",
     description:
-      "Gulbhahar offers luxury handmade juttis and designer bags crafted by skilled artisans. Shop exclusive, handcrafted collections that redefine elegance and style.",
-    icons: {
+      "Experience Gulbhahar, where Indian tradition meets handmade perfection.  Ethnic Wear, Juttis, Jewellery, Bags all crafted with detail and elegance.",
+    
+      keywords: ["Gulbhahar"," Gulbhahar.com", "gulbahar","gulbahar.com",  "Ethnic Wear", "Juttis", "Jewellery", "Bags "],
+    
+      icons: {
       icon: "/logo.png",
+      apple: "/apple-touch-icon.png", // Add Apple touch icon
     },
     alternates: {
       canonical: "https://www.gulbhahar.com", 
     },
     openGraph: {
-      title: "Gulbhahar | Crafting Luxury – Handmade Juttis & Designer Bags", 
+      title: "Gulbhahar | The Art of Handmade Luxury Ethnic Wear",
       description:
-        "Gulbhahar offers luxury handmade juttis and designer bags crafted by skilled artisans. Shop exclusive, handcrafted collections that redefine elegance and style.", // ← Fixed description
-      type: "website",
+      "Experience Gulbhahar, where Indian tradition meets handmade perfection.  Ethnic Wear, Juttis, Jewellery, Bags all crafted with detail and elegance.",
+    
+        type: "website",
       locale: "en_US",
       url: "https://www.gulbhahar.com", 
       siteName: "Gulbhahar",
+      images: [
+        {
+          url: "/og-image.jpg", // Add OG image
+          width: 1200,
+          height: 630,
+          alt: "Gulbhahar - Luxury Handmade Juttis & Designer Bags",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Gulbhahar | The Art of Handmade Luxury Ethnic Wear",
+      description:
+      "Experience Gulbhahar, where Indian tradition meets handmade perfection.  Ethnic Wear, Juttis, Jewellery, Bags all crafted with detail and elegance.",
+    
+      images: ["/og-image.jpg"],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      nocache: false,
+      googleBot: {
+        index: true,
+        follow: true,
+        noimageindex: false,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
     },
   };
 }
@@ -51,8 +85,6 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <meta name="robots" content="index, follow, noodp" />
-        <meta name="googlebot" content="index, follow, noodp" />
         {/* Preconnect for performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -60,49 +92,34 @@ export default function RootLayout({ children }) {
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://www.facebook.com" />
+
+        {/* DNS Prefetch for third-party domains */}
+        <link rel="dns-prefetch" href="https://analytic.thekapslog.com" />
+        <link rel="dns-prefetch" href="https://www.clarity.ms" />
 
         {/* Google Fonts */}
         <link
           href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&display=swap"
           rel="stylesheet"
         />
-
-        <script
-          defer
-          src="https://analytic.thekapslog.com/script.js"
-          data-website-id="44e63c96-7961-4702-9c43-961a03afa948"
-        ></script>
-
-        {/* Microsoft Clarity - Inline script for immediate loading */}
-        <script
-          type="text/javascript"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function(c,l,a,r,i,t,y){
-                  c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-                  t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-                  y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-              })(window, document, "clarity", "script", "s4y81yz4rh");
-            `,
-          }}
-        />
-
-        {/* Meta Pixel (Facebook Pixel) - noscript fallback */}
-        <noscript>
-          <img 
-            height="1" 
-            width="1" 
-            style={{display: 'none'}}
-            src="https://www.facebook.com/tr?id=1705895113580123&ev=PageView&noscript=1"
-            alt=""
-          />
-        </noscript>
       </head>
+      
       <SessionWrapper>
         <body
           className={`${poppins.variable} ${jetbrainsMono.variable} antialiased`}
         >
-          {/* Google Analytics - Using Next.js Script component properly */}
+          {/* Analytics Scripts */}
+          
+          {/* Custom Analytics */}
+          <Script
+            src="https://analytic.thekapslog.com/script.js"
+            data-website-id="44e63c96-7961-4702-9c43-961a03afa948"
+            strategy="afterInteractive"
+          />
+
+          {/* Google Analytics */}
           <Script
             src="https://www.googletagmanager.com/gtag/js?id=G-NR9HQHE5F4"
             strategy="afterInteractive"
@@ -112,17 +129,35 @@ export default function RootLayout({ children }) {
             strategy="afterInteractive"
             dangerouslySetInnerHTML={{
               __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-NR9HQHE5F4');
-            `,
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-NR9HQHE5F4', {
+                  page_title: document.title,
+                  page_location: window.location.href
+                });
+              `,
             }}
           />
 
-          {/* Meta Pixel (Facebook Pixel) */}
+          {/* Microsoft Clarity */}
           <Script
-            id="meta-pixel"
+            id="microsoft-clarity"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function(c,l,a,r,i,t,y){
+                    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+                })(window, document, "clarity", "script", "s4y81yz4rh");
+              `,
+            }}
+          />
+
+          {/* Facebook Pixel */}
+          <Script
+            id="facebook-pixel"
             strategy="afterInteractive"
             dangerouslySetInnerHTML={{
               __html: `
@@ -140,11 +175,24 @@ export default function RootLayout({ children }) {
             }}
           />
 
+          {/* Facebook Pixel Noscript */}
+          <noscript>
+            <img 
+              height="1" 
+              width="1" 
+              style={{display: 'none'}}
+              src="https://www.facebook.com/tr?id=1705895113580123&ev=PageView&noscript=1"
+              alt=""
+            />
+          </noscript>
+
           <AuthProvider>
             <ReactQueryProvider>
               <CartProvider>
                 <Navbar />
-                {children}
+                <main id="main-content">
+                  {children}
+                </main>
                 <Footer />
               </CartProvider>
             </ReactQueryProvider>

@@ -3,17 +3,21 @@ import ContactPage from "./Component/contact";
 
 export async function generateMetadata() {
   return {
-    title: "Contact Us - Gulbhahar Jutti Customer Support & Inquiries",
+    title: "Contact | Gulbhahar - Customer Support & Inquiries",
     description:
-      "Get in touch with Gulbhahar customer support for jutti inquiries, sizing help, or order assistance. Multiple contact options for quick resolution of your queries.",
-    alternates: {
+      "Get in touch with Gulbhahar for premium handcrafted juttis and accessories. Our customer support team is here to assist you with inquiries, orders, and business collaborations. Drop us a message today!",
+   
+      keywords: ["gulbhahar contact", "gulbhahar customer support", "handcrafted jutti inquiries", "designer jutti customer service", "gulbhahar email support", "gulbhahar phone number", "jutti store india support", "premium footwear inquiries", "gulbhahar company address", "gulbhahar message form"],
+
+      alternates: {
       canonical: "https://www.gulbhahar.com/contact",
     },
     openGraph: {
-      title: "Contact Us - Gulbhahar Jutti Customer Support & Inquiries",
-      description:
-        "Get in touch with Gulbhahar customer support for jutti inquiries, sizing help, or order assistance. Multiple contact options for quick resolution of your queries.",
-      type: "website",
+     title: "Contact | Gulbhahar - Customer Support & Inquiries",
+     description:
+      "Get in touch with Gulbhahar for premium handcrafted juttis and accessories. Our customer support team is here to assist you with inquiries, orders, and business collaborations. Drop us a message today!",
+   
+        type: "website",
       locale: "en_US",
       url: "https://www.gulbhahar.com/contact",
       siteName: "Gulbhahar",

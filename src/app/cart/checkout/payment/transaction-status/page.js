@@ -164,6 +164,31 @@ const TransactionStatusContent = () => {
         }
       }
 
+      // 🔥 Fire Meta Pixel Purchase event
+        if (typeof window !== "undefined" && window.fbq) {
+          const cartItems = checkoutData?.cartItems || [];
+
+          window.fbq("track", "Purchase", {
+            content_ids: cartItems.map((item) => item.id?.toString()),
+            contents: cartItems.map((item) => ({
+              id: item.id?.toString(),
+              quantity: item.quantity || 1,
+              item_price: item.price || 0,
+            })),
+            content_type: "product",
+            value: parseFloat(transactionData.amount) || 0,
+            currency: "INR",
+            transaction_id: transactionData.trackingId,
+            payment_method: transactionData.paymentMethod,
+          });
+
+          console.log("🔥 Pixel Purchase event sent", {
+            orderId: transactionData.orderId,
+            amount: transactionData.amount,
+            items: cartItems,
+          });
+        }
+
       // Generate unique IDs if not available
       const generateSessionId = () => {
         const timestamp = Date.now();

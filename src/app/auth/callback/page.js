@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useAuth } from '../../../Providers/ContextProviders/AuthContext';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import authApi from '../../api/auth/auth';
 
 const OAuthCallbackPage = () => {
   const { data: session, status } = useSession();
@@ -34,37 +35,47 @@ const OAuthCallbackPage = () => {
           
           if (!userData) {
             console.log('📡 Fetching user data from backend...');
-            const response = await axios.post(
-              `https://api.gulbhahar.com/api/users/user-by-token`, 
-              {},
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: `Bearer ${token}`
-                }
-              }
-            );
+            // const response = await axios.post(
+            //   `https://api.gulbhahar.com/api/users/user-by-token`, 
+            //   {},
+            //   {
+            //     headers: {
+            //       'Content-Type': 'application/json',
+            //       Authorization: `Bearer ${token}`
+            //     }
+            //   }
+            // );
             
-            const data = response.data.user;
-            console.log('📦 User data from backend:', data);
-            
-            userData = {
-              email: data.email,
-              name: data.name,
-              firstName: data.firstName || data.first_name || data.user?.firstName || '',
-              lastName: data.lastName || data.last_name || data.user?.lastName || '',
-              userId: data.userId || data.id || data.user?.id || '',
-              location: data.location || data.user?.location || '',
-              phoneNumber: data.phoneNumber || data.phone || data.user?.phoneNumber || '',
-              profilePicture: data.profilePicture || data.avatar || data.user?.profilePicture || data?.image || '',
-              emailVerified: data.emailVerified !== undefined ? data.emailVerified : true,
-              phoneVerified: data.phoneVerified !== undefined ? data.phoneVerified : true,
-              ...data.user
-            };
+            const result = await authApi.handleSocialLoginCallback(token);
+             if (!result.success) {
+              throw new Error(result.error);
+            }
+             userData = result.userData;
+            console.log('📦 User data from backend:', userData);
           }
           
           console.log('🔑 Completing social login...');
           const loginSuccess = await login(token, userData);
+            // const data = response.data.user;
+            // console.log('📦 User data from backend:', data);
+            
+          //   userData = {
+          //     email: data.email,
+          //     name: data.name,
+          //     firstName: data.firstName || data.first_name || data.user?.firstName || '',
+          //     lastName: data.lastName || data.last_name || data.user?.lastName || '',
+          //     userId: data.userId || data.id || data.user?.id || '',
+          //     location: data.location || data.user?.location || '',
+          //     phoneNumber: data.phoneNumber || data.phone || data.user?.phoneNumber || '',
+          //     profilePicture: data.profilePicture || data.avatar || data.user?.profilePicture || data?.image || '',
+          //     emailVerified: data.emailVerified !== undefined ? data.emailVerified : true,
+          //     phoneVerified: data.phoneVerified !== undefined ? data.phoneVerified : true,
+          //     ...data.user
+          //   };
+          // }
+          
+          // console.log('🔑 Completing social login...');
+          // const loginSuccess = await login(token, userData);
           
           if (loginSuccess) {
             console.log('✅ Social login successful, redirecting to home...');

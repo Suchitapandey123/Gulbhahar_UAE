@@ -3,17 +3,20 @@ import React from "react";
 import Collection from "../../components/Collection";
 import ContentJuttis from "./components/ContentJuttisForWomen";
 import ContentJuttisForWomen from "./components/ContentJuttisForWomen";
-
+import QuickTag from "../../components/QuickTag";
+import { popularTags  } from "../../tag";
 export async function generateMetadata() {
   return {
-    title:"Juttis For Women (New Collection) | GULBHAHAR |  Premium Juttis for Women",
-    description: "Explore Gulbhahar's handcrafted juttis for women collection. Luxury Juttis with intricate embroidery and authentic designs. Shop traditional Indian juttis online today.",
+    title:"Juttis for Women| Gulbhahar’s Limited Juttis for Women | Only 24 Pairs", 
+    description: "Elevate your wardrobe with Gulbhahar’s limited‑edition juttis for women, only 24 pairs per design. Handcrafted by artisans, these exclusive shoes blend heritage craftsmanship with contemporary style.",
+     keywords: ["Juttis for women", "Jutis for women", "juti for women", "Jutti for women", "jutty for women", "juty for women", "juttee for women", "jute for women", "jutties for women", "women juttis", "women juti"],
+
     alternates: {
       canonical: "https://www.gulbhahar.com/collections/juttis-for-women",
     },
     openGraph: {
-      title:"Juttis For Women (New Collection) | GULBHAHAR |  Premium Juttis for Women",
-      description: "Explore Gulbhahar's handcrafted juttis for women collection. Luxury Juttis with intricate embroidery and authentic designs. Shop traditional Indian juttis online today.",
+      title:"Juttis for Women| Gulbhahar’s Limited Juttis for Women | Only 24 Pairs",
+      description: "Elevate your wardrobe with Gulbhahar’s limited‑edition juttis for women, only 24 pairs per design. Handcrafted by artisans, these exclusive shoes blend heritage craftsmanship with contemporary style.",
         type: "website",
       locale: "en_US",
       url: "https://www.gulbhahar.com/collections/juttis-for-women",
@@ -27,6 +30,7 @@ const page = () => {
     <div className="mt-24">
       <Collection />
       <ContentJuttisForWomen />
+      <QuickTag popularTags={popularTags["juttis-for-women"]}  />
     </div>
   );
 };
