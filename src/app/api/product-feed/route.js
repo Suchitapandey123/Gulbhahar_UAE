@@ -10,7 +10,7 @@ export async function GET() {
     // Create Excel workbook
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Product Feed");
-
+ 
     // Define columns
     worksheet.columns = [
       { header: "id", key: "id" },
@@ -41,7 +41,7 @@ export async function GET() {
         brand: "GULBHAHAR",
       });
     });
-
+     
     // Convert workbook to buffer
     const buffer = await workbook.xlsx.writeBuffer();
 

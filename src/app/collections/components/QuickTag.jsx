@@ -71,7 +71,7 @@ export default function QuickTag({ popularTags = [] }) {
         >
           {popularTags.map((tag, index) => (
             <motion.div key={index} variants={itemVariants} className="group">
-              <Link href="/collections">
+              <Link href="#">
                 <motion.div
                   variants={tagVariants}
                   initial="rest"
