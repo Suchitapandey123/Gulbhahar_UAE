@@ -1017,7 +1017,7 @@ const handleAddToCart = async (e, item) => {
                           </div>
 
                           {/* Colors */}
-                          <div className="flex items-center gap-1">
+                          {/* <div className="flex items-center gap-1">
                             {item.colors && item.colors.length > 0 && (
                               <div className="flex items-center gap-1">
                                 {item.colors.slice(0, 3).map((color, idx) => (
@@ -1037,7 +1037,7 @@ const handleAddToCart = async (e, item) => {
                                 )}
                               </div>
                             )}
-                          </div>
+                          </div> */}
                         </div>
                       </div>
                     ) : (

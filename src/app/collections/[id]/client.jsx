@@ -701,7 +701,12 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
                 {/* Size Selection */}
                 <div className="mb-8">
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-sm font-medium">Size</h3>
+                    <h3 className="text-sm font-medium">
+                      {["juttis", "heels"].includes(product.category?.toLowerCase())
+        ? "Size"
+        : "Details"}
+                      </h3>
+                       {["juttis", "heels"].includes(product.category?.toLowerCase()) && (
                     <button
                       onClick={() => setShowSizeGuide(true)}
                       className="text-red-900 text-xs cursor-pointer hover:underline font-medium flex items-center gap-1"
@@ -709,7 +714,10 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
                       <Ruler className="w-3 h-3" />
                       <span>Size Guide</span>
                     </button>
+                       )}
                   </div>
+                  {["juttis", "heels"].includes(product.category?.toLowerCase()) ? (
+    <>
                   <div className="grid grid-cols-4 sm:grid-cols-7 gap-2 max-w-md">
                     {generateSizeRange(product.sizes).map(
                       ({ size, available }, idx) => (
@@ -726,11 +734,11 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
                           }`}
                         >
                           <span
-                            className={`${
-                              !available
-                                ? "  decoration-2 decoration-red-900"
-                                : ""
-                            }`}
+                            // className={`${
+                            //   !available
+                            //     ? "  decoration-2 decoration-red-900"
+                            //     : ""
+                            // }`}
                           >
                             {size}
                           </span>
@@ -761,6 +769,15 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
                       </div>
                     </div>
                   </div>
+                  </>
+  ) : (
+    /* Other categories for mobile - Show only selected details */
+    <div className="flex items-center gap-2">
+      <span className="text-sm text-red-900 font-medium bg-red-50 px-2 py-1 rounded">
+        {product.sizes && product.sizes.length > 0 ? product.sizes[0] : "One Size"}
+      </span>
+    </div>
+  )}
                 </div>
                 {/* Delivery Section - Mobile */}
                 <div className="mb-8">
@@ -1092,10 +1109,16 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-1 h-4 bg-red-900 rounded-full"></div>
                   <h3 className="text-base font-semibold text-gray-900">
-                    Size Selection
+                    {/* Size Selection */}
+                     {["juttis", "heels"].includes(product.category?.toLowerCase())
+        ? "Size Selection"
+        : "Details"}
                   </h3>
                 </div>
                 <div className="bg-gray-50 rounded-lg p-4 border-l-2 border-red-900">
+                    {["juttis", "heels"].includes(product.category?.toLowerCase()) ? (
+      <>
+        {/* Jutti / sandal logic */}
                   {/* Selected size display */}
                   {selectedSize &&
                     generateSizeRange(product.sizes).find(
@@ -1127,11 +1150,11 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
                           }`}
                         >
                           <span
-                            className={`${
-                              !available
-                                ? " decoration-2 decoration-red-900"
-                                : ""
-                            }`}
+                            // className={`${
+                            //   !available
+                            //     ? " decoration-2 decoration-red-900"
+                            //     : ""
+                            // }`}
                           >
                             {size}
                           </span>
@@ -1164,6 +1187,7 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
                       <Ruler className="w-4 h-4" />
                       <span>Size Guide</span>
                     </button>
+                    
 
                     {/* Size availability legend */}
                     <div className="flex items-center gap-4 text-xs text-gray-600">
@@ -1181,6 +1205,17 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
                       </div>
                     </div>
                   </div>
+
+                  </>
+    ) : (
+      /* Other categories: show single selected detail */
+      <div className="flex items-center gap-2">
+        {/* <span className="text-sm font-medium text-gray-700">Selected:</span> */}
+        <span className="text-sm text-red-900 font-medium bg-red-50 px-2 py-1 rounded">
+          {product.sizes && product.sizes.length > 0 ? product.sizes[0] : "One Size"}
+        </span>
+      </div>
+    )}
                 </div>
               </div>
 

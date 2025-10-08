@@ -3,6 +3,7 @@ import { ProductClient } from "./client";
 import { QueryClient } from "@tanstack/react-query";
 import productApi from "@/app/api/v0/product-service";
 import ProductNotAvailable from "./components/ProductNotFound/ProductNotFound";
+import { redirect } from "next/navigation";
 
 async function getProductData(productID) {
   const queryClient = new QueryClient();
@@ -116,8 +117,6 @@ export default async function CollectionPage({ params }) {
     
     const { product, similarProducts } = await getProductData(productID);
 
-    // console.log('Product:', product);
-    // console.log('Similar Products:', similarProducts);
     
     return (
       <ProductClient 
@@ -127,11 +126,6 @@ export default async function CollectionPage({ params }) {
     );
   } catch (error) {
     console.error('Error in CollectionPage:', error);
-    
-    return (
-      <div className="error-container mt-2 lg:mt-24">
-        <ProductNotAvailable />
-      </div>
-    );
+    redirect('/not-found');
   }
 }
