@@ -232,7 +232,7 @@ const NewCollection = ({ newCollection }) => {
                   onHoverStart={() => setHoveredCard(index)}
                   onHoverEnd={() => setHoveredCard(null)}
                 >
-                  <Link href={`/collections/${product.productId}`}>
+                  <Link href={`/products/${product.productId}`}>
                     <motion.div 
                       className="space-y-3 cursor-pointer relative"
                       whileHover={{ 

@@ -770,6 +770,29 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
                     </div>
                   </div>
                   </>
+
+                  ) : product.category?.toLowerCase() === "bags" ? (
+  /* BAG CATEGORY — Handle space-separated or x-separated sizes */
+  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-w-md">
+    {product.sizes && product.sizes.length > 0 ? (
+      (
+        product.sizes.length === 1
+          ? product.sizes[0].split(/[x\s]+/) // split by 'x' or space
+          : product.sizes
+      ).map((dim, idx) => (
+        <div
+          key={idx}
+          className="py-2 px-3 text-sm text-red-900 font-medium bg-red-50 border border-red-200 rounded text-center capitalize"
+        >
+          {["Height", "Width", "Depth"][idx] || `Dim ${idx + 1}`}:{" "}
+          <span className="font-semibold">{dim.trim()}</span>
+        </div>
+      ))
+    ) : (
+      <span className="text-sm text-gray-500">No size info available</span>
+    )}
+  </div>
+
   ) : (
     /* Other categories for mobile - Show only selected details */
     <div className="flex items-center gap-2">
@@ -1207,6 +1230,28 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
                   </div>
 
                   </>
+                   ) : product.category?.toLowerCase() === "bags" ? (
+  // Bag size split logic (supports both "x" and space-separated formats)
+  <div className="flex flex-col gap-2">
+    {product.sizes && product.sizes.length > 0 ? (
+      // Split by "x" or space, trim, and filter empty
+      product.sizes[0]
+        .split(/x|\s+/)
+        .map(size => size.trim())
+        .filter(size => size)
+        .map((dim, idx) => (
+          <div
+            key={idx}
+            className="text-sm text-red-900 font-medium bg-red-50 px-2 py-1 rounded"
+          >
+            {["Height", "Width", "Depth"][idx] || `Dim ${idx + 1}`}: {dim}
+          </div>
+        ))
+    ) : (
+      <span className="text-sm text-gray-500">No size info</span>
+    )}
+  </div>
+
     ) : (
       /* Other categories: show single selected detail */
       <div className="flex items-center gap-2">
@@ -1388,7 +1433,7 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
             <div className="px-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
               {similarProducts.map((item, index) => (
                 <div key={item.productId} className="group w-full">
-                  <Link href={`/collections/${item.productId}`}>
+                  <Link href={`/products/${item.productId}`}>
                     <div className="cursor-pointer relative space-y-3">
                       {/* Image Container */}
                       <div className="relative overflow-hidden w-full aspect-[3/4]">

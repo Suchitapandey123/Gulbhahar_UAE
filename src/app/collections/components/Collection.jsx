@@ -833,7 +833,7 @@ const handleAddToCart = async (e, item) => {
                 onMouseEnter={() => handleMouseEnter(item.id)}
                 onMouseLeave={handleMouseLeave}
               >
-                <Link href={`/collections/${item.productId}`}>
+                <Link href={`/products/${item.productId}`}>
                   <div
                     className={`cursor-pointer relative ${
                       viewMode === "grid" ? "space-y-3" : "flex gap-4 p-4"
