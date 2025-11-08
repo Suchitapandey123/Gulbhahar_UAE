@@ -29,7 +29,7 @@ const TransactionStatusContent = () => {
       clearCart,
 
     } = useCart();
-
+  
   // 🎯 Refs to prevent duplicate API calls
   const apiCallInProgress = useRef(false);
   const apiCallCompleted = useRef(false);
@@ -41,24 +41,18 @@ const TransactionStatusContent = () => {
     const orderId = searchParams.get("orderId") || searchParams.get("order_id");
     const amount = searchParams.get("amount");
     const trackingId =
-      searchParams.get("transactionId") || searchParams.get("tracking_id");
+      searchParams.get("transactionId");
     const error = searchParams.get("error");
     const bankRefNo = searchParams.get("bank_ref_no");
     const statusMessage = searchParams.get("status_message");
     const method = searchParams.get("payment_method");
 
-    // console.log("🎯 Transaction Status Page - URL Parameters:", {
-    //   status,
-    //   orderId,
-    //   amount,
-    //   trackingId,
-    //   error,
-    //   bankRefNo,
-    //   statusMessage,
-    //   method,
-    // });
+    // console.log("Status" ,status)
+    // console.log("orderId" , orderId) 
+    // console.log("transactionId" , trackingId) 
+    // console.log("payment_method" , method) 
 
-    // 🛡️ Prevent processing the same transaction multiple times
+    //  Prevent processing the same transaction multiple times
     if (trackingId && processedTransactionId.current === trackingId) {
       // console.log("⏭️ Transaction already processed, skipping...", trackingId);
       setIsLoading(false);
@@ -113,7 +107,7 @@ const TransactionStatusContent = () => {
       setShowContent(true);
       setIsLoading(false);
     }, 500);
-  }, []); // 🎯 Empty dependency array - only run once on mount
+  }, []); //  Empty dependency array - only run once on mount
 
   // 🛡️ Enhanced function to prevent duplicate API calls
   const sendCompleteOrderDataToBackend = async (transactionData) => {

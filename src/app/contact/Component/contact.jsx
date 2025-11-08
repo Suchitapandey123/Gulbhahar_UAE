@@ -16,7 +16,8 @@ import {
   CheckCircle
 } from "lucide-react";
 import { useMutation } from '@tanstack/react-query';
-import { contactAPI  } from '../../api/contact/contact';
+import contactAPI from "@/app/api/contact/contact";
+
 
 
 
@@ -34,7 +35,7 @@ export default function ContactPage() {
 
   // React Query mutation for contact support
   const contactSupportMutation = useMutation({
-    mutationFn: contactAPI,
+    mutationFn: contactAPI.createContactSupport,
     onSuccess: (data) => {
       console.log('Contact form submitted successfully:', data);
       setShowSuccessMessage(true);
@@ -74,9 +75,6 @@ export default function ContactPage() {
         break;
       case "Technical Support":
         contactusValue = "technical";
-        break;
-      case "Sales Inquiry":
-        contactusValue = "sales";
         break;
       case "Customer Support":
         contactusValue = "support";
@@ -118,7 +116,7 @@ export default function ContactPage() {
   const queryOptions = [
     { value: "General Question", icon: "❓", description: "General questions and info", apiValue: "general" },
     { value: "Technical Support", icon: "🔧", description: "Technical help and support", apiValue: "technical" },
-    { value: "Sales Inquiry", icon: "💼", description: "Business sales inquiries", apiValue: "sales" },
+    // { value: "Sales Inquiry", icon: "💼", description: "Business sales inquiries", apiValue: "sales" },
     { value: "Customer Support", icon: "🎧", description: "Customer service and assistance", apiValue: "support" },
     { value: "Feedback", icon: "💬", description: "Share your feedback with us", apiValue: "feedback" },
     { value: "Other", icon: "📋", description: "Other inquiries not listed above", apiValue: "other" }
