@@ -1,0 +1,108 @@
+{
+  "collections": [
+    {
+      "id": "bridal-juttis",
+      "title": "Bridal Juttis by Gulbhahar",
+      "subtitle": "Where Tradition Meets Timeless Elegance",
+      "introduction": "When it comes to weddings, every detail counts - from the bridal attire to the jewellery and, yes, the bridal juttis. At Gulbhahar, we believe that every bridal look is incomplete without the perfect handcrafted juttis, which are a complete mix of tradition and comfort. Founded by Monica Gulati, Gulbhahar has become a home for the artisanal spirit and modernity of bridal luxury.",
+      "sections": [
+        {
+          "title": "The Charm of Bridal Juttis",
+          "icon": "💍",
+          "content": "Bridal juttis have always held a special place in Indian weddings...",
+          "features": [
+            { "icon": "👰", "title": "Walk", "description": "Comfortable movement" },
+            { "icon": "💃", "title": "Dance", "description": "Graceful celebrations" },
+            { "icon": "✨", "title": "Celebrate", "description": "Elegant comfort" }
+          ],
+          "additionalContent": "At Gulbhahar, we are proud of our innovative designs..."
+        },
+        {
+          "title": "Why Brides Love Gulbhahar Juttis",
+          "icon": "💖",
+          "content": "Every single pair of Gulbhahar bridal juttis is a story sewn with thread, beads, and love...",
+          "features": [
+            { "icon": "🤲", "title": "Made by Hand with Love", "description": "Each pair is carefully crafted by passionate artisans using centuries-old techniques." },
+            { "icon": "☁️", "title": "Made for Comfort", "description": "Weddings are long events, so we ensure you're comfortable for every minute while looking fabulous!" },
+            { "icon": "💎", "title": "Unique & Exclusive", "description": "Gulbhahar pieces are not manufactured in bulk; they are treasures that represent unique personality and charm." }
+          ]
+        }
+      ],
+      "conclusion": {
+        "title": "Take A Step into Your Forever with Gulbhahar",
+        "content": "Your wedding day is a magical moment you'll always remember...",
+        "finalNote": "So when you think of bridal juttis, think of Gulbhahar - where every bride can shine, one step at a time. ✨"
+      }
+    },
+    {
+      "id": "juttis",
+      "title": "Traditional Juttis Collection",
+      "subtitle": "Handcrafted Comfort for Everyday Elegance",
+      "introduction": "Juttis have been a favourite for all time in traditional Indian footwear. With intricate embroidery, bright colours and cultural appeal, they remain one of the most popular options among fashionable people. Gulbhahar, founded by Monica Gulati, showcases the craftsmanship of creating juttis. Each collection has a blending heritage with contemporary sophistication. Every pair is designed to be extremely comfortable, durable and stylish.",
+      "sections": [
+        {
+          "title": "The Art of Jutti Making",
+          "icon": "👞",
+          "content": "Traditional juttis represent centuries of Indian craftsmanship...",
+          "features": [
+            {"icon": "🪡", "title": "Hand Embroidery", "description": "Intricate traditional patterns" },
+            {"icon": "👑", "title": "Royal Heritage", "description": "Inspired by royal footwear" },
+            {"icon": "💝", "title": "Modern Comfort", "description": "Updated for contemporary wear" }
+          ]
+        }
+      ],
+      "conclusion": {
+        "title": "Step into Tradition with Gulbhahar Juttis",
+        "content": "Experience the perfect blend of traditional craftsmanship and modern comfort...",
+        "finalNote": "Embrace the heritage, enjoy the comfort - walk the Gulbhahar way. 👞"
+      }
+    },
+    {
+      "id": "heels",
+      "title": "Designer Heels Collection",
+      "subtitle": "Modern Elegance Meets Traditional Craftsmanship",
+      "introduction": "Elevate your style with our exquisite collection of designer heels...",
+      "sections": [
+        {
+          "title": "Elevate Your Traditional Look",
+          "icon": "👠",
+          "content": "Our heels are designed to complement your ethnic wear...",
+          "features": [
+            { "icon": "🌟", "title": "Ethnic Designs", "description": "Traditional motifs and patterns" },
+            { "icon": "💃", "title": "Comfort Focus", "description": "Designed for extended wear" },
+            { "icon": "🎨", "title": "Artisanal Touch", "description": "Handcrafted details on every pair" }
+          ]
+        }
+      ],
+      "conclusion": {
+        "title": "Stand Tall in Tradition with Gulbhahar Heels",
+        "content": "Our heels collection offers the perfect combination of traditional beauty and modern comfort...",
+        "finalNote": "Reach new heights of elegance with Gulbhahar heels. 👠"
+      }
+    },
+    
+    {
+      "id": "bags",
+      "title": "Handcrafted Bags Collection",
+      "subtitle": "The Perfect Accessory for Your Traditional Attire",
+      "introduction": "Complete your traditional look with our beautifully handcrafted bags and clutches...",
+      "sections": [
+        {
+          "title": "Artisanal Bag Making",
+          "icon": "👜",
+          "content": "Our bags showcase the finest Indian craftsmanship...",
+          "features": [
+            { "icon": "🪡", "title": "Hand Embroidery", "description": "Detailed traditional work" },
+            { "icon": "💎", "title": "Premium Materials", "description": "Quality fabrics and trims" },
+            { "icon": "🎯", "title": "Functional Design", "description": "Beautiful and practical" }
+          ]
+        }
+      ],
+      "conclusion": {
+        "title": "Carry Tradition with Gulbhahar Bags",
+        "content": "Our bag collection is designed to be more than just accessories...",
+        "finalNote": "Carry elegance, tradition, and functionality with Gulbhahar bags. 👜"
+      }
+    }
+  ]
+}

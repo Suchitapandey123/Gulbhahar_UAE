@@ -49,16 +49,28 @@ const sortOptions = [
 
 const ITEMS_PER_PAGE = 24;
 
-export default function Collection() {
+// export default function Collection() {
+
+//    useEffect(() => {
+//     if (window.fbq) {
+//       fbq("track", "ViewContent", {
+//         content_name: "Collection Page",
+//         content_category: "Juttis",
+//       });
+//     }
+//   }, []);
+
+// 🔥 ADD CATEGORY PROP
+export default function Collection({ category = null }) {
 
    useEffect(() => {
     if (window.fbq) {
       fbq("track", "ViewContent", {
         content_name: "Collection Page",
-        content_category: "Juttis",
+        content_category: category || "Juttis",
       });
     }
-  }, []);
+  }, [category]); // 🔥 ADD CATEGORY DEPENDENCY
 
   
   const [currentImageIndices, setCurrentImageIndices] = useState({});
@@ -92,13 +104,25 @@ export default function Collection() {
   const { showToast, ToastContainer } = useToast();
 
   // Data Fetching
+  // const {
+  //   data: apiData,
+  //   isLoading,
+  //   error,
+  // } = useQuery({
+  //   queryKey: ["getAllProduct"],
+  //   queryFn: () => productApi.getAllProduct(),
+  // });
   const {
     data: apiData,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["getAllProduct"],
-    queryFn: () => productApi.getAllProduct(),
+    queryKey: ["getProductsByCategory", category], // 🔥 INCLUDE CATEGORY IN QUERY KEY
+    queryFn: () => 
+      category 
+        ? productApi.getProductsByCategory(category) // 🔥 FETCH BY CATEGORY
+        : productApi.getAllProduct(), // 🔥 FALLBACK TO ALL PRODUCTS
+    enabled: true, // Always enable the query
   });
 
   // Transform API data to match component structure
@@ -210,7 +234,7 @@ const handleAddToCart = async (e, item) => {
 
     return () => clearTimeout(timeoutId);
   }, [selectedSeason, selectedSizes, sortBy]);
-
+    
 
   // Extract unique sizes from API data
   const sizes = [

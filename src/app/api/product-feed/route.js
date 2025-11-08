@@ -36,7 +36,7 @@ export async function GET() {
         availability,
         condition: "new",
         price: `${p.price} INR`,
-        link: `https://www.gulbhahar.com/collections/${p.productId}`,
+        link: `https://www.gulbhahar.com/products/${p.productId}`,
         image_link: p.images?.[0]?.[0] || "",
         brand: "GULBHAHAR",
       });
