@@ -1,6 +1,4 @@
 import { Eye } from "lucide-react";
-import { pageService } from "../../app/api/pageService/pageService";
-import React, { useState, useEffect } from "react";
 
 const CollectionsDropdown = ({
   isCollectionDropdownOpen,
@@ -10,163 +8,117 @@ const CollectionsDropdown = ({
   dropdownRef,
   hoverTimeoutRef,
 }) => {
-  // const collectionCategories = 
-  // [
-  //   {
-  //     title: "Designed By Monica",
-  //     subtitle: "Exclusive Collection",
-  //      items : [
-  //       {
-  //         name: "Juttis",
-  //         slug: "/collections/juttis"
-  //       },
-  //       {
-  //         name: "Punjabi Juttis",
-  //         slug: "/collections/punjabi-juttis"
-  //       },
-  //       {
-  //         name: "Bridal Juttis",
-  //         slug: "/collections/bridal-juttis"
-  //       },
-  //       {
-  //         name: "Punjabi Juttis For Ladies",
-  //         slug: "/collections/punjabi-juttis-for-ladies"
-  //       },
-  //       {
-  //         name: "Juttis For Women",
-  //         slug: "/collections/juttis-for-women"
-  //       }
-  //     ]
+  const collectionCategories = 
+  [
+    {
+      title: "Designed By Monica",
+      subtitle: "Exclusive Collection",
+       items : [
+        {
+          name: "Juttis",
+          slug: "/collections/juttis"
+        },
+        {
+          name: "Punjabi Juttis",
+          slug: "/collections/punjabi-juttis"
+        },
+        {
+          name: "Bridal Juttis",
+          slug: "/collections/bridal-juttis"
+        },
+        {
+          name: "Punjabi Juttis For Ladies",
+          slug: "/collections/punjabi-juttis-for-ladies"
+        },
+        {
+          name: "Juttis For Women",
+          slug: "/collections/juttis-for-women"
+        }
+      ]
       
-  //   },
-  //   {
-  //     title: "Casual Juttis",
-  //     subtitle: "Everyday Comfort",
-  //     items : [
-  //       {
-  //         name: "Juttis",
-  //         slug: "/collections/juttis"
-  //       },
-  //       {
-  //         name: "Punjabi Juttis",
-  //         slug: "/collections/punjabi-juttis"
-  //       },
-  //       {
-  //         name: "Bridal Juttis",
-  //         slug: "/collections/bridal-juttis"
-  //       },
-  //       {
-  //         name: "Punjabi Juttis For Ladies",
-  //         slug: "/collections/punjabi-juttis-for-ladies"
-  //       },
-  //       {
-  //         name: "Juttis For Women",
-  //         slug: "/collections/juttis-for-women"
-  //       }
-  //     ]
+    },
+    {
+      title: "Casual Juttis",
+      subtitle: "Everyday Comfort",
+      items : [
+        {
+          name: "Juttis",
+          slug: "/collections/juttis"
+        },
+        {
+          name: "Punjabi Juttis",
+          slug: "/collections/punjabi-juttis"
+        },
+        {
+          name: "Bridal Juttis",
+          slug: "/collections/bridal-juttis"
+        },
+        {
+          name: "Punjabi Juttis For Ladies",
+          slug: "/collections/punjabi-juttis-for-ladies"
+        },
+        {
+          name: "Juttis For Women",
+          slug: "/collections/juttis-for-women"
+        }
+      ]
       
-  //   },
-  //   {
-  //     title: "Festive Collection",
-  //     subtitle: "Celebration Ready",
-  //     items : [
-  //       {
-  //         name: "Juttis",
-  //         slug: "/collections/juttis"
-  //       },
-  //       {
-  //         name: "Punjabi Juttis",
-  //         slug: "/collections/punjabi-juttis"
-  //       },
-  //       {
-  //         name: "Bridal Juttis",
-  //         slug: "/collections/bridal-juttis"
-  //       },
-  //       {
-  //         name: "Punjabi Juttis For Ladies",
-  //         slug: "/collections/punjabi-juttis-for-ladies"
-  //       },
-  //       {
-  //         name: "Juttis For Women",
-  //         slug: "/collections/juttis-for-women"
-  //       }
-  //     ]
+    },
+    {
+      title: "Festive Collection",
+      subtitle: "Celebration Ready",
+      items : [
+        {
+          name: "Juttis",
+          slug: "/collections/juttis"
+        },
+        {
+          name: "Punjabi Juttis",
+          slug: "/collections/punjabi-juttis"
+        },
+        {
+          name: "Bridal Juttis",
+          slug: "/collections/bridal-juttis"
+        },
+        {
+          name: "Punjabi Juttis For Ladies",
+          slug: "/collections/punjabi-juttis-for-ladies"
+        },
+        {
+          name: "Juttis For Women",
+          slug: "/collections/juttis-for-women"
+        }
+      ]
       
-  //   },
-  //   {
-  //     title: "Designer Collection",
-  //     subtitle: "Luxury Edition",
-  //     items : [
-  //       {
-  //         name: "Juttis",
-  //         slug: "/collections/juttis"
-  //       },
-  //       {
-  //         name: "Punjabi Juttis",
-  //         slug: "/collections/punjabi-juttis"
-  //       },
-  //       {
-  //         name: "Bridal Juttis",
-  //         slug: "/collections/bridal-juttis"
-  //       },
-  //       {
-  //         name: "Punjabi Juttis For Ladies",
-  //         slug: "/collections/punjabi-juttis-for-ladies"
-  //       },
-  //       {
-  //         name: "Juttis For Women",
-  //         slug: "/collections/juttis-for-women"
-  //       }
-  //     ]
+    },
+    {
+      title: "Designer Collection",
+      subtitle: "Luxury Edition",
+      items : [
+        {
+          name: "Juttis",
+          slug: "/collections/juttis"
+        },
+        {
+          name: "Punjabi Juttis",
+          slug: "/collections/punjabi-juttis"
+        },
+        {
+          name: "Bridal Juttis",
+          slug: "/collections/bridal-juttis"
+        },
+        {
+          name: "Punjabi Juttis For Ladies",
+          slug: "/collections/punjabi-juttis-for-ladies"
+        },
+        {
+          name: "Juttis For Women",
+          slug: "/collections/juttis-for-women"
+        }
+      ]
       
-  //   },
-  // ];
-
-     const [collectionCategories, setCollectionCategories] = useState([]);
-  const [loading, setLoading] = useState(false);
-
- useEffect(() => {
-  const fetchCollections = async () => {
-    setLoading(true);
-    try {
-      const res = await pageService.getAllPages(1, 50);
-      console.log("API Response:", res);
-
-      if (res && res.success && Array.isArray(res.data)) {
-        const collections = res.data.filter((page) =>
-          page.category
-            ? page.category.toLowerCase().includes("collection") ||
-              page.category.toLowerCase().includes("juttis") ||
-              page.category.toLowerCase().includes("bags")
-            : false
-        );
-
-        console.log("Filtered collections:", collections);
-
-        const formatted = collections.map((page) => ({
-          title: page.metaTitle || page.slug,
-          subtitle:
-            page.metaDescription?.slice(0, 60) || "Explore the collection",
-          items: [
-            {
-              name: page.metaTitle || "View Collection",
-              slug: `/collections/${page.slug}`,
-            },
-          ],
-        }));
-
-        setCollectionCategories(formatted);
-      }
-    } catch (error) {
-      console.error("Error fetching collections:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (isCollectionDropdownOpen) fetchCollections();
-}, [isCollectionDropdownOpen]);
-
+    },
+  ];
 
   const handleMouseEnter = () => {
     if (window.innerWidth >= 768) {
@@ -262,20 +214,15 @@ const CollectionsDropdown = ({
           </button>
         </div>
 
-      {loading ? (
-  <p className="text-center text-gray-500">Loading collections...</p>
-) : (
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-    {collectionCategories.map((category, index) => (
-      <CollectionCategory
-        key={index}
-        category={category}
-        onCategoryClick={handleCategoryClick}
-      />
-    ))}
-  </div>
-)}
-
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+          {collectionCategories.map((category, index) => (
+            <CollectionCategory
+              key={index}
+              category={category}
+              onCategoryClick={handleCategoryClick}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

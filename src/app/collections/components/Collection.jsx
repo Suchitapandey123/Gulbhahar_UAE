@@ -709,23 +709,24 @@ const handleAddToCart = async (e, item) => {
 
       <div className="max-w-[1600px] mx-auto  flex flex-col lg:flex-row">
         
-        {/* Sidebar - Visible only on lg screens and larger */}
-        <div className="hidden xl:flex mt-5 flex-col max-w-[360px] mb-8">
-           {/* Breadcrumb */}
-      <div className="max-w-[400px] px-2 lg:px-2">
-        <nav className="py-2">
-          <span className="text-red-700 hover:text-red-900 transition-colors cursor-pointer">
-            Home
-          </span>
-          <span className="mx-2 text-red-400">/</span>
-          <span className="text-red-900 font-semibold">Collections</span>
-        </nav>
-      </div>
+       {/* Sidebar - Visible only on lg screens and larger */}
+<div className="hidden xl:flex mt-5 flex-col max-w-[360px] mb-8 sticky top-24 h-fit">
+  {/* Breadcrumb */}
+  <div className="max-w-[400px] px-2 lg:px-2">
+    <nav className="py-2">
+      <span className="text-red-700 hover:text-red-900 transition-colors cursor-pointer">
+        Home
+      </span>
+      <span className="mx-2 text-red-400">/</span>
+      <span className="text-red-900 font-semibold">Collections</span>
+    </nav>
+  </div>
 
-          <div className="bg-white border-2 border-red-200 h-[890px] w-[280px] rounded-xl shadow-lg">
-            <FilterContent />
-          </div>
-        </div>
+  {/* Filter Box - Fixed Height with Scroll */}
+  <div className="bg-white border-2 border-red-200 h-[calc(100vh-140px)] w-[280px] rounded-xl shadow-lg overflow-y-auto">
+    <FilterContent />
+  </div>
+</div>
 
         {/* Mobile Filter Modal */}
         {isModalOpen && (
