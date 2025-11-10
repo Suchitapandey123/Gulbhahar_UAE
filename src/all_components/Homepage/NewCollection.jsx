@@ -390,7 +390,7 @@ const NewCollection = ({ newCollection }) => {
               transition={{ delay: 0.8, duration: 0.6 }}
               className="mt-12 flex justify-center"
             >
-              <Link href="/Collections">
+              <Link href="/collections">
                 <motion.button
                   whileHover={{ 
                     scale: 1.05,
