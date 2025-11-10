@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import axios from "axios";
 import { useCart } from "@/Providers/ContextProviders/CartContext";
 import { useToast } from "@/hooks/useToast";
 import { checkoutApi } from '../../../api/cart/cart';
@@ -434,8 +433,11 @@ export default function CheckoutComponent() {
         error: null,
         deliveryInfo: null,
       });
+
       return;
     }
+
+    console.log(validatePostalCode)
 
     // 🔧 CHECK IF API IS ENABLED
     if (!ENABLE_PINCODE_API) {
@@ -808,7 +810,7 @@ export default function CheckoutComponent() {
       }
 
       showToast(
-        "✅ Information validated! Redirecting to payment...",
+        "Information validated! Redirecting to payment...",
         "success"
       );
 
@@ -1219,12 +1221,12 @@ export default function CheckoutComponent() {
                         <div className="flex flex-col sm:flex-row gap-2">
                           {postalCodeValidation.deliveryInfo.cod && (
                             <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs inline-flex items-center gap-1 w-fit">
-                              💰 COD Available
+                              COD Available
                             </span>
                           )}
                           {postalCodeValidation.deliveryInfo.isODA && (
                             <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs inline-flex items-center gap-1 w-fit">
-                              🚛 Remote Area (+₹50)
+                             Remote Area (+₹50)
                             </span>
                           )}
                         </div>
@@ -1564,7 +1566,7 @@ export default function CheckoutComponent() {
                   </p>
                   {postalCodeValidation.deliveryInfo?.cod && (
                     <p className="text-xs text-green-700 mt-1">
-                      💰 Cash on Delivery available
+                      Cash on Delivery available
                     </p>
                   )}
                 </div>
