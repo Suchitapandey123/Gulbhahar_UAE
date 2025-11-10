@@ -196,7 +196,7 @@ export default function AlternatingAbout() {
               </p>
             </div>
 
-            <Link href="/Collections">
+            <Link href="/collections">
               <motion.button
                 className="group px-4 py-2 xs:px-6 xs:py-3 sm:px-8 sm:py-3 md:px-10 md:py-4 lg:px-12 lg:py-4 xl:px-14 xl:py-5 2xl:px-16 2xl:py-6 bg-red-900 text-white rounded-full text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold hover:bg-red-800 transition-colors inline-flex items-center gap-2 xs:gap-3 sm:gap-4 shadow-lg"
                 whileHover={{ scale: 1.05 }}
