@@ -96,6 +96,61 @@ export const signupApi = {
       },
     });
     return response;
+  },
+
+  // Mobile Login - Send OTP (FIXED: using phoneNumber instead of phone)
+  sendMobileLoginOtp: async (phoneNumber) => {
+    const response = await fetch(`${BASE_URL}/loginwithphone/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        phoneNumber: phoneNumber  // Changed from 'phone' to 'phoneNumber'
+      }),
+    });
+    return response;
+  },
+
+  // Mobile Login - Verify OTP
+  verifyMobileLoginOtp: async (userId, otp) => {
+    const response = await fetch(`${BASE_URL}/loginwithphone/verify-login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: userId,
+        otp: otp
+      }),
+    });
+    return response;
+  },
+
+  // Mobile Login - Resend OTP
+  resendMobileLoginOtp: async (userId) => {
+    const response = await fetch(`${BASE_URL}/loginwithphone/resend-otp`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: userId
+      }),
+    });
+    return response;
+  },
+
+  // Get user by token
+  getUserByToken: async (token) => {
+    const response = await fetch(`${BASE_URL}/loginwithphone/user-by-token`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    return response;
   }
 };
 
