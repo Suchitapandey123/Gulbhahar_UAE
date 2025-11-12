@@ -24,6 +24,7 @@ const CartPage = () => {
     toggleCart,
     removeFromCart,
     updateQuantity,
+    updateItemVariant,
     clearCart,
     addToCart,
   } = useCart();
@@ -71,7 +72,7 @@ const CartPage = () => {
       await new Promise((resolve) => setTimeout(resolve, 300));
 
       // Remove the current item
-      removeFromCart(item.id);
+      removeFromCart(item.id, item.selectedColor, item.selectedSize);
 
       // Add the same item with new color
       const updatedItem = {
@@ -85,6 +86,7 @@ const CartPage = () => {
 
       // Add back with new color
       await addToCart(updatedItem);
+      updateItemVariant(item, updatedItem);
 
       console.log("✅ Color updated successfully");
     } catch (error) {
@@ -101,39 +103,35 @@ const CartPage = () => {
 
   // Handle size change with loading state
   const handleSizeChange = async (item, newSize) => {
-    console.log("📏 Changing size for item:", item.id, "to:", newSize);
+  console.log("📏 Changing size for item:", item.id, "to:", newSize);
 
-    try {
-      // Set loading state
-      setLoadingItems((prev) => new Set(prev).add(item.id));
+  try {
+    setLoadingItems((prev) => new Set(prev).add(item.id));
 
-      // Small delay to show loading state
-      await new Promise((resolve) => setTimeout(resolve, 300));
+    await new Promise((resolve) => setTimeout(resolve, 300));
 
-      // Remove the current item
-      removeFromCart(item.id);
+    // ✅ remove old variant using color + size
+    removeFromCart(item.id, item.selectedColor, item.selectedSize);
 
-      // Add the same item with new size
-      const updatedItem = {
-        ...item,
-        selectedSize: newSize,
-      };
+    // ✅ then add updated one
+    const updatedItem = {
+      ...item,
+      selectedSize: newSize,
+    };
 
-      // Add back with new size
-      await addToCart(updatedItem);
+    await addToCart(updatedItem);
+    console.log("✅ Size updated successfully");
+  } catch (error) {
+    console.error("❌ Error updating size:", error);
+  } finally {
+    setLoadingItems((prev) => {
+      const newSet = new Set(prev);
+      newSet.delete(item.id);
+      return newSet;
+    });
+  }
+};
 
-      console.log("✅ Size updated successfully");
-    } catch (error) {
-      console.error("❌ Error updating size:", error);
-    } finally {
-      // Remove loading state
-      setLoadingItems((prev) => {
-        const newSet = new Set(prev);
-        newSet.delete(item.id);
-        return newSet;
-      });
-    }
-  };
 
   // Get the current image for display
   const getCurrentImage = (item) => {
@@ -239,10 +237,10 @@ const CartPage = () => {
                 {cart
                   .filter((item) => !loadingItems.has(item.id))
                   .map((item) => (
-                    <div
-                      key={item.id}
-                      className="border border-red-200 rounded-lg"
-                    >
+                     <div
+      key={item.cartId || `${item.id}-${item.selectedColor}-${item.selectedSize}`} // ✅ unique key
+      className="border border-red-200 rounded-lg"
+    >
                       {/* Main Item Row */}
                       <div className="flex gap-3 p-3">
                         {/* Product Image - Clickable */}
@@ -294,31 +292,31 @@ const CartPage = () => {
 
                           {/* Quantity Controls */}
                           <div className="flex items-center gap-2 mt-2">
-                            <button
-                              onClick={() =>
-                                updateQuantity(item.id, item.quantity - 1)
-                              }
-                              className="p-1 hover:bg-gray-100 rounded transition-colors"
-                            >
-                              <Minus size={14} />
-                            </button>
-                            <span className="w-8 text-center text-sm font-medium">
-                              {item.quantity}
-                            </span>
-                            <button
-                              onClick={() =>
-                                updateQuantity(item.id, item.quantity + 1)
-                              }
-                              className="p-1 hover:bg-gray-100 rounded transition-colors"
-                            >
-                              <Plus size={14} />
-                            </button>
-                            <button
-                              onClick={() => removeFromCart(item.id)}
-                              className="p-1 hover:bg-red-100 text-red-600 rounded transition-colors ml-2"
-                            >
-                              <Trash2 size={14} />
-                            </button>
+                           <button
+  onClick={() =>
+    updateQuantity(item.id, item.quantity - 1, item.selectedColor, item.selectedSize)
+  }
+>
+  -
+</button>
+
+<span>{item.quantity}</span>
+
+<button
+  onClick={() =>
+    updateQuantity(item.id, item.quantity + 1, item.selectedColor, item.selectedSize)
+  }
+>
+  +
+</button>
+
+                      <button
+                        onClick={() => removeFromCart(item.id, item.selectedColor, item.selectedSize)}
+                        className="p-1 hover:bg-red-100 text-red-600 rounded transition-colors ml-2"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+
                           </div>
                         </div>
 
