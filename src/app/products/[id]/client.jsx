@@ -1479,20 +1479,78 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
                           )}
 
                         {/* Hover Add to Cart Button */}
-                        <div className="absolute bottom-0 left-0 right-0 bg-red-900 text-white text-center py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-full group-hover:translate-y-0">
-                          <button
-                            onClick={(e) => handleAddToCart(e, item)}
-                            disabled={addingToCart === item.productId}
-                            className="w-full text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-75"
-                          >
-                            <ShoppingBag size={14} />
-                            <span>
-                              {addingToCart === item.productId
-                                ? "Adding..."
-                                : "Add to Cart"}
-                            </span>
-                          </button>
-                        </div>
+                       <div className="absolute bottom-0 left-0 right-0 bg-red-900 text-white text-center py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-full group-hover:translate-y-0">
+                        <button
+                          onClick={async (e) => {
+                            e.preventDefault(); // Prevent navigation to product page
+                            e.stopPropagation(); // Stop event bubbling
+                            
+                            console.log("🛒 Similar Product - Adding to cart:", item);
+
+                            if (!item.productId && !item.id) {
+                              showToast("Product ID not found", "error");
+                              return;
+                            }
+
+                            try {
+                              const cartSelectedColor = item.colors?.[0] || "default";
+                              const cartSelectedSize = item.sizes?.[0] || "default";
+
+                              console.log("🎨 Selected variants for similar product:", {
+                                color: cartSelectedColor,
+                                size: cartSelectedSize,
+                              });
+
+                              const cartItem = {
+                                ...item,
+                                id: item.productId || item.id,
+                                productId: item.productId || item.id,
+                                selectedColor: cartSelectedColor,
+                                selectedSize: cartSelectedSize,
+                                selectedColorIndex: 0,
+                                addedAt: new Date().toISOString(),
+                              };
+
+                              console.log("🔍 Standardized similar product cart item:", cartItem);
+
+                              const result = await addToCart(cartItem);
+
+                              if (result.success) {
+                                console.log("✅ Similar product added successfully to cart");
+                                if (window.fbq) {
+                                  fbq("track", "AddToCart", {
+                                    content_ids: [item.productId || item.id],
+                                    content_name: item.name,
+                                    content_type: "product",
+                                    value: item.price,
+                                    currency: "INR",
+                                  });
+                                }
+
+                                showToast(
+                                  `${item.name} (${cartSelectedSize}, ${cartSelectedColor}) added to cart!`,
+                                  "success"
+                                );
+                              } else {
+                                console.log("❌ Failed to add similar product to cart");
+                                showToast(result.message || "Failed to add item to cart", "error");
+                              }
+                            } catch (error) {
+                              console.error("❌ Error adding similar product to cart:", error);
+                              showToast("Failed to add item to cart. Please try again.", "error");
+                            }
+                          }}
+                          disabled={addingToCart === item.productId}
+                          className="w-full text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-75"
+                        >
+                          <ShoppingBag size={14} />
+                          <span>
+                            {addingToCart === item.productId
+                              ? "Adding..."
+                              : "Add to Cart"}
+                          </span>
+                        </button>
+                       </div>
                       </div>
 
                       {/* Product Info - Grid Layout */}
