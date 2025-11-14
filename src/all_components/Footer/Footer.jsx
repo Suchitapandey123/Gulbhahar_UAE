@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import React, { useState } from "react";
 import { usePathname } from "next/navigation";
+import { useToast } from "../../hooks/useToast";
 import {
   Youtube,
   Twitter,
@@ -18,6 +20,7 @@ import {
   Phone,
 } from "lucide-react";
 
+import { newsletterAPI } from "../../app/api/newsletterApi/newsletterApi";
 // Mock social media icons
 const FooterYouTube = ({ className }) => <Youtube className={className} />;
 const FooterTwitterX = ({ className }) => <Twitter className={className} />;
@@ -150,6 +153,47 @@ const UPI = ({ className }) => (
 );
 
 export default function Footer() {
+const { showToast, ToastContainer } = useToast();
+
+  const [email, setEmail] = useState("");
+  // const [agree, setAgree] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [consent, setConsent] = useState(false);
+  
+      const handleSubmit = async (e) => {
+          e.preventDefault();
+          if (!consent) {
+            showToast("Please accept the terms before subscribing.", "error");
+            return;
+          }
+
+          setLoading(true);
+
+          try {
+            const response = await newsletterAPI.subscribe({ email });
+
+            console.log("Newsletter response:", response);
+
+            showToast(
+              response?.message || "Thank you for subscribing!",
+              "success"
+            );
+
+            setEmail("");
+            setConsent(false);
+          } catch (error) {
+            console.log("Newsletter Error:", error);
+
+            showToast(
+              error?.message || "Subscription failed. Try again!",
+              "error"
+            );
+          } finally {
+            setLoading(false);
+          }
+        };
+
+
   const pathname = usePathname();
 
   //   if (pathname === "/") {
@@ -182,8 +226,12 @@ export default function Footer() {
     { href: "/privacy-policy", label: "Privacy Policy" },
   ];
 
+
+<ToastContainer />
   return (
+    
     <footer className="w-full">
+       <ToastContainer />
       {/* Trust Badges */}
       <div className=" py-4 sm:py-6">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -227,7 +275,7 @@ export default function Footer() {
               </div>
               <div>
                 <p className="text-xs sm:text-sm font-bold text-gray-900">
-                  24/7 Support
+                  24/7 Support 
                 </p>
                 <p className="text-xs text-gray-600">Always here to help</p>
               </div>
@@ -247,44 +295,44 @@ export default function Footer() {
                   src="/footerlogo.png"
                   alt="Gulbhahar Logo"
                   width={300}
-                  height={150}
+                  height={150} 
                   priority
                   className="h-16 object-cover sm:h-16  lg:mx-0"
                 />
 
                 <p className="text-[16px] mt-[-10px] ml-1 text-gray-600  ">
-                  Premium Fashion & Style
+                  Premium Fashion & Style 
                 </p>
               </Link>
 
               <p className="text-sm sm:text-base text-gray-600 max-w-sm mx-auto lg:mx-0">
                 Discover timeless elegance with our curated collection of
-                premium footwear and accessories.
+                premium footwear and accessories. 
                 <span className="text-red-900 font-semibold">
-                  {" "}
-                  Crafted with love, designed for you.
+                  {" "} 
+                  Crafted with love, designed for you. 
                 </span>
               </p>
 
               {/* Social Media */}
               <div>
                 <p className="text-sm font-bold text-gray-900 mb-3">
-                  Follow Us
+                  Follow Us 
                 </p>
                 <div className="flex space-x-4 justify-center lg:justify-start">
                   <Link
-                    href="#"
+                    href="#" 
                     className="w-10 h-10 bg-red-100 hover:bg-red-900 text-red-900 hover:text-white rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110"
-                  >
-                    <FooterTwitterX className="h-5 w-5" />
-                  </Link>
+                  > 
+                    <FooterTwitterX className="h-5 w-5" /> 
+                  </Link> 
                   <Link
                     href="https://www.instagram.com/gulbhahar_official?igsh=MzRlODBiNWFlZA=="
                     className="w-10 h-10 bg-red-100 hover:bg-red-900 text-red-900 hover:text-white rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110"
                   >
                     <FooterInstagram className="h-5 w-5" />
                   </Link>
-                  <Link
+                  <Link 
                     href="https://www.facebook.com/share/1GN5HZC6dS/"
                     className="w-10 h-10 bg-red-100 hover:bg-red-900 text-red-900 hover:text-white rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110"
                   >
@@ -294,14 +342,14 @@ export default function Footer() {
               </div>
             </div>
           </div>
-
+          
           {/* Links Sections */}
           <div className="lg:col-span-6 text-end grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-8">
             {/* Shop Links */}
             <div className="text-left">
               <h3 className="text-sm font-bold uppercase tracking-wider text-red-900 mb-4 sm:mb-6">
-                Shop
-              </h3>
+                Shop 
+              </h3> 
               <ul className="space-y-2  sm:space-y-3">
                 {shopLinks.map((link, index) => (
                   <li key={index}>
@@ -439,13 +487,35 @@ export default function Footer() {
               <input
                 type="email"
                 placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="flex-1 px-4 py-3 border-2 border-red-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-900 transition-all duration-200"
               />
-              <button className="bg-gradient-to-r from-red-900 to-red-800 text-white px-6 py-3 rounded-xl font-bold hover:from-red-800 hover:to-red-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
-                <Mail className="h-4 w-4" />
-                Subscribe
-              </button>
+                  <button
+  disabled={!consent || loading}
+  onClick={handleSubmit}
+  className={`${
+    !consent || loading
+      ? "opacity-60 cursor-not-allowed"
+      : "hover:from-red-800 hover:to-red-700"
+  } bg-gradient-to-r from-red-900 to-red-800 text-white px-6 py-3 rounded-xl font-bold`}
+>
+  {loading ? "Please wait..." : "Subscribe"}
+</button>
+
             </div>
+                <div className="mt-4 flex items-center justify-center gap-2">
+              <input
+  type="checkbox"
+  checked={consent}
+  onChange={() => setConsent(!consent)}
+  className="h-4 w-4 cursor-pointer"
+/>
+
+              <label className="text-sm text-gray-700 cursor-pointer">
+                I agree to receive marketing emails from <strong>Gulbhahar</strong>.
+              </label>
+                </div>
           </div>
         </div>
       </div>

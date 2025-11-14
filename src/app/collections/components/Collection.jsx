@@ -187,10 +187,10 @@ const handleAddToCart = async (e, item) => {
     
     if (result.success) {
       // console.log('✅ Item added successfully');
-      showToast(
-        `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`, 
-        'success'
-      );
+        showToast(
+          `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`, 
+          'success'
+        );
     } else {
       // console.log('❌ Failed to add item');
       showToast("Failed to add item to cart. Please try again.", "error");
@@ -958,7 +958,26 @@ const handleAddToCart = async (e, item) => {
                       {/* Hover Add to Cart Button - Only in grid view */}
                       {viewMode === "grid" && (
                         <div className="absolute bottom-0 left-0 right-0 bg-red-900 text-white text-center py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-full group-hover:translate-y-0">
-                          <button
+                               <button
+                        onClick={(e) => handleAddToCart(e, item)}
+                        disabled={addingToCart === (item.productId || item.id)}
+                          className="w-full text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-75"
+                          >
+                        {addingToCart === (item.productId || item.id) ? (
+                          <>
+                            {/* Spinner */}
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                            <span>Adding...</span>
+                          </>
+                        ) : (
+                          <>
+                            <ShoppingBag size={16} />
+                            <span>Add to Cart</span>
+                          </>
+                        )}
+                    </button>
+                         
+                          {/* <button
                             onClick={(e) => handleAddToCart(e, item)}
                             disabled={addingToCart === item.id}
                             className="w-full text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-75"
@@ -969,7 +988,7 @@ const handleAddToCart = async (e, item) => {
                                 ? "Adding..."
                                 : "Add to Cart"}
                             </span>
-                          </button>
+                          </button> */}
                         </div>
                       )}
                     </div>
@@ -1186,18 +1205,25 @@ const handleAddToCart = async (e, item) => {
                             })()}
                           </div>
 
-                          <button
-                            onClick={(e) => handleAddToCart(e, item)}
-                            disabled={addingToCart === item.id}
-                            className="bg-red-900 hover:bg-red-800 text-white px-6 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed"
-                          >
+                    <button
+                        onClick={(e) => handleAddToCart(e, item)}
+                        disabled={addingToCart === (item.productId || item.id)}
+                        className="bg-red-900 hover:bg-red-800 text-white px-6 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed"
+                      >
+                        {addingToCart === (item.productId || item.id) ? (
+                          <>
+                            {/* Spinner */}
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                            <span>Adding...</span>
+                          </>
+                        ) : (
+                          <>
                             <ShoppingBag size={16} />
-                            <span>
-                              {addingToCart === item.id
-                                ? "Adding..."
-                                : "Add to Cart"}
-                            </span>
-                          </button>
+                            <span>Add to Cart</span>
+                          </>
+                        )}
+                    </button>
+
                         </div>
                       </div>
                     )}
