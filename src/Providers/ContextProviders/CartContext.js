@@ -103,25 +103,74 @@ const addToCart = async (product) => {
     setAddingToCart(null);
   }
 };
+   
+  const removeFromCart = (productId, selectedColor, selectedSize) => {
+    // setCart(prevCart => prevCart.filter(item => item.id !== productId));
+    setCart((prevCart) =>
+    prevCart.filter((item) => {
+      const itemCartId = `${item.productId || item.id}-${item.selectedColor || item.colors?.[0] || 'default'}-${item.selectedSize || item.sizes?.[0] || 'default'}`;
+     if (!selectedColor || !selectedSize) {
+  console.warn("removeFromCart called without proper color/size:", productId, selectedColor, selectedSize);
+}
+const targetCartId = `${productId}-${selectedColor || 'default'}-${selectedSize || 'default'}`;
 
-  const removeFromCart = (productId) => {
-    setCart(prevCart => prevCart.filter(item => item.id !== productId));
+      return itemCartId !== targetCartId;
+    })
+  );
   };
-
-  const updateQuantity = (productId, newQuantity) => {
+    
+  const updateQuantity = (productId, newQuantity, selectedColor, selectedSize) => {
     if (newQuantity <= 0) {
-      removeFromCart(productId);
+      removeFromCart(productId, selectedColor, selectedSize);
       return;
     }
     
     setCart(prevCart =>
-      prevCart.map(item =>
-        item.id === productId
-          ? { ...item, quantity: newQuantity }
+       prevCart.map((item) => {
+      const itemCartId = `${item.productId || item.id}-${item.selectedColor || item.colors?.[0] || 'default'}-${item.selectedSize || item.sizes?.[0] || 'default'}`;
+      const targetCartId = `${productId}-${selectedColor || 'default'}-${selectedSize || 'default'}`;
+      return itemCartId === targetCartId
+        ? { ...item, quantity: newQuantity }
+        : item;
+    })
+  ) ;
+   };
+
+
+  // 🧩 Update color/size variant instead of adding new item
+const updateItemVariant = (oldItem, newVariant) => {
+  setCart((prevCart) => {
+    const oldCartId = `${oldItem.productId || oldItem.id}-${oldItem.selectedColor || 'default'}-${oldItem.selectedSize || 'default'}`;
+    const newCartId = `${newVariant.productId || newVariant.id}-${newVariant.selectedColor || 'default'}-${newVariant.selectedSize || 'default'}`;
+
+    // If variant already exists → merge quantities
+    const existingIndex = prevCart.findIndex(item => {
+      const itemCartId = `${item.productId || item.id}-${item.selectedColor || 'default'}-${item.selectedSize || 'default'}`;
+      return itemCartId === newCartId;
+    });
+
+    let updatedCart;
+
+    if (existingIndex !== -1) {
+      // 🧩 Merge with existing variant
+      updatedCart = prevCart.map((item, idx) =>
+        idx === existingIndex
+          ? { ...item, quantity: item.quantity + oldItem.quantity }
           : item
-      )
-    );
-  };
+      );
+    } else {
+      // 🧩 Replace old variant with new one
+      updatedCart = prevCart.map((item) => {
+        const itemCartId = `${item.productId || item.id}-${item.selectedColor || 'default'}-${item.selectedSize || 'default'}`;
+        return itemCartId === oldCartId ? { ...item, ...newVariant } : item;
+      });
+    }
+
+    localStorage.setItem("shopping-cart", JSON.stringify(updatedCart));
+    return updatedCart;
+  });
+};
+
 
   const clearCart = () => {
     setCart([]);
