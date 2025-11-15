@@ -10,9 +10,10 @@ export const newsletterAPI = {
       });
 
       if (!res.ok) {
-        const text = await res.text();
-        throw new Error(`API Error: ${res.status} → ${text}`);
-      }
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Something went wrong");
+        }
+
 
       return await res.json();
     } catch (error) {

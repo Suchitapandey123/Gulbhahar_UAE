@@ -473,9 +473,11 @@ const { showToast, ToastContainer } = useToast();
           </div>
         </div>
 
+     
         {/* Newsletter Subscription */}
         <div className="mt-12 lg:mt-16 bg-gradient-to-r from-red-50 to-red-100 rounded-2xl p-6 sm:p-8 border-2 border-red-200">
           <div className="text-center max-w-2xl mx-auto">
+            
             <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
               Stay in the Loop! 📧
             </h3>
@@ -483,41 +485,56 @@ const { showToast, ToastContainer } = useToast();
               Subscribe to our newsletter for exclusive offers, new arrivals,
               and style tips.
             </p>
+
+            {/* Consent Box */}
+            <div className="max-w-md mx-auto mb-6">
+              <div className="flex items-start gap-3 bg-white/50 p-3 rounded-xl shadow-sm border border-red-200">
+                <input
+                  type="checkbox"
+                  checked={consent}
+                  onChange={() => setConsent(!consent)}
+                  className="h-4 w-4 mt-1 cursor-pointer"
+                />
+
+                <label className="text-xs sm:text-sm text-gray-700 leading-5 cursor-pointer text-left">
+                  I agree to the 
+                  <span className="font-medium text-red-700 hover:underline cursor-pointer"> Terms & Conditions </span>
+                  and 
+                  <span className="font-medium text-red-700 hover:underline cursor-pointer"> Privacy Policy</span>.
+                  I consent to receive updates via <strong>SMS / Email / RCS.</strong>
+                </label>
+              </div>
+            </div>
+
+            {/* Email Input + Button */}
             <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
               <input
                 type="email"
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 px-4 py-3 border-2 border-red-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-900 transition-all duration-200"
+                className="flex-1 px-4 py-3 border-2 border-red-200 rounded-xl 
+                focus:outline-none focus:ring-2 focus:ring-red-500 
+                focus:border-red-900 transition-all duration-200 bg-white"
               />
-                  <button
-  disabled={!consent || loading}
-  onClick={handleSubmit}
-  className={`${
-    !consent || loading
-      ? "opacity-60 cursor-not-allowed"
-      : "hover:from-red-800 hover:to-red-700"
-  } bg-gradient-to-r from-red-900 to-red-800 text-white px-6 py-3 rounded-xl font-bold`}
->
-  {loading ? "Please wait..." : "Subscribe"}
-</button>
 
+              <button
+                disabled={!consent || loading}
+                onClick={handleSubmit}
+                className={`${
+                  !consent || loading
+                    ? "opacity-60 cursor-not-allowed"
+                    : "hover:from-red-800 hover:to-red-700"
+                } bg-gradient-to-r from-red-900 to-red-800 
+                  text-white px-6 py-3 rounded-xl font-bold transition-all duration-200`}
+              >
+                {loading ? "Please wait..." : "Subscribe"}
+              </button>
             </div>
-                <div className="mt-4 flex items-center justify-center gap-2">
-              <input
-  type="checkbox"
-  checked={consent}
-  onChange={() => setConsent(!consent)}
-  className="h-4 w-4 cursor-pointer"
-/>
 
-              <label className="text-sm text-gray-700 cursor-pointer">
-                I agree to receive marketing emails from <strong>Gulbhahar</strong>.
-              </label>
-                </div>
           </div>
         </div>
+
       </div>
 
       {/* Copyright */}
