@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { GulbharLoader } from '@/all_components/loader/GulbharLoader';
 import {
   ChevronDown,
   ChevronUp,
@@ -117,12 +118,12 @@ export default function Collection({ category = null }) {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["getProductsByCategory", category], // 🔥 INCLUDE CATEGORY IN QUERY KEY
+    queryKey: ["getProductsByCategory", category], 
     queryFn: () => 
       category 
-        ? productApi.getProductsByCategory(category) // 🔥 FETCH BY CATEGORY
-        : productApi.getAllProduct(), // 🔥 FALLBACK TO ALL PRODUCTS
-    enabled: true, // Always enable the query
+        ? productApi.getProductsByCategory(category) 
+        : productApi.getAllProduct(), 
+    enabled: true, 
   });
 
   // Transform API data to match component structure
@@ -680,13 +681,8 @@ const handleAddToCart = async (e, item) => {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen mt-16 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-red-900 mx-auto"></div>
-          <p className="mt-4 text-red-900 font-semibold">Loading products...</p>
-        </div>
-      </div>
-    );
+        <GulbharLoader />
+      )
   }
 
   // Error state
@@ -710,23 +706,23 @@ const handleAddToCart = async (e, item) => {
       <div className="max-w-[1600px] mx-auto  flex flex-col lg:flex-row">
         
        {/* Sidebar - Visible only on lg screens and larger */}
-<div className="hidden xl:flex mt-5 flex-col max-w-[360px] mb-8 sticky top-24 h-fit">
-  {/* Breadcrumb */}
-  <div className="max-w-[400px] px-2 lg:px-2">
-    <nav className="py-2">
-      <span className="text-red-700 hover:text-red-900 transition-colors cursor-pointer">
-        Home
-      </span>
-      <span className="mx-2 text-red-400">/</span>
-      <span className="text-red-900 font-semibold">Collections</span>
-    </nav>
-  </div>
+      <div className="hidden xl:flex mt-5 flex-col max-w-[360px] mb-8 sticky top-24 h-fit">
+        {/* Breadcrumb */}
+        <div className="max-w-[400px] px-2 lg:px-2">
+          <nav className="py-2">
+            <span className="text-red-700 hover:text-red-900 transition-colors cursor-pointer">
+              Home
+            </span>
+            <span className="mx-2 text-red-400">/</span>
+            <span className="text-red-900 font-semibold">Collections</span>
+          </nav>
+        </div>
 
-  {/* Filter Box - Fixed Height with Scroll */}
-  <div className="bg-white border-2 border-red-200 h-[calc(100vh-140px)] w-[280px] rounded-xl shadow-lg overflow-y-auto">
-    <FilterContent />
-  </div>
-</div>
+        {/* Filter Box - Fixed Height with Scroll */}
+        <div className="bg-white border-2 border-red-200 h-[calc(100vh-140px)] w-[280px] rounded-xl shadow-lg overflow-y-auto">
+          <FilterContent />
+        </div>
+      </div>
 
         {/* Mobile Filter Modal */}
         {isModalOpen && (
