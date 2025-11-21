@@ -38,7 +38,7 @@ export const profileAPI = {
         throw new Error("No auth token found");
       }
 
-      console.log("🔄 Update API Call:", userData);
+      
 
       const response = await fetch(`${API_BASE_URL}/users/update-user`, {
         method: 'POST',
@@ -49,7 +49,7 @@ export const profileAPI = {
         body: JSON.stringify(userData)
       });
 
-      console.log("📡 Response Status:", response.status);
+      
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -57,11 +57,11 @@ export const profileAPI = {
       }
 
       const result = await response.json();
-      console.log("✅ Update Success:", result);
+      
       return result;
       
     } catch (error) {
-      console.error('🚨 API Error:', error);
+      
       throw error;
     }
   },

@@ -10,36 +10,43 @@ const ContentSection = ({ page: initialPage }) => {
   const [loading, setLoading] = useState(!initialPage);
   const [error, setError] = useState("");
 
-  // Function to parse additional details content
+  // Function to parse additional details content - FIXED VERSION
   const parseDetailsContent = (detail) => {
-    if (!detail) return { description: "", highlight: "", points: [], keyValues: [] };
+    if (!detail) return { description: "", highlight: "", points: [], keyValues: [], subTitle1: "" };
 
-    let description = detail.subDescription1 || "";
+    // Find the actual subDescription and subTitle keys (could be subDescription1, subDescription2, etc.)
+    const subDescKey = Object.keys(detail).find(key => key.startsWith('subDescription'));
+    const subTitleKey = Object.keys(detail).find(key => key.startsWith('subTitle'));
+    
+    const subDescription = subDescKey ? detail[subDescKey] : "";
+    const subTitle = subTitleKey ? detail[subTitleKey] : "";
+
+    let description = subDescription;
     let highlight = detail.highlight || "";
     let points = detail.tags || [];
     let keyValues = detail.keyValues || [];
 
-    // If separate fields don't exist, try to parse from subDescription1 (backward compatibility)
+    // If separate fields don't exist, try to parse from subDescription (backward compatibility)
     if (!highlight && !points.length && !keyValues.length && description) {
       // Extract highlight
-      const highlightMatch = description.match(/\*\*(.*?)\*\*/);
+      const highlightMatch = description.match(/^\*\*(.*?)\*\*\n\n/);
       if (highlightMatch) {
         highlight = highlightMatch[1].trim();
         description = description.replace(highlightMatch[0], "").trim();
       }
-
-      // Extract points
-      const pointsMatch = description.match(/Key Points:\s*((?:\n?• .*)+)/);
-      if (pointsMatch) {
-        points = pointsMatch[1]
-          .split("\n")
-          .filter((p) => p.startsWith("• "))
-          .map((p) => p.replace("• ", "").trim());
-        description = description.replace(pointsMatch[0], "").trim();
+      
+      // Extract tags/points
+      const tagsMatch = description.match(/^Tags:\s*(.+?)\n\n/);
+      if (tagsMatch) {
+        points = tagsMatch[1]
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter((tag) => tag);
+        description = description.replace(tagsMatch[0], "").trim();
       }
 
       // Extract key-values
-      const kvMatch = description.match(/Details:\s*((?:\n?.*:.*)+)/);
+      const kvMatch = description.match(/^Details:\n((?:.+:.+\n)+)\n/);
       if (kvMatch) {
         keyValues = kvMatch[1]
           .split("\n")
@@ -52,7 +59,10 @@ const ContentSection = ({ page: initialPage }) => {
       }
 
       // Remove separator
-      description = description.replace(/---\s*/g, "").trim();
+      if (description.startsWith("---\n\n")) {
+        description = description.slice(5);
+      }
+      description = description.trim();
     }
 
     return { 
@@ -60,7 +70,7 @@ const ContentSection = ({ page: initialPage }) => {
       highlight, 
       points, 
       keyValues,
-      subTitle1: detail.subTitle1 || ""
+      subTitle1: subTitle || detail.subTitle1 || ""
     };
   };
 
@@ -74,12 +84,14 @@ const ContentSection = ({ page: initialPage }) => {
         const pageData = data.page || data.data || data;
         
         console.log("ContentSection API Response:", pageData);
+        console.log("Raw additionalDetails:", pageData.additionalDetails);
         
-        // Parse additional details to extract structured data
+        // Parse additional details to extract structured data - FIXED
         if (pageData.additionalDetails && Array.isArray(pageData.additionalDetails)) {
           pageData.parsedAdditionalDetails = pageData.additionalDetails.map(detail => 
             parseDetailsContent(detail)
           );
+          console.log("Parsed additionalDetails:", pageData.parsedAdditionalDetails);
         } else {
           pageData.parsedAdditionalDetails = [];
         }
@@ -96,7 +108,7 @@ const ContentSection = ({ page: initialPage }) => {
     fetchPage();
   }, [slug, initialPage]);
 
-  // Parse initial page data if provided
+  // Parse initial page data if provided - FIXED
   useEffect(() => {
     if (initialPage && initialPage.additionalDetails) {
       const parsedPage = {
@@ -105,6 +117,7 @@ const ContentSection = ({ page: initialPage }) => {
           parseDetailsContent(detail)
         )
       };
+      console.log("Initial page parsed details:", parsedPage.parsedAdditionalDetails);
       setPage(parsedPage);
     }
   }, [initialPage]);
@@ -142,7 +155,7 @@ const ContentSection = ({ page: initialPage }) => {
               {page.onPageDescription}
             </p>
           </div>
-        )}
+        )} 
 
         {/* Dynamic Sections - USING ADDITIONAL DETAILS */}
         <div className="space-y-8 sm:space-y-12 lg:space-y-16">
@@ -219,44 +232,52 @@ const ContentSection = ({ page: initialPage }) => {
               </h2>
               
               {/* First 2 sentences from description */}
-              {page.parsedAdditionalDetails[3].description && (
-                <div className="mb-4 sm:mb-6">
-                  {(() => {
-                    const sentences = page.parsedAdditionalDetails[3].description.split('. ').filter(s => s.trim() !== '');
-                    const firstTwoSentences = sentences.slice(0, 2).join('. ') + (sentences.length > 2 ? '.' : '');
-                    const remainingSentences = sentences.slice(2).join('. ') + (sentences.length > 2 ? '.' : '');
-                    
-                    return (
-                      <>
-                        <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4">
-                          {firstTwoSentences}
-                        </p>
-                        
-                        {/* Points as Pink Boxes */}
-                        {page.parsedAdditionalDetails[3].points && page.parsedAdditionalDetails[3].points.length > 0 && (
-                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4">
-                            {page.parsedAdditionalDetails[3].points.map((point, index) => (
-                              <div
-                                key={index}
-                                className="bg-red-100 text-red-900 px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-center font-semibold text-sm sm:text-base"
-                              >
-                                {point}
-                              </div>
-                            ))}
-                          </div>
-                        )}
+{page.parsedAdditionalDetails[3].description && (
+  <div className="mb-4 sm:mb-6">
+    {(() => {
+      const sentences = page.parsedAdditionalDetails[3].description
+        .split('.')
+        .map(s => s.trim())
+        .filter(s => s !== '');
 
-                        {/* Remaining sentences after points */}
-                        {remainingSentences && (
-                          <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
-                            {remainingSentences}
-                          </p>
-                        )}
-                      </>
-                    );
-                  })()}
+      const firstTwo = sentences.slice(0, 2).join('. ') + (sentences.length >= 2 ? '.' : '');
+      const remaining = sentences.slice(2).join('. ');
+      const finalRemaining = remaining ? remaining + '.' : '';
+
+      return (
+        <>
+          {/* FIRST 2 SENTENCES */}
+          <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4">
+            {firstTwo}
+          </p>
+
+          {/* Pink Boxes */}
+          {page.parsedAdditionalDetails[3].points?.length > 0 && (
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] justify-center gap-3 sm:gap-4 mb-4">
+
+              {page.parsedAdditionalDetails[3].points.map((point, index) => (
+                <div
+                  key={index}
+                  className="bg-red-100 text-red-900 px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-center font-semibold text-sm sm:text-base"
+                >
+                  {point}
                 </div>
-              )}
+              ))}
+            </div>
+          )}
+
+          {/* REMAINING SENTENCES AFTER POINTS */}
+          {finalRemaining && (
+            <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
+              {finalRemaining}
+            </p>
+          )}
+        </>
+      );
+    })()}
+  </div>
+)}
+
 
               {/* Additional description after points */}
               {page.parsedAdditionalDetails[3].keyValues && page.parsedAdditionalDetails[3].keyValues.length > 0 && (
@@ -307,17 +328,19 @@ const ContentSection = ({ page: initialPage }) => {
               {page.parsedAdditionalDetails[5].keyValues && page.parsedAdditionalDetails[5].keyValues.length > 0 && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                   {page.parsedAdditionalDetails[5].keyValues.map((kv, index) => (
-                    <div
-                      key={index}
-                      className="bg-white border border-red-200 rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow duration-300"
-                    >
-                      <h3 className="font-bold text-red-900 text-base sm:text-lg mb-2 sm:mb-3">
-                        {kv.key}
-                      </h3>
-                      <p className="text-gray-600 text-sm sm:text-base">
-                        {kv.value}
-                      </p>
-                    </div>
+                   <div
+  key={index}
+  className="bg-white border border-red-200 rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow duration-300 
+  flex flex-col items-center justify-center text-center"
+>
+  <h3 className="font-bold text-red-900 text-base sm:text-lg mb-2 sm:mb-3">
+    {kv.key}
+  </h3>
+  <p className="text-gray-600 text-sm sm:text-base">
+    {kv.value}
+  </p>
+</div>
+
                   ))}
                 </div>
               )}
@@ -358,14 +381,40 @@ const ContentSection = ({ page: initialPage }) => {
             </section>
           )}
 
-          {/* Additional Sections beyond 7 */}
-          {page.parsedAdditionalDetails && page.parsedAdditionalDetails.length > 7 && 
-            page.parsedAdditionalDetails.slice(7).map((detail, index) => (
-              <section key={index + 7} className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
+          {/* Section 8 - Additional Section */}
+          {page.parsedAdditionalDetails?.[7] && (
+            <section className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+                <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
+                  <span className="w-8 h-8 bg-blue-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
+                    8
+                  </span>
+                  <span className="leading-tight">{page.parsedAdditionalDetails[7].subTitle1}</span>
+                </div>
+              </h2>
+              <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
+                {page.parsedAdditionalDetails[7].description}
+              </p>
+              
+              {/* Show highlight if exists */}
+              {page.parsedAdditionalDetails[7].highlight && (
+                <div className="bg-gradient-to-r from-blue-900 to-blue-700 text-white p-4 sm:p-6 rounded-lg sm:rounded-xl mt-4">
+                  <p className="font-semibold text-base sm:text-lg italic leading-relaxed">
+                    {page.parsedAdditionalDetails[7].highlight}
+                  </p>
+                </div>
+              )}
+            </section>
+          )}
+
+          {/* Additional Sections beyond 8 */}
+          {page.parsedAdditionalDetails && page.parsedAdditionalDetails.length > 8 && 
+            page.parsedAdditionalDetails.slice(8).map((detail, index) => (
+              <section key={index + 8} className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
                   <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
-                    <span className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
-                      {index + 8}
+                    <span className="w-8 h-8 bg-green-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
+                      {index + 9}
                     </span>
                     <span className="leading-tight">{detail.subTitle1}</span>
                   </div>
@@ -376,7 +425,7 @@ const ContentSection = ({ page: initialPage }) => {
                 
                 {/* Show highlight if exists */}
                 {detail.highlight && (
-                  <div className="bg-gradient-to-r from-red-900 to-red-700 text-white p-4 sm:p-6 rounded-lg sm:rounded-xl mt-4">
+                  <div className="bg-gradient-to-r from-green-900 to-green-700 text-white p-4 sm:p-6 rounded-lg sm:rounded-xl mt-4">
                     <p className="font-semibold text-base sm:text-lg italic leading-relaxed">
                       {detail.highlight}
                     </p>
