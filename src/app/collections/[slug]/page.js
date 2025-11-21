@@ -65,9 +65,8 @@ export default async function Page({ params: rawParams }) {
     <div className="mt-24">
       <Collection />
       <ContentSection page={page} />
-      <QuickTag
-        popularTags={popularTags[slug] || popularTags["bridal-juttis"]}
-      />
+      <QuickTag popularTags={page?.keywords || []} />
+
     </div>
   );
 }

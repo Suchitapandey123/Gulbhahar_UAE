@@ -381,6 +381,7 @@ const ContentSection = ({ page: initialPage }) => {
             </section>
           )}
 
+
           {/* Section 8 - Additional Section */}
           {page.parsedAdditionalDetails?.[7] && (
             <section className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
