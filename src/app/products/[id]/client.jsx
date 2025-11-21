@@ -1540,15 +1540,21 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
                               showToast("Failed to add item to cart. Please try again.", "error");
                             }
                           }}
-                          disabled={addingToCart === item.productId}
-                          className="w-full text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-75"
-                        >
-                          <ShoppingBag size={14} />
-                          <span>
-                            {addingToCart === item.productId
-                              ? "Adding..."
-                              : "Add to Cart"}
-                          </span>
+  disabled={addingToCart === (item.productId || item.id)}
+  className="w-full text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-75"
+>
+  {addingToCart === (item.productId || item.id) ? (
+    <>
+      {/* Spinner */}
+      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+      <span>Adding...</span>
+    </>
+  ) : (
+    <>
+      <ShoppingBag size={14} />
+      <span>Add to Cart</span>
+    </>
+  )}
                         </button>
                        </div>
                       </div>
