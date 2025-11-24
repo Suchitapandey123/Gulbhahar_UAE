@@ -1231,7 +1231,7 @@ const handleAddToCart = async (e, item) => {
 
           {/* Enhanced No Products Found */}
           {filteredCollections.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-20 px-4 min-h-[400px]">
+            <div className="hidden flex-col items-center justify-center py-20 px-4 min-h-[400px]">
               {/* Animated Icon Container */}
               <div className="relative mb-8 group">
                 <div className="absolute inset-0 bg-gradient-to-r from-red-100 to-red-50 rounded-full blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-300"></div>
