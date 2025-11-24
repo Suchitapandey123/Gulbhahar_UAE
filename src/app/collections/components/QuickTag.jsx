@@ -12,7 +12,6 @@ const oldStandardTT = Old_Standard_TT({
   subsets: ["latin"],
 });
 
-// Animations
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {

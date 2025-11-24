@@ -329,17 +329,17 @@ const ContentSection = ({ page: initialPage }) => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                   {page.parsedAdditionalDetails[5].keyValues.map((kv, index) => (
                    <div
-  key={index}
-  className="bg-white border border-red-200 rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow duration-300 
-  flex flex-col items-center justify-center text-center"
->
-  <h3 className="font-bold text-red-900 text-base sm:text-lg mb-2 sm:mb-3">
+    key={index}
+     className="bg-white border border-red-200 rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow duration-300 
+     flex flex-col items-center justify-center text-center"
+     >
+     <h3 className="font-bold text-red-900 text-base sm:text-lg mb-2 sm:mb-3">
     {kv.key}
-  </h3>
-  <p className="text-gray-600 text-sm sm:text-base">
-    {kv.value}
-  </p>
-</div>
+    </h3>
+     <p className="text-gray-600 text-sm sm:text-base">
+       {kv.value}
+     </p>
+  </div>
 
                   ))}
                 </div>
