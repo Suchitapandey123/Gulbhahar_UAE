@@ -1,8 +1,7 @@
-// profile-api.js
 const API_BASE_URL = 'https://api.gulbhahar.com/api';
 
 export const profileAPI = {
-  // Get user profile by token
+ 
   getUserProfile: async () => {
     try {
       const token = localStorage.getItem("authToken");
@@ -28,7 +27,44 @@ export const profileAPI = {
       console.error('Error fetching user profile:', error);
       throw error;
     }
-  }
+  },
+  
+  
+  updateUserProfile: async (userData) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      
+      if (!token) {
+        throw new Error("No auth token found");
+      }
+
+      
+
+      const response = await fetch(`${API_BASE_URL}/users/update-user`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(userData)
+      });
+
+      
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `Failed to update profile: ${response.status}`);
+      }
+
+      const result = await response.json();
+      
+      return result;
+      
+    } catch (error) {
+      
+      throw error;
+    }
+  },
 };
 
 export default profileAPI;

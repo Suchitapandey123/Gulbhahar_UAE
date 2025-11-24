@@ -1404,7 +1404,7 @@ export default function CheckoutComponent() {
 
                     return (
                       <div
-                        key={item.id}
+                        key={item.id + (item.selectedSize || "") + (item.selectedColor || "")}
                         className="bg-red-50/50 rounded-xl border border-red-100 p-4"
                       >
                         <div className="flex items-center space-x-3">

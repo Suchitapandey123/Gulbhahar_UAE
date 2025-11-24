@@ -2,7 +2,6 @@ import axios from 'axios';
 
 const DELHIVERY_TOKEN = "8225de";
 
-// Only the postal code validation API that's actually used
 export const checkoutApi = {
   validatePostalCode: async (postalCode) => {
     try {

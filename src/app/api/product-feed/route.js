@@ -4,14 +4,12 @@ import ExcelJS from "exceljs";
 
 export async function GET() {
   try {
-    // Fetch product data
+    
     const { data: products } = await axios.get("https://api.gulbhahar.com/api/products/get-all-product");
 
-    // Create Excel workbook
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Product Feed");
  
-    // Define columns
     worksheet.columns = [
       { header: "id", key: "id" },
       { header: "title", key: "title" },
@@ -24,7 +22,6 @@ export async function GET() {
       { header: "brand", key: "brand" },
     ];
 
-    // Fill rows
     products.forEach((p) => {
       const totalQty = p.inventory?.reduce((sum, i) => sum + (i.quantity || 0), 0);
       const availability = totalQty > 0 ? "in stock" : "out of stock";
@@ -36,16 +33,14 @@ export async function GET() {
         availability,
         condition: "new",
         price: `${p.price} INR`,
-        link: `https://www.gulbhahar.com/collections/${p.productId}`,
+        link: `https://www.gulbhahar.com/products/${p.productId}`,
         image_link: p.images?.[0]?.[0] || "",
         brand: "GULBHAHAR",
       });
     });
      
-    // Convert workbook to buffer
     const buffer = await workbook.xlsx.writeBuffer();
 
-    // Return Excel file as response
     return new NextResponse(buffer, {
       status: 200,
       headers: {

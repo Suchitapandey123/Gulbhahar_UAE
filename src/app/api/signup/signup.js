@@ -1,7 +1,7 @@
 const BASE_URL = 'https://api.gulbhahar.com';
 
 export const signupApi = {
-  // User registration
+  
   signUp: async (userData) => {
     const response = await fetch(`${BASE_URL}/api/users/sign-up`, {
       method: 'POST',
@@ -13,7 +13,7 @@ export const signupApi = {
     return response;
   },
 
-  // Email verification
+  
   verifyEmail: async (email, verificationCode) => {
     const response = await fetch(`${BASE_URL}/api/users/verify-email`, {
       method: 'POST',
@@ -28,7 +28,7 @@ export const signupApi = {
     return response;
   },
 
-  // Resend verification code
+  
   resendVerificationCode: async (email) => {
     const response = await fetch(`${BASE_URL}/api/users/resend-verification-code`, {
       method: 'POST',
@@ -42,7 +42,6 @@ export const signupApi = {
     return response;
   },
 
-  // Phone OTP initiation
   initiatePhoneOTP: async (phoneNumber) => {
     const response = await fetch(`${BASE_URL}/codRoutes/initiate`, {
       method: 'POST',
@@ -56,7 +55,6 @@ export const signupApi = {
     return response;
   },
 
-  // Phone OTP verification
   verifyPhoneOTP: async (sessionId, otp) => {
     const response = await fetch(`${BASE_URL}/codRoutes/verify`, {
       method: 'POST',
@@ -71,7 +69,6 @@ export const signupApi = {
     return response;
   },
 
-  // User login
   login: async (email, password) => {
     const response = await fetch(`${BASE_URL}/api/users/login`, {
       method: 'POST',
@@ -86,13 +83,64 @@ export const signupApi = {
     return response;
   },
    
-  // Image upload (presigned URL usage)
   uploadImage: async (uploadUrl, imageFile) => {
     const response = await fetch(uploadUrl, {
       method: 'PUT',
       body: imageFile,
       headers: {
         'Content-Type': imageFile.type,
+      },
+    });
+    return response;
+  },
+
+  sendMobileLoginOtp: async (phoneNumber) => {
+    const response = await fetch(`${BASE_URL}/loginwithphone/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        phoneNumber: phoneNumber  
+      }),
+    });
+    return response;
+  },
+
+  verifyMobileLoginOtp: async (userId, otp) => {
+    const response = await fetch(`${BASE_URL}/loginwithphone/verify-login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: userId,
+        otp: otp
+      }),
+    });
+    return response;
+  },
+
+  resendMobileLoginOtp: async (userId) => {
+    const response = await fetch(`${BASE_URL}/loginwithphone/resend-otp`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: userId
+      }),
+    });
+    return response;
+  },
+
+
+  getUserByToken: async (token) => {
+    const response = await fetch(`${BASE_URL}/loginwithphone/user-by-token`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
     });
     return response;

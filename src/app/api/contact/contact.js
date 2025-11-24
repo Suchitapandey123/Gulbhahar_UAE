@@ -10,7 +10,7 @@ const api = axios.create({
 });
 
 export const contactAPI = {
-  // Create a new contact support ticket
+  
   createContactSupport: async (contactData) => {
     const response = await api.post(
       '/contactSupport/createContactSupport',
@@ -19,7 +19,7 @@ export const contactAPI = {
     return response.data;
   },
 
-  // (Optional) add more contact-related endpoints here later
+  
 };
 
 export default contactAPI;

@@ -14,26 +14,20 @@ const CollectionsDropdown = ({
       title: "Designed By Monica",
       subtitle: "Exclusive Collection",
        items : [
-        {
-          name: "Juttis",
-          slug: "/collections/juttis"
-        },
+        
+        
         {
           name: "Punjabi Juttis",
           slug: "/collections/punjabi-juttis"
         },
+         { name: "Bridal Saree ", slug: "/collections/bridal-saree-collection" },
+        { name: "Red Suit ", slug: "/collections/red-suit" },
         {
           name: "Bridal Juttis",
           slug: "/collections/bridal-juttis"
         },
-        {
-          name: "Punjabi Juttis For Ladies",
-          slug: "/collections/punjabi-juttis-for-ladies"
-        },
-        {
-          name: "Juttis For Women",
-          slug: "/collections/juttis-for-women"
-        }
+         { name: "Peach Color Suit ", slug: "/collections/peach-colour-suit" },
+       
       ]
       
     },
@@ -65,57 +59,29 @@ const CollectionsDropdown = ({
       
     },
     {
-      title: "Festive Collection",
-      subtitle: "Celebration Ready",
-      items : [
-        {
-          name: "Juttis",
-          slug: "/collections/juttis"
-        },
-        {
-          name: "Punjabi Juttis",
-          slug: "/collections/punjabi-juttis"
-        },
-        {
-          name: "Bridal Juttis",
-          slug: "/collections/bridal-juttis"
-        },
-        {
-          name: "Punjabi Juttis For Ladies",
-          slug: "/collections/punjabi-juttis-for-ladies"
-        },
-        {
-          name: "Juttis For Women",
-          slug: "/collections/juttis-for-women"
-        }
-      ]
+      title: "Saree Collection",
+      subtitle: "Traditional & Premium",
+      items: [
+        { name: "Bridal Saree Collection", slug: "/collections/bridal-saree-collection" },
+      { name: "Plain Satin Saree", slug: "/collections/plain-satin-saree" },
+      { name: "Banarasi Saree Price", slug: "/collections/banarasi-saree-price" },
+      { name: "Chiffon Banarasi Saree", slug: "/collections/chiffon-banarasi-saree" },
+      { name: "Off White Saree", slug: "/collections/off-white-saree" }
+      
+    ]
       
     },
     {
-      title: "Designer Collection",
-      subtitle: "Luxury Edition",
+      title: "Suits Collection",
+      subtitle: "Elegant & Comfortable",
       items : [
-        {
-          name: "Juttis",
-          slug: "/collections/juttis"
-        },
-        {
-          name: "Punjabi Juttis",
-          slug: "/collections/punjabi-juttis"
-        },
-        {
-          name: "Bridal Juttis",
-          slug: "/collections/bridal-juttis"
-        },
-        {
-          name: "Punjabi Juttis For Ladies",
-          slug: "/collections/punjabi-juttis-for-ladies"
-        },
-        {
-          name: "Juttis For Women",
-          slug: "/collections/juttis-for-women"
-        }
-      ]
+    { name: "Lavender Suit", slug: "/collections/lavender-suit" },
+    { name: "Indo Western Suit ", slug: "/collections/indo-western-suit" },
+    { name: "Blue Suit Black Shirt", slug: "/collections/blue-suit-black-shirt" },
+    { name: "Plain Suit ", slug: "/collections/plain-suit" },
+    
+    { name: "Red Suit", slug: "/collections/red-suit" }
+  ]
       
     },
   ];

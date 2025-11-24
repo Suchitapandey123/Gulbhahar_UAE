@@ -770,6 +770,29 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
                     </div>
                   </div>
                   </>
+
+                  ) : product.category?.toLowerCase() === "bags" ? (
+  /* BAG CATEGORY — Handle space-separated or x-separated sizes */
+  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-w-md">
+    {product.sizes && product.sizes.length > 0 ? (
+      (
+        product.sizes.length === 1
+          ? product.sizes[0].split(/[x\s]+/) // split by 'x' or space
+          : product.sizes
+      ).map((dim, idx) => (
+        <div
+          key={idx}
+          className="py-2 px-3 text-sm text-red-900 font-medium bg-red-50 border border-red-200 rounded text-center capitalize"
+        >
+          {["Height", "Width", "Depth"][idx] || `Dim ${idx + 1}`}:{" "}
+          <span className="font-semibold">{dim.trim()}</span>
+        </div>
+      ))
+    ) : (
+      <span className="text-sm text-gray-500">No size info available</span>
+    )}
+  </div>
+
   ) : (
     /* Other categories for mobile - Show only selected details */
     <div className="flex items-center gap-2">
@@ -1207,6 +1230,28 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
                   </div>
 
                   </>
+                   ) : product.category?.toLowerCase() === "bags" ? (
+  // Bag size split logic (supports both "x" and space-separated formats)
+  <div className="flex flex-col gap-2">
+    {product.sizes && product.sizes.length > 0 ? (
+      // Split by "x" or space, trim, and filter empty
+      product.sizes[0]
+        .split(/x|\s+/)
+        .map(size => size.trim())
+        .filter(size => size)
+        .map((dim, idx) => (
+          <div
+            key={idx}
+            className="text-sm text-red-900 font-medium bg-red-50 px-2 py-1 rounded"
+          >
+            {["Height", "Width", "Depth"][idx] || `Dim ${idx + 1}`}: {dim}
+          </div>
+        ))
+    ) : (
+      <span className="text-sm text-gray-500">No size info</span>
+    )}
+  </div>
+
     ) : (
       /* Other categories: show single selected detail */
       <div className="flex items-center gap-2">
@@ -1388,7 +1433,7 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
             <div className="px-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
               {similarProducts.map((item, index) => (
                 <div key={item.productId} className="group w-full">
-                  <Link href={`/collections/${item.productId}`}>
+                  <Link href={`/products/${item.productId}`}>
                     <div className="cursor-pointer relative space-y-3">
                       {/* Image Container */}
                       <div className="relative overflow-hidden w-full aspect-[3/4]">
@@ -1434,20 +1479,84 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
                           )}
 
                         {/* Hover Add to Cart Button */}
-                        <div className="absolute bottom-0 left-0 right-0 bg-red-900 text-white text-center py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-full group-hover:translate-y-0">
-                          <button
-                            onClick={(e) => handleAddToCart(e, item)}
-                            disabled={addingToCart === item.productId}
-                            className="w-full text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-75"
-                          >
-                            <ShoppingBag size={14} />
-                            <span>
-                              {addingToCart === item.productId
-                                ? "Adding..."
-                                : "Add to Cart"}
-                            </span>
-                          </button>
-                        </div>
+                       <div className="absolute bottom-0 left-0 right-0 bg-red-900 text-white text-center py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-full group-hover:translate-y-0">
+                        <button
+                          onClick={async (e) => {
+                            e.preventDefault(); // Prevent navigation to product page
+                            e.stopPropagation(); // Stop event bubbling
+                            
+                            console.log("🛒 Similar Product - Adding to cart:", item);
+
+                            if (!item.productId && !item.id) {
+                              showToast("Product ID not found", "error");
+                              return;
+                            }
+
+                            try {
+                              const cartSelectedColor = item.colors?.[0] || "default";
+                              const cartSelectedSize = item.sizes?.[0] || "default";
+
+                              console.log("🎨 Selected variants for similar product:", {
+                                color: cartSelectedColor,
+                                size: cartSelectedSize,
+                              });
+
+                              const cartItem = {
+                                ...item,
+                                id: item.productId || item.id,
+                                productId: item.productId || item.id,
+                                selectedColor: cartSelectedColor,
+                                selectedSize: cartSelectedSize,
+                                selectedColorIndex: 0,
+                                addedAt: new Date().toISOString(),
+                              };
+
+                              console.log("🔍 Standardized similar product cart item:", cartItem);
+
+                              const result = await addToCart(cartItem);
+
+                              if (result.success) {
+                                console.log("✅ Similar product added successfully to cart");
+                                if (window.fbq) {
+                                  fbq("track", "AddToCart", {
+                                    content_ids: [item.productId || item.id],
+                                    content_name: item.name,
+                                    content_type: "product",
+                                    value: item.price,
+                                    currency: "INR",
+                                  });
+                                }
+
+                                showToast(
+                                  `${item.name} (${cartSelectedSize}, ${cartSelectedColor}) added to cart!`,
+                                  "success"
+                                );
+                              } else {
+                                console.log("❌ Failed to add similar product to cart");
+                                showToast(result.message || "Failed to add item to cart", "error");
+                              }
+                            } catch (error) {
+                              console.error("❌ Error adding similar product to cart:", error);
+                              showToast("Failed to add item to cart. Please try again.", "error");
+                            }
+                          }}
+  disabled={addingToCart === (item.productId || item.id)}
+  className="w-full text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-75"
+>
+  {addingToCart === (item.productId || item.id) ? (
+    <>
+      {/* Spinner */}
+      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+      <span>Adding...</span>
+    </>
+  ) : (
+    <>
+      <ShoppingBag size={14} />
+      <span>Add to Cart</span>
+    </>
+  )}
+                        </button>
+                       </div>
                       </div>
 
                       {/* Product Info - Grid Layout */}
