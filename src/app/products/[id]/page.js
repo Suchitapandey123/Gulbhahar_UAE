@@ -2,8 +2,41 @@ import React from "react";
 import { ProductClient } from "./client";
 import { QueryClient } from "@tanstack/react-query";
 import productApi from "@/app/api/v0/product-service";
-import ProductNotAvailable from "./components/ProductNotFound/ProductNotFound";
 import { redirect } from "next/navigation";
+import sitemapData from "@/utils/sitemapData.json"
+
+export async function generateStaticParams() {
+  try {
+    const staticParams = [];
+
+    // 1️⃣ PRODUCTS → /products/<productId>
+    const products = await productApi.getAllProduct();
+
+    products?.forEach((product) => {
+      staticParams.push({
+        slugs: ["products", product.productId],
+      });
+    });
+
+    // 2️⃣ CATEGORIES → /collections/<categorySlug>
+    sitemapData?.forEach((category) => {
+      staticParams.push({
+        slugs: ["collections", category.slug],
+      });
+    });
+
+    return staticParams;
+
+  } catch (error) {
+    console.error("Error generating static params:", error);
+    return [];
+  }
+}
+
+// ISR Configuration - Generate on-demand with caching
+
+export const revalidate = 86400; // Cache for 24 hours
+export const dynamicParams = true; // Enable on-demand generation
 
 async function getProductData(productID) {
   const queryClient = new QueryClient();

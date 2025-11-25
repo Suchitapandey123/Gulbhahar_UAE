@@ -1,5 +1,6 @@
 // app/sitemap.js
 import productApi from "./api/v0/product-service";
+import sitemapData from "@/utils/sitemapData.json"
 
 export default async function sitemap() {
   const baseUrl = 'https://www.gulbhahar.com';
@@ -87,20 +88,28 @@ export default async function sitemap() {
       },
     ];
 
-    // Fetch dynamic content
     const products = await productApi.getAllProduct();
-    // console.log('Fetched products:', products);
-    // Product pages
-    const productPages = products?.map((product) => ({
-      url: `${baseUrl}/collections/${product.productId}`,
-      lastModified: new Date(product.updatedAt || product.createdAt || new Date()),
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    })) || [];
 
-    return [...staticPages, ...productPages];
-    
-  } catch (error) {
+  const productPages = products?.map((product) => ({
+    url: `${baseUrl}/products/${product.productId}`,
+    lastModified: new Date(product.updatedAt || product.createdAt || new Date()),
+    changeFrequency: "weekly",
+    priority: 0.7,
+  })) || [];
+
+  // fetch category pages (from sitemapData)
+  const categoryPages = sitemapData?.map((category) => ({
+    url: `${baseUrl}/collections/${category.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly",
+    priority: 0.6,
+  })) || [];
+
+  // final return
+  return [...staticPages, ...productPages, ...categoryPages];
+
+}
+   catch (error) {
     console.error('Error generating sitemap:', error);
     
     // Fallback static sitemap
