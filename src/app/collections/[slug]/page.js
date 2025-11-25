@@ -5,6 +5,30 @@ import QuickTag from "../components/QuickTag";
 import { popularTags } from "../tag";
 import { pageService } from "../../api/pageService/pageService";
 import { redirect } from "next/navigation";
+import sitemapData from "@/utils/sitemapData.json"
+
+
+export async function generateStaticParams() {
+  try {
+    const staticParams = [];
+    
+    //CATEGORIES → /collections/<categorySlug>
+    sitemapData?.forEach((category) => {
+      staticParams.push({
+        slugs: ["collections", category.slug],
+      });
+    });
+
+    return staticParams;
+
+  } catch (error) {
+    console.error("Error generating static params:", error);
+    return [];
+  }
+}
+export const revalidate = 86400; // Cache for 24 hours
+export const dynamicParams = true; // Enable on-demand generation
+
 
 export async function generateMetadata({ params: rawParams }) {
   const params = await rawParams;

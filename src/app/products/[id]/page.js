@@ -17,14 +17,6 @@ export async function generateStaticParams() {
         slugs: ["products", product.productId],
       });
     });
-
-    // 2️⃣ CATEGORIES → /collections/<categorySlug>
-    sitemapData?.forEach((category) => {
-      staticParams.push({
-        slugs: ["collections", category.slug],
-      });
-    });
-
     return staticParams;
 
   } catch (error) {

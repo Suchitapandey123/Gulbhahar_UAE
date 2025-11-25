@@ -1,6 +1,10 @@
 import React from 'react'
 import CollectionPage from '@/app/collections/components/Collection'
 
+
+export const revalidate = 86400; // Cache for 24 hours
+export const dynamicParams = true; // Enable on-demand generation
+
 export async function generateMetadata() {
   return {
     title:"Gulbhahar Jutti Collection - Handcrafted Traditional Footwear",
