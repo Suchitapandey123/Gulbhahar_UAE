@@ -1,9 +1,8 @@
 import React from "react";
 import { ProductClient } from "./client";
-import { QueryClient } from "@tanstack/react-query";
 import productApi from "@/app/api/v0/product-service";
 import { redirect } from "next/navigation";
-import sitemapData from "@/utils/sitemapData.json"
+
 
 export async function generateStaticParams() {
   try {
@@ -31,20 +30,10 @@ export const revalidate = 86400; // Cache for 24 hours
 export const dynamicParams = true; // Enable on-demand generation
 
 async function getProductData(productID) {
-  const queryClient = new QueryClient();
 
-  try {
-    // Fetch product details using fetchQuery
-    const product = await queryClient.fetchQuery({
-      queryKey: ['product', productID],
-      queryFn: () => productApi.productById(productID)
-    });
-
-    // Fetch similar products using fetchQuery
-    const similarProducts = await queryClient.fetchQuery({
-      queryKey: ['similarProducts', productID],
-      queryFn: () => productApi.getSimilarProducts(productID)
-    });
+    try {
+    const product = await productApi.productById(productID);
+    const similarProducts = await productApi.getSimilarProducts(productID);
 
     return {
       product,
