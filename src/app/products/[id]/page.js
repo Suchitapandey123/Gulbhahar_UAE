@@ -91,11 +91,11 @@ export async function generateMetadata({ params }) {
       description: product.details[0],
         type: 'website',
         locale: 'en_US',
-        url : `https://www.gulbhahar.com/collections/${productID}`,
+        url : `https://www.gulbhahar.com/products/${productID}`,
         siteName: 'Gulbhahar',
       },
       alternates: {
-        canonical: `https://www.gulbhahar.com/collections/${productID}`,
+        canonical: `https://www.gulbhahar.com/products/${productID}`,
       },
     };
   } catch (error) {
