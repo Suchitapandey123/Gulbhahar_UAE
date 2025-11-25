@@ -7,45 +7,90 @@ import { pageService } from "../../api/pageService/pageService";
 import { redirect } from "next/navigation";
 import sitemapData from "@/utils/sitemapData.json"
 
-export const revalidate = 86400; // Cache for 24 hours
-export const dynamicParams = true; // Enable on-demand generation
+export const revalidate = 86400; 
+export const dynamicParams = true; 
 
 
 export async function generateMetadata({ params: rawParams }) {
   const params = await rawParams;
   const slug = params?.slug;
 
-  if (!slug) return { title: "Invalid Page", description: "No slug" };
+  if (!slug) {
+    return {
+      title: "Invalid Page",
+      description: "No slug provided",
+    };
+  }
 
-
+  // Product Slug Pattern
   const pattern = /^P\d{11}$/;
   if (pattern.test(slug)) {
     return {
-      title: `Product ${slug}`,
-      description: `Explore product ${slug}`,
+      title: `Product ${slug} | Gulbhahar`,
+      description: `Explore premium handcrafted product ${slug} at Gulbhahar.`,
       keywords: ["product", slug, "Gulbhahar"],
+      alternates: {
+        canonical: `https://www.gulbhahar.com/collections/${slug}`,
+      },
+      openGraph: {
+        title: `Product ${slug} | Gulbhahar`,
+        description: `Explore premium handcrafted product ${slug} at Gulbhahar.`,
+        type: "product",
+        url: `https://www.gulbhahar.com/collections/${slug}`,
+        siteName: "Gulbhahar",
+        locale: "en_US",
+      },
     };
   }
 
   try {
     const validateRes = await pageService.validateSlug(slug);
-    if (!validateRes?.success)
-      return { title: "Page Not Found", description: "No page found" };
+    if (!validateRes?.success) {
+      return {
+        title: "Page Not Found",
+        description: "The requested page does not exist.",
+      };
+    }
 
     const res = await pageService.getPageBySlug(slug);
     const page = res?.data || res?.page;
-    if (!page)
-      return { title: "Page Not Found", description: "No content found" };
+
+    if (!page) {
+      return {
+        title: "Page Not Found",
+        description: "Content not available.",
+      };
+    }
 
     return {
       title: page.metaTitle || `${slug} | Gulbhahar`,
-      description: page.metaDescription || `Explore ${slug} collection.`,
+      description:
+        page.metaDescription || `Explore curated collections of ${slug} at Gulbhahar.`,
       keywords: page.keywords || [slug, "Gulbhahar", "ethnic wear"],
+
+      alternates: {
+        canonical: `https://www.gulbhahar.com/collections/${slug}`,
+      },
+
+      openGraph: {
+        title: page.metaTitle || `${slug} | Gulbhahar`,
+        description:
+          page.metaDescription ||
+          `Explore curated collections of ${slug} at Gulbhahar.`,
+        type: "website",
+        url: `https://www.gulbhahar.com/collections/${slug}`,
+        siteName: "Gulbhahar",
+        locale: "en_US",
+      },
     };
   } catch (err) {
-    return { title: "Error", description: "Something went wrong" };
+    return {
+      title: "Error",
+      description: "Something went wrong",
+    };
   }
 }
+
 
 export default async function Page({ params: rawParams }) {
   const params = await rawParams;
