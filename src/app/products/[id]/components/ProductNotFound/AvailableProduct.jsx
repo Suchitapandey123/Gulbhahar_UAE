@@ -13,6 +13,7 @@ import Image from "next/image";
 import { useToast } from "@/hooks/useToast";
 import { useCart } from "@/Providers/ContextProviders/CartContext";
 import productApi from "@/app/api/v0/product-service";
+import { toast } from "sonner";
 
 
 
@@ -139,18 +140,26 @@ const handleAddToCart = async (e, item) => {
     const result = await addToCart(cartItemWithVariants);
     
     if (result.success) {
-      // console.log('✅ Item added successfully');
-      showToast(
+      toast.success(
         `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`, 
         'success'
-      );
+      )
+      // console.log('✅ Item added successfully');
+      // showToast(
+      //   `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`, 
+      //   'success'
+      // );
     } else {
       // console.log('❌ Failed to add item');
-      showToast("Failed to add item to cart. Please try again.", "error");
+      // showToast("Failed to add item to cart. Please try again.", "error");
+      toast.error("Failed to add item to cart. Please try again.");
     }
   } catch (error) {
-    console.error("❌ Error adding to cart:", error);
-    showToast("Failed to add item to cart. Please try again.", "error");
+
+    toast.error("Failed to add item to cart. Please try again.");
+
+    // console.error("❌ Error adding to cart:", error);
+    // showToast("Failed to add item to cart. Please try again.", "error");
   }
 };
 

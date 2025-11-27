@@ -268,7 +268,7 @@ const SecurityPrivacy = () => {
                 onClick={() => setActiveView(SecurityView.PASSWORD)}
               />
 
-              <SecurityBox
+              {/* <SecurityBox
                 title="Two-Factor Authentication"
                 description="Add an extra layer of security to your account"
                 icon={Smartphone}
@@ -287,7 +287,7 @@ const SecurityPrivacy = () => {
                 description="Manage devices that have access to your account"
                 icon={Monitor}
                 onClick={() => setActiveView(SecurityView.DEVICE_MANAGEMENT)}
-              />
+              /> */}
 
               <SecurityBox
                 title="Privacy Settings"

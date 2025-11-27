@@ -183,19 +183,19 @@ const handleImageChange = (file) => {
           />
         )}
 
-        {activeView === ProfileView.NEWSLETTER && (
+        {/* {activeView === ProfileView.NEWSLETTER && (
           <NewsletterView
             onNavigate={setActiveView}
             ProfileView={ProfileView}
           />
-        )}
+        )} */}
 
-        {activeView === ProfileView.NOTIFICATIONS && (
+        {/* {activeView === ProfileView.NOTIFICATIONS && (
           <NotificationsView
             onNavigate={setActiveView}
             ProfileView={ProfileView}
           />
-        )}
+        )} */}
       </div>
     </div>
   );

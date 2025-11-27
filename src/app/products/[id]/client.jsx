@@ -32,6 +32,7 @@ import Link from "next/link";
 import ImageModal from "./components/ImageModal";
 import Reviews from "./components/Reviews";
 import { checkDeliveryAPI } from "../../api/deliveryApi/deliveryApi";
+import { toast } from "sonner";
 
 const generateSizeRange = (availableSizes) => {
   const allSizes = ["35", "36", "37", "38", "39", "40", "41"];
@@ -134,18 +135,25 @@ export function ProductClient({ product, similarProducts }) {
           deliveryDate.getDate() + (postalCode.pre_paid === "Y" ? 2 : 3)
         );
 
-        showToast(
-          `Delivery available to ${postalCode.city}, ${postalCode.district}`,
+        toast.success(
+            `Delivery available to ${postalCode.city}, ${postalCode.district}`,
           "success"
-        );
+        )
+
+        // showToast(
+        //   `Delivery available to ${postalCode.city}, ${postalCode.district}`,
+        //   "success"
+        // );
       } else {
         setDeliveryError("Delivery not available to this pincode");
-        showToast("Delivery not available to this pincode", "error");
+        // showToast("Delivery not available to this pincode", "error");
+        toast.error("Delivery not available to this pincode", "error");
       }
     } catch (error) {
       console.error("Delivery check error:", error);
       setDeliveryError("Failed to check delivery. Please try again.");
-      showToast("Failed to check delivery availability", "error");
+      // showToast("Failed to check delivery availability", "error");
+      toast.error("Failed to check delivery availability", "error");
     } finally {
       setIsCheckingDelivery(false);
     }
@@ -255,7 +263,8 @@ export function ProductClient({ product, similarProducts }) {
     console.log("🛒 Product Detail - Adding to cart:", product);
 
     if (!product.productId && !product.id) {
-      showToast("Product ID not found", "error");
+      // showToast("Product ID not found", "error");
+      toast.error("Product ID not found", "error");
       return;
     }
 
@@ -295,17 +304,26 @@ export function ProductClient({ product, similarProducts }) {
                 currency: "INR",
               });
             }
-        showToast(
-          `${product.name} (${cartSelectedSize}, ${cartSelectedColor}) added to cart!`,
+        // showToast(
+        //   `${product.name} (${cartSelectedSize}, ${cartSelectedColor}) added to cart!`,
+        //   "success"
+        // );
+        toast.success(
+           `${product.name} (${cartSelectedSize}, ${cartSelectedColor}) added to cart!`,
           "success"
-        );
+        )
       } else {
-        console.log("❌ Failed to add item to cart");
-        showToast(result.message || "Failed to add item to cart", "error");
+        toast.error(
+          result.message || "Failed to add item to cart"
+        )
+
+        // console.log("❌ Failed to add item to cart");
+        // showToast(result.message || "Failed to add item to cart", "error");
       }
     } catch (error) {
-      console.error("❌ Error adding to cart:", error);
-      showToast("Failed to add item to cart. Please try again.", "error");
+      toast.error("Failed to add item to cart. Please try again.", "error");
+      // console.error("❌ Error adding to cart:", error);
+      // showToast("Failed to add item to cart. Please try again.", "error");
     }
   };
 
@@ -1485,10 +1503,11 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
                             e.preventDefault(); // Prevent navigation to product page
                             e.stopPropagation(); // Stop event bubbling
                             
-                            console.log("🛒 Similar Product - Adding to cart:", item);
+                            // console.log("🛒 Similar Product - Adding to cart:", item);
 
                             if (!item.productId && !item.id) {
-                              showToast("Product ID not found", "error");
+                              // showToast("Product ID not found", "error");
+                              toast.error("Product ID not found for similar product");
                               return;
                             }
 
@@ -1527,17 +1546,24 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
                                   });
                                 }
 
-                                showToast(
+                                toast.success(
                                   `${item.name} (${cartSelectedSize}, ${cartSelectedColor}) added to cart!`,
                                   "success"
-                                );
+                                )
+
+                                // showToast(
+                                //   `${item.name} (${cartSelectedSize}, ${cartSelectedColor}) added to cart!`,
+                                //   "success"
+                                // );
                               } else {
-                                console.log("❌ Failed to add similar product to cart");
-                                showToast(result.message || "Failed to add item to cart", "error");
+                                toast.error(result.message || "Failed to add item to cart");
+                                // console.log("❌ Failed to add similar product to cart");
+                                // showToast(result.message || "Failed to add item to cart", "error");
                               }
                             } catch (error) {
-                              console.error("❌ Error adding similar product to cart:", error);
-                              showToast("Failed to add item to cart. Please try again.", "error");
+                              toast.error("Failed to add item to cart. Please try again.");
+                              // console.error("❌ Error adding similar product to cart:", error);
+                              // showToast("Failed to add item to cart. Please try again.", "error");
                             }
                           }}
   disabled={addingToCart === (item.productId || item.id)}

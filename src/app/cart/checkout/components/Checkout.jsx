@@ -19,6 +19,7 @@ import Image from "next/image";
 import { useCart } from "@/Providers/ContextProviders/CartContext";
 import { useToast } from "@/hooks/useToast";
 import { checkoutApi } from '../../../api/cart/cart';
+import { toast } from "sonner";
 
 const Breadcrumb = () => (
   <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-8">
@@ -469,7 +470,9 @@ export default function CheckoutComponent() {
           },
         });
 
-        showToast(`✅ Postal code ${postalCode} - Default validation (API disabled)`, "success");
+        toast.success(`✅ Postal code ${postalCode} - Default validation (API disabled)`);
+
+        // showToast(`✅ Postal code ${postalCode} - Default validation (API disabled)`, "success");
       }, 500);
       
       return;
@@ -552,12 +555,16 @@ export default function CheckoutComponent() {
       setPostalCodeValidation(result);
 
   if (result.isValid) {
-    showToast(
-      `✅ Postal code valid for ${result.deliveryInfo.city}, ${result.deliveryInfo.district}`,
-      "success"
-    );
+
+    toast.success(`✅ Postal code valid for ${result.deliveryInfo.city}, ${result.deliveryInfo.district}`);
+
+    // showToast(
+    //   `✅ Postal code valid for ${result.deliveryInfo.city}, ${result.deliveryInfo.district}`,
+    //   "success"
+    // );
   } else {
-    showToast(result.error, "error");
+    toast.error(`❌ ${result.error}`);
+    // showToast(result.error, "error");
   }
 // } catch (error) {
 //   setPostalCodeValidation({
@@ -590,7 +597,9 @@ export default function CheckoutComponent() {
         deliveryInfo: null,
       });
 
-      showToast(errorMessage, "error");
+      toast.error(`❌ ${errorMessage}`);
+
+      // showToast(errorMessage, "error");
     }
   };
 
@@ -672,7 +681,8 @@ export default function CheckoutComponent() {
       }
 
       if (validationErrors.length > 0) {
-        showToast(validationErrors[0], "error");
+        toast.error(validationErrors[0],"error");
+        // showToast(validationErrors[0], "error");
         setIsProcessing(false);
         return;
       }
@@ -680,16 +690,18 @@ export default function CheckoutComponent() {
       // Validate postal code
       if (formData.postalCode) {
         if (postalCodeValidation.isValidating) {
-          showToast(
-            "Please wait for postal code validation to complete",
-            "warning"
-          );
+          toast.warning("Please wait for postal code validation to complete");
+          // showToast(
+          //   "Please wait for postal code validation to complete",
+          //   "warning"
+          // );
           setIsProcessing(false);
           return;
         }
 
         if (postalCodeValidation.isValid === false) {
-          showToast("Please enter a valid postal code for delivery", "error");
+          toast.error("Please enter a valid postal code for delivery");
+          // showToast("Please enter a valid postal code for delivery", "error");
           setIsProcessing(false);
           return;
         }
@@ -803,16 +815,19 @@ export default function CheckoutComponent() {
           // console.log("✅ Verified saved data:", parsedSavedData);
         }
       } catch (error) {
-        console.error("❌ Error saving checkout data:", error);
-        showToast("Error saving checkout data. Please try again.", "error");
+        // console.error("❌ Error saving checkout data:", error);
+        toast.error(" Error saving checkout data. Please try again.");
+        // showToast("Error saving checkout data. Please try again.", "error");
         setIsProcessing(false);
         return;
       }
 
-      showToast(
-        "Information validated! Redirecting to payment...",
-        "success"
-      );
+      toast.success("Information validated! Redirecting to payment...");
+
+      // showToast(
+      //   "Information validated! Redirecting to payment...",
+      //   "success"
+      // );
 
       // Add a small delay to ensure localStorage is written
       setTimeout(() => {
@@ -821,8 +836,9 @@ export default function CheckoutComponent() {
         );
       }, 1000);
     } catch (error) {
-      console.error("Error processing checkout:", error);
-      showToast("Something went wrong. Please try again.", "error");
+      toast.error("Something went wrong. Please try again.");
+      // console.error("Error processing checkout:", error);
+      // showToast("Something went wrong. Please try again.", "error");
     } finally {
       setIsProcessing(false);
     }

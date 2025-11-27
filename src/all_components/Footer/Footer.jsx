@@ -5,6 +5,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import { useToast } from "../../hooks/useToast";
+import { useAuth } from "../../Providers/ContextProviders/AuthContext";
 import {
   Youtube,
   Twitter,
@@ -21,6 +22,7 @@ import {
 } from "lucide-react";
 
 import { newsletterAPI } from "../../app/api/newsletterApi/newsletterApi";
+import { toast } from "sonner";
 // Mock social media icons
 const FooterYouTube = ({ className }) => <Youtube className={className} />;
 const FooterTwitterX = ({ className }) => <Twitter className={className} />;
@@ -154,6 +156,7 @@ const UPI = ({ className }) => (
 
 export default function Footer() {
 const { showToast, ToastContainer } = useToast();
+  const { isAuthenticated } = useAuth();
 
   const [email, setEmail] = useState("");
   // const [agree, setAgree] = useState(false);
@@ -163,7 +166,8 @@ const { showToast, ToastContainer } = useToast();
       const handleSubmit = async (e) => {
           e.preventDefault();
           if (!consent) {
-            showToast("Please accept the terms before subscribing.", "error");
+            toast.error("Please accept the terms before subscribing.");
+            // showToast("Please accept the terms before subscribing.", "error");
             return;
           }
 
@@ -172,22 +176,32 @@ const { showToast, ToastContainer } = useToast();
           try {
             const response = await newsletterAPI.subscribe({ email });
 
-            console.log("Newsletter response:", response);
+            // console.log("Newsletter response:", response);
 
-            showToast(
+            toast.success(
               response?.message || "Thank you for subscribing!",
               "success"
-            );
+            )
+
+            // showToast(
+            //   response?.message || "Thank you for subscribing!",
+            //   "success"
+            // );
 
             setEmail("");
             setConsent(false);
           } catch (error) {
-            console.log("Newsletter Error:", error);
+            // console.log("Newsletter Error:", error);
 
-            showToast(
-              error?.message || "Subscription failed. Try again!",
+            toast.error(
+               error?.message || "Subscription failed. Try again!",
               "error"
             );
+
+            // showToast(
+            //   error?.message || "Subscription failed. Try again!",
+            //   "error"
+            // );
           } finally {
             setLoading(false);
           }
@@ -215,7 +229,7 @@ const { showToast, ToastContainer } = useToast();
   const companyLinks = [
     { href: "/about", label: "About Us" },
     { href: "/contact", label: "Contact" },
-    { href: "/account", label: "My Account" },
+    ...(isAuthenticated ? [{ href: "/account", label: "My Account" }] : []),
     { href: "/", label: "Careers" },
   ];
 

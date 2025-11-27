@@ -23,7 +23,7 @@ const MainView = ({ formData, onNavigate, ProfileView }) => {
           onClick={() => onNavigate(ProfileView.ADDRESS_BOOK)}
         />
         
-        <ProfileBox
+        {/* <ProfileBox
           title="Newsletter Subscription"
           description="Control your email and WhatsApp newsletter preferences"
           icon={Mail}
@@ -35,7 +35,7 @@ const MainView = ({ formData, onNavigate, ProfileView }) => {
           description="Configure SMS, email, and WhatsApp notification settings"
           icon={Bell}
           onClick={() => onNavigate(ProfileView.NOTIFICATIONS)}
-        />
+        /> */}
       </div>
     </div>
   );

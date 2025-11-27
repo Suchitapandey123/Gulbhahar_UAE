@@ -13,10 +13,10 @@ import {
 // Sidebar Links
 const navItems = [
   { label: "My Orders", path: "/account/account-centre/my-order", icon: ShoppingBag },
-  { label: "Wishlist", path: "/account/account-centre/wishlist", icon: Heart },
+  // { label: "Wishlist", path: "/account/account-centre/wishlist", icon: Heart },
   { label: "Profile", path: "/account/account-centre/profile", icon: User },
   { label: "Settings", path: "/account/account-centre/settings", icon: Settings },
-  { label: "Security & Privacy", path: "/account/account-centre/security", icon: Shield },
+  // { label: "Security & Privacy", path: "/account/account-centre/security", icon: Shield },
 ];
 
 export default function Sidebar() {

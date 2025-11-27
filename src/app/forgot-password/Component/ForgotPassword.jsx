@@ -8,6 +8,7 @@ import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useToast  } from '../../../hooks/useToast';
 import forgotPasswordAPI from '../../api/forgotPassword/forgotPassword';
+import { toast } from 'sonner';
 
 
 
@@ -168,8 +169,9 @@ const EmailConfirmationStep = ({ email, setEmail, goToNextStep }) => {
     mutationFn: forgotPasswordAPI.forgotPassword,
     onSuccess: (data) => {
       // console.log('Email sent successfully:', data);
-      showToast('Verification email sent successfully!', 'success');
+      // showToast('Verification email sent successfully!', 'success');
       // toast.success('Email verified successfully!');
+      toast.success('Verification email sent successfully!');
 
       goToNextStep();
     },
@@ -177,7 +179,8 @@ const EmailConfirmationStep = ({ email, setEmail, goToNextStep }) => {
       console.error('Error sending email:', error);
       const errorMessage = error.response?.data?.message || 'Failed to send verification email. Please try again.';
       setEmailError(errorMessage);
-      showToast(errorMessage, 'error');
+      // showToast(errorMessage, 'error');
+      toast.error(errorMessage);
     },
   });
 
@@ -301,7 +304,8 @@ const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificati
       // console.log('Email verified successfully:', data);
       setError('');
       setSuccessMessage('Email verified successfully!');
-      showToast('Email verified successfully!', 'success');
+      // showToast('Email verified successfully!', 'success');
+      toast.success('Email verified successfully!');
       
       // Store the verification code for the final step
       const code = verificationCode.join('');
@@ -317,7 +321,8 @@ const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificati
       const errorMessage = error.response?.data?.message || 'Invalid verification code. Please try again.';
       setError(errorMessage);
       setSuccessMessage('');
-      showToast(errorMessage, 'error');
+      // showToast(errorMessage, 'error');
+      toast.error(errorMessage);
     },
   });
 
@@ -329,7 +334,8 @@ const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificati
       // console.log('Email resent successfully:', data);
       setError('');
       setSuccessMessage('Verification code resent successfully!');
-      showToast('Verification code resent successfully!', 'success');
+      // showToast('Verification code resent successfully!', 'success');
+      toast.success('Verification code resent successfully!');
       // Clear success message after 3 seconds
       setTimeout(() => setSuccessMessage(''), 3000);
     },
@@ -338,7 +344,8 @@ const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificati
       const errorMessage = error.response?.data?.message || 'Failed to resend verification email.';
       setError(errorMessage);
       setSuccessMessage('');
-      showToast(errorMessage, 'error');
+      // showToast(errorMessage, 'error');
+      toast.error(errorMessage);
     },
   });
   

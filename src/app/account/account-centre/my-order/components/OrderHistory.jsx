@@ -154,25 +154,25 @@ const OrderHistory = () => {
       icon: MapPin,
       onClick: () => setActiveView(OrderView.TRACK)
     },
+    // {
+    //   title: "Refund History",
+    //   description: "Track refunds, view refund status and history",
+    //   icon: RefreshCcw,
+    //   // href: "/account/account-centre/my-order"
+    //   onClick: () => setActiveView(OrderView.REFUND)
+    // },
     {
-      title: "Refund History",
-      description: "Track refunds, view refund status and history",
-      icon: RefreshCcw,
-      // href: "/account/account-centre/my-order"
-      onClick: () => setActiveView(OrderView.REFUND)
-    },
-    {
-      title: "Return/Exchange Requests",
+      title: "Cancel Your Order",
       description: "Problem with order? Request returns and exchanges",
       icon: ArrowLeftRight,
       onClick: () => setActiveView(OrderView.RETURN)
     },
-    {
-      title: "Payment Methods",
-      description: "Default payment methods, saved cards, UPI IDs",
-      icon: CreditCard,
-      onClick: () => setActiveView(OrderView.PAYMENT)
-    }
+    // {
+    //   title: "Payment Methods",
+    //   description: "Default payment methods, saved cards, UPI IDs",
+    //   icon: CreditCard,
+    //   onClick: () => setActiveView(OrderView.PAYMENT)
+    // }
   ];
 
   return (

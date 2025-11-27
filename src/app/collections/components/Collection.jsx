@@ -19,6 +19,7 @@ import TopTrends from "./TopTrends";
 import Image from "next/image";
 import { useToast } from "@/hooks/useToast";
 import { useCart } from "../../../Providers/ContextProviders/CartContext"; // 🔥 ADD THIS IMPORT
+import { toast } from "sonner";
 
 // Keep fallback data for when API is loading or fails
 const fallbackCollections = [
@@ -187,18 +188,23 @@ const handleAddToCart = async (e, item) => {
     const result = await addToCart(cartItemWithVariants);
     
     if (result.success) {
-      // console.log('✅ Item added successfully');
-        showToast(
-          `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`, 
+      toast.success(`${item.name} (${selectedSize}, ${selectedColor}) added to cart!`, 
           'success'
         );
+      // console.log('✅ Item added successfully');
+        // showToast(
+        //   `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`, 
+        //   'success'
+        // );
     } else {
+      toast.error("Failed to add item to cart. Please try again.", "error");
       // console.log('❌ Failed to add item');
-      showToast("Failed to add item to cart. Please try again.", "error");
+      // showToast("Failed to add item to cart. Please try again.", "error");
     }
   } catch (error) {
-    console.error("❌ Error adding to cart:", error);
-    showToast("Failed to add item to cart. Please try again.", "error");
+    // console.error("❌ Error adding to cart:", error);
+    // showToast("Failed to add item to cart. Please try again.", "error");
+    toast.error("Failed to add item to cart. Please try again.", "error");
   }
 };
 
