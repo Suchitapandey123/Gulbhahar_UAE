@@ -1,5 +1,5 @@
 import React from 'react'
-import Profile from './Component/Profile'
+import Profile from './component/Profile/Profile';
 
 export async function generateMetadata() {
   return {

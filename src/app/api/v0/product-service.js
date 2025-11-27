@@ -1,6 +1,5 @@
+import { API_BASE_URL } from "@/utils/envHere";
 import axios from "axios";
-
-const API_BASE_URL = "https://api.gulbhahar.com";
 
 const api = axios.create({
   baseURL: API_BASE_URL,

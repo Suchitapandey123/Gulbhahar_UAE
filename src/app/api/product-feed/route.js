@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
 import ExcelJS from "exceljs";
+import { API_BASE_URL } from "@/utils/envHere";
 
 export async function GET() {
   try {
     
-    const { data: products } = await axios.get("https://api.gulbhahar.com/api/products/get-all-product");
+    const { data: products } = await axios.get(`${API_BASE_URL}/api/products/get-all-product`);
 
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Product Feed");

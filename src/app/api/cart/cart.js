@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/utils/envHere';
 import axios from 'axios';
 
 const DELHIVERY_TOKEN = "8225de";
@@ -6,7 +7,7 @@ export const checkoutApi = {
   validatePostalCode: async (postalCode) => {
     try {
       const response = await axios.get(
-        `https://api.gulbhahar.com/delhiveryRoutes/v0/checkAvalibility?pincode=${postalCode}`,
+        `${API_BASE_URL}/delhiveryRoutes/v0/checkAvalibility?pincode=${postalCode}`,
         {
           timeout: 10000,
           headers: {

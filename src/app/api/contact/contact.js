@@ -1,6 +1,6 @@
+import { API_BASE_URL } from '@/utils/envHere';
 import axios from 'axios';
 
-const API_BASE_URL = 'https://api.gulbhahar.com/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -13,7 +13,7 @@ export const contactAPI = {
   
   createContactSupport: async (contactData) => {
     const response = await api.post(
-      '/contactSupport/createContactSupport',
+      '/api/contactSupport/createContactSupport',
       contactData
     );
     return response.data;

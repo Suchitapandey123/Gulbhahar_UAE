@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://api.gulbhahar.com";
+import { API_BASE_URL } from "@/utils/envHere";
 
 export const newsletterAPI = {
   subscribe: async (payload) => {

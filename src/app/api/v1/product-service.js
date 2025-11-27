@@ -1,7 +1,6 @@
+import { API_BASE_URL } from "@/utils/envHere";
 import axios from "axios";
-import { color } from "framer-motion";
 
-const API_BASE_URL = "https://api.gulbhahar.com";
 // Main API instance with authentication for all operations
 const api = axios.create({
   baseURL: API_BASE_URL,

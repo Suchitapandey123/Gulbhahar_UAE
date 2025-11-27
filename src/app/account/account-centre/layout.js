@@ -5,7 +5,6 @@ export default function AccountLayout({ children }) {
       <div className="flex">
         {/* Main Content */}
         <main className="flex-1 p-2">
-          
           {children}
         </main>
       </div>

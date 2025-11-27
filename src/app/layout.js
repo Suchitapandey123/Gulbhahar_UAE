@@ -9,6 +9,7 @@ import Script from "next/script";
 import { AuthProvider } from "@/Providers/ContextProviders/AuthContext";
 import { CartProvider } from "@/Providers/ContextProviders/CartContext";
 import SessionWrapper from "@/Providers/GoogleSessionProvider/SessionWrapper";
+import { Toaster } from "sonner";
 
 // Configure fonts
 const poppins = Poppins({
@@ -188,6 +189,7 @@ export default function RootLayout({ children }) {
 
           <AuthProvider>
             <ReactQueryProvider>
+              <Toaster position="bottom-right" />
               <CartProvider>
                 <Navbar />
                 <main id="main-content">

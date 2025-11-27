@@ -1,7 +1,7 @@
 
+import { API_BASE_URL } from '@/utils/envHere';
 import axios from 'axios';
 
-const API_BASE_URL = 'https://api.gulbhahar.com/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -13,13 +13,13 @@ const api = axios.create({
 export const forgotPasswordAPI = {
   
   forgotPassword: async (email) => {
-    const response = await api.post('/users/forgot-password', { email });
+    const response = await api.post('/api/users/forgot-password', { email });
     return response.data;
   },
 
   
   verifyEmail: async (email, verificationCode) => {
-    const response = await api.post('/users/verify-email', { 
+    const response = await api.post('/api/users/verify-email', { 
       email, 
       verificationCode 
     });
@@ -28,7 +28,7 @@ export const forgotPasswordAPI = {
 
   
     resetPassword: async ({ email, verificationCode, newPassword }) => {
-    const response = await api.put('/users/reset-password', {
+    const response = await api.put('/api/users/reset-password', {
         email,
         verificationCode,
         newPassword,
@@ -38,7 +38,7 @@ export const forgotPasswordAPI = {
 
   
       resendVerificationCode: async (email) => {
-        const response = await api.post('/users/resend-verification-code', { 
+        const response = await api.post('/api/users/resend-verification-code', { 
           email 
         });
         return response.data;
