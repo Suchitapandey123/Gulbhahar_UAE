@@ -37,4 +37,23 @@ export const pageService = {
     if (!res.ok) throw new Error("Failed to fetch pages");
     return res.json();
   },
+
+
+  async getQuickLinks(parentCategory, currentSlug) {
+    try {
+      const res = await fetch(
+        `${API_BASE_URL}/api/pages/get-quicklinks?parentCategory=${encodeURIComponent(
+          parentCategory
+        )}&currentSlug=${encodeURIComponent(currentSlug)}`,
+        { cache: "no-store" }
+      );
+
+      if (!res.ok) throw new Error("Failed to fetch quick links");
+
+      return res.json();
+    } catch (error) {
+      console.error("QuickLinks API Error:", error);
+      return { success: false, data: [] };
+    }
+  },
 };

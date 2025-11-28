@@ -2,6 +2,7 @@ import React from "react";
 import ContentSection from "./components/ContentSection";
 import Collection from "../components/Collection";
 import QuickTag from "../components/QuickTag";
+import QuickLinks from "../components/QuickLinks";
 import { popularTags } from "../tag";
 import { pageService } from "../../api/pageService/pageService";
 import { redirect } from "next/navigation";
@@ -10,6 +11,27 @@ import sitemapData from "@/utils/sitemapData.json"
 export const revalidate = 86400; 
 export const dynamicParams = true; 
 
+function detectCategoryFromSlug(slug) {
+  if (!slug) return 'suit'; // default fallback
+  
+  const slugLower = slug.toLowerCase();
+  
+  // Enhanced category detection
+  if (slugLower.includes('saree') || slugLower.includes('sari')) return 'saree';
+  if (slugLower.includes('lehenga')) return 'lehenga';
+  if (slugLower.includes('suit') || slugLower.includes('blazer')) return 'suit';
+  if (slugLower.includes('jutti') || slugLower.includes('mojari')) return 'juttis';
+  if (slugLower.includes('dress') || slugLower.includes('gown')) return 'dress';
+  if (slugLower.includes('kurta') || slugLower.includes('kurti')) return 'kurta';
+  if (slugLower.includes('bridal')) {
+    // Bridal can be multiple categories, check context
+    if (slugLower.includes('saree')) return 'saree';
+    if (slugLower.includes('lehenga')) return 'lehenga';
+    return 'lehenga'; // default for bridal
+  }
+  
+  return 'suit'; // default fallback
+}
 
 export async function generateMetadata({ params: rawParams }) {
   const params = await rawParams;
@@ -111,10 +133,22 @@ export default async function Page({ params: rawParams }) {
   const page = res?.data || res?.page;
   if (!page) redirect("/not-found");
 
+  // Detect category from slug
+  const parentCategory = detectCategoryFromSlug(slug);
+  
+  console.log('Detected category:', parentCategory, 'for slug:', slug);
+
   return (
     <div className="mt-24">
       <Collection />
       <ContentSection page={page} />
+
+      {/* QuickLinks with detected category */}
+      <QuickLinks 
+        parentCategory={parentCategory}
+        currentSlug={slug}
+      />
+
       <QuickTag popularTags={page?.keywords || []} />
 
     </div>

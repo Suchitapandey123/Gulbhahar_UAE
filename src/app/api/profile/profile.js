@@ -1,5 +1,4 @@
-import { API_BASE_URL } from "@/utils/envHere";
-
+const API_BASE_URL = 'https://api.gulbhahar.com/api';
 
 export const profileAPI = {
  
@@ -11,7 +10,7 @@ export const profileAPI = {
         throw new Error("No auth token found");
       }
 
-      const response = await fetch(`${API_BASE_URL}/api/users/user-by-token`, {
+      const response = await fetch(`${API_BASE_URL}/users/user-by-token`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -32,15 +31,16 @@ export const profileAPI = {
   
   
   updateUserProfile: async (userData) => {
-    console.log(userData)
     try {
       const token = localStorage.getItem("authToken");
       
       if (!token) {
         throw new Error("No auth token found");
       }
-      const response = await fetch(`${API_BASE_URL}/api/users/update-user`, {
-      // const response = await fetch(`${API_BASE_URL}/users/update-user`, {
+
+      
+
+      const response = await fetch(`${API_BASE_URL}/users/update-user`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -48,7 +48,9 @@ export const profileAPI = {
         },
         body: JSON.stringify(userData)
       });
+
       
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || `Failed to update profile: ${response.status}`);
