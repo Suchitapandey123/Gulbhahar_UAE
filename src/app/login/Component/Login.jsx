@@ -497,19 +497,9 @@ const LoginPage = () => {
   const isButtonDisabled = isLoading || socialLoginLoading;
 
   return (
-    <div className='w-full min-h-screen mt-6'>
-      <header className="relative z-10 bg-white/80 backdrop-blur-sm border-b border-red-100 shadow-sm">
-        <div className="flex items-center justify-center">
-          <div className="max-w-[1600px] mx-auto flex justify-center items-center">
-            <div className="text-3xl font-bold bg-gradient-to-r from-red-900 to-rose-700 bg-clip-text text-transparent">
-              LOGO
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <div className="max-w-[1600px] mx-auto px-6 pt-6">
-        <button 
+    <div className='w-full min-h-screen mt-16 sm:mt-20'>
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 pt-4 sm:pt-6">
+        <button
           onClick={handleGoHome}
           className="group flex items-center text-red-700 hover:text-red-900 transition-all duration-200 transform hover:scale-105"
         >
@@ -518,8 +508,8 @@ const LoginPage = () => {
         </button>
       </div>
 
-      <div className="flex min-h-[calc(100vh-120px)] w-full items-center justify-center py-12">
-        <div className="mx-auto flex w-full max-w-[1600px] flex-col-reverse md:flex-row gap-12 px-6">
+      <div className="flex min-h-[calc(100vh-120px)] w-full items-center justify-center py-6 sm:py-12">
+        <div className="mx-auto flex w-full max-w-[1600px] flex-col-reverse md:flex-row gap-8 md:gap-12 px-4 sm:px-6">
           
           <div className="w-full md:w-1/2 flex items-center justify-center">
             <div className="w-full max-w-md">
