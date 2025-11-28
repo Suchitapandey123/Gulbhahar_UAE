@@ -1,71 +1,227 @@
 "use client";
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Package, 
   Calendar, 
-  DollarSign, 
   Eye, 
   ChevronRight,
   Clock,
   CheckCircle,
   XCircle,
-  ArrowLeft
+  IndianRupee,
+  Truck,
+  ShoppingBag
 } from 'lucide-react';
 
-const orders = [
-  {
-    id: "#5913",
-    date: "12th Jan, 2025",
-    value: "INR 8,500",
-    status: "In Progress",
-    statusColor: "bg-amber-100 text-amber-800 border-amber-200",
-    statusIcon: Clock,
-  },
-  {
-    id: "#5914",
-    date: "14th Jan, 2025",
-    value: "INR 7,000",
-    status: "Completed",
-    statusColor: "bg-green-100 text-green-800 border-green-200",
-    statusIcon: CheckCircle,
-  },
-  {
-    id: "#5915",
-    date: "15th Jan, 2025",
-    value: "INR 5,500",
-    status: "Canceled",
-    statusColor: "bg-red-100 text-red-800 border-red-200",
-    statusIcon: XCircle,
-  },
-  {
-    id: "#5916",
-    date: "16th Jan, 2025",
-    value: "INR 9,200",
-    status: "In Progress",
-    statusColor: "bg-amber-100 text-amber-800 border-amber-200",
-    statusIcon: Clock,
-  },
-];
+import { orderHistoryAPI } from '../../../../api/order/orderApi';
 
 export const OrderHistoryDetails = ({ onOrderClick }) => {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch order history from API
+  const fetchOrderHistoryData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      console.log(' Starting API call to fetch order history...');
+      
+      // Check if API function exists
+      if (!orderHistoryAPI || !orderHistoryAPI.getOrderHistory) {
+        throw new Error('API function not available. Please check the import path.');
+      }
+      
+      const data = await orderHistoryAPI.getOrderHistory();
+      console.log(' API data received:', data);
+      
+      // Transform API data to match your UI structure
+      const ordersData = data.orders || [];
+      const transformedOrders = transformOrderData(ordersData);
+      setOrders(transformedOrders);
+      
+      console.log('Orders transformed and set:', transformedOrders.length, 'orders');
+      
+    } catch (err) {
+      console.error('Error fetching order history:', err);
+      setError(err.message || 'Failed to load orders. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Transform API data - Only essential 6-7 fields
+  const transformOrderData = (apiOrders) => {
+    if (!apiOrders || !Array.isArray(apiOrders)) {
+      console.log('⚠️ No orders data found in API response');
+      return [];
+    }
+
+    console.log('Transforming orders:', apiOrders.length, 'orders found');
+
+    return apiOrders.map((order, index) => {
+      // 1. Order ID (Short version)
+      const orderId = order.orderId ? order.orderId.replace('ORDER_', '#') : `#${5913 + index}`;
+      
+      // 2. Format date
+      const orderDate = new Date(order.placedAt);
+      const formattedDate = formatDate(orderDate);
+      
+      // 3. Format currency
+      const formattedValue = formatCurrency(order.totalAmount);
+      
+      // 4. Determine status
+      const statusInfo = determineOrderStatus(order.status);
+      
+     
+      
+      // 7. Product image (for thumbnail)
+      const productImage = order.items?.[0]?.productImage?.[0] || '';
+      
+      return {
+        
+        id: orderId,                    
+        productName: productName,       
+             
+        date: formattedDate,           
+        value: formattedValue,        
+        status: statusInfo.status,     
+        statusColor: statusInfo.statusColor,
+        statusIcon: statusInfo.statusIcon,
+        productImage: productImage,     
+        
+       
+        originalData: order
+      };
+    });
+  };
+
+  // Format date to "12th Jan, 2025" format
+  const formatDate = (date) => {
+    if (!(date instanceof Date) || isNaN(date)) {
+      return 'Invalid Date';
+    }
+
+    const day = date.getDate();
+    const month = date.toLocaleString('en-US', { month: 'short' });
+    const year = date.getFullYear();
+    
+    // Add ordinal suffix to day
+    const getOrdinalSuffix = (d) => {
+      if (d > 3 && d < 21) return 'th';
+      switch (d % 10) {
+        case 1: return 'st';
+        case 2: return 'nd';
+        case 3: return 'rd';
+        default: return 'th';
+      }
+    };
+    
+    return `${day}${getOrdinalSuffix(day)} ${month}, ${year}`;
+  };
+
+  // Format currency to Indian Rupees format
+  const formatCurrency = (amount) => {
+    if (typeof amount !== 'number') {
+      return '₹ 0';
+    }
+    
+    return `${amount.toLocaleString('en-IN')}`;
+  };
+
+  
+  const determineOrderStatus = (status) => {
+    const statusMap = {
+      'Pending': { 
+        status: "Pending", 
+        statusColor: "bg-amber-100 text-amber-800 border-amber-200", 
+        statusIcon: Clock 
+      },
+      'Confirmed': { 
+        status: "Confirmed", 
+        statusColor: "bg-blue-100 text-blue-800 border-blue-200", 
+        statusIcon: ShoppingBag 
+      },
+      'Shipped': { 
+        status: "Shipped", 
+        statusColor: "bg-purple-100 text-purple-800 border-purple-200", 
+        statusIcon: Truck 
+      },
+      'Delivered': { 
+        status: "Delivered", 
+        statusColor: "bg-green-100 text-green-800 border-green-200", 
+        statusIcon: CheckCircle 
+      },
+      'Cancelled': { 
+        status: "Cancelled", 
+        statusColor: "bg-red-100 text-red-800 border-red-200", 
+        statusIcon: XCircle 
+      },
+      'Returned': { 
+        status: "Returned", 
+        statusColor: "bg-gray-100 text-gray-800 border-gray-200", 
+        statusIcon: XCircle 
+      }
+    };
+    
+    return statusMap[status] || { 
+      status: "Processing", 
+      statusColor: "bg-amber-100 text-amber-800 border-amber-200", 
+      statusIcon: Clock 
+    };
+  };
+
+  // Handle View Details button click
+  const handleViewDetails = (order, e) => {
+    e.stopPropagation(); // Prevent row click event
+    if (onOrderClick) {
+      onOrderClick(order);
+    }
+  };
+
+  // Fetch orders on component mount
+  useEffect(() => {
+    fetchOrderHistoryData();
+  }, []);
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-900 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading your orders...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white flex items-center justify-center">
+        <div className="text-center">
+          <XCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Failed to load orders</h3>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button 
+            onClick={fetchOrderHistoryData}
+            className="bg-red-900 text-white px-6 py-2 rounded-lg hover:bg-red-800 transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white">
-      <div className="max-w-[1600px] mx-auto  py-3 sm:py-6 md:py-8">
+      <div className="max-w-[1600px] mx-auto py-3 sm:py-6 md:py-8">
         {/* Header Section */}
         <div className="mb-4 sm:mb-6 md:mb-8">
-          {/* <div className="flex items-center gap-1 sm:gap-2 mb-3 sm:mb-4">
-            <button 
-              onClick={onOrderClick}
-              className="flex items-center gap-1 sm:gap-2 text-red-900 hover:text-red-700 transition-colors group"
-            >
-              <ArrowLeft className="w-3 sm:w-4 h-3 sm:h-4 group-hover:-translate-x-1 transition-transform" />
-              <span className="text-xs sm:text-sm md:text-base font-medium">My Orders</span>
-            </button>
-            <ChevronRight className="w-3 sm:w-4 h-3 sm:h-4 text-gray-400" />
-            <span className="text-gray-700 text-xs sm:text-sm md:text-base font-medium">Order History</span>
-          </div> */}
-          
-          <div  className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+          <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
             <div className="p-1.5 sm:p-2 bg-red-900 rounded-lg">
               <Package className="text-white w-4 sm:w-5 md:w-6 h-4 sm:h-5 md:h-6" />
             </div>
@@ -84,125 +240,167 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
         <div className="bg-white rounded-none sm:rounded-xl shadow-none sm:shadow-sm border-0 sm:border sm:border-red-100 overflow-hidden">
           {/* Table Headers - Desktop Only */}
           <div className="hidden lg:grid grid-cols-12 gap-4 py-4 px-6 bg-red-50 border-b border-red-100">
-            <div className="col-span-4 flex items-center gap-2 text-red-900 font-semibold text-sm">
+            <div className="col-span-3 flex items-center gap-2 text-red-900 font-semibold text-sm">
               <Package className="w-4 h-4" />
-              Order Details
+              Order Id
+            </div>
+             <div className="col-span-3 flex items-center gap-2 text-red-900 font-semibold text-sm">
+              <Package className="w-4 h-4" />
+              product Name
             </div>
             <div className="col-span-2 flex items-center gap-2 text-red-900 font-semibold text-sm">
               <Clock className="w-4 h-4" />
               Status
             </div>
-            <div className="col-span-3 flex items-center gap-2 text-red-900 font-semibold text-sm">
+            <div className="col-span-2 flex items-center gap-2 text-red-900 font-semibold text-sm">
               <Calendar className="w-4 h-4" />
               Order Date
             </div>
             <div className="col-span-2 flex items-center gap-2 text-red-900 font-semibold text-sm">
-              <DollarSign className="w-4 h-4" />
+              <IndianRupee className="w-4 h-4" />
               Total Value
             </div>
-            <div className="col-span-1"></div>
+            <div className="col-span-3 flex items-center justify-end gap-2 text-red-900 font-semibold text-sm">
+              <Eye className="w-4 h-4" />
+              Actions
+            </div>
           </div>
 
           {/* Orders List */}
-          <div className="divide-y  divide-gray-100">
-            {orders.map((order, index) => {
-              const StatusIcon = order.statusIcon;
-              return (
-                <div
-                  key={index}
-                  className="group hover:bg-red-50/50 transition-all duration-200 cursor-pointer"
-                  onClick={onOrderClick}
-                >
-                  {/* Mobile Layout */}
-                  <div className="lg:hidden p-3 sm:p-4 md:p-5">
-                    <div className="flex items-start justify-between mb-2 sm:mb-3">
-                      <div className="flex items-center gap-2 sm:gap-3">
-                        <div className="p-1.5 sm:p-2 bg-red-100 rounded-lg group-hover:bg-red-200 transition-colors">
-                          <Package className="w-4 sm:w-5 h-4 sm:h-5 text-red-900" />
+          <div className="divide-y divide-gray-100">
+            {orders.length === 0 ? (
+              // Empty state
+              <div className="p-8 text-center">
+                <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">No orders found</h3>
+                <p className="text-gray-600">You haven't placed any orders yet.</p>
+              </div>
+            ) : (
+              orders.map((order, index) => {
+                const StatusIcon = order.statusIcon;
+                return (
+                  <div
+                    key={order.id}
+                    className="group hover:bg-red-50/50 transition-all duration-200 cursor-pointer"
+                    onClick={() => onOrderClick && onOrderClick(order)}
+                  >
+                    {/* Mobile Layout */}
+                    <div className="lg:hidden p-3 sm:p-4 md:p-5">
+                      <div className="flex items-start justify-between mb-2 sm:mb-3">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <div className="p-1.5 sm:p-2 bg-red-100 rounded-lg group-hover:bg-red-200 transition-colors">
+                            <Package className="w-4 sm:w-5 h-4 sm:h-5 text-red-900" />
+                          </div>
+                          <div>
+                            <span className="font-semibold text-gray-900 text-sm sm:text-base">
+                              {order.id}
+                            </span>
+                            
+                          </div>
+                        </div>
+                        <Eye className="w-4 sm:w-5 h-4 sm:h-5 text-red-900 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </div>
+                      
+                      <div className="grid grid-cols-1 xs:grid-cols-2 gap-2 sm:gap-4 mb-2 sm:mb-3">
+                        <div>
+                          <p className="text-xs text-gray-500 mb-0.5 sm:mb-1">Date</p>
+                          <p className="font-medium text-gray-900 text-xs sm:text-sm">{order.date}</p>
                         </div>
                         <div>
-                          <span className="font-semibold text-gray-900 text-sm sm:text-base">
-                            Order {order.id}
-                          </span>
-                          <p className="text-xs sm:text-sm text-gray-500 hidden sm:block">Click to view details</p>
+                          <p className="text-xs text-gray-500 mb-0.5 sm:mb-1">Amount</p>
+                          <p className="font-semibold text-gray-900 text-xs sm:text-sm">{order.value}</p>
                         </div>
                       </div>
-                      <Eye className="w-4 sm:w-5 h-4 sm:h-5 text-red-900 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      
+                      <div className="flex items-center justify-between">
+                        <div className={`inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-medium border ${order.statusColor}`}>
+                          <StatusIcon className="w-3 h-3" />
+                          <span className="text-xs text-nowrap sm:text-sm">{order.status}</span>
+                        </div>
+                        
+                        {/* View Details Button - Mobile */}
+                        <button 
+                          onClick={(e) => handleViewDetails(order, e)}
+                          className="bg-red-900 text-white px-3 py-1.5 rounded-lg hover:bg-red-800 transition-colors text-xs font-medium flex items-center gap-1"
+                        >
+                          <Eye className="w-3 h-3" />
+                          Details
+                        </button>
+                      </div>
                     </div>
-                    
-                    <div className="grid grid-cols-1 xs:grid-cols-2 gap-2 sm:gap-4 mb-2 sm:mb-3">
-                      <div>
-                        <p className="text-xs text-gray-500 mb-0.5 sm:mb-1">Date</p>
-                        <p className="font-medium text-gray-900 text-xs sm:text-sm">{order.date}</p>
+
+                    {/* Desktop Layout */}
+                    <div className="hidden lg:grid grid-cols-12 gap-4 py-5 px-6 items-center">
+                      <div className="col-span-3 flex items-center gap-4">
+                        <div className="p-3 bg-red-100 rounded-lg group-hover:bg-red-200 transition-colors">
+                          <Package className="w-6 h-6 text-red-900" />
+                        </div>
+                        <div>
+                          <span className="font-semibold text-gray-900 text-base">
+                            {order.id}
+                          </span>
+                         
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-xs text-gray-500 mb-0.5 sm:mb-1">Amount</p>
-                        <p className="font-semibold text-gray-900 text-xs sm:text-sm">{order.value}</p>
+                        
+                         <div className="col-span-2">
+                        <div className={`inline-flex text-nowrap items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border ${order.statusColor}`}>
+                          <StatusIcon className="w-4 h-4" />
+                          {order.productName}
+                        </div>
                       </div>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className={`inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-medium border ${order.statusColor}`}>
-                        <StatusIcon className="w-3 h-3" />
-                        <span className="text-xs text-nowrap sm:text-sm">{order.status}</span>
+
+                      <div className="col-span-2">
+                        <div className={`inline-flex text-nowrap items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border ${order.statusColor}`}>
+                          <StatusIcon className="w-4 h-4" />
+                          {order.status}
+                        </div>
                       </div>
-                      <ChevronRight className="w-3 sm:w-4 h-3 sm:h-4 text-gray-400 group-hover:text-red-900 group-hover:translate-x-1 transition-all" />
+
+                      <div className="col-span-2">
+                        <div className="flex items-center gap-2 text-gray-900 font-medium">
+                          <Calendar className="w-4 h-4 text-gray-500" />
+                          {order.date}
+                        </div>
+                      </div>
+
+                      <div className="col-span-2">
+                        <div className="flex items-center gap-2 text-gray-900 font-semibold">
+                          <IndianRupee className="w-4 h-4 text-gray-500" />
+                          {order.value}
+                        </div>
+                      </div>
+
+                      <div className="col-span-3 flex justify-end">
+                        <button 
+                          onClick={(e) => handleViewDetails(order, e)}
+                          className="bg-red-900 text-white px-6 py-2 rounded-lg hover:bg-red-800 transition-colors text-sm font-medium flex items-center gap-2"
+                        >
+                          <Eye className="w-4 h-4" />
+                          View Details
+                        </button>
+                      </div>
                     </div>
                   </div>
-
-                  {/* Desktop Layout */}
-                  <div className="hidden lg:grid grid-cols-12 gap-4 py-5 px-6 items-center">
-                    <div className="col-span-4 flex items-center gap-4">
-                      <div className="p-3 bg-red-100 rounded-lg group-hover:bg-red-200 transition-colors">
-                        <Package className="w-6 h-6 text-red-900" />
-                      </div>
-                      <div>
-                        <span className="font-semibold text-gray-900 text-base">
-                          Order {order.id}
-                        </span>
-                        <p className="text-sm text-gray-500">Click to view details</p>
-                      </div>
-                    </div>
-
-                    <div className="col-span-3">
-                      <div className={`inline-flex text-nowrap items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border ${order.statusColor}`}>
-                        <StatusIcon className="w-4 h-4" />
-                        {order.status}
-                      </div>
-                    </div>
-
-                    <div className="col-span-3">
-                      <div className="flex items-center gap-2 text-gray-900 font-medium">
-                        <Calendar className="w-4 h-4 text-gray-500" />
-                        {order.date}
-                      </div>
-                    </div>
-
-                    <div className="col-span-2">
-                      <div className="flex items-center gap-2 text-gray-900 font-semibold">
-                        <DollarSign className="w-4 h-4 text-gray-500" />
-                        {order.value}
-                      </div>
-                    </div>
-
-                    <div className="col-span-1 flex justify-end">
-                      <Eye className="w-5 h-5 text-red-900 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
 
-          {/* Empty State Footer */}
-          <div className="p-3 sm:p-6 text-center border-t border-gray-100 bg-gray-50">
-            <p className="text-gray-500 text-xs sm:text-sm">
-              Showing {orders.length} orders • 
-              <button className="text-red-900 hover:text-red-700 ml-1 font-medium">
-                Load more orders
-              </button>
-            </p>
-          </div>
+          {/* Footer */}
+          {orders.length > 0 && (
+            <div className="p-3 sm:p-6 text-center border-t border-gray-100 bg-gray-50">
+              <p className="text-gray-500 text-xs sm:text-sm">
+                Showing {orders.length} orders • 
+                <button 
+                  onClick={fetchOrderHistoryData}
+                  className="text-red-900 hover:text-red-700 ml-1 font-medium"
+                >
+                  Refresh orders
+                </button>
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Quick Actions */}
