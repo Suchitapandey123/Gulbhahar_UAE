@@ -14,6 +14,7 @@ import {
   CreditCard,
 } from "lucide-react";
 import { useCart } from "@/Providers/ContextProviders/CartContext";
+import { API_BASE_URL } from "@/utils/envHere";
 
 const TransactionStatusContent = () => {
   const router = useRouter();
@@ -397,7 +398,7 @@ const TransactionStatusContent = () => {
       const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
 
       const response = await fetch(
-        "https://api.gulbhahar.com/guestorderRoutes/order",
+        `${API_BASE_URL}/guestorderRoutes/order`,
         {
           method: "POST",
           headers: {
