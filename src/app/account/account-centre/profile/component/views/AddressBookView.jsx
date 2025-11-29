@@ -1,207 +1,191 @@
-import { useState } from "react";
-import { Plus, Trash2, Home, ChevronDown } from "lucide-react";
+"use client";
+
+import { useState, useEffect } from "react";
+import { Plus, Trash2 } from "lucide-react";
 import Breadcrumb from "../Profile/Breadcrumb";
+import profileAPI from "../../../../../api/profile/profile";
 
 const AddressBookView = ({ onNavigate, ProfileView }) => {
-  // Address form state
+  const [showForm, setShowForm] = useState(false);
+
   const [addressFormData, setAddressFormData] = useState({
-    streetAddress: "",
+    fullName: "",
+    phone: "",
+    addressLine1: "",
     city: "",
-    region: "Select Region",
-    postalCode: ""
+    state: "",
+    postalCode: "",
+    country: "India",
   });
 
-  // Saved addresses state
-  const [savedAddresses, setSavedAddresses] = useState([
-    {
-      id: 1,
-      streetAddress: "512, Kailash Tower, Mahavir Enclave, Mumbai",
-      postalCode: "400001"
-    },
-    {
-      id: 2,
-      streetAddress: "78, Green Valley, MG Road, Bangalore",
-      postalCode: "560001"
-    },
-    {
-      id: 3,
-      streetAddress: "203, Lotus Apartments, Park Street, Kolkata",
-      postalCode: "700016"
-    }
-  ]);
+  const [savedAddresses, setSavedAddresses] = useState([]);
 
-  // Handle address input changes
+  const loadAddresses = async () => {
+    try {
+      const response = await profileAPI.getUserAddresses();
+      console.log("Address API Response:", response);
+
+      if (response.success && Array.isArray(response.data)) {
+        setSavedAddresses(response.data);
+      } else {
+        setSavedAddresses([]);
+      }
+    } catch (error) {
+      console.error("Error loading addresses:", error);
+      setSavedAddresses([]);
+    }
+  };
+
+  useEffect(() => {
+    loadAddresses();
+  }, []);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setAddressFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setAddressFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Add new address function
-  const handleAddAddress = () => {
-    if (
-      addressFormData.streetAddress &&
-      addressFormData.city &&
-      addressFormData.postalCode
-    ) {
-      const newAddress = {
-        id: Date.now(),
-        streetAddress: `${addressFormData.streetAddress}, ${addressFormData.city}`,
-        postalCode: addressFormData.postalCode
-      };
-
-      setSavedAddresses(prev => [...prev, newAddress]);
-
-      // Reset the form
-      setAddressFormData({
-        streetAddress: "",
-        city: "",
-        region: "Select Region",
-        postalCode: ""
-      });
-    }
-  };
-
-  // Remove address function
   const handleRemoveAddress = (id) => {
-    setSavedAddresses(prev => prev.filter(address => address.id !== id));
+    setSavedAddresses((prev) =>
+      prev.filter((a) => a.shippingAddress.postalCode !== id)
+    );
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <Breadcrumb 
+    <div className="max-w-4xl mx-auto px-4 lg:px-0 mt-6">
+
+      {/* Breadcrumb */}
+      <Breadcrumb
         items={[
           { label: "Profile", onClick: () => onNavigate(ProfileView.MAIN) },
-          { label: "Address Book" }
-        ]} 
+          { label: "Address Book" },
+        ]}
       />
 
-      {/* Add New Address */}
-      <div className="bg-white rounded-xl border border-red-100 shadow-sm mb-6">
-        <div className="bg-gradient-to-r from-red-50 to-red-25 px-6 sm:px-8 py-6 border-b border-red-100">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h2 className="text-xl font-semibold text-gray-900">Add New Address</h2>
-              <p className="text-gray-600 text-sm mt-1">Add a new delivery address</p>
-            </div>
-            <button 
-              onClick={handleAddAddress}
-              className="flex items-center gap-2 bg-red-900 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors text-sm font-medium"
-            >
-              <Plus className="w-4 h-4" />
-              Add Address
-            </button>
-          </div>
-        </div>
-
-        <div className="p-6 sm:p-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="lg:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Street Address <span className="text-red-500">*</span>
-              </label>
-              <div className="relative">
-                <Home className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-                <input
-                  type="text"
-                  name="streetAddress"
-                  value={addressFormData.streetAddress}
-                  onChange={handleInputChange}
-                  placeholder="Enter your house number and street name"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-900 focus:border-red-900 transition-colors"
-                />
-              </div>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                City <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="city"
-                value={addressFormData.city}
-                onChange={handleInputChange}
-                placeholder="Enter city name"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-900 focus:border-red-900 transition-colors"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Region <span className="text-red-500">*</span>
-              </label>
-              <div className="relative">
-                <select
-                  name="region"
-                  value={addressFormData.region}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-900 focus:border-red-900 transition-colors appearance-none"
-                >
-                  <option>Select Region</option>
-                  <option>Maharashtra</option>
-                  <option>Karnataka</option>
-                  <option>Tamil Nadu</option>
-                  <option>West Bengal</option>
-                  <option>Delhi</option>
-                </select>
-                <ChevronDown className="absolute right-3 top-3 w-5 h-5 text-gray-400 pointer-events-none" />
-              </div>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Postal Code <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="postalCode"
-                value={addressFormData.postalCode}
-                onChange={handleInputChange}
-                placeholder="Enter postal code"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-900 focus:border-red-900 transition-colors"
-              />
-            </div>
-          </div>
-        </div>
+      {/* Add New Address Button */}
+      <div className="mb-6 flex justify-end">
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="flex items-center gap-2 bg-red-900 text-white px-5 py-2.5 rounded-lg hover:bg-red-800 transition"
+        >
+          <Plus className="w-4 h-4" />
+          {showForm ? "Hide Form" : "Add New Address"}
+        </button>
       </div>
+
+      {/* Address Form */}
+      {showForm && (
+        <div className="bg-white rounded-xl border border-red-100 shadow-sm mb-6">
+          <div className="bg-red-50 px-6 py-4 border-b border-red-100">
+            <h2 className="text-xl font-semibold">Add New Address</h2>
+          </div>
+
+          <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <input
+              type="text"
+              name="fullName"
+              value={addressFormData.fullName}
+              onChange={handleInputChange}
+              placeholder="Full Name"
+              className="border p-3 rounded"
+            />
+            <input
+              type="text"
+              name="phone"
+              value={addressFormData.phone}
+              onChange={handleInputChange}
+              placeholder="Phone Number"
+              className="border p-3 rounded"
+            />
+            <input
+              type="text"
+              name="addressLine1"
+              value={addressFormData.addressLine1}
+              onChange={handleInputChange}
+              placeholder="Address Line 1"
+              className="border p-3 rounded col-span-2"
+            />
+            <input
+              type="text"
+              name="city"
+              value={addressFormData.city}
+              onChange={handleInputChange}
+              placeholder="City"
+              className="border p-3 rounded"
+            />
+            <input
+              type="text"
+              name="state"
+              value={addressFormData.state}
+              onChange={handleInputChange}
+              placeholder="State"
+              className="border p-3 rounded"
+            />
+            <input
+              type="text"
+              name="postalCode"
+              value={addressFormData.postalCode}
+              onChange={handleInputChange}
+              placeholder="Postal Code"
+              className="border p-3 rounded"
+            />
+          </div>
+        </div>
+      )}
 
       {/* Saved Addresses */}
       <div className="bg-white rounded-xl border border-red-100 shadow-sm">
-        <div className="bg-gradient-to-r from-red-50 to-red-25 px-6 sm:px-8 py-6 border-b border-red-100">
-          <h2 className="text-xl font-semibold text-gray-900">Saved Addresses</h2>
+        <div className="bg-red-50 px-6 py-4 border-b border-red-100">
+          <h2 className="text-xl font-semibold">Saved Addresses</h2>
           <p className="text-gray-600 text-sm mt-1">
-            {savedAddresses.length} {savedAddresses.length === 1 ? 'address' : 'addresses'} saved
+            {savedAddresses.length} saved
           </p>
         </div>
-        
-        <div className="p-6 sm:p-8">
-          <div className="space-y-4">
-            {savedAddresses.map((address) => (
-              <div
-                key={address.id}
-                className="flex items-start justify-between p-4 border border-gray-200 rounded-lg hover:border-red-200 transition-colors"
-              >
-                <div className="flex-1">
-                  <p className="font-medium text-gray-900 mb-1">
-                    {address.streetAddress}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    Postal Code: {address.postalCode}
-                  </p>
-                </div>
-                <button
-                  onClick={() => handleRemoveAddress(address.id)}
-                  className="ml-4 p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                  aria-label="Remove address"
-                >
-                  <Trash2 className="w-5 h-5" />
-                </button>
+
+        <div className="p-6 space-y-5">
+          {savedAddresses.length === 0 && (
+            <p className="text-center text-gray-600">No addresses added yet.</p>
+          )}
+
+          {savedAddresses.map((address, index) => (
+            <div
+              key={index}
+              className="border rounded-xl p-5 flex justify-between items-start hover:border-red-300 transition"
+            >
+              <div>
+                <p className="font-semibold text-lg">
+                  {address.shippingAddress.fullName}
+                </p>
+
+                <p className="text-sm text-gray-700 mt-1">
+                  Address: {address.shippingAddress.addressLine1}
+                </p>
+
+                <p className="text-sm text-gray-600">
+                  {address.shippingAddress.city}, {address.shippingAddress.state}
+                </p>
+
+                <p className="text-sm text-gray-600">
+                  Postal Code: {address.shippingAddress.postalCode}
+                </p>
+
+                <p className="text-sm text-gray-600">
+                  Phone: {address.shippingAddress.phone}
+                </p>
+
+                <p className="text-sm text-gray-600">
+                  Country: {address.shippingAddress.country}
+                </p>
               </div>
-            ))}
-          </div>
+
+              <button
+                onClick={() => handleRemoveAddress(address.shippingAddress.postalCode)}
+                className="text-red-600 hover:bg-red-50 p-2 rounded"
+              >
+                <Trash2 className="w-5 h-5" />
+              </button>
+            </div>
+          ))}
         </div>
       </div>
     </div>

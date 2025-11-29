@@ -65,6 +65,35 @@ export const profileAPI = {
       throw error;
     }
   },
+
+ getUserAddresses: async () => {
+  try {
+    const token = localStorage.getItem("authToken");
+    if (!token) throw new Error("No auth token found");
+
+    const response = await fetch(
+      `${API_BASE_URL}/get-address/get-user-saved-address`, 
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({}),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch addresses: ${response.status}`);
+    }
+
+    return await response.json(); 
+  } catch (error) {
+    console.error("Error fetching addresses:", error);
+    return { success: false, data: [] };
+  }
+}
+
 };
 
 export default profileAPI;
