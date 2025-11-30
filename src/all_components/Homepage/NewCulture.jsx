@@ -160,13 +160,13 @@ const LuxuryCulture = () => {
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={containerVariants}
-      className="min-h-screen w-full relative overflow-hidden bg-gradient-to-br from-cream-50 via-stone-50 to-amber-50"
+      className=" w-full relative overflow-hidden bg-gradient-to-br from-cream-50 via-stone-50 to-amber-50"
     >
       {/* Background overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-transparent via-amber-50/30 to-orange-50/20" />
 
       {/* Main content */}
-      <div className="relative z-10  mx-auto px-1 sm:px-6 lg:px-8 py-8 md:py-16">
+      <div className="relative z-10 max-w-[1600px]  mx-auto px-1 sm:px-6 lg:px-8 py-8 md:py-16">
         {/* Header */}
         <motion.div 
           variants={headerVariants}

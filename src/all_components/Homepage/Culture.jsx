@@ -14,7 +14,7 @@ export default function Culture() {
   return (
     <>
       {/* Showcase Section */}
-      <section className=" mx-auto px-1 sm:px-4 py-16">
+      <section className=" max-w-[1600px] mx-auto px-1 sm:px-4 py-16">
         <h1 className="text-3xl lg:text-5xl font-bold mb-12 text-customRed">
           OUR SHOWCASE
         </h1>
@@ -40,7 +40,7 @@ export default function Culture() {
       </section>
 
       {/* Content Section */}
-      <section className="container mx-auto px-4 py-16">
+      <section className="max-w-[1600px] mx-auto px-4 py-16">
         <h2 className="text-2xl lg:text-3xl font-medium mb-8">
           Meticulously Handmade Footwear - Gulbhahar
         </h2>
