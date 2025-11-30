@@ -4,6 +4,7 @@ import Collection from '../../components/Collection';
 import ContentJuttis from './components/ContentJuttis';
 import QuickTag from "../../components/QuickTag";
 import { popularTags  } from "../../tag";
+import QuickSearch from '@/all_components/Homepage/QuickLinks';
 
 export async function generateMetadata() {
     return {
@@ -32,6 +33,7 @@ const page = () => {
       <Collection />
       <ContentJuttis />
       <QuickTag popularTags={popularTags["bridal-juttis"]}  />
+      <QuickSearch />
     </div>
   )
 }

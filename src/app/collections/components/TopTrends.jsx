@@ -12,7 +12,7 @@ const TopTrends = () => {
     <>
       {/* Top Trends Section */}
       <div className="bg-gradient-to-r from-red-100 to-rose-100 py-16 mt-16">
-        <section className="container mx-auto lg:max-w-[1600px] px-2 xs:px-4">
+        <section className=" mx-auto lg:max-w-[1600px] px-2 xs:px-4">
           <h2 className="text-5xl font-bold mb-12 text-red-900 text-center">
             Top Trends
           </h2>

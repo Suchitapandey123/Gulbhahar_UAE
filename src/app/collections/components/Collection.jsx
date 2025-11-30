@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { GulbharLoader } from '@/all_components/loader/GulbharLoader';
+import { GulbharLoader } from "@/all_components/loader/GulbharLoader";
 import {
   ChevronDown,
   ChevronUp,
@@ -40,7 +40,13 @@ const fallbackCollections = [
   },
 ];
 
-const seasons = [ "all","designed by monica", "casual juttis", "festive collection", "designer collection"];
+const seasons = [
+  "all",
+  "designed by monica",
+  "casual juttis",
+  "festive collection",
+  "designer collection",
+];
 
 const sortOptions = [
   { label: "Price: high to low", value: "price-desc" },
@@ -64,8 +70,7 @@ const ITEMS_PER_PAGE = 24;
 
 // 🔥 ADD CATEGORY PROP
 export default function Collection({ category = null }) {
-
-   useEffect(() => {
+  useEffect(() => {
     if (window.fbq) {
       fbq("track", "ViewContent", {
         content_name: "Collection Page",
@@ -74,7 +79,6 @@ export default function Collection({ category = null }) {
     }
   }, [category]); // 🔥 ADD CATEGORY DEPENDENCY
 
-  
   const [currentImageIndices, setCurrentImageIndices] = useState({});
   const [hoveredProduct, setHoveredProduct] = useState(null);
   const [viewMode, setViewMode] = useState("grid");
@@ -83,14 +87,14 @@ export default function Collection({ category = null }) {
   const [sortBy, setSortBy] = useState("relevance");
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+
   // 🔥 REMOVE THESE OLD CART STATES:
   // const [cart, setCart] = useState([]);
   // const [addingToCart, setAddingToCart] = useState(null);
-  
+
   // 🔥 ADD CART CONTEXT HOOK INSTEAD:
   const { addToCart, addingToCart } = useCart();
-  
+
   const [openSections, setOpenSections] = useState({
     price: false,
     size: false,
@@ -119,12 +123,12 @@ export default function Collection({ category = null }) {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["getProductsByCategory", category], 
-    queryFn: () => 
-      category 
-        ? productApi.getProductsByCategory(category) 
-        : productApi.getAllProduct(), 
-    enabled: true, 
+    queryKey: ["getProductsByCategory", category],
+    queryFn: () =>
+      category
+        ? productApi.getProductsByCategory(category)
+        : productApi.getAllProduct(),
+    enabled: true,
   });
 
   // Transform API data to match component structure
@@ -155,58 +159,59 @@ export default function Collection({ category = null }) {
   };
 
   // 🔥 REPLACE OLD handleAddToCart WITH THIS NEW ONE:
- 
 
+  const handleAddToCart = async (e, item) => {
+    // console.log('🛒 Collections - Adding item to cart:', item);
+    e.preventDefault();
+    e.stopPropagation();
 
-const handleAddToCart = async (e, item) => {
-  // console.log('🛒 Collections - Adding item to cart:', item);
-  e.preventDefault();
-  e.stopPropagation();
+    try {
+      // Auto-select first available options
+      const selectedColor =
+        item.colors && item.colors.length > 0 ? item.colors[0] : "default";
+      const selectedSize =
+        item.sizes && item.sizes.length > 0 ? item.sizes[0] : "default";
 
-  try {
-    // Auto-select first available options
-    const selectedColor = item.colors && item.colors.length > 0 ? item.colors[0] : 'default';
-    const selectedSize = item.sizes && item.sizes.length > 0 ? item.sizes[0] : 'default';
-    
-    // console.log('🎨 Auto-selected variants:', { selectedColor, selectedSize });
+      // console.log('🎨 Auto-selected variants:', { selectedColor, selectedSize });
 
-    // 🔥 STANDARDIZED cart item structure
-    const cartItemWithVariants = {
-      ...item,
-      // Use productId consistently
-      id: item.productId || item.id,
-      productId: item.productId || item.id,
-      selectedColor,
-      selectedSize,
-      selectedColorIndex: 0,
-      // Remove custom cartId - let context generate it
-      addedAt: new Date().toISOString()
-    };
+      // 🔥 STANDARDIZED cart item structure
+      const cartItemWithVariants = {
+        ...item,
+        // Use productId consistently
+        id: item.productId || item.id,
+        productId: item.productId || item.id,
+        selectedColor,
+        selectedSize,
+        selectedColorIndex: 0,
+        // Remove custom cartId - let context generate it
+        addedAt: new Date().toISOString(),
+      };
 
-    // console.log('🛒 Standardized cart item:', cartItemWithVariants);
+      // console.log('🛒 Standardized cart item:', cartItemWithVariants);
 
-    const result = await addToCart(cartItemWithVariants);
-    
-    if (result.success) {
-      toast.success(`${item.name} (${selectedSize}, ${selectedColor}) added to cart!`, 
-          'success'
+      const result = await addToCart(cartItemWithVariants);
+
+      if (result.success) {
+        toast.success(
+          `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`,
+          "success"
         );
-      // console.log('✅ Item added successfully');
+        // console.log('✅ Item added successfully');
         // showToast(
-        //   `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`, 
+        //   `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`,
         //   'success'
         // );
-    } else {
-      toast.error("Failed to add item to cart. Please try again.", "error");
-      // console.log('❌ Failed to add item');
+      } else {
+        toast.error("Failed to add item to cart. Please try again.", "error");
+        // console.log('❌ Failed to add item');
+        // showToast("Failed to add item to cart. Please try again.", "error");
+      }
+    } catch (error) {
+      // console.error("❌ Error adding to cart:", error);
       // showToast("Failed to add item to cart. Please try again.", "error");
+      toast.error("Failed to add item to cart. Please try again.", "error");
     }
-  } catch (error) {
-    // console.error("❌ Error adding to cart:", error);
-    // showToast("Failed to add item to cart. Please try again.", "error");
-    toast.error("Failed to add item to cart. Please try again.", "error");
-  }
-};
+  };
 
   // Use API data if available, otherwise fallback
   const collections = apiData ? transformApiData(apiData) : fallbackCollections;
@@ -222,7 +227,7 @@ const handleAddToCart = async (e, item) => {
         const calculatedMax = Math.max(...prices);
         const newMinPrice = Math.max(0, calculatedMin - 200);
         const newMaxPrice = calculatedMax + 200;
-  
+
         // Only update if values are different to prevent infinite re-renders
         if (minPrice !== newMinPrice || maxPrice !== newMaxPrice) {
           setMinPrice(newMinPrice);
@@ -241,7 +246,6 @@ const handleAddToCart = async (e, item) => {
 
     return () => clearTimeout(timeoutId);
   }, [selectedSeason, selectedSizes, sortBy]);
-    
 
   // Extract unique sizes from API data
   const sizes = [
@@ -283,7 +287,7 @@ const handleAddToCart = async (e, item) => {
       });
     }, 2000);
   };
-  
+
   const handleMouseLeave = () => {
     setHoveredProduct(null);
     clearInterval(slideIntervalRef.current);
@@ -294,7 +298,6 @@ const handleAddToCart = async (e, item) => {
       clearInterval(slideIntervalRef.current);
     };
   }, []);
-
 
   const toggleSection = (section) => {
     setOpenSections((prev) => ({
@@ -686,9 +689,7 @@ const handleAddToCart = async (e, item) => {
 
   // Loading state
   if (isLoading) {
-    return (
-        <GulbharLoader />
-      )
+    return <GulbharLoader />;
   }
 
   // Error state
@@ -710,25 +711,24 @@ const handleAddToCart = async (e, item) => {
       <ToastContainer />
 
       <div className="max-w-[1600px] mx-auto  flex flex-col lg:flex-row">
-        
-       {/* Sidebar - Visible only on lg screens and larger */}
-      <div className="hidden xl:flex mt-5 flex-col max-w-[360px] mb-8 sticky top-24 h-fit">
-        {/* Breadcrumb */}
-        <div className="max-w-[400px] px-2 lg:px-2">
-          <nav className="py-2">
-            <span className="text-red-700 hover:text-red-900 transition-colors cursor-pointer">
-              Home
-            </span>
-            <span className="mx-2 text-red-400">/</span>
-            <span className="text-red-900 font-semibold">Collections</span>
-          </nav>
-        </div>
+        {/* Sidebar - Visible only on lg screens and larger */}
+        <div className="hidden xl:flex mt-5 flex-col max-w-[360px] mb-8 sticky top-24 h-fit">
+          {/* Breadcrumb */}
+          <div className="max-w-[400px] px-2 lg:px-2">
+            <nav className="py-2">
+              <span className="text-red-700 hover:text-red-900 transition-colors cursor-pointer">
+                Home
+              </span>
+              <span className="mx-2 text-red-400">/</span>
+              <span className="text-red-900 font-semibold">Collections</span>
+            </nav>
+          </div>
 
-        {/* Filter Box - Fixed Height with Scroll */}
-        <div className="bg-white border-2 border-red-200 h-[calc(100vh-140px)] w-[280px] rounded-xl shadow-lg overflow-y-auto">
-          <FilterContent />
+          {/* Filter Box - Fixed Height with Scroll */}
+          <div className="bg-white border-2 border-red-200 h-[calc(100vh-140px)] w-[280px] rounded-xl shadow-lg overflow-y-auto">
+            <FilterContent />
+          </div>
         </div>
-      </div>
 
         {/* Mobile Filter Modal */}
         {isModalOpen && (
@@ -883,7 +883,7 @@ const handleAddToCart = async (e, item) => {
                           currentImageIndices[item.id] || 0;
 
                         return (
-                          <div className="relative w-full h-full bg-gray-100">
+                          <div className="relative w-full h-full bg-white -100">
                             {/* Stack all images and show current one with fade */}
                             {imagesToShow.map((image, idx) => (
                               <Image
@@ -893,7 +893,7 @@ const handleAddToCart = async (e, item) => {
                                 key={idx}
                                 src={image || "/Image/About1.png"}
                                 alt={`${item.title} - ${idx + 1}`}
-                                className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-700 ease-in-out ${
+                                className={`absolute inset-0 w-full h-full object-fit transition-opacity duration-700 ease-in-out ${
                                   currentImageIndex === idx
                                     ? "opacity-100"
                                     : "opacity-0"
@@ -944,6 +944,30 @@ const handleAddToCart = async (e, item) => {
                         </span>
                       )}
 
+                      {(index === 0 || index === 1) && (
+                        <div className="absolute top-0 right-0 z-10">
+                          <div className="relative">
+                            {/* Animated glow effect */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-[#7b1e28] to-[#4a0f14] rounded-lg blur-sm animate-pulse opacity-75"></div>
+
+                            {/* Main badge */}
+                            <span className="relative flex items-center gap-1 bg-gradient-to-r from-[#7b1e28] via-[#8b2632] to-[#4a0f14] text-white text-xs sm:text-sm font-semibold px-2 sm:px-2 py-1 sm:py-1 rounded-g shadow-lg border border-white/20">
+                              {/* Sparkle icon */}
+                              <span className="text-yellow-300 animate-pulse">
+                                ✨
+                              </span>
+                              <span className="tracking-wide">NEW ARRIVAL</span>
+                              <span className="text-yellow-300 animate-pulse">
+                                ✨
+                              </span>
+                            </span>
+
+                            {/* Shine effect */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-lg animate-shine"></div>
+                          </div>
+                        </div>
+                      )}
+
                       {/* Discount Badge */}
                       {item.originalPrice &&
                         item.originalPrice > item.price && (
@@ -960,25 +984,27 @@ const handleAddToCart = async (e, item) => {
                       {/* Hover Add to Cart Button - Only in grid view */}
                       {viewMode === "grid" && (
                         <div className="absolute bottom-0 left-0 right-0 bg-red-900 text-white text-center py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-full group-hover:translate-y-0">
-                               <button
-                        onClick={(e) => handleAddToCart(e, item)}
-                        disabled={addingToCart === (item.productId || item.id)}
-                          className="w-full text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-75"
+                          <button
+                            onClick={(e) => handleAddToCart(e, item)}
+                            disabled={
+                              addingToCart === (item.productId || item.id)
+                            }
+                            className="w-full text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-75"
                           >
-                        {addingToCart === (item.productId || item.id) ? (
-                          <>
-                            {/* Spinner */}
-                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                            <span>Adding...</span>
-                          </>
-                        ) : (
-                          <>
-                            <ShoppingBag size={16} />
-                            <span>Add to Cart</span>
-                          </>
-                        )}
-                    </button>
-                         
+                            {addingToCart === (item.productId || item.id) ? (
+                              <>
+                                {/* Spinner */}
+                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                <span>Adding...</span>
+                              </>
+                            ) : (
+                              <>
+                                <ShoppingBag size={16} />
+                                <span>Add to Cart</span>
+                              </>
+                            )}
+                          </button>
+
                           {/* <button
                             onClick={(e) => handleAddToCart(e, item)}
                             disabled={addingToCart === item.id}
@@ -1207,25 +1233,26 @@ const handleAddToCart = async (e, item) => {
                             })()}
                           </div>
 
-                    <button
-                        onClick={(e) => handleAddToCart(e, item)}
-                        disabled={addingToCart === (item.productId || item.id)}
-                        className="bg-red-900 hover:bg-red-800 text-white px-6 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed"
-                      >
-                        {addingToCart === (item.productId || item.id) ? (
-                          <>
-                            {/* Spinner */}
-                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                            <span>Adding...</span>
-                          </>
-                        ) : (
-                          <>
-                            <ShoppingBag size={16} />
-                            <span>Add to Cart</span>
-                          </>
-                        )}
-                    </button>
-
+                          <button
+                            onClick={(e) => handleAddToCart(e, item)}
+                            disabled={
+                              addingToCart === (item.productId || item.id)
+                            }
+                            className="bg-red-900 hover:bg-red-800 text-white px-6 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed"
+                          >
+                            {addingToCart === (item.productId || item.id) ? (
+                              <>
+                                {/* Spinner */}
+                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                <span>Adding...</span>
+                              </>
+                            ) : (
+                              <>
+                                <ShoppingBag size={16} />
+                                <span>Add to Cart</span>
+                              </>
+                            )}
+                          </button>
                         </div>
                       </div>
                     )}

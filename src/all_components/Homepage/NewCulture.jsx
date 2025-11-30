@@ -166,7 +166,7 @@ const LuxuryCulture = () => {
       <div className="absolute inset-0 bg-gradient-to-br from-transparent via-amber-50/30 to-orange-50/20" />
 
       {/* Main content */}
-      <div className="relative z-10 container mx-auto px-1 sm:px-6 lg:px-8 py-8 md:py-16">
+      <div className="relative z-10  mx-auto px-1 sm:px-6 lg:px-8 py-8 md:py-16">
         {/* Header */}
         <motion.div 
           variants={headerVariants}

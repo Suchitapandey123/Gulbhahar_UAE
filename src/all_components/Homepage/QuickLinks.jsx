@@ -7,7 +7,6 @@ import { useState, useRef, useEffect } from "react";
 import { ArrowUpRight, TrendingUp, Zap } from "lucide-react";
 import { pageService } from "../../app/api/pageService/pageService";
 
-
 const oldStandardTT = Old_Standard_TT({
   weight: "400",
   variable: "--font-old-standard-tt",
@@ -78,7 +77,10 @@ export default function QuickSearch() {
         setLoading(true);
         const parentCategory = "saree";
         const currentSlug = "kanjivaram-lehenga";
-        const data = await pageService.getQuickLinks(parentCategory, currentSlug);
+        const data = await pageService.getQuickLinks(
+          parentCategory,
+          currentSlug
+        );
         console.log("QuickLinks API Response:", data);
         setQuickLinksData(data);
       } catch (error) {
@@ -95,7 +97,7 @@ export default function QuickSearch() {
     if (!slug) return "";
     return slug
       .split("-") // Split by hyphen
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize first letter
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize first letter
       .join(" "); // Join with space
   };
 
@@ -149,7 +151,6 @@ export default function QuickSearch() {
 
   const popularSearches = getPopularSearches();
   const quickLinks = getQuickLinks();
-  
 
   return (
     <motion.footer
@@ -157,17 +158,16 @@ export default function QuickSearch() {
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={containerVariants}
-      className="max-w-[1600px] mx-auto py-16 px-4 bg-gradient-to-b from-gray-50 to-white"
+      className="max-w-[1600px] mx-auto py-16 px-4 "
     >
       {/* Popular Searches Section */}
-      <motion.div
-        variants={sectionVariants}
-        className="mb-12 relative"
-      >
+      <motion.div variants={sectionVariants} className="mb-12 relative">
         {/* Background decoration */}
         <motion.div
           initial={{ scale: 0, opacity: 0 }}
-          animate={isInView ? { scale: 1, opacity: 0.1 } : { scale: 0, opacity: 0 }}
+          animate={
+            isInView ? { scale: 1, opacity: 0.1 } : { scale: 0, opacity: 0 }
+          }
           transition={{ duration: 1, delay: 0.5 }}
           className="absolute -top-4 -left-4 w-16 h-16 bg-gradient-to-br from-red-900 via-red-600 to-red-900 rounded-full blur-xl"
         />
@@ -205,7 +205,7 @@ export default function QuickSearch() {
             >
               Popular Searches
             </motion.span>
-            
+
             {/* Animated underline */}
             <motion.div
               initial={{ scaleX: 0 }}
@@ -217,23 +217,19 @@ export default function QuickSearch() {
         </motion.div>
 
         <motion.div
-          className="flex flex-wrap gap-3"
+          className="flex flex-wrap gap-1"
           variants={containerVariants}
         >
           {popularSearches.map((item, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              className="group"
-            >
+            <motion.div key={index} variants={itemVariants} className="group">
               <Link href={`/collections/${item}`}>
                 <motion.div
                   variants={tagVariants}
                   initial="rest"
                   whileHover="hover"
                   whileTap="tap"
-                  className="relative px-4 py-2 bg-white border border-gray-200 rounded-full
-                           shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer
+                  className="relative
+                            transition-all duration-300 cursor-pointer
                            group-hover:border-red-300 overflow-hidden"
                 >
                   {/* Hover background gradient */}
@@ -250,7 +246,11 @@ export default function QuickSearch() {
                   >
                     {formatSlugToText(item)}
                   </span>
-                  
+
+                  {index !== popularSearches.length - 1 && (
+                    <span className=" text-black -900 font-"> | </span>
+                  )}
+
                   {/* Hover icon */}
                   <motion.div
                     initial={{ opacity: 0, scale: 0 }}
@@ -283,14 +283,13 @@ export default function QuickSearch() {
       </motion.div>
 
       {/* Quick Links Section */}
-      <motion.div
-        variants={sectionVariants}
-        className="relative"
-      >
+      <motion.div variants={sectionVariants} className="relative">
         {/* Background decoration */}
         <motion.div
           initial={{ scale: 0, opacity: 0 }}
-          animate={isInView ? { scale: 1, opacity: 0.1 } : { scale: 0, opacity: 0 }}
+          animate={
+            isInView ? { scale: 1, opacity: 0.1 } : { scale: 0, opacity: 0 }
+          }
           transition={{ duration: 1, delay: 0.8 }}
           className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-red-900 via-red-600 to-red-900 rounded-full blur-xl"
         />
@@ -329,7 +328,7 @@ export default function QuickSearch() {
             >
               Quick Links
             </motion.span>
-            
+
             {/* Animated underline */}
             <motion.div
               initial={{ scaleX: 0 }}
@@ -345,18 +344,14 @@ export default function QuickSearch() {
           variants={containerVariants}
         >
           {quickLinks.map((item, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              className="group"
-            >
+            <motion.div key={index} variants={itemVariants} className="group">
               <Link href={`/collections/${item}`}>
                 <motion.div
                   variants={tagVariants}
                   initial="rest"
                   whileHover="hover"
                   whileTap="tap"
-                  className="relative p-4 bg-white border border-gray-200 rounded-xl
+                  className="relative p-2 px-4 bg-white border border-gray-200 rounded-xl
                            shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer
                            group-hover:border-red-300 overflow-hidden"
                 >
@@ -368,16 +363,16 @@ export default function QuickSearch() {
                     className="absolute inset-0 bg-gradient-to-br from-red-50 to-red-100 rounded-xl"
                   />
 
-                  <motion.div
-                    className="relative z-10 flex items-center justify-between"
-                  >
+                  <motion.div className="relative z-10 flex items-center justify-between">
                     <span
                       className={`${oldStandardTT.variable} text-sm lg:text-base text-gray-700
-                                group-hover:text-red-700 transition-colors duration-200 font-medium`}
+              group-hover:text-red-700 truncate transition-colors duration-200 font-medium
+              relative cursor-pointer`}
+                      title={formatSlugToText(item)}
                     >
                       {formatSlugToText(item)}
                     </span>
-                    
+
                     <motion.div
                       initial={{ x: 0, opacity: 0.5 }}
                       whileHover={{ x: 3, opacity: 1 }}
@@ -388,9 +383,7 @@ export default function QuickSearch() {
                   </motion.div>
 
                   {/* Floating particles */}
-                  <motion.div
-                    className="absolute top-2 right-2"
-                  >
+                  <motion.div className="absolute top-2 right-2">
                     <motion.div
                       animate={{
                         y: [0, -3, 0],

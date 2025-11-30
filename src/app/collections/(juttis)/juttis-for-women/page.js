@@ -5,6 +5,7 @@ import ContentJuttis from "./components/ContentJuttisForWomen";
 import ContentJuttisForWomen from "./components/ContentJuttisForWomen";
 import QuickTag from "../../components/QuickTag";
 import { popularTags  } from "../../tag";
+import QuickSearch from "@/all_components/Homepage/QuickLinks";
 export async function generateMetadata() {
   return {
     title:"Juttis for Women| Gulbhahar’s Limited Juttis for Women | Only 24 Pairs", 
@@ -31,6 +32,7 @@ const page = () => {
       <Collection />
       <ContentJuttisForWomen />
       <QuickTag popularTags={popularTags["juttis-for-women"]}  />
+      <QuickSearch />
     </div>
   );
 };

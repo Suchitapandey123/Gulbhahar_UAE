@@ -263,6 +263,32 @@ const NewCollection = ({ newCollection }) => {
                             priority={index < 9}
                             className="object-cover transition-transform duration-300 group-hover:scale-105"
                           />
+
+
+                          // New Arrival Badge 
+                          {(index === 0) && (
+                        <div className="absolute top-0 right-0 z-10">
+                          <div className="relative">
+                            {/* Animated glow effect */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-[#7b1e28] to-[#4a0f14] rounded-lg blur-sm animate-pulse opacity-75"></div>
+
+                            {/* Main badge */}
+                            <span className="relative flex items-center gap-1 bg-gradient-to-r from-[#7b1e28] via-[#8b2632] to-[#4a0f14] text-white text-xs sm:text-sm font-semibold px-2 sm:px-2 py-1 sm:py-1 rounded-g shadow-lg border border-white/20">
+                              {/* Sparkle icon */}
+                              <span className="text-yellow-300 animate-pulse">
+                                ✨
+                              </span>
+                              <span className="tracking-wide">NEW ARRIVAL</span>
+                              <span className="text-yellow-300 animate-pulse">
+                                ✨
+                              </span>
+                            </span>
+
+                            {/* Shine effect */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-lg animate-shine"></div>
+                          </div>
+                        </div>
+                      )}
                           
                           {/* Hover Overlay */}
                           <motion.div

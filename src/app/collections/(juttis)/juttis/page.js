@@ -4,6 +4,7 @@ import Collection from '../../components/Collection';
 import ContentJuttis from './components/ContentJuttis';
 import QuickTag from "../../components/QuickTag";
 import { popularTags  } from "../../tag";
+import QuickSearch from '@/all_components/Homepage/QuickLinks';
 export async function generateMetadata() {
     return {
       title:"Juttis | Gulbhahar’s Limited-Edition Juttis | Only 24 Pairs per Design",
@@ -31,6 +32,7 @@ const page = () => {
       <Collection />
       <ContentJuttis />
       <QuickTag popularTags={popularTags["juttis"]}  />
+      <QuickSearch />
     </div>
   )
 }
