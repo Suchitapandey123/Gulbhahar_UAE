@@ -1,4 +1,4 @@
-// src/app/api/order/orderApi.js
+const API_BASE_URL = 'https://api.gulbhahar.com';
 
 export const orderHistoryAPI = {
   getOrderHistory: async () => {
@@ -8,11 +8,8 @@ export const orderHistoryAPI = {
       if (!token) {
         throw new Error("No auth token found");
       }
-
-      console.log("📡 Fetching order history from API...");
-      
-      
-      const response = await fetch('https://api.gulbhahar.com/orders/history', {
+          
+      const response = await fetch(`${API_BASE_URL}/orders/history`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -20,7 +20,6 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch order history from API
   const fetchOrderHistoryData = async () => {
     try {
       setLoading(true);
@@ -28,30 +27,30 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
       
       console.log(' Starting API call to fetch order history...');
       
-      // Check if API function exists
+      
       if (!orderHistoryAPI || !orderHistoryAPI.getOrderHistory) {
         throw new Error('API function not available. Please check the import path.');
       }
       
       const data = await orderHistoryAPI.getOrderHistory();
-      console.log(' API data received:', data);
+      console.log('📦 FULL API RESPONSE:', JSON.stringify(data, null, 2));
       
       // Transform API data to match your UI structure
       const ordersData = data.orders || [];
       const transformedOrders = transformOrderData(ordersData);
       setOrders(transformedOrders);
       
-      console.log('Orders transformed and set:', transformedOrders.length, 'orders');
+      console.log('✅ Orders transformed and set:', transformedOrders.length, 'orders');
       
     } catch (err) {
-      console.error('Error fetching order history:', err);
+      console.error(' Error fetching order history:', err);
       setError(err.message || 'Failed to load orders. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  // Transform API data - Only essential 6-7 fields
+  
   const transformOrderData = (apiOrders) => {
     if (!apiOrders || !Array.isArray(apiOrders)) {
       console.log('⚠️ No orders data found in API response');
@@ -61,43 +60,71 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
     console.log('Transforming orders:', apiOrders.length, 'orders found');
 
     return apiOrders.map((order, index) => {
-      // 1. Order ID (Short version)
-      const orderId = order.orderId ? order.orderId.replace('ORDER_', '#') : `#${5913 + index}`;
       
-      // 2. Format date
+      console.log(`\n Order ${index} full data:`, order);
+      console.log(` Order ${index} items:`, order.items);
+      
+      if (order.items && order.items.length > 0) {
+        console.log(`🔍 Order ${index} first item fields:`, Object.keys(order.items[0]));
+        console.log(`🏷️ Order ${index} first item productName:`, order.items[0].productName);
+        console.log(`🆔 Order ${index} first item productId:`, order.items[0].productId);
+      }
+
+     
+      const orderId = order.orderId ? order.orderId.replace('ORDER_', '#') : `#${5913 + index}`;
+           
+      let productName = "Product Name Not Available";
+      
+      if (order.items && order.items.length > 0) {
+        const firstItem = order.items[0];
+        
+        
+        if (firstItem.productName) {
+          productName = firstItem.productName;
+        }
+       
+        else if (firstItem.productId) {
+          productName = `Product ${firstItem.productId}`;
+        }
+        
+        else if (firstItem.selectedColor || firstItem.selectedSize) {
+          const color = firstItem.selectedColor || '';
+          const size = firstItem.selectedSize ? `Size ${firstItem.selectedSize}` : '';
+          productName = `${color} ${size}`.trim() || 'Custom Product';
+        }
+      }
+      
+      console.log(`Order ${index} final productName:`, productName);
+
+     
       const orderDate = new Date(order.placedAt);
       const formattedDate = formatDate(orderDate);
       
-      // 3. Format currency
+      
       const formattedValue = formatCurrency(order.totalAmount);
       
-      // 4. Determine status
+      
       const statusInfo = determineOrderStatus(order.status);
       
      
-      
-      // 7. Product image (for thumbnail)
-      const productImage = order.items?.[0]?.productImage?.[0] || '';
+      const productImage = order.items && order.items[0] && order.items[0].productImage && order.items[0].productImage.length > 0
+        ? order.items[0].productImage[0] 
+        : '';
       
       return {
-        
         id: orderId,                    
-        productName: productName,       
-             
+        productName: productName,     
         date: formattedDate,           
         value: formattedValue,        
         status: statusInfo.status,     
         statusColor: statusInfo.statusColor,
         statusIcon: statusInfo.statusIcon,
         productImage: productImage,     
-        
-       
         originalData: order
       };
     });
   };
 
-  // Format date to "12th Jan, 2025" format
   const formatDate = (date) => {
     if (!(date instanceof Date) || isNaN(date)) {
       return 'Invalid Date';
@@ -107,7 +134,7 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
     const month = date.toLocaleString('en-US', { month: 'short' });
     const year = date.getFullYear();
     
-    // Add ordinal suffix to day
+   
     const getOrdinalSuffix = (d) => {
       if (d > 3 && d < 21) return 'th';
       switch (d % 10) {
@@ -127,7 +154,7 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
       return '₹ 0';
     }
     
-    return `${amount.toLocaleString('en-IN')}`;
+    return ` ${amount.toLocaleString('en-IN')}`;
   };
 
   
@@ -173,12 +200,41 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
   };
 
   // Handle View Details button click
-  const handleViewDetails = (order, e) => {
-    e.stopPropagation(); // Prevent row click event
-    if (onOrderClick) {
-      onOrderClick(order);
-    }
-  };
+  // Handle View Details button click
+const handleViewDetails = (order, e) => {
+  e.stopPropagation();
+  
+  console.log('🖱️ === VIEW DETAILS CLICKED ===');
+  console.log('📦 Order object:', order);
+  console.log('🔍 Order structure analysis:', {
+    id: order.id,
+    productName: order.productName,
+    hasOriginalData: !!order.originalData,
+    originalData: order.originalData,
+    allKeys: Object.keys(order)
+  });
+  
+  if (onOrderClick) {
+    console.log('🚀 Calling onOrderClick with order...');
+    onOrderClick(order);
+  } else {
+    console.error('❌ CRITICAL: onOrderClick prop is undefined!');
+    console.error('Check if OrderHistoryDetails has onOrderClick prop');
+  }
+};
+
+// Also add debugging to the row click
+const handleRowClick = (order) => {
+  console.log('📋 === ROW CLICKED ===');
+  console.log('📦 Order object:', order);
+  
+  if (onOrderClick) {
+    console.log('🚀 Calling onOrderClick from row click...');
+    onOrderClick(order);
+  } else {
+    console.error('❌ CRITICAL: onOrderClick prop is undefined in row click!');
+  }
+};
 
   // Fetch orders on component mount
   useEffect(() => {
@@ -240,13 +296,13 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
         <div className="bg-white rounded-none sm:rounded-xl shadow-none sm:shadow-sm border-0 sm:border sm:border-red-100 overflow-hidden">
           {/* Table Headers - Desktop Only */}
           <div className="hidden lg:grid grid-cols-12 gap-4 py-4 px-6 bg-red-50 border-b border-red-100">
-            <div className="col-span-3 flex items-center gap-2 text-red-900 font-semibold text-sm">
+            {/* <div className="col-span-3 flex items-center gap-2 text-red-900 font-semibold text-sm">
               <Package className="w-4 h-4" />
               Order Id
-            </div>
-             <div className="col-span-3 flex items-center gap-2 text-red-900 font-semibold text-sm">
+            </div> */}
+            <div className="col-span-3 flex items-center gap-2 text-red-900 font-semibold text-sm">
               <Package className="w-4 h-4" />
-              product Name
+              Product Name
             </div>
             <div className="col-span-2 flex items-center gap-2 text-red-900 font-semibold text-sm">
               <Clock className="w-4 h-4" />
@@ -295,7 +351,9 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
                             <span className="font-semibold text-gray-900 text-sm sm:text-base">
                               {order.id}
                             </span>
-                            
+                            <p className="text-gray-600 text-xs sm:text-sm truncate">
+                              {order.productName}
+                            </p>
                           </div>
                         </div>
                         <Eye className="w-4 sm:w-5 h-4 sm:h-5 text-red-900 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -331,9 +389,9 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
 
                     {/* Desktop Layout */}
                     <div className="hidden lg:grid grid-cols-12 gap-4 py-5 px-6 items-center">
-                      <div className="col-span-3 flex items-center gap-4">
-                        <div className="p-3 bg-red-100 rounded-lg group-hover:bg-red-200 transition-colors">
-                          <Package className="w-6 h-6 text-red-900" />
+                      {/* <div className="col-span-3 flex items-center gap-4">
+                        <div className="p-3 bg-red-50 rounded-lg group-hover:bg-red-200 transition-colors">
+                          <Package className="w-3 h-3 text-red-600" />
                         </div>
                         <div>
                           <span className="font-semibold text-gray-900 text-base">
@@ -341,12 +399,12 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
                           </span>
                          
                         </div>
-                      </div>
+                      </div> */}
                         
-                         <div className="col-span-2">
-                        <div className={`inline-flex text-nowrap items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border ${order.statusColor}`}>
-                          <StatusIcon className="w-4 h-4" />
-                          {order.productName}
+                      <div className="col-span-3">
+                        <div className="flex items-center gap-2 text-gray-900 font-medium">
+                          {/* <Package className="w-4 h-4 text-gray-500" /> */}
+                          <span className="truncate">{order.productName}</span>
                         </div>
                       </div>
 
