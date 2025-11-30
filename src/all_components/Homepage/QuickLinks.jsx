@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import { Old_Standard_TT } from "next/font/google";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ArrowUpRight, TrendingUp, Zap } from "lucide-react";
+import { pageService } from "../../app/api/pageService/pageService";
+
 
 const oldStandardTT = Old_Standard_TT({
   weight: "400",
@@ -65,24 +67,89 @@ export default function QuickSearch() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
 
-  const popularSearches = [
-    "Designer Juttis",
-    "Wedding Footwear",
-    "Punjabi Juttis",
-    "Festive Collection",
-    "Traditional Mojaris",
-  ];
+  // State for API data
+  const [quickLinksData, setQuickLinksData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const quickLinks = [
-    "New Arrivals",
-    "Best Sellers",
-    "Sale Items",
-    "Gift Cards",
-    // "Size Guide",
-    "Care Instructions",
-    "Custom Orders",
-    "Track Order",
-  ];
+  // Fetch data from API
+  useEffect(() => {
+    async function getQuickLinksFun() {
+      try {
+        setLoading(true);
+        const parentCategory = "saree";
+        const currentSlug = "kanjivaram-lehenga";
+        const data = await pageService.getQuickLinks(parentCategory, currentSlug);
+        console.log("QuickLinks API Response:", data);
+        setQuickLinksData(data);
+      } catch (error) {
+        console.error("Error fetching quick links:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    getQuickLinksFun();
+  }, []); // Empty dependency array means run once on mount
+
+  // Function to format slug to readable text
+  const formatSlugToText = (slug) => {
+    if (!slug) return "";
+    return slug
+      .split("-") // Split by hyphen
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize first letter
+      .join(" "); // Join with space
+  };
+
+  // Get 5 items from each category for Popular Searches
+  const getPopularSearches = () => {
+    if (!quickLinksData?.data) {
+      return [
+        "Designer Juttis",
+        "Wedding Footwear",
+        "Punjabi Juttis",
+        "Festive Collection",
+        "Traditional Mojaris",
+      ];
+    }
+
+    const items = [];
+    const { saree = [], suit = [], lehenga = [] } = quickLinksData.data;
+
+    // Take 5 from saree, 5 from suit, 5 from lehenga
+    items.push(...saree.slice(0, 5));
+    items.push(...suit.slice(0, 5));
+    items.push(...lehenga.slice(0, 5));
+
+    return items;
+  };
+
+  // Get 4 items from each category for Quick Links
+  const getQuickLinks = () => {
+    if (!quickLinksData?.data) {
+      return [
+        "New Arrivals",
+        "Best Sellers",
+        "Sale Items",
+        "Gift Cards",
+        "Care Instructions",
+        "Custom Orders",
+        "Track Order",
+      ];
+    }
+
+    const items = [];
+    const { saree = [], suit = [], lehenga = [] } = quickLinksData.data;
+
+    // Take 4 from saree, 4 from suit, 4 from lehenga
+    items.push(...saree.slice(0, 4));
+    items.push(...suit.slice(0, 4));
+    items.push(...lehenga.slice(0, 4));
+
+    return items;
+  };
+
+  const popularSearches = getPopularSearches();
+  const quickLinks = getQuickLinks();
+  
 
   return (
     <motion.footer
@@ -159,13 +226,13 @@ export default function QuickSearch() {
               variants={itemVariants}
               className="group"
             >
-              <Link href="/collections">
+              <Link href={`/collections/${item}`}>
                 <motion.div
                   variants={tagVariants}
                   initial="rest"
                   whileHover="hover"
                   whileTap="tap"
-                  className="relative px-4 py-2 bg-white border border-gray-200 rounded-full 
+                  className="relative px-4 py-2 bg-white border border-gray-200 rounded-full
                            shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer
                            group-hover:border-red-300 overflow-hidden"
                 >
@@ -176,12 +243,12 @@ export default function QuickSearch() {
                     transition={{ duration: 0.3 }}
                     className="absolute inset-0 bg-gradient-to-r from-red-50 to-red-100 -z-10"
                   />
-                  
+
                   <span
-                    className={`${oldStandardTT.variable} text-sm lg:text-base text-gray-700 
+                    className={`${oldStandardTT.variable} text-sm lg:text-base text-gray-700
                               group-hover:text-red-700 transition-colors duration-200 relative z-10`}
                   >
-                    {item}
+                    {formatSlugToText(item)}
                   </span>
                   
                   {/* Hover icon */}
@@ -283,13 +350,13 @@ export default function QuickSearch() {
               variants={itemVariants}
               className="group"
             >
-              <Link href="/collections">
+              <Link href={`/collections/${item}`}>
                 <motion.div
                   variants={tagVariants}
                   initial="rest"
                   whileHover="hover"
                   whileTap="tap"
-                  className="relative p-4 bg-white border border-gray-200 rounded-xl 
+                  className="relative p-4 bg-white border border-gray-200 rounded-xl
                            shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer
                            group-hover:border-red-300 overflow-hidden"
                 >
@@ -300,15 +367,15 @@ export default function QuickSearch() {
                     transition={{ duration: 0.3 }}
                     className="absolute inset-0 bg-gradient-to-br from-red-50 to-red-100 rounded-xl"
                   />
-                  
+
                   <motion.div
                     className="relative z-10 flex items-center justify-between"
                   >
                     <span
-                      className={`${oldStandardTT.variable} text-sm lg:text-base text-gray-700 
+                      className={`${oldStandardTT.variable} text-sm lg:text-base text-gray-700
                                 group-hover:text-red-700 transition-colors duration-200 font-medium`}
                     >
-                      {item}
+                      {formatSlugToText(item)}
                     </span>
                     
                     <motion.div
