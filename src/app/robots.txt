@@ -2,9 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /account/
 Disallow: /cart/checkout/
-Disallow: /login
-Disallow: /signup
 Disallow: /cgi-bin/
 Disallow: /forgot-password
-
 Sitemap: https://www.gulbhahar.com/sitemap.xml

@@ -44,15 +44,15 @@ export default async function QuickLinks({ parentCategory, currentSlug }) {
 
         return (
           <div key={category} className="mb-8">
-            <h2 className={`${oldStandardTT.variable} text-2xl lg:text-3xl font-semibold mb-6`}>
+            <span className={`${oldStandardTT.variable} text-2xl lg:text-3xl font-semibold mb-6`}>
               <span className="bg-gradient-to-r from-red-900 via-red-600 to-red-900 bg-clip-text text-transparent">
                 {headingText}
               </span>
-            </h2>
+            </span>
 
             <div className="flex flex-wrap text-gray-700 text-[15px] leading-relaxed">
               {links.map((slug, index) => (
-                <span key={index} className="flex items-center">
+                <h2 key={index} className="flex items-center">
                   <Link
                     href={`/collections/${slug}`}
                     className="hover:underline hover:text-red-900"
@@ -64,7 +64,7 @@ export default async function QuickLinks({ parentCategory, currentSlug }) {
                   {index !== links.length - 1 && (
                     <span className="mx-1 text-gray-400">|</span>
                   )}
-                </span>
+                </h2>
               ))}
             </div>
           </div>

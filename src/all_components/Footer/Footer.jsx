@@ -361,9 +361,9 @@ const { showToast, ToastContainer } = useToast();
           <div className="lg:col-span-6 text-end grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-8">
             {/* Shop Links */}
             <div className="text-left">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-red-900 mb-4 sm:mb-6">
+              <p className="text-sm font-bold uppercase tracking-wider text-red-900 mb-4 sm:mb-6">
                 Shop 
-              </h3> 
+              </p> 
               <ul className="space-y-2  sm:space-y-3">
                 {shopLinks.map((link, index) => (
                   <li key={index}>
@@ -380,9 +380,9 @@ const { showToast, ToastContainer } = useToast();
 
             {/* Company Links */}
             <div className="text-center sm:text-left w-full">
-              <h3 className="text-sm font-bold  uppercase tracking-wider text-red-900 mb-4 sm:mb-6">
+              <p className="text-sm font-bold  uppercase tracking-wider text-red-900 mb-4 sm:mb-6">
                 Company
-              </h3>
+              </p>
               <ul className="space-y-2 sm:space-y-3">
                 {companyLinks.map((link, index) => (
                   <li key={index}>
@@ -399,9 +399,9 @@ const { showToast, ToastContainer } = useToast();
 
             {/* Support Links */}
             <div className="text-left">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-red-900 mb-4 sm:mb-6">
+              <p className="text-sm font-bold uppercase tracking-wider text-red-900 mb-4 sm:mb-6">
                 Support
-              </h3>
+              </p>
               <ul className="space-y-2 sm:space-y-3">
                 {supportLinks.map((link, index) => (
                   <li key={index}>
@@ -419,9 +419,9 @@ const { showToast, ToastContainer } = useToast();
 
           {/* Contact & Payment Section */}
           <div className="lg:col-span-2 w-full text-center lg:text-left">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-red-900 mb-4 sm:mb-6">
+            <p className="text-sm font-bold uppercase tracking-wider text-red-900 mb-4 sm:mb-6">
               Get in Touch
-            </h3>
+            </p>
             {/* dfscxgkljefdbgfbgkckjxbvfdasfxkjbciruebgfidub
             dcxgknf;dln;ofdg;lk ;l;nvc;
             fdvcs;flgcknbvfk;gndcbv;snki */}
@@ -492,9 +492,9 @@ const { showToast, ToastContainer } = useToast();
         <div className="mt-12 lg:mt-16 bg-gradient-to-r from-red-50 to-red-100 rounded-2xl p-6 sm:p-8 border-2 border-red-200">
           <div className="text-center max-w-2xl mx-auto">
             
-            <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
+            <p className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
               Stay in the Loop! 📧
-            </h3>
+            </p>
             <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
               Subscribe to our newsletter for exclusive offers, new arrivals,
               and style tips.

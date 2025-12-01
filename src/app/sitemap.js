@@ -31,9 +31,9 @@ export default async function sitemap() {
         priority: 0.7,
       },
       {
-        url: `${baseUrl}/heritage-collection`,
+        url: `${baseUrl}/heritage-culture`,
         lastModified: new Date(),
-        priority: 0.6,
+        priority: 0.7,
       },
       
       // Authentication pages - lower priority (not indexed for SEO)

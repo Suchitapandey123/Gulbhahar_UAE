@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import { Old_Standard_TT } from "next/font/google";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, use } from "react";
 import { ArrowUpRight, TrendingUp, Zap } from "lucide-react";
 import { pageService } from "../../app/api/pageService/pageService";
 
@@ -70,9 +70,7 @@ export default function QuickSearch() {
   const [quickLinksData, setQuickLinksData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch data from API
-  useEffect(() => {
-    async function getQuickLinksFun() {
+  async function getQuickLinksFun() {
       try {
         setLoading(true);
         const parentCategory = "saree";
@@ -88,9 +86,11 @@ export default function QuickSearch() {
       } finally {
         setLoading(false);
       }
-    }
-    getQuickLinksFun();
-  }, []); // Empty dependency array means run once on mount
+  }
+
+  useEffect(() => {
+  getQuickLinksFun();
+}, []);
 
   // Function to format slug to readable text
   const formatSlugToText = (slug) => {
@@ -102,40 +102,24 @@ export default function QuickSearch() {
   };
 
   // Get 5 items from each category for Popular Searches
-  const getPopularSearches = () => {
-    if (!quickLinksData?.data) {
-      return [
-        "Designer Juttis",
-        "Wedding Footwear",
-        "Punjabi Juttis",
-        "Festive Collection",
-        "Traditional Mojaris",
-      ];
-    }
+ const getPopularSearches = () => {
+  if (!quickLinksData?.data) return [];
 
-    const items = [];
-    const { saree = [], suit = [], lehenga = [] } = quickLinksData.data;
+  const items = [];
+  const { saree = [], suit = [], lehenga = [] } = quickLinksData.data;
 
-    // Take 5 from saree, 5 from suit, 5 from lehenga
-    items.push(...saree.slice(0, 5));
-    items.push(...suit.slice(0, 5));
-    items.push(...lehenga.slice(0, 5));
+  items.push(...saree.slice(0, 5));
+  items.push(...suit.slice(0, 5));
+  items.push(...lehenga.slice(0, 5));
 
-    return items;
-  };
+  return items;
+};
+
 
   // Get 4 items from each category for Quick Links
   const getQuickLinks = () => {
     if (!quickLinksData?.data) {
-      return [
-        "New Arrivals",
-        "Best Sellers",
-        "Sale Items",
-        "Gift Cards",
-        "Care Instructions",
-        "Custom Orders",
-        "Track Order",
-      ];
+      return [];
     }
 
     const items = [];
@@ -148,9 +132,10 @@ export default function QuickSearch() {
 
     return items;
   };
-
-  const popularSearches = getPopularSearches();
-  const quickLinks = getQuickLinks();
+   
+  
+const popularSearches = getPopularSearches();
+const quickLinks = getQuickLinks();
 
   return (
     <motion.footer
@@ -189,7 +174,7 @@ export default function QuickSearch() {
           >
             <TrendingUp className="w-6 h-6 text-red-700" />
           </motion.div>
-          <h3
+          <span
             className={`${oldStandardTT.variable} text-2xl lg:text-3xl font-semibold text-gray-800 relative`}
           >
             <motion.span
@@ -213,7 +198,7 @@ export default function QuickSearch() {
               transition={{ duration: 0.8, delay: 0.3 }}
               className="absolute bottom-0 left-0 h-0.5 w-full bg-gradient-to-r from-red-900 via-red-600 to-red-900 transform origin-left"
             />
-          </h3>
+          </span>
         </motion.div>
 
         <motion.div
@@ -228,7 +213,7 @@ export default function QuickSearch() {
                   initial="rest"
                   whileHover="hover"
                   whileTap="tap"
-                  className="relative
+                  className="relative flex items-center justify-center gap-1
                             transition-all duration-300 cursor-pointer
                            group-hover:border-red-300 overflow-hidden"
                 >
@@ -288,7 +273,7 @@ export default function QuickSearch() {
         <motion.div
           initial={{ scale: 0, opacity: 0 }}
           animate={
-            isInView ? { scale: 1, opacity: 0.1 } : { scale: 0, opacity: 0 }
+            isInView ? { scale: 0, opacity: 0.1 } : { scale: 0, opacity: 0 }
           }
           transition={{ duration: 1, delay: 0.8 }}
           className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-red-900 via-red-600 to-red-900 rounded-full blur-xl"
@@ -300,7 +285,7 @@ export default function QuickSearch() {
         >
           <motion.div
             animate={{
-              scale: [1, 1.2, 1],
+              scale: [0, 0, 0],
               rotate: [0, 180, 360],
             }}
             transition={{
@@ -311,7 +296,7 @@ export default function QuickSearch() {
           >
             <Zap className="w-6 h-6 text-red-700" />
           </motion.div>
-          <h3
+          <span
             className={`${oldStandardTT.variable} text-2xl lg:text-3xl font-semibold text-gray-800 relative`}
           >
             <motion.span
@@ -336,7 +321,7 @@ export default function QuickSearch() {
               transition={{ duration: 0.8, delay: 0.6 }}
               className="absolute bottom-0 left-0 h-0.5 w-full bg-gradient-to-r from-red-900 via-red-600 to-red-900 transform origin-left"
             />
-          </h3>
+          </span>
         </motion.div>
 
         <motion.div

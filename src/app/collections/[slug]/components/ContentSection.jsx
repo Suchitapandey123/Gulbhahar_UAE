@@ -162,14 +162,14 @@ const ContentSection = ({ page: initialPage }) => {
           {/* Section 1 - Red Background */}
           {page.parsedAdditionalDetails?.[0] && (
             <section className="bg-red-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
                 <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                   <span className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                     1
                   </span>
                   <span className="leading-tight">{page.parsedAdditionalDetails[0].subTitle1}</span>
                 </div>
-              </h2>
+              </div>
               <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
                 {page.parsedAdditionalDetails[0].description}
               </p>
@@ -179,14 +179,14 @@ const ContentSection = ({ page: initialPage }) => {
           {/* Section 2 - With Highlight in Red Box */}
           {page.parsedAdditionalDetails?.[1] && (
             <section>
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
                 <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                   <span className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                     2
                   </span>
                   <span className="leading-tight">{page.parsedAdditionalDetails[1].subTitle1}</span>
                 </div>
-              </h2>
+              </div>
               <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
                 {page.parsedAdditionalDetails[1].description}
               </p>
@@ -205,14 +205,14 @@ const ContentSection = ({ page: initialPage }) => {
           {/* Section 3 - Gray Background */}
           {page.parsedAdditionalDetails?.[2] && (
             <section className="bg-gray-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
                 <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                   <span className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                     3
                   </span>
                   <span className="leading-tight">{page.parsedAdditionalDetails[2].subTitle1}</span>
                 </div>
-              </h2>
+              </div>
               <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
                 {page.parsedAdditionalDetails[2].description}
               </p>
@@ -222,14 +222,14 @@ const ContentSection = ({ page: initialPage }) => {
           {/* Section 4 - Points in Pink Boxes */}
           {page.parsedAdditionalDetails?.[3] && (
             <section>
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
                 <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                   <span className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                     4
                   </span>
                   <span className="leading-tight">{page.parsedAdditionalDetails[3].subTitle1}</span>
                 </div>
-              </h2>
+              </div>
               
               {/* First 2 sentences from description */}
 {page.parsedAdditionalDetails[3].description && (
@@ -291,14 +291,14 @@ const ContentSection = ({ page: initialPage }) => {
           {/* Section 5 - Gradient Red Background */}
           {page.parsedAdditionalDetails?.[4] && (
             <section className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
                 <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                   <span className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                     5
                   </span>
                   <span className="leading-tight">{page.parsedAdditionalDetails[4].subTitle1}</span>
                 </div>
-              </h2>
+              </div>
               <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
                 {page.parsedAdditionalDetails[4].description}
               </p>
@@ -308,14 +308,14 @@ const ContentSection = ({ page: initialPage }) => {
           {/* Section 6 - Key-Values as Cards */}
           {page.parsedAdditionalDetails?.[5] && (
             <section>
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
                 <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                   <span className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                     6
                   </span>
                   <span className="leading-tight">{page.parsedAdditionalDetails[5].subTitle1}</span>
                 </div>
-              </h2>
+              </div>
 
               {/* Main Description */}
               {page.parsedAdditionalDetails[5].description && (
@@ -333,9 +333,9 @@ const ContentSection = ({ page: initialPage }) => {
      className="bg-white border border-red-200 rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow duration-300 
      flex flex-col items-center justify-center text-center"
      >
-     <h3 className="font-bold text-red-900 text-base sm:text-lg mb-2 sm:mb-3">
+     <p className="font-bold text-red-900 text-base sm:text-lg mb-2 sm:mb-3">
     {kv.key}
-    </h3>
+    </p>
      <p className="text-gray-600 text-sm sm:text-base">
        {kv.value}
      </p>
@@ -354,9 +354,9 @@ const ContentSection = ({ page: initialPage }) => {
                       key={index}
                       className="bg-white border border-red-200 rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow duration-300"
                     >
-                      <h3 className="font-bold text-red-900 text-base sm:text-lg mb-2 sm:mb-3">
+                      <p className="font-bold text-red-900 text-base sm:text-lg mb-2 sm:mb-3">
                         {point}
-                      </h3>
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -367,14 +367,14 @@ const ContentSection = ({ page: initialPage }) => {
           {/* Section 7 - Dark Background */}
           {page.parsedAdditionalDetails?.[6] && (
             <section className="bg-gray-900 text-white rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
                 <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                   <span className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
-                    7
+                    7div
                   </span>
                   <span className="leading-tight">{page.parsedAdditionalDetails[6].subTitle1}</span>
                 </div>
-              </h2>
+              </div>
               <p className="text-gray-300 leading-relaxed text-sm sm:text-base lg:text-lg">
                 {page.parsedAdditionalDetails[6].description}
               </p>
@@ -385,14 +385,14 @@ const ContentSection = ({ page: initialPage }) => {
           {/* Section 8 - Additional Section */}
           {page.parsedAdditionalDetails?.[7] && (
             <section className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
                 <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                   <span className="w-8 h-8 bg-blue-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                     8
                   </span>
                   <span className="leading-tight">{page.parsedAdditionalDetails[7].subTitle1}</span>
                 </div>
-              </h2>
+              </div>
               <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
                 {page.parsedAdditionalDetails[7].description}
               </p>
@@ -412,14 +412,14 @@ const ContentSection = ({ page: initialPage }) => {
           {page.parsedAdditionalDetails && page.parsedAdditionalDetails.length > 8 && 
             page.parsedAdditionalDetails.slice(8).map((detail, index) => (
               <section key={index + 8} className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+                <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
                   <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                     <span className="w-8 h-8 bg-green-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                       {index + 9}
                     </span>
                     <span className="leading-tight">{detail.subTitle1}</span>
                   </div>
-                </h2>
+                </div>
                 <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
                   {detail.description}
                 </p>
@@ -439,9 +439,9 @@ const ContentSection = ({ page: initialPage }) => {
           {/* Conclusion Section - Using shortDescription */}
           {page.shortDescription && (
             <div className="text-center mt-8 sm:mt-12 lg:mt-16 bg-gradient-to-r from-red-900 to-red-700 text-white rounded-xl sm:rounded-2xl p-6 sm:p-8 lg:p-12">
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
+              <span className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
                 Conclusion
-              </h2>
+              </span>
               <p className="text-sm sm:text-base lg:text-lg leading-relaxed max-w-3xl mx-auto">
                 {page.shortDescription}
               </p>
@@ -451,9 +451,9 @@ const ContentSection = ({ page: initialPage }) => {
           {/* FAQ Section */}
           {page.faq?.length > 0 && (
             <section className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-red-900 mb-4 sm:mb-6">
+              <span className="text-xl sm:text-2xl md:text-3xl font-bold text-red-900 mb-4 sm:mb-6">
                 Frequently Asked Questions
-              </h2>
+              </span>
               <div className="space-y-4 sm:space-y-6">
                 {page.faq.map((item, idx) => (
                   <div 
@@ -488,9 +488,9 @@ const ContentSection = ({ page: initialPage }) => {
         {/* Bottom Section (if exists) */}
         {page.bottomSection && (
           <div className="text-center mt-8 sm:mt-12 lg:mt-16 bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-xl sm:rounded-2xl p-6 sm:p-8 lg:p-12">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
+            <span className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
               {page.bottomSection.title}
-            </h2>
+            </span>
             <p className="text-sm sm:text-base lg:text-lg leading-relaxed max-w-3xl mx-auto">
               {page.bottomSection.description}
             </p>

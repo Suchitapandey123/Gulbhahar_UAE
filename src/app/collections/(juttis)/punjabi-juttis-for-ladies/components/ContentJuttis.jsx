@@ -25,14 +25,14 @@ const ContentPunjabiJuttisForLadies = () => {
           
           {/* Heritage that Speaks Through Craft Section */}
           <section className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-800 to-red-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   🏛️
                 </span>
                 <span className="leading-tight">A Heritage that Speaks Through Craft</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
               Punjabi juttis have origins that can be traced back centuries. Historically, juttis have often been designated for royalty and artisans, focusing on embroidered designs. Juttis are typically crafted with pure leather and embroidered threads, beads, and sequins.
             </p>
@@ -66,14 +66,14 @@ const ContentPunjabiJuttisForLadies = () => {
 
           {/* Fit for Every Occasion Section */}
           <section>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-700 to-red-800 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   🎭
                 </span>
                 <span className="leading-tight">Fit for Every Occasion</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
               Punjabi juttis are versatile for any time. From festive occasions and weddings to casual social engagements and beyond, they are just as comfortable to wear as they are stylish.
             </p>
@@ -134,14 +134,14 @@ const ContentPunjabiJuttisForLadies = () => {
 
           {/* Comfort Meets Style Section */}
           <section className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-600 to-red-700 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   ☁️
                 </span>
                 <span className="leading-tight">Comfort Meets Style</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
               Punjabi juttis, with their intricate beauty, are also known for comfort. Gulbhahar provides extra cushioning and lightweight construction, along with durable finishes. The designs suit long days on one's feet plus stylish looks.
             </p>
@@ -175,14 +175,14 @@ const ContentPunjabiJuttisForLadies = () => {
 
           {/* A Canvas of Creativity Section */}
           <section>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-600 to-red-800 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   🎨
                 </span>
                 <span className="leading-tight">A Canvas of Creativity</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
               One of the great things about Punjabi juttis is that there is a multitude of designs! From coloured floral to more modern geometric pairings, there is going to be some creative design in every possible jutti style you could own.
             </p>
@@ -241,14 +241,14 @@ const ContentPunjabiJuttisForLadies = () => {
 
           {/* Bringing Tradition to Today Section */}
           <section className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-700 to-red-800 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   🌉
                 </span>
                 <span className="leading-tight">Bringing Tradition to Today</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
               Fashion today allows us to show our choice of the individual while definitely linking to cultural identity and heritage. Gulbhahar reflects this by demonstrating Punjabi juttis as bridging the past to the present.
             </p>
@@ -276,14 +276,14 @@ const ContentPunjabiJuttisForLadies = () => {
 
           {/* Why Choose Gulbhahar Section */}
           <section>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-800 to-red-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   ⭐
                 </span>
                 <span className="leading-tight">Why Choose Gulbhahar?</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
               Gulbhahar excels in offering ladies' Punjabi juttis that honour tradition while blending styles. Each pair is made to last. The conscious brand is all about empowering artisans and sustainability, so with every purchase, you contribute to cultural preservation.
             </p>
@@ -321,14 +321,14 @@ const ContentPunjabiJuttisForLadies = () => {
 
           {/* Perfect Finishing Touch Section */}
           <section className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-600 to-red-700 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   ✨
                 </span>
                 <span className="leading-tight">The Perfect Finishing Touch</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
               A thoughtfully selected pair of Punjabi juttis can elevate any outfit and add sophistication and charm with no effort. The right jutti is the perfect finishing touch, whether paired with traditional or contemporary ensembles.
             </p>
@@ -357,9 +357,9 @@ const ContentPunjabiJuttisForLadies = () => {
 
         {/* Conclusion */}
         <div className="text-center mt-8 sm:mt-12 lg:mt-16 bg-gradient-to-r from-red-900 to-red-800 text-white rounded-xl sm:rounded-2xl p-6 sm:p-8 lg:p-12">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
+          <span className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
             An Expression of Culture, Creativity, and Timeless Style
-          </h2>
+          </span>
           <p className="text-sm sm:text-base lg:text-lg leading-relaxed max-w-3xl mx-auto">
             Punjabi jutti for ladies from Gulbhahar is an expression of culture, creativity, and timeless style. By owning a pair of Punjabi jutti, a woman is part of the story, and she represents the old and the new combined with fashion that is 'always in style'.
           </p>

@@ -33,7 +33,7 @@ const Logo = ({ isScrolled, pathname }) => {
           </div>
 
           {/* GULBHAHAR Text Logo */}
-          <h1
+          <span
             className={`
               text-xl sm:text-2xl md:text-4xl lg:text-5xl font-normal sm:tracking-[0.2em]
               transition-all duration-700 ease-out transform relative z-10
@@ -49,7 +49,7 @@ const Logo = ({ isScrolled, pathname }) => {
             style={{ fontFamily: "Old Standard TT, serif" }}
           >
             GULBHAHAR
-          </h1>
+          </span>
 
           {/* Effects */}
           <LogoEffects isScrolled={isScrolled} pathname={pathname} />
