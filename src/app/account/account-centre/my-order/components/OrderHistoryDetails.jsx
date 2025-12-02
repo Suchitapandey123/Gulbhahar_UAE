@@ -10,7 +10,8 @@ import {
   XCircle,
   IndianRupee,
   Truck,
-  ShoppingBag
+  ShoppingBag,
+  RefreshCw
 } from 'lucide-react';
 
 import { orderHistoryAPI } from '../../../../api/order/orderApi';
@@ -25,8 +26,7 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
       setLoading(true);
       setError(null);
       
-      console.log(' Starting API call to fetch order history...');
-      
+      console.log('Starting API call to fetch order history...');
       
       if (!orderHistoryAPI || !orderHistoryAPI.getOrderHistory) {
         throw new Error('API function not available. Please check the import path.');
@@ -35,7 +35,6 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
       const data = await orderHistoryAPI.getOrderHistory();
       console.log('📦 FULL API RESPONSE:', JSON.stringify(data, null, 2));
       
-      // Transform API data to match your UI structure
       const ordersData = data.orders || [];
       const transformedOrders = transformOrderData(ordersData);
       setOrders(transformedOrders);
@@ -43,14 +42,13 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
       console.log('✅ Orders transformed and set:', transformedOrders.length, 'orders');
       
     } catch (err) {
-      console.error(' Error fetching order history:', err);
+      console.error('Error fetching order history:', err);
       setError(err.message || 'Failed to load orders. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  
   const transformOrderData = (apiOrders) => {
     if (!apiOrders || !Array.isArray(apiOrders)) {
       console.log('⚠️ No orders data found in API response');
@@ -60,67 +58,32 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
     console.log('Transforming orders:', apiOrders.length, 'orders found');
 
     return apiOrders.map((order, index) => {
+      console.log(`\nOrder ${index} full data:`, order);
       
-      console.log(`\n Order ${index} full data:`, order);
-      console.log(` Order ${index} items:`, order.items);
-      
-      if (order.items && order.items.length > 0) {
-        console.log(`🔍 Order ${index} first item fields:`, Object.keys(order.items[0]));
-        console.log(`🏷️ Order ${index} first item productName:`, order.items[0].productName);
-        console.log(`🆔 Order ${index} first item productId:`, order.items[0].productId);
-      }
+      const orderId = order.orderId || `ORDER_${5913 + index}`;
+      console.log(`Order ${index} orderId:`, orderId);
 
-     
-      const orderId = order.orderId ? order.orderId.replace('ORDER_', '#') : `#${5913 + index}`;
-           
-      let productName = "Product Name Not Available";
-      
-      if (order.items && order.items.length > 0) {
-        const firstItem = order.items[0];
-        
-        
-        if (firstItem.productName) {
-          productName = firstItem.productName;
-        }
-       
-        else if (firstItem.productId) {
-          productName = `Product ${firstItem.productId}`;
-        }
-        
-        else if (firstItem.selectedColor || firstItem.selectedSize) {
-          const color = firstItem.selectedColor || '';
-          const size = firstItem.selectedSize ? `Size ${firstItem.selectedSize}` : '';
-          productName = `${color} ${size}`.trim() || 'Custom Product';
-        }
-      }
-      
-      console.log(`Order ${index} final productName:`, productName);
-
-     
       const orderDate = new Date(order.placedAt);
       const formattedDate = formatDate(orderDate);
       
-      
       const formattedValue = formatCurrency(order.totalAmount);
-      
       
       const statusInfo = determineOrderStatus(order.status);
       
-     
       const productImage = order.items && order.items[0] && order.items[0].productImage && order.items[0].productImage.length > 0
         ? order.items[0].productImage[0] 
         : '';
       
       return {
-        id: orderId,                    
-        productName: productName,     
+        id: orderId,
         date: formattedDate,           
         value: formattedValue,        
         status: statusInfo.status,     
         statusColor: statusInfo.statusColor,
         statusIcon: statusInfo.statusIcon,
         productImage: productImage,     
-        originalData: order
+        originalData: order,
+        trackingId: order.trackingId || ''
       };
     });
   };
@@ -134,7 +97,6 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
     const month = date.toLocaleString('en-US', { month: 'short' });
     const year = date.getFullYear();
     
-   
     const getOrdinalSuffix = (d) => {
       if (d > 3 && d < 21) return 'th';
       switch (d % 10) {
@@ -148,123 +110,98 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
     return `${day}${getOrdinalSuffix(day)} ${month}, ${year}`;
   };
 
-  // Format currency to Indian Rupees format
   const formatCurrency = (amount) => {
     if (typeof amount !== 'number') {
-      return '₹ 0';
+      return '₹0';
     }
     
-    return ` ${amount.toLocaleString('en-IN')}`;
+    return `₹${amount.toLocaleString('en-IN')}`;
   };
 
-  
   const determineOrderStatus = (status) => {
     const statusMap = {
       'Pending': { 
         status: "Pending", 
-        statusColor: "bg-amber-100 text-amber-800 border-amber-200", 
+        statusColor: "bg-amber-50 text-amber-700 border-amber-200", 
         statusIcon: Clock 
       },
       'Confirmed': { 
         status: "Confirmed", 
-        statusColor: "bg-blue-100 text-blue-800 border-blue-200", 
+        statusColor: "bg-blue-50 text-blue-700 border-blue-200", 
         statusIcon: ShoppingBag 
       },
       'Shipped': { 
         status: "Shipped", 
-        statusColor: "bg-purple-100 text-purple-800 border-purple-200", 
+        statusColor: "bg-purple-50 text-purple-700 border-purple-200", 
         statusIcon: Truck 
       },
       'Delivered': { 
         status: "Delivered", 
-        statusColor: "bg-green-100 text-green-800 border-green-200", 
+        statusColor: "bg-green-50 text-green-700 border-green-200", 
         statusIcon: CheckCircle 
       },
       'Cancelled': { 
         status: "Cancelled", 
-        statusColor: "bg-red-100 text-red-800 border-red-200", 
+        statusColor: "bg-red-50 text-red-700 border-red-200", 
         statusIcon: XCircle 
       },
       'Returned': { 
         status: "Returned", 
-        statusColor: "bg-gray-100 text-gray-800 border-gray-200", 
+        statusColor: "bg-gray-50 text-gray-700 border-gray-200", 
         statusIcon: XCircle 
       }
     };
     
     return statusMap[status] || { 
       status: "Processing", 
-      statusColor: "bg-amber-100 text-amber-800 border-amber-200", 
+      statusColor: "bg-amber-50 text-amber-700 border-amber-200", 
       statusIcon: Clock 
     };
   };
 
-  // Handle View Details button click
-  // Handle View Details button click
-const handleViewDetails = (order, e) => {
-  e.stopPropagation();
-  
-  console.log('🖱️ === VIEW DETAILS CLICKED ===');
-  console.log('📦 Order object:', order);
-  console.log('🔍 Order structure analysis:', {
-    id: order.id,
-    productName: order.productName,
-    hasOriginalData: !!order.originalData,
-    originalData: order.originalData,
-    allKeys: Object.keys(order)
-  });
-  
-  if (onOrderClick) {
-    console.log('🚀 Calling onOrderClick with order...');
-    onOrderClick(order);
-  } else {
-    console.error('❌ CRITICAL: onOrderClick prop is undefined!');
-    console.error('Check if OrderHistoryDetails has onOrderClick prop');
-  }
-};
+  const handleViewDetails = (order, e) => {
+    e.stopPropagation();
+    
+    console.log('🖱️ === VIEW DETAILS CLICKED ===');
+    console.log('📦 Order object:', order);
+    
+    if (onOrderClick) {
+      console.log('🚀 Calling onOrderClick with order...');
+      onOrderClick(order);
+    } else {
+      console.error('❌ CRITICAL: onOrderClick prop is undefined!');
+    }
+  };
 
-// Also add debugging to the row click
-const handleRowClick = (order) => {
-  console.log('📋 === ROW CLICKED ===');
-  console.log('📦 Order object:', order);
-  
-  if (onOrderClick) {
-    console.log('🚀 Calling onOrderClick from row click...');
-    onOrderClick(order);
-  } else {
-    console.error('❌ CRITICAL: onOrderClick prop is undefined in row click!');
-  }
-};
-
-  // Fetch orders on component mount
   useEffect(() => {
     fetchOrderHistoryData();
   }, []);
 
-  // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-red-50/30 via-white to-red-50/20 flex items-center justify-center p-4">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-900 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading your orders...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-red-200 border-t-red-900 mx-auto"></div>
+          <p className="mt-4 text-sm md:text-base text-gray-600 font-medium">Loading your orders...</p>
         </div>
       </div>
     );
   }
 
-  // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white flex items-center justify-center">
-        <div className="text-center">
-          <XCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Failed to load orders</h3>
-          <p className="text-gray-600 mb-4">{error}</p>
+      <div className="min-h-screen bg-gradient-to-br from-red-50/30 via-white to-red-50/20 flex items-center justify-center p-4">
+        <div className="text-center max-w-md">
+          <div className="bg-red-50 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+            <XCircle className="w-8 h-8 text-red-600" />
+          </div>
+          <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2">Failed to load orders</h3>
+          <p className="text-sm md:text-base text-gray-600 mb-6">{error}</p>
           <button 
             onClick={fetchOrderHistoryData}
-            className="bg-red-900 text-white px-6 py-2 rounded-lg hover:bg-red-800 transition-colors"
+            className="bg-red-900 text-white px-6 py-3 rounded-lg hover:bg-red-800 transition-all duration-200 text-sm md:text-base font-medium shadow-lg hover:shadow-xl inline-flex items-center gap-2"
           >
+            <RefreshCw className="w-4 h-4" />
             Try Again
           </button>
         </div>
@@ -273,66 +210,63 @@ const handleRowClick = (order) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white">
-      <div className="max-w-[1600px] mx-auto py-3 sm:py-6 md:py-8">
+    <div className="min-h-screen bg-gradient-to-br from-red-50/30 via-white to-red-50/20">
+      <div className="w-full py-6 md:py-8 lg:py-10">
         {/* Header Section */}
-        <div className="mb-4 sm:mb-6 md:mb-8">
-          <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-            <div className="p-1.5 sm:p-2 bg-red-900 rounded-lg">
-              <Package className="text-white w-4 sm:w-5 md:w-6 h-4 sm:h-5 md:h-6" />
+        <div className="mb-6 md:mb-8 px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-3 md:gap-4 mb-4">
+            <div className="p-2 md:p-3 bg-red-900 rounded-xl shadow-lg">
+              <Package className="text-white w-6 h-6 md:w-7 md:h-7" />
             </div>
             <div>
-              <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">
                 Order History
               </h1>
-              <p className="text-gray-600 text-xs sm:text-sm md:text-base">Track and manage your order history</p>
+              <p className="text-sm md:text-base text-gray-600 mt-1">Track and manage all your orders</p>
             </div>
           </div>
           
-          <div className="h-0.5 sm:h-1 bg-gradient-to-r from-red-900 via-red-700 to-red-500 rounded-full w-16 sm:w-20 md:w-24" />
+          <div className="h-1 bg-gradient-to-r from-red-900 via-red-600 to-red-400 rounded-full w-20 md:w-28" />
         </div>
 
-        {/* Orders Container */}
-        <div className="bg-white rounded-none sm:rounded-xl shadow-none sm:shadow-sm border-0 sm:border sm:border-red-100 overflow-hidden">
-          {/* Table Headers - Desktop Only */}
-          <div className="hidden lg:grid grid-cols-12 gap-4 py-4 px-6 bg-red-50 border-b border-red-100">
-            {/* <div className="col-span-3 flex items-center gap-2 text-red-900 font-semibold text-sm">
+        {/* Orders Container - Full Width */}
+        <div className="bg-white shadow-lg border-y border-red-100/50 overflow-hidden">
+          {/* Table Headers - Desktop & Tablet */}
+          <div className="hidden md:grid md:grid-cols-11 lg:grid-cols-12 gap-4 py-4 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-red-50 to-red-50/50 border-b border-red-100">
+            <div className="col-span-3 flex items-center gap-2 text-red-900 font-bold text-xs lg:text-sm">
               <Package className="w-4 h-4" />
-              Order Id
-            </div> */}
-            <div className="col-span-3 flex items-center gap-2 text-red-900 font-semibold text-sm">
-              <Package className="w-4 h-4" />
-              Product Name
+              <span>Order ID</span>
             </div>
-            <div className="col-span-2 flex items-center gap-2 text-red-900 font-semibold text-sm">
+            <div className="col-span-2 flex items-center gap-2 text-red-900 font-bold text-xs lg:text-sm">
               <Clock className="w-4 h-4" />
-              Status
+              <span>Status</span>
             </div>
-            <div className="col-span-2 flex items-center gap-2 text-red-900 font-semibold text-sm">
+            <div className="col-span-2 lg:col-span-2 flex items-center gap-2 text-red-900 font-bold text-xs lg:text-sm">
               <Calendar className="w-4 h-4" />
-              Order Date
+              <span>Date</span>
             </div>
-            <div className="col-span-2 flex items-center gap-2 text-red-900 font-semibold text-sm">
+            <div className="col-span-2 flex items-center gap-2 text-red-900 font-bold text-xs lg:text-sm">
               <IndianRupee className="w-4 h-4" />
-              Total Value
+              <span>Total</span>
             </div>
-            <div className="col-span-3 flex items-center justify-end gap-2 text-red-900 font-semibold text-sm">
+            <div className="col-span-2 lg:col-span-3 flex items-center justify-end gap-2 text-red-900 font-bold text-xs lg:text-sm">
               <Eye className="w-4 h-4" />
-              Actions
+              <span>Actions</span>
             </div>
           </div>
 
           {/* Orders List */}
           <div className="divide-y divide-gray-100">
             {orders.length === 0 ? (
-              // Empty state
-              <div className="p-8 text-center">
-                <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">No orders found</h3>
-                <p className="text-gray-600">You haven't placed any orders yet.</p>
+              <div className="p-12 md:p-16 text-center">
+                <div className="bg-gray-50 rounded-full w-20 h-20 md:w-24 md:h-24 flex items-center justify-center mx-auto mb-4">
+                  <Package className="w-10 h-10 md:w-12 md:h-12 text-gray-300" />
+                </div>
+                <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2">No orders found</h3>
+                <p className="text-sm md:text-base text-gray-600">You haven't placed any orders yet.</p>
               </div>
             ) : (
-              orders.map((order, index) => {
+              orders.map((order) => {
                 const StatusIcon = order.statusIcon;
                 return (
                   <div
@@ -340,99 +274,128 @@ const handleRowClick = (order) => {
                     className="group hover:bg-red-50/50 transition-all duration-200 cursor-pointer"
                     onClick={() => onOrderClick && onOrderClick(order)}
                   >
-                    {/* Mobile Layout */}
-                    <div className="lg:hidden p-3 sm:p-4 md:p-5">
-                      <div className="flex items-start justify-between mb-2 sm:mb-3">
-                        <div className="flex items-center gap-2 sm:gap-3">
-                          <div className="p-1.5 sm:p-2 bg-red-100 rounded-lg group-hover:bg-red-200 transition-colors">
-                            <Package className="w-4 sm:w-5 h-4 sm:h-5 text-red-900" />
+                    {/* Mobile Layout (< md) */}
+                    <div className="md:hidden p-4 space-y-3">
+                      {/* Header Row */}
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <div className="p-2 bg-red-100 rounded-lg group-hover:bg-red-200 transition-colors flex-shrink-0">
+                            <Package className="w-5 h-5 text-red-900" />
                           </div>
-                          <div>
-                            <span className="font-semibold text-gray-900 text-sm sm:text-base">
+                          <div className="min-w-0 flex-1">
+                            <p className="font-bold text-gray-900 text-sm truncate">
                               {order.id}
-                            </span>
-                            <p className="text-gray-600 text-xs sm:text-sm truncate">
-                              {order.productName}
                             </p>
+                            <p className="text-xs text-gray-500 mt-0.5">{order.date}</p>
                           </div>
                         </div>
-                        <Eye className="w-4 sm:w-5 h-4 sm:h-5 text-red-900 opacity-0 group-hover:opacity-100 transition-opacity" />
                       </div>
                       
-                      <div className="grid grid-cols-1 xs:grid-cols-2 gap-2 sm:gap-4 mb-2 sm:mb-3">
-                        <div>
-                          <p className="text-xs text-gray-500 mb-0.5 sm:mb-1">Date</p>
-                          <p className="font-medium text-gray-900 text-xs sm:text-sm">{order.date}</p>
+                      {/* Status and Amount Row */}
+                      <div className="flex items-center justify-between gap-3">
+                        <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border ${order.statusColor}`}>
+                          <StatusIcon className="w-3.5 h-3.5" />
+                          <span>{order.status}</span>
                         </div>
-                        <div>
-                          <p className="text-xs text-gray-500 mb-0.5 sm:mb-1">Amount</p>
-                          <p className="font-semibold text-gray-900 text-xs sm:text-sm">{order.value}</p>
+                        <div className="flex items-center gap-1 text-gray-900 font-bold text-base">
+                          <IndianRupee className="w-4 h-4" />
+                          <span>{order.value}</span>
                         </div>
                       </div>
                       
-                      <div className="flex items-center justify-between">
-                        <div className={`inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-medium border ${order.statusColor}`}>
-                          <StatusIcon className="w-3 h-3" />
-                          <span className="text-xs text-nowrap sm:text-sm">{order.status}</span>
+                      {/* Action Button */}
+                      <button 
+                        onClick={(e) => handleViewDetails(order, e)}
+                        className="w-full bg-red-900 text-white py-2.5 rounded-lg hover:bg-red-800 active:bg-red-950 transition-all duration-200 text-sm font-semibold flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+                      >
+                        <Eye className="w-4 h-4" />
+                        View Details
+                      </button>
+                    </div>
+
+                    {/* Tablet Layout (md to lg) */}
+                    <div className="hidden md:grid lg:hidden md:grid-cols-11 gap-4 py-4 px-4 sm:px-6 items-center">
+                      <div className="col-span-3 flex items-center gap-3">
+                        <div className="p-2.5 bg-red-50 rounded-lg group-hover:bg-red-200 transition-colors">
+                          <Package className="w-5 h-5 text-red-700" />
                         </div>
-                        
-                        {/* View Details Button - Mobile */}
+                        <div className="min-w-0">
+                          <p className="font-bold text-gray-900 text-sm truncate">
+                            {order.id}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="col-span-2">
+                        <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border ${order.statusColor}`}>
+                          <StatusIcon className="w-3.5 h-3.5" />
+                          <span>{order.status}</span>
+                        </div>
+                      </div>
+
+                      <div className="col-span-2">
+                        <div className="flex items-center gap-2 text-gray-700 text-sm">
+                          <Calendar className="w-4 h-4 text-gray-400" />
+                          <span>{order.date}</span>
+                        </div>
+                      </div>
+
+                      <div className="col-span-2">
+                        <div className="flex items-center gap-1 text-gray-900 font-bold text-sm">
+                          <IndianRupee className="w-4 h-4" />
+                          <span>{order.value}</span>
+                        </div>
+                      </div>
+
+                      <div className="col-span-2 flex justify-end">
                         <button 
                           onClick={(e) => handleViewDetails(order, e)}
-                          className="bg-red-900 text-white px-3 py-1.5 rounded-lg hover:bg-red-800 transition-colors text-xs font-medium flex items-center gap-1"
+                          className="bg-red-900 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-all duration-200 text-xs font-semibold flex items-center gap-2 shadow-md hover:shadow-lg"
                         >
-                          <Eye className="w-3 h-3" />
+                          <Eye className="w-4 h-4" />
                           Details
                         </button>
                       </div>
                     </div>
 
-                    {/* Desktop Layout */}
-                    <div className="hidden lg:grid grid-cols-12 gap-4 py-5 px-6 items-center">
-                      {/* <div className="col-span-3 flex items-center gap-4">
-                        <div className="p-3 bg-red-50 rounded-lg group-hover:bg-red-200 transition-colors">
-                          <Package className="w-3 h-3 text-red-600" />
+                    {/* Desktop Layout (lg+) */}
+                    <div className="hidden lg:grid grid-cols-12 gap-4 py-5 px-8 items-center">
+                      <div className="col-span-3 flex items-center gap-4">
+                        <div className="p-3 bg-red-50 rounded-xl group-hover:bg-red-200 transition-colors">
+                          <Package className="w-5 h-5 text-red-700" />
                         </div>
-                        <div>
-                          <span className="font-semibold text-gray-900 text-base">
+                        <div className="min-w-0">
+                          <p className="font-bold text-gray-900 truncate">
                             {order.id}
-                          </span>
-                         
-                        </div>
-                      </div> */}
-                        
-                      <div className="col-span-3">
-                        <div className="flex items-center gap-2 text-gray-900 font-medium">
-                          {/* <Package className="w-4 h-4 text-gray-500" /> */}
-                          <span className="truncate">{order.productName}</span>
+                          </p>
                         </div>
                       </div>
 
                       <div className="col-span-2">
-                        <div className={`inline-flex text-nowrap items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border ${order.statusColor}`}>
+                        <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold border ${order.statusColor}`}>
                           <StatusIcon className="w-4 h-4" />
-                          {order.status}
+                          <span>{order.status}</span>
                         </div>
                       </div>
 
                       <div className="col-span-2">
-                        <div className="flex items-center gap-2 text-gray-900 font-medium">
+                        <div className="flex items-center gap-2 text-gray-700 font-medium">
                           <Calendar className="w-4 h-4 text-gray-500" />
-                          {order.date}
+                          <span>{order.date}</span>
                         </div>
                       </div>
 
                       <div className="col-span-2">
-                        <div className="flex items-center gap-2 text-gray-900 font-semibold">
-                          <IndianRupee className="w-4 h-4 text-gray-500" />
-                          {order.value}
+                        <div className="flex items-center gap-1.5 text-gray-900 font-bold">
+                          <IndianRupee className="w-4 h-4" />
+                          <span>{order.value}</span>
                         </div>
                       </div>
 
                       <div className="col-span-3 flex justify-end">
                         <button 
                           onClick={(e) => handleViewDetails(order, e)}
-                          className="bg-red-900 text-white px-6 py-2 rounded-lg hover:bg-red-800 transition-colors text-sm font-medium flex items-center gap-2"
+                          className="bg-red-900 text-white px-6 py-2.5 rounded-lg hover:bg-red-800 transition-all duration-200 text-sm font-semibold flex items-center gap-2 shadow-lg hover:shadow-xl"
                         >
                           <Eye className="w-4 h-4" />
                           View Details
@@ -447,14 +410,16 @@ const handleRowClick = (order) => {
 
           {/* Footer */}
           {orders.length > 0 && (
-            <div className="p-3 sm:p-6 text-center border-t border-gray-100 bg-gray-50">
-              <p className="text-gray-500 text-xs sm:text-sm">
-                Showing {orders.length} orders • 
+            <div className="p-4 md:p-6 text-center border-t border-gray-100 bg-gray-50">
+              <p className="text-xs md:text-sm text-gray-600">
+                Showing <span className="font-semibold text-gray-900">{orders.length}</span> {orders.length === 1 ? 'order' : 'orders'}
+                <span className="mx-2">•</span>
                 <button 
                   onClick={fetchOrderHistoryData}
-                  className="text-red-900 hover:text-red-700 ml-1 font-medium"
+                  className="text-red-900 hover:text-red-700 font-semibold inline-flex items-center gap-1 hover:underline"
                 >
-                  Refresh orders
+                  <RefreshCw className="w-3.5 h-3.5" />
+                  Refresh
                 </button>
               </p>
             </div>
@@ -462,18 +427,24 @@ const handleRowClick = (order) => {
         </div>
 
         {/* Quick Actions */}
-        <div className="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-          <button className="flex items-center justify-center gap-2 p-3 sm:p-4 bg-white border-0 sm:border sm:border-red-200 rounded-none sm:rounded-lg hover:bg-red-50 sm:hover:border-red-300 shadow-sm sm:shadow-none transition-colors">
-            <Package className="w-4 sm:w-5 h-4 sm:h-5 text-red-900" />
-            <span className="font-medium text-gray-900 text-sm sm:text-base">Track Orders</span>
+        <div className="mt-6 md:mt-8 px-4 sm:px-6 lg:px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+          <button className="flex items-center justify-center gap-2.5 p-4 md:p-5 bg-white border border-red-200 rounded-xl hover:bg-red-50 hover:border-red-300 hover:shadow-lg transition-all duration-200 group">
+            <div className="p-2 bg-red-50 rounded-lg group-hover:bg-red-100 transition-colors">
+              <Package className="w-5 h-5 text-red-900" />
+            </div>
+            <span className="font-semibold text-gray-900 text-sm md:text-base">Track Orders</span>
           </button>
-          <button className="flex items-center justify-center gap-2 p-3 sm:p-4 bg-white border-0 sm:border sm:border-red-200 rounded-none sm:rounded-lg hover:bg-red-50 sm:hover:border-red-300 shadow-sm sm:shadow-none transition-colors">
-            <Clock className="w-4 sm:w-5 h-4 sm:h-5 text-red-900" />
-            <span className="font-medium text-gray-900 text-sm sm:text-base">Refund History</span>
+          <button className="flex items-center justify-center gap-2.5 p-4 md:p-5 bg-white border border-red-200 rounded-xl hover:bg-red-50 hover:border-red-300 hover:shadow-lg transition-all duration-200 group">
+            <div className="p-2 bg-red-50 rounded-lg group-hover:bg-red-100 transition-colors">
+              <Clock className="w-5 h-5 text-red-900" />
+            </div>
+            <span className="font-semibold text-gray-900 text-sm md:text-base">Refund History</span>
           </button>
-          <button className="flex items-center justify-center gap-2 p-3 sm:p-4 bg-white border-0 sm:border sm:border-red-200 rounded-none sm:rounded-lg hover:bg-red-50 sm:hover:border-red-300 shadow-sm sm:shadow-none transition-colors sm:col-span-2 lg:col-span-1">
-            <ChevronRight className="w-4 sm:w-5 h-4 sm:h-5 text-red-900" />
-            <span className="font-medium text-gray-900 text-sm sm:text-base">Return & Exchange</span>
+          <button className="flex items-center justify-center gap-2.5 p-4 md:p-5 bg-white border border-red-200 rounded-xl hover:bg-red-50 hover:border-red-300 hover:shadow-lg transition-all duration-200 group sm:col-span-2 lg:col-span-1">
+            <div className="p-2 bg-red-50 rounded-lg group-hover:bg-red-100 transition-colors">
+              <ChevronRight className="w-5 h-5 text-red-900" />
+            </div>
+            <span className="font-semibold text-gray-900 text-sm md:text-base">Return & Exchange</span>
           </button>
         </div>
       </div>
