@@ -209,6 +209,7 @@
 import profileAPI from "@/app/api/profile/profile";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useAuth } from "@/Providers/ContextProviders/AuthContext";
 
 import MainView from "../views/MainView";
 import PersonalInfoView from "../views/PersonalInfoView";
@@ -226,6 +227,7 @@ const ProfileView = {
 const Profile = () => {
   const router = useRouter();
   const params = useSearchParams();
+  const { updateUserData } = useAuth();
 
   const [activeView, setActiveView] = useState(ProfileView.MAIN);
   const [loading, setLoading] = useState(true);
@@ -342,9 +344,48 @@ const Profile = () => {
 
       if (res.status === 200 && !res.uploadUrl) {
         toast.success("User Details Updated Successfully");
+        // Clear selected file
+        setSelectedFile(null);
+
+        // Re-fetch profile to get updated data from server
+        const updatedProfile = await profileAPI.getUserProfile();
+
+        if (updatedProfile.user) {
+          const userData = updatedProfile.user;
+
+          // Update local state
+          setUser(userData);
+          setFormData({
+            userId: userData.userId || "",
+            firstName: userData.firstName || "",
+            lastName: userData.lastName || "",
+            email: userData.email || "",
+            phoneNumber: userData.phoneNumber || "",
+            location: userData.location || "",
+            imageUrl: userData.imageUrl || "",
+            contentType: ""
+          });
+
+          // Update AuthContext to sync header/navbar immediately
+          console.log('🔄 Updating AuthContext with:', userData);
+          updateUserData({
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            email: userData.email,
+            phoneNumber: userData.phoneNumber,
+            location: userData.location,
+            imageUrl: userData.imageUrl,
+            userId: userData.userId,
+            name: `${userData.firstName || ""} ${userData.lastName || ""}`.trim()
+          });
+        }
+
+        // Navigate back to main view
+        changeView(ProfileView.MAIN);
       }
 
       if (res.status === 200 && selectedFile && res.uploadUrl) {
+        // Upload image to S3
         await fetch(res.uploadUrl, {
           method: "PUT",
           body: selectedFile,
@@ -354,6 +395,44 @@ const Profile = () => {
         });
 
         toast.success("User Details and Profile Updated Successfully");
+        // Clear selected file and blob URL
+        setSelectedFile(null);
+
+        // Re-fetch profile to get the real S3 URL from server
+        const updatedProfile = await profileAPI.getUserProfile();
+
+        if (updatedProfile.user) {
+          const userData = updatedProfile.user;
+
+          // Update local state with real S3 URL
+          setUser(userData);
+          setFormData({
+            userId: userData.userId || "",
+            firstName: userData.firstName || "",
+            lastName: userData.lastName || "",
+            email: userData.email || "",
+            phoneNumber: userData.phoneNumber || "",
+            location: userData.location || "",
+            imageUrl: userData.imageUrl || "", // Real S3 URL from server
+            contentType: ""
+          });
+
+          // Update AuthContext with real S3 URL to sync header/navbar
+          console.log('🔄 Updating AuthContext with new image:', userData);
+          updateUserData({
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            email: userData.email,
+            phoneNumber: userData.phoneNumber,
+            location: userData.location,
+            imageUrl: userData.imageUrl, // Real S3 URL
+            userId: userData.userId,
+            name: `${userData.firstName || ""} ${userData.lastName || ""}`.trim()
+          });
+        }
+
+        // Navigate back to main view
+        changeView(ProfileView.MAIN);
       }
     } catch (error) {
       console.error("Error:", error.message);
