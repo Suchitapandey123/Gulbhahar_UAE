@@ -1,5 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
+import Link from "next/link";
 import { 
   ArrowLeft, 
   Package, 
@@ -25,6 +26,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { orderHistoryAPI } from '../../../../api/order/orderApi';
+import { profileAPI } from '../../../../api/profile/profile';
 
 export function OrderDetailsPage({ selectedOrder, onBack = () => {} }) {
   const [activeTab, setActiveTab] = useState("history");
@@ -46,24 +48,132 @@ export function OrderDetailsPage({ selectedOrder, onBack = () => {} }) {
   const [successMessage, setSuccessMessage] = useState("");
   const [fetchingUserData, setFetchingUserData] = useState(true);
   const [showAllProducts, setShowAllProducts] = useState(false);
+  const [cancelledDate, setCancelledDate] = useState(null);
+  const [savedAddresses, setSavedAddresses] = useState([]);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [isLoadingAddresses, setIsLoadingAddresses] = useState(false);
+  const [addressError, setAddressError] = useState(null);
+   
+  
+  useEffect(() => {
+   
+    fetchUserData();
+    if (activeTab === "receiver") {
+      fetchUserAddresses();
+    }
+  }, [activeTab]);
 
-  // REMOVED: पहले से user data fetch करने वाला useEffect
-  // अब हम सिर्फ cancel modal open होने पर ही fetch करेंगे
+  const fetchUserAddresses = async () => {
+    if (savedAddresses.length > 0) return; 
+    
+    setIsLoadingAddresses(true);
+    setAddressError(null);
+    
+    try {
+      const response = await profileAPI.getUserAddresses();     
+      if (response.success && Array.isArray(response.data)) {
+        setSavedAddresses(response.data);
+        if (response.data.length > 0) {
+          setSelectedAddress(response.data[0]);
+        }
+      } else {
+        setAddressError("No addresses found");
+      }
+    } catch (error) {
+      console.error("Error fetching addresses:", error);
+      setAddressError("Failed to load addresses");
+    } finally {
+      setIsLoadingAddresses(false);
+    }
+  };
+
+const fetchUserData = () => {
+  if (userEmail) {
+    return;
+  }
+  
+  if (userEmail && userEmail !== "user@example.com") {
+    return;
+  }
+
+  let foundEmail = "";
+  
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    const value = localStorage.getItem(key);
+  
+    if (value && typeof value === 'string' && value.includes('@')) {
+      const emailMatch = value.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+      if (emailMatch) {
+        foundEmail = emailMatch[0];
+        break;
+      }
+    }
+  }
+
+  if (!foundEmail) {
+    const commonKeys = ['userEmail', 'email', 'user_email', 'userEmail', 'user.email'];
+    for (const key of commonKeys) {
+      const value = localStorage.getItem(key);
+      if (value && value.includes('@')) {
+        foundEmail = value;
+        console.log(`Found email in key '${key}':`, foundEmail);
+        break;
+      }
+    }
+  }
+  
+  // Method 4: Check user object
+  if (!foundEmail) {
+    const userDataStr = localStorage.getItem("user");
+    if (userDataStr) {
+      try {
+        const userData = JSON.parse(userDataStr);
+        if (userData.email && userData.email.includes('@')) {
+          foundEmail = userData.email;
+        }
+      } catch (err) {
+
+      }
+    }
+  }
+  
+  
+  if (foundEmail) {
+    setUserEmail(foundEmail);
+    console.log("✅ Email set to state:", foundEmail);
+  } else {
+    console.warn("⚠️ Email not found in localStorage. Using fallback.");
+  }
+};
+
+  // Format address function
+  const formatAddress = (addressData) => {
+    if (!addressData?.shippingAddress) return "No address available";
+    
+    const { shippingAddress } = addressData;
+    const parts = [
+      shippingAddress.addressLine1,
+      shippingAddress.city,
+      shippingAddress.state,
+      shippingAddress.postalCode,
+      shippingAddress.country
+    ].filter(part => part && part.trim() !== '');
+    
+    return parts.join(', ');
+  };
 
   // Transform order data when selectedOrder changes
   useEffect(() => {
-    console.log('🔍 OrderDetailsPage - selectedOrder received:', selectedOrder);
-    
     if (selectedOrder) {
-      console.log('✅ SelectedOrder found, checking for data...');
-      console.log('📋 SelectedOrder structure:', {
+      console.log('SelectedOrder found, checking for data...');
+      console.log('SelectedOrder structure:', {
         hasOriginalData: !!selectedOrder.originalData,
         hasItems: !!selectedOrder.items,
         hasOrderId: !!selectedOrder.orderId,
         keys: Object.keys(selectedOrder)
       });
-      
-      // Method 1: If selectedOrder has originalData
+  
       if (selectedOrder.originalData) {
         console.log('🔄 Transforming from originalData');
         try {
@@ -71,11 +181,10 @@ export function OrderDetailsPage({ selectedOrder, onBack = () => {} }) {
           setOrderData(transformedData);
           setError(null);
         } catch (err) {
-          console.error('❌ Error transforming order data:', err);
           setError('Failed to load order details');
         }
       }
-      // Method 2: If selectedOrder itself has the order data
+
       else if (selectedOrder.items || selectedOrder.orderId) {
         console.log('🔄 Using selectedOrder directly as order data');
         try {
@@ -83,7 +192,6 @@ export function OrderDetailsPage({ selectedOrder, onBack = () => {} }) {
           setOrderData(transformedData);
           setError(null);
         } catch (err) {
-          console.error('❌ Error transforming order data:', err);
           setError('Failed to load order details');
         }
       }
@@ -95,19 +203,16 @@ export function OrderDetailsPage({ selectedOrder, onBack = () => {} }) {
           setOrderData(fallbackData);
           setError(null);
         } catch (err) {
-          console.error('❌ Error with fallback data:', err);
           setError('No order data available');
         }
       }
     } else {
-      console.log('❌ No selectedOrder provided');
       setError('No order selected');
     }
     
     setLoading(false);
   }, [selectedOrder]);
 
-  // Countdown timer for OTP resend
   useEffect(() => {
     let timer;
     if (countdown > 0) {
@@ -116,18 +221,15 @@ export function OrderDetailsPage({ selectedOrder, onBack = () => {} }) {
     return () => clearTimeout(timer);
   }, [countdown]);
 
-  // NEW: जब cancel modal open हो, तभी user data fetch करें
   useEffect(() => {
     if (showCancelModal) {
       fetchUserDataForCancellation();
     }
   }, [showCancelModal]);
 
-  // User data fetch function for cancellation
   const fetchUserDataForCancellation = () => {
     console.log("🔍 Fetching user data for cancellation...");
     
-    // सबसे पहले localStorage check करें
     const userEmailFromStorage = localStorage.getItem("userEmail");
     const userNameFromStorage = localStorage.getItem("userName");
     const userDataStr = localStorage.getItem("user");
@@ -143,32 +245,24 @@ export function OrderDetailsPage({ selectedOrder, onBack = () => {} }) {
     let foundEmail = "";
     let foundName = "";
 
-    // Method 1: Direct from userEmail key
     if (userEmailFromStorage) {
       foundEmail = userEmailFromStorage;
-      console.log("✅ Found email in userEmail key:", foundEmail);
     }
 
-    // Method 2: From userName key
     if (userNameFromStorage) {
       foundName = userNameFromStorage;
-      console.log("✅ Found name in userName key:", foundName);
     }
 
-    // Method 3: Fallback - check user object
     if (!foundEmail && userDataStr) {
       try {
         const userData = JSON.parse(userDataStr);
         if (userData.email) {
           foundEmail = userData.email;
-          console.log("✅ Found email in user object:", foundEmail);
         }
         if (userData.name && !foundName) {
           foundName = userData.name;
-          console.log("✅ Found name in user object:", foundName);
         }
       } catch (err) {
-        console.error("❌ Error parsing userData:", err);
       }
     }
 
@@ -179,10 +273,10 @@ export function OrderDetailsPage({ selectedOrder, onBack = () => {} }) {
         const decoded = JSON.parse(atob(payload));
         if (decoded.name) {
           foundName = decoded.name;
-          console.log("✅ Found name in JWT token:", foundName);
+          
         }
       } catch (jwtErr) {
-        console.error("❌ Error decoding JWT:", jwtErr);
+        
       }
     }
 
@@ -193,7 +287,7 @@ export function OrderDetailsPage({ selectedOrder, onBack = () => {} }) {
         const [name, value] = cookie.trim().split('=');
         if (name.includes('email') || name.includes('Email')) {
           foundEmail = value;
-          console.log("✅ Found email in cookie:", foundEmail);
+          console.log("Found email in cookie:", foundEmail);
           break;
         }
       }
@@ -201,8 +295,7 @@ export function OrderDetailsPage({ selectedOrder, onBack = () => {} }) {
 
     // Debug: Show all localStorage items if email not found
     if (!foundEmail) {
-      console.warn("⚠️ Email not found in localStorage or cookies");
-      console.log("🔍 All localStorage items:");
+      
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         const value = localStorage.getItem(key);
@@ -214,7 +307,7 @@ export function OrderDetailsPage({ selectedOrder, onBack = () => {} }) {
     if (foundEmail) {
       setUserEmail(foundEmail);
     } else {
-      console.error("❌ Email not found anywhere!");
+      console.error(" Email not found anywhere!");
     }
     
     if (foundName) {
@@ -237,7 +330,7 @@ export function OrderDetailsPage({ selectedOrder, onBack = () => {} }) {
     // First, check if we have user email
     if (!userEmail) {
       setApiError("User email not found. Please ensure you are logged in.");
-      console.error("❌ User email is empty when trying to send OTP");
+      console.error(" User email is empty when trying to send OTP");
       console.log("📊 Current user data:", { userEmail, userName });
       
       // Try to fetch again
@@ -257,7 +350,7 @@ export function OrderDetailsPage({ selectedOrder, onBack = () => {} }) {
     setApiError("");
     
     try {
-      console.log('📧 Sending OTP for cancellation:', {
+      console.log('Sending OTP for cancellation:', {
         email: userEmail,
         userName: userName || "User",
         orderId: orderData.orderId
@@ -269,108 +362,81 @@ export function OrderDetailsPage({ selectedOrder, onBack = () => {} }) {
         orderId: orderData.orderId
       });
 
-      console.log('✅ OTP sent successfully:', response);
+      console.log(' OTP sent successfully:', response);
       setIsSendingOtp(false);
       setOtpSent(true);
-      setCountdown(30); // 30 seconds countdown
-      setCancelStep(2); // Move to OTP verification step
+      setCountdown(30); 
+      setCancelStep(2); 
       
     } catch (error) {
-      console.error('❌ Error sending OTP:', error);
+      console.error(' Error sending OTP:', error);
       setApiError(error.message || 'Failed to send OTP. Please try again.');
       setIsSendingOtp(false);
     }
   };
 
   // Handle OTP input with validation
-  // Handle OTP input with validation - IMPROVED VERSION
-const handleOtpChange = (index, value) => {
-  // Allow only numbers
-  if (!/^\d*$/.test(value)) return;
-  
-  // If user is pasting 6-digit OTP
-  if (value.length === 6) {
-    console.log("📋 Pasting OTP:", value);
-    const digits = value.split('');
-    const newOtp = [...otp];
+  const handleOtpChange = (index, value) => {
+    // Allow only numbers
+    if (!/^\d*$/.test(value)) return;
     
-    // Fill all 6 inputs with the pasted digits
-    for (let i = 0; i < 6; i++) {
-      if (i < digits.length) {
-        newOtp[i] = digits[i];
+    // If user is pasting 6-digit OTP
+    if (value.length === 6) {
+      console.log("📋 Pasting OTP:", value);
+      const digits = value.split('');
+      const newOtp = [...otp];
+      
+      // Fill all 6 inputs with the pasted digits
+      for (let i = 0; i < 6; i++) {
+        if (i < digits.length) {
+          newOtp[i] = digits[i];
+        }
       }
+      
+      setOtp(newOtp);
+      
+      // Focus on the last input after a short delay
+      setTimeout(() => {
+        const lastInput = document.getElementById(`otp-input-5`);
+        if (lastInput) lastInput.focus();
+      }, 50);
+      
+      return;
     }
     
+    // Single digit input
+    if (value.length > 1) {
+      value = value.charAt(value.length - 1); // Take last character (for mobile keyboard suggestions)
+    }
+    
+    const newOtp = [...otp];
+    newOtp[index] = value;
     setOtp(newOtp);
     
-    // Focus on the last input after a short delay
-    setTimeout(() => {
-      const lastInput = document.getElementById(`otp-input-5`);
-      if (lastInput) lastInput.focus();
-    }, 50);
+    // Auto focus next input if current has value
+    if (value && index < 5) {
+      setTimeout(() => {
+        const nextInput = document.getElementById(`otp-input-${index + 1}`);
+        if (nextInput) nextInput.focus();
+      }, 10);
+    }
+  };
+
+  // Separate handlePaste function
+  const handlePaste = (e) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData('text').trim();
+    console.log("📋 Pasted data:", pastedData);
     
-    return;
-  }
-  
-  // Single digit input
-  if (value.length > 1) {
-    value = value.charAt(value.length - 1); // Take last character (for mobile keyboard suggestions)
-  }
-  
-  const newOtp = [...otp];
-  newOtp[index] = value;
-  setOtp(newOtp);
-  
-  // Auto focus next input if current has value
-  if (value && index < 5) {
-    setTimeout(() => {
-      const nextInput = document.getElementById(`otp-input-${index + 1}`);
-      if (nextInput) nextInput.focus();
-    }, 10);
-  }
-};
-
-// Separate handlePaste function
-const handlePaste = (e) => {
-  e.preventDefault();
-  const pastedData = e.clipboardData.getData('text').trim();
-  console.log("📋 Pasted data:", pastedData);
-  
-  // Check if it's a 6-digit number
-  if (/^\d{6}$/.test(pastedData)) {
-    handleOtpChange(0, pastedData);
-  } else {
-    // Show error if invalid
-    setApiError('Please paste a valid 6-digit OTP');
-    setTimeout(() => setApiError(''), 3000);
-  }
-};
-
-// OTP Input में ये use करें
-<div className="flex justify-center gap-2 mb-4">
-  {[0, 1, 2, 3, 4, 5].map((index) => (
-    <input
-      key={index}
-      id={`otp-input-${index}`}
-      type="text"
-      inputMode="numeric"
-      pattern="[0-9]*"
-      maxLength={6}
-      value={otp[index]}
-      onChange={(e) => handleOtpChange(index, e.target.value)}
-      onPaste={index === 0 ? handlePaste : undefined} // Only first input handles paste
-      onKeyDown={(e) => {
-        // Handle backspace
-        if (e.key === 'Backspace' && !otp[index] && index > 0) {
-          const prevInput = document.getElementById(`otp-input-${index - 1}`);
-          if (prevInput) prevInput.focus();
-        }
-      }}
-      className="w-12 h-14 text-center text-xl font-semibold border-2 border-gray-300 rounded-lg focus:border-[#7f1d1d] focus:ring-2 focus:ring-[#7f1d1d]/20 outline-none transition-colors"
-      autoFocus={index === 0 && !otp[0]}
-    />
-  ))}
-</div>
+    // Check if it's a 6-digit number
+    if (/^\d{6}$/.test(pastedData)) {
+      handleOtpChange(0, pastedData);
+    } else {
+      // Show error if invalid
+      setApiError('Please paste a valid 6-digit OTP');
+      setTimeout(() => setApiError(''), 3000);
+    }
+  };
 
   const handleVerifyOtp = async () => {
     const enteredOtp = otp.join('');
@@ -391,7 +457,8 @@ const handlePaste = (e) => {
         email: userEmail,
         userName: userName,
         otp: enteredOtp,
-        orderId: orderData.orderId
+        orderId: orderData.orderId,
+        cancellationReason: cancelReason
       };
       
       console.log('📝 Request body:', requestBody);
@@ -404,17 +471,23 @@ const handlePaste = (e) => {
       setIsVerifyingOtp(false);
       setCancelStep(3);
       setSuccessMessage(response.message || "Order cancelled successfully!");
+      setCancelledDate(new Date()); // Set cancellation date
       
       // Update order status locally
-      setOrderData(prev => ({
-        ...prev,
-        status: 'Cancelled',
-        statusColor: 'bg-red-100 text-red-800 border-red-200',
-        statusIcon: XCircle
-      }));
+      setOrderData(prev => {
+        const newCancelledDate = new Date();
+        return {
+          ...prev,
+          status: 'Cancelled',
+          statusColor: 'bg-red-100 text-red-800 border-red-200',
+          statusIcon: XCircle,
+          // Regenerate timeline with cancellation
+          timeline: generateOrderTimeline('Cancelled', new Date(prev.originalData.placedAt || prev.orderDate), newCancelledDate, cancelReason)
+        };
+      });
       
     } catch (error) {
-      console.error('❌ Full error details:', error);
+      console.error(' Full error details:', error);
       
       setApiError(error.message || 'Failed to cancel order. Please try again.');
       setIsVerifyingOtp(false);
@@ -439,9 +512,7 @@ const handlePaste = (e) => {
     setCountdown(0);
     setApiError("");
     setSuccessMessage("");
-    // Optional: Clear user data when modal closes
-    // setUserEmail("");
-    // setUserName("");
+    setCancelledDate(null);
   };
 
   // Handle cancel order button click
@@ -559,6 +630,99 @@ const handlePaste = (e) => {
     };
   };
 
+  // Function to check if shipping should be shown
+const shouldShowFreeShipping = () => {
+  if (!orderData) return true;
+  return orderData.status !== 'Cancelled';
+};
+
+  // Generate order timeline based on status - UPDATED VERSION
+  const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellationReason = '') => {
+    // Get current date for cancelled timeline
+    const currentDate = cancelledAt || new Date();
+    
+    const baseStages = [
+      {
+        title: "Order Placed",
+        date: orderDate,
+        icon: Info,
+        status: "completed"
+      },
+      {
+        title: "Order Confirmed",
+        date: new Date(orderDate.getTime() + 30 * 60 * 1000),
+        description: "Tracking Number Assigned",
+        icon: CheckCircle,
+        status: "completed"
+      },
+      {
+        title: "Product Packaging",
+        date: new Date(orderDate.getTime() + 2 * 60 * 60 * 1000),
+        description: "Product packed in warehouse",
+        icon: Package,
+        status: status === 'Pending' ? 'pending' : 'completed'
+      },
+      {
+        title: "Product Shipped",
+        date: new Date(orderDate.getTime() + 24 * 60 * 60 * 1000),
+        description: "Product shipped from warehouse",
+        icon: Truck,
+        status: ['Shipped', 'Delivered'].includes(status) ? 'completed' : 'pending'
+      },
+      {
+        title: "Out for Delivery",
+        date: new Date(orderDate.getTime() + 3 * 24 * 60 * 60 * 1000),
+        description: "Product out for delivery",
+        icon: Truck,
+        status: status === 'Delivered' ? 'completed' : 'pending'
+      },
+      {
+        title: "Delivered",
+        date: new Date(orderDate.getTime() + 5 * 24 * 60 * 60 * 1000),
+        description: "Product delivered successfully",
+        icon: CheckCircle,
+        status: status === 'Delivered' ? 'completed' : 'pending'
+      }
+    ];
+
+    // Add cancellation stage if order is cancelled
+    if (status === 'Cancelled') {
+      // Insert cancellation stage after order confirmation
+      baseStages.splice(2, 0, {
+        title: "Order Cancelled",
+        date: currentDate,
+        description: `Cancelled by customer${cancellationReason ? ` - Reason: ${cancellationReason}` : ''}`,
+        icon: XCircle,
+        status: "completed"
+      });
+      
+      // Update all subsequent stages to be 'cancelled' state
+      for (let i = 3; i < baseStages.length; i++) {
+        baseStages[i].status = "cancelled";
+        // Update icon for cancelled stages
+        baseStages[i].icon = XCircle;
+      }
+    }
+
+    return baseStages.map(stage => ({
+      ...stage,
+      formattedDate: formatDateTime(stage.date)
+    }));
+  };
+
+  // Format date with time
+  const formatDateTime = (date) => {
+    if (!(date instanceof Date) || isNaN(date)) return 'Invalid Date';
+    
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'pm' : 'am';
+    const formattedHours = hours % 12 || 12;
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+    
+    return `${formatDate(date)} ${formattedHours}:${formattedMinutes} ${ampm}`;
+  };
+
   // Transform function
   const transformOrderDetails = (order) => {
     if (!order) {
@@ -617,7 +781,8 @@ const handlePaste = (e) => {
       const statusInfo = determineOrderStatus(order.status);
 
       // 7. Generate order timeline based on status
-      const orderTimeline = generateOrderTimeline(order.status, orderDate);
+      const cancelledDate = order.cancelledAt ? new Date(order.cancelledAt) : null;
+      const orderTimeline = generateOrderTimeline(order.status, orderDate, cancelledDate, order.cancellationReason);
 
       return {
         orderId,
@@ -648,71 +813,6 @@ const handlePaste = (e) => {
       console.error('❌ Error in transformOrderDetails:', error);
       throw new Error('Failed to transform order data');
     }
-  };
-
-  // Generate order timeline based on status
-  const generateOrderTimeline = (status, orderDate) => {
-    const baseStages = [
-      {
-        title: "Order Placed",
-        date: orderDate,
-        icon: Info,
-        status: "completed"
-      },
-      {
-        title: "Order Confirmed",
-        date: new Date(orderDate.getTime() + 30 * 60 * 1000),
-        description: "Tracking Number Assigned",
-        icon: CheckCircle,
-        status: "completed"
-      },
-      {
-        title: "Product Packaging",
-        date: new Date(orderDate.getTime() + 2 * 60 * 60 * 1000),
-        description: "Product packed in warehouse",
-        icon: Package,
-        status: status === 'Pending' ? 'pending' : 'completed'
-      },
-      {
-        title: "Product Shipped",
-        date: new Date(orderDate.getTime() + 24 * 60 * 60 * 1000),
-        description: "Product shipped from warehouse",
-        icon: Truck,
-        status: ['Shipped', 'Delivered'].includes(status) ? 'completed' : 'pending'
-      },
-      {
-        title: "Out for Delivery",
-        date: new Date(orderDate.getTime() + 3 * 24 * 60 * 60 * 1000),
-        description: "Product out for delivery",
-        icon: Truck,
-        status: status === 'Delivered' ? 'completed' : 'pending'
-      },
-      {
-        title: "Delivered",
-        date: new Date(orderDate.getTime() + 5 * 24 * 60 * 60 * 1000),
-        description: "Product delivered successfully",
-        icon: CheckCircle,
-        status: status === 'Delivered' ? 'completed' : 'pending'
-      }
-    ];
-
-    return baseStages.map(stage => ({
-      ...stage,
-      formattedDate: formatDateTime(stage.date)
-    }));
-  };
-
-  // Format date with time
-  const formatDateTime = (date) => {
-    if (!(date instanceof Date) || isNaN(date)) return 'Invalid Date';
-    
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const ampm = hours >= 12 ? 'pm' : 'am';
-    const formattedHours = hours % 12 || 12;
-    const formattedMinutes = minutes.toString().padStart(2, '0');
-    
-    return `${formatDate(date)} ${formattedHours}:${formattedMinutes} ${ampm}`;
   };
 
   // Function to get products to display
@@ -838,65 +938,61 @@ const handlePaste = (e) => {
                 </div>
               </div>
 
-     {/* Products Display - New Design */}
-<div className="mb-6">
-  <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-    <Package className="w-5 h-5 text-[#7f1d1d]" />
-    Products in this order
-  </h3>
-  
-  <div className="space-y-4">
-    {productsToDisplay.map((product, index) => (
-      <div key={index} className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
-        {/* Product Image */}
-       {/* Product Image */}
-<div className="flex-shrink-0">
-  <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-300 bg-white">
-            {product.image ? (
-              <img 
-                src={product.image} 
-                alt={product.name}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="%239ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>';
-                }}
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                <Package className="w-8 h-8 text-gray-400" />
-              </div>
-            )}
-          </div>
-        </div>
+              {/* Products Display - New Design */}
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <Package className="w-5 h-5 text-[#7f1d1d]" />
+                  Products in this order
+                </h3>
+                
+                <div className="space-y-4">
+                  {productsToDisplay.map((product, index) => (
+                    <div key={index} className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                      {/* Product Image */}
+                      <div className="flex-shrink-0">
+                        <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-300 bg-white">
+                          {product.image ? (
+                            <img 
+                              src={product.image} 
+                              alt={product.name}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="%239ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>';
+                              }}
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                              <Package className="w-8 h-8 text-gray-400" />
+                            </div>
+                          )}
+                        </div>
+                      </div>
 
-        {/* Product Details - UPDATED WITH SMALLER TEXT */}
-        <div className="flex-1 min-w-0">
-          <h4 className="text-sm font-semibold text-gray-900 mb-1 truncate">
-            {product.name}
-          </h4>
-          <div className="flex flex-wrap items-center gap-2 text-xs text-gray-600">
-            {product.quantity > 1 && (
-              <span className="bg-gray-200 px-2 py-0.5 rounded-md">
-                Qty: {product.quantity}
-              </span>
-            )}
-            {product.color && product.color !== 'Not specified' && (
-              <span className="flex items-center gap-1">
-                <span className="w-3 h-3 rounded-full border border-gray-300" style={{backgroundColor: product.color}} />
-                {product.color}
-              </span>
-            )}
-            {product.size && product.size !== 'Not specified' && (
-              <span>Size: {product.size}</span>
-            )}
-          </div>
-        </div>
-
-        
-       
-      </div>
-    ))}
+                      {/* Product Details */}
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-sm font-semibold text-gray-900 mb-1 truncate">
+                          {product.name}
+                        </h4>
+                        <div className="flex flex-wrap items-center gap-2 text-xs text-gray-600">
+                          {product.quantity > 1 && (
+                            <span className="bg-gray-200 px-2 py-0.5 rounded-md">
+                              Qty: {product.quantity}
+                            </span>
+                          )}
+                          {product.color && product.color !== 'Not specified' && (
+                            <span className="flex items-center gap-1">
+                              <span className="w-3 h-3 rounded-full border border-gray-300" style={{backgroundColor: product.color}} />
+                              {product.color}
+                            </span>
+                          )}
+                          {product.size && product.size !== 'Not specified' && (
+                            <span>Size: {product.size}</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
 
                   {/* Show More/Less Button */}
                   {hasMoreProducts && (
@@ -999,15 +1095,16 @@ const handlePaste = (e) => {
 
                 {/* Action Buttons */}
                 <div className="space-y-3">
+                  {/* Free Shipping - Conditionally Hide When Cancelled */}
+  {shouldShowFreeShipping() && (
                   <div className="flex items-center gap-2 text-green-600 text-sm bg-green-50 px-4 py-3 rounded-lg">
                     <Truck className="w-5 h-5" />
-                   
                     <span>Free Shipping</span>
                   </div>
-                  
+                   )}
                   {canCancelOrder() && (
                     <button
-                      onClick={() => setShowCancelModal(true)}
+                      onClick={handleOpenCancelModal}
                       className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-300"
                     >
                       <XCircle className="w-5 h-5" />
@@ -1015,10 +1112,10 @@ const handlePaste = (e) => {
                     </button>
                   )}
 
-                  <button className="w-full flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 hover:border-[#7f1d1d] text-gray-700 hover:text-[#7f1d1d] font-medium rounded-lg transition-colors">
+                  {/* <button className="w-full flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 hover:border-[#7f1d1d] text-gray-700 hover:text-[#7f1d1d] font-medium rounded-lg transition-colors">
                     <ExternalLink className="w-5 h-5" />
                     Track Order
-                  </button>
+                  </button> */}
                 </div>
               </div>
 
@@ -1031,9 +1128,11 @@ const handlePaste = (e) => {
                     <p className="text-xs text-blue-700 mt-1">
                       Contact our support team for any queries about your order.
                     </p>
-                    <button className="mt-2 text-xs text-blue-600 hover:text-blue-800 font-medium">
+                    <Link 
+        href="/contact" className="mt-2 text-xs text-blue-600 hover:text-blue-800 font-medium">
                       Contact Support →
-                    </button>
+                      </Link>
+                     
                   </div>
                 </div>
               </div>
@@ -1065,48 +1164,74 @@ const handlePaste = (e) => {
 
           {/* Tab Content */}
           <div className="p-6">
-            {/* Tab content remains same as before */}
+            {/* History Tab with Timeline */}
             {activeTab === "history" && (
               <div className="relative">
                 <h3 className="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-2">
                   <Clock className="w-5 h-5 text-[#7f1d1d]" />
                   Order Timeline
+                  {orderData.status === 'Cancelled' && (
+                    <span className="ml-2 px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">
+                      Cancelled
+                    </span>
+                  )}
                 </h3>
                 
                 <div className="relative ml-6">
                   {orderData.timeline.map((stage, index) => {
                     const StageIcon = stage.icon;
+                    const isCancelledStage = stage.status === 'cancelled';
+                    
                     return (
                       <div key={index} className="relative pb-8 last:pb-0">
                         {/* Timeline line */}
                         {index !== orderData.timeline.length - 1 && (
                           <div className={`absolute left-4 top-8 w-0.5 h-full ${
-                            stage.status === 'completed' ? 'bg-[#7f1d1d]' : 'bg-[#7f1d1d]/20'
+                            stage.status === 'completed' ? 'bg-[#7f1d1d]' : 
+                            isCancelledStage ? 'bg-red-200' :
+                            'bg-[#7f1d1d]/20'
                           }`}></div>
                         )}
                         
                         {/* Timeline node */}
                         <div className="flex items-start gap-4">
                           <div className={`relative z-10 flex items-center justify-center w-8 h-8 rounded-full flex-shrink-0 ${
-                            stage.status === 'completed' ? 'bg-[#7f1d1d]' : 'bg-gray-300'
+                            stage.status === 'completed' ? 'bg-[#7f1d1d]' : 
+                            isCancelledStage ? 'bg-red-500' :
+                            'bg-gray-300'
                           }`}>
-                            <StageIcon className="w-4 h-4 text-white" />
+                            <StageIcon className={`w-4 h-4 ${
+                              isCancelledStage ? 'text-white' : 'text-white'
+                            }`} />
                           </div>
                           
                           <div className="flex-1 min-w-0">
                             <div className={`rounded-xl p-4 border ${
                               stage.status === 'completed' 
                                 ? 'bg-[#7f1d1d]/5 border-[#7f1d1d]/10' 
+                                : isCancelledStage
+                                ? 'bg-red-50 border-red-200'
                                 : 'bg-gray-50 border-gray-200'
                             }`}>
-                              <h4 className="font-semibold text-gray-900 mb-1">
-                                {stage.title}
-                              </h4>
+                              <div className="flex items-center gap-2 mb-1">
+                                <h4 className={`font-semibold ${
+                                  isCancelledStage ? 'text-red-800' : 'text-gray-900'
+                                }`}>
+                                  {stage.title}
+                                </h4>
+                                {isCancelledStage && (
+                                  <span className="px-2 py-0.5 bg-red-100 text-red-700 text-xs font-medium rounded-full">
+                                    Cancelled
+                                  </span>
+                                )}
+                              </div>
                               <p className="text-sm text-gray-600 mb-2">
                                 {stage.formattedDate}
                               </p>
                               {stage.description && (
-                                <p className="text-sm text-gray-500">
+                                <p className={`text-sm ${
+                                  isCancelledStage ? 'text-red-700' : 'text-gray-500'
+                                }`}>
                                   {stage.description}
                                 </p>
                               )}
@@ -1174,7 +1299,6 @@ const handlePaste = (e) => {
                         <p className="text-lg font-semibold text-[#7f1d1d]">
                           {formatCurrency(item.price * item.quantity)}
                         </p>
-                        
                       </div>
                     </div>
                   ))}
@@ -1209,50 +1333,102 @@ const handlePaste = (e) => {
               </div>
             )}
 
-            {activeTab === "receiver" && (
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-2">
-                  <User className="w-5 h-5 text-[#7f1d1d]" />
-                  Receiver Information
-                </h3>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
-                    <div className="flex items-center gap-2 mb-2">
-                      <User className="w-5 h-5 text-[#7f1d1d]" />
-                      <span className="font-medium text-gray-900">Full Name</span>
-                    </div>
-                    <p className="text-gray-700">John Doe</p>
-                  </div>
-                  
-                  <div className="p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Mail className="w-5 h-5 text-[#7f1d1d]" />
-                      <span className="font-medium text-gray-900">Email</span>
-                    </div>
-                    <p className="text-gray-700">john.doe@example.com</p>
-                  </div>
-                  
-                  <div className="p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Phone className="w-5 h-5 text-[#7f1d1d]" />
-                      <span className="font-medium text-gray-900">Phone</span>
-                    </div>
-                    <p className="text-gray-700">+91 98765 43210</p>
-                  </div>
-                  
-                  <div className="p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10 md:col-span-2">
-                    <div className="flex items-center gap-2 mb-2">
-                      <MapPin className="w-5 h-5 text-[#7f1d1d]" />
-                      <span className="font-medium text-gray-900">Shipping Address</span>
-                    </div>
-                    <p className="text-gray-700">
-                      123 Main Street, Mumbai, Maharashtra 400001, India
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
+             {activeTab === "receiver" && (
+    <div>
+      <h3 className="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-2">
+        <User className="w-5 h-5 text-[#7f1d1d]" />
+        Receiver Information
+      </h3>
+      
+      {/* Loading State */}
+      {isLoadingAddresses && (
+        <div className="text-center py-8">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#7f1d1d] mb-4"></div>
+          <p className="text-gray-600">Loading address information...</p>
+        </div>
+      )}
+      
+      {/* Error State */}
+      {addressError && !isLoadingAddresses && (
+        <div className="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg">
+          <AlertTriangle className="w-12 h-12 text-amber-500 mx-auto mb-3" />
+          <p className="text-gray-600 mb-4">{addressError}</p>
+          <button
+            onClick={fetchUserAddresses}
+            className="text-[#7f1d1d] hover:text-[#991b1b] font-medium"
+          >
+            Retry
+          </button>
+        </div>
+      )}
+      
+      {/* No Addresses State */}
+      {!isLoadingAddresses && !addressError && savedAddresses.length === 0 && (
+        <div className="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg">
+          <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+          <p className="text-gray-600 mb-4">No shipping addresses found in your profile</p>
+          <p className="text-sm text-gray-500 mb-4">
+            Please add your shipping address in the Address Book section
+          </p>
+        </div>
+      )}
+      
+      {/* Address Display - SIMPLIFIED (no dropdown) */}
+      {!isLoadingAddresses && selectedAddress && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
+            <div className="flex items-center gap-2 mb-2">
+              <User className="w-5 h-5 text-[#7f1d1d]" />
+              <span className="font-medium text-gray-900">Full Name</span>
+            </div>
+            <p className="text-gray-700">
+              {selectedAddress.shippingAddress?.fullName || 'Not specified'}
+            </p>
+          </div>
+          
+          <div className="p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
+            <div className="flex items-center gap-2 mb-2">
+              <Mail className="w-5 h-5 text-[#7f1d1d]" />
+              <span className="font-medium text-gray-900">Email</span>
+            </div>
+            <p className="text-gray-700">
+              {userEmail || 'Loading...'}
+            </p>
+          </div>
+          
+          <div className="p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
+            <div className="flex items-center gap-2 mb-2">
+              <Phone className="w-5 h-5 text-[#7f1d1d]" />
+              <span className="font-medium text-gray-900">Phone</span>
+            </div>
+            <p className="text-gray-700">
+              {selectedAddress.shippingAddress?.phone || 'Not specified'}
+            </p>
+          </div>
+          
+          <div className="p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10 md:col-span-2">
+            <div className="flex items-center gap-2 mb-2">
+              <MapPin className="w-5 h-5 text-[#7f1d1d]" />
+              <span className="font-medium text-gray-900">Shipping Address</span>
+            </div>
+            <p className="text-gray-700">
+              {formatAddress(selectedAddress)}
+            </p>
+          </div>
+        </div>
+      )}
+      
+      {/* Show multiple addresses option (optional) */}
+      {!isLoadingAddresses && savedAddresses.length > 1 && (
+        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+          <p className="text-sm text-blue-800">
+            <strong>Note:</strong> You have {savedAddresses.length} saved addresses. 
+            This order will be delivered to the default address shown above.
+          </p>
+        </div>
+      )}
+    </div>
+  )}
           </div>
         </div>
       </div>
@@ -1389,9 +1565,17 @@ const handlePaste = (e) => {
                           type="text"
                           inputMode="numeric"
                           pattern="[0-9]*"
-                          maxLength={1}
+                          maxLength={6}
                           value={otp[index]}
                           onChange={(e) => handleOtpChange(index, e.target.value)}
+                          onPaste={index === 0 ? handlePaste : undefined}
+                          onKeyDown={(e) => {
+                            // Handle backspace
+                            if (e.key === 'Backspace' && !otp[index] && index > 0) {
+                              const prevInput = document.getElementById(`otp-input-${index - 1}`);
+                              if (prevInput) prevInput.focus();
+                            }
+                          }}
                           className="w-12 h-14 text-center text-xl font-semibold border-2 border-gray-300 rounded-lg focus:border-[#7f1d1d] focus:ring-2 focus:ring-[#7f1d1d]/20 outline-none transition-colors"
                           autoFocus={index === 0 && !otp[0]}
                         />
@@ -1425,11 +1609,10 @@ const handlePaste = (e) => {
                     <CheckCircle className="w-8 h-8 text-green-600" />
                   </div>
                   <h4 className="text-lg font-semibold text-gray-900 mb-2">
-                    Order Cancelled Suc cessfully!
+                    Order Cancelled Successfully!
                   </h4>
                   <p className="text-gray-600 mb-4">
                     Your order <span className="font-semibold">{orderData.orderId}</span> has been cancelled.
-                  
                   </p>
                   <div className="animate-pulse text-sm text-gray-500">
                     Redirecting to order history...
@@ -1566,7 +1749,9 @@ function getFallbackOrderData(selectedOrder) {
     return `${day}${getOrdinalSuffix(day)} ${month}, ${year}`;
   };
 
-  const generateOrderTimeline = (status, orderDate) => {
+  const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellationReason = '') => {
+    const currentDate = cancelledAt || new Date();
+    
     const baseStages = [
       {
         title: "Order Placed",
@@ -1611,10 +1796,41 @@ function getFallbackOrderData(selectedOrder) {
       }
     ];
 
+    // Add cancellation stage if order is cancelled
+    if (status === 'Cancelled') {
+      // Insert cancellation stage after order confirmation
+      baseStages.splice(2, 0, {
+        title: "Order Cancelled",
+        date: currentDate,
+        description: `Cancelled by customer${cancellationReason ? ` - Reason: ${cancellationReason}` : ''}`,
+        icon: XCircle,
+        status: "completed"
+      });
+      
+      // Update all subsequent stages to be 'cancelled' state
+      for (let i = 3; i < baseStages.length; i++) {
+        baseStages[i].status = "cancelled";
+        // Update icon for cancelled stages
+        baseStages[i].icon = XCircle;
+      }
+    }
+
     return baseStages.map(stage => ({
       ...stage,
       formattedDate: formatDate(stage.date)
     }));
+  };
+
+  const formatDateTime = (date) => {
+    if (!(date instanceof Date) || isNaN(date)) return 'Invalid Date';
+    
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'pm' : 'am';
+    const formattedHours = hours % 12 || 12;
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+    
+    return `${formatDate(date)} ${formattedHours}:${formattedMinutes} ${ampm}`;
   };
 
   return {

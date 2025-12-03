@@ -294,6 +294,7 @@
 
 "use client";
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { 
   ArrowLeft, 
@@ -467,10 +468,11 @@ const OrderHistory = () => {
                 <p className="text-gray-600 text-sm mb-4">
                   Contact our support team for assistance
                 </p>
-                <button className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#7f1d1d] text-white font-medium rounded-lg hover:bg-[#991b1b] transition-colors duration-300">
+                <Link 
+        href="/contact"className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#7f1d1d] text-white font-medium rounded-lg hover:bg-[#991b1b] transition-colors duration-300">
                   Contact Support
                   <ChevronRight className="w-4 h-4" />
-                </button>
+                </Link>
               </div>
             </div>
           </div>
