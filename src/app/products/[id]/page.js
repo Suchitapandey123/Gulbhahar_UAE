@@ -127,7 +127,7 @@ export default async function CollectionPage({ params }) {
   try {
     const param = await params;
     const productID = param.id;
-    // console.log('Params:', productID);
+    console.log('Params:', productID);
     
     const { product, similarProducts } = await getProductData(productID);
 

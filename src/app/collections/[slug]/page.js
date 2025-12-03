@@ -140,7 +140,7 @@ export default async function Page({ params: rawParams }) {
 
   return (
     <div className="mt-24">
-      <Collection />
+      <Collection category={'sarees'}/>
       <ContentSection page={page} />
 
       {/* QuickLinks with detected category */}
