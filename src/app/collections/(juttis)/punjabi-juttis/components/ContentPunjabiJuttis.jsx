@@ -24,14 +24,14 @@ const ContentPunjabiJuttis = () => {
           
           {/* Cultural Experience Section */}
           <section className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-800 to-red-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   🏰
                 </span>
                 <span className="leading-tight">The Cultural Experience of Punjabi Juttis</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
               Punjabi Juttis are ingrained in North Indian culture, from the royalty to the common village man. The Punjabi Jutti is a timeless charm that holds true even today. From the embroidery to the beadwork, every pair has the artistry of a skilled artisan behind it and showcases their talents as portable artwork.
             </p>
@@ -64,14 +64,14 @@ const ContentPunjabiJuttis = () => {
 
           {/* Signature Styles Section */}
           <section>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-700 to-red-800 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   👑
                 </span>
                 <span className="leading-tight">Gulbhahar's Signature Styles - Firoza & Anarkali</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-6">
               Two of our most popular designs at Gulbhahar are Firoza and Anarkali.
             </p>
@@ -130,14 +130,14 @@ const ContentPunjabiJuttis = () => {
 
           {/* Comfort Meets Heritage Section */}
           <section className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-600 to-red-700 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   ☁️
                 </span>
                 <span className="leading-tight">Comfort Meets Heritage</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
               To say there is a misperception that traditional juttis are reserved for specific occasions or that they may not be comfortable is an understatement. We have made every effort to reject this perception at Gulbhahar.
             </p>
@@ -168,14 +168,14 @@ const ContentPunjabiJuttis = () => {
 
           {/* What Makes Gulbhahar Unique Section */}
           <section>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-600 to-red-800 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   ⭐
                 </span>
                 <span className="leading-tight">What Makes Gulbhahar Unique</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
               Yes, many brands will sell juttis but Gulbhahar is primarily about artistry and authenticity rather than fashion. Each pair is made with heritage in mind, but also meeting the contemporary demands of the fashion landscape.
             </p>
@@ -209,14 +209,14 @@ const ContentPunjabiJuttis = () => {
 
           {/* New Fashion Statement Section */}
           <section className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-700 to-red-800 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   🌍
                 </span>
                 <span className="leading-tight">The New Fashion Statement</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
               Today, Punjabi Juttis virtually have a rightful place outside of the Indian subcontinent. From fashion influencers on Instagram to celebrities on red carpets, handcrafted juttis have become an internationally recognisable fashion statement.
             </p>
@@ -251,14 +251,14 @@ const ContentPunjabiJuttis = () => {
 
           {/* Philosophy Section */}
           <section>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-800 to-red-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   💫
                 </span>
                 <span className="leading-tight">Our Fashion Philosophy</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
               At Gulbhahar, we believe that fashion should be expressive yet timeless. Our collections, like Firoza and Anarkali, stay true to that belief - and make sure you are stylish, yet comfortable, and mostly connected to an age-old tradition.
             </p>
@@ -282,9 +282,9 @@ const ContentPunjabiJuttis = () => {
 
         {/* Conclusion */}
         <div className="text-center mt-8 sm:mt-12 lg:mt-16 bg-gradient-to-r from-red-900 to-red-800 text-white rounded-xl sm:rounded-2xl p-6 sm:p-8 lg:p-12">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
+          <span className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
             Step Into Heritage, Walk Into the Future
-          </h2>
+          </span>
           <p className="text-sm sm:text-base lg:text-lg leading-relaxed max-w-3xl mx-auto">
             Experience the perfect blend of tradition and modernity with Gulbhahar's handcrafted Punjabi juttis. From Firoza's sophisticated elegance to Anarkali's regal magnificence, discover footwear that tells your story.
           </p>

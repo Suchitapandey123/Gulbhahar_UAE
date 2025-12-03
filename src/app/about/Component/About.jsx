@@ -33,7 +33,7 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.2, delay: 0.3 }}
             >
-              <motion.h1 className="mt-4">
+              <motion.div className="mt-4">
                 <motion.span
                   className=" text-6xl sm:text-7xl md:text-8xl lg:text-7xl xl:text-8xl 2xl:text-9xl  font-black leading-[0.85] block bg-gradient-to-r from-[#7f0001] via-[#7f0001] to-[#7f0001] bg-clip-text text-transparent"
                   initial={{ opacity: 0, y: 50, rotateX: 90 }}
@@ -58,7 +58,7 @@ const HeroSection = () => {
                 >
                   of heritage
                 </motion.span>
-              </motion.h1>
+              </motion.div>
             </motion.div>
 
             <motion.div 
@@ -1432,7 +1432,7 @@ const BrandStorySection = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              <motion.h3 
+              <motion.h1 
                 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold text-[#7f0001] mb-4 sm:mb-6"
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -1440,7 +1440,7 @@ const BrandStorySection = () => {
                 viewport={{ once: true }}
               >
                 About Us
-              </motion.h3>
+              </motion.h1>
               
               <div className="space-y-4 sm:space-y-6 text-sm xs:text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed">
                 <p>

@@ -252,7 +252,8 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Settings,
   MapPin,
@@ -267,6 +268,7 @@ import {
   Key,
   CheckCircle
 } from "lucide-react";
+import Link from "next/link";
 
 /* --- Security Views Constants --- */
 const SecurityView = {
@@ -276,9 +278,35 @@ const SecurityView = {
 };
 
 const Setting = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  /* -------------------------------------------
+      ACTIVE VIEW WITH URL SYNC
+  -------------------------------------------- */
   const [activeView, setActiveView] = useState(SecurityView.MAIN);
 
-  // Password states
+  // Read "view" from URL on load
+  useEffect(() => {
+    const viewFromUrl = searchParams.get("view");
+    if (viewFromUrl && SecurityView[viewFromUrl.toUpperCase()]) {
+      setActiveView(viewFromUrl);
+    }
+  }, [searchParams]);
+
+  // Change view AND update query param in URL
+  const changeView = (view) => {
+    setActiveView(view);
+
+    const url = new URL(window.location.href);
+    url.searchParams.set("view", view);
+
+    router.replace(url.toString(), { scroll: false });
+  };
+
+  /* -------------------------------------------
+      PASSWORD STATE
+  -------------------------------------------- */
   const [passwordData, setPasswordData] = useState({
     newPassword: "",
     confirmPassword: "",
@@ -289,15 +317,16 @@ const Setting = () => {
     confirmPassword: false,
   });
 
-  // Privacy settings state
+  /* -------------------------------------------
+      PRIVACY SETTINGS STATE
+  -------------------------------------------- */
   const [privacySettings, setPrivacySettings] = useState({
     profileVisibility: true,
     activityStatus: false,
     dataCollection: true,
-    marketing: false
+    marketing: false,
   });
 
-  // Handle password input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setPasswordData((prev) => ({
@@ -306,7 +335,6 @@ const Setting = () => {
     }));
   };
 
-  // Toggle password visibility
   const togglePasswordVisibility = (field) => {
     setShowPassword((prev) => ({
       ...prev,
@@ -314,7 +342,6 @@ const Setting = () => {
     }));
   };
 
-  // Handle password form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     if (passwordData.newPassword !== passwordData.confirmPassword) {
@@ -325,18 +352,18 @@ const Setting = () => {
     setPasswordData({ newPassword: "", confirmPassword: "" });
   };
 
-  // Toggle privacy setting
   const togglePrivacySetting = (setting) => {
-    setPrivacySettings(prev => ({
+    setPrivacySettings((prev) => ({
       ...prev,
-      [setting]: !prev[setting]
+      [setting]: !prev[setting],
     }));
   };
 
-  /* --------------------------------------------------
-        UNIVERSAL CARD COMPONENT
-  -------------------------------------------------- */
-  const CardBox = ({ title, description, icon: Icon, onClick, variant="default" }) => (
+  /* -------------------------------------------
+      COMPONENTS
+  -------------------------------------------- */
+
+  const CardBox = ({ title, description, icon: Icon, onClick, variant = "default" }) => (
     <div
       className={`group bg-white border rounded-xl p-6 cursor-pointer transition-all duration-300 hover:shadow-lg ${
         variant === "danger"
@@ -360,15 +387,7 @@ const Setting = () => {
     </div>
   );
 
-  /* --------------------------------------------------
-        TOGGLE SWITCH COMPONENT
-  -------------------------------------------------- */
-  const ToggleSwitch = ({
-    id,
-    checked,
-    onChange,
-    disabled = false
-  }) => (
+  const ToggleSwitch = ({ id, checked, onChange }) => (
     <div className="relative inline-block w-12 h-6">
       <input
         type="checkbox"
@@ -376,26 +395,22 @@ const Setting = () => {
         className="sr-only"
         checked={checked}
         onChange={onChange}
-        disabled={disabled}
       />
       <label
         htmlFor={id}
         className={`block overflow-hidden h-6 rounded-full cursor-pointer transition-all duration-300 ${
-          checked ? 'bg-red-900' : 'bg-gray-300'
-        } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+          checked ? "bg-red-900" : "bg-gray-300"
+        }`}
       >
         <span
           className={`block w-5 h-5 rounded-full bg-white shadow-md transform transition-all duration-300 ${
-            checked ? 'translate-x-6' : 'translate-x-0.5'
+            checked ? "translate-x-6" : "translate-x-0.5"
           } mt-0.5`}
         />
       </label>
     </div>
   );
 
-  /* --------------------------------------------------
-        BREADCRUMB COMPONENT
-  -------------------------------------------------- */
   const Breadcrumb = ({ items }) => (
     <div className="flex items-center gap-2 mb-6 sm:mb-8">
       {items.map((item, index) => (
@@ -405,8 +420,8 @@ const Setting = () => {
             onClick={item.onClick}
             className={`text-sm sm:text-base font-medium transition-colors ${
               index === items.length - 1
-                ? 'text-red-900 cursor-default'
-                : 'text-gray-600 hover:text-red-900'
+                ? "text-red-900 cursor-default"
+                : "text-gray-600 hover:text-red-900"
             }`}
           >
             {item.label}
@@ -417,127 +432,88 @@ const Setting = () => {
   );
 
   /* --------------------------------------------------
-        PASSWORD PAGE - EXACT COPY FROM SECURITY
+     PASSWORD PAGE WITH QUERY-PARAMS
   -------------------------------------------------- */
   if (activeView === SecurityView.PASSWORD) {
     return (
       <div className="max-w-4xl mx-auto">
         <Breadcrumb
           items={[
-            { label: "Settings", onClick: () => setActiveView(SecurityView.MAIN) },
-            { label: "Change Password" }
+            { label: "Settings", onClick: () => changeView(SecurityView.MAIN) },
+            { label: "Change Password" },
           ]}
         />
 
         <div className="bg-white rounded-xl border border-red-100 shadow-sm overflow-hidden">
-          {/* Header */}
           <div className="bg-gradient-to-r from-red-50 to-red-25 px-6 sm:px-8 py-6 border-b border-red-100">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div>
-                <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">
-                  Change Password
-                </h2>
-                <p className="text-gray-600 text-sm mt-1">
-                  Create a strong password to keep your account secure
-                </p>
-              </div>
-            </div>
+            <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">
+              Change Password
+            </h2>
+            <p className="text-gray-600 text-sm mt-1">
+              Create a strong password to keep your account secure
+            </p>
           </div>
 
-          {/* Form */}
-          <div className="p-6 sm:p-8">
-            <div className="space-y-6">
-              {/* New Password Field */}
-              <div>
-                <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                  New Password <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-                  <input
-                    type={showPassword.newPassword ? "text" : "password"}
-                    id="newPassword"
-                    name="newPassword"
-                    value={passwordData.newPassword}
-                    onChange={handleInputChange}
-                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-900 focus:border-red-900 transition-colors"
-                    placeholder="Enter new password"
-                    required
-                  />
-                  <button
-                    type="button"
-                    className="absolute right-3 top-3 text-gray-400 hover:text-gray-600 transition-colors"
-                    onClick={() => togglePasswordVisibility("newPassword")}
-                  >
-                    {showPassword.newPassword ? (
-                      <EyeOff className="w-5 h-5" />
-                    ) : (
-                      <Eye className="w-5 h-5" />
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              {/* Confirm Password Field */}
-              <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                  Confirm Password <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-                  <input
-                    type={showPassword.confirmPassword ? "text" : "password"}
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    value={passwordData.confirmPassword}
-                    onChange={handleInputChange}
-                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-900 focus:border-red-900 transition-colors"
-                    placeholder="Confirm new password"
-                    required
-                  />
-                  <button
-                    type="button"
-                    className="absolute right-3 top-3 text-gray-400 hover:text-gray-600 transition-colors"
-                    onClick={() => togglePasswordVisibility("confirmPassword")}
-                  >
-                    {showPassword.confirmPassword ? (
-                      <EyeOff className="w-5 h-5" />
-                    ) : (
-                      <Eye className="w-5 h-5" />
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              {/* Password Requirements */}
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <h4 className="font-medium text-red-900 mb-2">Password Requirements:</h4>
-                <ul className="text-sm text-red-800 space-y-1">
-                  <li>• At least 8 characters long</li>
-                  <li>• Include uppercase and lowercase letters</li>
-                  <li>• Include at least one number</li>
-                  <li>• Include at least one special character</li>
-                </ul>
-              </div>
-
-              {/* Submit Button */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                <button
-                  onClick={handleSubmit}
-                  className="flex items-center justify-center gap-2 bg-red-900 text-white px-6 py-3 rounded-lg hover:bg-red-800 transition-colors font-medium"
-                >
-                  <Key className="w-4 h-4" />
-                  Change Password
-                </button>
+          <div className="p-6 sm:p-8 space-y-6">
+            {/* New Password */}
+            <div>
+              <label className="block text-sm mb-2 font-medium">New Password</label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                <input
+                  type={showPassword.newPassword ? "text" : "password"}
+                  name="newPassword"
+                  value={passwordData.newPassword}
+                  onChange={handleInputChange}
+                  className="w-full pl-10 pr-12 py-3 border rounded-lg"
+                  placeholder="Enter new password"
+                />
                 <button
                   type="button"
-                  onClick={() => setActiveView(SecurityView.MAIN)}
-                  className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                  className="absolute right-3 top-3 text-gray-500"
+                  onClick={() => togglePasswordVisibility("newPassword")}
                 >
-                  Cancel
+                  {showPassword.newPassword ? <EyeOff /> : <Eye />}
                 </button>
               </div>
             </div>
+
+            {/* Confirm Password */}
+            <div>
+              <label className="block text-sm mb-2 font-medium">Confirm Password</label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                <input
+                  type={showPassword.confirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  value={passwordData.confirmPassword}
+                  onChange={handleInputChange}
+                  className="w-full pl-10 pr-12 py-3 border rounded-lg"
+                  placeholder="Confirm password"
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-3 text-gray-500"
+                  onClick={() => togglePasswordVisibility("confirmPassword")}
+                >
+                  {showPassword.confirmPassword ? <EyeOff /> : <Eye />}
+                </button>
+              </div>
+            </div>
+
+            <button
+              onClick={handleSubmit}
+              className="bg-red-900 text-white px-6 py-3 rounded-lg"
+            >
+              Change Password
+            </button>
+
+            <button
+              onClick={() => changeView(SecurityView.MAIN)}
+              className="px-6 py-3 border rounded-lg"
+            >
+              Cancel
+            </button>
           </div>
         </div>
       </div>
@@ -545,149 +521,72 @@ const Setting = () => {
   }
 
   /* --------------------------------------------------
-        PRIVACY SETTINGS PAGE - EXACT COPY FROM SECURITY
+     PRIVACY SETTINGS PAGE WITH QUERY-PARAMS
   -------------------------------------------------- */
   if (activeView === SecurityView.PRIVACY_SETTINGS) {
     return (
       <div className="max-w-4xl mx-auto">
         <Breadcrumb
           items={[
-            { label: "Settings", onClick: () => setActiveView(SecurityView.MAIN) },
-            { label: "Privacy Settings" }
+            { label: "Settings", onClick: () => changeView(SecurityView.MAIN) },
+            { label: "Privacy Settings" },
           ]}
         />
 
-        <div className="bg-white rounded-xl border border-red-100 shadow-sm overflow-hidden">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-red-50 to-red-25 px-6 sm:px-8 py-6 border-b border-red-100">
-            <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">
-              Privacy Settings
-            </h2>
-            <p className="text-gray-600 text-sm mt-1">
-              Control your privacy preferences and data usage
-            </p>
-          </div>
+        <div className="bg-white rounded-xl border border-red-100 shadow-sm p-6 sm:p-8">
+          <h2 className="text-xl sm:text-2xl font-semibold mb-6">Privacy Settings</h2>
 
-          <div className="p-6 sm:p-8">
-            <div className="space-y-6">
-              <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-red-200 transition-colors">
-                <div className="flex items-center gap-3">
-                  <Settings className="w-5 h-5 text-red-900" />
-                  <div>
-                    <p className="font-medium text-gray-900">Profile Visibility</p>
-                    <p className="text-sm text-gray-600">Make your profile visible to other users</p>
-                  </div>
-                </div>
-                <ToggleSwitch
-                  id="profile-visibility"
-                  checked={privacySettings.profileVisibility}
-                  onChange={() => togglePrivacySetting('profileVisibility')}
-                />
-              </div>
-
-              <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-red-200 transition-colors">
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-red-900" />
-                  <div>
-                    <p className="font-medium text-gray-900">Activity Status</p>
-                    <p className="text-sm text-gray-600">Show when you're active or online</p>
-                  </div>
-                </div>
-                <ToggleSwitch
-                  id="activity-status"
-                  checked={privacySettings.activityStatus}
-                  onChange={() => togglePrivacySetting('activityStatus')}
-                />
-              </div>
-
-              <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-red-200 transition-colors">
-                <div className="flex items-center gap-3">
-                  <Shield className="w-5 h-5 text-red-900" />
-                  <div>
-                    <p className="font-medium text-gray-900">Data Collection</p>
-                    <p className="text-sm text-gray-600">Allow collection of usage data for improvements</p>
-                  </div>
-                </div>
-                <ToggleSwitch
-                  id="data-collection"
-                  checked={privacySettings.dataCollection}
-                  onChange={() => togglePrivacySetting('dataCollection')}
-                />
-              </div>
-
-              <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-red-200 transition-colors">
-                <div className="flex items-center gap-3">
-                  <Mail className="w-5 h-5 text-red-900" />
-                  <div>
-                    <p className="font-medium text-gray-900">Marketing Communications</p>
-                    <p className="text-sm text-gray-600">Receive promotional emails and offers</p>
-                  </div>
-                </div>
-                <ToggleSwitch
-                  id="marketing"
-                  checked={privacySettings.marketing}
-                  onChange={() => togglePrivacySetting('marketing')}
-                />
-              </div>
-            </div>
-
-            {/* Save Settings Button */}
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <button
-                onClick={() => console.log('Privacy settings saved:', privacySettings)}
-                className="bg-red-900 text-white px-6 py-3 rounded-lg hover:bg-red-800 transition-colors font-medium"
+          <div className="space-y-6">
+            {Object.keys(privacySettings).map((key) => (
+              <div
+                key={key}
+                className="flex items-center justify-between p-4 border rounded-lg"
               >
-                Save Privacy Settings
-              </button>
-            </div>
+                <p className="font-medium capitalize">{key.replace(/([A-Z])/g, " $1")}</p>
+                <ToggleSwitch
+                  checked={privacySettings[key]}
+                  onChange={() => togglePrivacySetting(key)}
+                />
+              </div>
+            ))}
           </div>
+
+          <button className="mt-8 bg-red-900 text-white px-6 py-3 rounded-lg">
+            Save Privacy Settings
+          </button>
         </div>
       </div>
     );
   }
 
   /* --------------------------------------------------
-        DEFAULT MAIN SETTINGS PAGE
+     MAIN SETTINGS PAGE
   -------------------------------------------------- */
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50/40 via-white to-red-50/20">
       <div className="max-w-[1600px] mx-auto px-0 sm:px-6 lg:px-8 py-6 sm:py-8">
-
-        {/* HEADER */}
-        <div className="mb-8 sm:mb-12">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="p-3 bg-red-900 rounded-xl">
-              <Settings className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">Settings</h1>
-              <p className="text-gray-600 text-sm sm:text-base mt-1">Manage account preferences</p>
-            </div>
-          </div>
-
-          <div className="h-1 w-24 bg-gradient-to-r from-red-900 via-red-700 to-red-500 rounded-full" />
-        </div>
-
-        {/* SETTINGS GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
 
-          <CardBox title="Address Book" description="Manage your delivery addresses" icon={MapPin} />
-          <CardBox title="Help & Support" description="Get help or contact support" icon={HelpCircle} />
-          <CardBox title="Sign Out" description="Logout from this device" icon={LogOut} variant="danger" />
+          <Link href="/account/account-centre/profile?view=address_book">
+          <CardBox title="Address Book" description="Manage addresses" icon={MapPin} />
+          </Link>
+          <Link href="/contact">
+          <CardBox title="Help & Support" description="Get help" icon={HelpCircle} />
+          </Link>
+          <CardBox title="Sign Out" description="Logout" icon={LogOut} variant="danger" />
 
-          {/* Now working: */}
           <CardBox
             title="Change Password"
-            description="Update your account password"
+            description="Update password"
             icon={Lock}
-            onClick={() => setActiveView(SecurityView.PASSWORD)}
+            onClick={() => changeView(SecurityView.PASSWORD)}
           />
 
           <CardBox
             title="Privacy Settings"
-            description="Control your privacy preferences"
+            description="Privacy preferences"
             icon={Shield}
-            onClick={() => setActiveView(SecurityView.PRIVACY_SETTINGS)}
+            onClick={() => changeView(SecurityView.PRIVACY_SETTINGS)}
           />
         </div>
       </div>

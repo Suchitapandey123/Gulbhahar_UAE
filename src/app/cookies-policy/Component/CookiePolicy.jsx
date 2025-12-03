@@ -320,7 +320,7 @@ delivery: {
             <Truck className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h1 className="text-lg sm:text-xl text-gray-900 font-bold">Gulbhahar Shipping Policy</h1>
+            <p className="text-lg sm:text-xl text-gray-900 font-bold">Gulbhahar Shipping Policy</p>
           </div>
         </div>
         <div className="ml-13 space-y-4">
@@ -396,7 +396,7 @@ refund: {
             <RefreshCw className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h1 className="font-bold text-yellow-900 mb-2 text-lg">Gulbhahar Refund Policy</h1>
+            <p className="font-bold text-yellow-900 mb-2 text-lg">Gulbhahar Refund Policy</p>
             <div className="space-y-3">
               <p className="text-sm sm:text-base text-gray-700">
                 We strive for complete customer satisfaction. However, please note our refund policy:

@@ -24,14 +24,14 @@ const ContentJuttisForWomen = () => {
           
           {/* Heritage Section */}
           <section className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="div">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-800 to-red-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   👑
                 </span>
                 <span className="leading-tight">A Heritage Crafted for Queens</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4">
               The history of jutti dates back to the Mughal era when its expert craftsmen made these flat-soled beauties for only royalty. Jutti were not originally designated as left or right and were made to take the shape of the owner's foot over time for a custom fit.
             </p>
@@ -45,14 +45,14 @@ const ContentJuttisForWomen = () => {
 
           {/* Versatility Section */}
           <section>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-700 to-red-800 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   ✨
                 </span>
                 <span className="leading-tight">Versatility Meets Elegance</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
               What differentiates juttis for women from Gulbhahar is their amazing versatility. The non-heeled insole makes it very easy and comfy to walk around in for hours. The beautiful and sophisticated shapes work well with flowing ethnic to contemporary fusion, to whatever your fab style is!
             </p>
@@ -81,14 +81,14 @@ const ContentJuttisForWomen = () => {
 
           {/* Art of Making Section */}
           <section className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-600 to-red-700 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   🎨
                 </span>
                 <span className="leading-tight">The Art of Making Jutti</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
               The handwork of traditional juttis is a labour of love, with years of hard work and expertise. Craftspeople start with genuine leather and cut and trim each one by hand, then embellish the tops with beautiful embroidery, sequins, mirrors, or thread work, creating patterns that tell stories of regional culture and of artistic heritage.
             </p>
@@ -123,14 +123,14 @@ const ContentJuttisForWomen = () => {
 
           {/* Modern Appeal Section */}
           <section>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-600 to-red-800 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   🌟
                 </span>
                 <span className="leading-tight">Modern Uses, Timeless Appeal</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
               The modern juttis for women have adopted modern design elements while still reflecting the artistry of the tradition. Contemporary juttis are made using new materials and colour combinations and combine traditional or western ornamentation to appeal to the fashionable woman of all ages.
             </p>
@@ -138,11 +138,11 @@ const ContentJuttisForWomen = () => {
             {/* Style Range */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div className="bg-gradient-to-br from-red-50 to-red-100 border border-red-300 rounded-lg sm:rounded-xl p-4 sm:p-6">
-                <h3 className="font-bold text-red-900 text-base sm:text-lg mb-2 sm:mb-3">💼 Professional Elegance</h3>
+                <p className="font-bold text-red-900 text-base sm:text-lg mb-2 sm:mb-3">💼 Professional Elegance</p>
                 <p className="text-red-800 text-sm sm:text-base">Simple and subtle designs perfect for work environments and daily wear.</p>
               </div>
               <div className="bg-gradient-to-br from-red-100 to-red-200 border border-red-400 rounded-lg sm:rounded-xl p-4 sm:p-6">
-                <h3 className="font-bold text-red-900 text-base sm:text-lg mb-2 sm:mb-3">✨ Special Occasions</h3>
+                <p className="font-bold text-red-900 text-base sm:text-lg mb-2 sm:mb-3">✨ Special Occasions</p>
                 <p className="text-red-800 text-sm sm:text-base">Heavily embroidered designs with metallic accents and geometric patterns.</p>
               </div>
             </div>
@@ -150,14 +150,14 @@ const ContentJuttisForWomen = () => {
 
           {/* Styling Section */}
           <section className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-700 to-red-800 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   👗
                 </span>
                 <span className="leading-tight">Styling Your Juttis</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
               The beauty of juttis for women is their versatility. Subtle jutti designs will complement less ornate informal Indian wear. The key to styling juttis for women is understanding their versatility. The fact that they're flat provides a clean, crisp line that can hold its own.
             </p>
@@ -183,14 +183,14 @@ const ContentJuttisForWomen = () => {
 
           {/* Supporting Artisans Section */}
           <section>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-700 to-red-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   🤝
                 </span>
                 <span className="leading-tight">Supporting Artisan Communities</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
               There is no question that by purchasing authentic, handcrafted juttis, you're supporting artisan communities. They have been keeping these ancient traditions alive and well for generations. Every purchase from Gulbhahar helps support local artisans.
             </p>
@@ -205,14 +205,14 @@ const ContentJuttisForWomen = () => {
 
           {/* Cultural Heritage Section */}
           <section className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-600 to-red-800 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   🏛️
                 </span>
                 <span className="leading-tight">Symbol of Cultural Heritage</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
               Juttis for women symbolise cultural heritage, craftsmanship, and classic style. In a world full of fast fashion and rapid change, juttis have been, and will always be, a classic accessory.
             </p>
@@ -236,9 +236,9 @@ const ContentJuttisForWomen = () => {
 
         {/* Conclusion */}
         <div className="text-center mt-8 sm:mt-12 lg:mt-16 bg-gradient-to-r from-red-900 to-red-800 text-white rounded-xl sm:rounded-2xl p-6 sm:p-8 lg:p-12">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
+          <span className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
             Gulbhahar is Where Tradition Entwines with Modern Fashion
-          </h2>
+          </span>
           <p className="text-sm sm:text-base lg:text-lg leading-relaxed max-w-3xl mx-auto">
             Gulbhahar is for anyone who appreciates beauty, comfort, and authentic craftsmanship. Step into a world where every stride tells a story of heritage, and every design celebrates the timeless elegance of Indian artistry.
           </p>

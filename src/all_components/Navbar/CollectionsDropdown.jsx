@@ -203,9 +203,9 @@ const CollectionCategory = ({ category, onCategoryClick }) => (
     // onClick={() => onCategoryClick(category.title)}
   >
     <div className="space-y-2">
-      <h3 className="font-bold text-gray-900 text-base lg:text-xl transition-colors duration-300">
+      <p className="font-bold text-gray-900 text-base lg:text-xl transition-colors duration-300">
         {category.title}
-      </h3>
+      </p>
       <p className="text-xs lg:text-lg text-gray-500 transition-colors duration-300">
         {category.subtitle}
       </p>

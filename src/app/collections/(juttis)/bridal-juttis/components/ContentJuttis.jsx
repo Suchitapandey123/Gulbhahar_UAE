@@ -25,14 +25,14 @@ const ContentBridalJuttis = () => {
           
           {/* The Charm of Bridal Juttis Section */}
           <section className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-800 to-red-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   💍
                 </span>
                 <span className="leading-tight">The Charm of Bridal Juttis</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
               Bridal juttis have always held a special place in Indian weddings, from the intricately designed traditional juttis that anchor the bridal look to the cultural significance those juttis bring. Unlike heels or modern wear, juttis allow the bride to walk, dance and celebrate in comfort while feeling elegant, all at the same time.
             </p>
@@ -64,14 +64,14 @@ const ContentBridalJuttis = () => {
 
           {/* Why Brides Love Gulbhahar Section */}
           <section>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-700 to-red-800 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   💖
                 </span>
                 <span className="leading-tight">Why Brides Love Gulbhahar Juttis</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-6">
               Every single pair of Gulbhahar bridal juttis is a story sewn with thread, beads, and love. Brides love us because our juttis are:
             </p>
@@ -112,14 +112,14 @@ const ContentBridalJuttis = () => {
 
           {/* Bridal Favourites Section */}
           <section className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="div">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-600 to-red-700 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   👑
                 </span>
                 <span className="leading-tight">Our Bridal Favourites: Maharani & Lal Ishq</span>
               </div>
-            </h2>
+            </div>
             
             {/* Bridal Favourites Cards */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-6">
@@ -181,14 +181,14 @@ const ContentBridalJuttis = () => {
 
           {/* The Gulbhahar Touch Section */}
           <section>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-600 to-red-800 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   🏛️
                 </span>
                 <span className="leading-tight">The Gulbhahar Touch</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
               At Gulbhahar, we consider bridal juttis a family heirloom rather than simply a piece of footwear. Each pair is handmade with strict detail to ensure it homes in on the magnificence of the bridal trousseau while also being wearable long after the wedding.
             </p>
@@ -223,14 +223,14 @@ const ContentBridalJuttis = () => {
 
           {/* A Bride's Best Friend Section */}
           <section className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-700 to-red-800 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   👭
                 </span>
                 <span className="leading-tight">A Bride's Best Friend</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
               Brides always say the best part of wearing Gulbhahar juttis is the comfort. Weddings include hours of standing, dancing, and walking. Heels may elevate a wedding look, but they often don't make it past the ceremony.
             </p>
@@ -264,14 +264,14 @@ const ContentBridalJuttis = () => {
 
           {/* Monica Gulati Legacy Section */}
           <section>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
               <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                 <span className="w-10 h-10 bg-gradient-to-r from-red-800 to-red-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   🌟
                 </span>
                 <span className="leading-tight">A Legacy of Craftsmanship by Monica Gulati</span>
               </div>
-            </h2>
+            </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
               The force behind Gulbhahar is Monica Gulati, who set out to reintroduce the traditional art of jutti-making with a modern identity. With a love for handcrafted fashion and a deep appreciation for artisanal work, Gulbhahar has quickly become a go-to for brides across India and around the world.
             </p>
@@ -309,9 +309,9 @@ const ContentBridalJuttis = () => {
 
         {/* Conclusion */}
         <div className="text-center mt-8 sm:mt-12 lg:mt-16 bg-gradient-to-r from-red-900 to-red-800 text-white rounded-xl sm:rounded-2xl p-6 sm:p-8 lg:p-12">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
+          <span className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
             Take A Step into Your Forever with Gulbhahar
-          </h2>
+          </span>
           <p className="text-sm sm:text-base lg:text-lg leading-relaxed max-w-3xl mx-auto mb-4">
             Your wedding day is a magical moment you'll always remember, and every detail deserves to be perfect to make it even more special. When you wear Gulbhahar bridal juttis such as Maharani and Lal Ishq, you're not just selecting to wear juttis, you're selecting comfort and grace and tradition that will walk with you into your next phase of life.
           </p>

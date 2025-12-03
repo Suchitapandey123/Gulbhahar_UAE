@@ -18,13 +18,13 @@ export default function QuickTag({ popularTags = [] }) {
       <div className="w-full animate-slide-up">
         <div className="flex items-center gap-3 mb-6">
           <TrendingUp className="w-6 h-6 text-red-700 animate-bounce" />
-          <h3
+          <span
             className={`${oldStandardTT.variable} text-2xl lg:text-3xl font-semibold relative`}
           >
             <span className="bg-gradient-to-r from-red-900 via-red-600 to-red-900 bg-clip-text text-transparent">
               Popular Tags
             </span>
-          </h3>
+          </span>
         </div>
 
         <div className="flex flex-wrap gap-3">
@@ -34,7 +34,6 @@ export default function QuickTag({ popularTags = [] }) {
               className="group animate-fade-in-up"
               style={{ animationDelay: `${index * 80}ms` }}
             >
-              <Link href={`/search?query=${tag}`}>
                 <div className="relative px-4 py-2 bg-white border border-gray-200 rounded-full shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer overflow-hidden hover:-translate-y-0.5 hover:scale-105 active:scale-98">
                   <div className="absolute inset-0 bg-gradient-to-r from-red-50 to-red-100 -z-10 -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
 
@@ -43,12 +42,7 @@ export default function QuickTag({ popularTags = [] }) {
                   >
                     {tag}
                   </span>
-
-                  <div className="absolute top-1 right-1 opacity-0 scale-0 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200">
-                    <ArrowUpRight className="w-3 h-3 text-red-500" />
-                  </div>
                 </div>
-              </Link>
             </div>
           ))}
         </div>
