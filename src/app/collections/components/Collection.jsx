@@ -2,6 +2,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { GulbharLoader } from "@/all_components/loader/GulbharLoader";
+
+import React from "react";
 import {
   ChevronDown,
   ChevronUp,
@@ -695,7 +697,7 @@ export default function Collection({ category = null }) {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen mt-16 flex items-center justify-center">
+      <div className=" mt-16 flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-900 font-semibold">
             Error loading products: {error.message}
@@ -707,7 +709,7 @@ export default function Collection({ category = null }) {
   }
 
   return (
-    <div className="min-h-screen mt-20 lg:mt-24 pt-4">
+    <div className=" mt-20 lg:mt-24 pt-4">
       <ToastContainer />
 
       <div className="max-w-[1600px] mx-auto  flex flex-col lg:flex-row">
@@ -723,11 +725,20 @@ export default function Collection({ category = null }) {
               <span className="text-red-900 font-semibold">Collections</span>
             </nav>
           </div>
+          
+          <div className="bg-white border-2 border-red-200 
+  h-[calc(100vh-180px)] 
+  md:h-[calc(100vh-160px)] 
+  lg:h-[calc(100vh-150px)] 
+  xl:h-[calc(100vh-140px)]
+  w-[280px] rounded-xl shadow-lg overflow-y-auto">
+  <FilterContent />
+</div>
 
           {/* Filter Box - Fixed Height with Scroll */}
-          <div className="bg-white border-2 border-red-200 h-[calc(100vh-140px)] w-[280px] rounded-xl shadow-lg overflow-y-auto">
+          {/* <div className="bg-white border-2 border-red-200 h-[calc(100vh-140px)] w-[280px] rounded-xl shadow-lg overflow-y-auto">
             <FilterContent />
-          </div>
+          </div> */}
         </div>
 
         {/* Mobile Filter Modal */}
@@ -843,422 +854,452 @@ export default function Collection({ category = null }) {
 
           {/* Product Grid/List with ViewMode Support */}
           <div
-            className={`px-1 ${
-              viewMode === "grid"
-                ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8"
-                : "flex flex-col gap-4"
-            }`}
-          >
-            {paginatedCollections.map((item, index) => (
-              <div
-                key={item.productId}
-                className={`group w-full ${
-                  viewMode === "list"
-                    ? "bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
-                    : ""
+                className={`px-1 ${
+                  viewMode === "grid"
+                    ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8"
+                    : "flex flex-col gap-4"
                 }`}
-                onMouseEnter={() => handleMouseEnter(item.id)}
-                onMouseLeave={handleMouseLeave}
               >
-                <Link href={`/products/${item.productId}`}>
-                  <div
-                    className={`cursor-pointer relative ${
-                      viewMode === "grid" ? "space-y-3" : "flex gap-4 p-4"
-                    }`}
-                  >
-                    {/* Image Container */}
-                    <div
-                      className={`relative overflow-hidden ${
-                        viewMode === "grid"
-                          ? "w-full aspect-[3/4]"
-                          : "w-32 h-32 sm:w-40 sm:h-40 flex-shrink-0 rounded-lg"
-                      }`}
-                    >
-                      {(() => {
-                        const isMultipleColors = Array.isArray(item.image[0]);
-                        const imagesToShow = isMultipleColors
-                          ? item.image[0]
-                          : item.image;
-                        const currentImageIndex =
-                          currentImageIndices[item.id] || 0;
-
-                        return (
-                          <div className="relative w-full h-full bg-white -100">
-                            {/* Stack all images and show current one with fade */}
-                            {imagesToShow.map((image, idx) => (
+             {paginatedCollections.map((item, index) => (
+                  <React.Fragment key={item.productId || index}>
+                          {index === 4 && (
+                            <div className="col-span-full w-full my-4 ">
                               <Image
-                                width={200}
-                                height={450}
-                                priority
-                                key={idx}
-                                src={image || "/Image/About1.png"}
-                                alt={`${item.title} - ${idx + 1}`}
-                                className={`absolute inset-0 w-full h-full object-fit transition-opacity duration-700 ease-in-out ${
-                                  currentImageIndex === idx
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                } ${viewMode === "list" ? "rounded-lg" : ""}`}
-                                onError={(e) => {
-                                  e.target.src = "/Image/About1.png";
-                                }}
+                                src={"/new-img.png"}
+                                height={500}
+                                width={1000}
+                                alt="design"
+                                className="w-full h-auto sm:h-[220px] md:h-[420px] object-cover rounded-lg"
                               />
-                            ))}
+                            </div>
+                          )}
+                          
+                          <div
+                            className={`group w-full ${
+                              viewMode === "list"
+                                ? "bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+                                : ""
+                            }`}
+                            onMouseEnter={() => handleMouseEnter(item.id)}
+                            onMouseLeave={handleMouseLeave}
+                          >
+                            {/* Rest of your code... */}
+                                  {/* </div>
+                                </React.Fragment>
+                              ))} */}
+                            {/* {paginatedCollections.map((item, index) => (
+                              <div
+                                key={item.productId}
+                                className={`group w-full ${
+                                  viewMode === "list"
+                                    ? "bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+                                    : ""
+                                }`}
+                                onMouseEnter={() => handleMouseEnter(item.id)}
+                                onMouseLeave={handleMouseLeave}
+                              > */}
 
-                            {/* Hover Overlay */}
-                            <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
-                          </div>
-                        );
-                      })()}
-
-                      {/* Image Indicators - Only show in grid view */}
-                      {viewMode === "grid" &&
-                        (() => {
-                          const isMultipleColors = Array.isArray(item.image[0]);
-                          const imagesToShow = isMultipleColors
-                            ? item.image[0]
-                            : item.image;
-
-                          return (
-                            imagesToShow.length > 1 && (
-                              <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
-                                {imagesToShow.map((_, idx) => (
+                              
+                                <Link href={`/products/${item.productId}`}>
                                   <div
-                                    key={idx}
-                                    className={`w-2 h-2 rounded-full transition-all ${
-                                      (currentImageIndices[item.id] || 0) ===
-                                      idx
-                                        ? "bg-red-900 w-3"
-                                        : "bg-white/80"
+                                    className={`cursor-pointer relative ${
+                                      viewMode === "grid" ? "space-y-3" : "flex gap-4 p-4"
                                     }`}
-                                  />
-                                ))}
-                              </div>
-                            )
-                          );
-                        })()}
-
-                      {/* Stock Tag */}
-                      {item.stock && item.stock <= 5 && item.stock > 0 && (
-                        <span className="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded z-10">
-                          Only {item.stock} left!
-                        </span>
-                      )}
-
-                      {(index === 0 || index === 1) && (
-                        <div className="absolute top-0 right-0 z-10">
-                          <div className="relative">
-                            {/* Animated glow effect */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-[#7b1e28] to-[#4a0f14] rounded-lg blur-sm animate-pulse opacity-75"></div>
-
-                            {/* Main badge */}
-                            <span className="relative flex items-center gap-1 bg-gradient-to-r from-[#7b1e28] via-[#8b2632] to-[#4a0f14] text-white text-xs sm:text-sm font-semibold px-2 sm:px-2 py-1 sm:py-1 rounded-g shadow-lg border border-white/20">
-                              {/* Sparkle icon */}
-                              <span className="text-yellow-300 animate-pulse">
-                                ✨
-                              </span>
-                              <span className="tracking-wide">NEW ARRIVAL</span>
-                              <span className="text-yellow-300 animate-pulse">
-                                ✨
-                              </span>
-                            </span>
-
-                            {/* Shine effect */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-lg animate-shine"></div>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Discount Badge */}
-                      {item.originalPrice &&
-                        item.originalPrice > item.price && (
-                          <span className="absolute top-2 right-2 bg-green-600 text-white text-xs px-2 py-1 rounded z-10">
-                            {Math.round(
-                              ((item.originalPrice - item.price) /
-                                item.originalPrice) *
-                                100
-                            )}
-                            % OFF
-                          </span>
-                        )}
-
-                      {/* Hover Add to Cart Button - Only in grid view */}
-                      {viewMode === "grid" && (
-                        <div className="absolute bottom-0 left-0 right-0 bg-red-900 text-white text-center py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-full group-hover:translate-y-0">
-                          <button
-                            onClick={(e) => handleAddToCart(e, item)}
-                            disabled={
-                              addingToCart === (item.productId || item.id)
-                            }
-                            className="w-full text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-75"
-                          >
-                            {addingToCart === (item.productId || item.id) ? (
-                              <>
-                                {/* Spinner */}
-                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                <span>Adding...</span>
-                              </>
-                            ) : (
-                              <>
-                                <ShoppingBag size={16} />
-                                <span>Add to Cart</span>
-                              </>
-                            )}
-                          </button>
-
-                          {/* <button
-                            onClick={(e) => handleAddToCart(e, item)}
-                            disabled={addingToCart === item.id}
-                            className="w-full text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-75"
-                          >
-                            <ShoppingBag size={14} />
-                            <span>
-                              {addingToCart === item.id
-                                ? "Adding..."
-                                : "Add to Cart"}
-                            </span>
-                          </button> */}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Product Info - Different layouts for grid vs list */}
-                    {viewMode === "grid" ? (
-                      /* Grid View - Compact Layout */
-                      <div className="flex flex-col justify-between h-full px-2 py-2 space-y-1">
-                        {/* Top Row - Product Name & Price */}
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="flex-1 min-w-0">
-                            <h3 className="text-xs sm:text-sm font-semibold text-gray-900 line-clamp-2 leading-tight">
-                              {item.name?.toUpperCase() || "PRODUCT NAME"}
-                            </h3>
-                          </div>
-                          <div className="flex-shrink-0 text-right">
-                            <div className="flex flex-col items-end gap-0.5">
-                              <span className="text-sm font-bold text-red-600">
-                                ₹{item.price.toLocaleString()}
-                              </span>
-                              {item.originalPrice &&
-                                item.originalPrice > item.price && (
-                                  <span className="text-xs text-gray-400 line-through">
-                                    ₹{item.originalPrice.toLocaleString()}
-                                  </span>
-                                )}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Second Row - Stock Status */}
-                        <div className="flex items-center justify-start text-xs">
-                          <div className="flex-1">
-                            {item.stock && item.stock <= 5 && item.stock > 0 ? (
-                              <span className="text-red-600 font-medium">
-                                {item.stock} left
-                              </span>
-                            ) : (
-                              <span className="text-green-600 font-medium">
-                                In Stock
-                              </span>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Bottom Row - Metadata */}
-                        <div className="flex items-center justify-between text-xs text-gray-600">
-                          {/* Sizes */}
-                          <div className="flex items-center gap-1">
-                            {item.sizes && item.sizes.length > 0 && (
-                              <>
-                                <span className="text-gray-500">Size:</span>
-                                <div className="flex gap-1">
-                                  {item.sizes.slice(0, 2).map((size, idx) => (
-                                    <span
-                                      key={idx}
-                                      className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded text-xs font-medium"
-                                    >
-                                      {size}
-                                    </span>
-                                  ))}
-                                  {item.sizes.length > 2 && (
-                                    <span className="text-gray-500">
-                                      +{item.sizes.length - 2}
-                                    </span>
-                                  )}
-                                </div>
-                              </>
-                            )}
-                          </div>
-
-                          {/* Colors */}
-                          {/* <div className="flex items-center gap-1">
-                            {item.colors && item.colors.length > 0 && (
-                              <div className="flex items-center gap-1">
-                                {item.colors.slice(0, 3).map((color, idx) => (
-                                  <div
-                                    key={idx}
-                                    className="w-3 h-3 rounded-full border border-gray-300"
-                                    style={{
-                                      backgroundColor: color.toLowerCase(),
-                                    }}
-                                    title={color}
-                                  />
-                                ))}
-                                {item.colors.length > 3 && (
-                                  <span className="text-gray-500 text-xs">
-                                    +{item.colors.length - 3}
-                                  </span>
-                                )}
-                              </div>
-                            )}
-                          </div> */}
-                        </div>
-                      </div>
-                    ) : (
-                      /* List View - Horizontal Layout */
-                      <div className="flex-1 flex flex-col justify-between py-1">
-                        {/* Top Section */}
-                        <div className="space-y-2">
-                          <div className="flex items-start justify-between">
-                            <h3 className="text-base sm:text-lg font-semibold text-gray-900 line-clamp-2 pr-4">
-                              {item.name?.toUpperCase() || "PRODUCT NAME"}
-                            </h3>
-                            <div className="flex flex-col items-end gap-1">
-                              <span className="text-lg font-bold text-red-600">
-                                ₹{item.price.toLocaleString()}
-                              </span>
-                              {item.originalPrice &&
-                                item.originalPrice > item.price && (
-                                  <span className="text-sm text-gray-400 line-through">
-                                    ₹{item.originalPrice.toLocaleString()}
-                                  </span>
-                                )}
-                            </div>
-                          </div>
-
-                          {/* Stock Status */}
-                          <div className="flex items-center gap-4">
-                            <div className="flex items-center text-sm">
-                              {item.stock &&
-                              item.stock <= 5 &&
-                              item.stock > 0 ? (
-                                <span className="text-red-600 font-medium">
-                                  Only {item.stock} left
-                                </span>
-                              ) : (
-                                <span className="text-green-600 font-medium">
-                                  ✓ In Stock
-                                </span>
-                              )}
-                            </div>
-                          </div>
-
-                          {/* Product Details */}
-                          <div className="flex items-center gap-6 text-sm text-gray-600">
-                            {/* Sizes */}
-                            {item.sizes && item.sizes.length > 0 && (
-                              <div className="flex items-center gap-2">
-                                <span className="font-medium">Sizes:</span>
-                                <div className="flex gap-1">
-                                  {item.sizes.slice(0, 4).map((size, idx) => (
-                                    <span
-                                      key={idx}
-                                      className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium"
-                                    >
-                                      {size}
-                                    </span>
-                                  ))}
-                                  {item.sizes.length > 4 && (
-                                    <span className="text-gray-500">
-                                      +{item.sizes.length - 4}
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                            )}
-
-                            {/* Colors */}
-                            {item.colors && item.colors.length > 0 && (
-                              <div className="flex items-center gap-2">
-                                <span className="font-medium">Colors:</span>
-                                <div className="flex items-center gap-1">
-                                  {item.colors.slice(0, 5).map((color, idx) => (
+                                  >
+                                    {/* Image Container */}
                                     <div
-                                      key={idx}
-                                      className="w-5 h-5 rounded-full border-2 border-gray-300"
-                                      style={{
-                                        backgroundColor: color.toLowerCase(),
-                                      }}
-                                      title={color}
-                                    />
-                                  ))}
-                                  {item.colors.length > 5 && (
-                                    <span className="text-gray-500 text-sm">
-                                      +{item.colors.length - 5}
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        </div>
+                                      className={`relative overflow-hidden ${
+                                        viewMode === "grid"
+                                          ? "w-full aspect-[3/4]"
+                                          : "w-32 h-32 sm:w-40 sm:h-40 flex-shrink-0 rounded-lg"
+                                      }`}
+                                    >
+                                      {(() => {
+                                        const isMultipleColors = Array.isArray(item.image[0]);
+                                        const imagesToShow = isMultipleColors
+                                          ? item.image[0]
+                                          : item.image;
+                                        const currentImageIndex =
+                                          currentImageIndices[item.id] || 0;
 
-                        {/* Bottom Section - Add to Cart Button */}
-                        <div className="flex items-center justify-between mt-4">
-                          <div className="flex items-center gap-2">
-                            {/* Image Indicators for List View */}
-                            {(() => {
-                              const isMultipleColors = Array.isArray(
-                                item.image[0]
-                              );
-                              const imagesToShow = isMultipleColors
-                                ? item.image[0]
-                                : item.image;
+                                        return (
+                                          <div className="relative w-full h-full bg-white -100">
+                                            {/* Stack all images and show current one with fade */}
+                                            {imagesToShow.map((image, idx) => (
+                                              <Image
+                                                width={200}
+                                                height={450}
+                                                priority
+                                                key={idx}
+                                                src={image || "/Image/About1.png"}
+                                                alt={`${item.title} - ${idx + 1}`}
+                                                className={`absolute inset-0 w-full h-full object-fit transition-opacity duration-700 ease-in-out ${
+                                                  currentImageIndex === idx
+                                                    ? "opacity-100"
+                                                    : "opacity-0"
+                                                } ${viewMode === "list" ? "rounded-lg" : ""}`}
+                                                onError={(e) => {
+                                                  e.target.src = "/Image/About1.png";
+                                                }}
+                                              />
+                                            ))}
 
-                              return (
-                                imagesToShow.length > 1 && (
-                                  <div className="flex gap-1">
-                                    {imagesToShow.map((_, idx) => (
-                                      <div
-                                        key={idx}
-                                        className={`w-2 h-2 rounded-full transition-all ${
-                                          (currentImageIndices[item.id] ||
-                                            0) === idx
-                                            ? "bg-red-900"
-                                            : "bg-gray-300"
-                                        }`}
-                                      />
-                                    ))}
+                                            {/* Hover Overlay */}
+                                            <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+                                          </div>
+                                        );
+                                      })()}
+
+                                      {/* Image Indicators - Only show in grid view */}
+                                      {viewMode === "grid" &&
+                                        (() => {
+                                          const isMultipleColors = Array.isArray(item.image[0]);
+                                          const imagesToShow = isMultipleColors
+                                            ? item.image[0]
+                                            : item.image;
+
+                                          return (
+                                            imagesToShow.length > 1 && (
+                                              <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
+                                                {imagesToShow.map((_, idx) => (
+                                                  <div
+                                                    key={idx}
+                                                    className={`w-2 h-2 rounded-full transition-all ${
+                                                      (currentImageIndices[item.id] || 0) ===
+                                                      idx
+                                                        ? "bg-red-900 w-3"
+                                                        : "bg-white/80"
+                                                    }`}
+                                                  />
+                                                ))}
+                                              </div>
+                                            )
+                                          );
+                                        })()}
+
+                                      {/* Stock Tag */}
+                                      {item.stock && item.stock <= 5 && item.stock > 0 && (
+                                        <span className="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded z-10">
+                                          Only {item.stock} left!
+                                        </span>
+                                      )}
+
+                                      {(index === 0 || index === 1) && (
+                                        <div className="absolute top-0 right-0 z-10">
+                                          <div className="relative">
+                                            {/* Animated glow effect */}
+                                            <div className="absolute inset-0 bg-gradient-to-r from-[#7b1e28] to-[#4a0f14] rounded-lg blur-sm animate-pulse opacity-75"></div>
+
+                                            {/* Main badge */}
+                                            <span className="relative flex items-center gap-1 bg-gradient-to-r from-[#7b1e28] via-[#8b2632] to-[#4a0f14] text-white text-xs sm:text-sm font-semibold px-2 sm:px-2 py-1 sm:py-1 rounded-g shadow-lg border border-white/20">
+                                              {/* Sparkle icon */}
+                                              <span className="text-yellow-300 animate-pulse">
+                                                ✨
+                                              </span>
+                                              <span className="tracking-wide">NEW ARRIVAL</span>
+                                              <span className="text-yellow-300 animate-pulse">
+                                                ✨
+                                              </span>
+                                            </span>
+
+                                            {/* Shine effect */}
+                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-lg animate-shine"></div>
+                                          </div>
+                                        </div>
+                                      )}
+
+                                      {/* Discount Badge */}
+                                      {item.originalPrice &&
+                                        item.originalPrice > item.price && (
+                                          <span className="absolute top-2 right-2 bg-green-600 text-white text-xs px-2 py-1 rounded z-10">
+                                            {Math.round(
+                                              ((item.originalPrice - item.price) /
+                                                item.originalPrice) *
+                                                100
+                                            )}
+                                            % OFF
+                                          </span>
+                                        )}
+
+                                      {/* Hover Add to Cart Button - Only in grid view */}
+                                      {viewMode === "grid" && (
+                                        <div className="absolute bottom-0 left-0 right-0 bg-red-900 text-white text-center py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-full group-hover:translate-y-0">
+                                          <button
+                                            onClick={(e) => handleAddToCart(e, item)}
+                                            disabled={
+                                              addingToCart === (item.productId || item.id)
+                                            }
+                                            className="w-full text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-75"
+                                          >
+                                            {addingToCart === (item.productId || item.id) ? (
+                                              <>
+                                                {/* Spinner */}
+                                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                                <span>Adding...</span>
+                                              </>
+                                            ) : (
+                                              <>
+                                                <ShoppingBag size={16} />
+                                                <span>Add to Cart</span>
+                                              </>
+                                            )}
+                                          </button>
+
+                                          {/* <button
+                                            onClick={(e) => handleAddToCart(e, item)}
+                                            disabled={addingToCart === item.id}
+                                            className="w-full text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-75"
+                                          >
+                                            <ShoppingBag size={14} />
+                                            <span>
+                                              {addingToCart === item.id
+                                                ? "Adding..."
+                                                : "Add to Cart"}
+                                            </span>
+                                          </button> */}
+                                        </div>
+                                      )}
+                                    </div>
+
+                                    {/* Product Info - Different layouts for grid vs list */}
+                                    {viewMode === "grid" ? (
+                                      /* Grid View - Compact Layout */
+                                      <div className="flex flex-col justify-between h-full px-2 py-2 space-y-1">
+                                        {/* Top Row - Product Name & Price */}
+                                        <div className="flex items-start justify-between gap-2">
+                                          <div className="flex-1 min-w-0">
+                                            <h3 className="text-xs sm:text-sm font-semibold text-gray-900 line-clamp-2 leading-tight">
+                                              {item.name?.toUpperCase() || "PRODUCT NAME"}
+                                            </h3>
+                                          </div>
+                                          <div className="flex-shrink-0 text-right">
+                                            <div className="flex flex-col items-end gap-0.5">
+                                              <span className="text-sm font-bold text-red-600">
+                                                ₹{item.price.toLocaleString()}
+                                              </span>
+                                              {item.originalPrice &&
+                                                item.originalPrice > item.price && (
+                                                  <span className="text-xs text-gray-400 line-through">
+                                                    ₹{item.originalPrice.toLocaleString()}
+                                                  </span>
+                                                )}
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        {/* Second Row - Stock Status */}
+                                        <div className="flex items-center justify-start text-xs">
+                                          <div className="flex-1">
+                                            {item.stock && item.stock <= 5 && item.stock > 0 ? (
+                                              <span className="text-red-600 font-medium">
+                                                {item.stock} left
+                                              </span>
+                                            ) : (
+                                              <span className="text-green-600 font-medium">
+                                                In Stock
+                                              </span>
+                                            )}
+                                          </div>
+                                        </div>
+
+                                        {/* Bottom Row - Metadata */}
+                                        <div className="flex items-center justify-between text-xs text-gray-600">
+                                          {/* Sizes */}
+                                          <div className="flex items-center gap-1">
+                                            {item.sizes && item.sizes.length > 0 && (
+                                              <>
+                                                <span className="text-gray-500">Size:</span>
+                                                <div className="flex gap-1">
+                                                  {item.sizes.slice(0, 2).map((size, idx) => (
+                                                    <span
+                                                      key={idx}
+                                                      className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded text-xs font-medium"
+                                                    >
+                                                      {size}
+                                                    </span>
+                                                  ))}
+                                                  {item.sizes.length > 2 && (
+                                                    <span className="text-gray-500">
+                                                      +{item.sizes.length - 2}
+                                                    </span>
+                                                  )}
+                                                </div>
+                                              </>
+                                            )}
+                                          </div>
+
+                                          {/* Colors */}
+                                          {/* <div className="flex items-center gap-1">
+                                            {item.colors && item.colors.length > 0 && (
+                                              <div className="flex items-center gap-1">
+                                                {item.colors.slice(0, 3).map((color, idx) => (
+                                                  <div
+                                                    key={idx}
+                                                    className="w-3 h-3 rounded-full border border-gray-300"
+                                                    style={{
+                                                      backgroundColor: color.toLowerCase(),
+                                                    }}
+                                                    title={color}
+                                                  />
+                                                ))}
+                                                {item.colors.length > 3 && (
+                                                  <span className="text-gray-500 text-xs">
+                                                    +{item.colors.length - 3}
+                                                  </span>
+                                                )}
+                                              </div>
+                                            )}
+                                          </div> */}
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      /* List View - Horizontal Layout */
+                                      <div className="flex-1 flex flex-col justify-between py-1">
+                                        {/* Top Section */}
+                                        <div className="space-y-2">
+                                          <div className="flex items-start justify-between">
+                                            <h3 className="text-base sm:text-lg font-semibold text-gray-900 line-clamp-2 pr-4">
+                                              {item.name?.toUpperCase() || "PRODUCT NAME"}
+                                            </h3>
+                                            <div className="flex flex-col items-end gap-1">
+                                              <span className="text-lg font-bold text-red-600">
+                                                ₹{item.price.toLocaleString()}
+                                              </span>
+                                              {item.originalPrice &&
+                                                item.originalPrice > item.price && (
+                                                  <span className="text-sm text-gray-400 line-through">
+                                                    ₹{item.originalPrice.toLocaleString()}
+                                                  </span>
+                                                )}
+                                            </div>
+                                          </div>
+
+                                          {/* Stock Status */}
+                                          <div className="flex items-center gap-4">
+                                            <div className="flex items-center text-sm">
+                                              {item.stock &&
+                                              item.stock <= 5 &&
+                                              item.stock > 0 ? (
+                                                <span className="text-red-600 font-medium">
+                                                  Only {item.stock} left
+                                                </span>
+                                              ) : (
+                                                <span className="text-green-600 font-medium">
+                                                  ✓ In Stock
+                                                </span>
+                                              )}
+                                            </div>
+                                          </div>
+
+                                          {/* Product Details */}
+                                          <div className="flex items-center gap-6 text-sm text-gray-600">
+                                            {/* Sizes */}
+                                            {item.sizes && item.sizes.length > 0 && (
+                                              <div className="flex items-center gap-2">
+                                                <span className="font-medium">Sizes:</span>
+                                                <div className="flex gap-1">
+                                                  {item.sizes.slice(0, 4).map((size, idx) => (
+                                                    <span
+                                                      key={idx}
+                                                      className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-medium"
+                                                    >
+                                                      {size}
+                                                    </span>
+                                                  ))}
+                                                  {item.sizes.length > 4 && (
+                                                    <span className="text-gray-500">
+                                                      +{item.sizes.length - 4}
+                                                    </span>
+                                                  )}
+                                                </div>
+                                              </div>
+                                            )}
+
+                                            {/* Colors */}
+                                            {item.colors && item.colors.length > 0 && (
+                                              <div className="flex items-center gap-2">
+                                                <span className="font-medium">Colors:</span>
+                                                <div className="flex items-center gap-1">
+                                                  {item.colors.slice(0, 5).map((color, idx) => (
+                                                    <div
+                                                      key={idx}
+                                                      className="w-5 h-5 rounded-full border-2 border-gray-300"
+                                                      style={{
+                                                        backgroundColor: color.toLowerCase(),
+                                                      }}
+                                                      title={color}
+                                                    />
+                                                  ))}
+                                                  {item.colors.length > 5 && (
+                                                    <span className="text-gray-500 text-sm">
+                                                      +{item.colors.length - 5}
+                                                    </span>
+                                                  )}
+                                                </div>
+                                              </div>
+                                            )}
+                                          </div>
+                                        </div>
+
+                                        {/* Bottom Section - Add to Cart Button */}
+                                        <div className="flex items-center justify-between mt-4">
+                                          <div className="flex items-center gap-2">
+                                            {/* Image Indicators for List View */}
+                                            {(() => {
+                                              const isMultipleColors = Array.isArray(
+                                                item.image[0]
+                                              );
+                                              const imagesToShow = isMultipleColors
+                                                ? item.image[0]
+                                                : item.image;
+
+                                              return (
+                                                imagesToShow.length > 1 && (
+                                                  <div className="flex gap-1">
+                                                    {imagesToShow.map((_, idx) => (
+                                                      <div
+                                                        key={idx}
+                                                        className={`w-2 h-2 rounded-full transition-all ${
+                                                          (currentImageIndices[item.id] ||
+                                                            0) === idx
+                                                            ? "bg-red-900"
+                                                            : "bg-gray-300"
+                                                        }`}
+                                                      />
+                                                    ))}
+                                                  </div>
+                                                )
+                                              );
+                                            })()}
+                                          </div>
+
+                                          <button
+                                            onClick={(e) => handleAddToCart(e, item)}
+                                            disabled={
+                                              addingToCart === (item.productId || item.id)
+                                            }
+                                            className="bg-red-900 hover:bg-red-800 text-white px-6 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed"
+                                          >
+                                            {addingToCart === (item.productId || item.id) ? (
+                                              <>
+                                                {/* Spinner */}
+                                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                                <span>Adding...</span>
+                                              </>
+                                            ) : (
+                                              <>
+                                                <ShoppingBag size={16} />
+                                                <span>Add to Cart</span>
+                                              </>
+                                            )}
+                                          </button>
+                                        </div>
+                                      </div>
+                                    )}
                                   </div>
-                                )
-                              );
-                            })()}
-                          </div>
-
-                          <button
-                            onClick={(e) => handleAddToCart(e, item)}
-                            disabled={
-                              addingToCart === (item.productId || item.id)
-                            }
-                            className="bg-red-900 hover:bg-red-800 text-white px-6 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed"
-                          >
-                            {addingToCart === (item.productId || item.id) ? (
-                              <>
-                                {/* Spinner */}
-                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                <span>Adding...</span>
-                              </>
-                            ) : (
-                              <>
-                                <ShoppingBag size={16} />
-                                <span>Add to Cart</span>
-                              </>
-                            )}
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </Link>
-              </div>
+                                </Link>
+                              </div>
+                  </React.Fragment>
             ))}
           </div>
 

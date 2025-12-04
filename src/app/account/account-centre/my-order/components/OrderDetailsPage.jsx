@@ -636,79 +636,89 @@ const shouldShowFreeShipping = () => {
   return orderData.status !== 'Cancelled';
 };
 
-  // Generate order timeline based on status - UPDATED VERSION
-  const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellationReason = '') => {
-    // Get current date for cancelled timeline
-    const currentDate = cancelledAt || new Date();
-    
-    const baseStages = [
-      {
-        title: "Order Placed",
-        date: orderDate,
-        icon: Info,
-        status: "completed"
-      },
-      {
-        title: "Order Confirmed",
-        date: new Date(orderDate.getTime() + 30 * 60 * 1000),
-        description: "Tracking Number Assigned",
-        icon: CheckCircle,
-        status: "completed"
-      },
-      {
-        title: "Product Packaging",
-        date: new Date(orderDate.getTime() + 2 * 60 * 60 * 1000),
-        description: "Product packed in warehouse",
-        icon: Package,
-        status: status === 'Pending' ? 'pending' : 'completed'
-      },
-      {
-        title: "Product Shipped",
-        date: new Date(orderDate.getTime() + 24 * 60 * 60 * 1000),
-        description: "Product shipped from warehouse",
-        icon: Truck,
-        status: ['Shipped', 'Delivered'].includes(status) ? 'completed' : 'pending'
-      },
-      {
-        title: "Out for Delivery",
-        date: new Date(orderDate.getTime() + 3 * 24 * 60 * 60 * 1000),
-        description: "Product out for delivery",
-        icon: Truck,
-        status: status === 'Delivered' ? 'completed' : 'pending'
-      },
-      {
-        title: "Delivered",
-        date: new Date(orderDate.getTime() + 5 * 24 * 60 * 60 * 1000),
-        description: "Product delivered successfully",
-        icon: CheckCircle,
-        status: status === 'Delivered' ? 'completed' : 'pending'
-      }
-    ];
-
-    // Add cancellation stage if order is cancelled
-    if (status === 'Cancelled') {
-      // Insert cancellation stage after order confirmation
-      baseStages.splice(2, 0, {
-        title: "Order Cancelled",
-        date: currentDate,
-        description: `Cancelled by customer${cancellationReason ? ` - Reason: ${cancellationReason}` : ''}`,
-        icon: XCircle,
-        status: "completed"
-      });
-      
-      // Update all subsequent stages to be 'cancelled' state
-      for (let i = 3; i < baseStages.length; i++) {
-        baseStages[i].status = "cancelled";
-        // Update icon for cancelled stages
-        baseStages[i].icon = XCircle;
-      }
+  // Generate order timeline based on status - FIXED VERSION
+const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellationReason = '') => {
+  // Get current date for cancelled timeline
+  const currentDate = cancelledAt || new Date();
+  
+  const baseStages = [
+    {
+      title: "Order Placed",
+      date: orderDate,
+      icon: Info,
+      status: "completed"
+    },
+    {
+      title: "Order Confirmed",
+      date: new Date(orderDate.getTime() + 30 * 60 * 1000),
+      description: "Tracking Number Assigned",
+      icon: CheckCircle,
+      // FIX: Check if order is cancelled
+      status: status === 'Cancelled' ? 'cancelled' : 'completed'
+    },
+    {
+      title: "Product Packaging",
+      date: new Date(orderDate.getTime() + 2 * 60 * 60 * 1000),
+      description: "Product packed in warehouse",
+      icon: Package,
+      // FIX: Check if order is cancelled
+      status: status === 'Pending' ? 'pending' : 
+             status === 'Cancelled' ? 'cancelled' : 'completed'
+    },
+    {
+      title: "Product Shipped",
+      date: new Date(orderDate.getTime() + 24 * 60 * 60 * 1000),
+      description: "Product shipped from warehouse",
+      icon: Truck,
+      // FIX: Check if order is cancelled
+      status: ['Shipped', 'Delivered'].includes(status) ? 'completed' : 
+             status === 'Cancelled' ? 'cancelled' : 'pending'
+    },
+    {
+      title: "Out for Delivery",
+      date: new Date(orderDate.getTime() + 3 * 24 * 60 * 60 * 1000),
+      description: "Product out for delivery",
+      icon: Truck,
+      // FIX: Check if order is cancelled
+      status: status === 'Delivered' ? 'completed' : 
+             status === 'Cancelled' ? 'cancelled' : 'pending'
+    },
+    {
+      title: "Delivered",
+      date: new Date(orderDate.getTime() + 5 * 24 * 60 * 60 * 1000),
+      description: "Product delivered successfully",
+      icon: CheckCircle,
+      // FIX: Check if order is cancelled
+      status: status === 'Delivered' ? 'completed' : 
+             status === 'Cancelled' ? 'cancelled' : 'pending'
     }
+  ];
 
-    return baseStages.map(stage => ({
-      ...stage,
-      formattedDate: formatDateTime(stage.date)
-    }));
-  };
+  // Add cancellation stage if order is cancelled
+  if (status === 'Cancelled') {
+    // Insert cancellation stage after order confirmation
+    baseStages.splice(2, 0, {
+      title: "Order Cancelled",
+      date: currentDate,
+      description: `Cancelled by customer${cancellationReason ? ` - Reason: ${cancellationReason}` : ''}`,
+      icon: XCircle,
+      status: "completed"
+    });
+    
+    // Update all subsequent stages to be 'cancelled' state
+    // FIX: Start from index 3 (after cancellation stage)
+    for (let i = 3; i < baseStages.length; i++) {
+      baseStages[i].status = "cancelled";
+      // Update icon for cancelled stages
+      baseStages[i].icon = XCircle;
+    }
+  }
+
+  return baseStages.map(stage => ({
+    ...stage,
+    formattedDate: formatDateTime(stage.date)
+  }));
+};
 
   // Format date with time
   const formatDateTime = (date) => {
@@ -1074,24 +1084,25 @@ const shouldShowFreeShipping = () => {
                 </div>
 
                 {/* Status Progress Bar */}
-                <div className="mb-6">
-                  <div className="flex justify-between text-xs text-gray-500 mb-2">
-                    <span>Order Placed</span>
-                    <span>Delivered</span>
-                  </div>
-                  <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div 
-                      className={`h-full ${orderData.badgeColor} transition-all duration-500`}
-                      style={{
-                        width: orderData.status === 'Pending' ? '20%' :
-                               orderData.status === 'Confirmed' ? '40%' :
-                               orderData.status === 'Shipped' ? '70%' :
-                               orderData.status === 'Delivered' ? '100%' :
-                               orderData.status === 'Cancelled' ? '100%' : '20%'
-                      }}
-                    />
-                  </div>
-                </div>
+                {/* Status Progress Bar */}
+<div className="mb-6">
+  <div className="flex justify-between text-xs text-gray-500 mb-2">
+    <span>Order Placed</span>
+    <span>{orderData.status === 'Cancelled' ? 'Cancelled' : 'Delivered'}</span>
+  </div>
+  <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+    <div 
+      className={`h-full ${orderData.badgeColor} transition-all duration-500`}
+      style={{
+        width: orderData.status === 'Pending' ? '20%' :
+               orderData.status === 'Confirmed' ? '40%' :
+               orderData.status === 'Shipped' ? '70%' :
+               orderData.status === 'Delivered' ? '100%' :
+               orderData.status === 'Cancelled' ? '100%' : '20%'
+      }}
+    />
+  </div>
+</div>
 
                 {/* Action Buttons */}
                 <div className="space-y-3">
@@ -1724,6 +1735,7 @@ const shouldShowFreeShipping = () => {
 }
 
 // Fallback data function
+// Fallback data function - FIXED VERSION
 function getFallbackOrderData(selectedOrder) {
   const fallbackDate = new Date();
   
@@ -1749,6 +1761,18 @@ function getFallbackOrderData(selectedOrder) {
     return `${day}${getOrdinalSuffix(day)} ${month}, ${year}`;
   };
 
+  const formatDateTime = (date) => {
+    if (!(date instanceof Date) || isNaN(date)) return 'Invalid Date';
+    
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'pm' : 'am';
+    const formattedHours = hours % 12 || 12;
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+    
+    return `${formatDate(date)} ${formattedHours}:${formattedMinutes} ${ampm}`;
+  };
+
   const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellationReason = '') => {
     const currentDate = cancelledAt || new Date();
     
@@ -1764,35 +1788,44 @@ function getFallbackOrderData(selectedOrder) {
         date: new Date(orderDate.getTime() + 30 * 60 * 1000),
         description: "Tracking Number Assigned",
         icon: CheckCircle,
-        status: "completed"
+        // FIX: Check if order is cancelled
+        status: status === 'Cancelled' ? 'cancelled' : 'completed'
       },
       {
         title: "Product Packaging",
         date: new Date(orderDate.getTime() + 2 * 60 * 60 * 1000),
         description: "Product packed in warehouse",
         icon: Package,
-        status: status === 'Pending' ? 'pending' : 'completed'
+        // FIX: Check if order is cancelled
+        status: status === 'Pending' ? 'pending' : 
+               status === 'Cancelled' ? 'cancelled' : 'completed'
       },
       {
         title: "Product Shipped",
         date: new Date(orderDate.getTime() + 24 * 60 * 60 * 1000),
         description: "Product shipped from warehouse",
         icon: Truck,
-        status: ['Shipped', 'Delivered'].includes(status) ? 'completed' : 'pending'
+        // FIX: Check if order is cancelled
+        status: ['Shipped', 'Delivered'].includes(status) ? 'completed' : 
+               status === 'Cancelled' ? 'cancelled' : 'pending'
       },
       {
         title: "Out for Delivery",
         date: new Date(orderDate.getTime() + 3 * 24 * 60 * 60 * 1000),
         description: "Product out for delivery",
         icon: Truck,
-        status: status === 'Delivered' ? 'completed' : 'pending'
+        // FIX: Check if order is cancelled
+        status: status === 'Delivered' ? 'completed' : 
+               status === 'Cancelled' ? 'cancelled' : 'pending'
       },
       {
         title: "Delivered",
         date: new Date(orderDate.getTime() + 5 * 24 * 60 * 60 * 1000),
         description: "Product delivered successfully",
         icon: CheckCircle,
-        status: status === 'Delivered' ? 'completed' : 'pending'
+        // FIX: Check if order is cancelled
+        status: status === 'Delivered' ? 'completed' : 
+               status === 'Cancelled' ? 'cancelled' : 'pending'
       }
     ];
 
@@ -1808,6 +1841,7 @@ function getFallbackOrderData(selectedOrder) {
       });
       
       // Update all subsequent stages to be 'cancelled' state
+      // FIX: Start from index 3 (after cancellation stage)
       for (let i = 3; i < baseStages.length; i++) {
         baseStages[i].status = "cancelled";
         // Update icon for cancelled stages
@@ -1817,21 +1851,19 @@ function getFallbackOrderData(selectedOrder) {
 
     return baseStages.map(stage => ({
       ...stage,
-      formattedDate: formatDate(stage.date)
+      formattedDate: formatDateTime(stage.date)
     }));
   };
 
-  const formatDateTime = (date) => {
-    if (!(date instanceof Date) || isNaN(date)) return 'Invalid Date';
-    
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const ampm = hours >= 12 ? 'pm' : 'am';
-    const formattedHours = hours % 12 || 12;
-    const formattedMinutes = minutes.toString().padStart(2, '0');
-    
-    return `${formatDate(date)} ${formattedHours}:${formattedMinutes} ${ampm}`;
-  };
+  // Get order status from selectedOrder
+  const orderStatus = selectedOrder?.status || 'Processing';
+  
+  // Generate timeline
+  const timeline = generateOrderTimeline(
+    orderStatus, 
+    fallbackDate,
+    orderStatus === 'Cancelled' ? new Date() : null
+  );
 
   return {
     orderId: selectedOrder?.id || 'ORDER_1234567890123_ABCDEF',
@@ -1846,10 +1878,10 @@ function getFallbackOrderData(selectedOrder) {
     orderDate: formatDate(fallbackDate),
     expectedDelivery: formatDate(new Date(fallbackDate.setDate(fallbackDate.getDate() + 7))),
     totalAmount: selectedOrder?.value || '₹ 0',
-    status: selectedOrder?.status || 'Processing',
-    statusColor: "bg-amber-100 text-amber-800 border-amber-200",
-    statusIcon: Clock,
-    badgeColor: "bg-amber-500",
+    status: orderStatus,
+    statusColor: orderStatus === 'Cancelled' ? 'bg-red-100 text-red-800 border-red-200' : 'bg-amber-100 text-amber-800 border-amber-200',
+    statusIcon: orderStatus === 'Cancelled' ? XCircle : Clock,
+    badgeColor: orderStatus === 'Cancelled' ? 'bg-red-500' : 'bg-amber-500',
     trackingId: 'Not assigned',
     items: [{
       productName: selectedOrder?.productName || 'Sample Product',
@@ -1861,7 +1893,7 @@ function getFallbackOrderData(selectedOrder) {
       price: 0
     }],
     totalItems: 1,
-    timeline: generateOrderTimeline(selectedOrder?.status || 'Pending', fallbackDate),
+    timeline: timeline,
     originalData: selectedOrder || {}
   };
 }
