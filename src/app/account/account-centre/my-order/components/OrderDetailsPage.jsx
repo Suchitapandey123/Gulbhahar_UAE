@@ -1082,10 +1082,8 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
                     </p>
                   </div>
                 </div>
-
-                {/* Status Progress Bar */}
-                {/* Status Progress Bar */}
-<div className="mb-6">
+                  
+                  <div className="mb-6">
   <div className="flex justify-between text-xs text-gray-500 mb-2">
     <span>Order Placed</span>
     <span>{orderData.status === 'Cancelled' ? 'Cancelled' : 'Delivered'}</span>
@@ -1104,10 +1102,30 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
   </div>
 </div>
 
+                {/* Status Progress Bar */}
+                <div className="mb-6">
+                  <div className="flex justify-between text-xs text-gray-500 mb-2">
+                    <span>Order Placed</span>
+                    <span>Delivered</span>
+                  </div>
+                  <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div 
+                      className={`h-full ${orderData.badgeColor} transition-all duration-500`}
+                      style={{
+                        width: orderData.status === 'Pending' ? '20%' :
+                               orderData.status === 'Confirmed' ? '40%' :
+                               orderData.status === 'Shipped' ? '70%' :
+                               orderData.status === 'Delivered' ? '100%' :
+                               orderData.status === 'Cancelled' ? '100%' : '20%'
+                      }}
+                    />
+                  </div>
+                </div>
+
                 {/* Action Buttons */}
                 <div className="space-y-3">
                   {/* Free Shipping - Conditionally Hide When Cancelled */}
-  {shouldShowFreeShipping() && (
+                    {shouldShowFreeShipping() && (
                   <div className="flex items-center gap-2 text-green-600 text-sm bg-green-50 px-4 py-3 rounded-lg">
                     <Truck className="w-5 h-5" />
                     <span>Free Shipping</span>

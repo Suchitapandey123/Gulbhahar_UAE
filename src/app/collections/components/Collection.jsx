@@ -865,7 +865,7 @@ export default function Collection({ category = null }) {
                           {index === 4 && (
                             <div className="col-span-full w-full my-4 ">
                               <Image
-                                src={"/new-img.png"}
+                                src={"/banner-image.jpg"}
                                 height={500}
                                 width={1000}
                                 alt="design"
