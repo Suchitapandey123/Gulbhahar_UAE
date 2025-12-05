@@ -1,5 +1,7 @@
 const API_BASE_URL = 'https://api.gulbhahar.com/api';
 
+const ORDER_API_BASE_URL = 'http://194.238.23.44:9080/api';
+
 export const profileAPI = {
  
   getUserProfile: async () => {
@@ -92,8 +94,50 @@ export const profileAPI = {
     console.error("Error fetching addresses:", error);
     return { success: false, data: [] };
   }
-}
+},
+  
+   getUserAddressByOrderId: async (orderId) => {
+  try {
+    const token = localStorage.getItem("authToken");
+    if (!token) throw new Error("No auth token found");
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); 
+
+    const response = await fetch(
+      `${ORDER_API_BASE_URL}/get-address/get-user-address-by-orderid?orderId=${orderId}`, 
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        signal: controller.signal
+      }
+    );
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch address: ${response.status}`);
+    }
+
+    return await response.json(); 
+  } catch (error) {
+    console.error("Error fetching order address:", error);
+    
+    
+    return { 
+      success: false, 
+      data: null,
+      message: error.name === 'AbortError' ? 'Request timeout' : error.message
+    };
+  }
+},
 
 };
+
+
+
 
 export default profileAPI;

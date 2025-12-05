@@ -70,7 +70,7 @@ const ITEMS_PER_PAGE = 24;
 //     }
 //   }, []);
 
-// 🔥 ADD CATEGORY PROP
+//  ADD CATEGORY PROP
 export default function Collection({ category = null }) {
   useEffect(() => {
     if (window.fbq) {
@@ -79,7 +79,7 @@ export default function Collection({ category = null }) {
         content_category: category || "Juttis",
       });
     }
-  }, [category]); // 🔥 ADD CATEGORY DEPENDENCY
+  }, [category]); //  ADD CATEGORY DEPENDENCY
 
   const [currentImageIndices, setCurrentImageIndices] = useState({});
   const [hoveredProduct, setHoveredProduct] = useState(null);
@@ -90,16 +90,16 @@ export default function Collection({ category = null }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // 🔥 REMOVE THESE OLD CART STATES:
+  //  REMOVE THESE OLD CART STATES:
   // const [cart, setCart] = useState([]);
   // const [addingToCart, setAddingToCart] = useState(null);
 
-  // 🔥 ADD CART CONTEXT HOOK INSTEAD:
+  //  ADD CART CONTEXT HOOK INSTEAD:
   const { addToCart, addingToCart } = useCart();
 
   const [openSections, setOpenSections] = useState({
-    price: false,
-    size: false,
+    price: true,
+    size: true,
   });
   const [priceRange, setPriceRange] = useState([500, 2000]);
   const [minPrice, setMinPrice] = useState(500);
@@ -160,7 +160,7 @@ export default function Collection({ category = null }) {
     }));
   };
 
-  // 🔥 REPLACE OLD handleAddToCart WITH THIS NEW ONE:
+  //  REPLACE OLD handleAddToCart WITH THIS NEW ONE:
 
   const handleAddToCart = async (e, item) => {
     // console.log('🛒 Collections - Adding item to cart:', item);
@@ -174,9 +174,9 @@ export default function Collection({ category = null }) {
       const selectedSize =
         item.sizes && item.sizes.length > 0 ? item.sizes[0] : "default";
 
-      // console.log('🎨 Auto-selected variants:', { selectedColor, selectedSize });
+      // console.log(' Auto-selected variants:', { selectedColor, selectedSize });
 
-      // 🔥 STANDARDIZED cart item structure
+      //  STANDARDIZED cart item structure
       const cartItemWithVariants = {
         ...item,
         // Use productId consistently
@@ -189,7 +189,7 @@ export default function Collection({ category = null }) {
         addedAt: new Date().toISOString(),
       };
 
-      // console.log('🛒 Standardized cart item:', cartItemWithVariants);
+      // console.log(' Standardized cart item:', cartItemWithVariants);
 
       const result = await addToCart(cartItemWithVariants);
 
@@ -198,18 +198,18 @@ export default function Collection({ category = null }) {
           `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`,
           "success"
         );
-        // console.log('✅ Item added successfully');
+        // console.log('Item added successfully');
         // showToast(
         //   `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`,
         //   'success'
         // );
       } else {
         toast.error("Failed to add item to cart. Please try again.", "error");
-        // console.log('❌ Failed to add item');
+        // console.log('Failed to add item');
         // showToast("Failed to add item to cart. Please try again.", "error");
       }
     } catch (error) {
-      // console.error("❌ Error adding to cart:", error);
+      // console.error("Error adding to cart:", error);
       // showToast("Failed to add item to cart. Please try again.", "error");
       toast.error("Failed to add item to cart. Please try again.", "error");
     }
@@ -450,7 +450,7 @@ export default function Collection({ category = null }) {
     setCurrentPage(1);
   };
 
-  // 🔥 REMOVE CartCounter COMPONENT - IT'S NOW IN HEADER
+  //  REMOVE CartCounter COMPONENT - IT'S NOW IN HEADER
   // const CartCounter = () => { ... }
 
   const FilterContent = () => (
@@ -726,14 +726,22 @@ export default function Collection({ category = null }) {
             </nav>
           </div>
           
-          <div className="bg-white border-2 border-red-200 
+          {/* <div className="bg-white border-2 border-red-200 
   h-[calc(100vh-180px)] 
   md:h-[calc(100vh-160px)] 
   lg:h-[calc(100vh-150px)] 
   xl:h-[calc(100vh-140px)]
   w-[280px] rounded-xl shadow-lg overflow-y-auto">
   <FilterContent />
-</div>
+</div> */}
+
+ <div className="bg-white border-2 border-red-200 
+        w-[280px] rounded-xl shadow-lg 
+        h-fit        
+        max-h-[110vh] 
+        overflow-y-auto">
+    <FilterContent />
+  </div>
 
           {/* Filter Box - Fixed Height with Scroll */}
           {/* <div className="bg-white border-2 border-red-200 h-[calc(100vh-140px)] w-[280px] rounded-xl shadow-lg overflow-y-auto">

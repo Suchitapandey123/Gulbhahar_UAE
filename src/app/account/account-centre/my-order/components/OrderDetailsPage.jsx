@@ -123,7 +123,7 @@ const fetchUserData = () => {
     }
   }
   
-  // Method 4: Check user object
+  
   if (!foundEmail) {
     const userDataStr = localStorage.getItem("user");
     if (userDataStr) {
@@ -141,9 +141,9 @@ const fetchUserData = () => {
   
   if (foundEmail) {
     setUserEmail(foundEmail);
-    console.log("✅ Email set to state:", foundEmail);
+   
   } else {
-    console.warn("⚠️ Email not found in localStorage. Using fallback.");
+    
   }
 };
 
@@ -163,7 +163,7 @@ const fetchUserData = () => {
     return parts.join(', ');
   };
 
-  // Transform order data when selectedOrder changes
+  
   useEffect(() => {
     if (selectedOrder) {
       console.log('SelectedOrder found, checking for data...');
@@ -175,7 +175,7 @@ const fetchUserData = () => {
       });
   
       if (selectedOrder.originalData) {
-        console.log('🔄 Transforming from originalData');
+       
         try {
           const transformedData = transformOrderDetails(selectedOrder.originalData);
           setOrderData(transformedData);
@@ -228,14 +228,14 @@ const fetchUserData = () => {
   }, [showCancelModal]);
 
   const fetchUserDataForCancellation = () => {
-    console.log("🔍 Fetching user data for cancellation...");
+    console.log("Fetching user data for cancellation...");
     
     const userEmailFromStorage = localStorage.getItem("userEmail");
     const userNameFromStorage = localStorage.getItem("userName");
     const userDataStr = localStorage.getItem("user");
     const authTokenStr = localStorage.getItem("authToken");
     
-    console.log("📋 Found in localStorage:", {
+    console.log(" Found in localStorage:", {
       userEmail: userEmailFromStorage,
       userName: userNameFromStorage,
       hasUserData: !!userDataStr,
@@ -293,7 +293,7 @@ const fetchUserData = () => {
       }
     }
 
-    // Debug: Show all localStorage items if email not found
+    
     if (!foundEmail) {
       
       for (let i = 0; i < localStorage.length; i++) {
@@ -314,20 +314,20 @@ const fetchUserData = () => {
       setUserName(foundName);
     }
 
-    console.log("🎯 Final user data for cancellation:", {
+    console.log(" Final user data for cancellation:", {
       email: foundEmail || "Not found",
       name: foundName || "Not found"
     });
   };
 
-  // Send OTP for cancellation - REAL API CALL
+  
   const handleSendOtp = async () => {
     if (!orderData) {
       setApiError("Order data not available");
       return;
     }
     
-    // First, check if we have user email
+   
     if (!userEmail) {
       setApiError("User email not found. Please ensure you are logged in.");
       console.error(" User email is empty when trying to send OTP");
@@ -377,16 +377,14 @@ const fetchUserData = () => {
 
   // Handle OTP input with validation
   const handleOtpChange = (index, value) => {
-    // Allow only numbers
+   
     if (!/^\d*$/.test(value)) return;
     
-    // If user is pasting 6-digit OTP
     if (value.length === 6) {
       console.log("📋 Pasting OTP:", value);
       const digits = value.split('');
       const newOtp = [...otp];
       
-      // Fill all 6 inputs with the pasted digits
       for (let i = 0; i < 6; i++) {
         if (i < digits.length) {
           newOtp[i] = digits[i];
@@ -395,7 +393,7 @@ const fetchUserData = () => {
       
       setOtp(newOtp);
       
-      // Focus on the last input after a short delay
+      
       setTimeout(() => {
         const lastInput = document.getElementById(`otp-input-5`);
         if (lastInput) lastInput.focus();
@@ -404,16 +402,16 @@ const fetchUserData = () => {
       return;
     }
     
-    // Single digit input
+   
     if (value.length > 1) {
-      value = value.charAt(value.length - 1); // Take last character (for mobile keyboard suggestions)
+      value = value.charAt(value.length - 1); 
     }
     
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
     
-    // Auto focus next input if current has value
+    
     if (value && index < 5) {
       setTimeout(() => {
         const nextInput = document.getElementById(`otp-input-${index + 1}`);
@@ -432,7 +430,7 @@ const fetchUserData = () => {
     if (/^\d{6}$/.test(pastedData)) {
       handleOtpChange(0, pastedData);
     } else {
-      // Show error if invalid
+      
       setApiError('Please paste a valid 6-digit OTP');
       setTimeout(() => setApiError(''), 3000);
     }
@@ -461,19 +459,19 @@ const fetchUserData = () => {
         cancellationReason: cancelReason
       };
       
-      console.log('📝 Request body:', requestBody);
+      console.log('Request body:', requestBody);
       
       const response = await orderHistoryAPI.verifyOtpForCancellation(requestBody);
 
-      console.log('✅ Order cancelled successfully:', response);
+      console.log('Order cancelled successfully:', response);
       
-      // Success handling
+     
       setIsVerifyingOtp(false);
       setCancelStep(3);
       setSuccessMessage(response.message || "Order cancelled successfully!");
-      setCancelledDate(new Date()); // Set cancellation date
+      setCancelledDate(new Date()); 
       
-      // Update order status locally
+     
       setOrderData(prev => {
         const newCancelledDate = new Date();
         return {
@@ -503,7 +501,7 @@ const fetchUserData = () => {
     await handleSendOtp();
   };
 
-  // Reset cancellation flow
+  
   const resetCancelFlow = () => {
     setCancelStep(1);
     setCancelReason("");
@@ -522,29 +520,26 @@ const fetchUserData = () => {
       return;
     }
 
-    // First check if we have user data
     if (!userEmail) {
       setApiError('User information not found. Please try again.');
       return;
     }
-
-    // Step 1: Send OTP
     await handleSendOtp();
   };
 
-  // Handle modal open
+ 
   const handleOpenCancelModal = () => {
-    // Reset any previous state
+   
     resetCancelFlow();
-    // Open modal - this will trigger the useEffect to fetch user data
+   
     setShowCancelModal(true);
   };
 
-  // Handle success after cancellation - Redirect to order history
+  
   const handleSuccessDone = () => {
     setShowCancelModal(false);
     resetCancelFlow();
-    // Redirect back to order history after 2 seconds
+   
     setTimeout(() => {
       onBack();
     }, 2000);
@@ -636,9 +631,9 @@ const shouldShowFreeShipping = () => {
   return orderData.status !== 'Cancelled';
 };
 
-  // Generate order timeline based on status - FIXED VERSION
+ 
 const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellationReason = '') => {
-  // Get current date for cancelled timeline
+ 
   const currentDate = cancelledAt || new Date();
   
   const baseStages = [
@@ -706,7 +701,7 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
     });
     
     // Update all subsequent stages to be 'cancelled' state
-    // FIX: Start from index 3 (after cancellation stage)
+   
     for (let i = 3; i < baseStages.length; i++) {
       baseStages[i].status = "cancelled";
       // Update icon for cancelled stages
@@ -796,7 +791,7 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
 
       return {
         orderId,
-        productImages: productImages.slice(0, 4), // Show max 4 images
+        productImages: productImages.slice(0, 4), 
         uniqueProducts,
         orderDate: formattedOrderDate,
         expectedDelivery: formattedExpectedDate,
@@ -1103,7 +1098,7 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
 </div>
 
                 {/* Status Progress Bar */}
-                <div className="mb-6">
+                {/* <div className="mb-6">
                   <div className="flex justify-between text-xs text-gray-500 mb-2">
                     <span>Order Placed</span>
                     <span>Delivered</span>
@@ -1120,12 +1115,12 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
                       }}
                     />
                   </div>
-                </div>
+                </div> */}
 
                 {/* Action Buttons */}
                 <div className="space-y-3">
                   {/* Free Shipping - Conditionally Hide When Cancelled */}
-                    {shouldShowFreeShipping() && (
+  {shouldShowFreeShipping() && (
                   <div className="flex items-center gap-2 text-green-600 text-sm bg-green-50 px-4 py-3 rounded-lg">
                     <Truck className="w-5 h-5" />
                     <span>Free Shipping</span>
@@ -1753,7 +1748,7 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
 }
 
 // Fallback data function
-// Fallback data function - FIXED VERSION
+
 function getFallbackOrderData(selectedOrder) {
   const fallbackDate = new Date();
   
@@ -1814,7 +1809,7 @@ function getFallbackOrderData(selectedOrder) {
         date: new Date(orderDate.getTime() + 2 * 60 * 60 * 1000),
         description: "Product packed in warehouse",
         icon: Package,
-        // FIX: Check if order is cancelled
+        
         status: status === 'Pending' ? 'pending' : 
                status === 'Cancelled' ? 'cancelled' : 'completed'
       },
@@ -1823,7 +1818,7 @@ function getFallbackOrderData(selectedOrder) {
         date: new Date(orderDate.getTime() + 24 * 60 * 60 * 1000),
         description: "Product shipped from warehouse",
         icon: Truck,
-        // FIX: Check if order is cancelled
+        
         status: ['Shipped', 'Delivered'].includes(status) ? 'completed' : 
                status === 'Cancelled' ? 'cancelled' : 'pending'
       },
