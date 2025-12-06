@@ -950,6 +950,7 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
                   Products in this order
                 </h3>
                 
+                
                 <div className="space-y-4">
                   {productsToDisplay.map((product, index) => (
                     <div key={index} className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200">

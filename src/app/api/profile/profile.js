@@ -1,6 +1,5 @@
 const API_BASE_URL = 'https://api.gulbhahar.com/api';
 
-const ORDER_API_BASE_URL = 'http://194.238.23.44:9080/api';
 
 export const profileAPI = {
  
@@ -105,7 +104,7 @@ export const profileAPI = {
     const timeoutId = setTimeout(() => controller.abort(), 10000); 
 
     const response = await fetch(
-      `${ORDER_API_BASE_URL}/get-address/get-user-address-by-orderid?orderId=${orderId}`, 
+      `${API_BASE_URL}/get-address/get-user-address-by-orderid?orderId=${orderId}`, 
       {
         method: "POST",
         headers: {

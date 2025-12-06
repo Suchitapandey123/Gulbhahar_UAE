@@ -864,12 +864,12 @@ export default function CheckoutComponent() {
       icon: "📦",
       name: "Free Shipping",
     },
-    express: {
-      price: 300,
-      days: "1-2 business days",
-      icon: "⚡",
-      name: "Express Shipping",
-    },
+    // express: {
+    //   price: 300,
+    //   days: "1-2 business days",
+    //   icon: "⚡",
+    //   name: "Express Shipping",
+    // },
   };
 
   // Calculate totals from cart - with safety checks
