@@ -877,6 +877,7 @@ export default function Collection({ category = null }) {
                                 height={500}
                                 width={1000}
                                 alt="design"
+                                priority
                                 className="w-full h-auto sm:h-[220px] md:h-[420px] object-cover rounded-lg"
                               />
                             </div>

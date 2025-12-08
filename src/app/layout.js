@@ -40,32 +40,6 @@ export async function generateMetadata() {
     alternates: {
       canonical: "https://www.gulbhahar.com", 
     },
-    openGraph: {
-      title: "Gulbhahar | The Art of Handmade Luxury Ethnic Wear",
-      description:
-      "Experience Gulbhahar, where Indian tradition meets handmade perfection.  Ethnic Wear, Juttis, Jewellery, Bags all crafted with detail and elegance.",
-    
-        type: "website",
-      locale: "en_US",
-      url: "https://www.gulbhahar.com", 
-      siteName: "Gulbhahar",
-      images: [
-        {
-          url: "/og-image.jpg", // Add OG image
-          width: 1200,
-          height: 630,
-          alt: "Gulbhahar - Luxury Handmade Juttis & Designer Bags",
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: "Gulbhahar | The Art of Handmade Luxury Ethnic Wear",
-      description:
-      "Experience Gulbhahar, where Indian tradition meets handmade perfection.  Ethnic Wear, Juttis, Jewellery, Bags all crafted with detail and elegance.",
-    
-      images: ["/og-image.jpg"],
-    },
     robots: {
       index: true,
       follow: true,
@@ -116,7 +90,7 @@ export default function RootLayout({ children }) {
           {/* Custom Analytics */}
           <Script
             src="https://analytic.thekapslog.com/script.js"
-            data-website-id="44e63c96-7961-4702-9c43-961a03afa948"
+            data-website-id="20dfac58-c9ab-4176-86f4-6430b377abdb"
             strategy="afterInteractive"
           />
 
