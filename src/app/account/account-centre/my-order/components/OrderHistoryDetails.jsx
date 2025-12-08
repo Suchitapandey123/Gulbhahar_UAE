@@ -35,7 +35,7 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
       }
 
       const data = await orderHistoryAPI.getOrderHistory();
-      console.log('📦 FULL API RESPONSE:', JSON.stringify(data, null, 2));
+      // console.log('📦 FULL API RESPONSE:', JSON.stringify(data, null, 2));
 
       const ordersData = data.orders || [];
       const transformedOrders = transformOrderData(ordersData);
@@ -60,7 +60,7 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
     console.log('Transforming orders:', apiOrders.length, 'orders found');
 
     return apiOrders.map((order, index) => {
-      console.log(`\nOrder ${index} full data:`, order);
+      // console.log(`\nOrder ${index} full data:`, order);
 
       const orderId = order.orderId || `ORDER_${5913 + index}`;
       console.log(`Order ${index} orderId:`, orderId);

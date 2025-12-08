@@ -64,28 +64,48 @@ export function OrderDetailsPage({ selectedOrder, onBack = () => {} }) {
   }, [activeTab]);
 
   const fetchUserAddresses = async () => {
-    if (savedAddresses.length > 0) return; 
+  // Skip if we already have data or no order data
+  if (savedAddresses.length > 0 || !orderData?.orderId) return;
+  
+  setIsLoadingAddresses(true);
+  setAddressError(null);
+  
+  try {
     
-    setIsLoadingAddresses(true);
-    setAddressError(null);
+    const response = await profileAPI.getShippingAddressByOrderId(orderData.orderId);
     
-    try {
-      const response = await profileAPI.getUserAddresses();     
-      if (response.success && Array.isArray(response.data)) {
+    
+    if (response.success) {
+     
+      if (Array.isArray(response.data)) {
         setSavedAddresses(response.data);
         if (response.data.length > 0) {
           setSelectedAddress(response.data[0]);
         }
+      } else if (response.data && typeof response.data === 'object') {
+       
+        setSavedAddresses([response.data]);
+        setSelectedAddress(response.data);
+      } else if (response.shippingAddress) {
+        
+        const addressData = {
+          shippingAddress: response.shippingAddress
+        };
+        setSavedAddresses([addressData]);
+        setSelectedAddress(addressData);
       } else {
-        setAddressError("No addresses found");
+        setAddressError("Address data format is not recognized");
       }
-    } catch (error) {
-      console.error("Error fetching addresses:", error);
-      setAddressError("Failed to load addresses");
-    } finally {
-      setIsLoadingAddresses(false);
+    } else {
+      setAddressError(response.message || "No address found for this order");
     }
-  };
+  } catch (error) {
+    
+    setAddressError("Failed to load address information");
+  } finally {
+    setIsLoadingAddresses(false);
+  }
+};
 
 const fetchUserData = () => {
   if (userEmail) {
@@ -148,11 +168,17 @@ const fetchUserData = () => {
 };
 
   // Format address function
-  const formatAddress = (addressData) => {
-    if (!addressData?.shippingAddress) return "No address available";
-    
+  // Format address function
+const formatAddress = (addressData) => {
+ 
+  
+  if (!addressData) return "No address data";
+  
+  // If it has shippingAddress object (like your API response)
+  if (addressData.shippingAddress) {
     const { shippingAddress } = addressData;
     const parts = [
+      shippingAddress.fullName,
       shippingAddress.addressLine1,
       shippingAddress.city,
       shippingAddress.state,
@@ -161,7 +187,24 @@ const fetchUserData = () => {
     ].filter(part => part && part.trim() !== '');
     
     return parts.join(', ');
-  };
+  }
+  
+  // If it's the shippingAddress object itself
+  if (addressData.fullName || addressData.addressLine1) {
+    const parts = [
+      addressData.fullName,
+      addressData.addressLine1,
+      addressData.city,
+      addressData.state,
+      addressData.postalCode,
+      addressData.country
+    ].filter(part => part && part.trim() !== '');
+    
+    return parts.join(', ');
+  }
+  
+  return "Address format not recognized";
+};
 
   
   useEffect(() => {
@@ -235,12 +278,12 @@ const fetchUserData = () => {
     const userDataStr = localStorage.getItem("user");
     const authTokenStr = localStorage.getItem("authToken");
     
-    console.log(" Found in localStorage:", {
-      userEmail: userEmailFromStorage,
-      userName: userNameFromStorage,
-      hasUserData: !!userDataStr,
-      hasAuthToken: !!authTokenStr
-    });
+    // console.log(" Found in localStorage:", {
+    //   userEmail: userEmailFromStorage,
+    //   userName: userNameFromStorage,
+    //   hasUserData: !!userDataStr,
+    //   hasAuthToken: !!authTokenStr
+    // });
 
     let foundEmail = "";
     let foundName = "";
@@ -331,7 +374,7 @@ const fetchUserData = () => {
     if (!userEmail) {
       setApiError("User email not found. Please ensure you are logged in.");
       console.error(" User email is empty when trying to send OTP");
-      console.log("📊 Current user data:", { userEmail, userName });
+      // console.log("📊 Current user data:", { userEmail, userName });
       
       // Try to fetch again
       fetchUserDataForCancellation();
@@ -1358,48 +1401,103 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
               </div>
             )}
 
-             {activeTab === "receiver" && (
-    <div>
-      <h3 className="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-2">
-        <User className="w-5 h-5 text-[#7f1d1d]" />
-        Receiver Information
-      </h3>
-      
-      {/* Loading State */}
-      {isLoadingAddresses && (
-        <div className="text-center py-8">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#7f1d1d] mb-4"></div>
-          <p className="text-gray-600">Loading address information...</p>
-        </div>
-      )}
-      
-      {/* Error State */}
-      {addressError && !isLoadingAddresses && (
-        <div className="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg">
-          <AlertTriangle className="w-12 h-12 text-amber-500 mx-auto mb-3" />
-          <p className="text-gray-600 mb-4">{addressError}</p>
+            {activeTab === "receiver" && (
+  <div>
+    <h3 className="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-2">
+      <User className="w-5 h-5 text-[#7f1d1d]" />
+      Receiver Information
+    </h3>
+    
+    {/* <div className="mb-4">
+      <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
+        <span>Order ID:</span>
+        <span className="font-mono bg-gray-100 px-2 py-1 rounded">
+          {orderData.orderId}
+        </span>
+      </div>
+    </div> */}
+    
+    {/* Loading State */}
+    {isLoadingAddresses && (
+      <div className="text-center py-8">
+        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#7f1d1d] mb-4"></div>
+        <p className="text-gray-600">Loading address information...</p>
+      </div>
+    )}
+    
+    {/* Error State */}
+    {addressError && !isLoadingAddresses && (
+      <div className="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg">
+        <AlertTriangle className="w-12 h-12 text-amber-500 mx-auto mb-3" />
+        <p className="text-gray-600 mb-4">{addressError}</p>
+        <div className="space-y-2">
           <button
             onClick={fetchUserAddresses}
-            className="text-[#7f1d1d] hover:text-[#991b1b] font-medium"
+            className="block w-full py-2 bg-[#7f1d1d] text-white rounded-lg hover:bg-[#991b1b] transition-colors"
           >
-            Retry
+            Retry Loading Address
+          </button>
+          <button
+            onClick={() => {
+              // Use fallback data from original order if available
+              if (orderData.originalData?.shippingAddress) {
+                const fallbackAddress = {
+                  shippingAddress: orderData.originalData.shippingAddress
+                };
+                setSavedAddresses([fallbackAddress]);
+                setSelectedAddress(fallbackAddress);
+                setAddressError(null);
+              }
+            }}
+            className="block w-full py-2 border border-[#7f1d1d] text-[#7f1d1d] rounded-lg hover:bg-[#7f1d1d]/5 transition-colors"
+          >
+            Use Order Data
           </button>
         </div>
-      )}
-      
-      {/* No Addresses State */}
-      {!isLoadingAddresses && !addressError && savedAddresses.length === 0 && (
-        <div className="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg">
-          <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-          <p className="text-gray-600 mb-4">No shipping addresses found in your profile</p>
-          <p className="text-sm text-gray-500 mb-4">
-            Please add your shipping address in the Address Book section
-          </p>
-        </div>
-      )}
-      
-      {/* Address Display - SIMPLIFIED (no dropdown) */}
-      {!isLoadingAddresses && selectedAddress && (
+      </div>
+    )}
+    
+    {/* No Addresses State */}
+    {!isLoadingAddresses && !addressError && savedAddresses.length === 0 && (
+      <div className="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg">
+        <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+        <p className="text-gray-600 mb-4">No shipping addresses found for this order</p>
+        
+        {/* Check if we have address in original data */}
+        {orderData.originalData?.shippingAddress ? (
+          <div className="mt-4">
+            <p className="text-sm text-gray-500 mb-2">
+              Found address in order data:
+            </p>
+            <div className="bg-gray-50 p-4 rounded-lg text-left">
+              <p className="font-medium">
+                {orderData.originalData.shippingAddress.fullName}
+              </p>
+              <p className="text-sm text-gray-600">
+                {orderData.originalData.shippingAddress.phone}
+              </p>
+              <p className="text-sm text-gray-600 mt-1">
+                {orderData.originalData.shippingAddress.addressLine1}
+              </p>
+              <p className="text-sm text-gray-600">
+                {orderData.originalData.shippingAddress.city}, {orderData.originalData.shippingAddress.state} - {orderData.originalData.shippingAddress.postalCode}
+              </p>
+            </div>
+          </div>
+        ) : (
+          <button
+            onClick={fetchUserAddresses}
+            className="mt-4 text-[#7f1d1d] hover:text-[#991b1b] font-medium"
+          >
+            Try Loading Again
+          </button>
+        )}
+      </div>
+    )}
+    
+    {/* Address Display */}
+    {!isLoadingAddresses && selectedAddress && (
+      <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
             <div className="flex items-center gap-2 mb-2">
@@ -1413,16 +1511,6 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
           
           <div className="p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
             <div className="flex items-center gap-2 mb-2">
-              <Mail className="w-5 h-5 text-[#7f1d1d]" />
-              <span className="font-medium text-gray-900">Email</span>
-            </div>
-            <p className="text-gray-700">
-              {userEmail || 'Loading...'}
-            </p>
-          </div>
-          
-          <div className="p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
-            <div className="flex items-center gap-2 mb-2">
               <Phone className="w-5 h-5 text-[#7f1d1d]" />
               <span className="font-medium text-gray-900">Phone</span>
             </div>
@@ -1430,30 +1518,36 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
               {selectedAddress.shippingAddress?.phone || 'Not specified'}
             </p>
           </div>
-          
-          <div className="p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10 md:col-span-2">
-            <div className="flex items-center gap-2 mb-2">
-              <MapPin className="w-5 h-5 text-[#7f1d1d]" />
-              <span className="font-medium text-gray-900">Shipping Address</span>
-            </div>
-            <p className="text-gray-700">
-              {formatAddress(selectedAddress)}
-            </p>
-          </div>
         </div>
-      )}
-      
-      {/* Show multiple addresses option (optional) */}
-      {!isLoadingAddresses && savedAddresses.length > 1 && (
-        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-          <p className="text-sm text-blue-800">
-            <strong>Note:</strong> You have {savedAddresses.length} saved addresses. 
-            This order will be delivered to the default address shown above.
+        
+        <div className="p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
+          <div className="flex items-center gap-2 mb-2">
+            <MapPin className="w-5 h-5 text-[#7f1d1d]" />
+            <span className="font-medium text-gray-900">Shipping Address</span>
+          </div>
+          <p className="text-gray-700 whitespace-pre-line">
+            {formatAddress(selectedAddress)}
           </p>
         </div>
-      )}
-    </div>
-  )}
+        
+        {/* Additional Info if available */}
+        {(selectedAddress.shippingAddress?.email || userEmail) && (
+          <div className="p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
+            <div className="flex items-center gap-2 mb-2">
+              <Mail className="w-5 h-5 text-[#7f1d1d]" />
+              <span className="font-medium text-gray-900">Email</span>
+            </div>
+            <p className="text-gray-700">
+              {selectedAddress.shippingAddress?.email || userEmail || 'Not specified'}
+            </p>
+          </div>
+        )}
+      </div>
+    )}
+    
+   
+  </div>
+)}
           </div>
         </div>
       </div>

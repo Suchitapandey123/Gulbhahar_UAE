@@ -95,44 +95,54 @@ export const profileAPI = {
   }
 },
   
-   getUserAddressByOrderId: async (orderId) => {
+   
+ getShippingAddressByOrderId: async (orderId) => {
   try {
-    const token = localStorage.getItem("authToken");
-    if (!token) throw new Error("No auth token found");
-
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); 
-
+    if (!orderId) {
+      return {
+        success: false,
+        error: 'Order ID is required',
+        shippingAddress: null
+      };
+    }
+    
     const response = await fetch(
       `${API_BASE_URL}/get-address/get-user-address-by-orderid?orderId=${orderId}`, 
       {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
-        signal: controller.signal
+      
       }
     );
-
-    clearTimeout(timeoutId);
-
+    
     if (!response.ok) {
-      throw new Error(`Failed to fetch address: ${response.status}`);
+      const errorText = await response.text();
+      return {
+        success: false,
+        error: `API Error: ${response.status}`,
+        shippingAddress: null
+      };
     }
+    
+    const data = await response.json();
+    
+    return {
+      success: true,
+      shippingAddress: data.shippingAddress || data.address || data,
+      ...data
+    };
 
-    return await response.json(); 
+    
   } catch (error) {
-    console.error("Error fetching order address:", error);
-    
-    
-    return { 
-      success: false, 
-      data: null,
-      message: error.name === 'AbortError' ? 'Request timeout' : error.message
+    return {
+      success: false,
+      error: error.message,
+      shippingAddress: null
     };
   }
-},
+}
 
 };
 
