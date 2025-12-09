@@ -83,7 +83,7 @@ export default function AlternatingAbout() {
     >
       <div className="max-w-[1600px] mx-auto overflow-x-hidden">
         {/* Header */}
-        <motion.h1
+        <motion.h3
           variants={itemVariants}
           className="text-center mb-8 xs:mb-12 sm:mb-16 md:mb-20 lg:mb-24 xl:mb-28 2xl:mb-32"
         >
@@ -93,7 +93,7 @@ export default function AlternatingAbout() {
           <p className="text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl text-red-900 tracking-widest font-light uppercase">
             Our Story
           </p>
-        </motion.h1>
+        </motion.h3>
 
         {/* Story Sections - Alternating Layout */}
         <div className="space-y-8 xs:space-y-12 sm:space-y-16 md:space-y-20 lg:space-y-24 xl:space-y-28 2xl:space-y-32">

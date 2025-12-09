@@ -394,7 +394,7 @@ refund: {
             <RefreshCw className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h1 className="font-bold text-yellow-900 mb-2 text-lg">Gulbhahar Refund Policy</h1>
+            <h2 className="font-bold text-yellow-900 mb-2 text-lg">Gulbhahar Refund Policy</h2>
             <div className="space-y-3">
               <p className="text-sm sm:text-base text-gray-700">
                 We strive for complete customer satisfaction. However, please note our refund policy:
@@ -551,9 +551,9 @@ refund: {
               <span className="text-sm font-semibold text-red-900">Legal Information</span>
             </div>
             
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
               {currentTab.title}
-            </h1>
+            </h2>
             
             <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">
               {activeTab === "policy" && "Cookies are small text files stored on your device when visiting our website. They help us provide essential features and analyze site usage."}

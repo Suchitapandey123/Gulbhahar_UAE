@@ -15,9 +15,9 @@ export default function Culture() {
     <>
       {/* Showcase Section */}
       <section className=" max-w-[1600px] mx-auto px-1 sm:px-4 py-16">
-        <h1 className="text-3xl lg:text-5xl font-bold mb-12 text-customRed">
+        <h2 className="text-3xl lg:text-5xl font-bold mb-12 text-customRed">
           OUR SHOWCASE
-        </h1>
+        </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {["/home-page/showcase-001-optimized.webp", "/home-page/showcase-002-optimized.webp", "/home-page/showcase-003-optimized.webp", "/home-page/showcase-003-optimized.webp"].map((img, i) => (

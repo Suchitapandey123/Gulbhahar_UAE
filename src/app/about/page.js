@@ -13,15 +13,15 @@ export async function generateMetadata() {
     alternates: {
       canonical: 'https://www.gulbhahar.com/about', 
     },
-    openGraph: {
-      title: 'About | Gulbhahar | Crafting Stories of Heritage',
-     description: "Our journey began with a vision to preserve & celebrate the timeless art of hand crafts. Our master artisans, many represent the third and fourth generations of their craft, with decades of expertise to every piece.",
+    // openGraph: {
+    //   title: 'About | Gulbhahar | Crafting Stories of Heritage',
+    //  description: "Our journey began with a vision to preserve & celebrate the timeless art of hand crafts. Our master artisans, many represent the third and fourth generations of their craft, with decades of expertise to every piece.",
     
-    type: 'website',
-      locale: 'en_US',
-      url: 'https://www.gulbhahar.com/about', 
-      siteName: 'Gulbhahar', 
-    },
+    // type: 'website',
+    //   locale: 'en_US',
+    //   url: 'https://www.gulbhahar.com/about', 
+    //   siteName: 'Gulbhahar', 
+    // },
   };
 }
 

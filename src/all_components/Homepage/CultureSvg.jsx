@@ -2,7 +2,7 @@ import React from 'react';
 
 const CultureImageText = () => {
   return (
-    <h1 
+    <h3 
       className="
         font-['Anton'] 
         font-[900] 
@@ -26,7 +26,7 @@ const CultureImageText = () => {
       "
     >
       CULTURE
-    </h1>
+    </h3>
   );
 };
 

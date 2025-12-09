@@ -9,15 +9,15 @@ export async function generateMetadata() {
     alternates: {
       canonical: "https://www.gulbhahar.com/cookies-policy",
     },
-    openGraph: {
-      title: "Cookie Policy - Gulbhahar Jutti Website Privacy",
-      description:
-        "Learn more about cookies and how Gulbhahar uses cookies to elevate the user experience on our website and personalise your journey.",
-      type: "website",
-      locale: "en_US",
-      url: "https://www.gulbhahar.com/cookies-policy",
-      siteName: "Gulbhahar",
-    },
+    // openGraph: {
+    //   title: "Cookie Policy - Gulbhahar Jutti Website Privacy",
+    //   description:
+    //     "Learn more about cookies and how Gulbhahar uses cookies to elevate the user experience on our website and personalise your journey.",
+    //   type: "website",
+    //   locale: "en_US",
+    //   url: "https://www.gulbhahar.com/cookies-policy",
+    //   siteName: "Gulbhahar",
+    // },
   };
 }
 const page = () => {

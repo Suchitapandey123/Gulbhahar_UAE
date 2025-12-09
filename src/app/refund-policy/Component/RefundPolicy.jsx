@@ -316,7 +316,7 @@ delivery: {
               <Truck className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h1 className="text-lg sm:text-xl text-gray-900 font-bold">Gulbhahar Shipping Policy</h1>
+              <h2 className="text-lg sm:text-xl text-gray-900 font-bold">Gulbhahar Shipping Policy</h2>
             </div>
           </div>
           <div className="ml-13 space-y-4">
@@ -418,7 +418,7 @@ refund: {
             <RefreshCw className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h1 className="font-bold text-yellow-900 mb-2 text-lg">Returns</h1>
+            <h3 className="font-bold text-yellow-900 mb-2 text-lg">Returns</h3>
             <div className="space-y-3">
               <p className="text-sm sm:text-base text-gray-700">
               Returns take place within 7 days, and an issue has to be raised within 24 hrs of delivery.
@@ -431,7 +431,7 @@ refund: {
                 </ul>
               </div>
 
-              <h1 className="font-bold text-yellow-900 mb-2 text-lg">Return Pickup Service</h1>
+              <h2 className="font-bold text-yellow-900 mb-2 text-lg">Return Pickup Service</h2>
 
               <div className="bg-white p-3 rounded-lg border border-red-200">
                 <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base text-gray-700">
@@ -583,9 +583,9 @@ refund: {
               <span className="text-sm font-semibold text-red-900">Legal Information</span>
             </div>
             
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+            <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
               {currentTab.title}
-            </h1>
+            </h3>
             
             <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">
               {activeTab === "policy" && "Cookies are small text files stored on your device when visiting our website. They help us provide essential features and analyze site usage."}

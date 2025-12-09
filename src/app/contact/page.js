@@ -12,16 +12,16 @@ export async function generateMetadata() {
       alternates: {
       canonical: "https://www.gulbhahar.com/contact",
     },
-    openGraph: {
-     title: "Contact | Gulbhahar - Customer Support & Inquiries",
-     description:
-      "Get in touch with Gulbhahar for premium handcrafted juttis and accessories. Our customer support team is here to assist you with inquiries, orders, and business collaborations. Drop us a message today!",
+    // openGraph: {
+    //  title: "Contact | Gulbhahar - Customer Support & Inquiries",
+    //  description:
+    //   "Get in touch with Gulbhahar for premium handcrafted juttis and accessories. Our customer support team is here to assist you with inquiries, orders, and business collaborations. Drop us a message today!",
    
-        type: "website",
-      locale: "en_US",
-      url: "https://www.gulbhahar.com/contact",
-      siteName: "Gulbhahar",
-    },
+    //     type: "website",
+    //   locale: "en_US",
+    //   url: "https://www.gulbhahar.com/contact",
+    //   siteName: "Gulbhahar",
+    // },
   };
 }
 

@@ -14,15 +14,15 @@ export async function generateMetadata() {
       alternates: {
         canonical: "https://www.gulbhahar.com/collections/juttis",
       },
-      openGraph: {
-        title:"Juttis | Gulbhahar’s Limited-Edition Juttis | Only 24 Pairs per Design",
-        description:"Own a piece of heritage: Gulbhahar’s handcrafted juttis are released in just 24 pairs per design. Each Jutti comes with complimentary custom embroidery and a numbered collector’s box. Buy jutis Online.",
+      // openGraph: {
+      //   title:"Juttis | Gulbhahar’s Limited-Edition Juttis | Only 24 Pairs per Design",
+      //   description:"Own a piece of heritage: Gulbhahar’s handcrafted juttis are released in just 24 pairs per design. Each Jutti comes with complimentary custom embroidery and a numbered collector’s box. Buy jutis Online.",
      
-        type: "website",
-        locale: "en_US",
-        url: "https://www.gulbhahar.com/collections/juttis",
-        siteName: "Gulbhahar",
-      },
+      //   type: "website",
+      //   locale: "en_US",
+      //   url: "https://www.gulbhahar.com/collections/juttis",
+      //   siteName: "Gulbhahar",
+      // },
     };
 }
 

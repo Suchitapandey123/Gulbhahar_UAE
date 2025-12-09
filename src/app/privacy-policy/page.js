@@ -9,14 +9,14 @@ export async function generateMetadata() {
     alternates: {
       canonical: "https://www.gulbhahar.com/privacy-policy",
     },
-    openGraph: {
-      title:"Privacy Policy - Your Data Protection on Gulbhahar Jutti",
-      description:"Read more about how Gulbhahar protects your personal data during jutti purchases. Learn about data collection, usage and secutiry measures for safe shopping.",
-      type: "website",
-      locale: "en_US",
-      url: "https://www.gulbhahar.com/privacy-policy",
-      siteName: "Gulbhahar",
-    },
+    // openGraph: {
+    //   title:"Privacy Policy - Your Data Protection on Gulbhahar Jutti",
+    //   description:"Read more about how Gulbhahar protects your personal data during jutti purchases. Learn about data collection, usage and secutiry measures for safe shopping.",
+    //   type: "website",
+    //   locale: "en_US",
+    //   url: "https://www.gulbhahar.com/privacy-policy",
+    //   siteName: "Gulbhahar",
+    // },
   };
 }
 
