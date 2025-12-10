@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import { useEffect, useState } from "react";
 import { GulbharLoader } from "@/all_components/loader/GulbharLoader";
 import { Grid, List, SlidersHorizontal, ShoppingBag } from "lucide-react";
@@ -11,6 +12,7 @@ import { staticProductsimage } from "@/app/data/random";
 import FilterSidebar from "./FilterSidebar";
 import ProductCard from "./ProductCard";
 import DummyProductCard from "./DummyProductCard";
+import Image from "next/image";
 
 const fallbackCollections = [
   {
@@ -273,7 +275,7 @@ export default function Collection({ parentCategory = null, slug = null }) {
               <span className="text-red-900 font-semibold">Collections</span>
             </nav>
           </div>
-          
+
           {/* <div className="bg-white border-2 border-red-200 
   h-[calc(100vh-180px)] 
   md:h-[calc(100vh-160px)] 
@@ -283,7 +285,7 @@ export default function Collection({ parentCategory = null, slug = null }) {
   <FilterContent />
 </div> */}
 
- {/* <div className="bg-white border-2 border-red-200 
+          {/* <div className="bg-white border-2 border-red-200 
         w-[280px] rounded-xl shadow-lg 
         h-fit        
         max-h-[110vh] 
@@ -409,23 +411,85 @@ export default function Collection({ parentCategory = null, slug = null }) {
               }`}
           >
             {parentCategory !== null ? (
-              [1, 2, 3, 4].map((_, index) => (
-                <DummyProductCard parentCategory={parentCategory} slug={slug} key={`dummy-${index}`} viewMode={viewMode} index={index} />
-              ))
+              <>
+                {/* Dummy Products */}
+                {[1, 2, 3, 4].map((_, index) => (
+                  <DummyProductCard
+                    key={`dummy-${index}`}
+                    parentCategory={parentCategory}
+                    slug={slug}
+                    viewMode={viewMode}
+                    index={index}
+                  />
+                ))}
+
+                {/* Banner after dummy products */}
+                <div className="col-span-full w-full my-4">
+                  <Image
+                    src="/banner-image.jpg"
+                    height={500}
+                    width={1000}
+                    alt="Similar Products Below"
+                    priority
+                    className="w-full h-auto sm:h-[220px] md:h-[420px] object-cover rounded-lg shadow-lg"
+                  />
+                </div>
+
+                {/* Heading for Real Products */}
+                <div className="col-span-full w-full my-6 text-center space-y-2">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-red-900">
+                    Complete Your {parentCategory?.charAt(0).toUpperCase() + parentCategory?.slice(1)} Look With These Juttis
+                  </h2>
+                  <p className="text-sm text-gray-600">
+                    Perfect footwear to pair with your dream outfit
+                  </p>
+                </div>
+
+                {/* Real Products from paginatedCollections */}
+                {paginatedCollections.slice(0,8).map((item, index) => (
+                  <ProductCard
+                    key={item.productId || item.id || `product-${index}`}
+                    item={item}
+                    index={index}
+                    viewMode={viewMode}
+                    category={category}
+                    currentImageIndices={currentImageIndices}
+                    setCurrentImageIndices={setCurrentImageIndices}
+                    handleAddToCart={handleAddToCart}
+                    addingToCart={addingToCart}
+                  />
+                ))}
+              </>
             ) : (
-              // Show products for juttis
+              // Show real products for juttis
               paginatedCollections.map((item, index) => (
-                <ProductCard
-                  key={item.productId || item.id || index}
-                  item={item}
-                  index={index}
-                  viewMode={viewMode}
-                  category={category}
-                  currentImageIndices={currentImageIndices}
-                  setCurrentImageIndices={setCurrentImageIndices}
-                  handleAddToCart={handleAddToCart}
-                  addingToCart={addingToCart}
-                />
+                <React.Fragment key={item.productId || item.id || `product-${index}`}>
+                  {/* Banner after 4th product */}
+                  {index === 4 && (
+                    <div className="col-span-full w-full my-4">
+                      <Image
+                        src="/banner-image.jpg"
+                        height={500}
+                        width={1000}
+                        alt="design"
+                        priority
+                        className="w-full h-auto sm:h-[220px] md:h-[420px] object-cover rounded-lg"
+                      />
+                    </div>
+                  )}
+
+                  {/* Product Card */}
+                  <ProductCard
+                    item={item}
+                    index={index}
+                    viewMode={viewMode}
+                    category={category}
+                    currentImageIndices={currentImageIndices}
+                    setCurrentImageIndices={setCurrentImageIndices}
+                    handleAddToCart={handleAddToCart}
+                    addingToCart={addingToCart}
+                  />
+                </React.Fragment>
               ))
             )}
           </div>

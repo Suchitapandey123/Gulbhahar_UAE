@@ -16,6 +16,8 @@ export default function ProductCard({
 }) {
   const slideIntervalRef = useRef(null);
 
+  console.log(item)
+
   const handleMouseEnter = (productId) => {
     clearInterval(slideIntervalRef.current);
 
@@ -49,19 +51,17 @@ export default function ProductCard({
 
   const cardContent = (
     <div
-      className={`cursor-pointer relative ${
-        viewMode === "grid" ? "space-y-3" : "flex gap-4 p-4"
-      }`}
+      className={`cursor-pointer relative ${viewMode === "grid" ? "space-y-3" : "flex gap-4 p-4"
+        }`}
       onMouseEnter={() => handleMouseEnter(item.id || item.productId)}
       onMouseLeave={handleMouseLeave}
     >
       {/* Image Section */}
       <div
-        className={`relative overflow-hidden ${
-          viewMode === "grid"
-            ? "w-full aspect-[3/4]"
-            : "w-32 h-32 sm:w-40 sm:h-40 flex-shrink-0 rounded-lg"
-        }`}
+        className={`relative overflow-hidden ${viewMode === "grid"
+          ? "w-full aspect-[3/4]"
+          : "w-32 h-32 sm:w-40 sm:h-40 flex-shrink-0 rounded-lg"
+          }`}
       >
         <div className="relative w-full h-full bg-white">
           {imagesToShow.map((image, idx) => (
@@ -72,9 +72,8 @@ export default function ProductCard({
               key={idx}
               src={image || "/Image/About1.png"}
               alt={`${item.title || item.name || "Product"} - ${idx + 1}`}
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${
-                currentImageIndex === idx ? "opacity-100" : "opacity-0"
-              } ${viewMode === "list" ? "rounded-lg" : ""}`}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${currentImageIndex === idx ? "opacity-100" : "opacity-0"
+                } ${viewMode === "list" ? "rounded-lg" : ""}`}
               onError={(e) => {
                 e.currentTarget.src = "/Image/About1.png";
               }}
@@ -91,9 +90,8 @@ export default function ProductCard({
             {imagesToShow.map((_, idx) => (
               <div
                 key={idx}
-                className={`w-2 h-2 rounded-full transition-all ${
-                  currentImageIndex === idx ? "bg-red-900 w-3" : "bg-white/80"
-                }`}
+                className={`w-2 h-2 rounded-full transition-all ${currentImageIndex === idx ? "bg-red-900 w-3" : "bg-white/80"
+                  }`}
               />
             ))}
           </div>
@@ -144,14 +142,70 @@ export default function ProductCard({
 
       {/* Product Info */}
       {viewMode === "grid" ? (
-        <div className="flex flex-col justify-between h-full px-2 py-2 space-y-1">
-          <h3 className="text-xs sm:text-sm font-semibold text-gray-900 line-clamp-2">
-            {(item.name || item.title || "PRODUCT").toUpperCase()}
-          </h3>
-          <span className="text-sm font-bold text-red-600">
-            ₹{item.price?.toLocaleString?.() || String(item.price)}
-          </span>
-        </div>
+        <>
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex-1 min-w-0">
+              <h3 className="text-xs sm:text-sm font-semibold text-gray-900 line-clamp-2 leading-tight">
+                {item.name?.toUpperCase() || "PRODUCT NAME"}
+              </h3>
+            </div>
+            <div className="flex-shrink-0 text-right">
+              <div className="flex flex-col items-end gap-0.5">
+                <span className="text-sm font-bold text-red-600">
+                  ₹{item.price.toLocaleString()}
+                </span>
+                {item.originalPrice &&
+                  item.originalPrice > item.price && (
+                    <span className="text-xs text-gray-400 line-through">
+                      ₹{item.originalPrice.toLocaleString()}
+                    </span>
+                  )}
+              </div>
+            </div>
+          </div>
+          {/* Second Row - Stock Status */}
+          <div className="flex items-center justify-start text-xs">
+            <div className="flex-1">
+              {item.stock && item.stock <= 5 && item.stock > 0 ? (
+                <span className="text-red-600 font-medium">
+                  {item.stock} left
+                </span>
+              ) : (
+                <span className="text-green-600 font-medium">
+                  In Stock
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between text-xs text-gray-600">
+            {/* Sizes */}
+            <div className="flex items-center gap-1">
+              {item.sizes && item.sizes.length > 0 && (
+                <>
+                  <span className="text-gray-500">Size:</span>
+                  <div className="flex gap-1">
+                    {item.sizes.slice(0, 2).map((size, idx) => (
+                      <span
+                        key={idx}
+                        className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded text-xs font-medium"
+                      >
+                        {size}
+                      </span>
+                    ))}
+                    {item.sizes.length > 2 && (
+                      <span className="text-gray-500">
+                        +{item.sizes.length - 2}
+                      </span>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+
+        </>
+
       ) : (
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -167,11 +221,10 @@ export default function ProductCard({
 
   return (
     <div
-      className={`group w-full ${
-        viewMode === "list"
-          ? "bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
-          : ""
-      }`}
+      className={`group w-full ${viewMode === "list"
+        ? "bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+        : ""
+        }`}
     >
       {category !== "sarees" ? (
         <Link href={`/products/${item.productId || item.id}`}>
