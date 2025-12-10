@@ -9,14 +9,14 @@ export async function generateMetadata() {
     alternates: {
       canonical: "https://www.gulbhahar.com/delivery-shipping-policy",
     },
-    openGraph: {
-      title:"Delivery & Shipping Policy - Gulbhahar Jutti Orders",
-  description:"Learn about Gulbhahar's delivery options, shipping charges, and timelines for jutti orders. Fast nationwide delivery with secure packaging for your footwear.",
-      type: "website",
-      locale: "en_US",
-      url: "https://www.gulbhahar.com/delivery-shipping-policy",
-      siteName: "Gulbhahar",
-    },
+  //   openGraph: {
+  //     title:"Delivery & Shipping Policy - Gulbhahar Jutti Orders",
+  // description:"Learn about Gulbhahar's delivery options, shipping charges, and timelines for jutti orders. Fast nationwide delivery with secure packaging for your footwear.",
+  //     type: "website",
+  //     locale: "en_US",
+  //     url: "https://www.gulbhahar.com/delivery-shipping-policy",
+  //     siteName: "Gulbhahar",
+  //   },
   };
 }
 const page = () => {

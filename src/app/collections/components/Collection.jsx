@@ -247,7 +247,7 @@ export default function Collection({ parentCategory = null, slug = null }) {
 
   if (error) {
     return (
-      <div className="min-h-screen mt-16 flex items-center justify-center">
+      <div className=" mt-16 flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-900 font-semibold">
             Error loading products: {error.message}
@@ -258,7 +258,7 @@ export default function Collection({ parentCategory = null, slug = null }) {
   }
 
   return (
-    <div className="min-h-screen mt-20 lg:mt-24 pt-4">
+    <div className=" mt-20 lg:mt-24 pt-4">
       <ToastContainer />
 
       <div className="max-w-[1600px] ml-2 mx-auto flex flex-col lg:flex-row">
@@ -273,6 +273,23 @@ export default function Collection({ parentCategory = null, slug = null }) {
               <span className="text-red-900 font-semibold">Collections</span>
             </nav>
           </div>
+          
+          {/* <div className="bg-white border-2 border-red-200 
+  h-[calc(100vh-180px)] 
+  md:h-[calc(100vh-160px)] 
+  lg:h-[calc(100vh-150px)] 
+  xl:h-[calc(100vh-140px)]
+  w-[280px] rounded-xl shadow-lg overflow-y-auto">
+  <FilterContent />
+</div> */}
+
+ {/* <div className="bg-white border-2 border-red-200 
+        w-[280px] rounded-xl shadow-lg 
+        h-fit        
+        max-h-[110vh] 
+        overflow-y-auto">
+    <FilterContent />
+  </div> */}
 
           <div className=" bg-white border-2 border-red-200 h-[calc(100vh-140px)] w-[280px] rounded-xl shadow-lg overflow-y-auto">
             <FilterSidebar

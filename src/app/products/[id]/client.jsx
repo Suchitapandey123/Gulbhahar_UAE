@@ -655,9 +655,9 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
               <div className="lg:pl-16 lg:hidden block py-2">
                 {/* Product Title */}
                 <div className="mb-6">
-                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-gray-900 mb-2">
+                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-gray-900 mb-2">
                     {product.name}
-                  </h1>
+                  </h2>
                   <p className="text-gray-600">
                     {product.title || product.category}
                   </p>

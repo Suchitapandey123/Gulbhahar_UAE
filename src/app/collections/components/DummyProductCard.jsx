@@ -131,9 +131,9 @@ export default function DummyProductCard({
             />
 
             {/* "Coming Soon" Overlay */}
-            <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
               <div className="text-center">
-                <p className="text-white font-bold  text-4xl mb-1">SOLD OUT</p>
+                {/* <p className="text-white font-bold  text-4xl mb-1">SOLD OUT</p> */}
                 {/* <p className="text-white/90 text-xs">Stay Tuned!</p> */}
               </div>
             </div>

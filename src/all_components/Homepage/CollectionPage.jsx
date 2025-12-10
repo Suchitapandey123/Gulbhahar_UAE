@@ -89,9 +89,9 @@ export default function CollectionsPage({collections}) {
     >
       {/* Header Section - No animations */}
       <div className="flex justify-between items-center mb-12">
-        <h1 className="text-xl lg:text-5xl sm:text-4xl font-bold text-customRed font-raleway">
+        <h2 className="text-xl lg:text-5xl sm:text-4xl font-bold text-customRed font-raleway">
           COLLECTIONS
-        </h1>
+        </h2>
         
         <Link href="/collections">
           <button className="flex items-center text-nowrap lg:gap-3 text-gray-900 hover:text-customRed text-sm sm:text-xl lg:text-2xl transition-colors font-raleway tracking-wider lg:w-[215] lg:h-[33px] uppercase group">

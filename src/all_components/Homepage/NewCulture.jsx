@@ -173,7 +173,7 @@ const LuxuryCulture = () => {
           className="text-center mb-12 md:mb-20"
         >
 
-          <motion.h1 
+          <motion.h2 
             variants={titleVariants}
             className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-light bg-gradient-to-r from-amber-800 via-orange-700 to-red-700 bg-clip-text text-transparent mb-6 md:mb-8 tracking-wide"
           >
@@ -187,7 +187,7 @@ const LuxuryCulture = () => {
                 className="w-full max-w-7xl h-auto drop-shadow-2xl"
               />
             </div>
-          </motion.h1>
+          </motion.h2>
           
           <motion.div 
             variants={statsVariants}

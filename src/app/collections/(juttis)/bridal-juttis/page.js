@@ -15,15 +15,15 @@ export async function generateMetadata() {
       alternates: {
         canonical: "https://www.gulbhahar.com/collections/bridal-juttis",
       },
-      openGraph: {
-        title:"Bridal Juttis | Gulbhahar’s Limited‑Edition Bridal/ Wedding Juttis | Only 24 Pairs per Design",
-       description:"Step into your wedding day in luxury .Gulbhahar’s limited‑edition bridal jutis are handcrafted and released in only 24 pairs per design. Each pair features elegant detailing, free custom embroidery and comes in a numbered collector’s box.",
+      // openGraph: {
+      //   title:"Bridal Juttis | Gulbhahar’s Limited‑Edition Bridal/ Wedding Juttis | Only 24 Pairs per Design",
+      //  description:"Step into your wedding day in luxury .Gulbhahar’s limited‑edition bridal jutis are handcrafted and released in only 24 pairs per design. Each pair features elegant detailing, free custom embroidery and comes in a numbered collector’s box.",
       
-        type: "website",
-        locale: "en_US",
-        url: "https://www.gulbhahar.com/collections/bridal-juttis",
-        siteName: "Gulbhahar",
-      },
+      //   type: "website",
+      //   locale: "en_US",
+      //   url: "https://www.gulbhahar.com/collections/bridal-juttis",
+      //   siteName: "Gulbhahar",
+      // },
     };
 }
 

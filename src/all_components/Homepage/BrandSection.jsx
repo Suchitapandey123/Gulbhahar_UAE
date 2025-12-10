@@ -119,7 +119,7 @@ const BrandSection = () => {
             className="text-center"
             variants={brandNameVariants}
           >
-            <h1 className="text-[30px]  xs:text-4xl sm:text-7xl md:text-[112px] lg:text-[150px] xl:text-[11rem] text-nowrap tracking-wider text-[#8B0000] font-light leading-tight">
+            <h2 className="text-[30px]  xs:text-4xl sm:text-7xl md:text-[112px] lg:text-[150px] xl:text-[11rem] text-nowrap tracking-wider text-[#8B0000] font-light leading-tight">
               <span  className='' style={{ fontFamily: "'Old Standard TT', serif" }}>
                 {brandName.split('').map((letter, index) => (
                   <motion.span
@@ -132,7 +132,7 @@ const BrandSection = () => {
                   </motion.span>
                 ))}
               </span>
-            </h1>
+            </h2>
           </motion.div>
 
           {/* Three Taglines with enhanced responsive layout */}

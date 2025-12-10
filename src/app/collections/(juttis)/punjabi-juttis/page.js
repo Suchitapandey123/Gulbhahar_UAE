@@ -15,15 +15,15 @@ export async function generateMetadata() {
       alternates: {
         canonical: "https://www.gulbhahar.com/collections/punjabi-juttis",
       },
-      openGraph: {
-        title:"Punjabi Juttis | Gulbhahar’s Limited‑Edition Punjabi Juttis | Only 24 Pairs per Design",
-        description:"Own a piece of heritage: Gulbhahar’s handcrafted Punjabi juttis/ jutis are released in just 24 pairs per design. Each Panjabi Jutti comes with complimentary custom embroidery and a numbered collector’s box.",
+      // openGraph: {
+      //   title:"Punjabi Juttis | Gulbhahar’s Limited‑Edition Punjabi Juttis | Only 24 Pairs per Design",
+      //   description:"Own a piece of heritage: Gulbhahar’s handcrafted Punjabi juttis/ jutis are released in just 24 pairs per design. Each Panjabi Jutti comes with complimentary custom embroidery and a numbered collector’s box.",
      
-        type: "website",
-        locale: "en_US",
-        url: "https://www.gulbhahar.com/collections/punjabi-juttis",
-        siteName: "Gulbhahar",
-      },
+      //   type: "website",
+      //   locale: "en_US",
+      //   url: "https://www.gulbhahar.com/collections/punjabi-juttis",
+      //   siteName: "Gulbhahar",
+      // },
     };
 }
 

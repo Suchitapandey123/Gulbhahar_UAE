@@ -15,14 +15,14 @@ export async function generateMetadata() {
       alternates: {
         canonical: "https://www.gulbhahar.com/collections/punjabi-juttis-for-ladies",
       },
-      openGraph: {
-         title:"Punjabi Juttis for ladies | Gulbhahar’s Limited Punjabi Jutis for Ladies| Only 24 Pairs ",
-       description:"Gulbhahar’s exclusive Punjabi juttis for ladies, limited to just 24 pairs per design. Each pair is hand stitched by master artisans, blending tradition with modern comfort. Make a statement with personalized elegance.",  
-        type: "website",
-        locale: "en_US",
-        url: "https://www.gulbhahar.com/collections/punjabi-juttis-for-ladies",
-        siteName: "Gulbhahar",
-      },
+      // openGraph: {
+      //    title:"Punjabi Juttis for ladies | Gulbhahar’s Limited Punjabi Jutis for Ladies| Only 24 Pairs ",
+      //  description:"Gulbhahar’s exclusive Punjabi juttis for ladies, limited to just 24 pairs per design. Each pair is hand stitched by master artisans, blending tradition with modern comfort. Make a statement with personalized elegance.",  
+      //   type: "website",
+      //   locale: "en_US",
+      //   url: "https://www.gulbhahar.com/collections/punjabi-juttis-for-ladies",
+      //   siteName: "Gulbhahar",
+      // },
     };
 }
 

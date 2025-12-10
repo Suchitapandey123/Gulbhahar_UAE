@@ -370,7 +370,7 @@ const ContentSection = ({ page: initialPage }) => {
               <div className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
                 <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
                   <span className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
-                    7div
+                    7
                   </span>
                   <span className="leading-tight">{page.parsedAdditionalDetails[6].subTitle1}</span>
                 </div>

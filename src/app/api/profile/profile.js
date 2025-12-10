@@ -1,5 +1,6 @@
 const API_BASE_URL = 'https://api.gulbhahar.com/api';
 
+
 export const profileAPI = {
  
   getUserProfile: async () => {
@@ -92,8 +93,60 @@ export const profileAPI = {
     console.error("Error fetching addresses:", error);
     return { success: false, data: [] };
   }
+},
+  
+   
+ getShippingAddressByOrderId: async (orderId) => {
+  try {
+    if (!orderId) {
+      return {
+        success: false,
+        error: 'Order ID is required',
+        shippingAddress: null
+      };
+    }
+    
+    const response = await fetch(
+      `${API_BASE_URL}/get-address/get-user-address-by-orderid?orderId=${orderId}`, 
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      
+      }
+    );
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      return {
+        success: false,
+        error: `API Error: ${response.status}`,
+        shippingAddress: null
+      };
+    }
+    
+    const data = await response.json();
+    
+    return {
+      success: true,
+      shippingAddress: data.shippingAddress || data.address || data,
+      ...data
+    };
+
+    
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message,
+      shippingAddress: null
+    };
+  }
 }
 
 };
+
+
+
 
 export default profileAPI;

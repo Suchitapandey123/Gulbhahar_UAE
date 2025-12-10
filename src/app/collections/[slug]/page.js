@@ -72,16 +72,16 @@ export async function generateMetadata({ params: rawParams }) {
         canonical: `https://www.gulbhahar.com/collections/${slug}`,
       },
 
-      openGraph: {
-        title: page.metaTitle || `${slug} | Gulbhahar`,
-        description:
-          page.metaDescription ||
-          `Explore curated collections of ${slug} at Gulbhahar.`,
-        type: "website",
-        url: `https://www.gulbhahar.com/collections/${slug}`,
-        siteName: "Gulbhahar",
-        locale: "en_US",
-      },
+      // openGraph: {
+      //   title: page.metaTitle || `${slug} | Gulbhahar`,
+      //   description:
+      //     page.metaDescription ||
+      //     `Explore curated collections of ${slug} at Gulbhahar.`,
+      //   type: "website",
+      //   url: `https://www.gulbhahar.com/collections/${slug}`,
+      //   siteName: "Gulbhahar",
+      //   locale: "en_US",
+      // },
     };
   } catch (err) {
     return {

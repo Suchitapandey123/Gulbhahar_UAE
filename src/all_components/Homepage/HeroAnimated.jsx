@@ -344,12 +344,12 @@ export default function ModernHeroAnimated() {
                     variants={textVariants}
                     className="space-y-2 sm:space-y-3 md:space-y-4"
                   >
-                    <h1 
+                    <h2 
                       style={{ fontFamily: "oldstandard" }} 
                       className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-light tracking-tighter text-white leading-[0.9] sm:leading-tight"
                     >
                       {currentSlide.title}
-                    </h1>
+                    </h2>
                     <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-light tracking-wide text-white/80">
                       {currentSlide.subtitle}
                     </h2>
