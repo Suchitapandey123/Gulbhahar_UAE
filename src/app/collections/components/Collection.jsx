@@ -198,6 +198,19 @@ export default function Collection({ category = null }) {
           `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`,
           "success"
         );
+
+        // 🔥 ADD FACEBOOK PIXEL TRACKING HERE
+      if (window.fbq) {
+      
+          fbq("track", "AddToCart", {
+            content_ids: [item.productId || item.id],
+            content_type: "product",
+            content_name: item.name || "Product",
+            content_category: category || item.season || "Juttis", 
+            value: item.price,
+            currency: "INR",
+          });
+      }
         // console.log('Item added successfully');
         // showToast(
         //   `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`,
@@ -1029,6 +1042,8 @@ export default function Collection({ category = null }) {
                                             % OFF
                                           </span>
                                         )}
+
+                                        
 
                                       {/* Hover Add to Cart Button - Only in grid view */}
                                       {viewMode === "grid" && (

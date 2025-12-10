@@ -54,14 +54,14 @@ export async function generateMetadata({ params: rawParams }) {
       alternates: {
         canonical: `https://www.gulbhahar.com/collections/${slug}`,
       },
-      openGraph: {
-        title: `Product ${slug} | Gulbhahar`,
-        description: `Explore premium handcrafted product ${slug} at Gulbhahar.`,
-        type: "product",
-        url: `https://www.gulbhahar.com/collections/${slug}`,
-        siteName: "Gulbhahar",
-        locale: "en_US",
-      },
+      // openGraph: {
+      //   title: `Product ${slug} | Gulbhahar`,
+      //   description: `Explore premium handcrafted product ${slug} at Gulbhahar.`,
+      //   type: "product",
+      //   url: `https://www.gulbhahar.com/collections/${slug}`,
+      //   siteName: "Gulbhahar",
+      //   locale: "en_US",
+      // },
     };
   }
 
