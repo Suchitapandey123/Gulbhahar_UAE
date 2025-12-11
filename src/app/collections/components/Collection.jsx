@@ -227,41 +227,6 @@ export default function Collection({ parentCategory = null, slug = null }) {
     setCurrentImageIndices(initialIndices);
   }, [collections.length]);
 
-  // Handle add to cart
-  const handleAddToCart = async (e, item) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    try {
-      const selectedColor =
-        item.colors && item.colors.length > 0 ? item.colors[0] : "default";
-      const selectedSize =
-        item.sizes && item.sizes.length > 0 ? item.sizes[0] : "default";
-
-      const cartItemWithVariants = {
-        ...item,
-        id: item.productId || item.id,
-        productId: item.productId || item.id,
-        selectedColor,
-        selectedSize,
-        selectedColorIndex: 0,
-        addedAt: new Date().toISOString(),
-      };
-
-      const result = await addToCart(cartItemWithVariants);
-
-      if (result.success) {
-        toast.success(
-          `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`,
-          "success"
-        );
-      } else {
-        toast.error("Failed to add item to cart. Please try again.", "error");
-      }
-    } catch (error) {
-      toast.error("Failed to add item to cart. Please try again.", "error");
-    }
-  };
 
   // Extract unique sizes
   const sizes = [
