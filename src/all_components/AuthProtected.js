@@ -15,7 +15,7 @@ export default function AuthProtected({ children }) {
     }
   }, [isAuthenticated, isLoading, router]);
 
-  // Show loading state while checking authentication
+  // Show loading state while checking authenticationccvlajfbhdfsokfhsdokbhfoivhfodcx
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
