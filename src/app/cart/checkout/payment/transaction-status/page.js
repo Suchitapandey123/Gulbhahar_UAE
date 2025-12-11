@@ -26,36 +26,95 @@ const TransactionStatusContent = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [backendSent, setBackendSent] = useState(false);
   const [backendProcessing, setBackendProcessing] = useState(false);
-  const {
-      clearCart,
-
-    } = useCart();
+  const { clearCart } = useCart();
   
+  // User data state for Meta Pixel
+  const [userData, setUserData] = useState({
+    email: null,
+    firstName: null,
+    lastName: null,
+    phone: null
+  });
+
   // 🎯 Refs to prevent duplicate API calls
   const apiCallInProgress = useRef(false);
   const apiCallCompleted = useRef(false);
   const processedTransactionId = useRef(null);
+  
+  // 🆕 Local user data ref (immediate access ke liye)
+  const userDataRef = useRef({
+    email: null,
+    firstName: null,
+    lastName: null,
+    phone: null
+  });
 
   useEffect(() => {
     // Get parameters from URL
     const status = searchParams.get("status");
     const orderId = searchParams.get("orderId") || searchParams.get("order_id");
     const amount = searchParams.get("amount");
-    const trackingId =
-      searchParams.get("transactionId");
+    const trackingId = searchParams.get("transactionId");
     const error = searchParams.get("error");
     const bankRefNo = searchParams.get("bank_ref_no");
     const statusMessage = searchParams.get("status_message");
     const method = searchParams.get("payment_method");
 
-    // console.log("Status" ,status)
-    // console.log("orderId" , orderId) 
-    // console.log("transactionId" , trackingId) 
-    // console.log("payment_method" , method) 
+    // 1. Pehle localStorage se data extract karo
+    const savedCheckoutData = localStorage.getItem("checkoutFormData");
+    let checkoutData = {};
+    let extractedUserData = {
+      email: null,
+      firstName: null,
+      lastName: null,
+      phone: null
+    };
+    
+    if (savedCheckoutData) {
+      try {
+        checkoutData = JSON.parse(savedCheckoutData);
+        console.log("📦 Checkout data from localStorage:", checkoutData);
+        
+        // 🔥 User data extract karo Meta Pixel ke liye
+        if (checkoutData.email) {
+          const email = checkoutData.email.trim().toLowerCase();
+          let firstName = null;
+          let lastName = null;
+          let phone = checkoutData.phone || null;
 
-    //  Prevent processing the same transaction multiple times
+          // Full name se first aur last name extract karo
+          if (checkoutData.fullName) {
+            const nameParts = checkoutData.fullName.trim().split(' ');
+            if (nameParts[0]) {
+              firstName = nameParts[0].replace(/[^a-zA-Z]/g, '').toLowerCase();
+            }
+            if (nameParts.length > 1) {
+              lastName = nameParts.slice(1).join(' ').replace(/[^a-zA-Z]/g, '').toLowerCase();
+            }
+          }
+          
+          extractedUserData = {
+            email,
+            firstName,
+            lastName,
+            phone
+          };
+          
+          // 🆕 REF mein bhi save karo for immediate access
+          userDataRef.current = extractedUserData;
+
+          console.log("👤 User data extracted for Meta Pixel:", extractedUserData);
+        }
+      } catch (e) {
+        console.warn("Could not parse checkout data from localStorage:", e);
+      }
+    }
+
+    // Set user data state (async hota hai)
+    setUserData(extractedUserData);
+
+    // Prevent processing the same transaction multiple times
     if (trackingId && processedTransactionId.current === trackingId) {
-      // console.log("⏭️ Transaction already processed, skipping...", trackingId);
       setIsLoading(false);
       setTimeout(() => setShowContent(true), 500);
       return;
@@ -92,8 +151,8 @@ const TransactionStatusContent = () => {
       // 🎯 Mark this transaction as processed
       processedTransactionId.current = trackingId;
 
-      // Send complete checkout data to backend (only for successful payments)
-      sendCompleteOrderDataToBackend(transactionData);
+      // 🆕 User data directly pass karo (extractedUserData se)
+      sendCompleteOrderDataToBackend(transactionData, checkoutData, extractedUserData);
     } else {
       console.warn("❌ Missing required parameters:", {
         status,
@@ -108,32 +167,25 @@ const TransactionStatusContent = () => {
       setShowContent(true);
       setIsLoading(false);
     }, 500);
-  }, []); //  Empty dependency array - only run once on mount
+  }, []);
 
   // 🛡️ Enhanced function to prevent duplicate API calls
-  const sendCompleteOrderDataToBackend = async (transactionData) => {
-    // 🎯 Multiple protection layers
+  const sendCompleteOrderDataToBackend = async (transactionData, checkoutData, userDataParam) => {
     if (apiCallInProgress.current) {
-      // console.log("⏭️ API call already in progress, skipping...");
       return;
     }
 
     if (apiCallCompleted.current) {
-      // console.log("⏭️ API call already completed, skipping...");
       return;
     }
 
     if (backendSent) {
-      // console.log("⏭️ Backend data already sent, skipping...");
       return;
     }
 
     // 🎯 ONLY send data to backend if payment is successful
     if (transactionData.status !== "success") {
-      // console.log("❌ Payment not successful, NOT sending data to backend");
-      // console.log("📊 Payment Status:", transactionData.status);
-      // console.log("💳 Payment Method:", transactionData.paymentMethod);
-      apiCallCompleted.current = true; // Mark as completed (no retry needed)
+      apiCallCompleted.current = true;
       return;
     }
 
@@ -141,50 +193,154 @@ const TransactionStatusContent = () => {
     apiCallInProgress.current = true;
     setBackendProcessing(true);
 
-    // console.log(
-    //   "✅ Payment successful! Sending complete order data to backend..."
-    // );
-    // console.log("💳 Payment Method:", transactionData.paymentMethod);
+    console.log("✅ Payment successful! Sending complete order data to backend...");
+    console.log("💳 Payment Method:", transactionData.paymentMethod);
+    
+    // 🆕 User data source decide karo (parameter ya ref)
+    const finalUserData = userDataParam || userDataRef.current || userData;
+    console.log("👤 Final User Data for Pixel:", finalUserData);
 
     try {
-      // Get checkout data from localStorage
-      const savedCheckoutData = localStorage.getItem("checkoutFormData");
-      let checkoutData = {};
-
-      if (savedCheckoutData) {
-        try {
-          checkoutData = JSON.parse(savedCheckoutData);
-        } catch (e) {
-          console.warn("Could not parse checkout data from localStorage");
-        }
+     // 🔥 CORRECTED Meta Pixel Purchase event with PROPER user data format
+if (typeof window !== "undefined" && window.fbq) {
+  console.log("🛒 Starting Meta Pixel Purchase event with user data...");
+  
+  // Get cart items
+  let cartItems = [];
+  let totalValue = parseFloat(transactionData.amount) || 0;
+  
+  if (checkoutData?.orderItems && Array.isArray(checkoutData.orderItems)) {
+    cartItems = checkoutData.orderItems;
+    console.log("📦 Cart items:", cartItems);
+  }
+  
+  // Prepare product data
+  const contentIds = [];
+  const contents = [];
+  
+  if (cartItems && cartItems.length > 0) {
+    cartItems.forEach((item) => {
+      if (item && item.id) {
+        contentIds.push(item.id.toString());
+        contents.push({
+          id: item.id.toString(),
+          quantity: item.quantity || 1,
+          item_price: item.price || 0,
+        });
       }
+    });
+  }
+  
+  // 🎯 CRITICAL: Prepare user data in EXACT Facebook format
+  const userDataForFB = {};
+  
+  // 1. EMAIL (must be lowercase and trimmed)
+  if (finalUserData.email) {
+    const email = finalUserData.email.toLowerCase().trim();
+    if (email.includes('@')) {
+      userDataForFB.em = email;
+      console.log("📧 Email prepared:", userDataForFB.em);
+    }
+  }
+  
+  // 2. FIRST NAME (must be lowercase)
+  if (finalUserData.firstName) {
+    userDataForFB.fn = finalUserData.firstName.toLowerCase().trim();
+    console.log("👤 First name prepared:", userDataForFB.fn);
+  }
+  
+  // 3. PHONE (must be in E.164 format: country code + number)
+  if (finalUserData.phone) {
+    const phone = finalUserData.phone.replace(/\D/g, ''); // Remove all non-digits
+    
+    // Indian phone number handling
+    if (phone.length === 10) {
+      userDataForFB.ph = '91' + phone; // India country code + 10-digit number
+      console.log("📱 Phone prepared:", userDataForFB.ph);
+    } else if (phone.length === 12 && phone.startsWith('91')) {
+      userDataForFB.ph = phone;
+      console.log("📱 Phone prepared:", userDataForFB.ph);
+    } else {
+      console.log("⚠️ Phone format not recognized:", phone);
+    }
+  }
+  
+  // 4. LAST NAME (if available)
+  if (finalUserData.lastName) {
+    userDataForFB.ln = finalUserData.lastName.toLowerCase().trim();
+    console.log("👤 Last name prepared:", userDataForFB.ln);
+  }
+  
+  // 5. COUNTRY (from checkoutData)
+  if (checkoutData.country) {
+    userDataForFB.country = checkoutData.country.toLowerCase().trim();
+    console.log("🌍 Country prepared:", userDataForFB.country);
+  }
+  
+  // 6. CITY (if available)
+  if (checkoutData.city) {
+    userDataForFB.ct = checkoutData.city.toLowerCase().trim();
+    console.log("🏙️ City prepared:", userDataForFB.ct);
+  }
+  
+  console.log("🎯 FINAL User data for Pixel:", JSON.stringify(userDataForFB, null, 2));
+  console.log("📊 Product data:", {
+    content_ids: contentIds,
+    value: totalValue,
+    num_items: cartItems.length || 1
+  });
+  
+  // 🚀 METHOD 1: Send Purchase event with ALL parameters
+  try {
+    console.log('🚀 Sending Purchase event...');
+    
+    const purchaseParams = {
+      
+      ...userDataForFB,
+      
+      value: totalValue,
+      currency: "INR",
+      content_ids: contentIds,
+      contents: contents,
+      content_type: "product",
+      transaction_id: transactionData.trackingId,
+      num_items: cartItems.length || 1,
+      payment_method: transactionData.paymentMethod,
+      
+      content_name: "Purchase",
+      content_category: "Fashion",
+      status: "completed",
+    };
+    
+    // Debug log to see EXACTLY what's being sent
+   console.log("📤 Purchase event parameters being sent:", JSON.stringify(purchaseParams, null, 2));
+    
+    // Send Purchase event
+    fbq("track", "Purchase", purchaseParams);
+    console.log("✅ Purchase event sent!");
+    
+  } catch (error) {
+    console.error("❌ Error in Purchase event:", error);
+  }
+  
+  setTimeout(() => {
+    if (Object.keys(userDataForFB).length > 0) {
+      console.log('🔄 Sending CompleteRegistration event...');
+      
+      const registrationParams = {
+        ...userDataForFB,
+      
+        status: 'purchase_completed',
+        registration_method: transactionData.paymentMethod === "cod" ? "COD" : "Online",
+        currency: "INR",
+        value: totalValue,
+      };
+      
+     
+    }
+  }, 1000);
+}
 
-      // 🔥 Fire Meta Pixel Purchase event
-        if (typeof window !== "undefined" && window.fbq) {
-          const cartItems = checkoutData?.cartItems || [];
-
-          window.fbq("track", "Purchase", {
-            content_ids: cartItems.map((item) => item.id?.toString()),
-            contents: cartItems.map((item) => ({
-              id: item.id?.toString(),
-              quantity: item.quantity || 1,
-              item_price: item.price || 0,
-            })),
-            content_type: "product",
-            value: parseFloat(transactionData.amount) || 0,
-            currency: "INR",
-            transaction_id: transactionData.trackingId,
-            payment_method: transactionData.paymentMethod,
-          });
-
-          console.log("🔥 Pixel Purchase event sent", {
-            orderId: transactionData.orderId,
-            amount: transactionData.amount,
-            items: cartItems,
-          });
-        }
-
-      // Generate unique IDs if not available
       const generateSessionId = () => {
         const timestamp = Date.now();
         const random = Math.random().toString(36).substring(2, 8);
@@ -225,7 +381,6 @@ const TransactionStatusContent = () => {
         return cleanPhone;
       };
 
-      // Helper function to get product images
       const getProductImages = (item) => {
         if (!item) return [];
 
@@ -288,7 +443,7 @@ const TransactionStatusContent = () => {
         }
       };
 
-      // Prepare complete order data
+ 
       const completeOrderData = {
         tracking_id: transactionData.trackingId,
         timestamp: new Date().toISOString(),

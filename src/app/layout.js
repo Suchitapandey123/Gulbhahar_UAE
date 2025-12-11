@@ -130,6 +130,8 @@ export default function RootLayout({ children }) {
             }}
           />
 
+          
+
           {/* Facebook Pixel */}
           <Script
             id="facebook-pixel"
@@ -152,12 +154,12 @@ export default function RootLayout({ children }) {
 
           {/* Facebook Pixel Noscript */}
           <noscript>
-            <img 
+            <img
               height="1" 
               width="1" 
               style={{display: 'none'}}
               src="https://www.facebook.com/tr?id=1705895113580123&ev=PageView&noscript=1"
-              alt=""
+              alt="facebook image"
             />
           </noscript>
 

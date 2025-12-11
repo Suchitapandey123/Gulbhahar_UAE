@@ -305,6 +305,15 @@ export default function CheckoutComponent() {
     postalCode: "",
   });
    
+     
+  useEffect(() => {
+  console.log("🔄 formData updated:", {
+    email: formData.email,
+    fullName: formData.fullName,
+    allFields: formData
+  });
+}, [formData]);
+
 
    useEffect(() => {
     if (cart && cart.length > 0) {
@@ -645,6 +654,63 @@ export default function CheckoutComponent() {
     try {
       setIsProcessing(true);
 
+       
+    // 🔥 IMPORTANT: Calculate totals INSIDE the function
+    const calculateTotals = () => {
+      const subtotal =
+        cart && Array.isArray(cart)
+          ? cart.reduce((sum, item) => {
+              if (
+                !item ||
+                typeof item.price !== "number" ||
+                typeof item.quantity !== "number"
+              ) {
+                return sum;
+              }
+              return sum + item.price * item.quantity;
+            }, 0)
+          : 0;
+
+      const isFreeShippingEligible = subtotal >= 5000;
+      
+      // Calculate shipping cost
+      let shipping = shippingOptions[shippingMethod]?.price || 0;
+      if (isFreeShippingEligible && shippingMethod === "free") {
+        shipping = 0;
+      }
+
+      // Add ODA surcharge if applicable
+      const odaSurcharge = postalCodeValidation.deliveryInfo?.isODA ? 50 : 0;
+      shipping += odaSurcharge;
+
+      const total = subtotal + shipping;
+
+      return { subtotal, shipping, total };
+    };
+
+    // Get current totals
+    const { subtotal, shipping, total } = calculateTotals();
+
+    // 🔥 ADD META PIXEL TRACKING
+    if (typeof window !== 'undefined' && window.fbq && cart && cart.length > 0) {
+      console.log('📊 Meta Pixel - Tracking Continue to Payment click');
+      
+      // Extract product IDs from cart
+      const contentIds = cart.map(item => item.productId || item.id).filter(Boolean);
+      
+      // Track InitiateCheckout event
+      fbq('track', 'InitiateCheckout', {
+        content_ids: contentIds,
+        content_type: 'product',
+        content_name: 'Checkout Process',
+        value: total,
+        currency: 'INR',
+        num_items: cart.reduce((sum, item) => sum + (item.quantity || 1), 0),
+      });
+      
+      console.log('✅ Meta Pixel - InitiateCheckout event sent');
+    }
+
       // Validate all required fields
       const requiredFields = ["fullName", "email", "phone"];
       const validationErrors = [];
@@ -797,7 +863,17 @@ export default function CheckoutComponent() {
           postalCode: postalCodeValidation.isValid === true,
         },
       };
-
+       
+      console.log("💾 DEBUG - checkoutData object:", {
+  email: checkoutData.email,
+  emailExists: 'email' in checkoutData,
+  fullName: checkoutData.fullName,
+  fullNameExists: 'fullName' in checkoutData,
+  formDataKeys: Object.keys(formData),
+  formDataEmail: formData.email,
+  formDataFullName: formData.fullName,
+  allCheckoutDataKeys: Object.keys(checkoutData)
+});
       // console.log(
       //   "💾 Saving validated checkout data to localStorage:",
       //   checkoutData
@@ -811,9 +887,15 @@ export default function CheckoutComponent() {
         // Verify the data was saved correctly
         const savedData = localStorage.getItem("checkoutFormData");
         if (savedData) {
-          const parsedSavedData = JSON.parse(savedData);
-          // console.log("✅ Verified saved data:", parsedSavedData);
-        }
+    const parsedSavedData = JSON.parse(savedData);
+    console.log("✅ Verified saved data structure:", {
+      hasEmail: 'email' in parsedSavedData,
+      email: parsedSavedData.email,
+      hasFullName: 'fullName' in parsedSavedData,
+      fullName: parsedSavedData.fullName,
+      allKeys: Object.keys(parsedSavedData)
+    });
+  }
       } catch (error) {
         // console.error("❌ Error saving checkout data:", error);
         toast.error(" Error saving checkout data. Please try again.");

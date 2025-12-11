@@ -118,6 +118,75 @@ export default function Collection({ parentCategory = null, slug = null }) {
     }));
   };
 
+  //  REPLACE OLD handleAddToCart WITH THIS NEW ONE:
+
+  const handleAddToCart = async (e, item) => {
+    // console.log('🛒 Collections - Adding item to cart:', item);
+    e.preventDefault();
+    e.stopPropagation();
+
+    try {
+      // Auto-select first available options
+      const selectedColor =
+        item.colors && item.colors.length > 0 ? item.colors[0] : "default";
+      const selectedSize =
+        item.sizes && item.sizes.length > 0 ? item.sizes[0] : "default";
+
+      // console.log(' Auto-selected variants:', { selectedColor, selectedSize });
+
+      //  STANDARDIZED cart item structure
+      const cartItemWithVariants = {
+        ...item,
+        // Use productId consistently
+        id: item.productId || item.id,
+        productId: item.productId || item.id,
+        selectedColor,
+        selectedSize,
+        selectedColorIndex: 0,
+        // Remove custom cartId - let context generate it
+        addedAt: new Date().toISOString(),
+      };
+
+      // console.log(' Standardized cart item:', cartItemWithVariants);
+
+      const result = await addToCart(cartItemWithVariants);
+
+      if (result.success) {
+        toast.success(
+          `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`,
+          "success"
+        );
+
+        // 🔥 ADD FACEBOOK PIXEL TRACKING HERE
+      if (window.fbq) {
+      
+          fbq("track", "AddToCart", {
+            content_ids: [item.productId || item.id],
+            content_type: "product",
+            content_name: item.name || "Product",
+            content_category: category || item.season || "Juttis", 
+            value: item.price,
+            currency: "INR",
+          });
+      }
+        // console.log('Item added successfully');
+        // showToast(
+        //   `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`,
+        //   'success'
+        // );
+      } else {
+        toast.error("Failed to add item to cart. Please try again.", "error");
+        // console.log('Failed to add item');
+        // showToast("Failed to add item to cart. Please try again.", "error");
+      }
+    } catch (error) {
+      // console.error("Error adding to cart:", error);
+      // showToast("Failed to add item to cart. Please try again.", "error");
+      toast.error("Failed to add item to cart. Please try again.", "error");
+    }
+  };
+
+  // Use API data if available, otherwise fallback
   const collections = apiData ? transformApiData(apiData) : fallbackCollections;
 
   // Update price range based on actual data
