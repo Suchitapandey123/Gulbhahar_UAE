@@ -1,4 +1,6 @@
-const API_BASE_URL = 'https://api.gulbhahar.com/api';
+import { API_BASE_URL } from "@/utils/envHere";
+
+
 
 
 export const profileAPI = {
@@ -11,7 +13,7 @@ export const profileAPI = {
         throw new Error("No auth token found");
       }
 
-      const response = await fetch(`${API_BASE_URL}/users/user-by-token`, {
+      const response = await fetch(`${API_BASE_URL}/api/users/user-by-token`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -41,7 +43,7 @@ export const profileAPI = {
 
       
 
-      const response = await fetch(`${API_BASE_URL}/users/update-user`, {
+      const response = await fetch(`${API_BASE_URL}/api/users/update-user`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -73,7 +75,7 @@ export const profileAPI = {
     if (!token) throw new Error("No auth token found");
 
     const response = await fetch(
-      `${API_BASE_URL}/get-address/get-user-saved-address`, 
+      `${API_BASE_URL}/api/get-address/get-user-saved-address`, 
       {
         method: "POST",
         headers: {
@@ -107,7 +109,7 @@ export const profileAPI = {
     }
     
     const response = await fetch(
-      `${API_BASE_URL}/get-address/get-user-address-by-orderid?orderId=${orderId}`, 
+      `${API_BASE_URL}/api/get-address/get-user-address-by-orderid?orderId=${orderId}`, 
       {
         method: 'POST',
         headers: {
