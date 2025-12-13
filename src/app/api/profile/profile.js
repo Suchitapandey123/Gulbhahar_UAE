@@ -144,11 +144,54 @@ export const profileAPI = {
       shippingAddress: null
     };
   }
-}
+},
 
+
+  searchCategories: async (searchQuery = "") => {
+  try {
+    const response = await fetch(
+      `http://194.238.23.44:9080/api/pages/search-category-slug?search=${encodeURIComponent(searchQuery)}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('API raw response:', data);
+
+    if (data.success) {
+      const allSlugs = data.data.map(item => ({
+        slug: item.slug,
+        title: item.slug
+          .split('-')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' '),
+        parentCategory: item.parentCategory,
+        fullSlug: `/collections/${item.slug}`
+      }));
+      
+      console.log('Processed slugs:', allSlugs);
+      return allSlugs; 
+    }
+
+    return [];
+  } catch (error) {
+    console.error("Error searching categories:", error);
+    return [];
+  }
+}
 };
 
-
-
+// Alag se export bhi kar sakte hain agar chahiye
+export const searchCategories = profileAPI.searchCategories;
 
 export default profileAPI;
+
+

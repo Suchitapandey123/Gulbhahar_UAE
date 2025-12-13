@@ -122,7 +122,7 @@ const LoginPage = () => {
   // Show loading state during OAuth or if already authenticated
   if (authLoading || (status === 'authenticated' && !isAuthenticated) || socialLoginLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-900 mx-auto mb-4"></div>
           <p className="text-red-900 font-medium">
@@ -135,7 +135,7 @@ const LoginPage = () => {
 
   if (isAuthenticated) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-red-900 mb-4">Redirecting...</h2>
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-900 mx-auto"></div>
@@ -497,7 +497,7 @@ const LoginPage = () => {
   const isButtonDisabled = isLoading || socialLoginLoading;
 
   return (
-    <div className='w-full min-h-screen mt-16 sm:mt-20'>
+    <div className='w-full mt-16 sm:mt-20'>
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 pt-4 sm:pt-6">
         <button
           onClick={handleGoHome}
@@ -508,7 +508,7 @@ const LoginPage = () => {
         </button>
       </div>
 
-      <div className="flex min-h-[calc(100vh-120px)] w-full items-center justify-center py-6 sm:py-12">
+      <div className="flex  w-full items-center justify-center py-6 sm:py-12">
         <div className="mx-auto flex w-full max-w-[1600px] flex-col-reverse md:flex-row gap-8 md:gap-12 px-4 sm:px-6">
           
           <div className="w-full md:w-1/2 flex items-center justify-center">
@@ -809,7 +809,7 @@ const LoginPage = () => {
             </div>
           </div>
           <div className="hidden md:block md:w-1/2">
-            <div className="h-full min-h-[600px]">
+            <div className="h-full ">
               <Carousel />
             </div>
           </div>
