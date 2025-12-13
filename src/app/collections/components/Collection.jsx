@@ -297,7 +297,8 @@ export default function Collection({ parentCategory = null, slug = null }) {
     <div className=" mt-20 lg:mt-24 pt-4">
       <ToastContainer />
 
-      <div className="max-w-[1600px] ml-2 mx-auto flex flex-col lg:flex-row">
+      {/* <div className="max-w-[1600px] ml-2 mx-auto flex flex-col lg:flex-row"> */}
+      <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row px-4 lg:px-8">
         {/* Sidebar - Desktop */}
         <div className="hidden xl:flex mt-5 flex-col max-w-[360px] mb-8 sticky top-24 h-fit">
           <div className="max-w-[400px] px-2 lg:px-2">
