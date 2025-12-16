@@ -573,7 +573,7 @@ refund: {
   const CurrentIcon = currentTab.icon;
 
   return (
-    <main className="min-h-screen mt-8  bg-gradient-to-br from-red-50/30 to-white">
+    <main className=" mt-8  bg-gradient-to-br from-red-50/30 to-white">
       {/* Header Section */}
       <div className="bg-white border-b-2 border-red-100">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-20">

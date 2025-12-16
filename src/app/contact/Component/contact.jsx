@@ -123,7 +123,7 @@ export default function ContactPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white">
+    <div className=" bg-gradient-to-br from-red-50/30 to-white pt-10 sm:pt-14 lg:pt-18">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-20">
         
         {/* Success Message */}

@@ -7,7 +7,7 @@ import { useAuth } from '../../../Providers/ContextProviders/AuthContext';
 import { signIn, useSession } from 'next-auth/react';
 import signupApi from "../../api/signup/signup";
 
-// Carousel component (unchanged)
+// Carousel component (responsive)
 const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const slides = [
@@ -26,7 +26,7 @@ const Carousel = () => {
   }, [slides.length]);
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-gradient-to-br from-red-100 to-rose-200 rounded-2xl shadow-2xl">
+    <div className="relative h-full w-full overflow-hidden bg-gradient-to-br from-red-100 to-rose-200 rounded-lg sm:rounded-xl lg:rounded-2xl shadow-lg sm:shadow-xl lg:shadow-2xl">
       <div className="h-full w-full">
         {slides.map((slide, index) => (
           <div
@@ -45,22 +45,22 @@ const Carousel = () => {
         ))}
       </div>
       
-      <div className="absolute inset-0 flex flex-col justify-end p-8">
+      <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6 lg:p-8">
         <div className="text-white">
-          <h3 className="text-2xl font-bold mb-2">Discover Premium Fashion</h3>
-          <p className="text-red-100 text-lg">Join thousands of fashion enthusiasts</p>
+          <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-1 sm:mb-2">Discover Premium Fashion</h3>
+          <p className="text-red-100 text-sm sm:text-base lg:text-lg">Join thousands of fashion enthusiasts</p>
         </div>
       </div>
       
-      <div className="absolute bottom-6 left-0 right-0 flex justify-center space-x-3">
+      <div className="absolute bottom-3 sm:bottom-4 lg:bottom-6 left-0 right-0 flex justify-center space-x-2 sm:space-x-3">
         {slides.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`h-2 rounded-full transition-all duration-300 transform hover:scale-125 ${
+            className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 transform hover:scale-125 ${
               index === currentSlide 
-                ? 'w-8 bg-white shadow-lg' 
-                : 'w-2 bg-white/50 hover:bg-white/70'
+                ? 'w-6 sm:w-8 bg-white shadow-lg' 
+                : 'w-1.5 sm:w-2 bg-white/50 hover:bg-white/70'
             }`}
             aria-label={`Go to slide ${index + 1}`}
           />
@@ -122,10 +122,10 @@ const LoginPage = () => {
   // Show loading state during OAuth or if already authenticated
   if (authLoading || (status === 'authenticated' && !isAuthenticated) || socialLoginLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-900 mx-auto mb-4"></div>
-          <p className="text-red-900 font-medium">
+          <div className="animate-spin rounded-full h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 border-b-2 border-red-900 mx-auto mb-3 sm:mb-4"></div>
+          <p className="text-red-900 font-medium text-sm sm:text-base">
             {socialLoginLoading ? 'Completing social login...' : 'Loading...'}
           </p>
         </div>
@@ -135,10 +135,10 @@ const LoginPage = () => {
 
   if (isAuthenticated) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-red-900 mb-4">Redirecting...</h2>
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-900 mx-auto"></div>
+          <h2 className="text-xl sm:text-2xl font-bold text-red-900 mb-3 sm:mb-4">Redirecting...</h2>
+          <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-red-900 mx-auto"></div>
         </div>
       </div>
     );
@@ -497,33 +497,34 @@ const LoginPage = () => {
   const isButtonDisabled = isLoading || socialLoginLoading;
 
   return (
-    <div className='w-full min-h-screen mt-16 sm:mt-20'>
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 pt-4 sm:pt-6">
-        <button
-          onClick={handleGoHome}
-          className="group flex items-center text-red-700 hover:text-red-900 transition-all duration-200 transform hover:scale-105"
-        >
-          <IoIosArrowBack className="mr-3 group-hover:-translate-x-1 transition-transform" />
-          <span className='font-medium'>Go to home</span>
-        </button>
-      </div>
+    <div className='w-full mt-12 sm:mt-16 md:mt-20'>
+      <div className="max-w-[1600px] mx-auto px-3 sm:px-4 md:px-6 pt-3 sm:pt-4 md:pt-6">
+  <button
+    onClick={handleGoHome}
+    className="group hidden sm:flex items-center text-red-700 hover:text-red-900 transition-all duration-200 transform hover:scale-105 text-sm sm:text-base"
+  >
+    <IoIosArrowBack className="mr-2 sm:mr-3 group-hover:-translate-x-1 transition-transform" />
+    <span className='font-medium'>Go to home</span>
+  </button>
+</div>
 
-      <div className="flex min-h-[calc(100vh-120px)] w-full items-center justify-center py-6 sm:py-12">
-        <div className="mx-auto flex w-full max-w-[1600px] flex-col-reverse md:flex-row gap-8 md:gap-12 px-4 sm:px-6">
+      <div className="flex w-full items-center justify-center py-4 sm:py-6 md:py-8 lg:py-12">
+        <div className="mx-auto flex w-full max-w-[1600px] flex-col-reverse lg:flex-row gap-4 sm:gap-6 md:gap-8 lg:gap-12 px-3 sm:px-4 md:px-6">
           
-          <div className="w-full md:w-1/2 flex items-center justify-center">
-            <div className="w-full max-w-md">
-              <div className="text-center mb-8">
-                <h1 className="text-4xl font-bold text-red-900 mb-3">Welcome Back</h1>
-                <p className="text-lg text-red-700">Sign in to your account to continue</p>
+          {/* Login Form - Mobile first (full width), then half on larger screens */}
+          <div className="w-full lg:w-1/2 flex items-center justify-center">
+            <div className="w-full max-w-md mx-auto">
+              <div className="text-center mb-6 sm:mb-8">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-red-900 mb-2 sm:mb-3">Welcome Back</h1>
+                <p className="text-red-700 text-sm sm:text-base md:text-lg">Sign in to your account to continue</p>
               </div>
-              
-              <div className="bg-white rounded-2xl shadow-2xl border border-red-100 p-8">
+              <div className="bg-white rounded-lg sm:rounded-xl lg:rounded-2xl shadow-lg sm:shadow-xl lg:shadow-2xl border-0 sm:border border-red-100 p-3 sm:p-6 md:p-8">
+              {/* <div className="bg-white rounded-lg sm:rounded-xl lg:rounded-2xl shadow-lg sm:shadow-xl lg:shadow-2xl border border-red-100 p-4 sm:p-6 md:p-8"> */}
                 {/* Login Method Toggle */}
-                <div className="flex space-x-4 mb-6">
+                <div className="flex space-x-2 sm:space-x-3 md:space-x-4 mb-4 sm:mb-6">
                   <button
                     onClick={() => setLoginMethod('email')}
-                    className={`flex-1 py-3 rounded-xl font-medium transition-all duration-200 ${
+                    className={`flex-1 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-medium transition-all duration-200 text-sm sm:text-base ${
                       loginMethod === 'email'
                         ? 'bg-red-900 text-white shadow-lg'
                         : 'bg-red-100 text-red-700 hover:bg-red-200'
@@ -533,7 +534,7 @@ const LoginPage = () => {
                   </button>
                   <button
                     onClick={() => setLoginMethod('mobile')}
-                    className={`flex-1 py-3 rounded-xl font-medium transition-all duration-200 ${
+                    className={`flex-1 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-medium transition-all duration-200 text-sm sm:text-base ${
                       loginMethod === 'mobile'
                         ? 'bg-red-900 text-white shadow-lg'
                         : 'bg-red-100 text-red-700 hover:bg-red-200'
@@ -543,17 +544,17 @@ const LoginPage = () => {
                   </button>
                 </div>
                 
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   {generalError && (
-                    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
+                    <div className="bg-red-50 border border-red-200 text-red-700 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base">
                       {generalError}
                     </div>
                   )}
                   
                   {successMessage && (
-                    <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl flex items-center">
+                    <div className="bg-green-50 border border-green-200 text-green-700 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl flex items-center text-sm sm:text-base">
                       {(isLoading || socialLoginLoading) && (
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-700 mr-3"></div>
+                        <div className="animate-spin rounded-full h-3 sm:h-4 w-3 sm:w-4 border-b-2 border-green-700 mr-2 sm:mr-3"></div>
                       )}
                       {successMessage}
                     </div>
@@ -563,21 +564,21 @@ const LoginPage = () => {
                   {loginMethod === 'email' && (
                     <>
                       <div>
-                        <label htmlFor="email" className="block text-lg font-semibold text-red-900 mb-3">
+                        <label htmlFor="email" className="block text-base sm:text-lg font-semibold text-red-900 mb-2 sm:mb-3">
                           Email Address
                         </label>
                         <div className="relative group">
-                          <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                            <FiUser className={`transition-colors ${emailError ? 'text-red-500' : 'text-red-600 group-focus-within:text-red-900'}`} />
+                          <div className="absolute inset-y-0 left-0 flex items-center pl-3 sm:pl-4 pointer-events-none">
+                            <FiUser className={`transition-colors text-sm sm:text-base ${emailError ? 'text-red-500' : 'text-red-600 group-focus-within:text-red-900'}`} />
                           </div>
                           <input
                             type="email"
                             id="email"
-                            className={`block w-full rounded-xl border-2 ${
+                            className={`block w-full rounded-lg sm:rounded-xl border-2 ${
                               emailError 
                                 ? 'border-red-500 focus:border-red-600' 
                                 : 'border-red-200 focus:border-red-900'
-                            } py-4 pl-12 pr-4 text-gray-800 placeholder-red-300 focus:outline-none focus:ring-4 focus:ring-red-100 transition-all duration-200 bg-red-50/30`}
+                            } py-3 sm:py-4 pl-10 sm:pl-12 pr-3 sm:pr-4 text-gray-800 placeholder-red-300 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-red-100 transition-all duration-200 bg-red-50/30 text-sm sm:text-base`}
                             placeholder="name@email.com"
                             value={email}
                             onChange={handleEmailChange}
@@ -586,29 +587,29 @@ const LoginPage = () => {
                           />
                         </div>
                         {touched.email && emailError && (
-                          <p className="mt-2 text-sm text-red-600 flex items-center">
-                            <span className="w-1 h-1 bg-red-600 rounded-full mr-2"></span>
+                          <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-red-600 flex items-center">
+                            <span className="w-1 h-1 bg-red-600 rounded-full mr-1 sm:mr-2"></span>
                             {emailError}
                           </p>
                         )}
                       </div>
                       
                       <div>
-                        <label htmlFor="password" className="block text-lg font-semibold text-red-900 mb-3">
+                        <label htmlFor="password" className="block text-base sm:text-lg font-semibold text-red-900 mb-2 sm:mb-3">
                           Password
                         </label>
                         <div className="relative group">
-                          <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                            <FiLock className={`transition-colors ${passwordError ? 'text-red-500' : 'text-red-600 group-focus-within:text-red-900'}`} />
+                          <div className="absolute inset-y-0 left-0 flex items-center pl-3 sm:pl-4 pointer-events-none">
+                            <FiLock className={`transition-colors text-sm sm:text-base ${passwordError ? 'text-red-500' : 'text-red-600 group-focus-within:text-red-900'}`} />
                           </div>
                           <input
                             type={showPassword ? "text" : "password"}
                             id="password"
-                            className={`block w-full rounded-xl border-2 ${
+                            className={`block w-full rounded-lg sm:rounded-xl border-2 ${
                               passwordError 
                                 ? 'border-red-500 focus:border-red-600' 
                                 : 'border-red-200 focus:border-red-900'
-                            } py-4 pl-12 pr-12 text-gray-800 placeholder-red-300 focus:outline-none focus:ring-4 focus:ring-red-100 transition-all duration-200 bg-red-50/30`}
+                            } py-3 sm:py-4 pl-10 sm:pl-12 pr-10 sm:pr-12 text-gray-800 placeholder-red-300 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-red-100 transition-all duration-200 bg-red-50/30 text-sm sm:text-base`}
                             placeholder="••••••••"
                             value={password}
                             onChange={handlePasswordChange}
@@ -617,16 +618,16 @@ const LoginPage = () => {
                           />
                           <button
                             type="button"
-                            className="absolute inset-y-0 right-0 flex items-center pr-4 text-red-600 hover:text-red-900 transition-colors disabled:opacity-50"
+                            className="absolute inset-y-0 right-0 flex items-center pr-3 sm:pr-4 text-red-600 hover:text-red-900 transition-colors disabled:opacity-50"
                             onClick={() => setShowPassword(!showPassword)}
                             disabled={isButtonDisabled}
                           >
-                            {showPassword ? <FiEyeOff /> : <FiEye />}
+                            {showPassword ? <FiEyeOff className="text-sm sm:text-base" /> : <FiEye className="text-sm sm:text-base" />}
                           </button>
                         </div>
                         {touched.password && passwordError && (
-                          <p className="mt-2 text-sm text-red-600 flex items-start">
-                            <span className="w-1 h-1 bg-red-600 rounded-full mr-2 mt-2 flex-shrink-0"></span>
+                          <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-red-600 flex items-start">
+                            <span className="w-1 h-1 bg-red-600 rounded-full mr-1 sm:mr-2 mt-1.5 sm:mt-2 flex-shrink-0"></span>
                             {passwordError}
                           </p>
                         )}
@@ -636,7 +637,7 @@ const LoginPage = () => {
                         <button 
                           onClick={handleForgotPassword}
                           type="button" 
-                          className="text-red-700 hover:text-red-900 font-medium underline decoration-2 underline-offset-2 transition-colors disabled:opacity-50"
+                          className="text-red-700 hover:text-red-900 font-medium underline decoration-2 underline-offset-2 transition-colors disabled:opacity-50 text-sm sm:text-base"
                           disabled={isButtonDisabled}
                         >
                           Forgot password?
@@ -649,21 +650,21 @@ const LoginPage = () => {
                   {loginMethod === 'mobile' && (
                     <>
                       <div>
-                        <label htmlFor="mobile" className="block text-lg font-semibold text-red-900 mb-3">
+                        <label htmlFor="mobile" className="block text-base sm:text-lg font-semibold text-red-900 mb-2 sm:mb-3">
                           Mobile Number
                         </label>
                         <div className="relative group">
-                          <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                            <FiPhone className={`transition-colors ${mobileError ? 'text-red-500' : 'text-red-600 group-focus-within:text-red-900'}`} />
+                          <div className="absolute inset-y-0 left-0 flex items-center pl-3 sm:pl-4 pointer-events-none">
+                            <FiPhone className={`transition-colors text-sm sm:text-base ${mobileError ? 'text-red-500' : 'text-red-600 group-focus-within:text-red-900'}`} />
                           </div>
                           <input
                             type="tel"
                             id="mobile"
-                            className={`block w-full rounded-xl border-2 ${
+                            className={`block w-full rounded-lg sm:rounded-xl border-2 ${
                               mobileError 
                                 ? 'border-red-500 focus:border-red-600' 
                                 : 'border-red-200 focus:border-red-900'
-                            } py-4 pl-12 pr-4 text-gray-800 placeholder-red-300 focus:outline-none focus:ring-4 focus:ring-red-100 transition-all duration-200 bg-red-50/30 ${
+                            } py-3 sm:py-4 pl-10 sm:pl-12 pr-3 sm:pr-4 text-gray-800 placeholder-red-300 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-red-100 transition-all duration-200 bg-red-50/30 text-sm sm:text-base ${
                               isOtpSent ? 'bg-gray-100 cursor-not-allowed' : ''
                             }`}
                             placeholder="Enter 10-digit mobile number"
@@ -675,13 +676,13 @@ const LoginPage = () => {
                           />
                         </div>
                         {touched.mobile && mobileError && (
-                          <p className="mt-2 text-sm text-red-600 flex items-center">
-                            <span className="w-1 h-1 bg-red-600 rounded-full mr-2"></span>
+                          <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-red-600 flex items-center">
+                            <span className="w-1 h-1 bg-red-600 rounded-full mr-1 sm:mr-2"></span>
                             {mobileError}
                           </p>
                         )}
                         {isOtpSent && (
-                          <p className="mt-2 text-sm text-red-700 flex items-center">
+                          <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-red-700 flex items-center">
                             <button
                               onClick={handleEditMobile}
                               className="text-red-900 hover:text-red-700 underline font-medium"
@@ -694,21 +695,21 @@ const LoginPage = () => {
                       
                       {showOtpField && (
                         <div>
-                          <label htmlFor="otp" className="block text-lg font-semibold text-red-900 mb-3">
+                          <label htmlFor="otp" className="block text-base sm:text-lg font-semibold text-red-900 mb-2 sm:mb-3">
                             Enter OTP
                           </label>
                           <div className="relative group">
-                            <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                              <FiLock className={`transition-colors ${otpError ? 'text-red-500' : 'text-red-600 group-focus-within:text-red-900'}`} />
+                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 sm:pl-4 pointer-events-none">
+                              <FiLock className={`transition-colors text-sm sm:text-base ${otpError ? 'text-red-500' : 'text-red-600 group-focus-within:text-red-900'}`} />
                             </div>
                             <input
                               type="text"
                               id="otp"
-                              className={`block w-full rounded-xl border-2 ${
+                              className={`block w-full rounded-lg sm:rounded-xl border-2 ${
                                 otpError 
                                   ? 'border-red-500 focus:border-red-600' 
                                   : 'border-red-200 focus:border-red-900'
-                              } py-4 pl-12 pr-4 text-gray-800 placeholder-red-300 focus:outline-none focus:ring-4 focus:ring-red-100 transition-all duration-200 bg-red-50/30`}
+                              } py-3 sm:py-4 pl-10 sm:pl-12 pr-3 sm:pr-4 text-gray-800 placeholder-red-300 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-red-100 transition-all duration-200 bg-red-50/30 text-sm sm:text-base`}
                               placeholder="Enter 6-digit OTP"
                               value={otp}
                               onChange={handleOtpChange}
@@ -717,12 +718,12 @@ const LoginPage = () => {
                             />
                           </div>
                           {otpError && (
-                            <p className="mt-2 text-sm text-red-600 flex items-center">
-                              <span className="w-1 h-1 bg-red-600 rounded-full mr-2"></span>
+                            <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-red-600 flex items-center">
+                              <span className="w-1 h-1 bg-red-600 rounded-full mr-1 sm:mr-2"></span>
                               {otpError}
                             </p>
                           )}
-                          <p className="mt-2 text-sm text-red-700">
+                          <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-red-700">
                             OTP sent to +91 {mobileNumber}
                           </p>
                         </div>
@@ -734,11 +735,11 @@ const LoginPage = () => {
                     type="button"
                     onClick={handleSubmit}
                     disabled={isButtonDisabled}
-                    className="w-full rounded-xl bg-gradient-to-r from-red-900 to-red-800 py-4 text-lg font-bold text-white shadow-xl hover:from-red-800 hover:to-red-700 focus:outline-none focus:ring-4 focus:ring-red-200 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
+                    className="w-full rounded-lg sm:rounded-xl bg-gradient-to-r from-red-900 to-red-800 py-3 sm:py-4 text-sm sm:text-base md:text-lg font-bold text-white shadow-lg sm:shadow-xl hover:from-red-800 hover:to-red-700 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-red-200 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
                   >
                     {isLoading ? (
                       <div className="flex items-center justify-center">
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-3"></div>
+                        <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2 sm:mr-3"></div>
                         {loginMethod === 'email' 
                           ? 'Signing in...' 
                           : isOtpSent ? 'Verifying...' : 'Sending OTP...'
@@ -752,27 +753,27 @@ const LoginPage = () => {
                   </button>
                 </div>
                 
-                <div className="mt-8">
+                <div className="mt-6 sm:mt-8">
                   <div className="relative">
                     <div className="absolute inset-0 flex items-center">
                       <div className="w-full border-t border-red-200"></div>
                     </div>
-                    <div className="relative flex justify-center text-sm">
-                      <span className="bg-white px-4 text-red-600 font-medium">Or continue with</span>
+                    <div className="relative flex justify-center text-xs sm:text-sm">
+                      <span className="bg-white px-2 sm:px-4 text-red-600 font-medium">Or continue with</span>
                     </div>
                   </div>
                   
-                  <div className="mt-6 grid grid-cols-2 gap-4">
+                  <div className="mt-4 sm:mt-6 grid grid-cols-2 gap-3 sm:gap-4">
                     <button
                       type="button"
                       onClick={() => handleSocialLogin('google')}
                       disabled={isButtonDisabled}
-                      className="flex w-full items-center justify-center rounded-xl border-2 border-red-200 bg-white py-3 px-4 text-sm font-medium text-red-900 shadow-sm hover:bg-red-50 hover:border-red-300 focus:outline-none focus:ring-4 focus:ring-red-100 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:transform-none"
+                      className="flex w-full items-center justify-center rounded-lg sm:rounded-xl border-2 border-red-200 bg-white py-2.5 sm:py-3 px-3 sm:px-4 text-xs sm:text-sm font-medium text-red-900 shadow-sm hover:bg-red-50 hover:border-red-300 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-red-100 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:transform-none"
                     >
                       {socialLoginLoading ? (
-                        <div className="w-4 h-4 border-2 border-red-900 border-t-transparent rounded-full animate-spin mr-2"></div>
+                        <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-red-900 border-t-transparent rounded-full animate-spin mr-1.5 sm:mr-2"></div>
                       ) : (
-                        <FaGoogle className='mr-3 text-red-600'/>
+                        <FaGoogle className='mr-1.5 sm:mr-3 text-red-600 text-sm sm:text-base'/>
                       )}
                       Google
                     </button>
@@ -780,20 +781,20 @@ const LoginPage = () => {
                       type="button"
                       onClick={() => handleSocialLogin('facebook')}
                       disabled={isButtonDisabled}
-                      className="flex w-full items-center justify-center rounded-xl border-2 border-red-200 bg-white py-3 px-4 text-sm font-medium text-red-900 shadow-sm hover:bg-red-50 hover:border-red-300 focus:outline-none focus:ring-4 focus:ring-red-100 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:transform-none"
+                      className="flex w-full items-center justify-center rounded-lg sm:rounded-xl border-2 border-red-200 bg-white py-2.5 sm:py-3 px-3 sm:px-4 text-xs sm:text-sm font-medium text-red-900 shadow-sm hover:bg-red-50 hover:border-red-300 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-red-100 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:transform-none"
                     >
                       {socialLoginLoading ? (
-                        <div className="w-4 h-4 border-2 border-red-900 border-t-transparent rounded-full animate-spin mr-2"></div>
+                        <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-red-900 border-t-transparent rounded-full animate-spin mr-1.5 sm:mr-2"></div>
                       ) : (
-                        <FaFacebook className='mr-3 text-red-600'/>
+                        <FaFacebook className='mr-1.5 sm:mr-3 text-red-600 text-sm sm:text-base'/>
                       )}
                       Facebook
                     </button>
                   </div>
                 </div>
                 
-                <div className="mt-8 text-center">
-                  <p className="text-red-700">
+                <div className="mt-6 sm:mt-8 text-center">
+                  <p className="text-red-700 text-sm sm:text-base">
                     Don't have an account?{' '}
                     <button 
                       onClick={handleSignUp}
@@ -808,8 +809,10 @@ const LoginPage = () => {
               </div>
             </div>
           </div>
-          <div className="hidden md:block md:w-1/2">
-            <div className="h-full min-h-[600px]">
+          
+          {/* Carousel - Hidden on mobile, shown on medium and up */}
+          <div className="hidden sm:block w-full lg:w-1/2">
+            <div className="h-full">
               <Carousel />
             </div>
           </div>

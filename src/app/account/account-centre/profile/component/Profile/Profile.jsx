@@ -447,9 +447,9 @@ const Profile = () => {
    ----------------------------------------------------------- */
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50/40 via-white to-red-50/20">
+      <div className=" bg-gradient-to-br from-red-50/40 via-white to-red-50/20">
         <div className="max-w-[1600px] mx-auto px-0 sm:px-6 lg:px-8 py-6 sm:py-8">
-          <div className="flex items-center justify-center min-h-[400px]">
+          <div className="flex items-center justify-center ">
             <div className="text-center">
               <div className="w-12 h-12 border-4 border-red-900 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
               <p className="text-gray-600">Loading profile...</p>
@@ -464,7 +464,7 @@ const Profile = () => {
    * 🔥 Render
    ----------------------------------------------------------- */
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50/40 via-white to-red-50/20">
+    <div className=" bg-gradient-to-br from-red-50/40 via-white to-red-50/20">
       <div className="max-w-[1600px] mx-auto px-0 sm:px-6 lg:px-8 py-6 sm:py-8">
 
         {activeView === ProfileView.MAIN && (

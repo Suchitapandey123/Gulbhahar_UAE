@@ -23,17 +23,19 @@ const HeroSection = () => {
       className="relative  mt-16 flex  justify-center overflow- px-2"
     >
       <div className="max-w-[1600px] mx-auto px-2 xs:px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-start">
           <motion.div 
             style={{ y: textY }}
-            className="text-center lg:text-left space-y-6 sm:space-y-8 lg:space-y-10"
+            className="text-center lg:text-left flex flex-col justify-center gap-6 sm:gap-8 lg:gap-10
++            min-h-[420px] sm:min-h-[480px] md:min-h-[520px] lg:min-h-[600px]"
           >
             <motion.div
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.2, delay: 0.3 }}
             >
-              <motion.div className="mt-4">
+              <motion.div className="mt-6 sm:mt-10 md:mt-14 lg:mt-20">
+
                 <motion.span
                   className=" text-6xl sm:text-7xl md:text-8xl lg:text-7xl xl:text-8xl 2xl:text-9xl  font-black leading-[0.85] block bg-gradient-to-r from-[#7f0001] via-[#7f0001] to-[#7f0001] bg-clip-text text-transparent"
                   initial={{ opacity: 0, y: 50, rotateX: 90 }}
@@ -1298,7 +1300,7 @@ const BrandStorySection = () => {
               
               <div className="pl-4 sm:pl-8 lg:pl-16 space-y-6 sm:space-y-8 lg:space-y-10">
                 <motion.h2 
-                  className="text-3xl flex gap-3 xs:text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl font-black leading-tight"
+                  className="mt-8 sm:mt-12 md:mt-16 lg:mt-20 xl:mt-24 text-3xl flex gap-3 xs:text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl font-black leading-tight"
                   initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
