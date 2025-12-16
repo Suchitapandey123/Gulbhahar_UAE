@@ -53,6 +53,7 @@ export async function generateMetadata() {
         'max-snippet': -1,
       },
     },
+    
   };
 }
 
@@ -73,6 +74,8 @@ export default function RootLayout({ children }) {
         {/* DNS Prefetch for third-party domains */}
         <link rel="dns-prefetch" href="https://analytic.thekapslog.com" />
         <link rel="dns-prefetch" href="https://www.clarity.ms" />
+        <meta name="facebook-domain-verification" content="i8jg1img7zm6lm54vot1vlfhvys5nc" />
+        <meta name="facebook-domain-verification" content="vsnutk0lf5e8h8j3qr40cba416cap0" />
 
         {/* Google Fonts */}
         <link
@@ -162,6 +165,8 @@ export default function RootLayout({ children }) {
               alt="facebook image"
             />
           </noscript>
+
+          
 
           <AuthProvider>
             <ReactQueryProvider>
