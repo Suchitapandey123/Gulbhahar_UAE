@@ -159,13 +159,13 @@ export default function Collection({ parentCategory = null, slug = null }) {
 
         // 🔥 ADD FACEBOOK PIXEL TRACKING HERE
       if (window.fbq) {
-      
+
           fbq("track", "AddToCart", {
             content_ids: [item.productId || item.id],
             content_type: "product",
             content_name: item.name || "Product",
-            content_category: category || item.season || "Juttis", 
-            value: item.price,
+            content_category: category || item.season || "Juttis",
+            value: parseFloat(item.price) || 0,
             currency: "INR",
           });
       }
