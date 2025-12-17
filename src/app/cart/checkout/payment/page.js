@@ -2,12 +2,12 @@
 
 import { useState, useEffect, Suspense, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { 
-  CreditCard, 
-  Shield, 
-  ShoppingBag, 
-  ArrowLeft, 
-  Loader2, 
+import {
+  CreditCard,
+  Shield,
+  ShoppingBag,
+  ArrowLeft,
+  Loader2,
   Lock,
   CheckCircle,
   Clock,
@@ -30,6 +30,7 @@ import {
   X,
   RefreshCw
 } from "lucide-react";
+import { event } from "@/utils/gtag";
 
 const Breadcrumb = () => (
   <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-8">
@@ -82,12 +83,12 @@ const PhoneOTPModal = ({ isOpen, onClose, onVerify, phone, isVerifying, error, s
   const handleCodeChange = (index, value) => {
     // Clear any local errors when user starts typing
     if (localError) setLocalError('');
-    
+
     // Only allow single digit
     if (value.length > 1) {
       value = value.slice(-1);
     }
-    
+
     // Only allow digits
     if (!/^\d*$/.test(value)) {
       return;
@@ -96,7 +97,7 @@ const PhoneOTPModal = ({ isOpen, onClose, onVerify, phone, isVerifying, error, s
     const newCode = [...verificationCode];
     newCode[index] = value;
     setVerificationCode(newCode);
-    
+
     // Auto-focus next input
     if (value && index < 5) {
       inputRefs.current[index + 1]?.focus();
@@ -113,14 +114,14 @@ const PhoneOTPModal = ({ isOpen, onClose, onVerify, phone, isVerifying, error, s
       }
       return;
     }
-    
+
     // Handle paste
     if (e.key === 'v' && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
       handlePaste(index);
       return;
     }
-    
+
     // Handle Enter key
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -129,7 +130,7 @@ const PhoneOTPModal = ({ isOpen, onClose, onVerify, phone, isVerifying, error, s
       }
       return;
     }
-    
+
     // Handle arrow keys
     if (e.key === 'ArrowLeft' && index > 0) {
       e.preventDefault();
@@ -145,14 +146,14 @@ const PhoneOTPModal = ({ isOpen, onClose, onVerify, phone, isVerifying, error, s
     try {
       const clipboardText = await navigator.clipboard.readText();
       const digits = clipboardText.replace(/\D/g, '').slice(0, 6);
-      
+
       if (digits.length > 0) {
         const newCode = [...verificationCode];
         for (let i = 0; i < digits.length && (startIndex + i) < 6; i++) {
           newCode[startIndex + i] = digits[i];
         }
         setVerificationCode(newCode);
-        
+
         // Focus the next empty input or the last filled input
         const nextIndex = Math.min(startIndex + digits.length, 5);
         inputRefs.current[nextIndex]?.focus();
@@ -169,7 +170,7 @@ const PhoneOTPModal = ({ isOpen, onClose, onVerify, phone, isVerifying, error, s
       setLocalError('Please enter complete 6-digit code');
       return;
     }
-    
+
     // Clear any errors
     setLocalError('');
     onVerify(codeString, sessionId, false);
@@ -179,7 +180,7 @@ const PhoneOTPModal = ({ isOpen, onClose, onVerify, phone, isVerifying, error, s
   const handleResend = async () => {
     setIsResending(true);
     setLocalError('');
-    
+
     try {
       const response = await fetch('https://api.gulbhahar.com/codRoutes/initiate', {
         method: 'POST',
@@ -239,7 +240,7 @@ const PhoneOTPModal = ({ isOpen, onClose, onVerify, phone, isVerifying, error, s
         >
           <X className="w-5 h-5" />
         </button>
-        
+
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8">
           <div className="w-16 h-16 bg-gradient-to-br from-red-800 to-red-900 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
@@ -269,11 +270,10 @@ const PhoneOTPModal = ({ isOpen, onClose, onVerify, phone, isVerifying, error, s
                   e.preventDefault();
                   handlePaste(index);
                 }}
-                className={`w-10 h-12 sm:w-12 sm:h-12 text-center text-lg sm:text-xl font-bold border-2 rounded-lg transition-all outline-none ${
-                  digit 
-                    ? 'border-red-900 bg-red-50 text-red-900' 
+                className={`w-10 h-12 sm:w-12 sm:h-12 text-center text-lg sm:text-xl font-bold border-2 rounded-lg transition-all outline-none ${digit
+                    ? 'border-red-900 bg-red-50 text-red-900'
                     : 'border-gray-200 focus:border-red-900 focus:ring-2 focus:ring-red-200'
-                } ${displayError ? 'border-red-500' : ''}`}
+                  } ${displayError ? 'border-red-500' : ''}`}
                 maxLength="1"
                 autoComplete="one-time-code"
                 aria-label={`Digit ${index + 1}`}
@@ -316,11 +316,10 @@ const PhoneOTPModal = ({ isOpen, onClose, onVerify, phone, isVerifying, error, s
           <button
             onClick={handleVerify}
             disabled={!isCodeComplete || isVerifying}
-            className={`w-full py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all duration-200 flex items-center justify-center gap-2 ${
-              isCodeComplete && !isVerifying
+            className={`w-full py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all duration-200 flex items-center justify-center gap-2 ${isCodeComplete && !isVerifying
                 ? 'bg-red-900 text-white hover:bg-red-800 shadow-lg hover:shadow-xl transform hover:scale-[1.02]'
                 : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-            }`}
+              }`}
           >
             {isVerifying ? (
               <>
@@ -356,24 +355,23 @@ const PhoneOTPModal = ({ isOpen, onClose, onVerify, phone, isVerifying, error, s
 };
 
 // Payment Method Card Component
-const PaymentMethodCard = ({ 
-  icon: Icon, 
-  title, 
-  description, 
-  badges, 
-  isSelected, 
-  onClick, 
+const PaymentMethodCard = ({
+  icon: Icon,
+  title,
+  description,
+  badges,
+  isSelected,
+  onClick,
   disabled = false,
   gradient = "from-blue-500 to-blue-600"
 }) => (
   <label className={`block cursor-pointer transition-all duration-300 ${disabled ? 'cursor-not-allowed opacity-60' : ''}`}>
-    <div className={`relative p-3 border-2 rounded-xl transition-all duration-300 ${
-      isSelected 
-        ? 'border-red-900 bg-red-50 shadow-lg scale-[1.02]' 
+    <div className={`relative p-3 border-2 rounded-xl transition-all duration-300 ${isSelected
+        ? 'border-red-900 bg-red-50 shadow-lg scale-[1.02]'
         : disabled
-        ? 'border-gray-200 bg-gray-50'
-        : 'border-gray-200 hover:border-red-300 hover:bg-red-25 hover:shadow-md'
-    }`}>
+          ? 'border-gray-200 bg-gray-50'
+          : 'border-gray-200 hover:border-red-300 hover:bg-red-25 hover:shadow-md'
+      }`}>
       <input
         type="radio"
         name="paymentMethod"
@@ -382,7 +380,7 @@ const PaymentMethodCard = ({
         disabled={disabled}
         className="sr-only"
       />
-      
+
       {isSelected && (
         <div className="absolute top-3 right-3">
           <div className="w-6 h-6 bg-red-900 rounded-full flex items-center justify-center">
@@ -390,7 +388,7 @@ const PaymentMethodCard = ({
           </div>
         </div>
       )}
-      
+
       <div className="flex items-start gap-4">
         <div className={`w-14 h-14 bg-gradient-to-br ${gradient} rounded-xl flex items-center justify-center shadow-lg flex-shrink-0`}>
           <Icon className="w-7 h-7 text-white" />
@@ -398,17 +396,16 @@ const PaymentMethodCard = ({
         <div className="flex-1 min-w-0">
           <h3 className="text-lg font-bold text-gray-900 mb-1">{title}</h3>
           <p className="text-sm text-gray-600 mb-3 leading-relaxed">{description}</p>
-          
+
           <div className="flex gap-2 flex-wrap">
             {badges.map((badge, index) => (
-              <span 
+              <span
                 key={index}
-                className={`px-3 py-1 rounded-full text-xs font-medium ${
-                  badge.type === 'success' ? 'bg-green-100 text-green-700' :
-                  badge.type === 'warning' ? 'bg-yellow-100 text-yellow-700' :
-                  badge.type === 'info' ? 'bg-blue-100 text-blue-700' :
-                  'bg-gray-100 text-gray-600'
-                }`}
+                className={`px-3 py-1 rounded-full text-xs font-medium ${badge.type === 'success' ? 'bg-green-100 text-green-700' :
+                    badge.type === 'warning' ? 'bg-yellow-100 text-yellow-700' :
+                      badge.type === 'info' ? 'bg-blue-100 text-blue-700' :
+                        'bg-gray-100 text-gray-600'
+                  }`}
               >
                 {badge.text}
               </span>
@@ -453,9 +450,9 @@ function PaymentContent() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    
+
     const savedCheckoutData = localStorage.getItem('checkoutFormData');
-    
+
     if (!savedCheckoutData) {
       console.warn('⚠️ No checkout data found, redirecting to checkout page');
       router.push('/cart/checkout');
@@ -495,7 +492,7 @@ function PaymentContent() {
       };
       setCheckoutData(defaultData);
     }
-    
+
     setIsLoading(false);
     setTimeout(() => setShowContent(true), 300);
   }, [orderId, amount, router]);
@@ -517,7 +514,7 @@ function PaymentContent() {
 
     const requiredFields = ['fullName', 'email', 'phone', 'orderId', 'orderTotal'];
     const missingFields = requiredFields.filter(field => !checkoutData[field]);
-    
+
     if (missingFields.length > 0) {
       console.error('❌ Missing required fields in checkout data:', missingFields);
       alert(`Missing required information: ${missingFields.join(', ')}. Please go back and complete checkout.`);
@@ -531,10 +528,10 @@ function PaymentContent() {
     }
 
     setIsProcessingCOD(true);
-    
+
     try {
       const cleanPhone = checkoutData.phone.replace(/\D/g, '');
-      
+
       const response = await fetch('https://api.gulbhahar.com/codRoutes/initiate', {
         method: 'POST',
         headers: {
@@ -556,7 +553,7 @@ function PaymentContent() {
       } else {
         throw new Error('Failed to send OTP');
       }
-      
+
       setIsProcessingCOD(false);
     } catch (error) {
       console.error('❌ Error sending OTP:', error);
@@ -572,7 +569,7 @@ function PaymentContent() {
     }
 
     setPhoneVerification({ isVerifying: true, error: null });
-    
+
     try {
       const response = await fetch('https://api.gulbhahar.com/codRoutes/verify', {
         method: 'POST',
@@ -587,6 +584,7 @@ function PaymentContent() {
 
       if (response.ok) {
         const result = await response.json();
+
         await processCODOrder();
       } else {
         const errorData = await response.json().catch(() => ({ message: 'Invalid OTP' }));
@@ -594,15 +592,24 @@ function PaymentContent() {
       }
     } catch (error) {
       console.error('❌ Phone verification failed:', error);
-      setPhoneVerification({ 
-        isVerifying: false, 
-        error: error.message || 'Phone verification failed. Please try again.' 
+      setPhoneVerification({
+        isVerifying: false,
+        error: error.message || 'Phone verification failed. Please try again.'
       });
     }
   };
 
   const processCODOrder = async () => {
-    
+
+    event({
+      action: "Whatsapp OTP Verified , Proceeding  to FInal Page",
+      params: {
+        "payment_method" : "COD" ,
+        "OrderID": checkoutData?.orderId
+      }
+    },
+    )
+
     const redirectUrl = `/cart/checkout/payment/transaction-status?status=success&orderId=${checkoutData?.orderId}&amount=${checkoutData?.orderTotal}&transactionId=COD_${Date.now()}&payment_method=cod`;
     router.push(redirectUrl);
   };
@@ -685,13 +692,13 @@ function PaymentContent() {
     <div className="min-h-screen mt-14 sm:mt-20 bg-gradient-to-br from-red-50/30 via-white to-red-50/20">
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-6 lg:py-8">
         <Breadcrumb />
-        
+
         <div className={`transform transition-all duration-1000 ${showContent ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-            
+
             {/* Payment Method Selection */}
             <div className="xl:col-span-2 space-y-8">
-              
+
               {/* Header */}
               <div className="text-center lg:text-left">
                 <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
@@ -724,7 +731,7 @@ function PaymentContent() {
                   description="Pay when your order is delivered to your doorstep. Phone verification required."
                   badges={[
                     { text: "OTP Verification", type: "warning" },
-                    checkoutData?.deliveryInfo?.cod 
+                    checkoutData?.deliveryInfo?.cod
                       ? { text: "Available", type: "success" }
                       : { text: "Not Available", type: "error" }
                   ]}
@@ -742,11 +749,11 @@ function PaymentContent() {
                     <div className="w-20 h-20 bg-gradient-to-br from-red-800 to-red-900 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
                       <CreditCard className="w-10 h-10 text-white" />
                     </div>
-                    
+
                     <h3 className="text-2xl font-bold text-gray-900 mb-4">
                       Secure Online Payment
                     </h3>
-                    
+
                     <p className="text-gray-600 text-lg mb-8 max-w-md mx-auto">
                       You'll be redirected to our secure payment gateway powered by CCAvenue to complete your transaction.
                     </p>
@@ -769,7 +776,7 @@ function PaymentContent() {
                           </>
                         )}
                       </button>
-                      
+
                       <button
                         onClick={handleGoBack}
                         className="flex-1 bg-white border-2 border-red-300 text-red-900 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-red-50 hover:border-red-400 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3"
@@ -784,11 +791,11 @@ function PaymentContent() {
                     <div className="w-20 h-20 bg-gradient-to-br from-red-800 to-red-900 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
                       <Banknote className="w-10 h-10 text-white" />
                     </div>
-                    
+
                     <h3 className="text-2xl font-bold text-gray-900 mb-4">
                       Cash on Delivery
                     </h3>
-                    
+
                     <p className="text-gray-600 text-lg mb-6 max-w-md mx-auto">
                       Pay when your order arrives. We'll send an OTP to your phone for verification.
                     </p>
@@ -821,7 +828,7 @@ function PaymentContent() {
                           </>
                         )}
                       </button>
-                      
+
                       <button
                         onClick={handleGoBack}
                         className="flex-1 bg-white border-2 border-red-300 text-red-900 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-red-50 hover:border-red-400 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3"
@@ -872,12 +879,12 @@ function PaymentContent() {
                     <span className="text-gray-600 font-medium">Order ID:</span>
                     <span className="font-mono text-sm bg-gray-100 px-3 py-1 rounded-lg">{checkoutData?.orderId || 'TEST_ORDER_001'}</span>
                   </div>
-                  
+
                   <div className="flex justify-between items-center py-3 border-b border-gray-100">
                     <span className="text-gray-600 font-medium">Customer:</span>
                     <span className="font-semibold text-gray-900 text-right">{checkoutData?.fullName || 'Test User'}</span>
                   </div>
-                  
+
                   <div className="flex justify-between items-center py-3 border-b border-gray-100">
                     <span className="text-gray-600 font-medium">Items:</span>
                     <span className="font-semibold text-red-900">{checkoutData?.orderItems?.length || 1} item(s)</span>
@@ -885,11 +892,10 @@ function PaymentContent() {
 
                   <div className="flex justify-between items-center py-3 border-b border-gray-100">
                     <span className="text-gray-600 font-medium">Payment Method:</span>
-                    <span className={`font-semibold px-3 py-1 rounded-full text-sm ${
-                      paymentMethod === 'cod' 
-                        ? 'bg-red-100 text-red-800' 
+                    <span className={`font-semibold px-3 py-1 rounded-full text-sm ${paymentMethod === 'cod'
+                        ? 'bg-red-100 text-red-800'
                         : 'bg-red-100 text-red-800'
-                    }`}>
+                      }`}>
                       {paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment'}
                     </span>
                   </div>
@@ -905,7 +911,7 @@ function PaymentContent() {
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">Shipping:</span>
                       <span className={`font-semibold ${(checkoutData?.orderShipping || 100) === 0 ? 'text-green-600' : 'text-gray-900'}`}>
-                        {(checkoutData?.orderShipping ) === 0 ? 'FREE' : `₹${(checkoutData?.orderShipping).toLocaleString()}`}
+                        {(checkoutData?.orderShipping) === 0 ? 'FREE' : `₹${(checkoutData?.orderShipping).toLocaleString()}`}
                       </span>
                     </div>
                     <div className="border-t pt-3">

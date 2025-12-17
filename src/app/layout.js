@@ -1,4 +1,3 @@
-// app/layout.js or app/layout.tsx
 
 import { Poppins, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
@@ -32,15 +31,15 @@ export async function generateMetadata() {
     title: "Gulbhahar | The Art of Handmade Luxury Ethnic Wear",
     description:
       "Experience Gulbhahar, where Indian tradition meets handmade perfection.  Ethnic Wear, Juttis, Jewellery, Bags all crafted with detail and elegance.",
-    
-      keywords: ["Gulbhahar"," Gulbhahar.com", "gulbahar","gulbahar.com",  "Ethnic Wear", "Juttis", "Jewellery", "Bags "],
-    
-      icons: {
+
+    keywords: ["Gulbhahar", " Gulbhahar.com", "gulbahar", "gulbahar.com", "Ethnic Wear", "Juttis", "Jewellery", "Bags "],
+
+    icons: {
       icon: "/logo.png",
       apple: "/apple-touch-icon.png", // Add Apple touch icon
     },
     alternates: {
-      canonical: "https://www.gulbhahar.com", 
+      canonical: "https://www.gulbhahar.com",
     },
     robots: {
       index: true,
@@ -55,7 +54,7 @@ export async function generateMetadata() {
         'max-snippet': -1,
       },
     },
-    
+
   };
 }
 
@@ -85,13 +84,13 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
         />
       </head>
-      
+
       <SessionWrapper>
         <body
           className={`${poppins.variable} ${jetbrainsMono.variable} antialiased`}
         >
           {/* Analytics Scripts */}
-          
+
           {/* Custom Analytics */}
           <Script
             src="https://analytic.thekapslog.com/script.js"
@@ -99,35 +98,28 @@ export default function RootLayout({ children }) {
             strategy="afterInteractive"
           />
 
-          
+
 
           {/* Google Analytics */}
           <Script
             src="https://www.googletagmanager.com/gtag/js?id=G-M4Q3C3DJQM"
             strategy="afterInteractive"
           />
-         
+
           <Script
-  id="google-analytics"
-  strategy="afterInteractive"
-  dangerouslySetInnerHTML={{
-    __html: `
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-M4Q3C3DJQM', {
-        page_path: window.location.pathname
-      });
-    `,
-  }}
-/>
-
-
-
-
-{/* SPA Route Change Tracker for dynamic page titles */}
-<RouteChangeTracker />
-
+            id="google-analytics"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-M4Q3C3DJQM', {
+                page_path: window.location.pathname
+              });
+            `,
+            }}
+          />
           {/* Microsoft Clarity */}
           <Script
             id="microsoft-clarity"
@@ -142,7 +134,7 @@ export default function RootLayout({ children }) {
               `,
             }}
           />
-         
+
           {/* Facebook Pixel */}
           <Script
             id="facebook-pixel"
@@ -173,15 +165,15 @@ export default function RootLayout({ children }) {
           {/* Facebook Pixel Noscript */}
           <noscript>
             <img
-              height="1" 
-              width="1" 
-              style={{display: 'none'}}
+              height="1"
+              width="1"
+              style={{ display: 'none' }}
               src="https://www.facebook.com/tr?id=1705895113580123&ev=PageView&noscript=1"
               alt="facebook image"
             />
           </noscript>
 
-          
+
 
           <AuthProvider>
             <ReactQueryProvider>

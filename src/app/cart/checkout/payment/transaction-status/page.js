@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useCart } from "@/Providers/ContextProviders/CartContext";
 import { API_BASE_URL } from "@/utils/envHere";
+import { event } from "@/utils/gtag";
 
 const TransactionStatusContent = () => {
   const router = useRouter();
@@ -27,7 +28,7 @@ const TransactionStatusContent = () => {
   const [backendSent, setBackendSent] = useState(false);
   const [backendProcessing, setBackendProcessing] = useState(false);
   const { clearCart } = useCart();
-  
+
   // User data state for Meta Pixel
   const [userData, setUserData] = useState({
     email: null,
@@ -40,7 +41,7 @@ const TransactionStatusContent = () => {
   const apiCallInProgress = useRef(false);
   const apiCallCompleted = useRef(false);
   const processedTransactionId = useRef(null);
-  
+
   // 🆕 Local user data ref (immediate access ke liye)
   const userDataRef = useRef({
     email: null,
@@ -69,12 +70,12 @@ const TransactionStatusContent = () => {
       lastName: null,
       phone: null
     };
-    
+
     if (savedCheckoutData) {
       try {
         checkoutData = JSON.parse(savedCheckoutData);
         console.log("📦 Checkout data from localStorage:", checkoutData);
-        
+
         // 🔥 User data extract karo Meta Pixel ke liye
         if (checkoutData.email) {
           const email = checkoutData.email.trim().toLowerCase();
@@ -92,14 +93,14 @@ const TransactionStatusContent = () => {
               lastName = nameParts.slice(1).join(' ').replace(/[^a-zA-Z]/g, '').toLowerCase();
             }
           }
-          
+
           extractedUserData = {
             email,
             firstName,
             lastName,
             phone
           };
-          
+
           // 🆕 REF mein bhi save karo for immediate access
           userDataRef.current = extractedUserData;
 
@@ -195,179 +196,179 @@ const TransactionStatusContent = () => {
 
     console.log("✅ Payment successful! Sending complete order data to backend...");
     console.log("💳 Payment Method:", transactionData.paymentMethod);
-    
+
     // 🆕 User data source decide karo (parameter ya ref)
     const finalUserData = userDataParam || userDataRef.current || userData;
     console.log("👤 Final User Data for Pixel:", finalUserData);
 
     try {
-     // 🔥 Wait for Facebook Pixel to be available
-     const waitForFbq = () => {
-       return new Promise((resolve) => {
-         if (typeof window !== "undefined" && window.fbq) {
-           resolve(true);
-         } else {
-           // Wait up to 3 seconds for fbq to load
-           let attempts = 0;
-           const checkInterval = setInterval(() => {
-             attempts++;
-             if (window.fbq) {
-               clearInterval(checkInterval);
-               resolve(true);
-             } else if (attempts >= 30) { // 30 attempts * 100ms = 3 seconds
-               clearInterval(checkInterval);
-               resolve(false);
-             }
-           }, 100);
-         }
-       });
-     };
-
-     const fbqAvailable = await waitForFbq();
-
-     // 🔥 CORRECTED Meta Pixel Purchase event with PROPER user data format
-if (fbqAvailable && typeof window !== "undefined" && window.fbq) {
-  console.log("🛒 Starting Meta Pixel Purchase event with user data...");
-  console.log("✅ window.fbq is available!");
-  
-  // Get cart items
-  let cartItems = [];
-  let totalValue = parseFloat(transactionData.amount) || 0;
-  
-  if (checkoutData?.orderItems && Array.isArray(checkoutData.orderItems)) {
-    cartItems = checkoutData.orderItems;
-    console.log("📦 Cart items:", cartItems);
-  }
-  
-  // Prepare product data
-  const contentIds = [];
-  const contents = [];
-  
-  if (cartItems && cartItems.length > 0) {
-    cartItems.forEach((item) => {
-      if (item && item.id) {
-        contentIds.push(item.id.toString());
-        contents.push({
-          id: item.id.toString(),
-          quantity: item.quantity || 1,
-          item_price: item.price || 0,
+      // 🔥 Wait for Facebook Pixel to be available
+      const waitForFbq = () => {
+        return new Promise((resolve) => {
+          if (typeof window !== "undefined" && window.fbq) {
+            resolve(true);
+          } else {
+            // Wait up to 3 seconds for fbq to load
+            let attempts = 0;
+            const checkInterval = setInterval(() => {
+              attempts++;
+              if (window.fbq) {
+                clearInterval(checkInterval);
+                resolve(true);
+              } else if (attempts >= 30) { // 30 attempts * 100ms = 3 seconds
+                clearInterval(checkInterval);
+                resolve(false);
+              }
+            }, 100);
+          }
         });
-      }
-    });
-  }
-  
-  // 🎯 CRITICAL: Prepare user data in EXACT Facebook format
-  const userDataForFB = {};
-  
-  // 1. EMAIL (must be lowercase and trimmed)
-  if (finalUserData.email) {
-    const email = finalUserData.email.toLowerCase().trim();
-    if (email.includes('@')) {
-      userDataForFB.em = email;
-      console.log("📧 Email prepared:", userDataForFB.em);
-    }
-  }
-  
-  // 2. FIRST NAME (must be lowercase)
-  if (finalUserData.firstName) {
-    userDataForFB.fn = finalUserData.firstName.toLowerCase().trim();
-    console.log("👤 First name prepared:", userDataForFB.fn);
-  }
-  
-  // 3. PHONE (must be in E.164 format: country code + number)
-  if (finalUserData.phone) {
-    const phone = finalUserData.phone.replace(/\D/g, ''); // Remove all non-digits
-    
-    // Indian phone number handling
-    if (phone.length === 10) {
-      userDataForFB.ph = '91' + phone; // India country code + 10-digit number
-      console.log("📱 Phone prepared:", userDataForFB.ph);
-    } else if (phone.length === 12 && phone.startsWith('91')) {
-      userDataForFB.ph = phone;
-      console.log("📱 Phone prepared:", userDataForFB.ph);
-    } else {
-      console.log("⚠️ Phone format not recognized:", phone);
-    }
-  }
-  
-  // 4. LAST NAME (if available)
-  if (finalUserData.lastName) {
-    userDataForFB.ln = finalUserData.lastName.toLowerCase().trim();
-    console.log("👤 Last name prepared:", userDataForFB.ln);
-  }
-  
-  // 5. COUNTRY (from checkoutData)
-  if (checkoutData.country) {
-    userDataForFB.country = checkoutData.country.toLowerCase().trim();
-    console.log("🌍 Country prepared:", userDataForFB.country);
-  }
-  
-  // 6. CITY (if available)
-  if (checkoutData.city) {
-    userDataForFB.ct = checkoutData.city.toLowerCase().trim();
-    console.log("🏙️ City prepared:", userDataForFB.ct);
-  }
-  
-  console.log("🎯 FINAL User data for Pixel:", JSON.stringify(userDataForFB, null, 2));
-  console.log("📊 Product data:", {
-    content_ids: contentIds,
-    value: totalValue,
-    num_items: cartItems.length || 1
-  });
-  
-  // 🚀 METHOD 1: Send Purchase event with ALL parameters
-  try {
-    console.log('🚀 Sending Purchase event...');
-    
-    const purchaseParams = {
-
-      ...userDataForFB,
-
-      value: parseFloat(totalValue) || 0,
-      currency: "INR",
-      content_ids: contentIds,
-      contents: contents,
-      content_type: "product",
-      transaction_id: transactionData.trackingId,
-      num_items: cartItems.length || 1,
-      payment_method: transactionData.paymentMethod,
-
-      content_name: "Purchase",
-      content_category: "Fashion",
-      status: "completed",
-    };
-    
-    // Debug log to see EXACTLY what's being sent
-   console.log("📤 Purchase event parameters being sent:", JSON.stringify(purchaseParams, null, 2));
-    
-    // Send Purchase event
-    fbq("track", "Purchase", purchaseParams);
-    console.log("✅ Purchase event sent!");
-    
-  } catch (error) {
-    console.error("❌ Error in Purchase event:", error);
-  }
-  
-  setTimeout(() => {
-    if (Object.keys(userDataForFB).length > 0) {
-      console.log('🔄 Sending CompleteRegistration event...');
-      
-      const registrationParams = {
-        ...userDataForFB,
-
-        status: 'purchase_completed',
-        registration_method: transactionData.paymentMethod === "cod" ? "COD" : "Online",
-        currency: "INR",
-        value: parseFloat(totalValue) || 0,
       };
-      
 
-    }
-  }, 1000);
-} else {
-  console.error("❌ Facebook Pixel (window.fbq) is NOT available on this page!");
-  console.log("window.fbq:", typeof window !== "undefined" ? window.fbq : "window is undefined");
-}
+      const fbqAvailable = await waitForFbq();
+
+      // 🔥 CORRECTED Meta Pixel Purchase event with PROPER user data format
+      if (fbqAvailable && typeof window !== "undefined" && window.fbq) {
+        console.log("🛒 Starting Meta Pixel Purchase event with user data...");
+        console.log("✅ window.fbq is available!");
+
+        // Get cart items
+        let cartItems = [];
+        let totalValue = parseFloat(transactionData.amount) || 0;
+
+        if (checkoutData?.orderItems && Array.isArray(checkoutData.orderItems)) {
+          cartItems = checkoutData.orderItems;
+          console.log("📦 Cart items:", cartItems);
+        }
+
+        // Prepare product data
+        const contentIds = [];
+        const contents = [];
+
+        if (cartItems && cartItems.length > 0) {
+          cartItems.forEach((item) => {
+            if (item && item.id) {
+              contentIds.push(item.id.toString());
+              contents.push({
+                id: item.id.toString(),
+                quantity: item.quantity || 1,
+                item_price: item.price || 0,
+              });
+            }
+          });
+        }
+
+        // 🎯 CRITICAL: Prepare user data in EXACT Facebook format
+        const userDataForFB = {};
+
+        // 1. EMAIL (must be lowercase and trimmed)
+        if (finalUserData.email) {
+          const email = finalUserData.email.toLowerCase().trim();
+          if (email.includes('@')) {
+            userDataForFB.em = email;
+            console.log("📧 Email prepared:", userDataForFB.em);
+          }
+        }
+
+        // 2. FIRST NAME (must be lowercase)
+        if (finalUserData.firstName) {
+          userDataForFB.fn = finalUserData.firstName.toLowerCase().trim();
+          console.log("👤 First name prepared:", userDataForFB.fn);
+        }
+
+        // 3. PHONE (must be in E.164 format: country code + number)
+        if (finalUserData.phone) {
+          const phone = finalUserData.phone.replace(/\D/g, ''); // Remove all non-digits
+
+          // Indian phone number handling
+          if (phone.length === 10) {
+            userDataForFB.ph = '91' + phone; // India country code + 10-digit number
+            console.log("📱 Phone prepared:", userDataForFB.ph);
+          } else if (phone.length === 12 && phone.startsWith('91')) {
+            userDataForFB.ph = phone;
+            console.log("📱 Phone prepared:", userDataForFB.ph);
+          } else {
+            console.log("⚠️ Phone format not recognized:", phone);
+          }
+        }
+
+        // 4. LAST NAME (if available)
+        if (finalUserData.lastName) {
+          userDataForFB.ln = finalUserData.lastName.toLowerCase().trim();
+          console.log("👤 Last name prepared:", userDataForFB.ln);
+        }
+
+        // 5. COUNTRY (from checkoutData)
+        if (checkoutData.country) {
+          userDataForFB.country = checkoutData.country.toLowerCase().trim();
+          console.log("🌍 Country prepared:", userDataForFB.country);
+        }
+
+        // 6. CITY (if available)
+        if (checkoutData.city) {
+          userDataForFB.ct = checkoutData.city.toLowerCase().trim();
+          console.log("🏙️ City prepared:", userDataForFB.ct);
+        }
+
+        console.log("🎯 FINAL User data for Pixel:", JSON.stringify(userDataForFB, null, 2));
+        console.log("📊 Product data:", {
+          content_ids: contentIds,
+          value: totalValue,
+          num_items: cartItems.length || 1
+        });
+
+        // 🚀 METHOD 1: Send Purchase event with ALL parameters
+        try {
+          console.log('🚀 Sending Purchase event...');
+
+          const purchaseParams = {
+
+            ...userDataForFB,
+
+            value: parseFloat(totalValue) || 0,
+            currency: "INR",
+            content_ids: contentIds,
+            contents: contents,
+            content_type: "product",
+            transaction_id: transactionData.trackingId,
+            num_items: cartItems.length || 1,
+            payment_method: transactionData.paymentMethod,
+
+            content_name: "Purchase",
+            content_category: "Fashion",
+            status: "completed",
+          };
+
+          // Debug log to see EXACTLY what's being sent
+          console.log("📤 Purchase event parameters being sent:", JSON.stringify(purchaseParams, null, 2));
+
+          // Send Purchase event
+          fbq("track", "Purchase", purchaseParams);
+          console.log("✅ Purchase event sent!");
+
+        } catch (error) {
+          console.error("❌ Error in Purchase event:", error);
+        }
+
+        setTimeout(() => {
+          if (Object.keys(userDataForFB).length > 0) {
+            console.log('🔄 Sending CompleteRegistration event...');
+
+            const registrationParams = {
+              ...userDataForFB,
+
+              status: 'purchase_completed',
+              registration_method: transactionData.paymentMethod === "cod" ? "COD" : "Online",
+              currency: "INR",
+              value: parseFloat(totalValue) || 0,
+            };
+
+
+          }
+        }, 1000);
+      } else {
+        console.error("❌ Facebook Pixel (window.fbq) is NOT available on this page!");
+        console.log("window.fbq:", typeof window !== "undefined" ? window.fbq : "window is undefined");
+      }
 
       const generateSessionId = () => {
         const timestamp = Date.now();
@@ -471,7 +472,7 @@ if (fbqAvailable && typeof window !== "undefined" && window.fbq) {
         }
       };
 
- 
+
       const completeOrderData = {
         tracking_id: transactionData.trackingId,
         timestamp: new Date().toISOString(),
@@ -606,6 +607,15 @@ if (fbqAvailable && typeof window !== "undefined" && window.fbq) {
 
       // 🎯 Mark as successfully completed
       apiCallCompleted.current = true;
+      
+      event({
+        action: "Final Order Placed SucessFully ",
+        params: {
+          "payment_method": "COD",
+        }
+      },
+      )
+
       setBackendSent(true);
       setBackendProcessing(false);
 
@@ -802,11 +812,10 @@ if (fbqAvailable && typeof window !== "undefined" && window.fbq) {
       className={`min-h-screen mt-14 sm:mt-[72px] bg-gradient-to-br ${statusInfo.bgColor} flex items-center justify-center px-4 py-8`}
     >
       <div
-        className={`bg-white rounded-3xl shadow-2xl border border-red-100 p-6 sm:p-8 lg:p-10 w-full max-w-md sm:max-w-lg lg:max-w-2xl text-center transform transition-all duration-1000 ${
-          showContent
+        className={`bg-white rounded-3xl shadow-2xl border border-red-100 p-6 sm:p-8 lg:p-10 w-full max-w-md sm:max-w-lg lg:max-w-2xl text-center transform transition-all duration-1000 ${showContent
             ? "scale-100 opacity-100 translate-y-0"
             : "scale-95 opacity-0 translate-y-8"
-        }`}
+          }`}
       >
         {/* Status Icon with Enhanced Animation */}
         <div className="mb-8 flex justify-center relative">
