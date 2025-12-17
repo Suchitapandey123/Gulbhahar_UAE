@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useCart } from "@/Providers/ContextProviders/CartContext";
+import { event } from "@/utils/gtag";
 
 const CartPage = () => {
   const {
@@ -488,7 +489,16 @@ const CartPage = () => {
               {/* Checkout Buttons */}
               <div className="space-y-2">
                 <button
-                  onClick={() => (window.location.href = "/cart/checkout")}
+                  onClick={() =>{
+                      event({
+                              action: "redirected To checkout page ",
+                              params: {
+                                "First_Product_Name" : cart[0].name,
+                                "First_Product_Id" : cart[0].productId,
+                              },
+                            })
+                    window.location.href = "/cart/checkout"
+                  }}
                   className="w-full bg-red-900 hover:bg-red-800 text-white py-3 rounded-lg font-semibold transition-colors"
                 >
                   Proceed to Checkout
