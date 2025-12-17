@@ -10,6 +10,8 @@ import { AuthProvider } from "@/Providers/ContextProviders/AuthContext";
 import { CartProvider } from "@/Providers/ContextProviders/CartContext";
 import SessionWrapper from "@/Providers/GoogleSessionProvider/SessionWrapper";
 import { Toaster } from "sonner";
+import RouteChangeTracker from "@/app/components/RouteChangeTracker"
+
 
 // Configure fonts
 const poppins = Poppins({
@@ -102,7 +104,7 @@ export default function RootLayout({ children }) {
             src="https://www.googletagmanager.com/gtag/js?id=G-NR9HQHE5F4"
             strategy="afterInteractive"
           />
-          <Script
+          {/* <Script
             id="google-analytics"
             strategy="afterInteractive"
             dangerouslySetInnerHTML={{
@@ -116,7 +118,25 @@ export default function RootLayout({ children }) {
                 });
               `,
             }}
-          />
+          /> */}
+          <Script
+  id="google-analytics"
+  strategy="afterInteractive"
+  dangerouslySetInnerHTML={{
+    __html: `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-NR9HQHE5F4', {
+        page_path: window.location.pathname
+      });
+    `,
+  }}
+/>
+
+
+{/* SPA Route Change Tracker for dynamic page titles */}
+<RouteChangeTracker />
 
           {/* Microsoft Clarity */}
           <Script
@@ -132,9 +152,7 @@ export default function RootLayout({ children }) {
               `,
             }}
           />
-
-          
-
+         
           {/* Facebook Pixel */}
           <Script
             id="facebook-pixel"
@@ -149,7 +167,14 @@ export default function RootLayout({ children }) {
                 t.src=v;s=b.getElementsByTagName(e)[0];
                 s.parentNode.insertBefore(t,s)}(window, document,'script',
                 'https://connect.facebook.net/en_US/fbevents.js');
-                fbq('init', '1705895113580123');  
+
+                // Initialize with advanced matching
+                fbq('init', '1705895113580123', {
+                  em: 'optional',
+                  ph: 'optional',
+                  external_id: 'optional'
+                });
+
                 fbq('track', 'PageView');
               `,
             }}

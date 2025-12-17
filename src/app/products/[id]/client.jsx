@@ -47,12 +47,12 @@ export function ProductClient({ product, similarProducts }) {
   useEffect(() => {
   if (!product || !window.fbq) return;
 
-  
+
   fbq("track", "ProductView", {
     content_ids: [product.productId || product.id],
     content_name: product.name,
     content_type: "product",
-    value: product.price,
+    value: parseFloat(product.price) || 0,
     currency: "INR",
   });
 }, [product?.id]);
@@ -300,7 +300,7 @@ export function ProductClient({ product, similarProducts }) {
                 content_ids: [product.productId || product.id],
                 content_name: product.name,
                 content_type: "product",
-                value: product.price,
+                value: parseFloat(product.price) || 0,
                 currency: "INR",
               });
             }
@@ -1541,7 +1541,7 @@ const SizeGuideModal = ({ isOpen, onClose }) => {
                                     content_ids: [item.productId || item.id],
                                     content_name: item.name,
                                     content_type: "product",
-                                    value: item.price,
+                                    value: parseFloat(item.price) || 0,
                                     currency: "INR",
                                   });
                                 }

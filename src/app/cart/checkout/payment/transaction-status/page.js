@@ -201,9 +201,34 @@ const TransactionStatusContent = () => {
     console.log("👤 Final User Data for Pixel:", finalUserData);
 
     try {
+     // 🔥 Wait for Facebook Pixel to be available
+     const waitForFbq = () => {
+       return new Promise((resolve) => {
+         if (typeof window !== "undefined" && window.fbq) {
+           resolve(true);
+         } else {
+           // Wait up to 3 seconds for fbq to load
+           let attempts = 0;
+           const checkInterval = setInterval(() => {
+             attempts++;
+             if (window.fbq) {
+               clearInterval(checkInterval);
+               resolve(true);
+             } else if (attempts >= 30) { // 30 attempts * 100ms = 3 seconds
+               clearInterval(checkInterval);
+               resolve(false);
+             }
+           }, 100);
+         }
+       });
+     };
+
+     const fbqAvailable = await waitForFbq();
+
      // 🔥 CORRECTED Meta Pixel Purchase event with PROPER user data format
-if (typeof window !== "undefined" && window.fbq) {
+if (fbqAvailable && typeof window !== "undefined" && window.fbq) {
   console.log("🛒 Starting Meta Pixel Purchase event with user data...");
+  console.log("✅ window.fbq is available!");
   
   // Get cart items
   let cartItems = [];
@@ -295,10 +320,10 @@ if (typeof window !== "undefined" && window.fbq) {
     console.log('🚀 Sending Purchase event...');
     
     const purchaseParams = {
-      
+
       ...userDataForFB,
-      
-      value: totalValue,
+
+      value: parseFloat(totalValue) || 0,
       currency: "INR",
       content_ids: contentIds,
       contents: contents,
@@ -306,7 +331,7 @@ if (typeof window !== "undefined" && window.fbq) {
       transaction_id: transactionData.trackingId,
       num_items: cartItems.length || 1,
       payment_method: transactionData.paymentMethod,
-      
+
       content_name: "Purchase",
       content_category: "Fashion",
       status: "completed",
@@ -329,16 +354,19 @@ if (typeof window !== "undefined" && window.fbq) {
       
       const registrationParams = {
         ...userDataForFB,
-      
+
         status: 'purchase_completed',
         registration_method: transactionData.paymentMethod === "cod" ? "COD" : "Online",
         currency: "INR",
-        value: totalValue,
+        value: parseFloat(totalValue) || 0,
       };
       
-     
+
     }
   }, 1000);
+} else {
+  console.error("❌ Facebook Pixel (window.fbq) is NOT available on this page!");
+  console.log("window.fbq:", typeof window !== "undefined" ? window.fbq : "window is undefined");
 }
 
       const generateSessionId = () => {
