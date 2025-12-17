@@ -10,6 +10,8 @@ import { AuthProvider } from "@/Providers/ContextProviders/AuthContext";
 import { CartProvider } from "@/Providers/ContextProviders/CartContext";
 import SessionWrapper from "@/Providers/GoogleSessionProvider/SessionWrapper";
 import { Toaster } from "sonner";
+import RouteChangeTracker from "@/app/components/RouteChangeTracker"
+
 
 // Configure fonts
 const poppins = Poppins({
@@ -53,6 +55,7 @@ export async function generateMetadata() {
         'max-snippet': -1,
       },
     },
+    
   };
 }
 
@@ -73,6 +76,8 @@ export default function RootLayout({ children }) {
         {/* DNS Prefetch for third-party domains */}
         <link rel="dns-prefetch" href="https://analytic.thekapslog.com" />
         <link rel="dns-prefetch" href="https://www.clarity.ms" />
+        <meta name="facebook-domain-verification" content="i8jg1img7zm6lm54vot1vlfhvys5nc" />
+        <meta name="facebook-domain-verification" content="vsnutk0lf5e8h8j3qr40cba416cap0" />
 
         {/* Google Fonts */}
         <link
@@ -94,26 +99,34 @@ export default function RootLayout({ children }) {
             strategy="afterInteractive"
           />
 
+          
+
           {/* Google Analytics */}
           <Script
-            src="https://www.googletagmanager.com/gtag/js?id=G-NR9HQHE5F4"
+            src="https://www.googletagmanager.com/gtag/js?id=G-M4Q3C3DJQM"
             strategy="afterInteractive"
           />
+         
           <Script
-            id="google-analytics"
-            strategy="afterInteractive"
-            dangerouslySetInnerHTML={{
-              __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', 'G-NR9HQHE5F4', {
-                  page_title: document.title,
-                  page_location: window.location.href
-                });
-              `,
-            }}
-          />
+  id="google-analytics"
+  strategy="afterInteractive"
+  dangerouslySetInnerHTML={{
+    __html: `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-M4Q3C3DJQM', {
+        page_path: window.location.pathname
+      });
+    `,
+  }}
+/>
+
+
+
+
+{/* SPA Route Change Tracker for dynamic page titles */}
+<RouteChangeTracker />
 
           {/* Microsoft Clarity */}
           <Script
@@ -129,9 +142,7 @@ export default function RootLayout({ children }) {
               `,
             }}
           />
-
-          
-
+         
           {/* Facebook Pixel */}
           <Script
             id="facebook-pixel"
@@ -146,7 +157,14 @@ export default function RootLayout({ children }) {
                 t.src=v;s=b.getElementsByTagName(e)[0];
                 s.parentNode.insertBefore(t,s)}(window, document,'script',
                 'https://connect.facebook.net/en_US/fbevents.js');
-                fbq('init', '1705895113580123');
+
+                // Initialize with advanced matching
+                fbq('init', '1705895113580123', {
+                  em: 'optional',
+                  ph: 'optional',
+                  external_id: 'optional'
+                });
+
                 fbq('track', 'PageView');
               `,
             }}
@@ -162,6 +180,8 @@ export default function RootLayout({ children }) {
               alt="facebook image"
             />
           </noscript>
+
+          
 
           <AuthProvider>
             <ReactQueryProvider>

@@ -73,7 +73,7 @@ export default function QuickSearch() {
   async function getQuickLinksFun() {
       try {
         setLoading(true);
-        const parentCategory = "saree";
+        const parentCategory = "lehenga";
         const currentSlug = "kanjivaram-lehenga";
         const data = await pageService.getQuickLinks(
           parentCategory,

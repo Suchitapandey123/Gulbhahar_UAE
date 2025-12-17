@@ -176,7 +176,7 @@ const FAQ = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white">
+    <div className="bg-gradient-to-br from-red-50/30 to-white pt-8 sm:pt-12 lg:pt-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-20">
         
         {/* Header Section */}

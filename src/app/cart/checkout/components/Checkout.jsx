@@ -703,7 +703,7 @@ export default function CheckoutComponent() {
         content_ids: contentIds,
         content_type: 'product',
         content_name: 'Checkout Process',
-        value: total,
+        value: parseFloat(total) || 0,
         currency: 'INR',
         num_items: cart.reduce((sum, item) => sum + (item.quantity || 1), 0),
       });
