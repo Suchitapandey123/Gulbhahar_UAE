@@ -99,26 +99,14 @@ export default function RootLayout({ children }) {
             strategy="afterInteractive"
           />
 
+          
+
           {/* Google Analytics */}
           <Script
-            src="https://www.googletagmanager.com/gtag/js?id=G-NR9HQHE5F4"
+            src="https://www.googletagmanager.com/gtag/js?id=G-M4Q3C3DJQM"
             strategy="afterInteractive"
           />
-          {/* <Script
-            id="google-analytics"
-            strategy="afterInteractive"
-            dangerouslySetInnerHTML={{
-              __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', 'G-NR9HQHE5F4', {
-                  page_title: document.title,
-                  page_location: window.location.href
-                });
-              `,
-            }}
-          /> */}
+         
           <Script
   id="google-analytics"
   strategy="afterInteractive"
@@ -127,12 +115,14 @@ export default function RootLayout({ children }) {
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-NR9HQHE5F4', {
+      gtag('config', 'G-M4Q3C3DJQM', {
         page_path: window.location.pathname
       });
     `,
   }}
 />
+
+
 
 
 {/* SPA Route Change Tracker for dynamic page titles */}
