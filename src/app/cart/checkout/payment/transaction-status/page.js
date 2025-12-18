@@ -605,36 +605,38 @@ const TransactionStatusContent = () => {
       const result = await response.json();
       // console.log("✅ Backend response:", result);
 
-      // 🎯 Mark as successfully completed
-      apiCallCompleted.current = true;
-      
       event({
-        action: "Final Order Placed SucessFully ",
+        action: "Final Order Placed SuccessFully",
         params: {
           "payment_method": "COD",
         }
       },
       )
 
+      // 🎯 Mark as successfully completed
+      apiCallCompleted.current = true;
+      
+      
+
       setBackendSent(true);
       setBackendProcessing(false);
 
       // Clear localStorage and cart after successful send
-      try {
-        localStorage.removeItem("checkoutFormData");
-        localStorage.removeItem("shopping-cart");
-        clearCart();
-        // console.log("🗑️ Checkout data cleared from localStorage");
+      // try {
+      //   localStorage.removeItem("checkoutFormData");
+      //   localStorage.removeItem("shopping-cart");
+      //   clearCart();
+      //   // console.log("🗑️ Checkout data cleared from localStorage");
 
-        // 🛒 Clear cart only on successful transaction
-        localStorage.removeItem("cart");
-        // console.log("🛒 Cart cleared from localStorage");
+      //   // 🛒 Clear cart only on successful transaction
+      //   localStorage.removeItem("cart");
+      //   // console.log("🛒 Cart cleared from localStorage");
 
-        // Dispatch custom event to notify cart context of the change
-        window.dispatchEvent(new Event("cartCleared"));
-      } catch (e) {
-        console.warn("Could not clear localStorage");
-      }
+      //   // Dispatch custom event to notify cart context of the change
+      //   window.dispatchEvent(new Event("cartCleared"));
+      // } catch (e) {
+      //   console.warn("Could not clear localStorage");
+      // }
     } catch (error) {
       console.error("❌ Error sending complete order data to backend:", error);
 
