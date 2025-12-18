@@ -168,7 +168,7 @@ const EmailConfirmationStep = ({ email, setEmail, goToNextStep }) => {
     // mutationFn: forgotPasswordAPI,
     mutationFn: forgotPasswordAPI.forgotPassword,
     onSuccess: (data) => {
-      // console.log('Email sent successfully:', data);
+      // // console.log('Email sent successfully:', data);
       // showToast('Verification email sent successfully!', 'success');
       // toast.success('Email verified successfully!');
       toast.success('Verification email sent successfully!');
@@ -301,7 +301,7 @@ const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificati
     mutationFn: ({ email, verificationCode }) => 
     forgotPasswordAPI.verifyEmail(email, verificationCode), 
     onSuccess: (data) => {
-      // console.log('Email verified successfully:', data);
+      // // console.log('Email verified successfully:', data);
       setError('');
       setSuccessMessage('Email verified successfully!');
       // showToast('Email verified successfully!', 'success');
@@ -331,7 +331,7 @@ const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificati
     // mutationFn: forgotPasswordAPI,
     mutationFn: forgotPasswordAPI.forgotPassword,
     onSuccess: (data) => {
-      // console.log('Email resent successfully:', data);
+      // // console.log('Email resent successfully:', data);
       setError('');
       setSuccessMessage('Verification code resent successfully!');
       // showToast('Verification code resent successfully!', 'success');
@@ -495,7 +495,7 @@ const CreatePasswordStep = ({ email, verificationCode, goToHomePage }) => {
   const resetPasswordMutation = useMutation({
     mutationFn: forgotPasswordAPI.resetPassword,
     onSuccess: (data) => {
-      // console.log('Password reset successful:', data);
+      // // console.log('Password reset successful:', data);
       // Show success message briefly before redirecting
       const successMessage = 'Password reset successfully! Redirecting to login...';
       alert(successMessage); // You can replace this with a proper toast/notification

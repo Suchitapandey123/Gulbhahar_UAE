@@ -28,7 +28,7 @@ const AddressBookView = ({ onNavigate, ProfileView }) => {
     
     try {
       const response = await profileAPI.getUserAddresses();
-      console.log("Address API Response:", response);
+      // console.log("Address API Response:", response);
 
       if (response.success && Array.isArray(response.data)) {
         setSavedAddresses(response.data);

@@ -1,7 +1,7 @@
 import ProfileImageDisplay from "./ProfileImageDisplay";
 
 const ProfileHeader = ({ formData }) => {
-  console.log("profile header" , formData.imageUrl)
+  // console.log("profile header" , formData.imageUrl)
   return (
     <div className="mb-8 sm:mb-12">
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-6">

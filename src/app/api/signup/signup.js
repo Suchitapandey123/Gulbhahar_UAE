@@ -83,7 +83,7 @@ export const signupApi = {
         password
       }),
     });
-    console.log(response)
+    // console.log(response)
     return response;
   },
    

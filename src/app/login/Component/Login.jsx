@@ -263,16 +263,16 @@ const LoginPage = () => {
         return;
       }
 
-      console.log('📱 Sending OTP to:', mobileNumber);
+      // console.log('📱 Sending OTP to:', mobileNumber);
       
       const response = await signupApi.sendMobileLoginOtp(mobileNumber);
-      console.log('📡 OTP Response status:', response.status);
+      // console.log('📡 OTP Response status:', response.status);
       
       const data = await response.json();
-      console.log('📦 OTP API Response:', data);
+      // console.log('📦 OTP API Response:', data);
       
       if (response.ok) {
-        console.log('✅ OTP sent successfully');
+        // console.log('✅ OTP sent successfully');
         setShowOtpField(true);
         setIsOtpSent(true);
         setUserId(data.userId || data.user?.id || data.id);
@@ -300,16 +300,16 @@ const LoginPage = () => {
         return;
       }
 
-      console.log('🔐 Verifying OTP:', { userId, otp });
+      // console.log('🔐 Verifying OTP:', { userId, otp });
       
       const response = await signupApi.verifyMobileLoginOtp(userId, otp);
-      console.log('📡 OTP Verification Response status:', response.status);
+      // console.log('📡 OTP Verification Response status:', response.status);
       
       const data = await response.json();
-      console.log('📦 OTP Verification API Response:', data);
+      // console.log('📦 OTP Verification API Response:', data);
       
       if (response.ok) {
-        console.log('✅ OTP verified successfully');
+        // console.log('✅ OTP verified successfully');
         
         const token = data.token || data.accessToken || data.authToken;
         
@@ -359,16 +359,16 @@ const LoginPage = () => {
     setSuccessMessage('');
     
     try {
-      console.log('🔄 Attempting login with:', { email, password: '***' });
+      // console.log('🔄 Attempting login with:', { email, password: '***' });
       
       const response = await signupApi.login(email, password);
-      console.log('📡 Response status:', response.status);
+      // console.log('📡 Response status:', response.status);
       
       const data = await response.json();
-      console.log('📦 Full API Response:', data);
+      // console.log('📦 Full API Response:', data);
       
       if (response.ok) {
-        console.log('✅ Login successful:', data);
+        // console.log('✅ Login successful:', data);
         
         const token = data.token || data.accessToken || data.authToken;
         
@@ -459,7 +459,7 @@ const LoginPage = () => {
 
   // Social login handler
   const handleSocialLogin = async (provider) => {
-    console.log(`🔄 Starting ${provider} OAuth flow...`);
+    // console.log(`🔄 Starting ${provider} OAuth flow...`);
     setGeneralError('');
     setSocialLoginLoading(true);
     

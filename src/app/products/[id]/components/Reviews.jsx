@@ -217,13 +217,13 @@ export default function Reviews({ variant = "mobile", productId }) {
     const canModify = reviewUserId === currentUserIdStr;
     
     // Debug logging
-    // console.log('=== AUTH CONTEXT MODIFY CHECK ===');
-    // console.log('Is Authenticated:', isAuthenticated);
-    // console.log('Current User ID (from context):', currentUserIdStr);
-    // console.log('Review User ID:', reviewUserId);
-    // console.log('Can Modify:', canModify);
-    // console.log('Review object:', review);
-    // console.log('================================');
+    // // console.log('=== AUTH CONTEXT MODIFY CHECK ===');
+    // // console.log('Is Authenticated:', isAuthenticated);
+    // // console.log('Current User ID (from context):', currentUserIdStr);
+    // // console.log('Review User ID:', reviewUserId);
+    // // console.log('Can Modify:', canModify);
+    // // console.log('Review object:', review);
+    // // console.log('================================');
     
     return canModify;
   };

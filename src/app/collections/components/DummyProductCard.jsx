@@ -121,7 +121,7 @@ export default function DummyProductCard({
               className={`w-full h-full object-fit ${viewMode === "list" ? "rounded-lg" : ""
                 }`}
               onError={(e) => {
-                console.log(`Image ${index} failed to load (403 or other error), using fallback: ${FALLBACK_IMAGES[index % FALLBACK_IMAGES.length]}`);
+                // console.log(`Image ${index} failed to load (403 or other error), using fallback: ${FALLBACK_IMAGES[index % FALLBACK_IMAGES.length]}`);
                 setImageError(true);
               }}
             />

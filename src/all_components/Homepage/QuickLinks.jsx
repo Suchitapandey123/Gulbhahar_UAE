@@ -79,7 +79,7 @@ export default function QuickSearch() {
           parentCategory,
           currentSlug
         );
-        console.log("QuickLinks API Response:", data);
+        // console.log("QuickLinks API Response:", data);
         setQuickLinksData(data);
       } catch (error) {
         console.error("Error fetching quick links:", error);
@@ -207,7 +207,7 @@ const quickLinks = getQuickLinks();
         >
           {popularSearches.map((item, index) => (
             <motion.div key={index} variants={itemVariants} className="group">
-              <Link href={`/collections/${item}`}>
+              <Link href={`/collections/${item}`} prefetch={true}>
                 <motion.div
                   variants={tagVariants}
                   initial="rest"

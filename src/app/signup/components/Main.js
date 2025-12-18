@@ -111,7 +111,7 @@ const SignupPage = () => {
 
 
      try {
-          // console.log('🔄 Attempting login with:', { email, password: '***' });
+          // // console.log('🔄 Attempting login with:', { email, password: '***' });
           
           // const response = await fetch('https://api.gulbhahar.com/api/users/login', {
           //   method: 'POST',
@@ -126,13 +126,13 @@ const SignupPage = () => {
 
           const response = await signupApi.login(formData.email, formData.password);
     
-          console.log('📡 Response status:', response.status);
+          // console.log('📡 Response status:', response.status);
           
           const data = await response.json();
-          console.log('📦 Full API Response:', data);
+          // console.log('📦 Full API Response:', data);
           
           if (response.ok) {
-            console.log('✅ Login successful:', data);
+            // console.log('✅ Login successful:', data);
             
             const token = data.token || data.accessToken || data.authToken;
             
@@ -269,7 +269,7 @@ const SignupPage = () => {
     try {
       setError('');
       setSuccess('');
-      console.log('🔄 Initiating phone OTP for:', formData.phoneNumber);
+      // console.log('🔄 Initiating phone OTP for:', formData.phoneNumber);
       
       // const response = await fetch('https://api.gulbhahar.com/codRoutes/initiate', {
       //   method: 'POST',
@@ -283,12 +283,12 @@ const SignupPage = () => {
       
       const response = await signupApi.initiatePhoneOTP(formData.phoneNumber);
       const data = await response.json();
-      console.log('📱 Phone OTP Response:', data);
+      // console.log('📱 Phone OTP Response:', data);
 
       if (response.ok && data.success) {
         setPhoneSessionId(data.sessionId);
         setSuccess(data.message || 'OTP sent on WhatsApp – verify within 2 min.');
-        console.log('✅ Phone OTP initiated successfully, sessionId:', data.sessionId);
+        // console.log('✅ Phone OTP initiated successfully, sessionId:', data.sessionId);
       } else {
         setError(data.message || 'Failed to send OTP. Please try again.');
         console.error('❌ Phone OTP initiation failed:', data);
@@ -305,7 +305,7 @@ const SignupPage = () => {
     setSuccess('');
     
     const verificationCode = formData.phoneVerificationCode.join('');
-    console.log('🔍 Starting phone verification with code:', verificationCode);
+    // console.log('🔍 Starting phone verification with code:', verificationCode);
     
     if (verificationCode.length !== 6) {
       setError('Please enter the complete 6-digit verification code');
@@ -320,7 +320,7 @@ const SignupPage = () => {
     }
     
     try {
-      console.log('🔍 Verifying phone OTP:', verificationCode, 'with sessionId:', phoneSessionId);
+      // console.log('🔍 Verifying phone OTP:', verificationCode, 'with sessionId:', phoneSessionId);
       
       // const response = await fetch('https://api.gulbhahar.com/codRoutes/verify', {
       //   method: 'POST',
@@ -335,11 +335,11 @@ const SignupPage = () => {
       
       const response = await signupApi.verifyPhoneOTP(phoneSessionId, verificationCode);
       const data = await response.json();
-      console.log('📱 Phone OTP Verification Response:', data);
-      console.log('📱 Response Status:', response.status);
+      // console.log('📱 Phone OTP Verification Response:', data);
+      // console.log('📱 Response Status:', response.status);
 
       if (response.ok) {
-        console.log('✅ Phone verified successfully, proceeding to auto-login');
+        // console.log('✅ Phone verified successfully, proceeding to auto-login');
         setSuccess('Phone verified successfully! Completing registration...');
         
         // Clear the session ID after successful verification
@@ -347,7 +347,7 @@ const SignupPage = () => {
         
         // Call auto-login after 1 second delay
         setTimeout(() => {
-          console.log('🚀 Calling performAutoLogin...');
+          // console.log('🚀 Calling performAutoLogin...');
           performAutoLogin();
         }, 1000);
       } else {
@@ -368,7 +368,7 @@ const SignupPage = () => {
     setSuccess('');
     
     try {
-      console.log('🔄 Resending phone OTP for:', formData.phoneNumber);
+      // console.log('🔄 Resending phone OTP for:', formData.phoneNumber);
       
       // const response = await fetch('https://api.gulbhahar.com/codRoutes/initiate', {
       //   method: 'POST',
@@ -391,7 +391,7 @@ const SignupPage = () => {
           ...prevState,
           phoneVerificationCode: ['', '', '', '', '', '']
         }));
-        console.log('✅ Phone OTP resent successfully, new sessionId:', data.sessionId);
+        // console.log('✅ Phone OTP resent successfully, new sessionId:', data.sessionId);
         
         // Clear success message after 3 seconds
         setTimeout(() => setSuccess(''), 3000);
@@ -490,7 +490,7 @@ const SignupPage = () => {
         }
         
         // Automatically initiate phone OTP when user account is created
-        console.log('✅ User account created, initiating phone OTP...');
+        // console.log('✅ User account created, initiating phone OTP...');
         await initiatePhoneOTP();
         
         setStep(3);

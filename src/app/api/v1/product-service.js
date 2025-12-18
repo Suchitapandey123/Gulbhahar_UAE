@@ -13,7 +13,7 @@ const api = axios.create({
 const ProductApi_v1 = {
   // Add product to wishlist
   addToCart: async (product, token) => {
-    console.log(product, token);  
+    // console.log(product, token);  
     try {
       const response = await api.post("/api/cart/add", {
         productId: product.productId,

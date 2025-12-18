@@ -10,12 +10,14 @@ import { CartProvider } from "@/Providers/ContextProviders/CartContext";
 import SessionWrapper from "@/Providers/GoogleSessionProvider/SessionWrapper";
 import { Toaster } from "sonner";
 import RouteChangeTracker from "@/app/components/RouteChangeTracker"
+import Image from "next/image";
 
 
 // Configure fonts
 const poppins = Poppins({
   variable: "--font-sans",
   subsets: ["latin"],
+  preload:true,
   weight: ["300", "400", "500", "600", "700"],
   display: "swap",
 });
@@ -23,6 +25,7 @@ const poppins = Poppins({
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
+  preload:true,
   display: "swap",
 });
 
@@ -164,7 +167,7 @@ export default function RootLayout({ children }) {
 
           {/* Facebook Pixel Noscript */}
           <noscript>
-            <img
+            <Image
               height="1"
               width="1"
               style={{ display: 'none' }}

@@ -57,7 +57,7 @@ export function ProductClient({ product, similarProducts }) {
       currency: "INR",
     });
   }, [product?.id]);
-  // console.log(product)
+  // // console.log(product)
   const router = useRouter();
   const { isAuthenticated } = useAuth();
   const { showToast, ToastContainer } = useToast();
@@ -122,7 +122,7 @@ export function ProductClient({ product, similarProducts }) {
       // }
 
       // const data = await response.json();
-      // console.log("Delivery check response:", data.msg);
+      // // console.log("Delivery check response:", data.msg);
 
 
       if (data.msg.delivery_codes && data.msg.delivery_codes.length > 0) {
@@ -261,7 +261,7 @@ export function ProductClient({ product, similarProducts }) {
   }, [isModalOpen]);
 
   const handleAddToCart = async () => {
-    console.log("🛒 Product Detail - Adding to cart:", product);
+    // console.log("🛒 Product Detail - Adding to cart:", product);
 
     if (!product.productId && !product.id) {
       // showToast("Product ID not found", "error");
@@ -274,10 +274,10 @@ export function ProductClient({ product, similarProducts }) {
         currentColor || product.colors?.[0] || "default";
       const cartSelectedSize = selectedSize || product.sizes?.[0] || "default";
 
-      console.log("🎨 Selected variants:", {
-        color: cartSelectedColor,
-        size: cartSelectedSize,
-      });
+      // console.log("🎨 Selected variants:", {
+      //   color: cartSelectedColor,
+      //   size: cartSelectedSize,
+      // });
 
       const cartItem = {
         ...product,
@@ -289,12 +289,12 @@ export function ProductClient({ product, similarProducts }) {
         addedAt: new Date().toISOString(),
       };
 
-      console.log("🔍 Standardized cart item:", cartItem);
+      // console.log("🔍 Standardized cart item:", cartItem);
 
       const result = await addToCart(cartItem);
 
       if (result.success) {
-        console.log("✅ Item added successfully to cart");
+        // console.log("✅ Item added successfully to cart");
 
         event({
           action: "Added to Cart ",
@@ -328,7 +328,7 @@ export function ProductClient({ product, similarProducts }) {
           result.message || "Failed to add item to cart"
         )
 
-        // console.log("❌ Failed to add item to cart");
+        // // console.log("❌ Failed to add item to cart");
         // showToast(result.message || "Failed to add item to cart", "error");
       }
     } catch (error) {
@@ -1518,10 +1518,10 @@ export function ProductClient({ product, similarProducts }) {
                                 const cartSelectedColor = item.colors?.[0] || "default";
                                 const cartSelectedSize = item.sizes?.[0] || "default";
 
-                                console.log("🎨 Selected variants for similar product:", {
-                                  color: cartSelectedColor,
-                                  size: cartSelectedSize,
-                                });
+                                // console.log("🎨 Selected variants for similar product:", {
+                                //   color: cartSelectedColor,
+                                //   size: cartSelectedSize,
+                                // });
 
                                 const cartItem = {
                                   ...item,
@@ -1533,12 +1533,12 @@ export function ProductClient({ product, similarProducts }) {
                                   addedAt: new Date().toISOString(),
                                 };
 
-                                console.log("🔍 Standardized similar product cart item:", cartItem);
+                                // console.log("🔍 Standardized similar product cart item:", cartItem);
 
                                 const result = await addToCart(cartItem);
 
                                 if (result.success) {
-                                  console.log("✅ Similar product added successfully to cart");
+                                  // console.log("✅ Similar product added successfully to cart");
                                   if (window.fbq) {
                                     fbq("track", "AddToCart", {
                                       content_ids: [item.productId || item.id],
@@ -1560,7 +1560,7 @@ export function ProductClient({ product, similarProducts }) {
                                   // );
                                 } else {
                                   toast.error(result.message || "Failed to add item to cart");
-                                  // console.log("❌ Failed to add similar product to cart");
+                                  // // console.log("❌ Failed to add similar product to cart");
                                   // showToast(result.message || "Failed to add item to cart", "error");
                                 }
                               } catch (error) {

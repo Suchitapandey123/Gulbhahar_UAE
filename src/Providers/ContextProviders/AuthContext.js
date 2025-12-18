@@ -110,7 +110,7 @@ const clearAuthData = () => {
   try {
     if (typeof window === 'undefined') return;
     
-    console.log('🧹 Clearing all auth data...');
+    // console.log('🧹 Clearing all auth data...');
     
     // Clear localStorage
     localStorage.removeItem('authToken');
@@ -139,7 +139,7 @@ const clearAuthData = () => {
       document.cookie = `${cookieName}=; expires=${pastDate}; path=/`;
     });
     
-    console.log('✅ All auth data cleared');
+    // console.log('✅ All auth data cleared');
   } catch (error) {
     console.error('Error clearing auth data:', error);
   }
@@ -160,40 +160,40 @@ export const AuthProvider = ({ children }) => {
       try {
         // 🔥 IMPORTANT: Don't initialize if we're in the middle of logging out
         if (isLoggingOut) {
-          console.log('🚫 Skipping auth initialization - logout in progress');
+          // console.log('🚫 Skipping auth initialization - logout in progress');
           setIsLoading(false);
           return;
         }
 
-        console.log('🔄 Initializing auth state...');
+        // console.log('🔄 Initializing auth state...');
         
         const token = getTokenFromStorage();
         const user = getUserDataFromStorage();
         const timestamp = getLoginTimestampFromStorage();
 
-        console.log('📋 Auth initialization data:', { 
-          hasToken: !!token, 
-          hasUser: !!user, 
-          timestamp 
-        });
+        // console.log('📋 Auth initialization data:', { 
+          // hasToken: !!token, 
+          // hasUser: !!user, 
+          // timestamp 
+        // });
 
         if (token && user) {
           // Check if token is expired before setting authenticated
           const isExpired = checkTokenExpiration(timestamp);
           
           if (isExpired) {
-            console.log('🕐 Token expired during initialization, clearing data');
+            // console.log('🕐 Token expired during initialization, clearing data');
             clearAuthData();
             setIsAuthenticated(false);
           } else {
-            console.log('✅ Valid auth data found, setting authenticated');
+            // console.log('✅ Valid auth data found, setting authenticated');
             setAuthTokenState(token);
             setUserDataState(user);
             setLoginTimestampState(timestamp);
             setIsAuthenticated(true);
           }
         } else {
-          console.log('❌ No valid auth data found');
+          // console.log('❌ No valid auth data found');
           setIsAuthenticated(false);
         }
       } catch (error) {
@@ -228,7 +228,7 @@ export const AuthProvider = ({ children }) => {
   // Login function
   const login = async (token, user) => {
     try {
-      console.log('🔐 Logging in user...', { email: user?.email });
+      // console.log('🔐 Logging in user...', { email: user?.email });
       
       // Clear any existing logout state
       setIsLoggingOut(false);
@@ -244,7 +244,7 @@ export const AuthProvider = ({ children }) => {
       setLoginTimestampState(timestamp);
       setIsAuthenticated(true);
 
-      console.log('✅ Login successful');
+      // console.log('✅ Login successful');
       return true;
     } catch (error) {
       console.error('🚨 Error during login:', error);
@@ -255,7 +255,7 @@ export const AuthProvider = ({ children }) => {
   // 🔥 IMPROVED LOGOUT FUNCTION
   const logout = async () => {
     try {
-      console.log('🚪 Starting logout process...');
+      // console.log('🚪 Starting logout process...');
       
       // Set logout state to prevent re-initialization
       setIsLoggingOut(true);
@@ -275,12 +275,12 @@ export const AuthProvider = ({ children }) => {
           redirect: false, // Don't auto-redirect
           callbackUrl: '/login' 
         });
-        console.log('✅ NextAuth signOut completed');
+        // console.log('✅ NextAuth signOut completed');
       } catch (nextAuthError) {
-        console.log('ℹ️ NextAuth signOut not needed or failed:', nextAuthError.message);
+        // console.log('ℹ️ NextAuth signOut not needed or failed:', nextAuthError.message);
       }
       
-      console.log('✅ Logout completed successfully');
+      // console.log('✅ Logout completed successfully');
       
       // Small delay to ensure all cleanup is done
       setTimeout(() => {
@@ -317,22 +317,22 @@ export const AuthProvider = ({ children }) => {
   // 🔥 IMPROVED: Auto logout if token is expired (but not during logout process)
   useEffect(() => {
     if (isAuthenticated && !isLoggingOut && isTokenExpired()) {
-      console.log('🕐 Token expired, auto-logging out...');
+      // console.log('🕐 Token expired, auto-logging out...');
       logout();
     }
   }, [isAuthenticated, loginTimestamp, isLoggingOut]);
 
   // 🔥 DEBUGGING: Log auth state changes
-  useEffect(() => {
-    console.log('🔍 Auth state changed:', {
-      isAuthenticated,
-      hasToken: !!authToken,
-      hasUser: !!userData,
-      isLoading,
-      isLoggingOut,
-      userEmail: userData?.email
-    });
-  }, [isAuthenticated, authToken, userData, isLoading, isLoggingOut]);
+  // useEffect(() => {
+  //   // console.log('🔍 Auth state changed:', {
+  //   //   isAuthenticated,
+  //   //   hasToken: !!authToken,
+  //   //   hasUser: !!userData,
+  //   //   isLoading,
+  //   //   isLoggingOut,
+  //   //   userEmail: userData?.email
+  //   // });
+  // }, [isAuthenticated, authToken, userData, isLoading, isLoggingOut]);
 
   // Context value
   const value = {

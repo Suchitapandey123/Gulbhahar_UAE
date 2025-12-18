@@ -103,7 +103,7 @@ const ProductNotFound = ({
   onGoBack = () => window.history.back(),
   onGoHome = () => window.location.href = '/',
   products = sampleProducts,
-  onProductClick = (id) => console.log('Product clicked:', id),
+  // onProductClick = (id) => console.log('Product clicked:', id),
   customMessage = null
 }) => {
   return (

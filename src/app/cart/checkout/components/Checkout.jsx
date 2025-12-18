@@ -307,13 +307,13 @@ export default function CheckoutComponent() {
   });
    
      
-  useEffect(() => {
-  console.log("🔄 formData updated:", {
-    email: formData.email,
-    fullName: formData.fullName,
-    allFields: formData
-  });
-}, [formData]);
+//   useEffect(() => {
+//   console.log("🔄 formData updated:", {
+//     email: formData.email,
+//     fullName: formData.fullName,
+//     allFields: formData
+//   });
+// }, [formData]);
 
 
    useEffect(() => {
@@ -872,13 +872,13 @@ export default function CheckoutComponent() {
         
         if (savedData) {
     const parsedSavedData = JSON.parse(savedData);
-    console.log("✅ Verified saved data structure:", {
-      hasEmail: 'email' in parsedSavedData,
-      email: parsedSavedData.email,
-      hasFullName: 'fullName' in parsedSavedData,
-      fullName: parsedSavedData.fullName,
-      allKeys: Object.keys(parsedSavedData)
-    });
+    // // console.log("✅ Verified saved data structure:", {
+    //   hasEmail: 'email' in parsedSavedData,
+    //   email: parsedSavedData.email,
+    //   hasFullName: 'fullName' in parsedSavedData,
+    //   fullName: parsedSavedData.fullName,
+    //   allKeys: Object.keys(parsedSavedData)
+    // });
   }
       } catch (error) {
         // console.error("❌ Error saving checkout data:", error);
