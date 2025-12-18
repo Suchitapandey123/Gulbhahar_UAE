@@ -622,21 +622,21 @@ const TransactionStatusContent = () => {
       setBackendProcessing(false);
 
       // Clear localStorage and cart after successful send
-      // try {
-      //   localStorage.removeItem("checkoutFormData");
-      //   localStorage.removeItem("shopping-cart");
-      //   clearCart();
-      //   // console.log("🗑️ Checkout data cleared from localStorage");
+      try {
+        localStorage.removeItem("checkoutFormData");
+        localStorage.removeItem("shopping-cart");
+        clearCart();
+        // console.log("🗑️ Checkout data cleared from localStorage");
 
-      //   // 🛒 Clear cart only on successful transaction
-      //   localStorage.removeItem("cart");
-      //   // console.log("🛒 Cart cleared from localStorage");
+        // 🛒 Clear cart only on successful transaction
+        localStorage.removeItem("cart");
+        // console.log("🛒 Cart cleared from localStorage");
 
-      //   // Dispatch custom event to notify cart context of the change
-      //   window.dispatchEvent(new Event("cartCleared"));
-      // } catch (e) {
-      //   console.warn("Could not clear localStorage");
-      // }
+        // Dispatch custom event to notify cart context of the change
+        window.dispatchEvent(new Event("cartCleared"));
+      } catch (e) {
+        console.warn("Could not clear localStorage");
+      }
     } catch (error) {
       console.error("❌ Error sending complete order data to backend:", error);
 

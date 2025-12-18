@@ -286,6 +286,7 @@ export default function CheckoutComponent() {
     email: { isValid: null, error: null },
     phone: { isValid: null, error: null },
     fullName: { isValid: null, error: null },
+
   });
 
   const [postalCodeValidation, setPostalCodeValidation] = useState({
@@ -472,7 +473,7 @@ export default function CheckoutComponent() {
             city: "Default City",
             district: "Default District", 
             state: "Default State",
-            cod: true, // ✅ COD available by default
+            cod: true, // COD available by default
             prepaid: true,
             pickup: true,
             covidZone: "Green",
