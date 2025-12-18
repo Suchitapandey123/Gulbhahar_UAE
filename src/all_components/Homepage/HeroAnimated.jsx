@@ -278,6 +278,7 @@ export default function ModernHeroAnimated() {
                   sizes="100vw"
                   className="object-cover"
                   priority
+                  loading="eager"
                   style={{
                     transform: 'translateZ(0)',
                     willChange: 'transform',
@@ -294,6 +295,7 @@ export default function ModernHeroAnimated() {
                   sizes="100vw"
                   className="object-cover"
                   priority
+                  loading="eager"
                   style={{
                     transform: 'translateZ(0)',
                     willChange: 'transform',

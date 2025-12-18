@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { X, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 
-const ImageModal = ({ 
-  isModalOpen, 
-  closeModal, 
-  currentImages, 
-  modalImageIndex, 
+const ImageModal = ({
+  isModalOpen,
+  closeModal,
+  currentImages,
+  modalImageIndex,
   setModalImageIndex,
   currentMainImage,
   product,
@@ -63,7 +63,7 @@ const ImageModal = ({
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (!isModalOpen) return;
-      
+
       if (e.key === 'ArrowLeft') prevImage();
       if (e.key === 'ArrowRight') nextImage();
       if (e.key === 'Escape') closeModal();
@@ -77,7 +77,7 @@ const ImageModal = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center">
-      <div 
+      <div
         ref={modalRef}
         className="relative w-full h-full  flex items-start sm:items-center justify-center"
         onMouseDown={handleMouseDown}
@@ -138,8 +138,8 @@ const ImageModal = ({
                 className="max-w-full max-h-full object-contain select-none"
                 width={1200}
                 height={800}
-                quality={90}
-                priority={true}
+                quality={75}
+                loading="eager"
                 onLoad={() => {
                   setImageLoading(false);
                   const currentUrl = currentImages[modalImageIndex] || currentMainImage;
@@ -171,11 +171,10 @@ const ImageModal = ({
             <button
               key={idx}
               onClick={() => setModalImageIndex(idx)}
-              className={`relative flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
-                modalImageIndex === idx
+              className={`relative flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-200 ${modalImageIndex === idx
                   ? "border-white shadow-lg scale-110"
                   : "border-transparent opacity-70 hover:opacity-100"
-              }`}
+                }`}
             >
               {/* Thumbnail Loading State */}
               {thumbnailsLoading.has(idx) && (
@@ -187,9 +186,8 @@ const ImageModal = ({
               <Image
                 src={img}
                 alt={`Thumbnail ${idx + 1}`}
-                className={`object-cover w-full h-full transition-opacity duration-200 ${
-                  thumbnailsLoading.has(idx) ? 'opacity-0' : 'opacity-100'
-                }`}
+                className={`object-cover w-full h-full transition-opacity duration-200 ${thumbnailsLoading.has(idx) ? 'opacity-0' : 'opacity-100'
+                  }`}
                 width={64}
                 height={64}
                 quality={60}
@@ -204,7 +202,7 @@ const ImageModal = ({
         </div>
 
         {/* Hidden preload images using Next.js Image for adjacent images */}
-        <div className="absolute -top-full opacity-0 pointer-events-none">
+        {/* <div className="absolute -top-full opacity-0 pointer-events-none">
           {currentImages.map((img, idx) => {
             const isAdjacent = Math.abs(idx - modalImageIndex) <= 1 && idx !== modalImageIndex;
             return isAdjacent ? (
@@ -222,7 +220,7 @@ const ImageModal = ({
               />
             ) : null;
           })}
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -26,7 +26,7 @@ const productApi = {
   
 
   productById: async (productId) => {
-    // console.log(productId)
+    // // console.log(productId)
     try {
       const response = await api.post(
         "/api/products/get-product-by" ,
@@ -43,7 +43,7 @@ const productApi = {
   
    
   getSimilarProducts: async (productId) => {
-    // console.log(productId)
+    // // console.log(productId)
     try {
       const response = await api.get(
         "/api/products/get-similar-product" ,
@@ -60,7 +60,7 @@ const productApi = {
 
 
   getInterestedProducts: async (productId) => {
-    // console.log(productId)
+    // // console.log(productId)
     try {
       const response = await api.post(
         "api/products/intrested-product",
@@ -122,12 +122,12 @@ const productApi = {
      
   
     getProductsByCategory: async (categoryName) => {
-      console.log(categoryName)
+      // console.log(categoryName)
     try {
   const response = await api.post("/api/products/get-all-product-by-category", {
     category:  categoryName 
   });
-  console.log('API raw response:', response.data); 
+  // console.log('API raw response:', response.data); 
   // return response.data.data || response.data; 
    return response.data;
 } catch (err) {

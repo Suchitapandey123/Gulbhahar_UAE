@@ -21,7 +21,7 @@ const ProfileImageDisplay = ({
 }, [imageUrl]);
 
   const handleImageLoad = () => {
-    // console.log("Image loaded successfully:", imageUrl);
+    // // console.log("Image loaded successfully:", imageUrl);
     setImageError(false);
   };
 

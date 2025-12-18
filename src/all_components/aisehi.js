@@ -33,7 +33,7 @@ const handler = NextAuth({
         body: JSON.stringify({ idToken: token.id_token })
       })
       const data = await response.json()
-      console.log("Backend Responsse : " , data)
+      // console.log("Backend Responsse : " , data)
       session.id_token = data.token
       // session.id_token = token.id_token // Add id_token to session
       return session

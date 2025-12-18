@@ -635,10 +635,6 @@ const TransactionStatusContent = () => {
       } catch (e) {
         console.warn("Could not clear localStorage");
       }
-
-      // // console.log(
-      //   `🎉 Complete ${transactionData.paymentMethod.toUpperCase()} order data sent to backend successfully`
-      // );
     } catch (error) {
       console.error("❌ Error sending complete order data to backend:", error);
 

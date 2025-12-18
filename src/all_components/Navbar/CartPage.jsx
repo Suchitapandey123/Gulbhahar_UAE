@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   X,
   ShoppingBag,
@@ -33,7 +33,7 @@ const CartPage = () => {
 
   const handleNavigateToProduct = (itemId) => {
     // Close the cart first
-    toggleCart(); 
+    toggleCart();
     // Small delay to allow cart closing animation, then navigate
     setTimeout(() => {
       router.push(`/collections/${itemId}`);
@@ -63,7 +63,7 @@ const CartPage = () => {
 
   // Handle color change with loading state
   const handleColorChange = async (item, newColor, newColorIndex) => {
-    console.log("🎨 Changing color for item:", item.id, "to:", newColor);
+    // // console.log("🎨 Changing color for item:", item.id, "to:", newColor);
 
     try {
       // Set loading state
@@ -89,7 +89,7 @@ const CartPage = () => {
       await addToCart(updatedItem);
       updateItemVariant(item, updatedItem);
 
-      console.log("✅ Color updated successfully");
+      // // console.log("✅ Color updated successfully");
     } catch (error) {
       console.error("❌ Error updating color:", error);
     } finally {
@@ -104,42 +104,42 @@ const CartPage = () => {
 
   // Handle size change with loading state
   const handleSizeChange = async (item, newSize) => {
-  console.log("📏 Changing size for item:", item.id, "to:", newSize);
+    // console.log("📏 Changing size for item:", item.id, "to:", newSize);
 
-  try {
-    setLoadingItems((prev) => new Set(prev).add(item.id));
+    try {
+      setLoadingItems((prev) => new Set(prev).add(item.id));
 
-    await new Promise((resolve) => setTimeout(resolve, 300));
+      await new Promise((resolve) => setTimeout(resolve, 300));
 
-    // ✅ remove old variant using color + size
-    removeFromCart(item.id, item.selectedColor, item.selectedSize);
+      // ✅ remove old variant using color + size
+      removeFromCart(item.id, item.selectedColor, item.selectedSize);
 
-    // ✅ then add updated one
-    const updatedItem = {
-      ...item,
-      selectedSize: newSize,
-    };
+      // ✅ then add updated one
+      const updatedItem = {
+        ...item,
+        selectedSize: newSize,
+      };
 
-    await addToCart(updatedItem);
-    console.log("✅ Size updated successfully");
-  } catch (error) {
-    console.error("❌ Error updating size:", error);
-  } finally {
-    setLoadingItems((prev) => {
-      const newSet = new Set(prev);
-      newSet.delete(item.id);
-      return newSet;
-    });
-  }
-};
+      await addToCart(updatedItem);
+      // console.log("✅ Size updated successfully");
+    } catch (error) {
+      console.error("❌ Error updating size:", error);
+    } finally {
+      setLoadingItems((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(item.id);
+        return newSet;
+      });
+    }
+  };
 
 
   // Get the current image for display
   const getCurrentImage = (item) => {
     // Check if it's images (plural) - array of arrays
-    // console.log(item)
+    // // console.log(item)
     if (item.images && Array.isArray(item.images)) {
-      // console.log("object")
+      // // console.log("object")
       if (item.images.length > 0 && Array.isArray(item.images[0])) {
         return item.images[0][0]; // First image from first array
       }
@@ -147,10 +147,10 @@ const CartPage = () => {
 
     // Check if it's image (singular) - single array
     if (item.image && Array.isArray(item.image)) {
-      // console.log(item.image[0])
+      // // console.log(item.image[0])
       return item.image[0][0]; // First image from array
     }
-    // console.log("object")
+    // // console.log("object")
     return null;
   };
 
@@ -238,10 +238,10 @@ const CartPage = () => {
                 {cart
                   .filter((item) => !loadingItems.has(item.id))
                   .map((item) => (
-                     <div
-      key={item.cartId || `${item.id}-${item.selectedColor}-${item.selectedSize}`} // ✅ unique key
-      className="border border-red-200 rounded-lg"
-    >
+                    <div
+                      key={item.cartId || `${item.id}-${item.selectedColor}-${item.selectedSize}`} // ✅ unique key
+                      className="border border-red-200 rounded-lg"
+                    >
                       {/* Main Item Row */}
                       <div className="flex gap-3 p-3">
                         {/* Product Image - Clickable */}
@@ -253,12 +253,12 @@ const CartPage = () => {
                             src={getCurrentImage(item)}
                             alt={item.name}
                             width={64}
-                            priority
                             height={64}
+                            quality={60}
+                            sizes="64px"
+                            loading="lazy"
+                            unoptimized={false}
                             className="w-full h-full object-cover"
-                            onError={(e) => {
-                              e.target.src = "/Image/About1.png";
-                            }}
                           />
                         </div>
 
@@ -293,30 +293,30 @@ const CartPage = () => {
 
                           {/* Quantity Controls */}
                           <div className="flex items-center gap-2 mt-2">
-                           <button
-  onClick={() =>
-    updateQuantity(item.id, item.quantity - 1, item.selectedColor, item.selectedSize)
-  }
->
-  -
-</button>
+                            <button
+                              onClick={() =>
+                                updateQuantity(item.id, item.quantity - 1, item.selectedColor, item.selectedSize)
+                              }
+                            >
+                              -
+                            </button>
 
-<span>{item.quantity}</span>
+                            <span>{item.quantity}</span>
 
-<button
-  onClick={() =>
-    updateQuantity(item.id, item.quantity + 1, item.selectedColor, item.selectedSize)
-  }
->
-  +
-</button>
+                            <button
+                              onClick={() =>
+                                updateQuantity(item.id, item.quantity + 1, item.selectedColor, item.selectedSize)
+                              }
+                            >
+                              +
+                            </button>
 
-                      <button
-                        onClick={() => removeFromCart(item.id, item.selectedColor, item.selectedSize)}
-                        className="p-1 hover:bg-red-100 text-red-600 rounded transition-colors ml-2"
-                      >
-                        <Trash2 size={14} />
-                      </button>
+                            <button
+                              onClick={() => removeFromCart(item.id, item.selectedColor, item.selectedSize)}
+                              className="p-1 hover:bg-red-100 text-red-600 rounded transition-colors ml-2"
+                            >
+                              <Trash2 size={14} />
+                            </button>
 
                           </div>
                         </div>
@@ -330,18 +330,18 @@ const CartPage = () => {
                           {/* Toggle Variant Selector Button */}
                           {((item.colors && item.colors.length > 1) ||
                             (item.sizes && item.sizes.length > 1)) && (
-                            <button
-                              onClick={() => toggleVariantSelector(item.id)}
-                              className="p-1 hover:bg-gray-100 rounded transition-colors text-gray-500 hover:text-gray-700"
-                              title="Change color/size"
-                            >
-                              {expandedItems.has(item.id) ? (
-                                <ChevronUp size={16} />
-                              ) : (
-                                <ChevronDown size={16} />
-                              )}
-                            </button>
-                          )}
+                              <button
+                                onClick={() => toggleVariantSelector(item.id)}
+                                className="p-1 hover:bg-gray-100 rounded transition-colors text-gray-500 hover:text-gray-700"
+                                title="Change color/size"
+                              >
+                                {expandedItems.has(item.id) ? (
+                                  <ChevronUp size={16} />
+                                ) : (
+                                  <ChevronDown size={16} />
+                                )}
+                              </button>
+                            )}
                         </div>
                       </div>
 
@@ -369,19 +369,17 @@ const CartPage = () => {
                                         )
                                       }
                                       disabled={loadingItems.has(item.id)}
-                                      className={`w-8 h-10 rounded-md overflow-hidden border-2 transition-all duration-200 ${
-                                        item.selectedColor === color
-                                          ? "border-red-900 scale-105"
-                                          : "border-gray-200 hover:border-gray-400"
-                                      } ${
-                                        loadingItems.has(item.id)
+                                      className={`w-8 h-10 rounded-md overflow-hidden border-2 transition-all duration-200 ${item.selectedColor === color
+                                        ? "border-red-900 scale-105"
+                                        : "border-gray-200 hover:border-gray-400"
+                                        } ${loadingItems.has(item.id)
                                           ? "opacity-50 cursor-not-allowed"
                                           : ""
-                                      }`}
+                                        }`}
                                       title={color}
                                     >
                                       {item.images &&
-                                      item.images[colorIndex] ? (
+                                        item.images[colorIndex] ? (
                                         <Image
                                           src={
                                             item.images[colorIndex][0] ||
@@ -409,11 +407,10 @@ const CartPage = () => {
                                     </button>
                                     {/* Color Name */}
                                     <span
-                                      className={`text-xs font-medium px-1 text-center min-w-0 max-w-[60px] truncate ${
-                                        item.selectedColor === color
-                                          ? "text-red-900"
-                                          : "text-gray-600"
-                                      }`}
+                                      className={`text-xs font-medium px-1 text-center min-w-0 max-w-[60px] truncate ${item.selectedColor === color
+                                        ? "text-red-900"
+                                        : "text-gray-600"
+                                        }`}
                                       title={color}
                                     >
                                       {color}
@@ -436,15 +433,13 @@ const CartPage = () => {
                                     key={size}
                                     onClick={() => handleSizeChange(item, size)}
                                     disabled={loadingItems.has(item.id)}
-                                    className={`px-3 py-1 text-xs border rounded transition-all duration-200 ${
-                                      item.selectedSize === size
-                                        ? "border-red-900 bg-red-900 text-white"
-                                        : "border-gray-200 hover:border-gray-400 hover:bg-gray-100"
-                                    } ${
-                                      loadingItems.has(item.id)
+                                    className={`px-3 py-1 text-xs border rounded transition-all duration-200 ${item.selectedSize === size
+                                      ? "border-red-900 bg-red-900 text-white"
+                                      : "border-gray-200 hover:border-gray-400 hover:bg-gray-100"
+                                      } ${loadingItems.has(item.id)
                                         ? "opacity-50 cursor-not-allowed"
                                         : ""
-                                    }`}
+                                      }`}
                                   >
                                     {size}
                                   </button>
@@ -462,11 +457,10 @@ const CartPage = () => {
                   <button
                     onClick={clearCart}
                     disabled={loadingItems.size > 0}
-                    className={`w-full py-2 text-sm text-red-600 hover:bg-red-50 border border-red-200 rounded-lg transition-colors ${
-                      loadingItems.size > 0
-                        ? "opacity-50 cursor-not-allowed"
-                        : ""
-                    }`}
+                    className={`w-full py-2 text-sm text-red-600 hover:bg-red-50 border border-red-200 rounded-lg transition-colors ${loadingItems.size > 0
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                      }`}
                   >
                     Clear All Items
                   </button>
@@ -489,14 +483,14 @@ const CartPage = () => {
               {/* Checkout Buttons */}
               <div className="space-y-2">
                 <button
-                  onClick={() =>{
-                      event({
-                              action: "redirected To checkout page ",
-                              params: {
-                                "First_Product_Name" : cart[0].name,
-                                "First_Product_Id" : cart[0].productId,
-                              },
-                            })
+                  onClick={() => {
+                    event({
+                      action: "redirected To checkout page ",
+                      params: {
+                        "First_Product_Name": cart[0].name,
+                        "First_Product_Id": cart[0].productId,
+                      },
+                    })
                     window.location.href = "/cart/checkout"
                   }}
                   className="w-full bg-red-900 hover:bg-red-800 text-white py-3 rounded-lg font-semibold transition-colors"

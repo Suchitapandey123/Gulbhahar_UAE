@@ -24,7 +24,7 @@ export const orderHistoryAPI = {
       }
 
       const data = await response.json();
-      console.log("API Response received:", data);
+      // console.log("API Response received:", data);
       return data;
       
     } catch (error) {
@@ -65,10 +65,10 @@ export const orderHistoryAPI = {
 
   verifyOtpForCancellation: async (data) => {
   try {
-    console.log('[API] Verifying OTP for cancellation:', {
-      ...data,
-      timestamp: new Date().toISOString()
-    });
+    // console.log('[API] Verifying OTP for cancellation:', {
+    //   ...data,
+    //   timestamp: new Date().toISOString()
+    // });
     
     const response = await fetch(`${API_BASE_URL}/orders/verify-otp-for-order-cancellation`, {
       method: 'POST',

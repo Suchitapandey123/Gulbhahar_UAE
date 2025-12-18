@@ -367,7 +367,7 @@ const Profile = () => {
           });
 
           // Update AuthContext to sync header/navbar immediately
-          console.log('🔄 Updating AuthContext with:', userData);
+          // console.log('🔄 Updating AuthContext with:', userData);
           updateUserData({
             firstName: userData.firstName,
             lastName: userData.lastName,
@@ -418,7 +418,7 @@ const Profile = () => {
           });
 
           // Update AuthContext with real S3 URL to sync header/navbar
-          console.log('🔄 Updating AuthContext with new image:', userData);
+          // console.log('🔄 Updating AuthContext with new image:', userData);
           updateUserData({
             firstName: userData.firstName,
             lastName: userData.lastName,

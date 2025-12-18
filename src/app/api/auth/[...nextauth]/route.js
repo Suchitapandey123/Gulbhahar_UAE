@@ -46,7 +46,7 @@ const handler = NextAuth({
             })
     
             const data = await resp.json()
-            console.log("Google backend response:", data)
+            // console.log("Google backend response:", data)
     
             token.backendToken = data.token || data.accessToken || data?.data?.token
             
@@ -93,7 +93,7 @@ const handler = NextAuth({
             })
     
             const data = await resp.json()
-            console.log("Facebook backend response:", data)
+            // console.log("Facebook backend response:", data)
     
             token.backendToken = data.token || data.accessToken || data?.data?.token
             

@@ -176,7 +176,7 @@ const { showToast, ToastContainer } = useToast();
           try {
             const response = await newsletterAPI.subscribe({ email });
 
-            // console.log("Newsletter response:", response);
+            // // console.log("Newsletter response:", response);
 
             toast.success(
               response?.message || "Thank you for subscribing!",
@@ -191,7 +191,7 @@ const { showToast, ToastContainer } = useToast();
             setEmail("");
             setConsent(false);
           } catch (error) {
-            // console.log("Newsletter Error:", error);
+            // // console.log("Newsletter Error:", error);
 
             toast.error(
                error?.message || "Subscription failed. Try again!",

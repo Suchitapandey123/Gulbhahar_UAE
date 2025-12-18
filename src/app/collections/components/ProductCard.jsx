@@ -16,7 +16,7 @@ export default function ProductCard({
 }) {
   const slideIntervalRef = useRef(null);
 
-  console.log(item)
+  // console.log(item)
 
   const handleMouseEnter = (productId) => {
     clearInterval(slideIntervalRef.current);
@@ -65,18 +65,24 @@ export default function ProductCard({
       >
         <div className="relative w-full h-full bg-white">
           {imagesToShow.map((image, idx) => (
+            
             <Image
-              width={200}
-              height={450}
-              priority
               key={idx}
               src={image || "/Image/About1.png"}
               alt={`${item.title || item.name || "Product"} - ${idx + 1}`}
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${currentImageIndex === idx ? "opacity-100" : "opacity-0"
-                } ${viewMode === "list" ? "rounded-lg" : ""}`}
-              onError={(e) => {
-                e.currentTarget.src = "/Image/About1.png";
-              }}
+              fill
+              priority={index < 4} 
+              loading={index < 4 ? "eager" : "lazy"} 
+              sizes={viewMode === "grid" 
+                ? "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                : "(max-width: 640px) 128px, 160px"
+              }
+              quality={65} 
+              placeholder="blur"
+              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${
+                currentImageIndex === idx ? "opacity-100" : "opacity-0"
+              } ${viewMode === "list" ? "rounded-lg" : ""}`}
             />
           ))}
 

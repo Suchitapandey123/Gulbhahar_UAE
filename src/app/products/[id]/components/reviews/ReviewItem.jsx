@@ -21,7 +21,7 @@ export function ReviewItem({
   const reviewId = review.reviewId || review._id;
 
   // Debug logging for canModify prop
-  // console.log('ReviewItem Debug:', {
+  // // console.log('ReviewItem Debug:', {
   //   reviewId,
   //   canModify,
   //   reviewUser: review.userId || review.user_id || review.authorId,

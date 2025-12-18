@@ -83,15 +83,15 @@ const ContentSection = ({ page: initialPage }) => {
         const data = await pageService.getPageBySlug(slug);
         const pageData = data.page || data.data || data;
         
-        console.log("ContentSection API Response:", pageData);
-        console.log("Raw additionalDetails:", pageData.additionalDetails);
+        // console.log("ContentSection API Response:", pageData);
+        // console.log("Raw additionalDetails:", pageData.additionalDetails);
         
         // Parse additional details to extract structured data - FIXED
         if (pageData.additionalDetails && Array.isArray(pageData.additionalDetails)) {
           pageData.parsedAdditionalDetails = pageData.additionalDetails.map(detail => 
             parseDetailsContent(detail)
           );
-          console.log("Parsed additionalDetails:", pageData.parsedAdditionalDetails);
+          // console.log("Parsed additionalDetails:", pageData.parsedAdditionalDetails);
         } else {
           pageData.parsedAdditionalDetails = [];
         }
@@ -117,7 +117,7 @@ const ContentSection = ({ page: initialPage }) => {
           parseDetailsContent(detail)
         )
       };
-      console.log("Initial page parsed details:", parsedPage.parsedAdditionalDetails);
+      // console.log("Initial page parsed details:", parsedPage.parsedAdditionalDetails);
       setPage(parsedPage);
     }
   }, [initialPage]);

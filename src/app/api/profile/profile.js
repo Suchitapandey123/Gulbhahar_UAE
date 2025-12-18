@@ -164,7 +164,7 @@ export const profileAPI = {
     }
 
     const data = await response.json();
-    console.log('API raw response:', data);
+    // console.log('API raw response:', data);
 
     if (data.success) {
       const allSlugs = data.data.map(item => ({
@@ -177,7 +177,7 @@ export const profileAPI = {
         fullSlug: `/collections/${item.slug}`
       }));
       
-      console.log('Processed slugs:', allSlugs);
+      // console.log('Processed slugs:', allSlugs);
       return allSlugs; 
     }
 

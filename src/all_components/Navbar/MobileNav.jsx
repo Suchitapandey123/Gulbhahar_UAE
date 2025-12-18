@@ -154,7 +154,7 @@ const MobileUserButton = ({
           <div
             key={item.label}
             onClick={() => {
-              console.log(`Navigating to ${item.href}`);
+              // console.log(`Navigating to ${item.href}`);
               router.push(item.href);
               setIsUserDropdownOpen(false);
             }}
@@ -170,7 +170,7 @@ const MobileUserButton = ({
 
         <div
   onClick={() => {
-    // console.log("Logout clicked ✅");
+    // // console.log("Logout clicked ✅");
     handleLogout();
     setIsUserDropdownOpen(false);
   }}

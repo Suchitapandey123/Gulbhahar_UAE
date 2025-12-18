@@ -16,7 +16,7 @@ export const debouncedSearch = async (query, delay = 300) => {
     searchTimeout = setTimeout(async () => {
       try {
         const response = await profileAPI.searchCategories(query);
-        console.log('🔍 API Response:', response);
+        // console.log('🔍 API Response:', response);
         
         // Handle array response
         if (Array.isArray(response)) {

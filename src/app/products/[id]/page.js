@@ -81,7 +81,7 @@ export async function generateMetadata({ params }) {
     const productID = param.id;
     
     const { product } = await getProductData(productID);
-    // console.log(product.details[0]);
+    // // console.log(product.details[0]);
     
     return {
       title: `${product.title.slice(0,43)}... - Gulbhahar`,
@@ -127,7 +127,7 @@ export default async function CollectionPage({ params }) {
   try {
     const param = await params;
     const productID = param.id;
-    console.log('Params:', productID);
+    // console.log('Params:', productID);
     
     const { product, similarProducts } = await getProductData(productID);
 

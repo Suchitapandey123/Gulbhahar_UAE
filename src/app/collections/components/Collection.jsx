@@ -121,7 +121,7 @@ export default function Collection({ parentCategory = null, slug = null }) {
   //  REPLACE OLD handleAddToCart WITH THIS NEW ONE:
 
   const handleAddToCart = async (e, item) => {
-    // console.log('🛒 Collections - Adding item to cart:', item);
+    // // console.log('🛒 Collections - Adding item to cart:', item);
     e.preventDefault();
     e.stopPropagation();
 
@@ -132,7 +132,7 @@ export default function Collection({ parentCategory = null, slug = null }) {
       const selectedSize =
         item.sizes && item.sizes.length > 0 ? item.sizes[0] : "default";
 
-      // console.log(' Auto-selected variants:', { selectedColor, selectedSize });
+      // // console.log(' Auto-selected variants:', { selectedColor, selectedSize });
 
       //  STANDARDIZED cart item structure
       const cartItemWithVariants = {
@@ -147,7 +147,7 @@ export default function Collection({ parentCategory = null, slug = null }) {
         addedAt: new Date().toISOString(),
       };
 
-      // console.log(' Standardized cart item:', cartItemWithVariants);
+      // // console.log(' Standardized cart item:', cartItemWithVariants);
 
       const result = await addToCart(cartItemWithVariants);
 
@@ -169,14 +169,14 @@ export default function Collection({ parentCategory = null, slug = null }) {
             currency: "INR",
           });
       }
-        // console.log('Item added successfully');
+        // // console.log('Item added successfully');
         // showToast(
         //   `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`,
         //   'success'
         // );
       } else {
         toast.error("Failed to add item to cart. Please try again.", "error");
-        // console.log('Failed to add item');
+        // // console.log('Failed to add item');
         // showToast("Failed to add item to cart. Please try again.", "error");
       }
     } catch (error) {
@@ -465,7 +465,8 @@ export default function Collection({ parentCategory = null, slug = null }) {
                     height={500}
                     width={1000}
                     alt="Similar Products Below"
-                    priority
+                    // preload
+                    // loading="eager"
                     className="w-full h-auto sm:h-[220px] md:h-[420px] object-cover rounded-lg shadow-lg"
                   />
                 </div>
@@ -507,7 +508,8 @@ export default function Collection({ parentCategory = null, slug = null }) {
                         height={500}
                         width={1000}
                         alt="design"
-                        priority
+                        // preload
+                        
                         className="w-full h-auto sm:h-[220px] md:h-[420px] object-cover rounded-lg"
                       />
                     </div>
@@ -530,7 +532,7 @@ export default function Collection({ parentCategory = null, slug = null }) {
           </div>
 
           {/* No Products Found */}
-          {filteredCollections.length === 0 && (
+          {/* {filteredCollections.length === 0 && (
             <div className="flex flex-col items-center justify-center py-20 px-4 min-h-[400px]">
               <div className="relative mb-8 group">
                 <div className="absolute inset-0 bg-gradient-to-r from-red-100 to-red-50 rounded-full blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-300"></div>
@@ -561,7 +563,7 @@ export default function Collection({ parentCategory = null, slug = null }) {
                 </button>
               </div>
             </div>
-          )}
+          )} */}
 
           {/* Pagination */}
           {totalPages > 1 && (
