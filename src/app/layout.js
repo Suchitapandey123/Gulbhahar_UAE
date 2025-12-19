@@ -86,22 +86,43 @@ export default function RootLayout({ children }) {
           href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&display=swap"
           rel="stylesheet"
         />
+
+        {/* Google Tag Manager */}
+        <Script
+          id="gtm-head"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','GTM-T5S7S772');
+            `,
+          }}
+        />
       </head>
 
       <SessionWrapper>
         <body
           className={`${poppins.variable} ${jetbrainsMono.variable} antialiased`}
         >
-          {/* Analytics Scripts */}
+          {/* GTM noscript */}
+          <noscript>
+            <iframe
+              src="https://www.googletagmanager.com/ns.html?id=GTM-T5S7S772"
+              height="0"
+              width="0"
+              style={{ display: 'none', visibility: 'hidden' }}
+            />
+          </noscript>
 
-          {/* Custom Analytics */}
+          {/* Analytics Scripts */}
           <Script
             src="https://analytic.thekapslog.com/script.js"
             data-website-id="20dfac58-c9ab-4176-86f4-6430b377abdb"
             strategy="afterInteractive"
           />
-
-
 
           {/* Google Analytics */}
           <Script
@@ -123,6 +144,7 @@ export default function RootLayout({ children }) {
             `,
             }}
           />
+
           {/* Microsoft Clarity */}
           <Script
             id="microsoft-clarity"
@@ -153,7 +175,6 @@ export default function RootLayout({ children }) {
                 s.parentNode.insertBefore(t,s)}(window, document,'script',
                 'https://connect.facebook.net/en_US/fbevents.js');
 
-                // Initialize with advanced matching
                 fbq('init', '1705895113580123', {
                   em: 'optional',
                   ph: 'optional',
@@ -175,8 +196,6 @@ export default function RootLayout({ children }) {
               alt="facebook image"
             />
           </noscript>
-
-
 
           <AuthProvider>
             <ReactQueryProvider>
