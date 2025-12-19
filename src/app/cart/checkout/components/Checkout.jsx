@@ -20,7 +20,7 @@ import { useCart } from "@/Providers/ContextProviders/CartContext";
 import { useToast } from "@/hooks/useToast";
 import { checkoutApi } from '../../../api/cart/cart';
 import { toast } from "sonner";
-import { event } from "@/utils/gtag";
+import { event } from "@/utils/gtm/gtag";
 
 const Breadcrumb = () => (
   <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-8">
@@ -38,7 +38,7 @@ const Breadcrumb = () => (
   </nav>
 );
 
-const CustomStateDropdown = ({ value, onChange, className = "" }) => {
+const CustomStateDropdown = ({ value, onChange, className = "" ,fieldValidation }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredStates, setFilteredStates] = useState(indianStates);
@@ -108,19 +108,20 @@ const CustomStateDropdown = ({ value, onChange, className = "" }) => {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full border-2 border-red-200 rounded-xl p-4 text-left text-gray-700 focus:border-red-900 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 flex items-center justify-between ${
-          isOpen ? "border-red-900 ring-2 ring-red-200" : ""
-        }`}
-        aria-haspopup="listbox"
-        aria-expanded={isOpen}
+        className={`w-full border-2 rounded-xl p-4 text-left focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 flex items-center justify-between ${fieldValidation.region?.isValid === true
+            ? "border-green-500"
+            : fieldValidation.region?.isValid === false
+              ? "border-red-500"
+              : "border-red-200 focus:border-red-900"
+          } ${isOpen ? "border-red-900 ring-2 ring-red-200" : ""}`}
       >
+
         <span className={value ? "text-gray-900" : "text-gray-500"}>
           {displayLabel}
         </span>
         <ChevronDown
-          className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${
-            isOpen ? "rotate-180" : ""
-          }`}
+          className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""
+            }`}
         />
       </button>
 
@@ -164,11 +165,10 @@ const CustomStateDropdown = ({ value, onChange, className = "" }) => {
                       key={state.value}
                       type="button"
                       onClick={() => handleStateSelect(state.value)}
-                      className={`w-full text-left px-4 py-3 hover:bg-red-50 focus:bg-red-50 focus:outline-none transition-colors duration-150 flex items-center justify-between group ${
-                        value === state.value
-                          ? "bg-red-100 text-red-900 font-semibold"
-                          : "text-gray-700"
-                      }`}
+                      className={`w-full text-left px-4 py-3 hover:bg-red-50 focus:bg-red-50 focus:outline-none transition-colors duration-150 flex items-center justify-between group ${value === state.value
+                        ? "bg-red-100 text-red-900 font-semibold"
+                        : "text-gray-700"
+                        }`}
                     >
                       <span className="flex items-center gap-2">
                         <MapPin className="h-4 w-4 text-gray-400 group-hover:text-red-500" />
@@ -286,7 +286,7 @@ export default function CheckoutComponent() {
     email: { isValid: null, error: null },
     phone: { isValid: null, error: null },
     fullName: { isValid: null, error: null },
-
+    region: { isValid: null, error: null },
   });
 
   const [postalCodeValidation, setPostalCodeValidation] = useState({
@@ -297,7 +297,7 @@ export default function CheckoutComponent() {
   });
 
   const [formData, setFormData] = useState({
-    country: "India", // Default to India
+    country: "India",
     fullName: "",
     email: "",
     phone: "",
@@ -306,34 +306,13 @@ export default function CheckoutComponent() {
     region: "",
     postalCode: "",
   });
-   
-     
-//   useEffect(() => {
-//   console.log("🔄 formData updated:", {
-//     email: formData.email,
-//     fullName: formData.fullName,
-//     allFields: formData
-//   });
-// }, [formData]);
 
-
-   useEffect(() => {
-    if (cart && cart.length > 0) {
-      fbq('track', 'InitiateCheckout', {
-        content_ids: cart.map(item => item.id),     // product IDs
-        content_name: 'Checkout',
-        content_type: 'product',
-        value: getCartTotal(),                      // total price
-        currency: 'INR'
-      });
-    }
-  }, [cart]);
 
   // Handle initial loading and cart state
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1000);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, []);
@@ -398,6 +377,16 @@ export default function CheckoutComponent() {
         }
         break;
 
+      case "region":
+        if (!value || value.trim().length === 0) {
+          isValid = false;
+          error = "Please select a state";
+        } else {
+          isValid = true;
+          error = null;
+        }
+        break;
+
       default:
         return;
     }
@@ -455,7 +444,7 @@ export default function CheckoutComponent() {
     if (!ENABLE_PINCODE_API) {
       // ✅ DEFAULT VALIDATION WITHOUT API
       // console.log("📍 Pincode API disabled - using default validation");
-      
+
       // Simulate a brief validation delay
       setPostalCodeValidation(prev => ({
         ...prev,
@@ -471,7 +460,7 @@ export default function CheckoutComponent() {
           error: null,
           deliveryInfo: {
             city: "Default City",
-            district: "Default District", 
+            district: "Default District",
             state: "Default State",
             cod: true, // COD available by default
             prepaid: true,
@@ -485,7 +474,7 @@ export default function CheckoutComponent() {
 
         // showToast(`✅ Postal code ${postalCode} - Default validation (API disabled)`, "success");
       }, 500);
-      
+
       return;
     }
     // 🚀 ORIGINAL API VALIDATION CODE (kept intact)
@@ -506,88 +495,34 @@ export default function CheckoutComponent() {
       isValidating: true,
       error: null,
     }));
-    
+
     try {
-      // const response = await axios.get(
-      //   `https://api.gulbhahar.com/delhiveryRoutes/v0/checkAvalibility?pincode=${postalCode}`,
-      //   {
-      //     timeout: 10000,
-      //     headers: {
-      //       Accept: "application/json",
-      //       "Content-Type": "application/json",
-      //       Authorization: `${DELHIVERY_TOKEN}`,
-      //     },
-      //   }
-      // );
 
       const result = await checkoutApi.validatePostalCode(postalCode);
+      setPostalCodeValidation(result);
+      if (result.isValid) {
 
-      // if (
-      //   response.data.msg &&
-      //   response.data.msg.delivery_codes &&
-      //   response.data.msg.delivery_codes.length > 0
-      // ) {
-      //   const deliveryData = response.data.msg.delivery_codes[0].postal_code;
+        toast.success(`✅ Postal code valid for ${result.deliveryInfo.city}, ${result.deliveryInfo.district}`);
 
-        // setPostalCodeValidation({
-        //   isValidating: false,
-        //   isValid: true,
-        //   error: null,
-        //   deliveryInfo: {
-        //     city: deliveryData.city,
-        //     district: deliveryData.district,
-        //     state: deliveryData.state_code,
-        //     cod: deliveryData.cod === "Y",
-        //     prepaid: deliveryData.pre_paid === "Y",
-        //     pickup: deliveryData.pickup === "Y",
-        //     covidZone: deliveryData.covid_zone,
-        //     isODA: deliveryData.is_oda === "Y",
-        //   },
-        // });
-
-      //   showToast(
-      //     `✅ Postal code valid for ${deliveryData.city}, ${deliveryData.district}`,
-      //     "success"
-      //   );
-      // } else {
+        // showToast(
+        //   `✅ Postal code valid for ${result.deliveryInfo.city}, ${result.deliveryInfo.district}`,
+        //   "success"
+        // );
+      } else {
+        toast.error(`❌ ${result.error}`);
+        // showToast(result.error, "error");
+      }
+      // } catch (error) {
       //   setPostalCodeValidation({
       //     isValidating: false,
       //     isValid: false,
-      //     error: "Postal code not serviceable",
+      //     error: error.message || "Unable to validate postal code",
       //     deliveryInfo: null,
       //   });
+      //   showToast(error.message || "Unable to validate postal code", "error");
 
-      //   showToast(
-      //     "This postal code is not serviceable in our delivery network",
-      //     "error"
-      //   );
       // }
-
-      setPostalCodeValidation(result);
-
-  if (result.isValid) {
-
-    toast.success(`✅ Postal code valid for ${result.deliveryInfo.city}, ${result.deliveryInfo.district}`);
-
-    // showToast(
-    //   `✅ Postal code valid for ${result.deliveryInfo.city}, ${result.deliveryInfo.district}`,
-    //   "success"
-    // );
-  } else {
-    toast.error(`❌ ${result.error}`);
-    // showToast(result.error, "error");
-  }
-// } catch (error) {
-//   setPostalCodeValidation({
-//     isValidating: false,
-//     isValid: false,
-//     error: error.message || "Unable to validate postal code",
-//     deliveryInfo: null,
-//   });
-//   showToast(error.message || "Unable to validate postal code", "error");
-
-// }
-   } catch (error) {
+    } catch (error) {
       let errorMessage = "Unable to validate postal code";
       if (error.code === "ECONNABORTED") {
         errorMessage = "Validation timeout - please try again";
@@ -656,12 +591,12 @@ export default function CheckoutComponent() {
     try {
       setIsProcessing(true);
 
-       
-    // 🔥 IMPORTANT: Calculate totals INSIDE the function
-    const calculateTotals = () => {
-      const subtotal =
-        cart && Array.isArray(cart)
-          ? cart.reduce((sum, item) => {
+
+      // 🔥 IMPORTANT: Calculate totals INSIDE the function
+      const calculateTotals = () => {
+        const subtotal =
+          cart && Array.isArray(cart)
+            ? cart.reduce((sum, item) => {
               if (
                 !item ||
                 typeof item.price !== "number" ||
@@ -671,38 +606,38 @@ export default function CheckoutComponent() {
               }
               return sum + item.price * item.quantity;
             }, 0)
-          : 0;
+            : 0;
 
-      const isFreeShippingEligible = subtotal >= 5000;
-      
-      // Calculate shipping cost
-      let shipping = shippingOptions[shippingMethod]?.price || 0;
-      if (isFreeShippingEligible && shippingMethod === "free") {
-        shipping = 0;
-      }
+        const isFreeShippingEligible = subtotal >= 5000;
 
-      // Add ODA surcharge if applicable
-      const odaSurcharge = postalCodeValidation.deliveryInfo?.isODA ? 50 : 0;
-      shipping += odaSurcharge;
+        // Calculate shipping cost
+        let shipping = shippingOptions[shippingMethod]?.price || 0;
+        if (isFreeShippingEligible && shippingMethod === "free") {
+          shipping = 0;
+        }
 
-      const total = subtotal + shipping;
+        // Add ODA surcharge if applicable
+        const odaSurcharge = postalCodeValidation.deliveryInfo?.isODA ? 50 : 0;
+        shipping += odaSurcharge;
 
-      return { subtotal, shipping, total };
-    };
+        const total = subtotal + shipping;
 
-    // Get current totals
-    const { subtotal, shipping, total } = calculateTotals();
+        return { subtotal, shipping, total };
+      };
 
-    
+      // Get current totals
+      const { subtotal, shipping, total } = calculateTotals();
+
+
 
       // Validate all required fields
-      const requiredFields = ["fullName", "email", "phone"];
+      const requiredFields = ["fullName", "email", "phone", "region"];
       const validationErrors = [];
 
       // Check if fields are filled
       const missingFields = requiredFields.filter((field) => !formData[field]);
       if (missingFields.length > 0) {
-        validationErrors.push(`Please fill in: ${missingFields.join(", ")}`);
+        validationErrors.push(`Please fill : ${missingFields.join(", ")}`);
       }
 
       // Check field validations
@@ -711,7 +646,7 @@ export default function CheckoutComponent() {
           validateField(field, formData[field]);
         }
       });
-       
+
 
       // Wait a bit for validation to complete
       await new Promise((resolve) => setTimeout(resolve, 100));
@@ -731,7 +666,7 @@ export default function CheckoutComponent() {
       }
 
       if (validationErrors.length > 0) {
-        toast.error(validationErrors[0],"error");
+        toast.error(validationErrors[0], "error");
         // showToast(validationErrors[0], "error");
         setIsProcessing(false);
         return;
@@ -847,17 +782,17 @@ export default function CheckoutComponent() {
           postalCode: postalCodeValidation.isValid === true,
         },
       };
-       
+
       console.log("💾 DEBUG - checkoutData object:", {
-  email: checkoutData.email,
-  emailExists: 'email' in checkoutData,
-  fullName: checkoutData.fullName,
-  fullNameExists: 'fullName' in checkoutData,
-  formDataKeys: Object.keys(formData),
-  formDataEmail: formData.email,
-  formDataFullName: formData.fullName,
-  allCheckoutDataKeys: Object.keys(checkoutData)
-});
+        email: checkoutData.email,
+        emailExists: 'email' in checkoutData,
+        fullName: checkoutData.fullName,
+        fullNameExists: 'fullName' in checkoutData,
+        formDataKeys: Object.keys(formData),
+        formDataEmail: formData.email,
+        formDataFullName: formData.fullName,
+        allCheckoutDataKeys: Object.keys(checkoutData)
+      });
       // console.log(
       //   "💾 Saving validated checkout data to localStorage:",
       //   checkoutData
@@ -870,17 +805,17 @@ export default function CheckoutComponent() {
 
         // Verify the data was saved correctly
         const savedData = localStorage.getItem("checkoutFormData");
-        
+
         if (savedData) {
-    const parsedSavedData = JSON.parse(savedData);
-    // // console.log("✅ Verified saved data structure:", {
-    //   hasEmail: 'email' in parsedSavedData,
-    //   email: parsedSavedData.email,
-    //   hasFullName: 'fullName' in parsedSavedData,
-    //   fullName: parsedSavedData.fullName,
-    //   allKeys: Object.keys(parsedSavedData)
-    // });
-  }
+          const parsedSavedData = JSON.parse(savedData);
+          // // console.log("✅ Verified saved data structure:", {
+          //   hasEmail: 'email' in parsedSavedData,
+          //   email: parsedSavedData.email,
+          //   hasFullName: 'fullName' in parsedSavedData,
+          //   fullName: parsedSavedData.fullName,
+          //   allKeys: Object.keys(parsedSavedData)
+          // });
+        }
       } catch (error) {
         // console.error("❌ Error saving checkout data:", error);
         toast.error(" Error saving checkout data. Please try again.");
@@ -889,36 +824,36 @@ export default function CheckoutComponent() {
         return;
       }
 
-      
+
       event({
-                action: "Continued To Payment",
-                params: {
-                  "Customer_Name" : formData.fullName ,
-                  "Customer_Number" : formData.phone
-                },
-              })
-      
-      
+        action: "Continued To Payment",
+        params: {
+          "Customer_Name": formData.fullName,
+          "Customer_Number": formData.phone
+        },
+      })
+
+
 
       // 🔥 ADD META PIXEL TRACKING
-    if (typeof window !== 'undefined' && window.fbq && cart && cart.length > 0) {
-      console.log('📊 Meta Pixel - Tracking Continue to Payment click');
-      
-      // Extract product IDs from cart
-      const contentIds = cart.map(item => item.productId || item.id).filter(Boolean);
-      
-      // Track InitiateCheckout event
-      fbq('track', 'InitiateCheckout', {
-        content_ids: contentIds,
-        content_type: 'product',
-        content_name: 'Checkout Process',
-        value: parseFloat(total) || 0,
-        currency: 'INR',
-        num_items: cart.reduce((sum, item) => sum + (item.quantity || 1), 0),
-      });
-      
-      console.log('✅ Meta Pixel - InitiateCheckout event sent');
-    }
+      if (typeof window !== 'undefined' && window.fbq && cart && cart.length > 0) {
+        console.log('📊 Meta Pixel - Tracking Continue to Payment click');
+
+        // Extract product IDs from cart
+        const contentIds = cart.map(item => item.productId || item.id).filter(Boolean);
+
+        // Track InitiateCheckout event
+        fbq('track', 'InitiateCheckout', {
+          content_ids: contentIds,
+          content_type: 'product',
+          content_name: 'Checkout Process',
+          value: parseFloat(total) || 0,
+          currency: 'INR',
+          num_items: cart.reduce((sum, item) => sum + (item.quantity || 1), 0),
+        });
+
+        console.log('✅ Meta Pixel - InitiateCheckout event sent');
+      }
 
       toast.success("Information validated! Redirecting to payment...");
 
@@ -974,15 +909,15 @@ export default function CheckoutComponent() {
   const subtotal =
     cart && Array.isArray(cart)
       ? cart.reduce((sum, item) => {
-          if (
-            !item ||
-            typeof item.price !== "number" ||
-            typeof item.quantity !== "number"
-          ) {
-            return sum;
-          }
-          return sum + item.price * item.quantity;
-        }, 0)
+        if (
+          !item ||
+          typeof item.price !== "number" ||
+          typeof item.quantity !== "number"
+        ) {
+          return sum;
+        }
+        return sum + item.price * item.quantity;
+      }, 0)
       : 0;
 
   const isFreeShippingEligible = subtotal >= 5000;
@@ -1092,13 +1027,12 @@ export default function CheckoutComponent() {
                       type="text"
                       value={formData.fullName}
                       onChange={handleInputChange}
-                      className={`w-full border-2 rounded-xl p-4 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${
-                        fieldValidation.fullName?.isValid === true
-                          ? "border-green-500 focus:border-green-500"
-                          : fieldValidation.fullName?.isValid === false
+                      className={`w-full border-2 rounded-xl p-4 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${fieldValidation.fullName?.isValid === true
+                        ? "border-green-500 focus:border-green-500"
+                        : fieldValidation.fullName?.isValid === false
                           ? "border-red-500 focus:border-red-500"
                           : "border-red-200 focus:border-red-900"
-                      }`}
+                        }`}
                       placeholder="Enter your full name"
                       required
                     />
@@ -1136,13 +1070,12 @@ export default function CheckoutComponent() {
                       type="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className={`w-full border-2 rounded-xl p-4 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${
-                        fieldValidation.email?.isValid === true
-                          ? "border-green-500 focus:border-green-500"
-                          : fieldValidation.email?.isValid === false
+                      className={`w-full border-2 rounded-xl p-4 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${fieldValidation.email?.isValid === true
+                        ? "border-green-500 focus:border-green-500"
+                        : fieldValidation.email?.isValid === false
                           ? "border-red-500 focus:border-red-500"
                           : "border-red-200 focus:border-red-900"
-                      }`}
+                        }`}
                       placeholder="your@email.com"
                       required
                     />
@@ -1184,13 +1117,12 @@ export default function CheckoutComponent() {
                       type="tel"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className={`w-full border-2 rounded-xl p-4 pl-16 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${
-                        fieldValidation.phone?.isValid === true
-                          ? "border-green-500 focus:border-green-500"
-                          : fieldValidation.phone?.isValid === false
+                      className={`w-full border-2 rounded-xl p-4 pl-16 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${fieldValidation.phone?.isValid === true
+                        ? "border-green-500 focus:border-green-500"
+                        : fieldValidation.phone?.isValid === false
                           ? "border-red-500 focus:border-red-500"
                           : "border-red-200 focus:border-red-900"
-                      }`}
+                        }`}
                       placeholder="9876543210"
                       maxLength="10"
                       pattern="[6-9][0-9]{9}"
@@ -1271,7 +1203,14 @@ export default function CheckoutComponent() {
                     value={formData.region}
                     onChange={handleInputChange}
                     className="w-full"
+                    fieldValidation={fieldValidation}
                   />
+                  {fieldValidation.region?.error && (
+                    <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                      <AlertCircle className="h-4 w-4" />
+                      {fieldValidation.region.error}
+                    </p>
+                  )}
                 </div>
 
                 {/* Postal Code */}
@@ -1294,13 +1233,12 @@ export default function CheckoutComponent() {
                       type="text"
                       value={formData.postalCode}
                       onChange={handleInputChange}
-                      className={`w-full border-2 rounded-xl p-4 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${
-                        postalCodeValidation.isValid === true
-                          ? "border-green-500 focus:border-green-500"
-                          : postalCodeValidation.isValid === false
+                      className={`w-full border-2 rounded-xl p-4 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${postalCodeValidation.isValid === true
+                        ? "border-green-500 focus:border-green-500"
+                        : postalCodeValidation.isValid === false
                           ? "border-red-500 focus:border-red-500"
                           : "border-red-200 focus:border-red-900"
-                      }`}
+                        }`}
                       placeholder="110001"
                       maxLength="6"
                       pattern="[0-9]*"
@@ -1340,7 +1278,7 @@ export default function CheckoutComponent() {
                           )}
                           {postalCodeValidation.deliveryInfo.isODA && (
                             <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs inline-flex items-center gap-1 w-fit">
-                             Remote Area (+₹50)
+                              Remote Area (+₹50)
                             </span>
                           )}
                         </div>
@@ -1392,13 +1330,12 @@ export default function CheckoutComponent() {
                     return (
                       <label
                         key={key}
-                        className={`flex items-center p-4 border-2 rounded-xl transition-all duration-200 ${
-                          isDisabled
-                            ? "border-gray-200 bg-gray-50 cursor-not-allowed opacity-60"
-                            : shippingMethod === key
+                        className={`flex items-center p-4 border-2 rounded-xl transition-all duration-200 ${isDisabled
+                          ? "border-gray-200 bg-gray-50 cursor-not-allowed opacity-60"
+                          : shippingMethod === key
                             ? "border-red-900 bg-red-50 ring-2 ring-red-200 cursor-pointer"
                             : "border-red-200 hover:border-red-300 hover:bg-red-50 cursor-pointer"
-                        }`}
+                          }`}
                       >
                         <input
                           type="radio"
@@ -1411,29 +1348,26 @@ export default function CheckoutComponent() {
                             }
                           }}
                           disabled={isDisabled}
-                          className={`w-4 h-4 focus:ring-2 ${
-                            isDisabled
-                              ? "text-gray-400 cursor-not-allowed"
-                              : "text-red-900 focus:ring-red-500 cursor-pointer"
-                          }`}
+                          className={`w-4 h-4 focus:ring-2 ${isDisabled
+                            ? "text-gray-400 cursor-not-allowed"
+                            : "text-red-900 focus:ring-red-500 cursor-pointer"
+                            }`}
                         />
                         <div className="ml-4 flex-1">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                               <span
-                                className={`text-2xl ${
-                                  isDisabled ? "opacity-50" : ""
-                                }`}
+                                className={`text-2xl ${isDisabled ? "opacity-50" : ""
+                                  }`}
                               >
                                 {icon}
                               </span>
                               <div>
                                 <p
-                                  className={`font-bold ${
-                                    isDisabled
-                                      ? "text-gray-400"
-                                      : "text-gray-900"
-                                  }`}
+                                  className={`font-bold ${isDisabled
+                                    ? "text-gray-400"
+                                    : "text-gray-900"
+                                    }`}
                                 >
                                   {name}
                                   {isDisabled && (
@@ -1443,11 +1377,10 @@ export default function CheckoutComponent() {
                                   )}
                                 </p>
                                 <p
-                                  className={`text-sm ${
-                                    isDisabled
-                                      ? "text-gray-400"
-                                      : "text-gray-600"
-                                  }`}
+                                  className={`text-sm ${isDisabled
+                                    ? "text-gray-400"
+                                    : "text-gray-600"
+                                    }`}
                                 >
                                   {days}
                                 </p>
@@ -1469,15 +1402,14 @@ export default function CheckoutComponent() {
                             </div>
                             <div className="text-right">
                               <span
-                                className={`font-bold text-lg ${
-                                  isDisabled ? "text-gray-400" : "text-red-900"
-                                }`}
+                                className={`font-bold text-lg ${isDisabled ? "text-gray-400" : "text-red-900"
+                                  }`}
                               >
                                 {isDisabled
                                   ? `₹${price}`
                                   : finalPrice === 0
-                                  ? "FREE"
-                                  : `₹${finalPrice}`}
+                                    ? "FREE"
+                                    : `₹${finalPrice}`}
                               </span>
                               {isFreeShippingEligible &&
                                 isFreeShippingOption &&
@@ -1643,11 +1575,10 @@ export default function CheckoutComponent() {
                 <button
                   onClick={handlePayment}
                   disabled={postalCodeValidation.isValidating || isProcessing}
-                  className={`w-full py-4 rounded-xl font-bold text-lg transform transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 ${
-                    postalCodeValidation.isValidating || isProcessing
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-gradient-to-r from-red-900 to-red-800 text-white hover:from-red-800 hover:to-red-700 hover:scale-105"
-                  }`}
+                  className={`w-full py-4 rounded-xl font-bold text-lg transform transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 ${postalCodeValidation.isValidating || isProcessing
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-gradient-to-r from-red-900 to-red-800 text-white hover:from-red-800 hover:to-red-700 hover:scale-105"
+                    }`}
                 >
                   {postalCodeValidation.isValidating ? (
                     <>

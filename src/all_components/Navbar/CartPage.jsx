@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useCart } from "@/Providers/ContextProviders/CartContext";
-import { event } from "@/utils/gtag";
+import { gaEvent } from "@/utils/gtm/gtag";
 
 const CartPage = () => {
   const {
@@ -484,7 +484,7 @@ const CartPage = () => {
               <div className="space-y-2">
                 <button
                   onClick={() => {
-                    event({
+                    gaEvent({
                       action: "redirected To checkout page ",
                       params: {
                         "First_Product_Name": cart[0].name,

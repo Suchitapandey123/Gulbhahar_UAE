@@ -18,6 +18,10 @@ const nextConfig = {
       {
         protocol:"https",
         hostname:"www.banarasee.in",
+      },
+      {
+        protocol:"https",
+        hostname:"www.facebook.com",
       }
     ],
     formats: ['image/webp', 'image/avif'],

@@ -30,7 +30,7 @@ import {
   X,
   RefreshCw
 } from "lucide-react";
-import { event } from "@/utils/gtag";
+import { event } from "@/utils/gtm/gtag";
 
 const Breadcrumb = () => (
   <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-8">

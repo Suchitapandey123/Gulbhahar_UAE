@@ -13,6 +13,7 @@ import FilterSidebar from "./FilterSidebar";
 import ProductCard from "./ProductCard";
 import DummyProductCard from "./DummyProductCard";
 import Image from "next/image";
+import { event, fbEvent } from "@/utils/fb/metaPixels";
 
 const fallbackCollections = [
   {
@@ -121,7 +122,6 @@ export default function Collection({ parentCategory = null, slug = null }) {
   //  REPLACE OLD handleAddToCart WITH THIS NEW ONE:
 
   const handleAddToCart = async (e, item) => {
-    // // console.log('🛒 Collections - Adding item to cart:', item);
     e.preventDefault();
     e.stopPropagation();
 
@@ -152,9 +152,18 @@ export default function Collection({ parentCategory = null, slug = null }) {
       const result = await addToCart(cartItemWithVariants);
 
       if (result.success) {
+        // fbEvent({
+        //           action: "Added to Cart ",
+        //           params: { product_id: "P123",
+        //             "Product_Name" : product.name ,
+        //             "Product_Id" : product.productId
+        //           },
+        //         })
+
+
+
         toast.success(
-          `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`,
-          "success"
+          `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`
         );
 
         // 🔥 ADD FACEBOOK PIXEL TRACKING HERE
@@ -169,19 +178,11 @@ export default function Collection({ parentCategory = null, slug = null }) {
             currency: "INR",
           });
       }
-        // // console.log('Item added successfully');
-        // showToast(
-        //   `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`,
-        //   'success'
-        // );
+    
       } else {
         toast.error("Failed to add item to cart. Please try again.", "error");
-        // // console.log('Failed to add item');
-        // showToast("Failed to add item to cart. Please try again.", "error");
       }
     } catch (error) {
-      // console.error("Error adding to cart:", error);
-      // showToast("Failed to add item to cart. Please try again.", "error");
       toast.error("Failed to add item to cart. Please try again.", "error");
     }
   };
