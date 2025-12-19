@@ -33,7 +33,7 @@ import ImageModal from "./components/ImageModal";
 import Reviews from "./components/Reviews";
 import { checkDeliveryAPI } from "../../api/deliveryApi/deliveryApi";
 import { toast } from "sonner";
-import { event } from "@/utils/gtag";
+import { gaEvent } from "@/utils/gtm/gtag";
 
 const generateSizeRange = (availableSizes) => {
   const allSizes = ["35", "36", "37", "38", "39", "40", "41"];
@@ -296,7 +296,7 @@ export function ProductClient({ product, similarProducts }) {
       if (result.success) {
         // console.log("✅ Item added successfully to cart");
 
-        event({
+        gaEvent({
           action: "Added to Cart ",
           params: { product_id: "P123",
             "Product_Name" : product.name ,

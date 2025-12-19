@@ -1,4 +1,4 @@
-export const event = ({ action, params, callback }) => {
+export const gaEvent = ({ action, params, callback }) => {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", action, {
       ...params,

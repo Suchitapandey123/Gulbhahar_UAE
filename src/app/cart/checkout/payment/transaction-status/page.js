@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { useCart } from "@/Providers/ContextProviders/CartContext";
 import { API_BASE_URL } from "@/utils/envHere";
-import { event } from "@/utils/gtag";
+import { event } from "@/utils/gtm/gtag";
 
 const TransactionStatusContent = () => {
   const router = useRouter();
@@ -259,21 +259,7 @@ const TransactionStatusContent = () => {
 
         // 🎯 CRITICAL: Prepare user data in EXACT Facebook format
         const userDataForFB = {};
-
-        // 1. EMAIL (must be lowercase and trimmed)
-        if (finalUserData.email) {
-          const email = finalUserData.email.toLowerCase().trim();
-          if (email.includes('@')) {
-            userDataForFB.em = email;
-            console.log("📧 Email prepared:", userDataForFB.em);
-          }
-        }
-
         // 2. FIRST NAME (must be lowercase)
-        if (finalUserData.firstName) {
-          userDataForFB.fn = finalUserData.firstName.toLowerCase().trim();
-          console.log("👤 First name prepared:", userDataForFB.fn);
-        }
 
         // 3. PHONE (must be in E.164 format: country code + number)
         if (finalUserData.phone) {
@@ -321,9 +307,6 @@ const TransactionStatusContent = () => {
           console.log('🚀 Sending Purchase event...');
 
           const purchaseParams = {
-
-            ...userDataForFB,
-
             value: parseFloat(totalValue) || 0,
             currency: "INR",
             content_ids: contentIds,
