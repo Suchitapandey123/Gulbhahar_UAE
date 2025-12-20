@@ -436,7 +436,7 @@ export default function Collection({ parentCategory = null, slug = null }) {
                 {/* Banner after dummy products */}
                 <div className="col-span-full w-full my-4">
                   <Image
-                    src="/banner-image.jpg"
+                    src="https://gulbahar-backend.s3.ap-south-1.amazonaws.com/public/banner-image.jpg"
                     height={500}
                     width={1000}
                     alt="Similar Products Below"
@@ -479,7 +479,7 @@ export default function Collection({ parentCategory = null, slug = null }) {
                   {index === 4 && (
                     <div className="col-span-full w-full my-4">
                       <Image
-                        src="/banner-image.jpg"
+                        src="https://gulbahar-backend.s3.ap-south-1.amazonaws.com/public/banner-image.jpg"
                         height={500}
                         width={1000}
                         alt="design"
