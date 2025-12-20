@@ -34,6 +34,7 @@ import Reviews from "./components/Reviews";
 import { checkDeliveryAPI } from "../../api/deliveryApi/deliveryApi";
 import { toast } from "sonner";
 import { gaEvent } from "@/utils/gtm/gtag";
+import { fbEvent } from "@/utils/fb/metaPixels";
 
 const generateSizeRange = (availableSizes) => {
   const allSizes = ["35", "36", "37", "38", "39", "40", "41"];
@@ -45,18 +46,6 @@ const generateSizeRange = (availableSizes) => {
 
 export function ProductClient({ product, similarProducts }) {
 
-  useEffect(() => {
-    if (!product || !window.fbq) return;
-
-
-    fbq("track", "ProductView", {
-      content_ids: [product.productId || product.id],
-      content_name: product.name,
-      content_type: "product",
-      value: parseFloat(product.price) || 0,
-      currency: "INR",
-    });
-  }, [product?.id]);
   // // console.log(product)
   const router = useRouter();
   const { isAuthenticated } = useAuth();
@@ -296,34 +285,17 @@ export function ProductClient({ product, similarProducts }) {
       if (result.success) {
         // console.log("✅ Item added successfully to cart");
 
-        gaEvent({
-          action: "Added to Cart ",
-          params: { product_id: "P123",
-            "Product_Name" : product.name ,
-            "Product_Id" : product.productId
-          },
-        })
+       
 
-
-
-        if (window.fbq) {
-          fbq("track", "AddToCart", {
-            content_ids: [product.productId || product.id],
-            content_name: product.name,
-            content_type: "product",
-            value: parseFloat(product.price) || 0,
-            currency: "INR",
-          });
-        }
         // showToast(
         //   `${product.name} (${cartSelectedSize}, ${cartSelectedColor}) added to cart!`,
         //   "success"
         // );
         toast.success(
           `${product.name} (${cartSelectedSize}, ${cartSelectedColor}) added to cart!`,
-          "success"
         )
       } else {
+        console.log(result)
         toast.error(
           result.message || "Failed to add item to cart"
         )
@@ -332,7 +304,7 @@ export function ProductClient({ product, similarProducts }) {
         // showToast(result.message || "Failed to add item to cart", "error");
       }
     } catch (error) {
-      toast.error("Failed to add item to cart. Please try again.", "error");
+      toast.error("Failed to add item to cart. Please try again.", error);
       // console.error("❌ Error adding to cart:", error);
       // showToast("Failed to add item to cart. Please try again.", "error");
     }
@@ -1537,18 +1509,7 @@ export function ProductClient({ product, similarProducts }) {
 
                                 const result = await addToCart(cartItem);
 
-                                if (result.success) {
-                                  // console.log("✅ Similar product added successfully to cart");
-                                  if (window.fbq) {
-                                    fbq("track", "AddToCart", {
-                                      content_ids: [item.productId || item.id],
-                                      content_name: item.name,
-                                      content_type: "product",
-                                      value: parseFloat(item.price) || 0,
-                                      currency: "INR",
-                                    });
-                                  }
-
+                                if (result.success) { 
                                   toast.success(
                                     `${item.name} (${cartSelectedSize}, ${cartSelectedColor}) added to cart!`,
                                     "success"
@@ -1564,7 +1525,8 @@ export function ProductClient({ product, similarProducts }) {
                                   // showToast(result.message || "Failed to add item to cart", "error");
                                 }
                               } catch (error) {
-                                toast.error("Failed to add item to cart. Please try again.");
+                                console.log(error)
+                                toast.error(error);
                                 // console.error("❌ Error adding similar product to cart:", error);
                                 // showToast("Failed to add item to cart. Please try again.", "error");
                               }

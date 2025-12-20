@@ -30,7 +30,8 @@ import {
   X,
   RefreshCw
 } from "lucide-react";
-import { event } from "@/utils/gtm/gtag";
+import { gaEvent } from "@/utils/gtm/gtag";
+import { fbEvent } from "@/utils/fb/metaPixels";
 
 const Breadcrumb = () => (
   <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-8">
@@ -271,8 +272,8 @@ const PhoneOTPModal = ({ isOpen, onClose, onVerify, phone, isVerifying, error, s
                   handlePaste(index);
                 }}
                 className={`w-10 h-12 sm:w-12 sm:h-12 text-center text-lg sm:text-xl font-bold border-2 rounded-lg transition-all outline-none ${digit
-                    ? 'border-red-900 bg-red-50 text-red-900'
-                    : 'border-gray-200 focus:border-red-900 focus:ring-2 focus:ring-red-200'
+                  ? 'border-red-900 bg-red-50 text-red-900'
+                  : 'border-gray-200 focus:border-red-900 focus:ring-2 focus:ring-red-200'
                   } ${displayError ? 'border-red-500' : ''}`}
                 maxLength="1"
                 autoComplete="one-time-code"
@@ -317,8 +318,8 @@ const PhoneOTPModal = ({ isOpen, onClose, onVerify, phone, isVerifying, error, s
             onClick={handleVerify}
             disabled={!isCodeComplete || isVerifying}
             className={`w-full py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all duration-200 flex items-center justify-center gap-2 ${isCodeComplete && !isVerifying
-                ? 'bg-red-900 text-white hover:bg-red-800 shadow-lg hover:shadow-xl transform hover:scale-[1.02]'
-                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+              ? 'bg-red-900 text-white hover:bg-red-800 shadow-lg hover:shadow-xl transform hover:scale-[1.02]'
+              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
               }`}
           >
             {isVerifying ? (
@@ -367,10 +368,10 @@ const PaymentMethodCard = ({
 }) => (
   <label className={`block cursor-pointer transition-all duration-300 ${disabled ? 'cursor-not-allowed opacity-60' : ''}`}>
     <div className={`relative p-3 border-2 rounded-xl transition-all duration-300 ${isSelected
-        ? 'border-red-900 bg-red-50 shadow-lg scale-[1.02]'
-        : disabled
-          ? 'border-gray-200 bg-gray-50'
-          : 'border-gray-200 hover:border-red-300 hover:bg-red-25 hover:shadow-md'
+      ? 'border-red-900 bg-red-50 shadow-lg scale-[1.02]'
+      : disabled
+        ? 'border-gray-200 bg-gray-50'
+        : 'border-gray-200 hover:border-red-300 hover:bg-red-25 hover:shadow-md'
       }`}>
       <input
         type="radio"
@@ -402,9 +403,9 @@ const PaymentMethodCard = ({
               <span
                 key={index}
                 className={`px-3 py-1 rounded-full text-xs font-medium ${badge.type === 'success' ? 'bg-green-100 text-green-700' :
-                    badge.type === 'warning' ? 'bg-yellow-100 text-yellow-700' :
-                      badge.type === 'info' ? 'bg-blue-100 text-blue-700' :
-                        'bg-gray-100 text-gray-600'
+                  badge.type === 'warning' ? 'bg-yellow-100 text-yellow-700' :
+                    badge.type === 'info' ? 'bg-blue-100 text-blue-700' :
+                      'bg-gray-100 text-gray-600'
                   }`}
               >
                 {badge.text}
@@ -500,6 +501,22 @@ function PaymentContent() {
   const handleOnlinePayment = () => {
     setIsProcessingOnline(true);
     // Process online payment without auto-redirect
+
+    gaEvent({
+      action: "Whatsapp OTP Verified , ONILNE Initiated",
+      params: {
+        "payment_method": "ONLINE",
+        "OrderID": checkoutData?.orderId
+      }
+    })
+
+    fbEvent({
+      action: "ONLINE_Initiated",
+      params: {
+        "payment_method": "ONLINE",
+        "OrderID": checkoutData?.orderId
+      }
+    })
     setTimeout(() => {
       handleSubmitPayment();
     }, 1000);
@@ -601,14 +618,21 @@ function PaymentContent() {
 
   const processCODOrder = async () => {
 
-    event({
-      action: "Whatsapp OTP Verified , Proceeding  to FInal Page",
+    gaEvent({
+      action: "Whatsapp OTP Verified , COD Initiated",
       params: {
-        "payment_method" : "COD" ,
+        "payment_method": "COD",
         "OrderID": checkoutData?.orderId
       }
-    },
-    )
+    })
+
+    fbEvent({
+      action: "COD_Initiated",
+      params: {
+        "payment_method": "COD",
+        "OrderID": checkoutData?.orderId
+      }
+    })
 
     const redirectUrl = `/cart/checkout/payment/transaction-status?status=success&orderId=${checkoutData?.orderId}&amount=${checkoutData?.orderTotal}&transactionId=COD_${Date.now()}&payment_method=cod`;
     router.push(redirectUrl);
@@ -893,8 +917,8 @@ function PaymentContent() {
                   <div className="flex justify-between items-center py-3 border-b border-gray-100">
                     <span className="text-gray-600 font-medium">Payment Method:</span>
                     <span className={`font-semibold px-3 py-1 rounded-full text-sm ${paymentMethod === 'cod'
-                        ? 'bg-red-100 text-red-800'
-                        : 'bg-red-100 text-red-800'
+                      ? 'bg-red-100 text-red-800'
+                      : 'bg-red-100 text-red-800'
                       }`}>
                       {paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment'}
                     </span>

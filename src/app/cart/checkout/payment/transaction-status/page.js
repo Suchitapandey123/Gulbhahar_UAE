@@ -15,7 +15,8 @@ import {
 } from "lucide-react";
 import { useCart } from "@/Providers/ContextProviders/CartContext";
 import { API_BASE_URL } from "@/utils/envHere";
-import { event } from "@/utils/gtm/gtag";
+import { gaEvent } from "@/utils/gtm/gtag";
+import { fbEvent } from "@/utils/fb/metaPixels";
 
 const TransactionStatusContent = () => {
   const router = useRouter();
@@ -202,157 +203,6 @@ const TransactionStatusContent = () => {
     console.log("👤 Final User Data for Pixel:", finalUserData);
 
     try {
-      // 🔥 Wait for Facebook Pixel to be available
-      const waitForFbq = () => {
-        return new Promise((resolve) => {
-          if (typeof window !== "undefined" && window.fbq) {
-            resolve(true);
-          } else {
-            // Wait up to 3 seconds for fbq to load
-            let attempts = 0;
-            const checkInterval = setInterval(() => {
-              attempts++;
-              if (window.fbq) {
-                clearInterval(checkInterval);
-                resolve(true);
-              } else if (attempts >= 30) { // 30 attempts * 100ms = 3 seconds
-                clearInterval(checkInterval);
-                resolve(false);
-              }
-            }, 100);
-          }
-        });
-      };
-
-      const fbqAvailable = await waitForFbq();
-
-      // 🔥 CORRECTED Meta Pixel Purchase event with PROPER user data format
-      if (fbqAvailable && typeof window !== "undefined" && window.fbq) {
-        console.log("🛒 Starting Meta Pixel Purchase event with user data...");
-        console.log("✅ window.fbq is available!");
-
-        // Get cart items
-        let cartItems = [];
-        let totalValue = parseFloat(transactionData.amount) || 0;
-
-        if (checkoutData?.orderItems && Array.isArray(checkoutData.orderItems)) {
-          cartItems = checkoutData.orderItems;
-          console.log("📦 Cart items:", cartItems);
-        }
-
-        // Prepare product data
-        const contentIds = [];
-        const contents = [];
-
-        if (cartItems && cartItems.length > 0) {
-          cartItems.forEach((item) => {
-            if (item && item.id) {
-              contentIds.push(item.id.toString());
-              contents.push({
-                id: item.id.toString(),
-                quantity: item.quantity || 1,
-                item_price: item.price || 0,
-              });
-            }
-          });
-        }
-
-        // 🎯 CRITICAL: Prepare user data in EXACT Facebook format
-        const userDataForFB = {};
-        // 2. FIRST NAME (must be lowercase)
-
-        // 3. PHONE (must be in E.164 format: country code + number)
-        if (finalUserData.phone) {
-          const phone = finalUserData.phone.replace(/\D/g, ''); // Remove all non-digits
-
-          // Indian phone number handling
-          if (phone.length === 10) {
-            userDataForFB.ph = '91' + phone; // India country code + 10-digit number
-            console.log("📱 Phone prepared:", userDataForFB.ph);
-          } else if (phone.length === 12 && phone.startsWith('91')) {
-            userDataForFB.ph = phone;
-            console.log("📱 Phone prepared:", userDataForFB.ph);
-          } else {
-            console.log("⚠️ Phone format not recognized:", phone);
-          }
-        }
-
-        // 4. LAST NAME (if available)
-        if (finalUserData.lastName) {
-          userDataForFB.ln = finalUserData.lastName.toLowerCase().trim();
-          console.log("👤 Last name prepared:", userDataForFB.ln);
-        }
-
-        // 5. COUNTRY (from checkoutData)
-        if (checkoutData.country) {
-          userDataForFB.country = checkoutData.country.toLowerCase().trim();
-          console.log("🌍 Country prepared:", userDataForFB.country);
-        }
-
-        // 6. CITY (if available)
-        if (checkoutData.city) {
-          userDataForFB.ct = checkoutData.city.toLowerCase().trim();
-          console.log("🏙️ City prepared:", userDataForFB.ct);
-        }
-
-        console.log("🎯 FINAL User data for Pixel:", JSON.stringify(userDataForFB, null, 2));
-        console.log("📊 Product data:", {
-          content_ids: contentIds,
-          value: totalValue,
-          num_items: cartItems.length || 1
-        });
-
-        // 🚀 METHOD 1: Send Purchase event with ALL parameters
-        try {
-          console.log('🚀 Sending Purchase event...');
-
-          const purchaseParams = {
-            value: parseFloat(totalValue) || 0,
-            currency: "INR",
-            content_ids: contentIds,
-            contents: contents,
-            content_type: "product",
-            transaction_id: transactionData.trackingId,
-            num_items: cartItems.length || 1,
-            payment_method: transactionData.paymentMethod,
-
-            content_name: "Purchase",
-            content_category: "Fashion",
-            status: "completed",
-          };
-
-          // Debug log to see EXACTLY what's being sent
-          console.log("📤 Purchase event parameters being sent:", JSON.stringify(purchaseParams, null, 2));
-
-          // Send Purchase event
-          fbq("track", "Purchase", purchaseParams);
-          console.log("✅ Purchase event sent!");
-
-        } catch (error) {
-          console.error("❌ Error in Purchase event:", error);
-        }
-
-        setTimeout(() => {
-          if (Object.keys(userDataForFB).length > 0) {
-            console.log('🔄 Sending CompleteRegistration event...');
-
-            const registrationParams = {
-              ...userDataForFB,
-
-              status: 'purchase_completed',
-              registration_method: transactionData.paymentMethod === "cod" ? "COD" : "Online",
-              currency: "INR",
-              value: parseFloat(totalValue) || 0,
-            };
-
-
-          }
-        }, 1000);
-      } else {
-        console.error("❌ Facebook Pixel (window.fbq) is NOT available on this page!");
-        console.log("window.fbq:", typeof window !== "undefined" ? window.fbq : "window is undefined");
-      }
-
       const generateSessionId = () => {
         const timestamp = Date.now();
         const random = Math.random().toString(36).substring(2, 8);
@@ -588,13 +438,22 @@ const TransactionStatusContent = () => {
       const result = await response.json();
       // console.log("✅ Backend response:", result);
 
-      event({
+      gaEvent({
         action: "Final Order Placed SuccessFully",
         params: {
-          "payment_method": "COD",
+          "payment_method": transactionData.paymentMethod,
         }
-      },
-      )
+      })
+
+       fbEvent({
+        action: "Purchase",
+        params: {
+          "content_name": `${transactionData.paymentMethod}_Order_Placed_SuccessFully`,
+          "content_type" : transactionData.paymentMethod
+        }
+      })
+      
+
 
       // 🎯 Mark as successfully completed
       apiCallCompleted.current = true;

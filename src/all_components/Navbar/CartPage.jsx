@@ -16,6 +16,7 @@ import {
 import Image from "next/image";
 import { useCart } from "@/Providers/ContextProviders/CartContext";
 import { gaEvent } from "@/utils/gtm/gtag";
+import { fbEvent } from "@/utils/fb/metaPixels";
 
 const CartPage = () => {
   const {
@@ -488,7 +489,14 @@ const CartPage = () => {
                       action: "redirected To checkout page ",
                       params: {
                         "First_Product_Name": cart[0].name,
-                        "First_Product_Id": cart[0].productId,
+                        "Product_Ids": cart.map(item => item.productId),
+                      },
+                    })
+                    fbEvent({
+                      action: "InitiateCheckout",
+                      params: {
+                        "First_Product_Name": cart[0].name,
+                        "content_ids": cart.map(item => item.productId),
                       },
                     })
                     window.location.href = "/cart/checkout"

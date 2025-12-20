@@ -17,7 +17,7 @@ import Image from "next/image";
 const poppins = Poppins({
   variable: "--font-sans",
   subsets: ["latin"],
-  preload:true,
+  preload: true,
   weight: ["300", "400", "500", "600", "700"],
   display: "swap",
 });
@@ -25,7 +25,7 @@ const poppins = Poppins({
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
-  preload:true,
+  preload: true,
   display: "swap",
 });
 
@@ -88,7 +88,7 @@ export default function RootLayout({ children }) {
         />
 
         {/* Google Tag Manager */}
-        <Script
+        {/* <Script
           id="gtm-head"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
@@ -100,14 +100,14 @@ export default function RootLayout({ children }) {
               })(window,document,'script','dataLayer','GTM-T5S7S772');
             `,
           }}
-        />
+        /> */}
       </head>
 
       <SessionWrapper>
         <body
           className={`${poppins.variable} ${jetbrainsMono.variable} antialiased`}
         >
-          {/* GTM noscript */}
+          GTM noscript
           <noscript>
             <iframe
               src="https://www.googletagmanager.com/ns.html?id=GTM-T5S7S772"
@@ -161,7 +161,31 @@ export default function RootLayout({ children }) {
           />
 
           {/* Facebook Pixel */}
+
           <Script
+            id="facebook-pixel"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                !function(f,b,e,v,n,t,s)
+                    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                    n.queue=[];t=b.createElement(e);t.async=!0;
+                    t.src=v;s=b.getElementsByTagName(e)[0];
+                    s.parentNode.insertBefore(t,s)}(window, document,'script',
+                    'https://connect.facebook.net/en_US/fbevents.js');
+                    fbq('init', '1557129638938241');
+                    fbq('track', 'PageView');
+              `,
+            }}
+          />
+
+
+
+
+
+          {/* <Script
             id="facebook-pixel"
             strategy="afterInteractive"
             dangerouslySetInnerHTML={{
@@ -184,7 +208,7 @@ export default function RootLayout({ children }) {
                 fbq('track', 'PageView');
               `,
             }}
-          />
+          /> */}
 
           {/* Facebook Pixel Noscript */}
           <noscript>
@@ -192,9 +216,16 @@ export default function RootLayout({ children }) {
               height="1"
               width="1"
               style={{ display: 'none' }}
-              src="https://www.facebook.com/tr?id=1705895113580123&ev=PageView&noscript=1"
+              src="https://www.facebook.com/tr?id=1557129638938241&ev=PageView&noscript=1"
               alt="facebook image"
             />
+            {/* <Image
+              height="1"
+              width="1"
+              style={{ display: 'none' }}
+              src="https://www.facebook.com/tr?id=1705895113580123&ev=PageView&noscript=1"
+              alt="facebook image"
+            /> */}
           </noscript>
 
           <AuthProvider>

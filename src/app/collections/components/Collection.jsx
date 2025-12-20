@@ -13,7 +13,7 @@ import FilterSidebar from "./FilterSidebar";
 import ProductCard from "./ProductCard";
 import DummyProductCard from "./DummyProductCard";
 import Image from "next/image";
-import { event, fbEvent } from "@/utils/fb/metaPixels";
+import {fbEvent } from "@/utils/fb/metaPixels";
 
 const fallbackCollections = [
   {
@@ -52,12 +52,12 @@ const ITEMS_PER_PAGE = 24;
 
 export default function Collection({ parentCategory = null, slug = null }) {
   useEffect(() => {
-    if (window.fbq) {
-      fbq("track", "ViewContent", {
-        content_name: "Collection Page",
-        content_category: category || "Juttis",
-      });
-    }
+     fbEvent({
+      action: "ViewContent",
+      params: {
+        "content_name" : "Juttis Page"
+      }
+    })
   }, [parentCategory]);
 
   const [currentImageIndices, setCurrentImageIndices] = useState({});
@@ -74,7 +74,7 @@ export default function Collection({ parentCategory = null, slug = null }) {
 
   const sarees = staticProductsimage;
   const { addToCart, addingToCart } = useCart();
-  const { showToast, ToastContainer } = useToast();
+  const {ToastContainer } = useToast();
   let category = "juttis"
 
 
@@ -132,9 +132,6 @@ export default function Collection({ parentCategory = null, slug = null }) {
       const selectedSize =
         item.sizes && item.sizes.length > 0 ? item.sizes[0] : "default";
 
-      // // console.log(' Auto-selected variants:', { selectedColor, selectedSize });
-
-      //  STANDARDIZED cart item structure
       const cartItemWithVariants = {
         ...item,
         // Use productId consistently
@@ -150,40 +147,17 @@ export default function Collection({ parentCategory = null, slug = null }) {
       // // console.log(' Standardized cart item:', cartItemWithVariants);
 
       const result = await addToCart(cartItemWithVariants);
+      console.log(result)
 
       if (result.success) {
-        // fbEvent({
-        //           action: "Added to Cart ",
-        //           params: { product_id: "P123",
-        //             "Product_Name" : product.name ,
-        //             "Product_Id" : product.productId
-        //           },
-        //         })
-
-
-
         toast.success(
           `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`
         );
-
-        // 🔥 ADD FACEBOOK PIXEL TRACKING HERE
-      if (window.fbq) {
-
-          fbq("track", "AddToCart", {
-            content_ids: [item.productId || item.id],
-            content_type: "product",
-            content_name: item.name || "Product",
-            content_category: category || item.season || "Juttis",
-            value: parseFloat(item.price) || 0,
-            currency: "INR",
-          });
-      }
-    
       } else {
         toast.error("Failed to add item to cart. Please try again.", "error");
       }
     } catch (error) {
-      toast.error("Failed to add item to cart. Please try again.", "error");
+      toast.error("Failed to add item to cart..", error);
     }
   };
 

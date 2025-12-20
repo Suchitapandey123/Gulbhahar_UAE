@@ -20,7 +20,8 @@ import { useCart } from "@/Providers/ContextProviders/CartContext";
 import { useToast } from "@/hooks/useToast";
 import { checkoutApi } from '../../../api/cart/cart';
 import { toast } from "sonner";
-import { event } from "@/utils/gtm/gtag";
+import { event, gaEvent } from "@/utils/gtm/gtag";
+import { fbEvent } from "@/utils/fb/metaPixels";
 
 const Breadcrumb = () => (
   <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-8">
@@ -825,35 +826,21 @@ export default function CheckoutComponent() {
       }
 
 
-      event({
+      gaEvent({
         action: "Continued To Payment",
         params: {
           "Customer_Name": formData.fullName,
           "Customer_Number": formData.phone
         },
       })
-
-
-
-      // 🔥 ADD META PIXEL TRACKING
-      if (typeof window !== 'undefined' && window.fbq && cart && cart.length > 0) {
-        console.log('📊 Meta Pixel - Tracking Continue to Payment click');
-
-        // Extract product IDs from cart
-        const contentIds = cart.map(item => item.productId || item.id).filter(Boolean);
-
-        // Track InitiateCheckout event
-        fbq('track', 'InitiateCheckout', {
-          content_ids: contentIds,
-          content_type: 'product',
-          content_name: 'Checkout Process',
-          value: parseFloat(total) || 0,
-          currency: 'INR',
-          num_items: cart.reduce((sum, item) => sum + (item.quantity || 1), 0),
-        });
-
-        console.log('✅ Meta Pixel - InitiateCheckout event sent');
-      }
+      fbEvent({
+        action: "ContinuedToPayment",
+        params: {
+          "Customer_Name": formData.fullName,
+          "Customer_Number": formData.phone,
+          "Customer_Email": formData.email,
+        },
+      })
 
       toast.success("Information validated! Redirecting to payment...");
 
