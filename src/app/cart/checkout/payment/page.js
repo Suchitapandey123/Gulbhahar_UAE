@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { gaEvent } from "@/utils/gtm/gtag";
 import { fbEvent } from "@/utils/fb/metaPixels";
+import analyticsAPI from "@/app/api/analytics/analytics";
 
 const Breadcrumb = () => (
   <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-8">
@@ -498,7 +499,7 @@ function PaymentContent() {
     setTimeout(() => setShowContent(true), 300);
   }, [orderId, amount, router]);
 
-  const handleOnlinePayment = () => {
+  const handleOnlinePayment = async() => {
     setIsProcessingOnline(true);
     // Process online payment without auto-redirect
 
@@ -517,6 +518,16 @@ function PaymentContent() {
         "OrderID": checkoutData?.orderId
       }
     })
+
+    let payMethod = "ONLINE"
+
+    try {
+      const res = await analyticsAPI.trackPaymentMethod(payMethod)
+      // console.log(res)
+    } catch (error) {
+      console.error(error)
+    }
+
     setTimeout(() => {
       handleSubmitPayment();
     }, 1000);
@@ -633,6 +644,15 @@ function PaymentContent() {
         "OrderID": checkoutData?.orderId
       }
     })
+
+    let payMethod = "COD"
+
+    try {
+      const res = await analyticsAPI.trackPaymentMethod(payMethod)
+      // console.log(res)
+    } catch (error) {
+      console.error(error)
+    }
 
     const redirectUrl = `/cart/checkout/payment/transaction-status?status=success&orderId=${checkoutData?.orderId}&amount=${checkoutData?.orderTotal}&transactionId=COD_${Date.now()}&payment_method=cod`;
     router.push(redirectUrl);

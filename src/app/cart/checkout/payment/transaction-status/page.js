@@ -17,6 +17,7 @@ import { useCart } from "@/Providers/ContextProviders/CartContext";
 import { API_BASE_URL } from "@/utils/envHere";
 import { gaEvent } from "@/utils/gtm/gtag";
 import { fbEvent } from "@/utils/fb/metaPixels";
+import analyticsAPI from "@/app/api/analytics/analytics";
 
 const TransactionStatusContent = () => {
   const router = useRouter();
@@ -429,6 +430,14 @@ const TransactionStatusContent = () => {
       clearTimeout(timeoutId);
 
       if (!response.ok) {
+
+        try {
+            const res = await analyticsAPI.trackOrderFailed()
+            // console.log(res)
+          } catch (error) {
+            console.error(error)
+          }
+      
         const errorData = await response
           .json()
           .catch(() => ({ message: "Unknown error" }));
@@ -452,6 +461,14 @@ const TransactionStatusContent = () => {
           "content_type" : transactionData.paymentMethod
         }
       })
+
+
+      try {
+            const res = await analyticsAPI.trackOrderConfirmed()
+            // console.log(res)
+          } catch (error) {
+            console.error(error)
+          }
       
 
 

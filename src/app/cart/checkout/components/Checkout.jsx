@@ -22,6 +22,7 @@ import { checkoutApi } from '../../../api/cart/cart';
 import { toast } from "sonner";
 import { event, gaEvent } from "@/utils/gtm/gtag";
 import { fbEvent } from "@/utils/fb/metaPixels";
+import analyticsAPI from "@/app/api/analytics/analytics";
 
 const Breadcrumb = () => (
   <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-8">
@@ -39,7 +40,7 @@ const Breadcrumb = () => (
   </nav>
 );
 
-const CustomStateDropdown = ({ value, onChange, className = "" ,fieldValidation }) => {
+const CustomStateDropdown = ({ value, onChange, className = "", fieldValidation }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredStates, setFilteredStates] = useState(indianStates);
@@ -110,10 +111,10 @@ const CustomStateDropdown = ({ value, onChange, className = "" ,fieldValidation 
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className={`w-full border-2 rounded-xl p-4 text-left focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 flex items-center justify-between ${fieldValidation.region?.isValid === true
-            ? "border-green-500"
-            : fieldValidation.region?.isValid === false
-              ? "border-red-500"
-              : "border-red-200 focus:border-red-900"
+          ? "border-green-500"
+          : fieldValidation.region?.isValid === false
+            ? "border-red-500"
+            : "border-red-200 focus:border-red-900"
           } ${isOpen ? "border-red-900 ring-2 ring-red-200" : ""}`}
       >
 
@@ -439,7 +440,7 @@ export default function CheckoutComponent() {
       return;
     }
 
-    console.log(validatePostalCode)
+    // console.log(validatePostalCode)
 
     // 🔧 CHECK IF API IS ENABLED
     if (!ENABLE_PINCODE_API) {
@@ -592,8 +593,6 @@ export default function CheckoutComponent() {
     try {
       setIsProcessing(true);
 
-
-      // 🔥 IMPORTANT: Calculate totals INSIDE the function
       const calculateTotals = () => {
         const subtotal =
           cart && Array.isArray(cart)
@@ -784,16 +783,7 @@ export default function CheckoutComponent() {
         },
       };
 
-      console.log("💾 DEBUG - checkoutData object:", {
-        email: checkoutData.email,
-        emailExists: 'email' in checkoutData,
-        fullName: checkoutData.fullName,
-        fullNameExists: 'fullName' in checkoutData,
-        formDataKeys: Object.keys(formData),
-        formDataEmail: formData.email,
-        formDataFullName: formData.fullName,
-        allCheckoutDataKeys: Object.keys(checkoutData)
-      });
+      console.log("💾 DEBUG - checkoutData object:", checkoutData);
       // console.log(
       //   "💾 Saving validated checkout data to localStorage:",
       //   checkoutData
@@ -802,29 +792,48 @@ export default function CheckoutComponent() {
       // Save to localStorage
       try {
         localStorage.setItem("checkoutFormData", JSON.stringify(checkoutData));
-        // console.log("✅ Checkout data saved to localStorage successfully");
-
-        // Verify the data was saved correctly
         const savedData = localStorage.getItem("checkoutFormData");
-
         if (savedData) {
           const parsedSavedData = JSON.parse(savedData);
-          // // console.log("✅ Verified saved data structure:", {
-          //   hasEmail: 'email' in parsedSavedData,
-          //   email: parsedSavedData.email,
-          //   hasFullName: 'fullName' in parsedSavedData,
-          //   fullName: parsedSavedData.fullName,
-          //   allKeys: Object.keys(parsedSavedData)
-          // });
         }
       } catch (error) {
         // console.error("❌ Error saving checkout data:", error);
         toast.error(" Error saving checkout data. Please try again.");
-        // showToast("Error saving checkout data. Please try again.", "error");
+
         setIsProcessing(false);
         return;
       }
 
+
+       const userData = {
+            "user": {
+              "email": checkoutData.email,
+              "phoneNumber": checkoutData.phone,
+              "name": checkoutData.fullName,
+              "address": {
+                "streetAddress": checkoutData.address,
+                "city": checkoutData.city,
+                "state": checkoutData.region,
+                "pincode": checkoutData.postalCode
+              }
+            },
+            "items": checkoutData.orderItems.map(item => ({
+                "productId": item.productId,
+                "productName": item.name,
+                "color": item.selectedColor,
+                "size": item.selectedSize,
+                "quantity": item.quantity
+              }))
+          }
+
+          // console.log(userData)
+          // Send Analytics to BAckend
+          try {
+            const res = await analyticsAPI.trackContinueToPayment(userData)
+            // console.log(res)
+          } catch (error) {
+            console.error(error)
+          }
 
       gaEvent({
         action: "Continued To Payment",
@@ -843,13 +852,6 @@ export default function CheckoutComponent() {
       })
 
       toast.success("Information validated! Redirecting to payment...");
-
-      // showToast(
-      //   "Information validated! Redirecting to payment...",
-      //   "success"
-      // );
-
-      // Add a small delay to ensure localStorage is written
       setTimeout(() => {
         router.push(
           `/cart/checkout/payment?orderId=${orderId}&amount=${total}`

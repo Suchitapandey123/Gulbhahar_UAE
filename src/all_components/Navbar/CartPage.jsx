@@ -17,6 +17,7 @@ import Image from "next/image";
 import { useCart } from "@/Providers/ContextProviders/CartContext";
 import { gaEvent } from "@/utils/gtm/gtag";
 import { fbEvent } from "@/utils/fb/metaPixels";
+import analyticsAPI from "@/app/api/analytics/analytics";
 
 const CartPage = () => {
   const {
@@ -484,7 +485,7 @@ const CartPage = () => {
               {/* Checkout Buttons */}
               <div className="space-y-2">
                 <button
-                  onClick={() => {
+                  onClick={async() => {
                     gaEvent({
                       action: "redirected To checkout page ",
                       params: {
@@ -499,6 +500,15 @@ const CartPage = () => {
                         "content_ids": cart.map(item => item.productId),
                       },
                     })
+
+                    try {
+                        const res = await analyticsAPI.trackProceedToCheckout()
+                        // console.log(res)
+                    } catch (error) {
+                      console.error(error)
+                    }
+                  
+
                     window.location.href = "/cart/checkout"
                   }}
                   className="w-full bg-red-900 hover:bg-red-800 text-white py-3 rounded-lg font-semibold transition-colors"

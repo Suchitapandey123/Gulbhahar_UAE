@@ -1,6 +1,6 @@
 export const fbEvent = ({ action, params = {}, callback }) => {
   if (typeof window !== "undefined" && window.fbq) {
-    console.log('FB Pixel Event:', action, params); // Debug log
+    // console.log('FB Pixel Event:', action, params); // Debug log
     window.fbq('track', action, params);
     if (callback) callback();
   } else {

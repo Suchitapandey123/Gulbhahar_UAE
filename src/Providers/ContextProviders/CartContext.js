@@ -1,5 +1,6 @@
 
 "use client";
+import analyticsAPI from '@/app/api/analytics/analytics';
 import { fbEvent } from '@/utils/fb/metaPixels';
 import { gaEvent } from '@/utils/gtm/gtag';
 import { createContext, useContext, useEffect, useState } from 'react';
@@ -105,6 +106,13 @@ export const CartProvider = ({ children }) => {
           "content_type" : "juttis"
         },
       })
+
+      try {
+        const res = await analyticsAPI.trackAddToCart(product.productId)
+        // console.log(res)
+      } catch (error) {
+        
+      }
 
       // // console.log('✅ Item added to cart successfully');
       return {
