@@ -76,7 +76,7 @@ export function ProductClient({ product, similarProducts }) {
   const currentColor = product.colors[selectedColorIndex];
   const currentImages = product.images[selectedColorIndex] || [];
   const currentMainImage =
-    currentImages[mainImageIndex] || "/assets/Image/About1.png";
+    currentImages[mainImageIndex] || "/assets/about/lal-ishq-1.jpg";
 
   // Calculate discount percentage
   const discountPercentage = Math.round(
@@ -682,7 +682,7 @@ export function ProductClient({ product, similarProducts }) {
                           <Image
                             src={
                               product.images[idx]?.[0] ||
-                              "/assets/Image/About1.png"
+                              "/assets/about/lal-ishq-1.jpg"
                             }
                             alt={color}
                             className="object-cover w-full h-full"
@@ -1107,7 +1107,7 @@ export function ProductClient({ product, similarProducts }) {
                           <Image
                             src={
                               product.images[idx]?.[0] ||
-                              "/assets/Image/About1.png"
+                              "/assets/about/lal-ishq-1.jpg"
                             }
                             alt={color}
                             className="object-cover w-full h-full"
@@ -1438,12 +1438,12 @@ export function ProductClient({ product, similarProducts }) {
                             src={
                               item.images && item.images.length > 0
                                 ? item.images[0][0]
-                                : "/Image/About1.png"
+                                : "/about/lal-ishq-1.jpg"
                             }
                             alt={item.name || "Product Image"}
                             className="absolute inset-0 w-full h-full object-contain"
                             onError={(e) => {
-                              e.target.src = "/Image/About1.png";
+                              e.target.src = "/about/lal-ishq-1.jpg";
                             }}
                           />
 

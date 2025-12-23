@@ -93,7 +93,7 @@ export default function AvailableProducts() {
       image:
         product.images && product.images.length > 0
           ? product.images
-          : ["/Image/About1.png", "/Image/About1.png", "/Image/About1.png"],
+          : ["/about/lal-ishq-1.jpg", "/about/lal-ishq-1.jpg", "/about/lal-ishq-1.jpg"],
       season: product.season?.toLowerCase() || "winter",
       stock: product.stock || Math.floor(Math.random() * 15) + 6,
       size: product.sizes && product.sizes.length > 0 ? product.sizes[0] : "M",
@@ -800,7 +800,7 @@ const handleAddToCart = async (e, item) => {
                                 height={450}
                                 priority
                                 key={idx}
-                                src={image || "/Image/About1.png"}
+                                src={image || "/about/lal-ishq-1.jpg"}
                                 alt={`${item.title} - ${idx + 1}`}
                                 className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-700 ease-in-out ${
                                   currentImageIndex === idx
@@ -808,7 +808,7 @@ const handleAddToCart = async (e, item) => {
                                     : "opacity-0"
                                 } ${viewMode === "list" ? "rounded-lg" : ""}`}
                                 onError={(e) => {
-                                  e.target.src = "/Image/About1.png";
+                                  e.target.src = "/about/lal-ishq-1.jpg";
                                 }}
                               />
                             ))}

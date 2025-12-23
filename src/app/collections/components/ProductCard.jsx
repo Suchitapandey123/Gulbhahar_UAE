@@ -68,7 +68,7 @@ export default function ProductCard({
             
             <Image
               key={idx}
-              src={image || "/Image/About1.png"}
+              src={image || "/about/lal-ishq-1.jpg"}
               alt={`${item.title || item.name || "Product"} - ${idx + 1}`}
               fill
               priority={index < 4} 

@@ -300,7 +300,7 @@ export default function PaymentPage() {
 
   // Get the current image for display with proper error handling
   const getCurrentImage = (item) => {
-    if (!item) return '/Image/About1.png';
+    if (!item) return '/about/lal-ishq-1.jpg';
     
     try {
       if (item.images && Array.isArray(item.images) && item.images.length > 0) {
@@ -308,28 +308,28 @@ export default function PaymentPage() {
           const colorIndex = item.selectedColorIndex || 0;
           const colorImages = item.images[colorIndex];
           if (colorImages && Array.isArray(colorImages) && colorImages.length > 0) {
-            return colorImages[0] || '/Image/About1.png';
+            return colorImages[0] || '/about/lal-ishq-1.jpg';
           }
           if (item.images[0] && Array.isArray(item.images[0]) && item.images[0].length > 0) {
-            return item.images[0][0] || '/Image/About1.png';
+            return item.images[0][0] || '/about/lal-ishq-1.jpg';
           }
         } else {
-          return item.images[0] || '/Image/About1.png';
+          return item.images[0] || '/about/lal-ishq-1.jpg';
         }
       }
       
       if (item.image) {
-        return Array.isArray(item.image) ? item.image[0] || '/Image/About1.png' : item.image;
+        return Array.isArray(item.image) ? item.image[0] || '/about/lal-ishq-1.jpg' : item.image;
       }
       
       if (item.currentMainImage) {
         return item.currentMainImage;
       }
       
-      return '/Image/About1.png';
+      return '/about/lal-ishq-1.jpg';
     } catch (error) {
       console.warn('Error getting image for item:', item?.id, error);
-      return '/Image/About1.png';
+      return '/about/lal-ishq-1.jpg';
     }
   };
 
@@ -907,7 +907,7 @@ export default function PaymentPage() {
                             className="w-full h-full object-cover"
                             onError={(e) => {
                               if (e.target) {
-                                e.target.src = '/Image/About1.png';
+                                e.target.src = '/about/lal-ishq-1.jpg';
                               }
                             }}
                           />
