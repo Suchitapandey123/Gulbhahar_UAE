@@ -6,9 +6,9 @@ const ContentJuttis = () => {
         {/* Main Heading */}
         <div className="text-center sm:text-start mb-8 sm:mb-12">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight px-2">
-            Juttis by Gulbhahar are a{' '}
-            <span className="text-red-900">Timeless Shoe</span>{' '}
-            for All Generations
+            Juttis | Gulbhahar’s  | {' '}
+            <span className="text-red-900">Limited-Edition Juttis</span>{' '}
+            Only 24 Pairs per Design
           </h1>
           <div className="w-16 sm:w-24 h-1 bg-gradient-to-r from-red-900 to-red-700 mx-auto rounded-full"></div>
         </div>
