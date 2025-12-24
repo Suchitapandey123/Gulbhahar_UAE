@@ -1648,6 +1648,7 @@ const BrandStorySection = () => {
           ease: "linear" 
         }}
       />
+      {/* this is the comment only for doing project redeployment */}
       <motion.div 
         className="absolute bottom-1/4 right-1/4 w-40 sm:w-56 lg:w-72 h-40 sm:h-56 lg:h-72 bg-gradient-to-tl from-[#7f0001]/15 to-[#7f0001]/25 rounded-full opacity-25 blur-3xl"
         animate={{ 
