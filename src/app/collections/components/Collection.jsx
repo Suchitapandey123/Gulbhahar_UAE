@@ -106,7 +106,7 @@ export default function Collection({ parentCategory = null, slug = null }) {
       image:
         product.images && product.images.length > 0
           ? product.images
-          : ["/Image/About1.png", "/Image/About1.png", "/Image/About1.png"],
+          : ["/about/lal-ishq-1.jpg", "/about/lal-ishq-1.jpg", "/about/lal-ishq-1.jpg"],
       season: product.season?.toLowerCase() || "winter",
       stock: product.stock || Math.floor(Math.random() * 15) + 6,
       size: product.sizes && product.sizes.length > 0 ? product.sizes[0] : "M",

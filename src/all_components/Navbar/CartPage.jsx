@@ -385,7 +385,7 @@ const CartPage = () => {
                                         <Image
                                           src={
                                             item.images[colorIndex][0] ||
-                                            "/Image/About1.png"
+                                            "/about/lal-ishq-1.jpg"
                                           }
                                           alt={color}
                                           priority

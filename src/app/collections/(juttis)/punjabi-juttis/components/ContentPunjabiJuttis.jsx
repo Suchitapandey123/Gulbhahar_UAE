@@ -6,8 +6,10 @@ const ContentPunjabiJuttis = () => {
         {/* Main Heading */}
         <div className="text-center sm:text-start mb-8 sm:mb-12">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight px-2">
-            <span className="text-red-900">Gulbhahar</span> - Preserving the heritage of{' '}
-            <span className="text-red-900">Punjabi Juttis</span>
+            <span className="text-red-900">Punjabi Juttis | Gulbhahar’s</span> Limited‑Edition Punjabi Juttis {' '}
+            <span className="text-red-900">| Only 24 Pairs per Design</span>
+
+             
           </h1>
           <div className="w-16 sm:w-24 h-1 bg-gradient-to-r from-red-900 to-red-800 mx-auto rounded-full"></div>
         </div>

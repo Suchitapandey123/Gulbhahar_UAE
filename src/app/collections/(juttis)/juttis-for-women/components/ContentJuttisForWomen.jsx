@@ -6,8 +6,8 @@ const ContentJuttisForWomen = () => {
         {/* Main Heading */}
         <div className="text-center lg:text-start mb-8 sm:mb-12">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight px-2">
-            <span className="text-red-900">Explore The Eternally Timeless</span>{' '}
-            Women's Juttis With Gulbhahar
+            <span className="text-red-900">Juttis for Women| Gulbhahar’s Limited </span>{' '}
+            Juttis for Women | Only 24 Pairs
           </h1>
           <div className="w-16 sm:w-24 h-1 bg-gradient-to-r from-red-900 to-red-800 mx-auto rounded-full"></div>
         </div>
