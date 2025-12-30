@@ -1,7 +1,13 @@
-User-agent: *
-Allow: /
+User-agent: Googlebot
+Disallow: 
+User-agent: googlebot-mobile
+Disallow: 
+User-agent: Bingbot
+Disallow: 
+User-agent: * 
 Disallow: /account/
 Disallow: /cart/checkout/
 Disallow: /cgi-bin/
 Disallow: /forgot-password
+Disallow: /search
 Sitemap: https://www.gulbhahar.com/sitemap-index.xml
