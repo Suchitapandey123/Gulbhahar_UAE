@@ -8,8 +8,11 @@ export default function ReactQueryProvider({ children }) {
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 60 * 1000,
-        refetchOnWindowFocus: false,
+        staleTime: 0, // Data is immediately stale - always fetch fresh
+        gcTime: 5 * 60 * 1000, // Garbage collect after 5 minutes
+        refetchOnWindowFocus: true, // Refetch when user returns to tab
+        refetchOnMount: true, // Refetch when component mounts
+        refetchOnReconnect: true, // Refetch when network reconnects
       },
     },
   }))

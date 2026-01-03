@@ -6,6 +6,10 @@ import QuickTag from "../../components/QuickTag";
 import { popularTags  } from "../../tag";
 import QuickSearch from '@/all_components/Homepage/QuickLinks';
 
+// Force dynamic rendering - always fetch fresh data (fixes AWS Amplify caching issue)
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function generateMetadata() {
     return {
       title:"Punjabi Juttis for ladies | Gulbhahar’s Limited Punjabi Jutis for Ladies| Only 24 Pairs ",

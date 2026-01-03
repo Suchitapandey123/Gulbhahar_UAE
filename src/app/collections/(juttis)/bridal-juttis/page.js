@@ -6,6 +6,10 @@ import QuickTag from "../../components/QuickTag";
 import { popularTags  } from "../../tag";
 import QuickSearch from '@/all_components/Homepage/QuickLinks';
 
+// Force dynamic rendering - always fetch fresh data (fixes AWS Amplify caching issue)
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function generateMetadata() {
     return {
       title:"Bridal Juttis | Gulbhahar’s Limited‑Edition Bridal/ Wedding Juttis | Only 24 Pairs per Design",

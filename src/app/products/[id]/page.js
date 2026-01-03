@@ -24,9 +24,9 @@ export async function generateStaticParams() {
   }
 }
 
-// ISR Configuration - Generate on-demand with caching
-
-export const revalidate = 86400; // Cache for 24 hours
+// Force dynamic rendering - always fetch fresh data (fixes AWS Amplify caching issue)
+export const dynamic = 'force-dynamic';
+export const revalidate = 0; // No caching
 export const dynamicParams = true; // Enable on-demand generation
 
 async function getProductData(productID) {

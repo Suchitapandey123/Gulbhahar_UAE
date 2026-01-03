@@ -2,7 +2,9 @@ import React from 'react'
 import CollectionPage from '@/app/collections/components/Collection'
 
 
-export const revalidate = 86400; // Cache for 24 hours
+// Force dynamic rendering - always fetch fresh data (fixes AWS Amplify caching issue)
+export const dynamic = 'force-dynamic';
+export const revalidate = 0; // No caching
 export const dynamicParams = true; // Enable on-demand generation
 
 export async function generateMetadata() {

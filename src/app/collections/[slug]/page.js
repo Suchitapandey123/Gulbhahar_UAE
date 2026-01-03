@@ -6,7 +6,9 @@ import QuickLinks from "../components/QuickLinks";
 import { pageService } from "../../api/pageService/pageService";
 import { redirect } from "next/navigation";
 
-export const revalidate = 86400; 
+// Force dynamic rendering - always fetch fresh data (fixes AWS Amplify caching issue)
+export const dynamic = 'force-dynamic';
+export const revalidate = 0; // No caching
 export const dynamicParams = true; 
 
 

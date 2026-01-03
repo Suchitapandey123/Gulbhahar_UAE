@@ -1,77 +1,98 @@
 import { API_BASE_URL } from "@/utils/envHere";
-import axios from "axios";
 
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json",
-  },
-});
-
-  
+// Using fetch with cache: 'no-store' to bypass all caching on AWS Amplify
 const productApi = {
   getAllProduct: async () => {
     try {
-      const response = await api.get(
-        "/api/products/get-all-product"
-      );
-      
-      const data = response.data;
+      const response = await fetch(`${API_BASE_URL}/api/products/get-all-product`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        cache: 'no-store', // Bypass cache - always fetch fresh data
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
       return data;
     } catch (error) {
-      throw error.response ? error.response.data : error;
+      console.error('Error fetching all products:', error);
+      throw error;
     }
   },
-  
 
   productById: async (productId) => {
-    // // console.log(productId)
     try {
-      const response = await api.post(
-        "/api/products/get-product-by" ,
-        {
-            productId
-        }
-      );
-      const data = response.data;
+      const response = await fetch(`${API_BASE_URL}/api/products/get-product-by`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ productId }),
+        cache: 'no-store', // Bypass cache - always fetch fresh data
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
       return data;
     } catch (error) {
-      throw error.response ? error.response.data : error;
-    }
-  },
-  
-   
-  getSimilarProducts: async (productId) => {
-    // // console.log(productId)
-    try {
-      const response = await api.get(
-        "/api/products/get-similar-product" ,
-        {
-            productId
-        }
-      );
-      const data = response.data;
-      return data;
-    } catch (error) {
-      throw error.response ? error.response.data : error;
+      console.error('Error fetching product by ID:', error);
+      throw error;
     }
   },
 
+  getSimilarProducts: async (productId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/products/get-similar-product?productId=${productId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        cache: 'no-store', // Bypass cache - always fetch fresh data
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching similar products:', error);
+      throw error;
+    }
+  },
 
   getInterestedProducts: async (productId) => {
-    // // console.log(productId)
     try {
-      const response = await api.post(
-        "api/products/intrested-product",
-        {
-            productId
-        }
-      );
-      const data = response.data;
+      const response = await fetch(`${API_BASE_URL}/api/products/intrested-product`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ productId }),
+        cache: 'no-store', // Bypass cache - always fetch fresh data
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
       return data;
     } catch (error) {
-      throw error.response ? error.response.data : error;
+      console.error('Error fetching interested products:', error);
+      throw error;
     }
   },
   
@@ -121,22 +142,29 @@ const productApi = {
   // },  
      
   
-    getProductsByCategory: async (categoryName) => {
-      // console.log(categoryName)
+  getProductsByCategory: async (categoryName) => {
     try {
-  const response = await api.post("/api/products/get-all-product-by-category", {
-    category:  categoryName 
-  });
-  // console.log('API raw response:', response.data); 
-  // return response.data.data || response.data; 
-   return response.data;
-} catch (err) {
-  console.error("API error", err.response?.status, err.response?.data);
-  return [];
-}
+      const response = await fetch(`${API_BASE_URL}/api/products/get-all-product-by-category`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ category: categoryName }),
+        cache: 'no-store', // Bypass cache - always fetch fresh data
+      });
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching products by category:', error);
+      return [];
+    }
   },
-  
-  
 };
+
 export default productApi;
