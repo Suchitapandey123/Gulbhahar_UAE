@@ -107,7 +107,7 @@ export default function RootLayout({ children }) {
         <body
           className={`${poppins.variable} ${jetbrainsMono.variable} antialiased`}
         >
-          GTM noscript
+          {/* GTM noscript */}
           <noscript>
             <iframe
               src="https://www.googletagmanager.com/ns.html?id=GTM-T5S7S772"
@@ -212,7 +212,7 @@ export default function RootLayout({ children }) {
 
           {/* Facebook Pixel Noscript */}
           <noscript>
-            <Image
+            <img
               height="1"
               width="1"
               style={{ display: 'none' }}
