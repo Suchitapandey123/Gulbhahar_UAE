@@ -3,16 +3,17 @@ import Wishlist from './Component/Wishlist'
 
 export async function generateMetadata() {
   return {
-    title: "My Wishlist - Save Your Favorite Gulbhahar Jutti Styles",
+    title: "My Wishlist - Save Your Favorite Gulbhahar Styles",
     description:
-      "Save your favorite Gulbhahar jutti styles in your wishlist. Keep track and get notified about sales on your preferred handcrafted footwear. Your juttis are only a click away!",
+      "Save your favorite Gulbhahar styles in your wishlist. Keep track and get notified about sales on your preferred orders.",
+    keywords: ["Wishlist"],
     alternates: {
       canonical: "https://www.gulbhahar.com/account/account-centre/wishlist",
     },
     openGraph: {
-      title: "My Wishlist - Save Your Favorite Gulbhahar Jutti Styles",
+      title: "My Wishlist - Save Your Favorite Gulbhahar Styles",
       description:
-        "Save your favorite Gulbhahar jutti styles in your wishlist. Keep track and get notified about sales on your preferred handcrafted footwear. Your juttis are only a click away!",
+        "Save your favorite Gulbhahar styles in your wishlist. Keep track and get notified about sales on your preferred orders.",
       type: "website",
       locale: "en_US",
       url: "https://www.gulbhahar.com/account/account-centre/wishlist",

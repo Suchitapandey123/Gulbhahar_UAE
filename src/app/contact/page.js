@@ -3,9 +3,9 @@ import ContactPage from "./Component/contact";
 
 export async function generateMetadata() {
   return {
-    title: "Contact | Gulbhahar - Customer Support & Inquiries",
+    title: "Contact us | Gulbhahar (Official) - Customer Support",
     description:
-      "Get in touch with Gulbhahar for premium handcrafted juttis and accessories. Our customer support team is here to assist you with inquiries, orders, and business collaborations. Drop us a message today!",
+      "Get in touch with Gulbhahar for support and inquiries.. Our customer support team is here to assist you .",
    
       keywords: ["gulbhahar contact", "gulbhahar customer support", "handcrafted jutti inquiries", "designer jutti customer service", "gulbhahar email support", "gulbhahar phone number", "jutti store india support", "premium footwear inquiries", "gulbhahar company address", "gulbhahar message form"],
 

@@ -12,16 +12,16 @@ export const revalidate = 0;
 
 export async function generateMetadata() {
     return {
-      title:"Punjabi Juttis for ladies | Gulbhahar’s Limited Punjabi Jutis for Ladies| Only 24 Pairs ",
-      description:"Gulbhahar’s exclusive Punjabi juttis for ladies, limited to just 24 pairs per design. Each pair is hand stitched by master artisans, blending tradition with modern comfort. Make a statement with personalized elegance.",
-      keywords: ["Punjabi Juttis for ladies", "Punjabi Jutis for ladies", "Punjabi juti for ladies", "Punjabi Jutti for ladies", "Punjabi jutty for ladies", "Punjabi juty for ladies", "Punjabi juttee for ladies", "Punjabi jute for ladies", "Punjabi jutties for ladies", "Panjabi Juttis for ladies", "Panjabi Jutis for ladies", "Panjabi juti for ladies", "Panjabi Jutti for ladies", "Panjabi jutty for ladies", "Panjabi juty for ladies", "Panjabi juttee for ladies", "Panjabi jute for ladies", "Panjabi jutties for ladies", "jutties for ladies", "ladies jutti", "ladies juti", "jutti ladies"],
+      title:"Punjabi Juttis for ladies, Buy Punjabi Jutis : Gulbhahar",
+      description:"Gulbhahar's Punjabi juttis for ladies, limited to just 24 pairs per design. Each pair is hand stitched by master artisans, with modern comfort.",
+      keywords: ["Punjabi Juttis for ladies", "Panjabi Juttis for ladies", "Punjabi Jutis for ladies", "Panjabi Jutis for ladies", "Punjabi Jutti for ladies", "Panjabi Jutti for ladies", "Punjabi Juti for ladies", "Panjabi Juti for ladies", "Punjabi Juttis for women", "Panjabi Juttis for women", "Punjabi Jutis for women", "Panjabi Jutis for women", "Punjabi Jutti for women", "Panjabi Jutti for women", "Punjabi Juti for women", "Panjabi Juti for women", "ladies Punjabi Juttis", "ladies Panjabi Juttis"],
 
       alternates: {
         canonical: "https://www.gulbhahar.com/collections/punjabi-juttis-for-ladies",
       },
       // openGraph: {
-      //    title:"Punjabi Juttis for ladies | Gulbhahar’s Limited Punjabi Jutis for Ladies| Only 24 Pairs ",
-      //  description:"Gulbhahar’s exclusive Punjabi juttis for ladies, limited to just 24 pairs per design. Each pair is hand stitched by master artisans, blending tradition with modern comfort. Make a statement with personalized elegance.",  
+      //    title:"Punjabi Juttis for ladies, Buy Punjabi Jutis : Gulbhahar",
+      //  description:"Gulbhahar's Punjabi juttis for ladies, limited to just 24 pairs per design. Each pair is hand stitched by master artisans, with modern comfort.",
       //   type: "website",
       //   locale: "en_US",
       //   url: "https://www.gulbhahar.com/collections/punjabi-juttis-for-ladies",

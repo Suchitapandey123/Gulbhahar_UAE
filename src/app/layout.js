@@ -31,11 +31,11 @@ const jetbrainsMono = JetBrains_Mono({
 
 export async function generateMetadata() {
   return {
-    title: "Gulbhahar | The Art of Handmade Luxury Ethnic Wear",
+    title: "Gulbhahar | Ethnic Suits, Sarees & Handmade Juttis for Women",
     description:
-      "Experience Gulbhahar, where Indian tradition meets handmade perfection.  Ethnic Wear, Juttis, Jewellery, Bags all crafted with detail and elegance.",
+      "Shop ethnic suits, sarees, handmade juttis, jewellery and bags at Gulbhahar : where Indian tradition meets timeless elegance.",
 
-    keywords: ["Gulbhahar", " Gulbhahar.com", "gulbahar", "gulbahar.com", "Ethnic Wear", "Juttis", "Jewellery", "Bags "],
+    keywords: ["gulbhahar", "gulbhahar.com", "gulbahar", "gulbahar.com", "ethnic wear", "ethnicwear", "gulbhahar official site"],
 
     icons: {
       icon: "/logo.png",

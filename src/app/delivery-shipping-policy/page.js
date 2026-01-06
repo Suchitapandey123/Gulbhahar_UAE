@@ -4,8 +4,9 @@ import DeliveryShipping from "@/app/delivery-shipping-policy/Component/DeliveryS
 
 export async function generateMetadata() {
   return {
-    title:"Delivery & Shipping Policy - Gulbhahar Jutti Orders",
-  description:"Learn about Gulbhahar's delivery options, shipping charges, and timelines for jutti orders. Fast nationwide delivery with secure packaging for your footwear.",
+    title:"Delivery & Shipping Policy - Gulbhahar Orders",
+  description:"Learn about Gulbhahar's delivery options, shipping charges, and timelines for orders. Fast nationwide delivery with secure packaging .",
+  keywords: ["delivery policy", "gulbhahar delivery", "gulbhahar shipping"],
     alternates: {
       canonical: "https://www.gulbhahar.com/delivery-shipping-policy",
     },

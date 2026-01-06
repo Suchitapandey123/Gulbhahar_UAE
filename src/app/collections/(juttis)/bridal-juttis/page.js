@@ -12,17 +12,17 @@ export const revalidate = 0;
 
 export async function generateMetadata() {
     return {
-      title:"Bridal Juttis | Gulbhahar’s Limited‑Edition Bridal/ Wedding Juttis | Only 24 Pairs per Design",
-      description:"Step into your wedding day in luxury .Gulbhahar’s limited‑edition bridal jutis are handcrafted and released in only 24 pairs per design. Each pair features elegant detailing, free custom embroidery and comes in a numbered collector’s box.",
-      keywords: ["Bridal Juttis", "Bridal Jutis", "Bridal juti", "Bridal Jutti", "Bridal Bridal jutty", "Bridal juty", "Bridal juttee", "Bridal jute", "Bridal jutties", "Wedding Juttis", "Wedding Jutis", "Wedding juti", "Wedding Jutti", "Wedding jutty", "Wedding juty", "Wedding juttee", "Wedding jute", "Wedding jutties", "bridal Shoes", "Wedding Shoes"],
+      title:"Bridal Juttis (New Stock) Wedding juttis | Gulbhahar",
+      description:"Gulbhahar's limited-edition bridal jutis are handcrafted and released in only 24 pairs per design. Each pair features elegant detailing.",
+      keywords: ["Bridal Juttis", "Wedding Juttis", "bridal Shoes", "Wedding Shoes", "Bridal Jutis", "Wedding Jutis", "Bridal Jutti", "Wedding Jutti", "bridal Shoe", "Wedding Shoe", "Bridal Juti", "Wedding Juti", "marriage Juttis", "marriage Jutis", "marriage Jutti", "marriage Juti", "nikah Juttis", "nikah Jutis", "nikah Jutti", "nikah Juti"],
 
       alternates: {
         canonical: "https://www.gulbhahar.com/collections/bridal-juttis",
       },
       // openGraph: {
-      //   title:"Bridal Juttis | Gulbhahar’s Limited‑Edition Bridal/ Wedding Juttis | Only 24 Pairs per Design",
-      //  description:"Step into your wedding day in luxury .Gulbhahar’s limited‑edition bridal jutis are handcrafted and released in only 24 pairs per design. Each pair features elegant detailing, free custom embroidery and comes in a numbered collector’s box.",
-      
+      //   title:"Bridal Juttis (New Stock) Wedding juttis | Gulbhahar",
+      //  description:"Gulbhahar's limited-edition bridal jutis are handcrafted and released in only 24 pairs per design. Each pair features elegant detailing.",
+
       //   type: "website",
       //   locale: "en_US",
       //   url: "https://www.gulbhahar.com/collections/bridal-juttis",

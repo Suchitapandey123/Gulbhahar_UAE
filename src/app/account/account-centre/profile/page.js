@@ -4,13 +4,14 @@ import Profile from './component/Profile/Profile';
 export async function generateMetadata() {
   return {
     title:"My Profile - Update Your Gulbhahar Account Details",
-  description:"Update your Gulbhahar profile information, preferences, and delivery details. Manage your account settings for a personalized jutti shopping experience.",
+  description:"Update your Gulbhahar profile information, preferences, and delivery details. Manage your account settings for a personalized shopping experience.",
+  keywords: ["Profile", "Gulbhahar Profile"],
     alternates: {
       canonical: "https://www.gulbhahar.com/account/account-centre/profile",
     },
     openGraph: {
       title:"My Profile - Update Your Gulbhahar Account Details",
-  description:"Update your Gulbhahar profile information, preferences, and delivery details. Manage your account settings for a personalized jutti shopping experience.",
+  description:"Update your Gulbhahar profile information, preferences, and delivery details. Manage your account settings for a personalized shopping experience.",
       type: "website",
       locale: "en_US",
       url: "https://www.gulbhahar.com/account/account-centre/profile",

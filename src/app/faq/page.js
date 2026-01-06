@@ -4,7 +4,8 @@ import FAQ from './Component/Faq'
 export async function generateMetadata() {
   return {
     title:"FAQs - Gulbhahar Jutti Size Guide & Customer Help",
-  description:"Find answers to common questions about Gulbhahar jutti sizing, care, shipping, and returns. Complete guide to help you choose and maintain your juttis.",
+  description:"Find answers to common questions about Gulbhahar collection sizing, care, shipping, and returns. Complete guide to help you.",
+  keywords: ["Faq", "faqs", "gulbhahar Faqs"],
     alternates: {
       canonical: "https://www.gulbhahar.com/faq",
     },

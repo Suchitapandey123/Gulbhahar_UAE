@@ -12,17 +12,17 @@ export const revalidate = 0;
 
 export async function generateMetadata() {
     return {
-      title:"Punjabi Juttis | Gulbhahar’s Limited‑Edition Punjabi Juttis | Only 24 Pairs per Design",
-      description:"Own a piece of heritage: Gulbhahar’s handcrafted Punjabi juttis/ jutis are released in just 24 pairs per design. Each Panjabi Jutti comes with complimentary custom embroidery and a numbered collector’s box.",
-      keywords: ["Punjabi Juttis", "Punjabi Jutis", "Punjabi juti", "Punjabi Jutti", "Punjabi jutty", "Punjabi juty", "Punjabi juttee", "Punjabi jute", "Punjabi jutties", "Panjabi Juttis", "Panjabi Jutis", "Panjabi juti", "Panjabi Jutti", "Panjabi jutty", "Panjabi juty", "Panjabi juttee", "Panjabi jute", "Panjabi jutties"],
+      title:"Punjabi Juttis, Buy Punjabi Juttis (New Designs)",
+      description:"Gulbhahar's handcrafted Punjabi juttis/ jutis are released in just 24 pairs per design. Each Panjabi Jutti comes with complimentary custom embroidery.",
+      keywords: ["Punjabi Juttis", "Panjabi Juttis", "Punjabi Jutis", "Panjabi Jutis", "Punjabi Jutti", "Panjabi Jutti", "Punjabi Juti", "Panjabi Juti", "buy Punjabi Juttis", "buy Panjabi Juttis", "buy Punjabi Jutis", "buy Panjabi Jutis", "buy Punjabi Jutti", "buy Panjabi Jutti", "buy Punjabi Juti", "buy Panjabi Juti", "Punjabi Juttis online", "Panjabi Juttis online"],
 
       alternates: {
         canonical: "https://www.gulbhahar.com/collections/punjabi-juttis",
       },
       // openGraph: {
-      //   title:"Punjabi Juttis | Gulbhahar’s Limited‑Edition Punjabi Juttis | Only 24 Pairs per Design",
-      //   description:"Own a piece of heritage: Gulbhahar’s handcrafted Punjabi juttis/ jutis are released in just 24 pairs per design. Each Panjabi Jutti comes with complimentary custom embroidery and a numbered collector’s box.",
-     
+      //   title:"Punjabi Juttis, Buy Punjabi Juttis (New Designs)",
+      //   description:"Gulbhahar's handcrafted Punjabi juttis/ jutis are released in just 24 pairs per design. Each Panjabi Jutti comes with complimentary custom embroidery.",
+
       //   type: "website",
       //   locale: "en_US",
       //   url: "https://www.gulbhahar.com/collections/punjabi-juttis",

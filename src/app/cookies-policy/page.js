@@ -3,9 +3,10 @@ import CookiePolicy from "@/app/cookies-policy/Component/CookiePolicy";
 
 export async function generateMetadata() {
   return {
-    title: "Cookie Policy - Gulbhahar Jutti Website Privacy",
+    title: "Cookie Policy - Gulbhahar Website Privacy",
     description:
-      "Learn how Gulbhahar uses cookies to enhance your jutti shopping experience. Understand our data collection practices and privacy protection measures.",
+      "Learn how Gulbhahar uses cookies to enhance your shopping experience. Understand our data collection practices and privacy measures.",
+    keywords: ["cookie policy", "gulbhahar cookie"],
     alternates: {
       canonical: "https://www.gulbhahar.com/cookies-policy",
     },

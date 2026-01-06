@@ -5,14 +5,15 @@ export async function generateMetadata() {
   return {
     title: "Heritage Culture - Celebrate Tradition with Gulbhahar Juttis",
     description:
-      "Discover the richness of heritage and tradition with Gulbhahar Juttis. We celebrate the craftsmanship, unique designs, and the cultural essence that inspires every handcrafted pair of juttis.",
+      "Discover the richness of heritage and tradition with Gulbhahar Juttis. We celebrate the craftsmanship, unique designs.",
+    keywords: ["Gulbhahar Heritage"],
     alternates: {
       canonical: "/heritage-culture",
     },
     openGraph: {
       title: "Heritage Culture - Celebrate Tradition with Gulbhahar Juttis",
     description:
-      "Discover the richness of heritage and tradition with Gulbhahar Juttis. We celebrate the craftsmanship, unique designs, and the cultural essence that inspires every handcrafted pair of juttis.",
+      "Discover the richness of heritage and tradition with Gulbhahar Juttis. We celebrate the craftsmanship, unique designs.",
       type: "website",
       locale: "en_US",
       url: "heritage-culture",

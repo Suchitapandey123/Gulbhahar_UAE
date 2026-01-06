@@ -12,8 +12,8 @@ export const revalidate = 0;
 
 export async function generateMetadata() {
     return {
-      title:"Juttis | Gulbhahar’s Limited-Edition Juttis | Only 24 Pairs per Design",
-      description:"Own a piece of heritage: Gulbhahar’s handcrafted juttis are released in just 24 pairs per design. Each Jutti comes with complimentary custom embroidery and a numbered collector’s box. Buy jutis Online.",
+      title:"Juttis : Buy Juttis @ Gulbhahar (upto 50% OFF)",
+      description:"Gulbhahar's handcrafted juttis are released in just 24 pairs per design. Each Jutti comes with complimentary custom embroidery.",
       keywords: ["Juttis", "Jutis", "juti", "Jutti", "jutty", "juty", "juttee", "jute", "jutties", "buy juttis", "buy juti"],
        
       alternates: {
