@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import { pageService } from "../../../api/pageService/pageService";
 
 const ContentSection = ({ page: initialPage }) => {
@@ -127,16 +127,8 @@ const ContentSection = ({ page: initialPage }) => {
   if (!page) return <p className="text-center py-10">Page not found</p>;
 
   if (page.isFeatured === false) {
-    return (
-      <div className="max-w-[1600px] mx-auto px-4 py-20 text-center bg-gradient-to-br from-red-50 to-red-100 rounded-2xl shadow-md">
-        <h1 className="text-4xl font-bold text-red-900 mb-4">
-          Page Not Available
-        </h1>
-        <p className="text-gray-700 text-lg max-w-xl mx-auto">
-          This page is currently inactive or under maintenance. Please check back later.
-        </p>
-      </div>
-    );
+    
+    redirect("/not-found");
   }
 
   return (
