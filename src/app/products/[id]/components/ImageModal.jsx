@@ -2,6 +2,14 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { X, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 
+
+const withVersion = (url, version) => {
+  if (!url) return url;
+  const sep = url.includes("?") ? "&" : "?";
+  return `${url}${sep}v=${version}`;
+};
+
+
 const ImageModal = ({
   isModalOpen,
   closeModal,
@@ -34,6 +42,13 @@ const ImageModal = ({
       }
     }
   }, [modalImageIndex, currentImages, currentMainImage, preloadedImages, isModalOpen]);
+
+
+  const imageVersion =
+    product?.updatedAt ||
+    product?.modifiedAt ||
+    product?.createdAt ||
+    Date.now();
 
   // Handle thumbnail loading
   const handleThumbnailLoad = useCallback((index) => {
@@ -133,7 +148,10 @@ const ImageModal = ({
             {/* Main Image */}
             <div className={`transition-opacity h-full w-full duration-300 ${imageLoading ? 'opacity-0' : 'opacity-100'}`}>
               <Image
-                src={currentImages[modalImageIndex] || currentMainImage}
+                src={withVersion(
+                  currentImages[modalImageIndex] || currentMainImage,
+                  imageVersion
+                )}
                 alt={`${product.name} - ${currentColor} - Image ${modalImageIndex + 1}`}
                 className="max-w-full max-h-full object-contain select-none"
                 width={1200}
@@ -172,8 +190,8 @@ const ImageModal = ({
               key={idx}
               onClick={() => setModalImageIndex(idx)}
               className={`relative flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-200 ${modalImageIndex === idx
-                  ? "border-white shadow-lg scale-110"
-                  : "border-transparent opacity-70 hover:opacity-100"
+                ? "border-white shadow-lg scale-110"
+                : "border-transparent opacity-70 hover:opacity-100"
                 }`}
             >
               {/* Thumbnail Loading State */}
@@ -184,7 +202,7 @@ const ImageModal = ({
               )}
 
               <Image
-                src={img}
+                 src={withVersion(img, imageVersion)}
                 alt={`Thumbnail ${idx + 1}`}
                 className={`object-cover w-full h-full transition-opacity duration-200 ${thumbnailsLoading.has(idx) ? 'opacity-0' : 'opacity-100'
                   }`}

@@ -75,12 +75,27 @@ export default function CollectionsPage({collections}) {
 
   // Helper function to get safe image URL
   const getSafeImageUrl = (collection) => {
-    try {
-      return collection?.images?.[0]?.[0] || '/assets/Image/fallback.jpg';
-    } catch {
-      return '/assets/Image/fallback.jpg';
-    }
-  };
+  try {
+    const url = collection?.images?.[0]?.[0];
+    if (!url) return '/assets/Image/fallback.jpg';
+
+    // pick any stable "last updated" value you have
+    const version =
+      collection.updatedAt ||
+      collection.modifiedAt ||
+      collection.createdAt ||
+      Date.now();
+
+    // handle existing query params safely
+    const separator = url.includes('?') ? '&' : '?';
+    console.log(`${url}${separator}v=${version}`)
+
+    return `${url}${separator}v=${version}`;
+  } catch {
+    return '/assets/Image/fallback.jpg';
+  }
+};
+
 
   return (
     <div

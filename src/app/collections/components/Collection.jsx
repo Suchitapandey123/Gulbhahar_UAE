@@ -116,6 +116,7 @@ export default function Collection({ parentCategory = null, slug = null }) {
       details: product.details || [],
       isActive: product.isActive !== false,
       createdAt: product.createdAt,
+      updatedAt: product.updatedAt
     }));
   };
 

@@ -75,8 +75,14 @@ export function ProductClient({ product, similarProducts }) {
   // Get current color and its images
   const currentColor = product.colors[selectedColorIndex];
   const currentImages = product.images[selectedColorIndex] || [];
-  const currentMainImage =
+  const currentMainImageRaw =
     currentImages[mainImageIndex] || "/assets/about/lal-ishq-1.jpg";
+
+  // Add cache-busting to main image
+  const cacheVersion = product.updatedAt ? `?v=${new Date(product.updatedAt).getTime()}` : '';
+  const currentMainImage = currentMainImageRaw.startsWith('/')
+    ? currentMainImageRaw
+    : `${currentMainImageRaw}${cacheVersion}`;
 
   // Calculate discount percentage
   const discountPercentage = Math.round(
@@ -621,7 +627,7 @@ export function ProductClient({ product, similarProducts }) {
                       }`}
                   >
                     <Image
-                      src={img}
+                      src={img.startsWith('/') ? img : `${img}${cacheVersion}`}
                       alt={`${product.name} thumbnail ${idx + 1}`}
                       priority
                       className="object-cover w-full h-full"
@@ -681,8 +687,9 @@ export function ProductClient({ product, similarProducts }) {
                         <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
                           <Image
                             src={
-                              product.images[idx]?.[0] ||
-                              "/assets/about/lal-ishq-1.jpg"
+                              product.images[idx]?.[0]
+                                ? (product.images[idx][0].startsWith('/') ? product.images[idx][0] : `${product.images[idx][0]}${cacheVersion}`)
+                                : "/assets/about/lal-ishq-1.jpg"
                             }
                             alt={color}
                             className="object-cover w-full h-full"
@@ -1106,8 +1113,9 @@ export function ProductClient({ product, similarProducts }) {
                         <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
                           <Image
                             src={
-                              product.images[idx]?.[0] ||
-                              "/assets/about/lal-ishq-1.jpg"
+                              product.images[idx]?.[0]
+                                ? (product.images[idx][0].startsWith('/') ? product.images[idx][0] : `${product.images[idx][0]}${cacheVersion}`)
+                                : "/assets/about/lal-ishq-1.jpg"
                             }
                             alt={color}
                             className="object-cover w-full h-full"
@@ -1437,7 +1445,7 @@ export function ProductClient({ product, similarProducts }) {
                             priority
                             src={
                               item.images && item.images.length > 0
-                                ? item.images[0][0]
+                                ? (item.images[0][0].startsWith('/') ? item.images[0][0] : `${item.images[0][0]}${item.updatedAt ? `?v=${new Date(item.updatedAt).getTime()}` : ''}`)
                                 : "/about/lal-ishq-1.jpg"
                             }
                             alt={item.name || "Product Image"}

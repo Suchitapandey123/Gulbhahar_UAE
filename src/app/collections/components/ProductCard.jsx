@@ -46,8 +46,9 @@ export default function ProductCard({
 
   const imagesArr = Array.isArray(item.image) ? item.image : [item.image];
   const imagesToShow = Array.isArray(imagesArr[0]) ? imagesArr[0] : imagesArr;
-  const currentImageIndex =
-    currentImageIndices[item.id || item.productId || index] || 0;
+  const currentImageIndex = currentImageIndices[item.id || item.productId || index] || 0;
+
+// console.log(`${imagesToShow[0]}${imagesToShow[0].includes("?") ? "&" : "?"}v=${Date.now()}`)
 
   const cardContent = (
     <div
@@ -65,24 +66,29 @@ export default function ProductCard({
       >
         <div className="relative w-full h-full bg-white">
           {imagesToShow.map((image, idx) => (
-            
+
             <Image
               key={idx}
-              src={image || "/about/lal-ishq-1.jpg"}
+              src={
+                image
+                  ? `${image}${image.includes("?") ? "&" : "?"}v=${item.updatedAt}`
+                  : "/about/lal-ishq-1.jpg"
+              }
+
+              
               alt={`${item.title || item.name || "Product"} - ${idx + 1}`}
               fill
-              priority={index < 4} 
-              loading={index < 4 ? "eager" : "lazy"} 
-              sizes={viewMode === "grid" 
+              priority={index < 4}
+              loading={index < 4 ? "eager" : "lazy"}
+              sizes={viewMode === "grid"
                 ? "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 : "(max-width: 640px) 128px, 160px"
               }
-              quality={65} 
+              quality={65}
               placeholder="blur"
               blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${
-                currentImageIndex === idx ? "opacity-100" : "opacity-0"
-              } ${viewMode === "list" ? "rounded-lg" : ""}`}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${currentImageIndex === idx ? "opacity-100" : "opacity-0"
+                } ${viewMode === "list" ? "rounded-lg" : ""}`}
             />
           ))}
 

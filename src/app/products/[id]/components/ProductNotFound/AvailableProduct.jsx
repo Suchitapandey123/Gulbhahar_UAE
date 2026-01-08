@@ -103,6 +103,7 @@ export default function AvailableProducts() {
       details: product.details || [],
       isActive: product.isActive !== false,
       createdAt: product.createdAt,
+      updatedAt: product.updatedAt,
     }));
   };
 
@@ -800,7 +801,11 @@ const handleAddToCart = async (e, item) => {
                                 height={450}
                                 priority
                                 key={idx}
-                                src={image || "/about/lal-ishq-1.jpg"}
+                                src={
+                                  image
+                                    ? `${image}?v=${item.updatedAt ? new Date(item.updatedAt).getTime() : ''}`
+                                    : "/about/lal-ishq-1.jpg"
+                                }
                                 alt={`${item.title} - ${idx + 1}`}
                                 className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-700 ease-in-out ${
                                   currentImageIndex === idx

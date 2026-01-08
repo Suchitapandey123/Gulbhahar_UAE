@@ -136,24 +136,28 @@ const CartPage = () => {
   };
 
 
-  // Get the current image for display
+  // Get the current image for display with cache-busting
   const getCurrentImage = (item) => {
+    let imageUrl = null;
+
     // Check if it's images (plural) - array of arrays
-    // // console.log(item)
     if (item.images && Array.isArray(item.images)) {
-      // // console.log("object")
       if (item.images.length > 0 && Array.isArray(item.images[0])) {
-        return item.images[0][0]; // First image from first array
+        imageUrl = item.images[0][0]; // First image from first array
       }
     }
 
     // Check if it's image (singular) - single array
-    if (item.image && Array.isArray(item.image)) {
-      // // console.log(item.image[0])
-      return item.image[0][0]; // First image from array
+    if (!imageUrl && item.image && Array.isArray(item.image)) {
+      imageUrl = item.image[0][0]; // First image from array
     }
-    // // console.log("object")
-    return null;
+
+    // Add cache-busting parameter if we have an image and updatedAt
+    if (imageUrl && item.updatedAt) {
+      return `${imageUrl}?v=${new Date(item.updatedAt).getTime()}`;
+    }
+
+    return imageUrl;
   };
 
   return (
