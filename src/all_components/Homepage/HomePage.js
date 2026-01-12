@@ -7,6 +7,9 @@ import CollectionsPage from './CollectionPage'
 import Culture from './Culture'
 import QuickSearch from './QuickLinks'
 import NewCulture from './NewCulture'
+import MatchCollection from './matchCollection'
+import MatchSareeSection from './MatchSareeSection'
+import MatchSuitSection from './MatchSuitSection'
 
 const HomePage = ({data}) => {
   
@@ -17,6 +20,9 @@ const HomePage = ({data}) => {
       <NewCollection newCollection = {data} />
       <AboutUsSection />
       <CollectionsPage collections={data} />
+      <MatchCollection />
+      <MatchSareeSection />
+      <MatchSuitSection />
       <NewCulture />
       <Culture />
       <QuickSearch />
