@@ -4,7 +4,8 @@ import { API_BASE_URL } from "@/utils/envHere";
 const productApi = {
   getAllProduct: async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/products/get-all-product`, {
+      const response = await fetch(`${API_BASE_URL}/new-api/products/get-all-product
+`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -27,7 +28,8 @@ const productApi = {
 
   productById: async (productId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/products/get-product-by`, {
+      const response = await fetch(`${API_BASE_URL}/new-api/products/get-product-by-id
+`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -36,13 +38,17 @@ const productApi = {
         body: JSON.stringify({ productId }),
         cache: 'no-store', // Bypass cache - always fetch fresh data
       });
+      console.log("Raw Response:", response);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
+      console.log("productById API data:", data);
       return data;
+
+      
     } catch (error) {
       console.error('Error fetching product by ID:', error);
       throw error;
