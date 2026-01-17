@@ -1049,7 +1049,7 @@ export function ProductClient({ product, similarProducts }) {
               </div>
 
               {/* Quantity Selector */}
-              <div className="flex items-center gap-4">
+              {/* <div className="flex items-center gap-4">
                 <div className="flex items-center border border-gray-300 rounded">
                   <button
                     onClick={decreaseQuantity}
@@ -1072,7 +1072,7 @@ export function ProductClient({ product, similarProducts }) {
                     Max: {availableQuantity} {availableQuantity === 1 ? 'item' : 'items'}
                   </div>
                 )}
-              </div>
+              </div> */}
 
               {/* Add to Cart Button */}
               <div className="pt-2">
