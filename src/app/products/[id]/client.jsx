@@ -429,10 +429,11 @@ export function ProductClient({ product, similarProducts }) {
         <ImageModal
           isModalOpen={isModalOpen}
           closeModal={closeModal}
-          images={currentImages}
+          currentImages={currentImages}
           modalImageIndex={modalImageIndex}
           setModalImageIndex={setModalImageIndex}
           product={product}
+          currentColor={currentColor}
           currentMainImage={currentImages[modalImageIndex]}
           handleMouseDown={handleMouseDown}
           handleMouseMove={handleMouseMove}

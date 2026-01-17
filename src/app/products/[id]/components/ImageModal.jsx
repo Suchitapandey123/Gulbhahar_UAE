@@ -13,12 +13,12 @@ const withVersion = (url, version) => {
 const ImageModal = ({
   isModalOpen,
   closeModal,
-  currentImages,
-  modalImageIndex,
+  currentImages = [],
+  modalImageIndex = 0,
   setModalImageIndex,
   currentMainImage,
   product,
-  currentColor,
+  currentColor = '',
   handleMouseDown,
   handleMouseMove,
   handleMouseUp,
@@ -31,18 +31,21 @@ const ImageModal = ({
   const [preloadedImages, setPreloadedImages] = useState(new Set());
   const modalRef = useRef(null);
 
+  // Ensure we have valid images array
+  const images = currentImages || [];
+  const safeModalIndex = Math.min(modalImageIndex, Math.max(0, images.length - 1));
+
   // Reset loading state when modal opens or image changes
   useEffect(() => {
-    if (isModalOpen) {
-      const currentImageUrl = currentImages[modalImageIndex] || currentMainImage;
+    if (isModalOpen && images.length > 0) {
+      const currentImageUrl = images[safeModalIndex] || currentMainImage;
       if (!preloadedImages.has(currentImageUrl)) {
         setImageLoading(true);
       } else {
         setImageLoading(false);
       }
     }
-  }, [modalImageIndex, currentImages, currentMainImage, preloadedImages, isModalOpen]);
-
+  }, [safeModalIndex, images, currentMainImage, preloadedImages, isModalOpen]);
 
   const imageVersion =
     product?.updatedAt ||
@@ -59,20 +62,18 @@ const ImageModal = ({
     });
   }, []);
 
-  const handleThumbnailLoadStart = useCallback((index) => {
-    setThumbnailsLoading(prev => new Set([...prev, index]));
-  }, []);
-
   // Navigation handlers
   const prevImage = useCallback(() => {
-    const newIndex = modalImageIndex > 0 ? modalImageIndex - 1 : currentImages.length - 1;
+    if (images.length === 0) return;
+    const newIndex = safeModalIndex > 0 ? safeModalIndex - 1 : images.length - 1;
     setModalImageIndex(newIndex);
-  }, [modalImageIndex, currentImages.length, setModalImageIndex]);
+  }, [safeModalIndex, images.length, setModalImageIndex]);
 
   const nextImage = useCallback(() => {
-    const newIndex = modalImageIndex < currentImages.length - 1 ? modalImageIndex + 1 : 0;
+    if (images.length === 0) return;
+    const newIndex = safeModalIndex < images.length - 1 ? safeModalIndex + 1 : 0;
     setModalImageIndex(newIndex);
-  }, [modalImageIndex, currentImages.length, setModalImageIndex]);
+  }, [safeModalIndex, images.length, setModalImageIndex]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -88,7 +89,10 @@ const ImageModal = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isModalOpen, prevImage, nextImage, closeModal]);
 
-  if (!isModalOpen) return null;
+  if (!isModalOpen || images.length === 0) return null;
+
+  // Get the current image URL safely
+  const currentImageUrl = images[safeModalIndex] || currentMainImage || '';
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center">
@@ -113,7 +117,7 @@ const ImageModal = ({
         </button>
 
         {/* Navigation Buttons */}
-        {currentImages.length > 1 && (
+        {images.length > 1 && (
           <>
             <button
               onClick={prevImage}
@@ -148,11 +152,8 @@ const ImageModal = ({
             {/* Main Image */}
             <div className={`transition-opacity h-full w-full duration-300 ${imageLoading ? 'opacity-0' : 'opacity-100'}`}>
               <Image
-                src={withVersion(
-                  currentImages[modalImageIndex] || currentMainImage,
-                  imageVersion
-                )}
-                alt={`${product.name} - ${currentColor} - Image ${modalImageIndex + 1}`}
+                src={currentImageUrl ? withVersion(currentImageUrl, imageVersion) : '/about/lal-ishq-1.jpg'}
+                alt={`${product?.name || 'Product'} - ${currentColor || ''} - Image ${safeModalIndex + 1}`}
                 className="max-w-full max-h-full object-contain select-none"
                 width={1200}
                 height={800}
@@ -160,13 +161,15 @@ const ImageModal = ({
                 loading="eager"
                 onLoad={() => {
                   setImageLoading(false);
-                  const currentUrl = currentImages[modalImageIndex] || currentMainImage;
-                  setPreloadedImages(prev => new Set([...prev, currentUrl]));
+                  if (currentImageUrl) {
+                    setPreloadedImages(prev => new Set([...prev, currentImageUrl]));
+                  }
                 }}
                 onLoadingComplete={() => {
                   setImageLoading(false);
-                  const currentUrl = currentImages[modalImageIndex] || currentMainImage;
-                  setPreloadedImages(prev => new Set([...prev, currentUrl]));
+                  if (currentImageUrl) {
+                    setPreloadedImages(prev => new Set([...prev, currentImageUrl]));
+                  }
                 }}
                 onError={() => setImageLoading(false)}
                 placeholder="blur"
@@ -179,17 +182,17 @@ const ImageModal = ({
         {/* Image Counter */}
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white bg-opacity-20 backdrop-blur-sm rounded-full px-4 py-2">
           <span className="text-white text-sm font-medium">
-            {modalImageIndex + 1} / {currentImages.length}
+            {safeModalIndex + 1} / {images.length}
           </span>
         </div>
 
         {/* Optimized Thumbnail Strip */}
         <div className="absolute bottom-16 left-1/2 py-1 transform -translate-x-1/2 flex gap-2 max-w-screen-sm overflow-x-auto px-4 scrollbar-hide">
-          {currentImages.map((img, idx) => (
+          {images.map((img, idx) => (
             <button
               key={idx}
               onClick={() => setModalImageIndex(idx)}
-              className={`relative flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-200 ${modalImageIndex === idx
+              className={`relative flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-200 ${safeModalIndex === idx
                 ? "border-white shadow-lg scale-110"
                 : "border-transparent opacity-70 hover:opacity-100"
                 }`}
@@ -202,16 +205,15 @@ const ImageModal = ({
               )}
 
               <Image
-                 src={withVersion(img, imageVersion)}
+                src={img ? withVersion(img, imageVersion) : '/about/lal-ishq-1.jpg'}
                 alt={`Thumbnail ${idx + 1}`}
                 className={`object-cover w-full h-full transition-opacity duration-200 ${thumbnailsLoading.has(idx) ? 'opacity-0' : 'opacity-100'
                   }`}
                 width={64}
                 height={64}
                 quality={60}
-                priority
+                loading="lazy"
                 onLoadingComplete={() => handleThumbnailLoad(idx)}
-                onLoadStart={() => handleThumbnailLoadStart(idx)}
                 placeholder="blur"
                 blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
               />
