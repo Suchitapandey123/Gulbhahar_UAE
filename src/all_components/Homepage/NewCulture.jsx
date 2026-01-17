@@ -183,7 +183,7 @@ const LuxuryCulture = () => {
                 alt="Cultural Heritage"
                 width={600}
                 height={200}
-                priority
+                loading="lazy"
                 className="w-full max-w-7xl h-auto drop-shadow-2xl"
               />
             </div>
@@ -238,7 +238,9 @@ const LuxuryCulture = () => {
                       src={heritageElements[0].image}
                       alt={heritageElements[0].title}
                       fill
-                      priority
+                      loading="lazy"
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      quality={70}
                       className="object-cover opacity-50"
                     />
                   </div>
@@ -277,7 +279,9 @@ const LuxuryCulture = () => {
                       src={heritageElements[1].image}
                       alt={heritageElements[1].title}
                       fill
-                      priority
+                      loading="lazy"
+                      sizes="(max-width: 1024px) 100vw, 25vw"
+                      quality={70}
                       className="object-cover opacity-50"
                     />
                   </div>
@@ -309,7 +313,9 @@ const LuxuryCulture = () => {
                       src={heritageElements[2].image}
                       alt={heritageElements[2].title}
                       fill
-                      priority
+                      loading="lazy"
+                      sizes="(max-width: 1024px) 100vw, 25vw"
+                      quality={70}
                       className="object-cover opacity-50"
                     />
                   </div>
@@ -340,7 +346,9 @@ const LuxuryCulture = () => {
                       src={heritageElements[3].image}
                       alt={heritageElements[3].title}
                       fill
-                      priority
+                      loading="lazy"
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      quality={70}
                       className="object-cover opacity-50"
                     />
                   </div>
@@ -373,7 +381,9 @@ const LuxuryCulture = () => {
                       src={heritageElements[4].image}
                       alt={heritageElements[4].title}
                       fill
-                      priority
+                      loading="lazy"
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      quality={70}
                       className="object-cover opacity-50"
                     />
                   </div>
@@ -411,7 +421,9 @@ const LuxuryCulture = () => {
               src={element.image}
               alt={element.title}
               fill
-              priority
+              loading="lazy"
+              sizes="(max-width: 768px) 100vw, 33vw"
+              quality={70}
               className="object-cover mt-2 opacity-50"
             />
           </div>
@@ -442,8 +454,10 @@ const LuxuryCulture = () => {
             <Image
               src={element.image}
               alt={element.title}
-              priority
               fill
+              loading="lazy"
+              sizes="100vw"
+              quality={70}
               className="object-cover opacity-50"
             />
           </div>

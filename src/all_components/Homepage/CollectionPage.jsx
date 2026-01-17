@@ -73,28 +73,14 @@ export default function CollectionsPage({collections}) {
     }
   };
 
-  // Helper function to get safe image URL
+  // Helper function to get safe image URL (without cache busting for Next.js optimization)
   const getSafeImageUrl = (collection) => {
-  try {
-    const url = collection?.images?.[0]?.[0];
-    if (!url) return '/assets/Image/fallback.jpg';
-
-    // pick any stable "last updated" value you have
-    const version =
-      collection.updatedAt ||
-      collection.modifiedAt ||
-      collection.createdAt ||
-      Date.now();
-
-    // handle existing query params safely
-    const separator = url.includes('?') ? '&' : '?';
-    console.log(`${url}${separator}v=${version}`)
-
-    return `${url}${separator}v=${version}`;
-  } catch {
-    return '/assets/Image/fallback.jpg';
-  }
-};
+    try {
+      return collection?.images?.[0]?.[0] || '/assets/Image/fallback.jpg';
+    } catch {
+      return '/assets/Image/fallback.jpg';
+    }
+  };
 
 
   return (
@@ -166,8 +152,10 @@ export default function CollectionsPage({collections}) {
                       src={getSafeImageUrl(collection)}
                       alt={`${collection.name} - collection image`}
                       fill
-                      priority
+                      priority={index < 2}
+                      loading={index < 2 ? undefined : "lazy"}
                       sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                      quality={70}
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                     

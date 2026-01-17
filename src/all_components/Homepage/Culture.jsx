@@ -28,7 +28,9 @@ export default function Culture() {
               <div className="relative overflow-hidden h-full">
                 <Image
                   src={img}
-                  priority
+                  loading="lazy"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  quality={70}
                   alt={`showcase image ${i + 1}`}
                   fill
                   className="object-cover"

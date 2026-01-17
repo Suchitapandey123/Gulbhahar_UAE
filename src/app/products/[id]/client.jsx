@@ -78,11 +78,8 @@ export function ProductClient({ product, similarProducts }) {
   const currentMainImageRaw =
     currentImages[mainImageIndex] || "/assets/about/lal-ishq-1.jpg";
 
-  // Add cache-busting to main image
-  const cacheVersion = product.updatedAt ? `?v=${new Date(product.updatedAt).getTime()}` : '';
-  const currentMainImage = currentMainImageRaw.startsWith('/')
-    ? currentMainImageRaw
-    : `${currentMainImageRaw}${cacheVersion}`;
+  // Use image directly without cache-busting (Next.js handles optimization)
+  const currentMainImage = currentMainImageRaw;
 
   // Calculate discount percentage
   const discountPercentage = Math.round(
@@ -604,9 +601,11 @@ export function ProductClient({ product, similarProducts }) {
                   src={currentMainImage}
                   alt={`${product.name} - ${currentColor}`}
                   priority
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  quality={85}
                   className="object-cover w-full h-full transition-transform duration-300 ease-in-out group-hover:scale-105"
-                  width={1000}
-                  height={700}
+                  width={800}
+                  height={600}
                   onClick={() => openModal(mainImageIndex)}
                 />
                 {/* Zoom Indicator */}
@@ -627,12 +626,14 @@ export function ProductClient({ product, similarProducts }) {
                       }`}
                   >
                     <Image
-                      src={img.startsWith('/') ? img : `${img}${cacheVersion}`}
+                      src={img}
                       alt={`${product.name} thumbnail ${idx + 1}`}
-                      priority
+                      loading="lazy"
+                      sizes="25vw"
+                      quality={60}
                       className="object-cover w-full h-full"
-                      width={1000}
-                      height={700}
+                      width={200}
+                      height={200}
                     />
                   </button>
                 ))}
@@ -686,16 +687,14 @@ export function ProductClient({ product, similarProducts }) {
                       >
                         <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
                           <Image
-                            src={
-                              product.images[idx]?.[0]
-                                ? (product.images[idx][0].startsWith('/') ? product.images[idx][0] : `${product.images[idx][0]}${cacheVersion}`)
-                                : "/assets/about/lal-ishq-1.jpg"
-                            }
+                            src={product.images[idx]?.[0] || "/assets/about/lal-ishq-1.jpg"}
                             alt={color}
                             className="object-cover w-full h-full"
-                            width={1000}
-                            priority
-                            height={700}
+                            width={100}
+                            height={120}
+                            loading="lazy"
+                            sizes="88px"
+                            quality={60}
                           />
                         </div>
                       </button>
@@ -1112,16 +1111,14 @@ export function ProductClient({ product, similarProducts }) {
                       >
                         <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
                           <Image
-                            src={
-                              product.images[idx]?.[0]
-                                ? (product.images[idx][0].startsWith('/') ? product.images[idx][0] : `${product.images[idx][0]}${cacheVersion}`)
-                                : "/assets/about/lal-ishq-1.jpg"
-                            }
+                            src={product.images[idx]?.[0] || "/assets/about/lal-ishq-1.jpg"}
                             alt={color}
                             className="object-cover w-full h-full"
-                            width={1000}
-                            priority
-                            height={700}
+                            width={100}
+                            height={120}
+                            loading="lazy"
+                            sizes="88px"
+                            quality={60}
                           />
                         </div>
                       </button>
@@ -1441,13 +1438,11 @@ export function ProductClient({ product, similarProducts }) {
                         <div className="relative w-full h-full bg-gray-100">
                           <Image
                             width={200}
-                            height={450}
-                            priority
-                            src={
-                              item.images && item.images.length > 0
-                                ? (item.images[0][0].startsWith('/') ? item.images[0][0] : `${item.images[0][0]}${item.updatedAt ? `?v=${new Date(item.updatedAt).getTime()}` : ''}`)
-                                : "/about/lal-ishq-1.jpg"
-                            }
+                            height={300}
+                            loading="lazy"
+                            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                            quality={65}
+                            src={item.images?.[0]?.[0] || "/about/lal-ishq-1.jpg"}
                             alt={item.name || "Product Image"}
                             className="absolute inset-0 w-full h-full object-contain"
                             onError={(e) => {

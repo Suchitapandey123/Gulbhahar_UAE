@@ -4,7 +4,8 @@ import { useState } from "react";
 import { Trash2, Minus, Plus, ShoppingCart, Tag } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import CartImage from "../../../../public/cart/cart.svg";
+// import CartImage from "../../../../public/cart/cart.svg";
+import CartImage from "../../../../public/cart/newcart.png"
 import OrderImage from "../../../../public/cart/order.svg";
 
 const Breadcrumb = () => (

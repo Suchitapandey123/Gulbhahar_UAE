@@ -69,17 +69,11 @@ export default function ProductCard({
 
             <Image
               key={idx}
-              src={
-                image
-                  ? `${image}${image.includes("?") ? "&" : "?"}v=${item.updatedAt}`
-                  : "/about/lal-ishq-1.jpg"
-              }
-
-              
+              src={image || "/about/lal-ishq-1.jpg"}
               alt={`${item.title || item.name || "Product"} - ${idx + 1}`}
               fill
-              priority={index < 4}
-              loading={index < 4 ? "eager" : "lazy"}
+              priority={index < 2 && idx === 0}
+              loading={index < 2 && idx === 0 ? undefined : "lazy"}
               sizes={viewMode === "grid"
                 ? "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 : "(max-width: 640px) 128px, 160px"

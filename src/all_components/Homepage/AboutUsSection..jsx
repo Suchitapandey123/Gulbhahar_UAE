@@ -117,9 +117,11 @@ export default function AlternatingAbout() {
                     src={story.image}
                     alt={story.title}
                     fill
-                    className="object-cover hover:scale-105 transition-transform duration-700" 
+                    className="object-cover hover:scale-105 transition-transform duration-700"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 45vw"
                     priority={index === 0}
+                    loading={index === 0 ? undefined : "lazy"}
+                    quality={75}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
 

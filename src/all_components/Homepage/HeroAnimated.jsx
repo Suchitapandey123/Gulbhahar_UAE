@@ -309,8 +309,9 @@ export default function ModernHeroAnimated() {
               const isCurrent = index === currentIndex;
               const isNext = index === nextIndex;
               const isFirstImage = index === 0;
-              
-              const shouldUsePriority = isCurrent || isNext || isFirstImage;
+
+              // Only load first image with priority to speed up initial load
+              const shouldUsePriority = isFirstImage;
               
               return (
                 <motion.div
@@ -357,8 +358,8 @@ export default function ModernHeroAnimated() {
                         sizes="100vw"
                         className="object-cover hero-image"
                         priority={shouldUsePriority}
-                        quality={isCurrent ? 90 : 80}
-                        {...(shouldUsePriority ? {} : { loading: "lazy" })}
+                        quality={75}
+                        loading={shouldUsePriority ? undefined : "lazy"}
                       />
                     </div>
 
@@ -371,8 +372,8 @@ export default function ModernHeroAnimated() {
                         sizes="100vw"
                         className="object-cover hero-image"
                         priority={shouldUsePriority}
-                        quality={isCurrent ? 90 : 80}
-                        {...(shouldUsePriority ? {} : { loading: "lazy" })}
+                        quality={75}
+                        loading={shouldUsePriority ? undefined : "lazy"}
                       />
                     </div>
 

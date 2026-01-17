@@ -1,33 +1,27 @@
-// Solution 1: Force fresh data on every request (Recommended)
+// Optimized with caching for better performance
 import HomePage from '@/all_components/Homepage/HomePage';
 import productApi from './api/v0/product-service';
 import { QueryClient } from '@tanstack/react-query';
 
-
+// Revalidate every 60 seconds for fresh data while maintaining cache
+export const revalidate = 60;
 
 export default async function Home() {
-  // Create a new QueryClient instance for each request
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        // Disable caching for server-side fetching
-        cacheTime: 0,
-        staleTime: 0,
-        refetchOnMount: true,
-        refetchOnWindowFocus: true,
+        // Cache for 5 minutes, consider stale after 1 minute
+        gcTime: 5 * 60 * 1000,
+        staleTime: 60 * 1000,
       },
     },
   });
-  
+
   const data = await queryClient.fetchQuery({
     queryKey: ['getAllProduct'],
     queryFn: () => productApi.getAllProduct(),
-    // Force fresh fetch
-    staleTime: 0,
-    cacheTime: 0,
+    staleTime: 60 * 1000,
   });
-  
-  // // console.log('Fresh Server Response:', data);
 
   return (
     <HomePage data={data} />
