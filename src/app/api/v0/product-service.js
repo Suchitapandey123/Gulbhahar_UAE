@@ -4,14 +4,14 @@ import { API_BASE_URL } from "@/utils/envHere";
 const productApi = {
   getAllProduct: async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/new-api/products/get-all-product
-`, {
+      const response = await fetch(`${API_BASE_URL}/new-api/products/get-all-product`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
-        cache: 'no-store', // Bypass cache - always fetch fresh data
+        cache: 'force-cache',
+        next: { revalidate: 60 },
       });
 
       if (!response.ok) {
@@ -28,8 +28,7 @@ const productApi = {
 
   productById: async (productId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/new-api/products/get-product-by-id
-`, {
+      const response = await fetch(`${API_BASE_URL}/new-api/products/get-product-by-id`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -38,7 +37,7 @@ const productApi = {
         body: JSON.stringify({ productId }),
         cache: 'no-store', // Bypass cache - always fetch fresh data
       });
-      console.log("Raw Response:", response);
+      // console.log("Raw Response:", response);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
