@@ -112,7 +112,7 @@ export default function AlternatingAbout() {
                   index % 2 === 1 ? "lg:col-start-2" : "lg:col-start-1"
                 } order-1 lg:order-none`}
               >
-                <div className="relative aspect-[3/4] w-full h-[300px] xs:h-[350px] sm:h-[400px] md:h-[450px] lg:h-[500px] xl:h-[550px] 2xl:h-[600px] overflow-hidden rounded-lg sm:rounded-xl lg:rounded-2xl xl:rounded-3xl shadow-2xl">
+                <div className="relative aspect-[3/4] w-full h-[300px] xs:h-[350px] sm:h-[400px] md:h-[450px] lg:h-[500px] xl:h-[550px] 2xl:h-[600px] overflow-hidden shadow-2xl">
                   <Image
                     src={story.image}
                     alt={story.title}

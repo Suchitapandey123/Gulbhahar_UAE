@@ -31,15 +31,18 @@ export async function generateMetadata() {
     };
 }
 
-const page = () => {
+const page = ({ params }) => {
+  const slug = params?.slug; // e.g. "punjabi-juttis-for-ladies"
+
   return (
     <div className='mt-24'>
-      <Collection />
+      <Collection parentCategory={slug} slug={slug} />
       <ContentJuttis />
-      <QuickTag popularTags={popularTags["bridal-juttis"]}  />
+      <QuickTag popularTags={popularTags[slug]} />
       <QuickSearch />
     </div>
   )
 }
 
-export default page
+export default page;
+

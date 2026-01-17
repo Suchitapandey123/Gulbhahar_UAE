@@ -76,23 +76,68 @@ export default function Collection({ parentCategory = null, slug = null }) {
   const { addToCart, addingToCart } = useCart();
   const {ToastContainer } = useToast();
   // let category = "juttis"
-  let category = parentCategory || null;
+  let category = parentCategory || slug || "all";
+console.log("CATEGORY INSIDE COLLECTION:", category);
 
 
 
-  // Data Fetching
+
+  // Data Fetching - Fetch ALL products and filter on frontend
   const {
-    data: apiData,
+    data: allProducts,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["getProductsByCategory", category],
-    queryFn: () =>
-      category
-        ? productApi.getProductsByCategory(category)
-        : productApi.getAllProduct(),
+    queryKey: ["getAllProducts"],
+    queryFn: () => productApi.getAllProduct(),
     enabled: true,
   });
+
+  // Filter products by parentCategory on frontend
+  const apiData = React.useMemo(() => {
+    // Handle different API response structures
+    const products = allProducts?.products || allProducts?.data || allProducts;
+
+    if (!products || !Array.isArray(products)) {
+      console.log("ALL PRODUCTS RAW:", allProducts);
+      console.log("EXTRACTED PRODUCTS:", products);
+      return [];
+    }
+
+    console.log("TOTAL PRODUCTS FROM API:", products.length);
+
+    if (!category || category === "all") return products;
+
+    // Filter products where parentCategory array includes the category
+    const filtered = products.filter(product => {
+      const productCategories = product.parentCategory || [];
+      if (Array.isArray(productCategories)) {
+        return productCategories.some(cat =>
+          cat?.toLowerCase?.() === category.toLowerCase()
+        );
+      }
+      return productCategories?.toLowerCase?.() === category.toLowerCase();
+    });
+
+    console.log(`Filtered ${filtered.length} products for category: ${category}`);
+    return filtered;
+  }, [allProducts, category]);
+
+  // Fallback: Fetch juttis when suit/saree has no products (after primary query completes)
+  const isSuitOrSaree = parentCategory && parentCategory !== "juttis";
+  const primaryQueryDone = !isLoading;
+  const noProductsFound = !apiData || (Array.isArray(apiData) && apiData.length === 0);
+  const shouldFetchJuttis = isSuitOrSaree && primaryQueryDone && noProductsFound;
+
+  const {
+    data: juttisData,
+    isLoading: juttisLoading,
+  } = useQuery({
+    queryKey: ["getJuttisForFallback"],
+    queryFn: () => productApi.getProductsByCategory("juttis"),
+    enabled: Boolean(shouldFetchJuttis),
+  });
+
 
   // Transform API data
   const transformApiData = (apiProducts) => {
@@ -104,6 +149,12 @@ export default function Collection({ parentCategory = null, slug = null }) {
       title: product.title || "productTitle",
       name: product.name || "Product",
       price: product.price || 0,
+      parentCategory: Array.isArray(product.parentCategory)
+      ? product.parentCategory
+      : product.parentCategory
+      ? [product.parentCategory]
+      : [],
+      category: product.category || product.parentCategory || "",
       originalPrice: product.originalPrice,
       image:
         product.images && product.images.length > 0
@@ -121,9 +172,10 @@ export default function Collection({ parentCategory = null, slug = null }) {
       updatedAt: product.updatedAt
     }));
   };
+console.log("CATEGORY FROM URL:", category);
+
 
   //  REPLACE OLD handleAddToCart WITH THIS NEW ONE:
-
   const handleAddToCart = async (e, item) => {
     e.preventDefault();
     e.stopPropagation();
@@ -164,8 +216,14 @@ export default function Collection({ parentCategory = null, slug = null }) {
     }
   };
 
-  // Use API data if available, otherwise fallback
-  const collections = apiData ? transformApiData(apiData) : fallbackCollections;
+  // Use API data - don't use fallback, let it be empty if no data
+  const collections = apiData && Array.isArray(apiData) ? transformApiData(apiData) : [];
+
+  // DEBUG: Check API response
+  console.log("API DATA RAW:", apiData);
+  console.log("COLLECTIONS LENGTH:", collections.length);
+  console.log("SHOULD FETCH JUTTIS:", shouldFetchJuttis);
+  console.log("JUTTIS DATA:", juttisData?.length || 0);
 
   // Update price range based on actual data
   useEffect(() => {
@@ -214,20 +272,35 @@ export default function Collection({ parentCategory = null, slug = null }) {
     sizes.length > 0 ? sizes : ["XXS", "XS", "S", "M", "L", "XL", "XXL"];
 
   // Filter collections
-  const filteredCollections = collections
-    .filter((item) => {
-      if (item.isActive === false) return false;
+  const filteredCollections = collections.filter((item) => {
+  if (item.isActive === false) return false;
 
-      const matchesSeason =
-        selectedSeason === "all" ||
-        item.season?.toLowerCase() === selectedSeason.toLowerCase();
-      const matchesPrice =
-        item.price >= priceRange[0] && item.price <= priceRange[1];
-      const matchesSize =
-        selectedSizes.length === 0 ||
-        selectedSizes.some((size) => item.sizes && item.sizes.includes(size));
-      return matchesSeason && matchesPrice && matchesSize;
-    })
+  const normalize = (val) =>
+    typeof val === "string" ? val.toLowerCase().trim() : "";
+
+  const matchesCategory = category && category !== "all"
+  ? Array.isArray(item.parentCategory) &&
+    item.parentCategory.some(
+      (cat) => normalize(cat) === normalize(category)
+    )
+  : true; // if category = "all", show all products
+
+
+  const matchesSeason =
+    selectedSeason === "all" ||
+    item.season?.toLowerCase() === selectedSeason.toLowerCase();
+
+  const matchesPrice =
+    item.price >= priceRange[0] && item.price <= priceRange[1];
+
+  const matchesSize =
+    selectedSizes.length === 0 ||
+    selectedSizes.some((size) => item.sizes && item.sizes.includes(size));
+
+  return matchesCategory && matchesSeason && matchesPrice && matchesSize;
+})
+
+
     .sort((a, b) => {
       switch (sortBy) {
         case "price-desc":
@@ -423,59 +496,98 @@ export default function Collection({ parentCategory = null, slug = null }) {
               : "flex flex-col gap-4"
               }`}
           >
-            {parentCategory !== null ? (
+            {parentCategory !== null && parentCategory !== "juttis" ? (
               <>
-                {/* Dummy Products */}
-                {[1, 2, 3, 4].map((_, index) => (
-                  <DummyProductCard
-                    key={`dummy-${index}`}
-                    parentCategory={parentCategory}
-                    slug={slug}
-                    viewMode={viewMode}
-                    index={index}
-                  />
-                ))}
+                {/* Check if we have real products for this category (suit/saree) */}
+                {paginatedCollections.length > 0 ? (
+                  <>
+                    {/* Show real suit/saree products */}
+                    {paginatedCollections.map((item, index) => (
+                      <React.Fragment key={item.productId || item.id || `product-${index}`}>
+                        {/* Banner after 4th product */}
+                        {index === 4 && (
+                          <div className="col-span-full w-full my-4">
+                            <Image
+                              src="https://gulbahar-backend.s3.ap-south-1.amazonaws.com/public/banner-image.jpg"
+                              height={500}
+                              width={1000}
+                              alt="Collection Banner"
+                              className="w-full h-auto sm:h-[220px] md:h-[420px] object-cover rounded-lg shadow-lg"
+                            />
+                          </div>
+                        )}
+                        <ProductCard
+                          item={item}
+                          index={index}
+                          viewMode={viewMode}
+                          category={category}
+                          currentImageIndices={currentImageIndices}
+                          setCurrentImageIndices={setCurrentImageIndices}
+                          handleAddToCart={handleAddToCart}
+                          addingToCart={addingToCart}
+                        />
+                      </React.Fragment>
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    {/* No real products - show Dummy Products */}
+                    {[1, 2, 3, 4].map((_, index) => (
+                      <DummyProductCard
+                        key={`dummy-${index}`}
+                        parentCategory={parentCategory}
+                        slug={slug}
+                        viewMode={viewMode}
+                        index={index}
+                      />
+                    ))}
 
-                {/* Banner after dummy products */}
-                <div className="col-span-full w-full my-4">
-                  <Image
-                    src="https://gulbahar-backend.s3.ap-south-1.amazonaws.com/public/banner-image.jpg"
-                    height={500}
-                    width={1000}
-                    alt="Similar Products Below"
-                    // preload
-                    // loading="eager"
-                    className="w-full h-auto sm:h-[220px] md:h-[420px] object-cover rounded-lg shadow-lg"
-                  />
-                </div>
+                    {/* Banner after dummy products */}
+                    <div className="col-span-full w-full my-4">
+                      <Image
+                        src="https://gulbahar-backend.s3.ap-south-1.amazonaws.com/public/banner-image.jpg"
+                        height={500}
+                        width={1000}
+                        alt="Similar Products Below"
+                        className="w-full h-auto sm:h-[220px] md:h-[420px] object-cover rounded-lg shadow-lg"
+                      />
+                    </div>
 
-                {/* Heading for Real Products */}
-                <div className="col-span-full w-full my-6 text-center space-y-2">
-                  <h2 className="text-2xl sm:text-3xl font-bold text-red-900">
-                    Complete Your {parentCategory?.charAt(0).toUpperCase() + parentCategory?.slice(1)} Look With These Juttis
-                  </h2>
-                  <p className="text-sm text-gray-600">
-                    Perfect footwear to pair with your dream outfit
-                  </p>
-                </div>
+                    {/* Heading for Juttis */}
+                    <div className="col-span-full w-full my-6 text-center space-y-2">
+                      <h2 className="text-2xl sm:text-3xl font-bold text-red-900">
+                        Complete Your {parentCategory?.charAt(0).toUpperCase() + parentCategory?.slice(1)} Look With These Juttis
+                      </h2>
+                      <p className="text-sm text-gray-600">
+                        Perfect footwear to pair with your dream outfit
+                      </p>
+                    </div>
 
-                {/* Real Products from paginatedCollections */}
-                {paginatedCollections.slice(0,8).map((item, index) => (
-                  <ProductCard
-                    key={item.productId || item.id || `product-${index}`}
-                    item={item}
-                    index={index}
-                    viewMode={viewMode}
-                    category={category}
-                    currentImageIndices={currentImageIndices}
-                    setCurrentImageIndices={setCurrentImageIndices}
-                    handleAddToCart={handleAddToCart}
-                    addingToCart={addingToCart}
-                  />
-                ))}
+                    {/* Show Juttis Products as fallback */}
+                    {juttisLoading ? (
+                      <div className="col-span-full text-center py-8">
+                        <p className="text-gray-500">Loading juttis...</p>
+                      </div>
+                    ) : (
+                      transformApiData(juttisData || []).slice(0, 8).map((item, index) => (
+                        <ProductCard
+                          key={item.productId || item.id || `jutti-${index}`}
+                          item={item}
+                          index={index}
+                          viewMode={viewMode}
+                          category="juttis"
+                          currentImageIndices={currentImageIndices}
+                          setCurrentImageIndices={setCurrentImageIndices}
+                          handleAddToCart={handleAddToCart}
+                          addingToCart={addingToCart}
+                        />
+                      ))
+                    )}
+                  </>
+                )}
               </>
             ) : (
-              // Show real products for juttis
+              // Show real products for juttis or when parentCategory is null
               paginatedCollections.map((item, index) => (
                 <React.Fragment key={item.productId || item.id || `product-${index}`}>
                   {/* Banner after 4th product */}
@@ -486,8 +598,6 @@ export default function Collection({ parentCategory = null, slug = null }) {
                         height={500}
                         width={1000}
                         alt="design"
-                        // preload
-                        
                         className="w-full h-auto sm:h-[220px] md:h-[420px] object-cover rounded-lg"
                       />
                     </div>

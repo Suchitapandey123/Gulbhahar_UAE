@@ -45,6 +45,11 @@ const nextConfig = {
       {
         protocol:"https",
         hostname:"www.facebook.com",
+      },
+      {
+        protocol: 'https',
+        hostname: 'gulbhahar-test.s3.ap-south-1.amazonaws.com',
+        pathname: '/**',
       }
     ],
     formats: ['image/webp', 'image/avif'],

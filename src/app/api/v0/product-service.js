@@ -4,8 +4,7 @@ import { API_BASE_URL } from "@/utils/envHere";
 const productApi = {
   getAllProduct: async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/new-api/products/get-all-product
-`, {
+      const response = await fetch(`${API_BASE_URL}/new-api/products/get-all-product`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -28,8 +27,7 @@ const productApi = {
 
   productById: async (productId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/new-api/products/get-product-by-id
-`, {
+      const response = await fetch(`${API_BASE_URL}/new-api/products/get-product-by-id`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -150,22 +148,36 @@ const productApi = {
   
   getProductsByCategory: async (categoryName) => {
     try {
+      console.log("API CALL - Fetching products for category:", categoryName);
+
       const response = await fetch(`${API_BASE_URL}/api/products/get-all-product-by-category`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
-        body: JSON.stringify({ category: categoryName }),
-        cache: 'no-store', // Bypass cache - always fetch fresh data
+        // Send both category and parentCategory to support different backend implementations
+        body: JSON.stringify({
+          category: categoryName,
+          parentCategory: categoryName
+        }),
+        cache: 'no-store',
       });
+
+      console.log("API Response Status:", response.status);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      return data;
+      console.log("API RAW RESPONSE:", data);
+
+      // Handle different response structures
+      const products = data?.products || data?.data || data;
+      console.log("API PRODUCTS for", categoryName, ":", Array.isArray(products) ? products.length : 0, "products");
+
+      return Array.isArray(products) ? products : [];
     } catch (error) {
       console.error('Error fetching products by category:', error);
       return [];

@@ -12,7 +12,6 @@ export const revalidate = 0; // No caching
 export const dynamicParams = true; 
 
 
-
 export async function generateMetadata({ params: rawParams }) {
   const params = await rawParams;
   const slug = params?.slug;
@@ -112,7 +111,36 @@ export default async function Page({ params: rawParams }) {
   const res = await pageService.getPageBySlug(slug);
   const page = res?.data || res?.page;
   if (!page) redirect("/not-found");
-  const parentCategory = page.parentCategory[0]
+  const slugLower = slug.toLowerCase();
+
+let parentCategory = null;
+
+if (page.parentCategory && page.parentCategory.length > 0) {
+  parentCategory = page.parentCategory[0].toLowerCase();
+} else {
+  const slugLower = slug.toLowerCase().trim();
+  if (slugLower.includes("jutti") || slugLower.includes("juttis")) {
+    parentCategory = "juttis";
+  } else if (slugLower.includes("saree") || slugLower.includes("sarees")) {
+    parentCategory = "saree";
+  } else if (slugLower.includes("suit") || slugLower.includes("suits")) {
+    parentCategory = "suit";
+  } else if (slugLower.includes("lehenga")) {
+    parentCategory = "lehenga";
+  }
+}
+
+console.log("SLUG:", slug, "→ DETECTED PARENT CATEGORY:", parentCategory);
+
+
+console.log("SLUG FROM URL:", slug);
+console.log("DETECTED CATEGORY:", parentCategory);
+
+console.log("SLUG FROM URL:", slug);
+console.log("DETECTED CATEGORY:", parentCategory);
+
+
+
   return (
     <div className="mt-24">
       <Collection parentCategory={parentCategory} slug={slug} />
