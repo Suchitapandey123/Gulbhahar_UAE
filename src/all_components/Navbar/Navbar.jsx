@@ -561,7 +561,7 @@ const Navbar = () => {
           transition-all duration-500 ease-out
           ${
             isScrolled || pathname !== "/"
-              ? "bg-white/95 shadow-lg py-2.5 lg:py-3 border-b border-gray-100/50"
+              ? " shadow-lg py-2.5 lg:py-3 border-b border-gray-100/50"
               : "bg-transparent shadow-none py-3 lg:py-4 border-b border-white/10"
           }
         `}
@@ -598,13 +598,7 @@ const Navbar = () => {
                     w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14  sm:mr-2 md:mr-3 flex items-center justify-center
                     transition-all duration-700 ease-out transform relative z-10
                     ${pathname === "/" ? "group-hover:scale-105" : ""}
-                    ${
-                      pathname !== "/"
-                        ? "opacity-100 translate-y-0" // Other pages: always visible
-                        : isScrolled
-                        ? "opacity-100 translate-y-0" // Home scrolled: visible
-                        : "opacity-0 translate-y-4" // Home not scrolled: hidden with slide up
-                    }
+                    opacity-100 translate-y-0
                   `}
                   >
                     <Image
@@ -629,11 +623,12 @@ const Navbar = () => {
                       }
                       ${
                         pathname !== "/"
-                          ? "text-[#800000] opacity-100 translate-y-0" // Other pages: always visible and red
+                          ? "text-[#800000]" // Other pages: maroon
                           : isScrolled
-                          ? "text-[#800000] opacity-100 translate-y-0" // Home scrolled: visible and red
-                          : "text-white opacity-0 translate-y-4" // Home not scrolled: hidden with slide up
+                          ? "text-[#800000]" // Home scrolled: maroon
+                          : "text-white" // Home not scrolled: white
                       }
+                      opacity-100 translate-y-0
                     `}
                     style={{ fontFamily: "Old Standard TT, serif" }}
                   >

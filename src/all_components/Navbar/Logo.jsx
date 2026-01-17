@@ -10,16 +10,10 @@ const Logo = ({ isScrolled, pathname }) => {
           {/* Logo Image */}
           <div
             className={`
-              w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 sm:mr-2 md:mr-3 
+              w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 sm:mr-2 md:mr-3
               flex items-center justify-center transition-all duration-700 ease-out transform relative z-10
               ${pathname === "/" ? "group-hover:scale-105" : ""}
-              ${
-                pathname !== "/"
-                  ? "opacity-100 translate-y-0"
-                  : isScrolled
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-4"
-              }
+              opacity-100 translate-y-0
             `}
           >
             <Image
@@ -40,11 +34,12 @@ const Logo = ({ isScrolled, pathname }) => {
               ${pathname === "/" ? "group-hover:scale-105 group-hover:tracking-[0.2em]" : ""}
               ${
                 pathname !== "/"
-                  ? "text-[#800000] opacity-100 translate-y-0"
+                  ? "text-[#800000]"
                   : isScrolled
-                  ? "text-[#800000] opacity-100 translate-y-0"
-                  : "text-white opacity-0 translate-y-4"
+                  ? "text-[#800000]"
+                  : "text-white"
               }
+              opacity-100 translate-y-0
             `}
             style={{ fontFamily: "Old Standard TT, serif" }}
           >

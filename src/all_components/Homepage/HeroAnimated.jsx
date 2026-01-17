@@ -60,7 +60,7 @@ export default function ModernHeroAnimated() {
   const heroData = [
     {
       id: 1,
-      image: "/home-page/new-hero1.webp",
+      image: "/home-page/newimagehero1.png",
       mobileImage: "/home-page/new-hero1-phone.webp",
       title: "GULBHAHAR",
       subtitle: "Heritage Reimagined",
@@ -80,7 +80,7 @@ export default function ModernHeroAnimated() {
     },
     {
       id: 2,
-      image: "/home-page/new-hero2.webp",
+      image: "/home-page/newimagehero2.png",
       mobileImage: "/home-page/new-hero2-phone.webp",
       title: "ARTISAN",
       subtitle: "Handcrafted Excellence",
@@ -232,33 +232,26 @@ export default function ModernHeroAnimated() {
           overflow-x: hidden;
           max-width: 100vw;
         }
-        
-        /* Optimize scroll performance */
-        * {
-          backface-visibility: hidden;
-          -webkit-backface-visibility: hidden;
-          transform-style: preserve-3d;
-        }
-        
+
         /* Smooth scrolling for better performance */
         html {
           scroll-behavior: smooth;
         }
-        
+
         .image-container {
           transform: translateZ(0);
           backface-visibility: hidden;
           perspective: 1000;
           will-change: transform, opacity;
         }
-        
+
         .hero-image {
           will-change: transform, opacity;
           transform: translateZ(0);
           image-rendering: -webkit-optimize-contrast;
           image-rendering: crisp-edges;
         }
-        
+
         .reverse-zoom-container {
           transform-origin: center center;
           width: 100%;
@@ -267,7 +260,7 @@ export default function ModernHeroAnimated() {
           inset: 0;
           will-change: transform;
         }
-        
+
         .no-scrollbar {
           -ms-overflow-style: none;
           scrollbar-width: none;
@@ -387,9 +380,9 @@ export default function ModernHeroAnimated() {
           </motion.div>
 
           {/* Play/Pause button */}
-          <motion.button
+          {/* <motion.button
             onClick={togglePlay}
-            className="absolute top-6 right-6 z-50 p-3 rounded-full bg-black/30 backdrop-blur-md border border-white/20 hover:bg-black/50 transition-all duration-300 group"
+            className="absolute top-20 sm:top-24 right-6 z-40 p-3 rounded-full bg-black/30 backdrop-blur-md border border-white/20 hover:bg-black/50 transition-all duration-300 group"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             initial={{ opacity: 0 }}
@@ -401,7 +394,7 @@ export default function ModernHeroAnimated() {
             ) : (
               <Play className="w-5 h-5 text-white/80 group-hover:text-white" />
             )}
-          </motion.button>
+          </motion.button> */}
 
           {/* MODERN CONTENT LAYOUT (ORIGINAL STRUCTURE) */}
           <div className="relative z-40 min-h-screen flex flex-col justify-center">

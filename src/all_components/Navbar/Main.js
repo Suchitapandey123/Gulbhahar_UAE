@@ -126,7 +126,7 @@ const Navbar = () => {
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          setIsScrolled(window.scrollY > 10);
+          setIsScrolled(window.scrollY > 150);
           ticking = false;
         });
         ticking = true;
@@ -229,15 +229,12 @@ const Navbar = () => {
       <MobileBackdrop isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
 
       <nav
-        className={`
-          fixed top-0 left-0 right-0 z-50 backdrop-blur-md
-          transition-all duration-500 ease-out
-          ${
-            isScrolled || pathname !== "/"
-              ? "bg-white/95 shadow-lg py-2.5 lg:py-3 border-b border-gray-100/50"
-              : "bg-transparent shadow-none py-3 lg:py-4 border-b border-white/10"
-          }
-        `}
+        className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md transition-all duration-500 ease-out ${
+          isScrolled || pathname !== "/"
+            ? "bg-white/95 shadow-lg py-2.5 lg:py-3 border-b border-gray-100/50"
+            : "bg-transparent shadow-none py-3 lg:py-4 border-b border-white/10"
+        }`}
+        style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999 }}
       >
         <div className="max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-8">
           <div className="flex items-center justify-between">
