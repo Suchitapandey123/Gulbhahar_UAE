@@ -75,7 +75,9 @@ export default function Collection({ parentCategory = null, slug = null }) {
   const sarees = staticProductsimage;
   const { addToCart, addingToCart } = useCart();
   const {ToastContainer } = useToast();
-  let category = "juttis"
+  // let category = "juttis"
+  let category = parentCategory || null;
+
 
 
   // Data Fetching
