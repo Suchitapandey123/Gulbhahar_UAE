@@ -88,9 +88,7 @@ export default function Collection({ parentCategory = null, slug = null }) {
   } = useQuery({
     queryKey: ["getProductsByCategory", category],
     queryFn: () =>
-      category
-        ? productApi.getProductsByCategory(category)
-        : productApi.getAllProduct(),
+         productApi.getAllProduct(),
     enabled: true,
   });
 
@@ -458,6 +456,7 @@ export default function Collection({ parentCategory = null, slug = null }) {
                     Perfect footwear to pair with your dream outfit
                   </p>
                 </div>
+
 
                 {/* Real Products from paginatedCollections */}
                 {paginatedCollections.slice(0,8).map((item, index) => (
