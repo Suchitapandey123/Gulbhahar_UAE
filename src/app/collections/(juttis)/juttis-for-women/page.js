@@ -1,45 +1,50 @@
-import CollectionsPage from "@/all_components/Homepage/CollectionPage";
-import React from "react";
+import React, { Suspense } from "react";
+import nextDynamic from "next/dynamic";
 import Collection from "../../components/Collection";
-import ContentJuttis from "./components/ContentJuttisForWomen";
-import ContentJuttisForWomen from "./components/ContentJuttisForWomen";
 import QuickTag from "../../components/QuickTag";
-import { popularTags  } from "../../tag";
-import QuickSearch from "@/all_components/Homepage/QuickLinks";
+import { popularTags } from "../../tag";
+import { GulbharLoader } from "@/shared-components/loader/GulbharLoader";
 
-// Force dynamic rendering - always fetch fresh data (fixes AWS Amplify caching issue)
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+// Lazy load below-fold components
+const ContentJuttisForWomen = nextDynamic(() => import("./components/ContentJuttisForWomen"), {
+  loading: () => <div className="min-h-[200px] animate-pulse bg-gray-100" />,
+});
+const QuickSearch = nextDynamic(() => import("@/shared-components/Homepage/QuickLinks"), {
+  loading: () => <div className="min-h-[150px] animate-pulse bg-gray-100" />,
+});
+
+// ISR: Revalidate every hour (fallback), or on-demand via /api/revalidate
+// Uses 'collections' and 'collection-juttis-for-women' tags for targeted revalidation
+export const revalidate = 3600;
 
 export async function generateMetadata() {
   return {
-    title:"Juttis for Women, Buy Juttis for Women | Gulbhahar",
+    title: "Juttis for Women, Buy Juttis for Women | Gulbhahar",
     description: "Elevate your wardrobe with Gulbhahar's limited-edition juttis for women, only 24 pairs per design. Handcrafted by artisans.",
-     keywords: ["Juttis for women", "Jutis for women", "juti for women", "Jutti for women", "jutty for women", "juty for women", "juttee for women", "jute for women", "jutties for women", "women juttis", "women juti"],
-
+    keywords: ["Juttis for women", "Jutis for women", "juti for women", "Jutti for women", "jutty for women", "juty for women", "juttee for women", "jute for women", "jutties for women", "women juttis", "women juti"],
     alternates: {
       canonical: "https://www.gulbhahar.com/collections/juttis-for-women",
     },
-    // openGraph: {
-    //   title:"Juttis for Women, Buy Juttis for Women | Gulbhahar",
-    //   description: "Elevate your wardrobe with Gulbhahar's limited-edition juttis for women, only 24 pairs per design. Handcrafted by artisans.",
-    //     type: "website",
-    //   locale: "en_US",
-    //   url: "https://www.gulbhahar.com/collections/juttis-for-women",
-    //   siteName: "Gulbhahar",
-    // },
+    openGraph: {
+      title: "Juttis for Women, Buy Juttis for Women | Gulbhahar",
+      description: "Elevate your wardrobe with Gulbhahar's limited-edition juttis for women, only 24 pairs per design. Handcrafted by artisans.",
+      type: "website",
+      locale: "en_US",
+      url: "https://www.gulbhahar.com/collections/juttis-for-women",
+      siteName: "Gulbhahar",
+    },
   };
 }
 
-const page = () => {
+export default function Page() {
   return (
     <div className="mt-24">
-      <Collection />
+      <Suspense fallback={<GulbharLoader />}>
+        <Collection />
+      </Suspense>
       <ContentJuttisForWomen />
-      <QuickTag popularTags={popularTags["juttis-for-women"]}  />
+      <QuickTag popularTags={popularTags["juttis-for-women"]} />
       <QuickSearch />
     </div>
   );
-};
-
-export default page;
+}

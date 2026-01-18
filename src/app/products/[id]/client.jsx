@@ -29,13 +29,13 @@ import {
   Plus,
   Minus,
 } from "lucide-react";
-import { useAuth } from "../../../Providers/ContextProviders/AuthContext";
+import { useAuth } from "@/providers/ContextProviders/AuthContext";
 import { useToast } from "../../../hooks/useToast";
-import { useCart } from "../../../Providers/ContextProviders/CartContext";
+import { useCart } from "@/providers/ContextProviders/CartContext";
 import Link from "next/link";
 import ImageModal from "./components/ImageModal";
 import Reviews from "./components/Reviews";
-import { checkDeliveryAPI } from "../../api/deliveryApi/deliveryApi";
+import { checkDeliveryAPI } from "../../api/delivery/deliveryApi";
 import { toast } from "sonner";
 import { gaEvent } from "@/utils/gtm/gtag";
 import { fbEvent } from "@/utils/fb/metaPixels";
@@ -497,6 +497,10 @@ export function ProductClient({ product, similarProducts }) {
                       className="object-cover hover:scale-105 transition-transform duration-300"
                       sizes="(max-width: 768px) 50vw, 30vw"
                       priority={idx < 2}
+                      loading={idx < 2 ? undefined : "lazy"}
+                      quality={idx < 2 ? 80 : 70}
+                      placeholder="blur"
+                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                     />
                     {/* Zoom Indicator */}
                     <div className="absolute top-4 right-4 bg-white bg-opacity-80 backdrop-blur-sm rounded-full p-2 opacity-0 hover:opacity-100 transition-opacity duration-200">

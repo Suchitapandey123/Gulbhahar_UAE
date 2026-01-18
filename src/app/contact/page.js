@@ -1,5 +1,5 @@
 import React from "react";
-import ContactPage from "./Component/contact";
+import ContactPage from "./components/contact";
 
 export async function generateMetadata() {
   return {

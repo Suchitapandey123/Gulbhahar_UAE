@@ -1,4 +1,4 @@
-import AuthProtected from "../../all_components/AuthProtected";
+import AuthProtected from "@/shared-components/AuthProtected";
 import Breadcrumb from "./components/Breadcrumb";
 import Sidebar from "./components/Sidebar";
 

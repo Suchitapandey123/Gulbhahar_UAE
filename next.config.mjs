@@ -2,23 +2,43 @@
 const nextConfig = {
   allowedDevOrigins: ['local-origin.dev', '*.local-origin.dev'],
 
-  // Prevent browser caching of pages - fixes stale data issue on AWS Amplify
+  // ISR-friendly caching headers
+  // Pages will be cached and revalidated via on-demand revalidation (POST /api/revalidate)
   async headers() {
     return [
       {
-        source: '/products/:path*',
+        // Static assets - cache for 1 year
+        source: '/_next/static/:path*',
         headers: [
-          { key: 'Cache-Control', value: 'no-cache, no-store, must-revalidate' },
-          { key: 'Pragma', value: 'no-cache' },
-          { key: 'Expires', value: '0' },
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
       },
       {
+        // Product pages - allow ISR caching with stale-while-revalidate
+        source: '/products/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' },
+        ],
+      },
+      {
+        // Collection pages - allow ISR caching with stale-while-revalidate
         source: '/collections/:path*',
         headers: [
-          { key: 'Cache-Control', value: 'no-cache, no-store, must-revalidate' },
-          { key: 'Pragma', value: 'no-cache' },
-          { key: 'Expires', value: '0' },
+          { key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' },
+        ],
+      },
+      {
+        // Homepage - shorter cache for freshness
+        source: '/',
+        headers: [
+          { key: 'Cache-Control', value: 'public, s-maxage=1800, stale-while-revalidate=3600' },
+        ],
+      },
+      {
+        // API routes - no caching
+        source: '/api/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'no-store' },
         ],
       },
     ];

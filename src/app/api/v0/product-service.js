@@ -1,6 +1,8 @@
 import { API_BASE_URL } from "@/utils/envHere";
 
-// Using fetch with cache: 'no-store' to bypass all caching on AWS Amplify
+// ISR with on-demand revalidation via cache tags
+// Tags: 'products', 'product-{id}', 'collections', 'home'
+// Revalidate via: POST /api/revalidate { secret, type: 'tag', tag: 'products' }
 const productApi = {
   getAllProduct: async () => {
     try {
@@ -10,8 +12,10 @@ const productApi = {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
-        cache: 'force-cache',
-        next: { revalidate: 60 },
+        next: {
+          revalidate: 3600, // Fallback: revalidate every hour
+          tags: ['products', 'home'] // On-demand revalidation tags
+        },
       });
 
       if (!response.ok) {
@@ -35,9 +39,11 @@ const productApi = {
           'Accept': 'application/json',
         },
         body: JSON.stringify({ productId }),
-        cache: 'no-store', // Bypass cache - always fetch fresh data
+        next: {
+          revalidate: 3600, // Fallback: revalidate every hour
+          tags: ['products', `product-${productId}`] // On-demand revalidation tags
+        },
       });
-      // console.log("Raw Response:", response);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -46,8 +52,6 @@ const productApi = {
       const data = await response.json();
       console.log("productById API data:", data);
       return data;
-
-      
     } catch (error) {
       console.error('Error fetching product by ID:', error);
       throw error;
@@ -62,7 +66,10 @@ const productApi = {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
-        cache: 'no-store', // Bypass cache - always fetch fresh data
+        next: {
+          revalidate: 3600,
+          tags: ['products', `product-${productId}-similar`]
+        },
       });
 
       if (!response.ok) {
@@ -86,7 +93,10 @@ const productApi = {
           'Accept': 'application/json',
         },
         body: JSON.stringify({ productId }),
-        cache: 'no-store', // Bypass cache - always fetch fresh data
+        next: {
+          revalidate: 3600,
+          tags: ['products']
+        },
       });
 
       if (!response.ok) {
@@ -156,7 +166,10 @@ const productApi = {
           'Accept': 'application/json',
         },
         body: JSON.stringify({ category: categoryName }),
-        cache: 'no-store', // Bypass cache - always fetch fresh data
+        next: {
+          revalidate: 3600,
+          tags: ['products', 'collections', `collection-${categoryName}`]
+        },
       });
 
       if (!response.ok) {

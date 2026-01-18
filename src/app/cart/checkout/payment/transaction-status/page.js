@@ -13,7 +13,7 @@ import {
   Banknote,
   CreditCard,
 } from "lucide-react";
-import { useCart } from "@/Providers/ContextProviders/CartContext";
+import { useCart } from "@/providers/ContextProviders/CartContext";
 import { API_BASE_URL } from "@/utils/envHere";
 import { gaEvent } from "@/utils/gtm/gtag";
 import { fbEvent } from "@/utils/fb/metaPixels";

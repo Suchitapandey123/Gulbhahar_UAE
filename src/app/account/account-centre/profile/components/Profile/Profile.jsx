@@ -209,7 +209,7 @@
 import profileAPI from "@/app/api/profile/profile";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAuth } from "@/Providers/ContextProviders/AuthContext";
+import { useAuth } from "@/providers/ContextProviders/AuthContext";
 
 import MainView from "../views/MainView";
 import PersonalInfoView from "../views/PersonalInfoView";

@@ -1,5 +1,5 @@
 import React from "react";
-import CookiePolicy from "@/app/cookies-policy/Component/CookiePolicy";
+import CookiePolicy from "@/app/cookies-policy/components/CookiePolicy";
 
 export async function generateMetadata() {
   return {

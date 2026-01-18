@@ -14,7 +14,7 @@ import {
   ChevronUp,
 } from "lucide-react";
 import Image from "next/image";
-import { useCart } from "@/Providers/ContextProviders/CartContext";
+import { useCart } from "@/providers/ContextProviders/CartContext";
 import { gaEvent } from "@/utils/gtm/gtag";
 import { fbEvent } from "@/utils/fb/metaPixels";
 import analyticsAPI from "@/app/api/analytics/analytics";

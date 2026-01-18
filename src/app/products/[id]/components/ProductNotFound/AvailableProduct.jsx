@@ -11,7 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import Image from "next/image";
 import { useToast } from "@/hooks/useToast";
-import { useCart } from "@/Providers/ContextProviders/CartContext";
+import { useCart } from "@/providers/ContextProviders/CartContext";
 import productApi from "@/app/api/v0/product-service";
 import { toast } from "sonner";
 

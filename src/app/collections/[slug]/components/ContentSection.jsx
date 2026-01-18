@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { redirect, useParams } from "next/navigation";
-import { pageService } from "../../../api/pageService/pageService";
+import { pageService } from "../../../api/page-service/pageService";
 
 const ContentSection = ({ page: initialPage }) => {
   const { slug } = useParams();

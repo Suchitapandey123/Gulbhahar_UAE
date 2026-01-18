@@ -2,8 +2,8 @@
 import { useState, useRef, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { useAuth } from "../../Providers/ContextProviders/AuthContext";
-import { useCart } from "@/Providers/ContextProviders/CartContext";
+import { useAuth } from "@/providers/ContextProviders/AuthContext";
+import { useCart } from "@/providers/ContextProviders/CartContext";
 
 import SearchPopup from "./SearchPopup";
 import CartPage from "./CartPage";

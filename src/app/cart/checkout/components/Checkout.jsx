@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useCart } from "@/Providers/ContextProviders/CartContext";
+import { useCart } from "@/providers/ContextProviders/CartContext";
 import { useToast } from "@/hooks/useToast";
 import { checkoutApi } from '../../../api/cart/cart';
 import { toast } from "sonner";

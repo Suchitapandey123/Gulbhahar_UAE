@@ -1,5 +1,5 @@
 import React from 'react'
-import ForgotPassword from "@/app/forgot-password/Component/ForgotPassword"
+import ForgotPassword from "@/app/forgot-password/components/ForgotPassword"
 
 
 export async function generateMetadata() {

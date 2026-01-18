@@ -1,5 +1,5 @@
 import React from 'react'
-import Component from "@/app/about/Component/About"
+import Component from "@/app/about/components/About"
 
 export async function generateMetadata() {
   return {

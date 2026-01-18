@@ -1,5 +1,5 @@
 import React from 'react'
-import Wishlist from './Component/Wishlist'
+import Wishlist from './components/Wishlist'
 
 export async function generateMetadata() {
   return {

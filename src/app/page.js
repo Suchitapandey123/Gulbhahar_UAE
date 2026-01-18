@@ -1,27 +1,24 @@
-// Optimized with caching for better performance
-import HomePage from '@/all_components/Homepage/HomePage';
+// ISR with on-demand revalidation - uses 'home' tag
+// Revalidate via: POST /api/revalidate { secret, type: 'tag', tag: 'home' }
+import HomePage from '@/shared-components/Homepage/HomePage';
 import productApi from './api/v0/product-service';
-import { QueryClient } from '@tanstack/react-query';
 
-// Revalidate every 60 seconds for fresh data while maintaining cache
-export const revalidate = 60;
+// ISR: Revalidate every hour (fallback), or on-demand via /api/revalidate
+export const revalidate = 3600;
+
+// Fetch products with proper caching - no need for QueryClient on server
+async function getProducts() {
+  try {
+    const data = await productApi.getAllProduct();
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    return [];
+  }
+}
 
 export default async function Home() {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        // Cache for 5 minutes, consider stale after 1 minute
-        gcTime: 5 * 60 * 1000,
-        staleTime: 60 * 1000,
-      },
-    },
-  });
-
-  const data = await queryClient.fetchQuery({
-    queryKey: ['getAllProduct'],
-    queryFn: () => productApi.getAllProduct(),
-    staleTime: 60 * 1000,
-  });
+  const data = await getProducts();
 
   return (
     <HomePage data={data} />

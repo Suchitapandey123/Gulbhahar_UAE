@@ -1,5 +1,5 @@
 import React from 'react'
-import LoginPage from './Component/Login'
+import LoginPage from './components/Login'
 
 export async function generateMetadata() {
   return {

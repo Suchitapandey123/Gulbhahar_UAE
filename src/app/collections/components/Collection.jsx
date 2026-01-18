@@ -1,12 +1,12 @@
 "use client";
 import React from "react";
 import { useEffect, useState } from "react";
-import { GulbharLoader } from "@/all_components/loader/GulbharLoader";
+import { GulbharLoader } from "@/shared-components/loader/GulbharLoader";
 import { Grid, List, SlidersHorizontal, ShoppingBag } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import productApi from "../../api/v0/product-service";
 import { useToast } from "@/hooks/useToast";
-import { useCart } from "../../../Providers/ContextProviders/CartContext";
+import { useCart } from "@/providers/ContextProviders/CartContext";
 import { toast } from "sonner";
 import { staticProductsimage } from "@/app/data/random";
 import FilterSidebar from "./FilterSidebar";
@@ -441,8 +441,10 @@ export default function Collection({ parentCategory = null, slug = null }) {
                     height={500}
                     width={1000}
                     alt="Similar Products Below"
-                    // preload
-                    // loading="eager"
+                    loading="lazy"
+                    quality={75}
+                    placeholder="blur"
+                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                     className="w-full h-auto sm:h-[220px] md:h-[420px] object-cover rounded-lg shadow-lg"
                   />
                 </div>
@@ -484,9 +486,11 @@ export default function Collection({ parentCategory = null, slug = null }) {
                         src="https://gulbahar-backend.s3.ap-south-1.amazonaws.com/public/banner-image.jpg"
                         height={500}
                         width={1000}
-                        alt="design"
-                        // preload
-                        
+                        alt="Gulbhahar Collection Banner"
+                        loading="lazy"
+                        quality={75}
+                        placeholder="blur"
+                        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                         className="w-full h-auto sm:h-[220px] md:h-[420px] object-cover rounded-lg"
                       />
                     </div>

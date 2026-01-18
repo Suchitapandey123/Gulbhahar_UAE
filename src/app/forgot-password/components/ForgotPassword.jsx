@@ -7,7 +7,7 @@ import { ChevronRight } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useToast  } from '../../../hooks/useToast';
-import forgotPasswordAPI from '../../api/forgotPassword/forgotPassword';
+import forgotPasswordAPI from '../../api/forgot-password/forgotPassword';
 import { toast } from 'sonner';
 
 
