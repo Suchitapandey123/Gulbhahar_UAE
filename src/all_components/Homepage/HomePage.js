@@ -21,9 +21,10 @@ const Culture = dynamic(() => import('./Culture'), {
 const QuickSearch = dynamic(() => import('./QuickLinks'), {
   loading: () => <div className="min-h-[200px]" />,
 })
-import MatchCollection from './matchCollection'
+
 import MatchSareeSection from './MatchSareeSection'
 import MatchSuitSection from './MatchSuitSection'
+import MatchCollection from './MatchCollection'
 
 const HomePage = ({data}) => {
   return (
