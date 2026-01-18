@@ -2,7 +2,7 @@
 
 export function ProductLoader() {
   return (
-    <div className="min-h-screen bg-white py-4 mt-10 sm:mt-0 px-4 sm:py-6 sm:px-6 lg:py-8 lg:px-8 font-raleway animate-pulse">
+    <div className="min-h-screen bg-white py-4 mt-10 sm:mt-0 px-2 sm:py-6 sm:px-6 lg:py-8 lg:px-8 font-raleway animate-pulse">
       <div className="max-w-[1600px] mx-auto mt-6 sm:mt-10 md:mt-24">
         {/* Breadcrumb Skeleton */}
         <div className="mb-4 lg:mb-6">

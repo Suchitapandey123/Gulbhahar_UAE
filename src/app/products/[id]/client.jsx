@@ -79,6 +79,85 @@ export function ProductClient({ product, similarProducts }) {
   const [quantity, setQuantity] = useState(1);
   const [openAccordion, setOpenAccordion] = useState(null);
 
+  // Page loading state - hide page until images are loaded
+  const [pageReady, setPageReady] = useState(false);
+
+  // Scroll to top when product changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    setPageReady(false);
+  }, [product.productId]);
+
+  // Preload critical images before showing page
+  useEffect(() => {
+    const firstColorImages = product.images?.[0] || [];
+
+    if (firstColorImages.length === 0) {
+      setPageReady(true);
+      return;
+    }
+
+    const cacheVersion = product.updatedAt ? `?v=${product.updatedAt}` : '';
+
+    // Build Next.js optimized image URLs for faster loading
+    const imagesToPreload = firstColorImages.slice(0, 4).map((src, idx) => {
+      const imageSrc = src.startsWith('/') ? src : `${src}${cacheVersion}`;
+
+      // Use Next.js image optimization URL with lower quality for faster processing
+      if (!src.startsWith('/')) {
+        // Determine appropriate width based on viewport
+        const width = idx < 2 ? 828 : 640; // Smaller sizes = faster optimization
+        const quality = 60; // Lower quality = faster processing
+        return `/_next/image?url=${encodeURIComponent(imageSrc)}&w=${width}&q=${quality}`;
+      }
+      return imageSrc;
+    });
+
+    let loadedCount = 0;
+
+    const preloadImage = (src) => {
+      return new Promise((resolve) => {
+        const img = new window.Image();
+
+        img.onload = () => {
+          loadedCount++;
+          resolve(src);
+        };
+
+        img.onerror = () => {
+          loadedCount++;
+          resolve(src); // Resolve even on error to not block page
+        };
+
+        // Set critical attributes for faster loading
+        img.fetchPriority = loadedCount < 2 ? 'high' : 'low';
+        img.decoding = 'async';
+        img.src = src;
+      });
+    };
+
+    // Set a timeout to show page even if images take too long
+    const timeout = setTimeout(() => {
+      if (!pageReady) {
+        console.warn('Image preload timeout - showing page anyway');
+        setPageReady(true);
+      }
+    }, 3000); // 3 second max wait
+
+    // Preload all critical images
+    Promise.all(imagesToPreload.map(preloadImage))
+      .then(() => {
+        clearTimeout(timeout);
+        setPageReady(true);
+      })
+      .catch(() => {
+        clearTimeout(timeout);
+        setPageReady(true); // Show page even if preload fails
+      });
+
+    return () => clearTimeout(timeout);
+  }, [product.productId, product.images, product.updatedAt]);
+
   // Delivery states
   const [deliveryInfo, setDeliveryInfo] = useState(null);
   const [isCheckingDelivery, setIsCheckingDelivery] = useState(false);
@@ -98,7 +177,7 @@ export function ProductClient({ product, similarProducts }) {
   const currentImages = product.images?.[selectedColorIndex] || product.images?.[0] || [];
 
   // Add cache-busting to main image
-  const cacheVersion = product.updatedAt ? `?v=${new Date(product.updatedAt).getTime()}` : '';
+  const cacheVersion = product.updatedAt ? `?v=${product.updatedAt}` : '';
 
   // Calculate discount percentage
   const discountPercentage = Math.round(
@@ -421,10 +500,25 @@ export function ProductClient({ product, similarProducts }) {
 
   const sizeRange = generateSizeRange(product.sizes || [], product.category);
 
+  // Show loading screen while images are preloading
+  // if (!pageReady) {
+  //   return (
+  //     <div className="fixed inset-0 bg-white z-50 flex items-center justify-center">
+  //       <div className="text-center space-y-4">
+  //         <div className="relative">
+  //           <Loader2 className="w-12 h-12 animate-spin text-red-600 mx-auto" />
+  //         </div>
+  //         <p className="text-gray-600 font-medium">Loading images...</p>
+  //         <p className="text-gray-400 text-sm">This may take a moment on first visit</p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
+
   return (
     <>
       <ToastContainer />
-      
+
       {isModalOpen && (
         <ImageModal
           isModalOpen={isModalOpen}
@@ -495,12 +589,11 @@ export function ProductClient({ product, similarProducts }) {
                       alt={`${product.name} - Image ${idx + 1}`}
                       fill
                       className="object-cover hover:scale-105 transition-transform duration-300"
-                      sizes="(max-width: 768px) 50vw, 30vw"
-                      priority={idx < 2}
-                      loading={idx < 2 ? undefined : "lazy"}
-                      quality={idx < 2 ? 80 : 70}
-                      placeholder="blur"
-                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 30vw"
+                      priority={idx < 4}
+                      loading="eager"
+                      quality={60}
+                      unoptimized={false}
                     />
                     {/* Zoom Indicator */}
                     <div className="absolute top-4 right-4 bg-white bg-opacity-80 backdrop-blur-sm rounded-full p-2 opacity-0 hover:opacity-100 transition-opacity duration-200">
@@ -519,9 +612,9 @@ export function ProductClient({ product, similarProducts }) {
               </h1>
 
               {/* SKU */}
-              <div className="text-sm text-gray-600">
+              {/* <div className="text-sm text-gray-600">
                 <span className="font-medium">Sku:</span> {product.productId || product.id || "N/A"}
-              </div>
+              </div> */}
 
               {/* Pricing Section */}
               <div className="space-y-2">
@@ -836,11 +929,10 @@ export function ProductClient({ product, similarProducts }) {
                       <div className="relative overflow-hidden w-full aspect-[3/4]">
                         <div className="relative w-full h-full bg-gray-100">
                           <Image
-                            width={200}
-                            height={300}
+                            fill
                             loading="lazy"
                             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                            quality={65}
+                            quality={60}
                             src={item.images?.[0]?.[0] || "/about/lal-ishq-1.jpg"}
                             alt={item.name || "Product Image"}
                             className="absolute inset-0 w-full h-full object-contain"

@@ -49,7 +49,6 @@ const ImageModal = ({
 
   const imageVersion =
     product?.updatedAt ||
-    product?.modifiedAt ||
     product?.createdAt ||
     Date.now();
 

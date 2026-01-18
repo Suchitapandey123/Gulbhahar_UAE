@@ -803,7 +803,7 @@ const handleAddToCart = async (e, item) => {
                                 key={idx}
                                 src={
                                   image
-                                    ? `${image}?v=${item.updatedAt ? new Date(item.updatedAt).getTime() : ''}`
+                                    ? `${image}?v=${item.updatedAt}`
                                     : "/about/lal-ishq-1.jpg"
                                 }
                                 alt={`${item.title} - ${idx + 1}`}

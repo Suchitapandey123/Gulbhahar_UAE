@@ -146,15 +146,37 @@ export default async function CollectionPage({ params }) {
     const param = await params;
     const productID = param.id;
     // console.log('Params:', productID);
-    
+
     const { product, similarProducts } = await getProductData(productID);
 
-    
+    // Get all images from the first color variant (what user sees first)
+    const firstColorImages = product.images?.[0] || [];
+    const cacheVersion = product.updatedAt ? `?v=${product.updatedAt}` : '';
+
+    // Preload first 4 images (above the fold in grid)
+    const imagesToPreload = firstColorImages.slice(0, 4).map(img =>
+      img.startsWith('/') ? img : `${img}${cacheVersion}`
+    );
+
     return (
-      <ProductClient 
-        product={product} 
-        similarProducts={similarProducts || fallbackSimilarProducts} 
-      />
+      <>
+        {/* Critical: Preload images before React renders */}
+        {imagesToPreload.map((img, idx) => (
+          <link
+            key={`preload-${idx}`}
+            rel="preload"
+            as="image"
+            href={img}
+            // Highest priority for first 2 images
+            fetchPriority={idx < 2 ? "high" : "low"}
+          />
+        ))}
+
+        <ProductClient
+          product={product}
+          similarProducts={similarProducts || fallbackSimilarProducts}
+        />
+      </>
     );
   } catch (error) {
     console.error('Error in CollectionPage:', error);
