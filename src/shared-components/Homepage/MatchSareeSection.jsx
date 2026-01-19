@@ -1,6 +1,6 @@
 "use client";
 
-import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function MatchSareeSection() {
@@ -52,7 +52,7 @@ export default function MatchSareeSection() {
         {sareeMatchData.map((item, i) => (
           <Link key={i} href={item.link}>
             <div className="relative group cursor-pointer aspect-[3/4] rounded-lg overflow-hidden">
-              <OptimizedImage
+              <Image
                 src={item.img}
                 alt={item.label}
                 fill

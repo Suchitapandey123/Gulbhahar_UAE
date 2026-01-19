@@ -6,7 +6,7 @@ import {
   useTransform,
   useSpring,
 } from "framer-motion";
-import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
+import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 import { ArrowUpRight, Play, Pause } from "lucide-react";
 
@@ -344,7 +344,7 @@ export default function ModernHeroAnimated() {
                   >
                     {/* Desktop Image */}
                     <div className="hidden md:block absolute inset-0 w-full h-full">
-                      <OptimizedImage
+                      <Image
                         src={slide.image}
                         alt={slide.title}
                         fill
@@ -358,7 +358,7 @@ export default function ModernHeroAnimated() {
 
                     {/* Mobile Image */}
                     <div className="md:hidden absolute inset-0 w-full h-full">
-                      <OptimizedImage
+                      <Image
                         src={slide.mobileImage}
                         alt={slide.title}
                         fill

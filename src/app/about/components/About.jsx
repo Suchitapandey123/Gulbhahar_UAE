@@ -1,6 +1,6 @@
 "use client"
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
+import Image from "next/image";
 import { useRef, useState } from 'react';
 
 // Immersive Hero Section
@@ -113,7 +113,7 @@ const HeroSection = () => {
             >
               <div className="relative w-full h-[300px] xs:h-[350px] sm:h-[400px] md:h-[500px] lg:h-[600px] xl:h-[700px] rounded-lg sm:rounded-xl lg:rounded-[2rem] overflow-hidden shadow-2xl">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent z-10" />
-                <OptimizedImage
+                <Image
                   src="/about/crafting-stories-optimized.webp"
                   alt="Heritage Craftsmanship"
                   fill
@@ -401,7 +401,7 @@ const TraditionSection = () => {
             viewport={{ once: true }}
           >
             <div className="relative h-[250px] xs:h-[300px] sm:h-[350px] md:h-[400px] lg:h-[500px] rounded-lg sm:rounded-xl lg:rounded-3xl overflow-hidden shadow-2xl border border-[#7f0001]/20">
-              <OptimizedImage
+              <Image
                 src="/about/adda-master-optimized.webp"
                 alt="Traditional Craftsmanship"
                 fill
@@ -481,7 +481,7 @@ const TraditionSection = () => {
             viewport={{ once: true }}
           >
             <div className="relative h-[250px] xs:h-[300px] sm:h-[350px] md:h-[400px] lg:h-[500px] rounded-lg sm:rounded-xl lg:rounded-3xl overflow-hidden shadow-2xl border border-[#7f0001]/20">
-              <OptimizedImage
+              <Image
                 src="/about/modern-innovation-optimized.webp"
                 alt="Contemporary Design"
                 fill
@@ -625,7 +625,7 @@ const ArtisanSection = () => {
             >
               <div className="relative h-[300px] xs:h-[350px] sm:h-[400px] lg:h-[500px] rounded-lg sm:rounded-xl lg:rounded-2xl overflow-hidden shadow-2xl border border-[#7f0001]/20">
                 {/* Background Image */}
-                <OptimizedImage
+                <Image
                   src={artisan.image}
                   alt={artisan.name}
                   fill
@@ -826,7 +826,7 @@ const ProcessSection = () => {
                 whileHover={{ scale: 1.05, rotateY: index % 2 === 1 ? -5 : 5 }}
               >
                 <div className="relative h-[250px] xs:h-[300px] sm:h-[350px] lg:h-[400px] rounded-lg sm:rounded-xl lg:rounded-2xl overflow-hidden shadow-2xl border border-[#7f0001]/20">
-                  <OptimizedImage
+                  <Image
                     src={step.img}
                     alt={step.title}
                     fill
@@ -968,7 +968,7 @@ const CollectionsSection = () => {
               transition={{ duration: 0.5 }}
               whileHover={{ scale: 1.02 }}
             >
-              <OptimizedImage
+              <Image
                 src={collections[activeCollection].image}
                 alt={collections[activeCollection].name}
                 fill
@@ -1103,7 +1103,7 @@ const TestimonialsSection = () => {
                 
                 <div className="flex items-center space-x-3 sm:space-x-4">
                   <div className="w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-gradient-to-r from-[#7f0001]/30 to-[#7f0001]/50 overflow-hidden"> 
-                    <OptimizedImage 
+                    <Image 
                       src={testimonial.image}
                       alt={testimonial.name}
                       className="w-full h-full object-cover rounded-full"

@@ -13,7 +13,7 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
-import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
+import Image from "next/image";
 import { useCart } from "@/providers/ContextProviders/CartContext";
 import { gaEvent } from "@/utils/gtm/gtag";
 import { fbEvent } from "@/utils/fb/metaPixels";
@@ -255,7 +255,7 @@ const CartPage = () => {
                           onClick={() => handleNavigateToProduct(item.id)}
                           className="w-16 h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0 hover:opacity-80 transition-opacity cursor-pointer"
                         >
-                          <OptimizedImage
+                          <Image
                             src={getCurrentImage(item)}
                             alt={item.name}
                             width={64}
@@ -386,7 +386,7 @@ const CartPage = () => {
                                     >
                                       {item.images &&
                                         item.images[colorIndex] ? (
-                                        <OptimizedImage
+                                        <Image
                                           src={
                                             item.images[colorIndex][0] ||
                                             "/about/lal-ishq-1.jpg"

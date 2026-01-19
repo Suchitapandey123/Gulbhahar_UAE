@@ -1,6 +1,6 @@
 "use client";
 
-import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function MatchCollection() {
@@ -54,7 +54,7 @@ export default function MatchCollection() {
             >
               <Link href={item.link}>
                 <div className="relative overflow-hidden h-full rounded-lg">
-                  <OptimizedImage
+                  <Image
                     src={item.img}
                     priority
                     alt={`${item.label} collection`}
@@ -90,7 +90,7 @@ export default function MatchCollection() {
       <section className="max-w-[1600px] mx-auto px-1 sm:px-4 py-16">
        
         <div className="col-span-full w-full my-4">
-                          <OptimizedImage
+                          <Image
                             src="https://gulbahar-backend.s3.ap-south-1.amazonaws.com/public/banner-image.jpg"
                             height={656}
                             width={1000}

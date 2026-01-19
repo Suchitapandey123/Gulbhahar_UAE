@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
+import Image from "next/image";
 
 const Logo = ({ isScrolled, pathname }) => {
   return (
@@ -16,7 +16,7 @@ const Logo = ({ isScrolled, pathname }) => {
               opacity-100 translate-y-0
             `}
           >
-            <OptimizedImage
+            <Image
               src="/logo.png"
               alt="Logo"
               fill

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
+import Image from "next/image";
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 import { CreditCard, Shield, MapPin, User, Package, ShoppingBag, Star, CheckCircle } from "lucide-react";
@@ -899,7 +899,7 @@ export default function PaymentPage() {
                       <div className="flex items-center space-x-3">
                         {/* Product Image */}
                         <div className="w-12 h-12 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
-                          <OptimizedImage
+                          <Image
                             src={getCurrentImage(item)}
                             alt={item.name || 'Product'}
                             width={48}

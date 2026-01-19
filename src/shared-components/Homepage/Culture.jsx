@@ -1,6 +1,6 @@
 "use client";
 
-import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
@@ -26,7 +26,7 @@ export default function Culture() {
               className="relative aspect-[3/4] group cursor-pointer"
             >
               <div className="relative overflow-hidden h-full">
-                <OptimizedImage
+                <Image
                   src={img}
                   loading="lazy"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"

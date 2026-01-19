@@ -1,5 +1,5 @@
 import { LogOut, Package, Settings, User, X } from "lucide-react";
-import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
+import Image from "next/image";
 import { useEffect } from "react";
 import MobileUserSection from "./MobileUserSection";
 import MobileNavigationLinks from "./MobileNavigationLinks";
@@ -111,7 +111,7 @@ const MobileMenuSidebar = ({
           {/* Mobile Menu Header */}
           <div className="flex items-center justify-between p-3 xs:p-4 sm:p-6 border-b border-gray-100">
             <div className="w-[70%] flex">
-              <OptimizedImage
+              <Image
                 src="/ful-gulbhaharlogo.png"
                 alt="Brand Logo"
                 width={80}

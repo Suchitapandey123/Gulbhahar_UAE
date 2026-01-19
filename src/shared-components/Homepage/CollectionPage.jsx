@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
@@ -167,7 +167,7 @@ export default function CollectionsPage({ collections = [] }) {
                 <div className="space-y-3 cursor-pointer">
                   {/* Image Container */}
                   <div className="relative overflow-hidden w-full aspect-[3/4] rounded-lg">
-                    <OptimizedImage
+                    <Image
                       src={getSafeImageUrl(collection)}
                       alt={`${collection.name} - collection image`}
                       fill

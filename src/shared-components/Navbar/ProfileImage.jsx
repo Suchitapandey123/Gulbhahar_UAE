@@ -1,5 +1,5 @@
 import { User } from "lucide-react";
-import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
+import Image from "next/image";
 
 const ProfileImage = ({ 
   size = "w-8 h-8", 
@@ -41,7 +41,7 @@ const ProfileImage = ({
       <div
         className={`${size} ${className} relative overflow-hidden rounded-full bg-gray-100 flex-shrink-0`}
       >
-        <OptimizedImage
+        <Image
           src={iimageUrl?.profilePicture || userData.imageUrl}
           alt={`${userData.firstName || "User"}'s profile`}
           fill

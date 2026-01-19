@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import { orderHistoryAPI } from '../../../../api/order/orderApi';
 import { profileAPI } from '../../../../api/profile/profile';
-import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
+import Image from "next/image";
 
 export function OrderDetailsPage({ selectedOrder, onBack = () => {} }) {
   const [activeTab, setActiveTab] = useState("history");
@@ -1000,7 +1000,7 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
                       <div className="flex-shrink-0">
                         <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-300 bg-white">
                           {product.image ? (
-                            <OptimizedImage
+                            <Image
                               src={product.image}
                               alt={product.name}
                               width={48}

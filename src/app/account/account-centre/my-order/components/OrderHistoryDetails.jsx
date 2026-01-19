@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 
 import { orderHistoryAPI } from '../../../../api/order/orderApi';
-import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
+import Image from "next/image";
 
 export const OrderHistoryDetails = ({ onOrderClick }) => {
   const [orders, setOrders] = useState([]);
@@ -319,7 +319,7 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
           {/* Table Headers - Desktop & Tablet */}
           <div className="hidden md:grid md:grid-cols-11 lg:grid-cols-12 gap-3 lg:gap-4 py-3 lg:py-4 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-red-50 to-red-50/50 border-b border-red-100">
             <div className="col-span-3 flex items-center gap-1.5 lg:gap-2 text-red-900 font-bold text-xs lg:text-sm">
-              <OptimizedImageIcon className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
+              <ImageIcon className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
               <span>Products</span>
             </div>
             <div className="col-span-2 flex items-center gap-1.5 lg:gap-2 text-red-900 font-bold text-xs lg:text-sm">
@@ -457,7 +457,7 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
                                   key={index}
                                   className="relative w-10 h-10 xl:w-12 xl:h-12 rounded-full border-2 border-white shadow-lg overflow-hidden group/image"
                                 >
-                                  <OptimizedImage
+                                  <Image
                                     src={img}
                                     height={50}
                                     width={50}

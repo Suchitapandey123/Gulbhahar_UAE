@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Trash2, Minus, Plus, ShoppingCart, Tag } from "lucide-react";
-import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 // import CartImage from "../../../../public/cart/cart.svg";
 import CartImage from "../../../../public/cart/newcart.png"
@@ -165,7 +165,7 @@ const CartPage = () => {
                     />
                     <div className="flex flex-1 ml-4">
                       <div className="relative">
-                        <OptimizedImage
+                        <Image
                           src={OrderImage}
                           alt={item.name}
                           width={76}
@@ -235,7 +235,7 @@ const CartPage = () => {
                       className="h-5 w-5 rounded accent-red-900 border-2 border-red-200 focus:ring-red-900"
                     />
                     <div className="relative">
-                      <OptimizedImage
+                      <Image
                         src={OrderImage}
                         alt={item.name}
                         width={96}

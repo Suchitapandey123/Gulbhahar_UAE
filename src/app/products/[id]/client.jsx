@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, useMemo } from "react";
-import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   ShoppingCart,
@@ -986,7 +986,7 @@ export function ProductClient({ product, similarProducts }) {
                     style={{ aspectRatio: "3 / 4" }}
                     onClick={() => openModal(idx)}
                   >
-                    <OptimizedImage
+                    <Image
                       src={img.startsWith('/') ? img : `${img}${cacheVersion}`}
                       alt={`${product.name} - Image ${idx + 1}`}
                       fill
@@ -1363,7 +1363,7 @@ export function ProductClient({ product, similarProducts }) {
                       {/* Image Container */}
                       <div className="relative overflow-hidden w-full aspect-[3/4]">
                         <div className="relative w-full h-full bg-gray-100">
-                          <OptimizedImage
+                          <Image
                             fill
                             loading="lazy"
                             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"

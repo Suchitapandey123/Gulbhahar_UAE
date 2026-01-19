@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { ShoppingBag } from "lucide-react";
-import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
+import Image from "next/image";
 
 const FALLBACK_IMAGES = [
   "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/sold_out/engagement-saree-collection/engagement-saree-collection_2.jpg",
@@ -111,7 +111,7 @@ export default function DummyProductCard({
             }`}
         >
           <div className="relative w-full h-full bg-white">
-            <OptimizedImage
+            <Image
               width={200}
               unoptimized
               height={450}

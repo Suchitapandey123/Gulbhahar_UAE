@@ -12,7 +12,7 @@ import { staticProductsimage } from "@/app/data/random";
 import FilterSidebar from "./FilterSidebar";
 import ProductCard from "./ProductCard";
 import DummyProductCard from "./DummyProductCard";
-import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
+import Image from "next/image";
 import {fbEvent } from "@/utils/fb/metaPixels";
 
 const fallbackCollections = [
@@ -508,7 +508,7 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
                         {/* Banner after 4th product */}
                         {index === 4 && (
                           <div className="col-span-full w-full my-4">
-                            <OptimizedImage
+                            <Image
                               src="https://gulbahar-backend.s3.ap-south-1.amazonaws.com/public/banner-image.jpg"
                               height={500}
                               width={1000}
@@ -545,7 +545,7 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
 
                 {/* Banner after dummy products */}
                 <div className="col-span-full w-full my-4">
-                  <OptimizedImage
+                  <Image
                     src="https://gulbahar-backend.s3.ap-south-1.amazonaws.com/public/banner-image.jpg"
                     height={500}
                     width={1000}
@@ -599,7 +599,7 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
                   {/* Banner after 4th product */}
                   {index === 4 && (
                     <div className="col-span-full w-full my-4">
-                      <OptimizedImage
+                      <Image
                         src="https://gulbahar-backend.s3.ap-south-1.amazonaws.com/public/banner-image.jpg"
                         height={500}
                         width={1000}

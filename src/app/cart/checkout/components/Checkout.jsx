@@ -15,7 +15,7 @@ import {
   Search,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
+import Image from "next/image";
 import { useCart } from "@/providers/ContextProviders/CartContext";
 import { useToast } from "@/hooks/useToast";
 import { checkoutApi } from '../../../api/cart/cart';
@@ -1444,7 +1444,7 @@ export default function CheckoutComponent() {
                       >
                         <div className="flex items-center space-x-3">
                           <div className="w-12 h-12 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
-                            <OptimizedImage
+                            <Image
                               src={getCurrentImage(item) || "/placeholder.jpg"}
                               alt={item.name || "Product"}
                               width={200}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
@@ -255,7 +255,7 @@ const NewCollection = ({ newCollection }) => {
                             ease: "easeOut" 
                           }}
                         >
-                          <OptimizedImage
+                          <Image
                             src={getSafeImageUrl(product)}
                             alt={`${product.name} - collection image`}
                             fill
