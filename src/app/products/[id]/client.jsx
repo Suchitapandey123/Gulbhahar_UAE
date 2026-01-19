@@ -265,7 +265,7 @@ export function ProductClient({ product, similarProducts }) {
   const currentImages = product.images?.[selectedColorIndex] || product.images?.[0] || [];
 
   // Generate size range based on inventory and category
-  const sizeRange = useMemo(() => {
+  let sizeRange = useMemo(() => {
     return generateSizeRange(product.inventory, product.category, product.sizes);
   }, [product.inventory, product.category, product.sizes]);
 
@@ -899,7 +899,7 @@ export function ProductClient({ product, similarProducts }) {
     );
   };
 
-  const sizeRange = generateSizeRange(product.sizes || [], product.category);
+
 
   // Show loading screen while images are preloading
   // if (!pageReady) {
