@@ -13,7 +13,7 @@ import {
   Banknote,
   CreditCard,
 } from "lucide-react";
-import { useCart } from "@/Providers/ContextProviders/CartContext";
+import { useCart } from "@/providers/ContextProviders/CartContext";
 import { API_BASE_URL } from "@/utils/envHere";
 import { gaEvent } from "@/utils/gtm/gtag";
 import { fbEvent } from "@/utils/fb/metaPixels";
@@ -76,7 +76,7 @@ const TransactionStatusContent = () => {
     if (savedCheckoutData) {
       try {
         checkoutData = JSON.parse(savedCheckoutData);
-        console.log("📦 Checkout data from localStorage:", checkoutData);
+        // console.log("📦 Checkout data from localStorage:", checkoutData);
 
         // 🔥 User data extract karo Meta Pixel ke liye
         if (checkoutData.email) {
@@ -106,7 +106,7 @@ const TransactionStatusContent = () => {
           // 🆕 REF mein bhi save karo for immediate access
           userDataRef.current = extractedUserData;
 
-          console.log("👤 User data extracted for Meta Pixel:", extractedUserData);
+          // console.log("👤 User data extracted for Meta Pixel:", extractedUserData);
         }
       } catch (e) {
         console.warn("Could not parse checkout data from localStorage:", e);
@@ -196,12 +196,12 @@ const TransactionStatusContent = () => {
     apiCallInProgress.current = true;
     setBackendProcessing(true);
 
-    console.log("✅ Payment successful! Sending complete order data to backend...");
-    console.log("💳 Payment Method:", transactionData.paymentMethod);
+    // console.log("✅ Payment successful! Sending complete order data to backend...");
+    // console.log("💳 Payment Method:", transactionData.paymentMethod);
 
     // 🆕 User data source decide karo (parameter ya ref)
     const finalUserData = userDataParam || userDataRef.current || userData;
-    console.log("👤 Final User Data for Pixel:", finalUserData);
+    // console.log("👤 Final User Data for Pixel:", finalUserData);
 
     try {
       const generateSessionId = () => {

@@ -1,38 +1,34 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import CollectionPage from '@/app/collections/components/Collection'
+import { GulbharLoader } from '@/shared-components/loader/GulbharLoader'
 
-
-// Force dynamic rendering - always fetch fresh data (fixes AWS Amplify caching issue)
-export const dynamic = 'force-dynamic';
-export const revalidate = 0; // No caching
-export const dynamicParams = true; // Enable on-demand generation
+// ISR: Revalidate every hour (fallback), or on-demand via /api/revalidate
+// Uses 'collections' tag for targeted revalidation
+export const revalidate = 3600;
 
 export async function generateMetadata() {
   return {
-    title:"Gulbhahar Collection Page - Suits, Sarees, Juttis etc",
-    description:"Explore Gulbhahar's exquisite ethnic wear collection. Premium footwear with embroidery suits & Saress with authentic designs. ",
+    title: "Gulbhahar Collection Page - Suits, Sarees, Juttis etc",
+    description: "Explore Gulbhahar's exquisite ethnic wear collection. Premium footwear with embroidery suits & Sarees with authentic designs.",
     keywords: ["gulbhahar collection", "suits", "sarees", "juttis", "saree", "sadi", "jutti", "soots", "ethnic wear", "ethnic collection"],
     alternates: {
       canonical: "https://www.gulbhahar.com/collections",
     },
-    // openGraph: {
-    //   title:"Gulbhahar Jutti Collection - Handcrafted Traditional Footwear",
-    // description:"Explore Gulbhahar's exquisite handcrafted jutti collection. Premium footwear with intricate embroidery and authentic designs. Shop traditional Indian juttis online today.",
-    //   type: "website",
-    //   locale: "en_US",
-    //   url: "https://www.gulbhahar.com/collections",
-    //   siteName: "Gulbhahar",
-    // },
+    openGraph: {
+      title: "Gulbhahar Collection Page - Suits, Sarees, Juttis etc",
+      description: "Explore Gulbhahar's exquisite ethnic wear collection. Premium footwear with embroidery suits & Sarees with authentic designs.",
+      type: "website",
+      locale: "en_US",
+      url: "https://www.gulbhahar.com/collections",
+      siteName: "Gulbhahar",
+    },
   };
 }
 
-const page = () => {
-  
+export default function Page() {
   return (
-    <div>
-      <CollectionPage/>
-    </div>
+    <Suspense fallback={<GulbharLoader />}>
+      <CollectionPage />
+    </Suspense>
   )
 }
-
-export default page

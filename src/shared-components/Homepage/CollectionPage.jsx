@@ -6,53 +6,56 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
-// Updated seasons array with your custom names
-const seasons = [
-  "all",
-  "designed by monica",
-  "casual juttis",        // Changed from "summer"
-  "festive collection",   // Changed from "winter"
-  "designer collection",  // Changed from "fall"
-  // "spring",
+// Category tabs for filtering products - Match these IDs with parentCategory values
+const categories = [
+  { id: "all", label: "All" },
+  { id: "juttis", label: "Juttis" },
+  { id: "saree", label: "Sarees" },
+  { id: "suit", label: "Suits" },
+  { id: "lehenga", label: "Lehenga" },
 ];
 
-
-export default function CollectionsPage({collections}) {
-  const [selectedSeason, setSelectedSeason] = useState("all");
-  const [isVisible, setIsVisible] = useState(false);
+export default function CollectionsPage({ collections = [] }) {
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const ref = useRef(null);
 
-  // Simple intersection observer without framer motion
+  // Debug: Log collections to see actual data
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect(); // Only trigger once
-        }
-      },
-      {
-        threshold: 0.1,
-        rootMargin: '-50px'
-      }
+    console.log("Collections data:", collections);
+    console.log("Unique parentCategories:", 
+      Array.from(new Set(collections.flatMap(c => c.parentCategory || [])))
     );
+  }, [collections]);
 
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  // Updated filtering logic to handle the mapping
-  const filteredCollections = selectedSeason === "all"
+  // Fixed filter logic - Check both parentCategory AND category field
+  const filteredCollections = selectedCategory === "all"
     ? collections
     : collections.filter(collection => {
-        const mappedSeason = seasons[selectedSeason] || selectedSeason;
-        return collection.season === mappedSeason;
+        const parentCategories = collection.parentCategory || [];
+        const categoryField = collection.category || "";
+
+        // Check parentCategory array first
+        const matchesParentCategory = parentCategories.some(
+          cat => cat?.toLowerCase().trim() === selectedCategory.toLowerCase().trim()
+        );
+
+        // Fallback: Check category field (for old products without parentCategory)
+        const matchesCategoryField = categoryField.toLowerCase().includes(selectedCategory.toLowerCase());
+
+        return matchesParentCategory || matchesCategoryField;
       });
 
-  // Minimal animation variants
+  // Debug: Log filtered results
+  useEffect(() => {
+    console.log("Selected category:", selectedCategory);
+    console.log("Filtered count:", filteredCollections.length);
+    console.log("Filtered items:", filteredCollections.map(c => ({
+      name: c.name,
+      parentCategory: c.parentCategory
+    })));
+  }, [selectedCategory, filteredCollections]);
+
+  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -82,13 +85,32 @@ export default function CollectionsPage({collections}) {
     }
   };
 
+  // Get count for each category - Check both parentCategory AND category field
+  const getCategoryCount = (categoryId) => {
+    if (categoryId === "all") return collections.length;
+
+    return collections.filter(collection => {
+      const parentCategories = collection.parentCategory || [];
+      const categoryField = collection.category || "";
+
+      // Check parentCategory array
+      const matchesParentCategory = parentCategories.some(
+        cat => cat?.toLowerCase().trim() === categoryId.toLowerCase().trim()
+      );
+
+      // Fallback: Check category field (for old products)
+      const matchesCategoryField = categoryField.toLowerCase().includes(categoryId.toLowerCase());
+
+      return matchesParentCategory || matchesCategoryField;
+    }).length;
+  };
 
   return (
     <div
       ref={ref}
       className="max-w-[1600px] mx-auto px-2 sm:px-6 lg:px-8 py-8"
     >
-      {/* Header Section - No animations */}
+      {/* Header Section */}
       <div className="flex justify-between items-center mb-12">
         <h2 className="text-xl lg:text-5xl sm:text-4xl font-bold text-customRed font-raleway">
           COLLECTIONS
@@ -104,49 +126,46 @@ export default function CollectionsPage({collections}) {
         </Link>
       </div>
 
-      {/* Filter Buttons - Simplified */}
-      <div className="overflow-x-auto scrollbar-hide lg:mb-10 mb-5">
-        <div className="flex gap-2 lg:gap-3 font-raleway min-w-max px-1">
-          {seasons.map((season) => (
-            <button
-              key={season}
-              onClick={() => setSelectedSeason(season)}
-              className={`
-                relative px-3 py-2 sm:px-4 sm:py-2.5 lg:px-6 lg:py-3 
-                text-xs sm:text-sm lg:text-base font-medium
-                rounded-md border-2 transition-all duration-200 ease-out
-                hover:shadow-md hover:-translate-y-0.5 active:translate-y-0
-                whitespace-nowrap flex-shrink-0
-                ${selectedSeason === season
-                  ? "bg-black text-white border-black shadow-md" 
-                  : "bg-white text-black border-gray-300 hover:bg-gray-50"
-                }
-              `}
-            >
-              {season !== "all" ? `${season.toUpperCase()}` : season.toUpperCase()}
-            </button>
-          ))}
-        </div>
+      {/* Category Filter Tabs - Same design as Collection.jsx */}
+      <div className="flex flex-nowrap gap-2 sm:gap-3 mb-8 overflow-x-auto pb-2">
+        {categories.map((category) => (
+          <button
+            key={category.id}
+            onClick={() => setSelectedCategory(category.id)}
+            className={`px-4 sm:px-6 py-2 sm:py-3 border-2 font-bold text-xs sm:text-sm rounded-lg transition-all duration-200 transform hover:scale-105 whitespace-nowrap flex-shrink-0 ${
+              selectedCategory === category.id
+                ? "bg-red-900 text-white border-red-900 shadow-lg"
+                : "bg-white text-red-900 border-red-300 hover:bg-red-50 hover:border-red-900"
+            }`}
+          >
+            {category.label.toUpperCase()}
+            <span className="ml-1 text-xs opacity-75">
+              ({getCategoryCount(category.id)})
+            </span>
+          </button>
+        ))}
       </div>
 
-      {/* Collections Grid - Only animate on filter change */}
+      
+
+      {/* Collections Grid */}
       <AnimatePresence mode="wait">
         <motion.div
-          key={selectedSeason}
+          key={selectedCategory}
           initial="hidden"
           animate="visible"
           variants={containerVariants}
           className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8"
         >
-          {filteredCollections.slice(0,8).map((collection, index) => (
+          {filteredCollections.slice(0, 8).map((collection , index) => (
             <motion.div
-              key={`${collection.productId}-${selectedSeason}`}
+              key={`${collection.productId}-${selectedCategory}`}
               variants={itemVariants}
               className="group w-full"
             >
               <Link href={`/collections/${collection.productId}`}>
                 <div className="space-y-3 cursor-pointer">
-                  {/* Image Container - Pure CSS animations */}
+                  {/* Image Container */}
                   <div className="relative overflow-hidden w-full aspect-[3/4] rounded-lg">
                     <Image
                       src={getSafeImageUrl(collection)}
@@ -176,6 +195,7 @@ export default function CollectionsPage({collections}) {
                     <p className="text-xs sm:text-sm text-gray-700 font-medium">
                       ₹ {collection.price?.toLocaleString() || "0"}
                     </p>
+                    
                   </div>
                 </div>
               </Link>
@@ -184,7 +204,7 @@ export default function CollectionsPage({collections}) {
         </motion.div>
       </AnimatePresence>
 
-      {/* Empty State - Static */}
+      {/* Empty State */}
       {filteredCollections.length === 0 && (
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center py-24 px-6">
           <div className="mx-auto mb-8 w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center">
@@ -211,7 +231,7 @@ export default function CollectionsPage({collections}) {
             <p className="text-lg text-gray-600 font-raleway max-w-md mx-auto">
               We couldn't find any collections for{" "}
               <span className="font-semibold text-red-600 bg-red-50 px-2 py-1 rounded-lg">
-                {selectedSeason}
+                {selectedCategory}
               </span>{" "}
               right now.
             </p>
@@ -219,8 +239,8 @@ export default function CollectionsPage({collections}) {
 
           <div className="mt-8">
             <button
-              onClick={() => setSelectedSeason("all")}
-              className="px-6 py-3 bg-red-500 text-white rounded-full font-semibold hover:bg-red-600 transition-colors duration-200 font-raleway"
+              onClick={() => setSelectedCategory("all")}
+              className="px-6 py-3 bg-customRed text-white rounded-full font-semibold hover:bg-red-800 transition-colors duration-200 font-raleway"
             >
               Browse All Collections
             </button>

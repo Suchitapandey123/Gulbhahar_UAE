@@ -1,5 +1,5 @@
 "use client"
-import Image from 'next/image';
+import Image from "next/image";
 import { useEffect, useState, useRef } from 'react';
 import { FaGoogle, FaFacebook, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { FiUser, FiLock, FiMail, FiMapPin, FiPhone, FiShield, FiCheck, FiCamera, FiUpload } from 'react-icons/fi';

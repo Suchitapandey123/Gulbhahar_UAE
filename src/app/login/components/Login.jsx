@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { FaGoogle, FaFacebook } from 'react-icons/fa';
 import { FiUser, FiLock, FiEye, FiEyeOff, FiPhone } from 'react-icons/fi';
 import { IoIosArrowBack } from 'react-icons/io';
-import { useAuth } from '../../../Providers/ContextProviders/AuthContext';
+import { useAuth } from '@/providers/ContextProviders/AuthContext';
 import { signIn, useSession } from 'next-auth/react';
 import signupApi from "../../api/signup/signup";
 

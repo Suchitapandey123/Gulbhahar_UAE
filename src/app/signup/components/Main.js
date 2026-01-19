@@ -10,7 +10,7 @@ import Security from './Security';
 import ProfileImageUpload from './ProfileImageUpload';
 import EmailVerification from './EmailVerification';
 import PhoneVerification from './PhoneVerification';
-import { useAuth } from '@/Providers/ContextProviders/AuthContext';
+import { useAuth } from '@/providers/ContextProviders/AuthContext';
 import signupApi from "../../api/signup/signup";
 
 

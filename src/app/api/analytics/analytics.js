@@ -52,7 +52,7 @@ export const analyticsAPI = {
 
 
     trackContinueToPayment: async (userData) => {
-        console.log(userData)
+        // console.log(userData)
         try {
             const res = await fetch(`${API_BASE_URL}/api/v1/analytics/continue-to-payment`, {
                 method: 'POST',
@@ -104,7 +104,7 @@ export const analyticsAPI = {
 
 
     trackOrderConfirmed: async (paymentMethod) => {
-        console.log(paymentMethod)
+        // console.log(paymentMethod)
         try {
             const res = await fetch(`${API_BASE_URL}/api/v1/analytics/order-confirmed`, {
                 method: 'POST',

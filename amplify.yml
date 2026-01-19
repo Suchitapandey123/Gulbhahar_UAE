@@ -10,6 +10,8 @@ frontend:
         # Clean build cache to ensure fresh builds
         - rm -rf .next
         - rm -rf node_modules
+        - rm -rf .next
+        - rm -rf node_modules
 
         # Install dependencies with pnpm
         - pnpm install --frozen-lockfile

@@ -1,17 +1,35 @@
-import React from "react";
+import React, { cache } from "react";
 import ContentSection from "./components/ContentSection";
 import Collection from "../components/Collection";
 import QuickTag from "../components/QuickTag";
 import QuickLinks from "../components/QuickLinks";
-import { pageService } from "../../api/pageService/pageService";
+import { pageService } from "../../api/page-service/pageService";
 import { redirect } from "next/navigation";
 
-// Force dynamic rendering - always fetch fresh data (fixes AWS Amplify caching issue)
-export const dynamic = 'force-dynamic';
-export const revalidate = 0; // No caching
-export const dynamicParams = true; 
+// ISR: Revalidate every hour (fallback), or on-demand via /api/revalidate
+// Uses 'collections' and 'collection-{slug}' tags for targeted revalidation
+export const revalidate = 3600;
+export const dynamicParams = true;
 
+// Cache API calls to prevent duplicates between generateMetadata and page component
+const validateSlugCached = cache(async (slug) => {
+  try {
+    return await pageService.validateSlug(slug);
+  } catch (error) {
+    console.error('Error validating slug:', error);
+    return null;
+  }
+});
 
+const getPageDataCached = cache(async (slug) => {
+  try {
+    const res = await pageService.getPageBySlug(slug);
+    return res?.data || res?.page || null;
+  } catch (error) {
+    console.error('Error fetching page:', error);
+    return null;
+  }
+});
 
 export async function generateMetadata({ params: rawParams }) {
   const params = await rawParams;
@@ -34,19 +52,12 @@ export async function generateMetadata({ params: rawParams }) {
       alternates: {
         canonical: `https://www.gulbhahar.com/collections/${slug}`,
       },
-      // openGraph: {
-      //   title: `Product ${slug} | Gulbhahar`,
-      //   description: `Explore premium handcrafted product ${slug} at Gulbhahar.`,
-      //   type: "product",
-      //   url: `https://www.gulbhahar.com/collections/${slug}`,
-      //   siteName: "Gulbhahar",
-      //   locale: "en_US",
-      // },
     };
   }
 
   try {
-    const validateRes = await pageService.validateSlug(slug);
+    // Use cached functions to avoid duplicate API calls
+    const validateRes = await validateSlugCached(slug);
     if (!validateRes?.success) {
       return {
         title: "Page Not Found",
@@ -54,9 +65,7 @@ export async function generateMetadata({ params: rawParams }) {
       };
     }
 
-    const res = await pageService.getPageBySlug(slug);
-    const page = res?.data || res?.page;
-
+    const page = await getPageDataCached(slug);
     if (!page) {
       return {
         title: "Page Not Found",
@@ -66,24 +75,19 @@ export async function generateMetadata({ params: rawParams }) {
 
     return {
       title: page.metaTitle || `${slug} | Gulbhahar`,
-      description:
-        page.metaDescription || `Explore curated collections of ${slug} at Gulbhahar.`,
+      description: page.metaDescription || `Explore curated collections of ${slug} at Gulbhahar.`,
       keywords: page.keywords || [slug, "Gulbhahar", "ethnic wear"],
-
       alternates: {
         canonical: `https://www.gulbhahar.com/collections/${slug}`,
       },
-
-      // openGraph: {
-      //   title: page.metaTitle || `${slug} | Gulbhahar`,
-      //   description:
-      //     page.metaDescription ||
-      //     `Explore curated collections of ${slug} at Gulbhahar.`,
-      //   type: "website",
-      //   url: `https://www.gulbhahar.com/collections/${slug}`,
-      //   siteName: "Gulbhahar",
-      //   locale: "en_US",
-      // },
+      openGraph: {
+        title: page.metaTitle || `${slug} | Gulbhahar`,
+        description: page.metaDescription || `Explore curated collections of ${slug} at Gulbhahar.`,
+        type: "website",
+        url: `https://www.gulbhahar.com/collections/${slug}`,
+        siteName: "Gulbhahar",
+        locale: "en_US",
+      },
     };
   } catch (err) {
     return {
@@ -93,39 +97,32 @@ export async function generateMetadata({ params: rawParams }) {
   }
 }
 
-
 export default async function Page({ params: rawParams }) {
   const params = await rawParams;
   const slug = params?.slug;
   if (!slug) redirect("/not-found");
 
-  //Product pattern check
+  // Product pattern check - redirect to product page
   const pattern = /^P\d{11}$/;
-  const isMatching = pattern.test(slug);
-  if (isMatching) {
+  if (pattern.test(slug)) {
     redirect(`/products/${slug}`);
   }
 
-  const validateRes = await pageService.validateSlug(slug);
+  // Use cached functions - same request won't be duplicated from generateMetadata
+  const validateRes = await validateSlugCached(slug);
   if (!validateRes?.success) redirect("/not-found");
 
-  const res = await pageService.getPageBySlug(slug);
-  const page = res?.data || res?.page;
+  const page = await getPageDataCached(slug);
   if (!page) redirect("/not-found");
-  const parentCategory = page.parentCategory[0]
+
+  const parentCategory = page.parentCategory[0];
+
   return (
     <div className="mt-24">
       <Collection parentCategory={parentCategory} slug={slug} />
       <ContentSection page={page} />
-
-      {/* QuickLinks with detected category */}
-      <QuickLinks 
-        parentCategory={parentCategory}
-        currentSlug={slug}
-      />
-
+      <QuickLinks parentCategory={parentCategory} currentSlug={slug} />
       <QuickTag popularTags={page?.keywords || []} />
-
     </div>
   );
 }

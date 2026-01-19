@@ -1,5 +1,5 @@
 import React from 'react'
-import DeliveryShipping from "@/app/delivery-shipping-policy/Component/DeliveryShipping"
+import DeliveryShipping from "@/app/delivery-shipping-policy/components/DeliveryShipping"
 
 
 export async function generateMetadata() {

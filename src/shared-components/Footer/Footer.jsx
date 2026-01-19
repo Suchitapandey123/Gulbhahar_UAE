@@ -5,7 +5,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import { useToast } from "../../hooks/useToast";
-import { useAuth } from "../../Providers/ContextProviders/AuthContext";
+import { useAuth } from "@/providers/ContextProviders/AuthContext";
 import {
   Youtube,
   Twitter,
@@ -21,7 +21,7 @@ import {
   Phone,
 } from "lucide-react";
 
-import { newsletterAPI } from "../../app/api/newsletterApi/newsletterApi";
+import { newsletterAPI } from "../../app/api/newsletter/newsletterApi";
 import { toast } from "sonner";
 // Mock social media icons
 const FooterYouTube = ({ className }) => <Youtube className={className} />;

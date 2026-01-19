@@ -17,8 +17,8 @@ import {
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import SearchPopup from "./SearchPopup";
-import { useAuth } from "../../Providers/ContextProviders/AuthContext"; // 🔥 ADD THIS IMPORT
-import { useCart } from "@/Providers/ContextProviders/CartContext";
+import { useAuth } from "@/providers/ContextProviders/AuthContext"; // 🔥 ADD THIS IMPORT
+import { useCart } from "@/providers/ContextProviders/CartContext";
 import CartPage from "./CartPage";
 import { signOut } from "next-auth/react";
 

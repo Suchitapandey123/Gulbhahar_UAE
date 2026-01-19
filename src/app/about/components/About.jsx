@@ -1,6 +1,6 @@
 "use client"
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import Image from 'next/image';
+import Image from "next/image";
 import { useRef, useState } from 'react';
 
 // Immersive Hero Section

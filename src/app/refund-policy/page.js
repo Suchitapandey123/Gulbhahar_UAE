@@ -1,5 +1,5 @@
 import React from 'react'
-import RefundPolicy from "@/app/refund-policy/Component/RefundPolicy"
+import RefundPolicy from "@/app/refund-policy/components/RefundPolicy"
 
 export async function generateMetadata() {
   return {

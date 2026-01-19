@@ -1,5 +1,5 @@
 import React from 'react'
-import FAQ from './Component/Faq'
+import FAQ from './components/Faq'
 
 export async function generateMetadata() {
   return {

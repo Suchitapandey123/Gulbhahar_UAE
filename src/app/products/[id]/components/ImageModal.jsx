@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import Image from 'next/image';
 import { X, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
-
+import Image from "next/image"
 
 const withVersion = (url, version) => {
   if (!url) return url;
@@ -49,7 +48,6 @@ const ImageModal = ({
 
   const imageVersion =
     product?.updatedAt ||
-    product?.modifiedAt ||
     product?.createdAt ||
     Date.now();
 

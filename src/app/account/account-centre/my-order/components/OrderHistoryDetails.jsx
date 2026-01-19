@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 
 import { orderHistoryAPI } from '../../../../api/order/orderApi';
-import Image from 'next/image';
+import Image from "next/image";
 
 export const OrderHistoryDetails = ({ onOrderClick }) => {
   const [orders, setOrders] = useState([]);

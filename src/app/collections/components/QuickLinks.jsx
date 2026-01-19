@@ -8,7 +8,7 @@ const oldStandardTT = Old_Standard_TT({
 });
 
 async function getQuickLinks(parentCategory, currentSlug) {
-  const { pageService } = await import("../../api/pageService/pageService");
+  const { pageService } = await import("../../api/page-service/pageService");
   const response = await pageService.getQuickLinks(parentCategory, currentSlug);
   
   if (response.success && response.data) {

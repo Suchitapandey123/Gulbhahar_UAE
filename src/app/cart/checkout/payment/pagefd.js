@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 import { CreditCard, Shield, MapPin, User, Package, ShoppingBag, Star, CheckCircle } from "lucide-react";
-import { useCart } from "@/Providers/ContextProviders/CartContext";
+import { useCart } from "@/providers/ContextProviders/CartContext";
 
 const Breadcrumb = () => (
   <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-8">

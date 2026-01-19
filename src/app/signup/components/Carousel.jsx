@@ -1,7 +1,7 @@
 // src/app/signup/components/Carousel.jsx
 "use client"
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
+import Image from "next/image";
 
 const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);

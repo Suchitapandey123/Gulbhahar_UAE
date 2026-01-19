@@ -1,5 +1,5 @@
 import React from "react";
-import Terms from "@/app/terms-condition/Component/Terms";
+import Terms from "@/app/terms-condition/components/Terms";
 
 export async function generateMetadata() {
   return {

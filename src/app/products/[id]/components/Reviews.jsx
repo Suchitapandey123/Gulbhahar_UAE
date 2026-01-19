@@ -6,7 +6,7 @@ import { ReviewStats } from "./reviews/ReviewStats";
 import { RatingBreakdown } from "./reviews/RatingBreakdown";
 import { SortDropdown } from "./reviews/SortDropdown";
 import { ReviewItem } from "./reviews/ReviewItem";
-import { useAuth } from "@/Providers/ContextProviders/AuthContext";
+import { useAuth } from "@/providers/ContextProviders/AuthContext";
 
 export default function Reviews({ variant = "mobile", productId }) {
   const [sortOrder, setSortOrder] = useState("Newest");

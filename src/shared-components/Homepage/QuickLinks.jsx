@@ -5,7 +5,7 @@
 // import { Old_Standard_TT } from "next/font/google";
 // import { useState, useRef, useEffect, use } from "react";
 // import { ArrowUpRight, TrendingUp, Zap } from "lucide-react";
-// import { pageService } from "../../app/api/pageService/pageService";
+// import { pageService } from "../../app/api/page-service/pageService";
 
 // const oldStandardTT = Old_Standard_TT({
 //   weight: "400",
@@ -427,7 +427,7 @@ import Link from "next/link";
 import { Old_Standard_TT } from "next/font/google";
 import { useState, useEffect } from "react";
 import { ArrowUpRight, TrendingUp, Zap } from "lucide-react";
-import { pageService } from "../../app/api/pageService/pageService";
+import { pageService } from "../../app/api/page-service/pageService";
 
 const oldStandardTT = Old_Standard_TT({
   weight: "400",
