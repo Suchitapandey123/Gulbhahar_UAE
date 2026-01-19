@@ -1,5 +1,5 @@
 "use client"
-import Image from 'next/image';
+import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
 import { useEffect, useState, useRef } from 'react';
 import { FaGoogle, FaFacebook, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { FiUser, FiLock, FiMail, FiMapPin, FiPhone, FiShield, FiCheck, FiCamera, FiUpload } from 'react-icons/fi';
@@ -55,7 +55,7 @@ const Carousel = () => {
           index === currentSlide ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
         }`}
       >
-        <Image
+        <OptimizedImage
           src={slide}
           alt={`Carousel slide ${index + 1}`}
           fill
@@ -759,7 +759,7 @@ const SignupPage = () => {
       <div className="bg-white rounded-2xl shadow-xl border border-red-100 p-8 text-center space-y-8">
         <div className="w-32 h-32 bg-red-100 rounded-full flex items-center justify-center mx-auto relative overflow-hidden border-4 border-red-200">
           {previewImage ? (
-            <Image
+            <OptimizedImage
               fill
               priority
               src={previewImage} 

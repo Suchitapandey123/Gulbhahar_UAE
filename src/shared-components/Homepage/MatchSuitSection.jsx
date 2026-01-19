@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
 import Link from "next/link";
 
 export default function MatchSuitSection() {
@@ -52,7 +52,7 @@ export default function MatchSuitSection() {
         {suitMatchData.map((item, i) => (
           <Link key={i} href={item.link}>
             <div className="relative group cursor-pointer aspect-[3/4] rounded-lg overflow-hidden">
-              <Image
+              <OptimizedImage
                 src={item.img}
                 alt={item.label}
                 fill

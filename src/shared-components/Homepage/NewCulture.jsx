@@ -178,7 +178,7 @@
 //             className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-light bg-gradient-to-r from-amber-800 via-orange-700 to-red-700 bg-clip-text text-transparent mb-6 md:mb-8 tracking-wide"
 //           >
 //             <div className="flex items-center justify-center mb-4 md:mb-6">
-//               <Image
+//               <OptimizedImage
 //                 src={culture}
 //                 alt="Cultural Heritage"
 //                 width={600}
@@ -234,7 +234,7 @@
 //               >
 //                 <div className={`relative w-full h-full bg-gradient-to-br ${heritageElements[0].color} rounded-3xl overflow-hidden shadow-2xl ${heritageElements[0].accent} border-2`}>
 //                   <div className="absolute inset-0">
-//                     <Image
+//                     <OptimizedImage
 //                       src={heritageElements[0].image}
 //                       alt={heritageElements[0].title}
 //                       fill
@@ -275,7 +275,7 @@
 //               >
 //                 <div className={`relative w-full h-full bg-gradient-to-br ${heritageElements[1].color} rounded-2xl overflow-hidden shadow-xl ${heritageElements[1].accent} border-2`}>
 //                   <div className="absolute inset-0">
-//                     <Image
+//                     <OptimizedImage
 //                       src={heritageElements[1].image}
 //                       alt={heritageElements[1].title}
 //                       fill
@@ -309,7 +309,7 @@
 //               >
 //                 <div className={`relative w-full h-full bg-gradient-to-br ${heritageElements[2].color} rounded-2xl overflow-hidden shadow-xl ${heritageElements[2].accent} border-2`}>
 //                   <div className="absolute inset-0">
-//                     <Image
+//                     <OptimizedImage
 //                       src={heritageElements[2].image}
 //                       alt={heritageElements[2].title}
 //                       fill
@@ -342,7 +342,7 @@
 //               >
 //                 <div className={`relative w-full h-full bg-gradient-to-br ${heritageElements[3].color} rounded-2xl overflow-hidden shadow-xl ${heritageElements[3].accent} border-2`}>
 //                   <div className="absolute inset-0">
-//                     <Image
+//                     <OptimizedImage
 //                       src={heritageElements[3].image}
 //                       alt={heritageElements[3].title}
 //                       fill
@@ -377,7 +377,7 @@
 //               >
 //                 <div className={`relative w-full h-full bg-gradient-to-br ${heritageElements[4].color} rounded-2xl overflow-hidden shadow-xl ${heritageElements[4].accent} border-2`}>
 //                   <div className="absolute inset-0">
-//                     <Image
+//                     <OptimizedImage
 //                       src={heritageElements[4].image}
 //                       alt={heritageElements[4].title}
 //                       fill
@@ -417,7 +417,7 @@
 //           className={`relative aspect-[4/3] bg-gradient-to-br ${element.color} rounded-2xl overflow-hidden border-2 ${element.accent}`}
 //         >
 //           <div className="absolute inset-0">
-//             <Image
+//             <OptimizedImage
 //               src={element.image}
 //               alt={element.title}
 //               fill
@@ -451,7 +451,7 @@
 //           className={`relative aspect-[3/4] bg-gradient-to-br ${element.color} rounded-2xl overflow-hidden shadow-xl border-2 ${element.accent}`}
 //         >
 //           <div className="absolute inset-0">
-//             <Image
+//             <OptimizedImage
 //               src={element.image}
 //               alt={element.title}
 //               fill
@@ -509,7 +509,7 @@
 'use client'
 
 import React from 'react';
-import Image from 'next/image';
+import OptimizedImage from '@/shared-components/cloudfront/OptmizedImage';
 import culture from "../../../public/home-page/culture.svg";
 import Link from 'next/link';
 
@@ -587,7 +587,7 @@ const LuxuryCulture = () => {
         <div className="text-center mb-12 md:mb-20">
           <h2 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-light bg-gradient-to-r from-amber-800 via-orange-700 to-red-700 bg-clip-text text-transparent mb-6 md:mb-8 tracking-wide">
             <div className="flex items-center justify-center mb-4 md:mb-6">
-              <Image
+              <OptimizedImage
                 src={culture}
                 alt="Cultural Heritage"
                 width={600}
@@ -631,7 +631,7 @@ const LuxuryCulture = () => {
                   key={el.id}
                   className={`col-span-${i === 0 || i === 3 || i === 4 ? 6 : 3} row-span-4 relative bg-gradient-to-br ${el.color} rounded-2xl overflow-hidden border-2 ${el.accent}`}
                 >
-                  <Image
+                  <OptimizedImage
                     src={el.image}
                     alt={el.title}
                     fill
@@ -654,7 +654,7 @@ const LuxuryCulture = () => {
                   key={el.id}
                   className={`relative aspect-[4/3] bg-gradient-to-br ${el.color} rounded-2xl overflow-hidden border-2 ${el.accent}`}
                 >
-                  <Image
+                  <OptimizedImage
                     src={el.image}
                     alt={el.title}
                     fill
@@ -677,7 +677,7 @@ const LuxuryCulture = () => {
                   key={el.id}
                   className={`relative aspect-[3/4] bg-gradient-to-br ${el.color} rounded-2xl overflow-hidden border-2 ${el.accent}`}
                 >
-                  <Image
+                  <OptimizedImage
                     src={el.image}
                     alt={el.title}
                     fill

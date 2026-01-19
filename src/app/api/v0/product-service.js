@@ -50,7 +50,7 @@ const productApi = {
       }
 
       const data = await response.json();
-      console.log("productById API data:", data);
+      // console.log("productById API data:", data);
       return data;
     } catch (error) {
       console.error('Error fetching product by ID:', error);
@@ -159,7 +159,7 @@ const productApi = {
   
   getProductsByCategory: async (categoryName) => {
     try {
-      console.log("API CALL - Fetching products for category:", categoryName);
+      // console.log("API CALL - Fetching products for category:", categoryName);
 
       const response = await fetch(`${API_BASE_URL}/api/products/get-all-product-by-category`, {
         method: 'POST',
@@ -174,18 +174,18 @@ const productApi = {
         },
       });
 
-      console.log("API Response Status:", response.status);
+      // console.log("API Response Status:", response.status);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log("API RAW RESPONSE:", data);
+      // console.log("API RAW RESPONSE:", data);
 
       // Handle different response structures
       const products = data?.products || data?.data || data;
-      console.log("API PRODUCTS for", categoryName, ":", Array.isArray(products) ? products.length : 0, "products");
+      // console.log("API PRODUCTS for", categoryName, ":", Array.isArray(products) ? products.length : 0, "products");
 
       return Array.isArray(products) ? products : [];
     } catch (error) {

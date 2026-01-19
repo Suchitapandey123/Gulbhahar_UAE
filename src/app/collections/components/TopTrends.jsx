@@ -3,7 +3,7 @@ import MB9 from "../../../../public/home-page/showcase-001-optimized.webp";
 import MB7 from "../../../../public/home-page/showcase-002-optimized.webp";
 import MB8 from "../../../../public/home-page/showcase-003-optimized.webp";
 import MB2 from "../../../../public/home-page/showcase-004-optimized.webp";
-import Image from "next/image";
+import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
 
 const slides = [MB2, MB7, MB8, MB9];
 const TopTrends = () => {
@@ -25,7 +25,7 @@ const TopTrends = () => {
                 className="bg-white shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-red-200 group"
               >
                 <div className="relative w-full h-[510px] xs:h-[470px] overflow-hidden">
-                  <Image
+                  <OptimizedImage
                   priority
                     width={500}
                     height={500}

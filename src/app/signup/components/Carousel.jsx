@@ -1,7 +1,7 @@
 // src/app/signup/components/Carousel.jsx
 "use client"
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
+import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
 
 const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -31,7 +31,7 @@ const Carousel = () => {
               index === currentSlide ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
             }`}
           >
-            <Image
+            <OptimizedImage
               src={slide}
               alt={`Carousel slide ${index + 1}`}
               fill

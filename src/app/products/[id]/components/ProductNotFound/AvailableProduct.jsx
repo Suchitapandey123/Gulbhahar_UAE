@@ -9,7 +9,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 
-import Image from "next/image";
+import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
 import { useToast } from "@/hooks/useToast";
 import { useCart } from "@/providers/ContextProviders/CartContext";
 import productApi from "@/app/api/v0/product-service";
@@ -796,7 +796,7 @@ const handleAddToCart = async (e, item) => {
                           <div className="relative w-full h-full bg-gray-100">
                             {/* Stack all images and show current one with fade */}
                             {imagesToShow.map((image, idx) => (
-                              <Image
+                              <OptimizedImage
                                 width={200}
                                 height={450}
                                 priority

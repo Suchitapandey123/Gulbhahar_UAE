@@ -1,7 +1,7 @@
 "use client";
 import { useRef, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
 import { ShoppingBag } from "lucide-react";
 
 export default function ProductCard({
@@ -67,7 +67,7 @@ export default function ProductCard({
         <div className="relative w-full h-full bg-white">
           {imagesToShow.map((image, idx) => (
 
-            <Image
+            <OptimizedImage
               key={idx}
               src={image || "/about/lal-ishq-1.jpg"}
               alt={`${item.title || item.name || "Product"} - ${idx + 1}`}

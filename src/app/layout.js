@@ -10,7 +10,7 @@ import { CartProvider } from "@/providers/ContextProviders/CartContext";
 import SessionWrapper from "@/providers/GoogleSessionProvider/SessionWrapper";
 import { Toaster } from "sonner";
 import RouteChangeTracker from "@/app/components/RouteChangeTracker"
-import Image from "next/image";
+import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
 
 
 // Configure fonts
@@ -219,7 +219,7 @@ export default function RootLayout({ children }) {
               src="https://www.facebook.com/tr?id=1557129638938241&ev=PageView&noscript=1"
               alt="facebook image"
             />
-            {/* <Image
+            {/* <OptimizedImage
               height="1"
               width="1"
               style={{ display: 'none' }}

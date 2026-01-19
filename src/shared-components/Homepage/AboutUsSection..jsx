@@ -1,6 +1,6 @@
 // "use client";
 
-// import Image from "next/image";
+// import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
 // import Link from "next/link";
 // import { useRef } from "react";
 // import { motion, useInView } from "framer-motion";
@@ -113,7 +113,7 @@
 //                 } order-1 lg:order-none`}
 //               >
 //                 <div className="relative aspect-[3/4] w-full h-[300px] xs:h-[350px] sm:h-[400px] md:h-[450px] lg:h-[500px] xl:h-[550px] 2xl:h-[600px] overflow-hidden rounded-lg sm:rounded-xl lg:rounded-2xl xl:rounded-3xl shadow-2xl">
-//                   <Image
+//                   <OptimizedImage
 //                     src={story.image}
 //                     alt={story.title}
 //                     fill
@@ -222,7 +222,7 @@
 
 "use client";
 
-import Image from "next/image";
+import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
@@ -283,7 +283,7 @@ export default function AlternatingAbout() {
                 } order-1 lg:order-none`}
               >
                 <div className="relative aspect-[3/4] w-full h-[300px] xs:h-[350px] sm:h-[400px] md:h-[450px] lg:h-[500px] xl:h-[550px] 2xl:h-[600px] overflow-hidden rounded-lg sm:rounded-xl lg:rounded-2xl xl:rounded-3xl shadow-2xl">
-                  <Image
+                  <OptimizedImage
                     src={story.image}
                     alt={story.title}
                     fill

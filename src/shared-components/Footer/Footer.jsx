@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
 import Link from "next/link";
 import React, { useState } from "react";
 import { usePathname } from "next/navigation";
@@ -305,7 +305,7 @@ const { showToast, ToastContainer } = useToast();
           <div className="lg:col-span-4 text-center lg:text-left">
             <div className="space-y-4 sm:space-y-6">
               <Link href="/" className="inline-block">
-                <Image
+                <OptimizedImage
                   src="/footerlogo.png"
                   alt="Gulbhahar Logo"
                   width={300}
@@ -458,7 +458,7 @@ const { showToast, ToastContainer } = useToast();
             <div>
               <p className="text-xl font-bold text-gray-900 mb-3">We Accept</p>
               <div className="flex space-x-2 items-center justify-center flex-wrap gap-2 lg:justify-start">
-                <Image
+                <OptimizedImage
                   src="/payment-cards/master-card-icon.png"
                   alt="Mastercard"
                   width={96}
@@ -466,7 +466,7 @@ const { showToast, ToastContainer } = useToast();
                   height={32}
                   className="h-12 w-12 object-contain"
                 />
-                <Image
+                <OptimizedImage
                   src="/payment-cards/visa-icon.png"
                   alt="Visa"
                   priority
@@ -474,7 +474,7 @@ const { showToast, ToastContainer } = useToast();
                   height={32}
                   className="h-10 w-12 object-contain"
                 />
-                <Image
+                <OptimizedImage
                   src="/payment-cards/bhim-upi.png"
                   alt="UPI"
                   width={48}

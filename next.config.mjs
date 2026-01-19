@@ -2,8 +2,6 @@
 const nextConfig = {
   allowedDevOrigins: ['local-origin.dev', '*.local-origin.dev'],
 
-  // ISR-friendly caching headers
-  // Pages will be cached and revalidated via on-demand revalidation (POST /api/revalidate)
   async headers() {
     return [
       {
@@ -57,6 +55,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "d21ojmskh8ksuv.cloudfront.net", // CloudFront CDN
       },
       {
         protocol:"https",

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudFront Test - Gulbhahar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #991b1b;
+            border-bottom: 3px solid #991b1b;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+        }
+        .test-section h2 {
+            color: #374151;
+            margin-top: 0;
+        }
+        .image-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .image-box {
+            border: 1px solid #d1d5db;
+            padding: 15px;
+            border-radius: 8px;
+            background: #f9fafb;
+        }
+        .image-box img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .status {
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .success { background: #d1fae5; color: #065f46; }
+        .error { background: #fee2e2; color: #991b1b; }
+        .loading { background: #fef3c7; color: #92400e; }
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .metric {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #991b1b;
+        }
+        .metric-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+        code {
+            background: #1f2937;
+            color: #10b981;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 13px;
+        }
+        .info {
+            background: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .btn {
+            background: #991b1b;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        .btn:hover { background: #7f1d1d; }
+        .btn:disabled { background: #9ca3af; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 CloudFront CDN Test - Gulbhahar</h1>
+
+        <div class="info">
+            <strong>CloudFront Distribution:</strong> <code>d21ojmskh8ksuv.cloudfront.net</code><br>
+            <strong>Status:</strong> <span style="color: #059669; font-weight: bold;">✅ Deployed and Active</span>
+        </div>
+
+        <div class="test-section">
+            <h2>📊 Performance Comparison</h2>
+            <p>Click the button below to test image loading speed from both S3 and CloudFront.</p>
+            <button class="btn" onclick="runTest()" id="testBtn">Run Performance Test</button>
+
+            <div class="image-container" style="margin-top: 20px;">
+                <!-- S3 Direct -->
+                <div class="image-box">
+                    <h3>🗄️ Direct from S3</h3>
+                    <img id="s3-image" alt="S3 Image" style="display: none;">
+                    <div id="s3-status" class="status loading">Waiting...</div>
+                    <div class="metrics" id="s3-metrics"></div>
+                </div>
+
+                <!-- CloudFront -->
+                <div class="image-box">
+                    <h3>⚡ Via CloudFront CDN</h3>
+                    <img id="cf-image" alt="CloudFront Image" style="display: none;">
+                    <div id="cf-status" class="status loading">Waiting...</div>
+                    <div class="metrics" id="cf-metrics"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>📈 Results Summary</h2>
+            <div id="summary" class="metrics">
+                <p style="color: #6b7280;">Click "Run Performance Test" to see results</p>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>💡 How CloudFront Helps</h2>
+            <ul style="line-height: 1.8;">
+                <li><strong>First Request (Cache Miss):</strong> CloudFront fetches from S3 and caches at edge</li>
+                <li><strong>Subsequent Requests (Cache Hit):</strong> Served instantly from nearest edge location</li>
+                <li><strong>Your Edge Location:</strong> Delhi (DEL51-P7) - Images cached locally!</li>
+                <li><strong>Expected Improvement:</strong> 2-10x faster after initial cache</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const S3_URL = 'https://gulbahar-backend.s3.ap-south-1.amazonaws.com/public/banner-image.jpg';
+        const CF_URL = 'https://d21ojmskh8ksuv.cloudfront.net/public/banner-image.jpg';
+
+        async function runTest() {
+            const btn = document.getElementById('testBtn');
+            btn.disabled = true;
+            btn.textContent = 'Testing...';
+
+            // Reset UI
+            document.getElementById('s3-status').className = 'status loading';
+            document.getElementById('s3-status').textContent = 'Loading...';
+            document.getElementById('cf-status').className = 'status loading';
+            document.getElementById('cf-status').textContent = 'Loading...';
+            document.getElementById('s3-metrics').innerHTML = '';
+            document.getElementById('cf-metrics').innerHTML = '';
+
+            // Add cache buster to get fresh timing
+            const cacheBuster = '?t=' + Date.now();
+
+            // Test S3
+            const s3Time = await testImage('s3', S3_URL + cacheBuster);
+
+            // Test CloudFront
+            const cfTime = await testImage('cloudfront', CF_URL + cacheBuster);
+
+            // Show summary
+            if (s3Time && cfTime) {
+                const improvement = Math.round(((s3Time - cfTime) / s3Time) * 100);
+                const speedup = (s3Time / cfTime).toFixed(2);
+
+                document.getElementById('summary').innerHTML = `
+                    <div class="metric">
+                        <div class="metric-value" style="color: ${improvement > 0 ? '#059669' : '#991b1b'}">${improvement > 0 ? improvement : 0}%</div>
+                        <div class="metric-label">${improvement > 0 ? 'Faster' : 'Similar'}</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">${speedup}x</div>
+                        <div class="metric-label">Speed Ratio</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value" style="color: #059669">${cfTime}ms</div>
+                        <div class="metric-label">CloudFront</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">${s3Time}ms</div>
+                        <div class="metric-label">S3 Direct</div>
+                    </div>
+                `;
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Run Test Again';
+        }
+
+        function testImage(source, url) {
+            return new Promise((resolve) => {
+                const img = document.getElementById(source === 's3' ? 's3-image' : 'cf-image');
+                const statusEl = document.getElementById(source === 's3' ? 's3-status' : 'cf-status');
+                const metricsEl = document.getElementById(source === 's3' ? 's3-metrics' : 'cf-metrics');
+
+                const startTime = performance.now();
+
+                img.onload = function() {
+                    const loadTime = Math.round(performance.now() - startTime);
+                    img.style.display = 'block';
+                    statusEl.className = 'status success';
+                    statusEl.textContent = '✅ Loaded Successfully';
+                    metricsEl.innerHTML = `
+                        <div class="metric">
+                            <div class="metric-value">${loadTime}ms</div>
+                            <div class="metric-label">Load Time</div>
+                        </div>
+                    `;
+                    resolve(loadTime);
+                };
+
+                img.onerror = function() {
+                    statusEl.className = 'status error';
+                    statusEl.textContent = '❌ Failed to Load';
+                    resolve(null);
+                };
+
+                img.src = url;
+            });
+        }
+    </script>
+</body>
+</html>

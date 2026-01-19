@@ -15,7 +15,7 @@ import {
   Eye,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import Image from "next/image";
+import OptimizedImage from "@/shared-components/cloudfront/OptmizedImage";
 import SearchPopup from "./SearchPopup";
 import { useAuth } from "@/providers/ContextProviders/AuthContext"; // 🔥 ADD THIS IMPORT
 import { useCart } from "@/providers/ContextProviders/CartContext";
@@ -344,7 +344,7 @@ const Navbar = () => {
         <div
           className={`${size} ${className} relative overflow-hidden rounded-full bg-gray-100 flex-shrink-0`}
         >
-          <Image
+          <OptimizedImage
             src={iimageUrl?.profilePicture || userData.imageUrl}
             alt={`${userData.firstName || "User"}'s profile`}
             fill
@@ -601,7 +601,7 @@ const Navbar = () => {
                     opacity-100 translate-y-0
                   `}
                   >
-                    <Image
+                    <OptimizedImage
                       src="/logo.png"
                       alt="Logo"
                       fill
@@ -1204,7 +1204,7 @@ const Navbar = () => {
           {/* Mobile Menu Header */}
           <div className="flex items-center justify-between p-3 xs:p-4 sm:p-6 border-b border-gray-100">
             <div className=" w-[70%] flex ">
-            <Image
+            <OptimizedImage
               src="/ful-gulbhaharlogo.png"
               alt="Brand Logo"
               width={80}
