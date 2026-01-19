@@ -7,7 +7,6 @@ const productApi = {
   getAllProduct: async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/new-api/products/get-all-product`, {
-      const response = await fetch(`${API_BASE_URL}/new-api/products/get-all-product`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
