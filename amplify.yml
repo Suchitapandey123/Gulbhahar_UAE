@@ -8,8 +8,8 @@ frontend:
         - corepack prepare pnpm@latest --activate
 
         # Clean build cache to ensure fresh builds
-        - rm -rf .next/cache
-        - rm -rf node_modules/.cache
+        - rm -rf .next
+        - rm -rf node_modules
 
         # Install dependencies with pnpm
         - pnpm install --frozen-lockfile
@@ -19,11 +19,12 @@ frontend:
         - env | grep NEXTAUTH || true
         - env | grep GOOGLE || true
 
-        # Write them into .env for Next.js
+        # Create .env file for Next.js (overwrite to prevent duplicates)
+        - echo "GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" > .env
+        - echo "GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET" >> .env
         - echo "NEXTAUTH_URL=$NEXTAUTH_URL" >> .env
         - echo "NEXTAUTH_SECRET=$NEXTAUTH_SECRET" >> .env
-        - echo "GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" >> .env
-        - echo "GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET" >> .env
+        - echo NEXT_PUBLIC_CLOUDFRONT_DOMAIN=d21ojmskh8ksuv.cloudfront.net" >> .env
 
         # Debug: show .env contents
         - echo "🔍 Final .env:"
