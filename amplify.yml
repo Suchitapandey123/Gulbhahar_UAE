@@ -24,6 +24,7 @@ frontend:
         - echo "GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET" >> .env
         - echo "NEXTAUTH_URL=$NEXTAUTH_URL" >> .env
         - echo "NEXTAUTH_SECRET=$NEXTAUTH_SECRET" >> .env
+        - echo NEXT_PUBLIC_CLOUDFRONT_DOMAIN=d21ojmskh8ksuv.cloudfront.net" >> .env
 
         # Debug: show .env contents
         - echo "🔍 Final .env:"
