@@ -19,11 +19,11 @@ frontend:
         - env | grep NEXTAUTH || true
         - env | grep GOOGLE || true
 
-        # Write them into .env for Next.js
+        # Create .env file for Next.js (overwrite to prevent duplicates)
+        - echo "GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" > .env
+        - echo "GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET" >> .env
         - echo "NEXTAUTH_URL=$NEXTAUTH_URL" >> .env
         - echo "NEXTAUTH_SECRET=$NEXTAUTH_SECRET" >> .env
-        - echo "GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" >> .env
-        - echo "GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET" >> .env
 
         # Debug: show .env contents
         - echo "🔍 Final .env:"

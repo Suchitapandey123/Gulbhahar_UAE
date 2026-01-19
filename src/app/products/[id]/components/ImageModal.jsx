@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { X, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
-import Image from "@/shared-components/cloudfront/OptmizedImage"
+import Image from "next/image"
 
 const withVersion = (url, version) => {
   if (!url) return url;
