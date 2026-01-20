@@ -5,17 +5,9 @@ import { useRouter } from "next/navigation";
 import {
   ShoppingCart,
   Heart,
-  Star,
-  ThumbsUp,
-  ThumbsDown,
-  User,
-  Package,
-  Truck,
   ChevronRight,
   Home,
   X,
-  ChevronLeft,
-  ChevronRight as ChevronRightIcon,
   ZoomIn,
   ShoppingBag,
   MapPin,
@@ -102,7 +94,7 @@ const SIZE_CONFIGS = {
 const generateSizeRange = (inventory, category, availableSizes = []) => {
   if (!inventory || inventory.length === 0) return [];
   
-  const categoryKey = category?.toLowerCase();
+  const categoryKey = category[0]
   const config = SIZE_CONFIGS[categoryKey] || SIZE_CONFIGS.default;
   
   // For bags, use product.sizes directly
@@ -239,7 +231,9 @@ export function ProductClient({ product, similarProducts }) {
   const modalRef = useRef(null);
 
   // Get category configuration
-  const categoryKey = product.category?.toLowerCase();
+// console.log(product.category)
+  const categoryKey = product.category[0];
+  
   const categoryConfig = SIZE_CONFIGS[categoryKey] || SIZE_CONFIGS.default;
 
   // Process available colors with hexcodes

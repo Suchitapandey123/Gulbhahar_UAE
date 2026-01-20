@@ -33,28 +33,18 @@ export default function CollectionsPage({ collections = [] }) {
     : collections.filter(collection => {
         const parentCategories = collection.parentCategory || [];
         const categoryField = collection.category || "";
-
+console.log(categoryField)
         // Check parentCategory array first
         const matchesParentCategory = parentCategories.some(
           cat => cat?.toLowerCase().trim() === selectedCategory.toLowerCase().trim()
         );
 
+        
         // Fallback: Check category field (for old products without parentCategory)
         const matchesCategoryField = categoryField.toLowerCase().includes(selectedCategory.toLowerCase());
 
         return matchesParentCategory || matchesCategoryField;
       });
-
-  // Debug: Log filtered results
-  useEffect(() => {
-    console.log("Selected category:", selectedCategory);
-    console.log("Filtered count:", filteredCollections.length);
-    console.log("Filtered items:", filteredCollections.map(c => ({
-      name: c.name,
-      parentCategory: c.parentCategory
-    })));
-  }, [selectedCategory, filteredCollections]);
-
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -91,8 +81,7 @@ export default function CollectionsPage({ collections = [] }) {
 
     return collections.filter(collection => {
       const parentCategories = collection.parentCategory || [];
-      const categoryField = collection.category || "";
-
+      const categoryField = collection.category[0] || "";
       // Check parentCategory array
       const matchesParentCategory = parentCategories.some(
         cat => cat?.toLowerCase().trim() === categoryId.toLowerCase().trim()
