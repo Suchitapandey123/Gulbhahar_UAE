@@ -1,0 +1,347 @@
+"use client";
+
+import { ChevronDown, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+
+interface FilterOption {
+  label: string;
+  value: string;
+}
+
+interface CollectionFiltersProps {
+  onFilterChange?: (filters: {
+    size?: string;
+    color?: string;
+    collections?: string;
+    season?: string;
+    fabric?: string;
+    price?: string;
+    sortBy?: string;
+  }) => void;
+  resultCount?: number;
+}
+
+interface DropdownFilterProps {
+  label: string;
+  options: FilterOption[];
+  value: string;
+  onChange: (value: string) => void;
+  isOpen: boolean;
+  onToggle: () => void;
+}
+
+const DropdownFilter: React.FC<DropdownFilterProps> = ({
+  label,
+  options,
+  value,
+  onChange,
+  isOpen,
+  onToggle,
+}) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        onToggle();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isOpen, onToggle]);
+
+  const selectedLabel = options.find((opt) => opt.value === value)?.label;
+  const hasSelection = value !== "all";
+
+  return (
+    <div ref={containerRef} className=" relative ">
+      <button
+        onClick={onToggle}
+        className={`flex items-center gap-2 px-3 py-2  bg-slate-200 transition-all duration-200 whitespace-nowrap  text-sm ${
+          isOpen
+            ? "border-red-400 shadow-md bg-red-50"
+            : hasSelection
+            ? "border-red-300 bg-red-50"
+            : "border-gray-300 hover:border-gray-400 hover:shadow-sm"
+        }`}
+      >
+        <span className="font-medium text-gray-900">
+          {label}
+          {hasSelection ? `: ${selectedLabel}` : ""}
+        </span>
+        <ChevronDown
+          size={16}
+          className={`text-gray-700 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+        />
+      </button>
+
+      {isOpen && (
+        <div className="absolute top-full left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-xl max-h-64 overflow-y-auto z-50">
+          {options.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => {
+                onChange(option.value);
+                onToggle();
+              }}
+              className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 transition-all duration-150 ${
+                value === option.value
+                  ? "bg-red-50 text-red-900 font-semibold"
+                  : "text-gray-700"
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default function CategoryCollection_Filters({
+  onFilterChange,
+  resultCount = 0,
+}: CollectionFiltersProps) {
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [filters, setFilters] = useState({
+    size: "all",
+    color: "all",
+    collections: "all",
+    season: "all",
+    fabric: "all",
+    price: "all",
+    sortBy: "relevance",
+  });
+
+  const handleFilterChange = (key: string, value: string) => {
+    const newFilters = { ...filters, [key]: value };
+    setFilters(newFilters);
+    onFilterChange?.(newFilters);
+  };
+
+  const clearAllFilters = () => {
+    const resetFilters = {
+      size: "all",
+      color: "all",
+      collections: "all",
+      season: "all",
+      fabric: "all",
+      price: "all",
+      sortBy: "relevance",
+    };
+    setFilters(resetFilters);
+    onFilterChange?.(resetFilters);
+  };
+
+  const removeFilter = (key: string) => {
+    const newFilters = { ...filters, [key]: "all" };
+    setFilters(newFilters);
+    onFilterChange?.(newFilters);
+  };
+
+  const toggleDropdown = (dropdownName: string) => {
+    setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
+  };
+
+  const sizeOptions: FilterOption[] = [
+    { label: "All Sizes", value: "all" },
+    { label: "35", value: "35" },
+    { label: "36", value: "36" },
+    { label: "37", value: "37" },
+    { label: "38", value: "38" },
+    { label: "39", value: "39" },
+    { label: "40", value: "40" },
+    { label: "41", value: "41" },
+  ];
+
+  const colorOptions: FilterOption[] = [
+    { label: "All Colors", value: "all" },
+    { label: "Red", value: "red" },
+    { label: "Blue", value: "blue" },
+    { label: "Green", value: "green" },
+    { label: "Black", value: "black" },
+    { label: "White", value: "white" },
+    { label: "Gold", value: "gold" },
+    { label: "Silver", value: "silver" },
+    { label: "Pink", value: "pink" },
+    { label: "Maroon", value: "maroon" },
+  ];
+
+  const collectionsOptions: FilterOption[] = [
+    { label: "All Collections", value: "all" },
+    { label: "Juttis", value: "juttis" },
+    { label: "Suits", value: "suits" },
+    { label: "Sarees", value: "sarees" },
+  ];
+
+  const seasonOptions: FilterOption[] = [
+    { label: "All Seasons", value: "all" },
+    { label: "Summer", value: "summer" },
+    { label: "Winter", value: "winter" },
+    { label: "Monsoon", value: "monsoon" },
+    { label: "Spring", value: "spring" },
+    { label: "All Season", value: "all-season" },
+  ];
+
+  const fabricOptions: FilterOption[] = [
+    { label: "All Fabrics", value: "all" },
+    { label: "Silk", value: "silk" },
+    { label: "Cotton", value: "cotton" },
+    { label: "Velvet", value: "velvet" },
+    { label: "Leather", value: "leather" },
+    { label: "Embroidered", value: "embroidered" },
+    { label: "Handcrafted", value: "handcrafted" },
+  ];
+
+  const priceOptions: FilterOption[] = [
+    { label: "All Prices", value: "all" },
+    { label: "Under ₹1,000", value: "0-1000" },
+    { label: "₹1,000 - ₹2,000", value: "1000-2000" },
+    { label: "₹2,000 - ₹3,000", value: "2000-3000" },
+    { label: "₹3,000 - ₹5,000", value: "3000-5000" },
+    { label: "₹5,000 - ₹10,000", value: "5000-10000" },
+    { label: "Above ₹10,000", value: "10000-999999" },
+  ];
+
+  const sortOptions: FilterOption[] = [
+    { label: "Relevance", value: "relevance" },
+    { label: "Price: Low to High", value: "price-asc" },
+    { label: "Price: High to Low", value: "price-desc" },
+    { label: "Newest", value: "newest" },
+  ];
+
+  const allFilterOptions: Record<string, FilterOption[]> = {
+    size: sizeOptions,
+    color: colorOptions,
+    collections: collectionsOptions,
+    season: seasonOptions,
+    fabric: fabricOptions,
+    price: priceOptions,
+  };
+
+  const getActiveFilters = () => {
+    const active: Array<{ key: string; label: string }> = [];
+
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== "all" && key !== "sortBy") {
+        const option = allFilterOptions[key]?.find((opt) => opt.value === value);
+        if (option) {
+          active.push({ key, label: option.label });
+        }
+      }
+    });
+    return active;
+  };
+
+  const activeFilters = getActiveFilters();
+
+  return (
+    <div className="w-full bg-white">
+      <div className="max-w-[1800px] mx-auto">
+        {/* Filters Row */}
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 py-4">
+          <DropdownFilter
+            label="Size"
+            options={sizeOptions}
+            value={filters.size}
+            onChange={(value) => handleFilterChange("size", value)}
+            isOpen={openDropdown === "size"}
+            onToggle={() => toggleDropdown("size")}
+          />
+
+          <DropdownFilter
+            label="Color"
+            options={colorOptions}
+            value={filters.color}
+            onChange={(value) => handleFilterChange("color", value)}
+            isOpen={openDropdown === "color"}
+            onToggle={() => toggleDropdown("color")}
+          />
+
+          <DropdownFilter
+            label="Season"
+            options={seasonOptions}
+            value={filters.season}
+            onChange={(value) => handleFilterChange("season", value)}
+            isOpen={openDropdown === "season"}
+            onToggle={() => toggleDropdown("season")}
+          />
+
+          <DropdownFilter
+            label="Fabric"
+            options={fabricOptions}
+            value={filters.fabric}
+            onChange={(value) => handleFilterChange("fabric", value)}
+            isOpen={openDropdown === "fabric"}
+            onToggle={() => toggleDropdown("fabric")}
+          />
+
+          <DropdownFilter
+            label="Collections"
+            options={collectionsOptions}
+            value={filters.collections}
+            onChange={(value) => handleFilterChange("collections", value)}
+            isOpen={openDropdown === "collections"}
+            onToggle={() => toggleDropdown("collections")}
+          />
+
+          <DropdownFilter
+            label="Price"
+            options={priceOptions}
+            value={filters.price}
+            onChange={(value) => handleFilterChange("price", value)}
+            isOpen={openDropdown === "price"}
+            onToggle={() => toggleDropdown("price")}
+          />
+
+          {/* Sort - pushed to right on larger screens */}
+          <div className="ml-auto">
+            <DropdownFilter
+              label="Sort"
+              options={sortOptions}
+              value={filters.sortBy}
+              onChange={(value) => handleFilterChange("sortBy", value)}
+              isOpen={openDropdown === "sort"}
+              onToggle={() => toggleDropdown("sort")}
+            />
+          </div>
+        </div>
+
+        {/* Active Filters and Result Count */}
+        {(activeFilters.length > 0 || resultCount > 0) && (
+          <div className="pb-4 flex flex-wrap items-center gap-2">
+            {resultCount > 0 && (
+              <span className="text-sm text-gray-600 mr-2">
+                {resultCount} {resultCount === 1 ? "Product" : "Products"}
+              </span>
+            )}
+
+            {activeFilters.map((filter) => (
+              <button
+                key={filter.key}
+                onClick={() => removeFilter(filter.key)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-800 rounded-full text-sm hover:bg-red-100 transition-colors"
+              >
+                <span>{filter.label}</span>
+                <X size={14} />
+              </button>
+            ))}
+
+            {activeFilters.length > 1 && (
+              <button
+                onClick={clearAllFilters}
+                className="text-sm text-gray-500 hover:text-gray-700 underline ml-2"
+              >
+                Clear all
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

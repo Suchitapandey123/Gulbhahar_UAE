@@ -1,10 +1,10 @@
-import React, { Suspense } from 'react'
-import CollectionPage from '@/app/collections/components/Collection'
-import { GulbharLoader } from '@/shared-components/loader/GulbharLoader'
+import CollectionPage from '@/app/collections/components/Collection';
+import LocalCollection from '@/modules/(gulbhahar)/collections/Local';
+
 
 // ISR: Revalidate every hour (fallback), or on-demand via /api/revalidate
 // Uses 'collections' tag for targeted revalidation
-export const revalidate = 3600;
+// export const revalidate = 3600;
 
 export async function generateMetadata() {
   return {
@@ -27,8 +27,8 @@ export async function generateMetadata() {
 
 export default function Page() {
   return (
-    <Suspense fallback={<GulbharLoader />}>
-      <CollectionPage />
-    </Suspense>
+    <>
+      <LocalCollection />
+    </>
   )
 }

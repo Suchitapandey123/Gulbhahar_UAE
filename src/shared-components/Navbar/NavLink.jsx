@@ -1,4 +1,3 @@
-
 import { ChevronDown } from "lucide-react";
 
 const NavLink = ({
@@ -46,25 +45,19 @@ const NavLink = ({
         `}
         onClick={handleClick}
       >
-        <span className="relative z-10 flex items-center">
+        <span className="relative z-10 flex items-center group-hover:scale-105 transition-transform duration-500">
           {children}
           {hasDropdown && (
             <ChevronDown
               size={14}
-              className={`ml-1 lg:ml-2 transition-all duration-300 ease-out ${
-                isActive ? "rotate-180" : ""
+              className={`ml-1.5 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+                isActive
+                  ? "rotate-180 text-[#800000]"
+                  : "group-hover:text-[#800000]"
               }`}
             />
           )}
         </span>
-
-        <div
-          className={`
-            absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0.5 transition-all duration-300 ease-out
-            ${isScrolled || pathname !== "/" ? "bg-[#800000]" : "bg-white"}
-            ${isActive ? "w-full" : "w-0 group-hover:w-full"}
-          `}
-        />
       </button>
     </div>
   );

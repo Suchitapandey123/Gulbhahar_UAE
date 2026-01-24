@@ -1,10 +1,14 @@
-import React, { cache } from "react";
-import ContentSection from "./components/ContentSection";
-import Collection from "../components/Collection";
-import QuickTag from "../components/QuickTag";
-import QuickLinks from "../components/QuickLinks";
-import { pageService } from "../../api/page-service/pageService";
+import CategoryCollection from "@/modules/(gulbhahar)/categoryPages/CategoryCollection";
 import { redirect } from "next/navigation";
+import { cache } from "react";
+import { pageService } from "../../api/page-service/pageService";
+import QuickLinks from "../components/QuickLinks";
+import QuickTag from "../components/QuickTag";
+import ContentSection from "./components/ContentSection";
+import CollectionForCategory from "../components/CollectionForCategory"
+import CategoryCollection_MatchingProducts from "@/modules/(gulbhahar)/categoryPages/CategoryCollection.MatchingProducts";
+import CategoryCollection_DummyProducts from "@/modules/(gulbhahar)/categoryPages/CategoryCollection.DummyProducts";
+
 
 // ISR: Revalidate every hour (fallback), or on-demand via /api/revalidate
 // Uses 'collections' and 'collection-{slug}' tags for targeted revalidation
@@ -119,7 +123,9 @@ export default async function Page({ params: rawParams }) {
 
   return (
     <div className="mt-24">
-      <Collection parentCategory={parentCategory} slug={slug} />
+       <CategoryCollection parentCategory={parentCategory} slug={slug} />
+       <CategoryCollection_DummyProducts parentCategory={parentCategory} slug={slug} />
+       <CategoryCollection_MatchingProducts /> 
       <ContentSection page={page} />
       <QuickLinks parentCategory={parentCategory} currentSlug={slug} />
       <QuickTag popularTags={page?.keywords || []} />

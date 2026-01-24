@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import { redirect, useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { pageService } from "../../../api/page-service/pageService";
 
 const ContentSection = ({ page: initialPage }) => {

@@ -1,39 +1,33 @@
 "use client";
-import { useState, useEffect, useRef, useMemo } from "react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import {
-  ShoppingCart,
-  Heart,
-  ChevronRight,
-  Home,
-  X,
-  ZoomIn,
-  ShoppingBag,
-  MapPin,
-  Clock,
-  CheckCircle,
-  AlertCircle,
-  Ruler,
-  Loader2,
-  ChevronDown,
-  ChevronUp,
-  Plus,
-  Minus,
-  Check,
-  HelpCircle,
-  Info,
-} from "lucide-react";
 import { useAuth } from "@/providers/ContextProviders/AuthContext";
-import { useToast } from "../../../hooks/useToast";
 import { useCart } from "@/providers/ContextProviders/CartContext";
+import {
+  AlertCircle,
+  Check,
+  CheckCircle,
+  ChevronDown,
+  ChevronRight,
+  ChevronUp,
+  Heart,
+  HelpCircle,
+  Home,
+  Info,
+  Loader2,
+  Ruler,
+  ShoppingBag,
+  ShoppingCart,
+  X,
+  ZoomIn
+} from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { toast } from "sonner";
+import { useToast } from "../../../hooks/useToast";
+import { checkDeliveryAPI } from "../../api/delivery/deliveryApi";
 import ImageModal from "./components/ImageModal";
 import Reviews from "./components/Reviews";
-import { checkDeliveryAPI } from "../../api/delivery/deliveryApi";
-import { toast } from "sonner";
-import { gaEvent } from "@/utils/gtm/gtag";
-import { fbEvent } from "@/utils/fb/metaPixels";
 
 // Define the custom red color
 const CUSTOM_RED = "hsl(359.39deg 63.87% 30.39%)";
@@ -1349,7 +1343,7 @@ export function ProductClient({ product, similarProducts }) {
               </h3>
               <div className="flex-grow h-px bg-gray-300"></div>
             </div>
-            <div className="px-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+            <div className=" grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 lg:gap-6">
               {similarProducts.map((item, index) => (
                 <div key={item.productId} className="group w-full">
                   <Link href={`/products/${item.productId}`}>

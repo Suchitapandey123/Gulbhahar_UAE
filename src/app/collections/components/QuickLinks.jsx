@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { Old_Standard_TT } from "next/font/google";
+import Link from "next/link";
 
 const oldStandardTT = Old_Standard_TT({
   weight: "400",

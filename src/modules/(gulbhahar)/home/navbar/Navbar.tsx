@@ -1,0 +1,298 @@
+"use client";
+import { useAuth } from "@/providers/ContextProviders/AuthContext";
+import { useCart } from "@/providers/ContextProviders/CartContext";
+import CartPage from "@/shared-components/Navbar/CartPage";
+import CollectionsDropdown from "@/shared-components/Navbar/CollectionsDropdown";
+import DesktopNav from "@/shared-components/Navbar/DesktopNav";
+import MobileMenuSidebar from "@/shared-components/Navbar/MobileMenuSidebar";
+import MobileNav from "@/shared-components/Navbar/MobileNav";
+import SearchPopup from "@/shared-components/Navbar/SearchPopup";
+import { Menu, X } from "lucide-react";
+import { signOut } from "next-auth/react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+
+const Navbar = () => {
+  const {
+    isAuthenticated,
+    userData,
+    authToken,
+    logout,
+    updateUserData,
+    isLoading: authLoading,
+  } = useAuth();
+  const { getCartItemsCount, isCartOpen, toggleCart } = useCart();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isCollectionDropdownOpen, setIsCollectionDropdownOpen] =
+    useState(false);
+  const [isMobileCollectionOpen, setIsMobileCollectionOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isHoverMode, setIsHoverMode] = useState(true);
+  const [profileImageLoading, setProfileImageLoading] = useState(false);
+  const [profileImageError, setProfileImageError] = useState(false);
+  const [openCategoryIndex, setOpenCategoryIndex] = useState(null);
+  const [iimageUrl, setiImageUrl] = useState(null);
+
+  const itemsCount = getCartItemsCount();
+
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const dropdownRef = useRef(null);
+  const userDropdownRef = useRef(null);
+  const hoverTimeoutRef = useRef(null);
+  const userHoverTimeoutRef = useRef(null);
+
+  // Load user image from localStorage
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedUserData = localStorage.getItem("userData");
+      try {
+        const parsedData = JSON.parse(storedUserData);
+        setiImageUrl(parsedData);
+      } catch {
+        setiImageUrl({ profilePicture: storedUserData });
+      }
+    }
+  }, []);
+
+  // Fetch user profile
+  const fetchUserProfile = async () => {
+    if (!authToken || !isAuthenticated) return;
+
+    try {
+      setProfileImageLoading(true);
+      const response = await fetch(
+        "https://api.gulbhahar.com/api/users/user-by-token",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        },
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.user) {
+          const updatedUserData = {
+            name: `${data.user.firstName || ""} ${
+              data.user.lastName || ""
+            }`.trim(),
+            email: data.user.email || "",
+            firstName: data.user.firstName || "",
+            lastName: data.user.lastName || "",
+            imageUrl: data.user.imageUrl || "",
+            userId: data.user.userId || data.user._id || "",
+          };
+          updateUserData(updatedUserData);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+    } finally {
+      setProfileImageLoading(false);
+    }
+  };
+
+  // Effects
+  useEffect(() => {
+    if (isAuthenticated && authToken && !authLoading) {
+      fetchUserProfile();
+    }
+  }, [isAuthenticated, authToken, authLoading]);
+
+  useEffect(() => {
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 150);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsCollectionDropdownOpen(false);
+        setIsHoverMode(true);
+      }
+      if (
+        userDropdownRef.current &&
+        !userDropdownRef.current.contains(event.target)
+      ) {
+        setIsUserDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+      if (userHoverTimeoutRef.current)
+        clearTimeout(userHoverTimeoutRef.current);
+    };
+  }, []);
+
+  // Handlers
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+    if (!isMenuOpen) {
+      setIsCollectionDropdownOpen(false);
+      setIsMobileCollectionOpen(false);
+      setIsSearchOpen(false);
+      setIsUserDropdownOpen(false);
+      setIsHoverMode(true);
+    }
+  };
+
+  const toggleSearchPopup = () => {
+    setIsSearchOpen(!isSearchOpen);
+    if (isMenuOpen) setIsMenuOpen(false);
+  };
+
+  const handleLogin = () => {
+    router.push("/login");
+  };
+
+  const handleLogout = () => {
+    logout();
+    signOut();
+    setIsUserDropdownOpen(false);
+    setProfileImageError(false);
+  };
+
+  // Shared props for child components
+  const sharedProps = {
+    isScrolled,
+    pathname,
+    router,
+    isAuthenticated,
+    userData,
+    authLoading,
+    profileImageLoading,
+    profileImageError,
+    iimageUrl,
+    itemsCount,
+    isCartOpen,
+    isSearchOpen,
+    isUserDropdownOpen,
+    isCollectionDropdownOpen,
+    isHoverMode,
+    toggleCart,
+    toggleSearchPopup,
+    handleLogin,
+    handleLogout,
+    setIsUserDropdownOpen,
+    setIsCollectionDropdownOpen,
+    setIsHoverMode,
+    setProfileImageError,
+    userDropdownRef,
+    dropdownRef,
+    hoverTimeoutRef,
+    userHoverTimeoutRef,
+  };
+
+  return (
+    <>
+      <SearchPopup isOpen={isSearchOpen} onClose={toggleSearchPopup} />
+      {isCartOpen && <CartPage />}
+
+      {/* Enhanced Mobile Backdrop with Blur */}
+      {isMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9998] transition-all duration-500 ease-in-out md:hidden"
+          onClick={toggleMenu}
+        />
+      )}
+
+      <nav
+        className={`fixed top-0 left-0 right-0 z-[9999] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+          isScrolled || pathname !== "/"
+            ? "bg-white/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] py-1.5 lg:py-2 border-b border-gray-200/30"
+            : "bg-transparent py-4 lg:py-6 border-b border-white/5"
+        }`}
+      >
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-2 lg:px-2">
+          <div className="flex items-center justify-between relative">
+            {/* Mobile Menu Toggle - Refined */}
+            <div className="flex items-center md:hidden">
+              <button
+                onClick={toggleMenu}
+                className={`group p-2.5 rounded-full transition-all duration-300 ${
+                  isScrolled || pathname !== "/"
+                    ? "text-gray-900 hover:bg-[#800000]/5 hover:text-[#800000]"
+                    : "text-white hover:bg-white/10 hover:text-white/80"
+                }`}
+                aria-label="Toggle menu"
+              >
+                <div className="relative w-6 h-6">
+                  {isMenuOpen ? (
+                    <X
+                      size={24}
+                      className="transition-transform duration-300 rotate-0 group-hover:rotate-90"
+                    />
+                  ) : (
+                    <Menu
+                      size={24}
+                      className="transition-transform duration-300 group-hover:scale-110"
+                    />
+                  )}
+                </div>
+              </button>
+            </div>
+
+            {/* Desktop Navigation */}
+            <DesktopNav {...sharedProps} />
+
+            {/* Mobile Navigation */}
+            <MobileNav
+              {...sharedProps}
+              toggleMenu={toggleMenu}
+              isMenuOpen={isMenuOpen}
+              toggleMobileCollection={() =>
+                setIsMobileCollectionOpen(!isMobileCollectionOpen)
+              }
+              isMobileCollectionOpen={isMobileCollectionOpen}
+              openCategoryIndex={openCategoryIndex}
+              setOpenCategoryIndex={setOpenCategoryIndex}
+            />
+          </div>
+
+          <CollectionsDropdown {...sharedProps} />
+        </div>
+
+        {/* Subtle Decorative Line for Scrolled State */}
+        <div
+          className={`absolute bottom-0 left-0 h-[1px] bg-gradient-to-r from-transparent via-[#800000]/20 to-transparent transition-all duration-1000 ${
+            isScrolled ? "w-full opacity-100" : "w-0 opacity-0"
+          }`}
+        />
+      </nav>
+
+      {/* Mobile Menu Sidebar */}
+      <MobileMenuSidebar
+        isMenuOpen={isMenuOpen}
+        toggleMenu={toggleMenu}
+        openCategoryIndex={openCategoryIndex}
+        setOpenCategoryIndex={setOpenCategoryIndex}
+        {...sharedProps}
+      />
+    </>
+  );
+};
+
+export default Navbar;

@@ -31,7 +31,7 @@ const sortOptions = [
 
 const ITEMS_PER_PAGE = 24;
 
-export default function Collection({ parentCategory = null, slug = null }) {
+export default function CollectionForCategory({ parentCategory = null, slug = null }) {
   useEffect(() => {
      fbEvent({
       action: "ViewContent",
@@ -74,8 +74,6 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
          productApi.getAllProduct(),
     enabled: true,
   });
-
-  console.log(allProducts)
 
   // Filter products by parentCategory on frontend
   const apiData = React.useMemo(() => {
@@ -333,146 +331,10 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
       <ToastContainer />
 
       {/* <div className="max-w-[1600px] ml-2 mx-auto flex flex-col lg:flex-row"> */}
-      <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row px-4 lg:px-8">
-        {/* Sidebar - Desktop */}
-        <div className="hidden xl:flex mt-5 flex-col max-w-[360px] mb-8 sticky top-24 h-fit">
-          <div className="max-w-[400px] px-2 lg:px-2">
-            <nav className="py-2">
-              <span className="text-red-700 hover:text-red-900 transition-colors cursor-pointer">
-                Home
-              </span>
-              <span className="mx-2 text-red-400">/</span>
-              <span className="text-red-900 font-semibold">Collections</span>
-            </nav>
-          </div>
-
-          {/* <div className="bg-white border-2 border-red-200 
-  h-[calc(100vh-180px)] 
-  md:h-[calc(100vh-160px)] 
-  lg:h-[calc(100vh-150px)] 
-  xl:h-[calc(100vh-140px)]
-  w-[280px] rounded-xl shadow-lg overflow-y-auto">
-  <FilterContent />
-</div> */}
-
-          {/* <div className="bg-white border-2 border-red-200 
-        w-[280px] rounded-xl shadow-lg 
-        h-fit        
-        max-h-[110vh] 
-        overflow-y-auto">
-    <FilterContent />
-  </div> */}
-
-          <div className=" bg-white border-2 border-red-200 h-[calc(100vh-140px)] w-[280px] rounded-xl shadow-lg overflow-y-auto">
-            <FilterSidebar
-              priceRange={priceRange}
-              setPriceRange={setPriceRange}
-              minPrice={minPrice}
-              maxPrice={maxPrice}
-              selectedSizes={selectedSizes}
-              setSelectedSizes={setSelectedSizes}
-              allSizes={allSizes}
-              clearFilters={clearFilters}
-            />
-          </div>
-        </div>
-
-        {/* Mobile Filter Modal */}
-        {isModalOpen && (
-          <div className=" fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm lg:hidden">
-            <div className="bg-white rounded-xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto shadow-2xl">
-              <FilterSidebar
-                priceRange={priceRange}
-                setPriceRange={setPriceRange}
-                minPrice={minPrice}
-                maxPrice={maxPrice}
-                selectedSizes={selectedSizes}
-                setSelectedSizes={setSelectedSizes}
-                allSizes={allSizes}
-                clearFilters={clearFilters}
-                isModal={true}
-                closeModal={() => setIsModalOpen(false)}
-              />
-            </div>
-          </div>
-        )}
-
+      <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row px-2 lg:px-2">
+     
         {/* Main Content */}
-        <div className="w-full px-2 lg:px-6">
-          {/* Controls */}
-          <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center justify-between border-b-2 border-red-200 pb-4 mb-6 gap-4">
-            <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
-              <div className="flex bg-white border-2 border-red-200 rounded-lg p-1 shadow-sm">
-                <button
-                  className={`p-2 rounded-md transition-all ${viewMode === "grid"
-                    ? "bg-red-900 text-white shadow-md"
-                    : "text-red-900 hover:bg-red-50"
-                    }`}
-                  onClick={() => setViewMode("grid")}
-                >
-                  <Grid size={15} />
-                </button>
-                <button
-                  className={`p-2 rounded-md transition-all ${viewMode === "list"
-                    ? "bg-red-900 text-white shadow-md"
-                    : "text-red-900 hover:bg-red-50"
-                    }`}
-                  onClick={() => setViewMode("list")}
-                >
-                  <List size={15} />
-                </button>
-              </div>
-            </div>
-
-            <div className="flex items-center px-1 xs:px-0 gap-3 w-full sm:w-auto justify-between sm:justify-start">
-              <button
-                className="flex lg:hidden items-center justify-center p-[6.5px] border-2 border-red-300 rounded-lg bg-white hover:bg-red-50 transition-colors"
-                onClick={() => setIsModalOpen(true)}
-              >
-                <SlidersHorizontal size={18} className="text-red-900 mr-2" />
-                <span className="text-red-900 font-medium">Filters</span>
-              </button>
-
-              <div className="flex items-center gap-2">
-                <span className="text-red-900 font-semibold hidden sm:inline">
-                  Sort by:
-                </span>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="px-2 py-2 border-2 border-red-300 rounded-lg bg-white text-red-900 font-medium focus:border-red-900 focus:ring-2 focus:ring-red-100 transition-all"
-                >
-                  {sortOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
-
-          {/* Season Filters */}
-          <div className="flex flex-nowrap gap-2 sm:gap-3 mb-8 overflow-x-auto pb-2">
-            {seasons.map((season) => (
-              <button
-                key={season}
-                onClick={() => {
-                  setSelectedSeason(season);
-                  setCurrentPage(1);
-                }}
-                className={`px-4 sm:px-6 py-2 sm:py-3 border-2 font-bold text-xs sm:text-sm rounded-lg transition-all duration-200 transform hover:scale-105 whitespace-nowrap flex-shrink-0 ${selectedSeason === season
-                  ? "bg-red-900 text-white border-red-900 shadow-lg"
-                  : "bg-white text-red-900 border-red-300 hover:bg-red-50 hover:border-red-900"
-                  }`}
-              >
-                {season !== "all"
-                  ? `${season.toUpperCase()}`
-                  : season.toUpperCase()}
-              </button>
-            ))}
-          </div>
-
+        <div className="w-full">
           {/* Product Grid */}
           <div
             className={`px-1 ${viewMode === "grid"

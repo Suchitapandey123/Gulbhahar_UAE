@@ -1,5 +1,4 @@
-
-import { User, LogOut, Settings, Package, ChevronDown } from "lucide-react";
+import { ChevronDown, LogOut, Package, Settings, User } from "lucide-react";
 import Link from "next/link";
 import ProfileImage from "./ProfileImage";
 
@@ -17,9 +16,21 @@ const UserSection = ({
   ...props
 }) => {
   const userMenuItems = [
-    { icon: User, label: "My Profile", href: "/account/account-centre/profile" },
-    { icon: Package, label: "My Orders", href: "/account/account-centre/my-order" },
-    { icon: Settings, label: "Settings", href: "/account/account-centre/settings" },
+    {
+      icon: User,
+      label: "My Profile",
+      href: "/account/account-centre/profile",
+    },
+    {
+      icon: Package,
+      label: "My Orders",
+      href: "/account/account-centre/my-order",
+    },
+    {
+      icon: Settings,
+      label: "Settings",
+      href: "/account/account-centre/settings",
+    },
   ];
 
   const handleUserMouseEnter = () => {
@@ -127,56 +138,61 @@ const UserDropdown = ({
 }) => (
   <div
     className={`
-      absolute right-0 top-full mt-2 w-56 bg-white/95 backdrop-blur-md shadow-2xl 
-      rounded-lg border border-gray-100 z-50 transition-all duration-300 ease-out
+      absolute right-0 top-[calc(100%+0.5rem)] w-64 bg-white/90 backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] 
+      rounded-2xl border border-gray-100/50 z-50 transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]
       ${
         isUserDropdownOpen
           ? "opacity-100 visible translate-y-0"
-          : "opacity-0 invisible -translate-y-2 pointer-events-none"
+          : "opacity-0 invisible -translate-y-4 pointer-events-none"
       }
     `}
   >
-    <div className="p-4 border-b border-gray-100">
-      <div className="flex items-center space-x-3">
+    <div className="p-5 border-b border-gray-100/50">
+      <div className="flex items-center space-x-4">
         <ProfileImage
-          size="w-10 h-10"
-          className="border-2 border-gray-200"
+          size="w-12 h-12"
+          className="border-2 border-[#800000/10] ring-4 ring-[#800000/5]"
           userData={userData}
           {...props}
         />
         <div className="flex-1 min-w-0">
-          <p className="font-semibold text-gray-800 text-sm truncate">
-            {userData?.name || `${userData?.firstName || ""} ${userData?.lastName || ""}`.trim()}
+          <p className="font-bold text-gray-900 text-base truncate">
+            {userData?.name ||
+              `${userData?.firstName || ""} ${userData?.lastName || ""}`.trim()}
           </p>
-          <p className="text-xs text-gray-600 truncate">
+          <p className="text-xs text-gray-500 truncate font-medium">
             {userData?.email}
           </p>
         </div>
       </div>
     </div>
 
-    <div className="py-2">
+    <div className="p-2">
       {userMenuItems.map((item) => (
         <Link
           key={item.label}
           href={item.href}
-          className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-800 
-                   hover:text-[#800000] hover:bg-[#800000]/5 transition-all duration-200"
+          className="flex items-center space-x-3.5 px-4 py-3 text-sm font-medium text-gray-700 
+                   hover:text-[#800000] hover:bg-[#800000]/5 rounded-xl transition-all duration-300 group"
           onClick={() => setIsUserDropdownOpen(false)}
         >
-          <item.icon size={16} />
+          <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center transition-colors group-hover:bg-[#800000]/10">
+            <item.icon size={18} />
+          </div>
           <span>{item.label}</span>
         </Link>
       ))}
 
-      <hr className="my-2 border-gray-100" />
+      <div className="my-2 border-t border-gray-100/50 mx-2" />
 
       <button
         onClick={handleLogout}
-        className="flex items-center space-x-3 px-4 py-2 text-sm text-red-600 
-                 hover:text-red-700 hover:bg-red-50 transition-all duration-200 w-full text-left"
+        className="flex items-center space-x-3.5 px-4 py-3 text-sm font-semibold text-red-500 
+                 hover:text-red-700 hover:bg-red-50 rounded-xl transition-all duration-300 w-full text-left group"
       >
-        <LogOut size={16} />
+        <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center transition-colors group-hover:bg-red-100">
+          <LogOut size={18} />
+        </div>
         <span>Logout</span>
       </button>
     </div>

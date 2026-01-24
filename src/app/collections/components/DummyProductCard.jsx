@@ -181,7 +181,7 @@ export default function DummyProductCard({
                   Out Of Stock
                 </span>
               ) : (
-               <span className="text-red-600 font-bold`">
+               <span className="text-red-600 font-bold">
                   Out Of Stock
                 </span>
               )}

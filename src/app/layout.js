@@ -2,15 +2,14 @@
 import { Poppins, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Footer from "@/shared-components/Footer/Footer";
-import Navbar from "@/shared-components/Navbar/Main";
+import Navbar from "@/modules/(gulbhahar)/home/navbar/Navbar";
 import ReactQueryProvider from "@/providers/ReactQueryProvider/ReactQueryProvider";
 import Script from "next/script";
 import { AuthProvider } from "@/providers/ContextProviders/AuthContext";
 import { CartProvider } from "@/providers/ContextProviders/CartContext";
 import SessionWrapper from "@/providers/GoogleSessionProvider/SessionWrapper";
 import { Toaster } from "sonner";
-import RouteChangeTracker from "@/app/components/RouteChangeTracker"
-import Image from "next/image";
+
 
 
 // Configure fonts

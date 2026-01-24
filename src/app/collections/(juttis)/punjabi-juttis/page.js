@@ -1,9 +1,9 @@
-import React, { Suspense } from 'react'
-import nextDynamic from 'next/dynamic'
+import { GulbharLoader } from '@/shared-components/loader/GulbharLoader';
+import nextDynamic from 'next/dynamic';
+import { Suspense } from 'react';
 import Collection from '../../components/Collection';
 import QuickTag from "../../components/QuickTag";
 import { popularTags } from "../../tag";
-import { GulbharLoader } from '@/shared-components/loader/GulbharLoader';
 
 // Lazy load below-fold components
 const ContentJuttis = nextDynamic(() => import('./components/ContentPunjabiJuttis'), {
