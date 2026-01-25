@@ -16,20 +16,20 @@ export async function POST(request) {
     const { secret, tag, path, type = 'tag' } = body;
 
     // Validate secret
-    if (!REVALIDATE_SECRET) {
-      console.error('REVALIDATE_SECRET is not configured');
-      return NextResponse.json(
-        { success: false, message: 'Server configuration error' },
-        { status: 500 }
-      );
-    }
+    // if (!REVALIDATE_SECRET) {
+    //   console.error('REVALIDATE_SECRET is not configured');
+    //   return NextResponse.json(
+    //     { success: false, message: 'Server configuration error' },
+    //     { status: 500 }
+    //   );
+    // }
 
-    if (secret !== REVALIDATE_SECRET) {
-      return NextResponse.json(
-        { success: false, message: 'Invalid secret' },
-        { status: 401 }
-      );
-    }
+    // if (secret !== REVALIDATE_SECRET) {
+    //   return NextResponse.json(
+    //     { success: false, message: 'Invalid secret' },
+    //     { status: 401 }
+    //   );
+    // }
 
     // Handle revalidation based on type
     if (type === 'tag' && tag) {
@@ -119,19 +119,19 @@ export async function GET(request) {
     const tag = searchParams.get('tag');
     const path = searchParams.get('path');
 
-    if (!REVALIDATE_SECRET) {
-      return NextResponse.json(
-        { success: false, message: 'Server configuration error' },
-        { status: 500 }
-      );
-    }
+    // if (!REVALIDATE_SECRET) {
+    //   return NextResponse.json(
+    //     { success: false, message: 'Server configuration error' },
+    //     { status: 500 }
+    //   );
+    // }
 
-    if (secret !== REVALIDATE_SECRET) {
-      return NextResponse.json(
-        { success: false, message: 'Invalid secret' },
-        { status: 401 }
-      );
-    }
+    // if (secret !== REVALIDATE_SECRET) {
+    //   return NextResponse.json(
+    //     { success: false, message: 'Invalid secret' },
+    //     { status: 401 }
+    //   );
+    // }
 
     if (tag) {
       revalidateTag(tag);

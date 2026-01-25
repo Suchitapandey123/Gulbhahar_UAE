@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Collections_Juttis_All = () => {
+const Collections_Suits_All = () => {
   return (
     <div>
       
@@ -8,4 +8,4 @@ const Collections_Juttis_All = () => {
   )
 }
 
-export default Collections_Juttis_All
+export default Collections_Suits_All

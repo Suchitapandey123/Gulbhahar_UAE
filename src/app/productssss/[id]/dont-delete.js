@@ -24,24 +24,22 @@ const getSimilarProducts = cache(async (productID) => {
   }
 });
 
-export async function generateStaticParams() {
-  try {
-    const products = await productApi.getAllProduct();
-    return products?.map((product) => ({
-      id: product.productId,
-    })) || [];
-  } catch (error) {
-    console.error("Error generating static params:", error);
-    return [];
-  }
-}
+// export async function generateStaticParams() {
+//   try {
+//     const products = await productApi.getAllProduct();
+//     return products?.map((product) => ({
+//       id: product.productId,
+//     })) || [];
+//   } catch (error) {
+//     console.error("Error generating static params:", error);
+//     return [];
+//   }
+// }
 
-// ISR: Revalidate every hour (fallback), or on-demand via /api/revalidate
-// Uses 'products' and 'product-{id}' tags for targeted revalidation
+
 export const revalidate = 3600;
 export const dynamicParams = true;
 
-// Parallel data fetching for product and similar products
 async function getProductData(productID) {
   const [product, similarProducts] = await Promise.all([
     getProduct(productID),
@@ -55,33 +53,6 @@ async function getProductData(productID) {
   return { product, similarProducts };
 }
 
-
-const fallbackSimilarProducts = [
-  {
-    id: 1,
-    name: "Noorani Jutti",
-    price: 5000,
-    rating: 5,
-    image: "/16.svg",
-    itemsLeft: 2,
-  },
-  {
-    id: 2,
-    name: "Noorani Jutti",
-    price: 5000,
-    rating: 5,
-    image: "/16.svg",
-    itemsLeft: 3,
-  },
-  {
-    id: 3,
-    name: "Noorani Jutti",
-    price: 5000,
-    rating: 5,
-    image: "/16.svg",
-    itemsLeft: 2,
-  },
-];
 
 // Generate metadata function - uses cached getProduct to avoid duplicate fetches
 export async function generateMetadata({ params }) {
@@ -174,7 +145,7 @@ export default async function CollectionPage({ params }) {
 
         <ProductClient
           product={product}
-          similarProducts={similarProducts || fallbackSimilarProducts}
+          similarProducts={similarProducts || []}
         />
       </>
     );

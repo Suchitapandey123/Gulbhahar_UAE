@@ -4,16 +4,15 @@ import { API_BASE_URL } from "@/utils/envHere";
 // Tags: 'collections', 'collection-{slug}'
 // Revalidate via: POST /api/revalidate { secret, type: 'tag', tag: 'collections' }
 export const pageService = {
-
   async validateSlug(slug) {
     const res = await fetch(
       `${API_BASE_URL}/api/pages/validateSlug?slug=${slug}`,
       {
         next: {
-          revalidate: 3600,
-          tags: ['collections', `collection-${slug}`]
-        }
-      }
+          revalidate: 604800,
+          tags: ["collections", `collection-${slug}`],
+        },
+      },
     );
     if (!res.ok) return { success: false };
     return res.json();
@@ -21,15 +20,12 @@ export const pageService = {
 
   async getPageBySlug(slug) {
     if (!slug) throw new Error("Slug is required");
-    const res = await fetch(
-      `${API_BASE_URL}/api/pages/slug/${slug}`,
-      {
-        next: {
-          revalidate: 3600,
-          tags: ['collections', `collection-${slug}`]
-        }
-      }
-    );
+    const res = await fetch(`${API_BASE_URL}/api/pages/slug/${slug}`, {
+      next: {
+        revalidate: 604800,
+        tags: ["collections", `collection-${slug}`],
+      },
+    });
     if (!res.ok) {
       const text = await res.text();
       console.error("Error response:", text);
@@ -43,10 +39,10 @@ export const pageService = {
       `${API_BASE_URL}api/pages/getAll?page=${page}&limit=${limit}`,
       {
         next: {
-          revalidate: 3600,
-          tags: ['collections']
-        }
-      }
+          revalidate: 604800,
+          tags: ["collections"],
+        },
+      },
     );
 
     if (!res.ok) throw new Error("Failed to fetch pages");
@@ -57,14 +53,14 @@ export const pageService = {
     try {
       const res = await fetch(
         `${API_BASE_URL}/api/pages/get-quicklinks?parentCategory=${encodeURIComponent(
-          parentCategory
+          parentCategory,
         )}&currentSlug=${encodeURIComponent(currentSlug)}`,
         {
           next: {
-            revalidate: 3600,
-            tags: ['collections', `collection-${currentSlug}`]
-          }
-        }
+            revalidate: 604800,
+            tags: ["collections", `collection-${currentSlug}`],
+          },
+        },
       );
 
       if (!res.ok) throw new Error("Failed to fetch quick links");

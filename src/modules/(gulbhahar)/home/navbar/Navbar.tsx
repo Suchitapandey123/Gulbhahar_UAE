@@ -32,28 +32,32 @@ const Navbar = () => {
   const [isHoverMode, setIsHoverMode] = useState(true);
   const [profileImageLoading, setProfileImageLoading] = useState(false);
   const [profileImageError, setProfileImageError] = useState(false);
-  const [openCategoryIndex, setOpenCategoryIndex] = useState(null);
-  const [iimageUrl, setiImageUrl] = useState(null);
+  const [openCategoryIndex, setOpenCategoryIndex] = useState<number | null>(
+    null,
+  );
+  const [iimageUrl, setiImageUrl] = useState<any>(null);
 
   const itemsCount = getCartItemsCount();
 
   const pathname = usePathname();
   const router = useRouter();
 
-  const dropdownRef = useRef(null);
-  const userDropdownRef = useRef(null);
-  const hoverTimeoutRef = useRef(null);
-  const userHoverTimeoutRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const userDropdownRef = useRef<HTMLDivElement>(null);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const userHoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Load user image from localStorage
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedUserData = localStorage.getItem("userData");
-      try {
-        const parsedData = JSON.parse(storedUserData);
-        setiImageUrl(parsedData);
-      } catch {
-        setiImageUrl({ profilePicture: storedUserData });
+      if (storedUserData) {
+        try {
+          const parsedData = JSON.parse(storedUserData);
+          setiImageUrl(parsedData);
+        } catch {
+          setiImageUrl({ profilePicture: storedUserData });
+        }
       }
     }
   }, []);
@@ -122,14 +126,17 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsCollectionDropdownOpen(false);
         setIsHoverMode(true);
       }
       if (
         userDropdownRef.current &&
-        !userDropdownRef.current.contains(event.target)
+        !userDropdownRef.current.contains(event.target as Node)
       ) {
         setIsUserDropdownOpen(false);
       }

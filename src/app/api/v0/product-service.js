@@ -1,8 +1,5 @@
 import { API_BASE_URL } from "@/utils/envHere";
 
-// ISR with on-demand revalidation via cache tags
-// Tags: 'products', 'product-{id}', 'collections', 'home'
-// Revalidate via: POST /api/revalidate { secret, type: 'tag', tag: 'products' }
 const productApi = {
   getAllProduct: async () => {
     try {
@@ -110,89 +107,41 @@ const productApi = {
       throw error;
     }
   },
-  
 
-  // new services
-  //   getSarees: async () => {
-  //   try {
-  //     const response = await api.post('/api/products/get-all-product/sarees');
-  //     return response.data;
-  //   } catch (err) {
-  //     console.error('API error', err.response?.status, err.response?.data);
-  //     return [];
-  //   }
-  // },
 
-  // getSuits: async () => {
-  //   try {
-  //     const response = await api.post('/api/products/get-all-product/suits');
-  //     return response.data;
-  //   } catch (err) {
-  //     console.error('API error', err.response?.status, err.response?.data);
-  //     return [];
-  //   }
-  // },
-
-  // getHeels: async () => {
-  //   try {
-  //     const response = await api.post('/api/products/get-all-product/heels');
-  //     return response.data;
-  //   } catch (err) {
-  //     console.error('API error', err.response?.status, err.response?.data);
-  //     return [];
-  //   }
-  // },
-
-  // getBags: async () => {
-  //   try {
-  //     const response = await api.post('/api/products//get-all-product-by-category' ,{
-  //       category: "bags"
-  //     });
-      
-  //     return response.data;
-  //   } catch (err) {
-  //     console.error('API error', err.response?.status, err.response?.data);
-  //     return [];
-  //   }
-  // },  
-     
-  
   getProductsByCategory: async (categoryName) => {
     try {
-      // console.log("API CALL - Fetching products for category:", categoryName);
+      const response = await fetch(
+        `${API_BASE_URL}/api/products/get-all-product-by-category`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({ category: categoryName }),
+          next: {
+            revalidate: 3600,
+            tags: ["products", "collections", "collection-juttis"],
+          },
+        }
+      );
 
-      const response = await fetch(`${API_BASE_URL}/api/products/get-all-product-by-category`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({ category: categoryName }),
-        next: {
-          revalidate: 3600,
-          tags: ['products', 'collections', `collection-${categoryName}`]
-        },
-      });
-
-      // console.log("API Response Status:", response.status);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      // console.log("API RAW RESPONSE:", data);
-
-      // Handle different response structures
       const products = data?.products || data?.data || data;
-      // console.log("API PRODUCTS for", categoryName, ":", Array.isArray(products) ? products.length : 0, "products");
-
+      console.log(products)
       return Array.isArray(products) ? products : [];
     } catch (error) {
-      console.error('Error fetching products by category:', error);
+      console.error("Error fetching juttis products:", error);
       return [];
     }
-  },
-};
+  }
+
+}
 
 export default productApi;

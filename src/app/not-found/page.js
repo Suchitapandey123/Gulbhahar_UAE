@@ -1,5 +1,4 @@
-import React from 'react'
-import ProductNotAvailable from '../products/[id]/components/ProductNotFound/ProductNotFound'
+import ProductNotAvailable from '../productssss/[id]/components/ProductNotFound/ProductNotFound'
 
 const page = () => {
   return (

@@ -1,31 +1,31 @@
 // Enhanced Checkout Component with Email and Phone Validation
 "use client";
-import { useState, useEffect, useRef } from "react";
-import {
-  MapPin,
-  User,
-  Package,
-  ShoppingBag,
-  CreditCard,
-  Shield,
-  CheckCircle,
-  AlertCircle,
-  Loader2,
-  ChevronDown,
-  Search,
-} from "lucide-react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { useCart } from "@/providers/ContextProviders/CartContext";
-import { useToast } from "@/hooks/useToast";
-import { checkoutApi } from '../../../api/cart/cart';
-import { toast } from "sonner";
-import { event, gaEvent } from "@/utils/gtm/gtag";
-import { fbEvent } from "@/utils/fb/metaPixels";
 import analyticsAPI from "@/app/api/analytics/analytics";
+import { useToast } from "@/hooks/useToast";
+import { useCart } from "@/providers/ContextProviders/CartContext";
+import { fbEvent } from "@/utils/fb/metaPixels";
+import { gaEvent } from "@/utils/gtm/gtag";
+import {
+  AlertCircle,
+  CheckCircle,
+  ChevronDown,
+  CreditCard,
+  Loader2,
+  MapPin,
+  Package,
+  Search,
+  Shield,
+  ShoppingBag,
+  User,
+} from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
+import { checkoutApi } from "../../../api/cart/cart";
 
 const Breadcrumb = () => (
-  <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-8">
+  <nav className="flex items-center space-x-2 text-sm text-gray-600 mt-20 mb-8">
     <span className="hover:text-red-900 transition-colors cursor-pointer">
       Home
     </span>
@@ -40,7 +40,12 @@ const Breadcrumb = () => (
   </nav>
 );
 
-const CustomStateDropdown = ({ value, onChange, className = "", fieldValidation }) => {
+const CustomStateDropdown = ({
+  value,
+  onChange,
+  className = "",
+  fieldValidation,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredStates, setFilteredStates] = useState(indianStates);
@@ -55,7 +60,7 @@ const CustomStateDropdown = ({ value, onChange, className = "", fieldValidation 
   useEffect(() => {
     if (searchTerm) {
       const filtered = indianStates.filter((state) =>
-        state.label.toLowerCase().includes(searchTerm.toLowerCase())
+        state.label.toLowerCase().includes(searchTerm.toLowerCase()),
       );
       setFilteredStates(filtered);
     } else {
@@ -110,20 +115,21 @@ const CustomStateDropdown = ({ value, onChange, className = "", fieldValidation 
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full border-2 rounded-xl p-4 text-left focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 flex items-center justify-between ${fieldValidation.region?.isValid === true
-          ? "border-green-500"
-          : fieldValidation.region?.isValid === false
-            ? "border-red-500"
-            : "border-red-200 focus:border-red-900"
-          } ${isOpen ? "border-red-900 ring-2 ring-red-200" : ""}`}
+        className={`w-full border-2 rounded-xl p-4 text-left focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 flex items-center justify-between ${
+          fieldValidation.region?.isValid === true
+            ? "border-green-500"
+            : fieldValidation.region?.isValid === false
+              ? "border-red-500"
+              : "border-red-200 focus:border-red-900"
+        } ${isOpen ? "border-red-900 ring-2 ring-red-200" : ""}`}
       >
-
         <span className={value ? "text-gray-900" : "text-gray-500"}>
           {displayLabel}
         </span>
         <ChevronDown
-          className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""
-            }`}
+          className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${
+            isOpen ? "rotate-180" : ""
+          }`}
         />
       </button>
 
@@ -167,10 +173,11 @@ const CustomStateDropdown = ({ value, onChange, className = "", fieldValidation 
                       key={state.value}
                       type="button"
                       onClick={() => handleStateSelect(state.value)}
-                      className={`w-full text-left px-4 py-3 hover:bg-red-50 focus:bg-red-50 focus:outline-none transition-colors duration-150 flex items-center justify-between group ${value === state.value
-                        ? "bg-red-100 text-red-900 font-semibold"
-                        : "text-gray-700"
-                        }`}
+                      className={`w-full text-left px-4 py-3 hover:bg-red-50 focus:bg-red-50 focus:outline-none transition-colors duration-150 flex items-center justify-between group ${
+                        value === state.value
+                          ? "bg-red-100 text-red-900 font-semibold"
+                          : "text-gray-700"
+                      }`}
                     >
                       <span className="flex items-center gap-2">
                         <MapPin className="h-4 w-4 text-gray-400 group-hover:text-red-500" />
@@ -271,7 +278,6 @@ const indianStates = [
   { value: "puducherry", label: "Puducherry" },
 ];
 
-
 export default function CheckoutComponent() {
   const router = useRouter();
   const { cart, getCartTotal } = useCart();
@@ -308,7 +314,6 @@ export default function CheckoutComponent() {
     region: "",
     postalCode: "",
   });
-
 
   // Handle initial loading and cart state
   useEffect(() => {
@@ -448,7 +453,7 @@ export default function CheckoutComponent() {
       // console.log("📍 Pincode API disabled - using default validation");
 
       // Simulate a brief validation delay
-      setPostalCodeValidation(prev => ({
+      setPostalCodeValidation((prev) => ({
         ...prev,
         isValidating: true,
         error: null,
@@ -472,7 +477,9 @@ export default function CheckoutComponent() {
           },
         });
 
-        toast.success(`✅ Postal code ${postalCode} - Default validation (API disabled)`);
+        toast.success(
+          `✅ Postal code ${postalCode} - Default validation (API disabled)`,
+        );
 
         // showToast(`✅ Postal code ${postalCode} - Default validation (API disabled)`, "success");
       }, 500);
@@ -499,12 +506,12 @@ export default function CheckoutComponent() {
     }));
 
     try {
-
       const result = await checkoutApi.validatePostalCode(postalCode);
       setPostalCodeValidation(result);
       if (result.isValid) {
-
-        toast.success(`✅ Postal code valid for ${result.deliveryInfo.city}, ${result.deliveryInfo.district}`);
+        toast.success(
+          `✅ Postal code valid for ${result.deliveryInfo.city}, ${result.deliveryInfo.district}`,
+        );
 
         // showToast(
         //   `✅ Postal code valid for ${result.deliveryInfo.city}, ${result.deliveryInfo.district}`,
@@ -597,15 +604,15 @@ export default function CheckoutComponent() {
         const subtotal =
           cart && Array.isArray(cart)
             ? cart.reduce((sum, item) => {
-              if (
-                !item ||
-                typeof item.price !== "number" ||
-                typeof item.quantity !== "number"
-              ) {
-                return sum;
-              }
-              return sum + item.price * item.quantity;
-            }, 0)
+                if (
+                  !item ||
+                  typeof item.price !== "number" ||
+                  typeof item.quantity !== "number"
+                ) {
+                  return sum;
+                }
+                return sum + item.price * item.quantity;
+              }, 0)
             : 0;
 
         const isFreeShippingEligible = subtotal >= 5000;
@@ -628,8 +635,6 @@ export default function CheckoutComponent() {
       // Get current totals
       const { subtotal, shipping, total } = calculateTotals();
 
-
-
       // Validate all required fields
       const requiredFields = ["fullName", "email", "phone", "region"];
       const validationErrors = [];
@@ -647,13 +652,12 @@ export default function CheckoutComponent() {
         }
       });
 
-
       // Wait a bit for validation to complete
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Check if any field validation failed
       const hasValidationErrors = requiredFields.some(
-        (field) => fieldValidation[field]?.isValid === false
+        (field) => fieldValidation[field]?.isValid === false,
       );
 
       if (hasValidationErrors) {
@@ -725,7 +729,7 @@ export default function CheckoutComponent() {
           const platform = navigator.platform;
 
           const fingerprint = btoa(
-            `${canvas.toDataURL()}_${screen}_${timezone}_${language}_${platform}`
+            `${canvas.toDataURL()}_${screen}_${timezone}_${language}_${platform}`,
           );
           return `FP_${fingerprint.substring(0, 16)}`;
         } catch (error) {
@@ -804,57 +808,56 @@ export default function CheckoutComponent() {
         return;
       }
 
+      const userData = {
+        user: {
+          email: checkoutData.email,
+          phoneNumber: checkoutData.phone,
+          name: checkoutData.fullName,
+          address: {
+            streetAddress: checkoutData.address,
+            city: checkoutData.city,
+            state: checkoutData.region,
+            pincode: checkoutData.postalCode,
+          },
+        },
+        items: checkoutData.orderItems.map((item) => ({
+          productId: item.productId,
+          productName: item.name,
+          color: item.selectedColor,
+          size: item.selectedSize,
+          quantity: item.quantity,
+        })),
+      };
 
-       const userData = {
-            "user": {
-              "email": checkoutData.email,
-              "phoneNumber": checkoutData.phone,
-              "name": checkoutData.fullName,
-              "address": {
-                "streetAddress": checkoutData.address,
-                "city": checkoutData.city,
-                "state": checkoutData.region,
-                "pincode": checkoutData.postalCode
-              }
-            },
-            "items": checkoutData.orderItems.map(item => ({
-                "productId": item.productId,
-                "productName": item.name,
-                "color": item.selectedColor,
-                "size": item.selectedSize,
-                "quantity": item.quantity
-              }))
-          }
-
-          // console.log(userData)
-          // Send Analytics to BAckend
-          try {
-            const res = await analyticsAPI.trackContinueToPayment(userData)
-            // console.log(res)
-          } catch (error) {
-            console.error(error)
-          }
+      // console.log(userData)
+      // Send Analytics to BAckend
+      try {
+        const res = await analyticsAPI.trackContinueToPayment(userData);
+        // console.log(res)
+      } catch (error) {
+        console.error(error);
+      }
 
       gaEvent({
         action: "Continued To Payment",
         params: {
-          "Customer_Name": formData.fullName,
-          "Customer_Number": formData.phone
+          Customer_Name: formData.fullName,
+          Customer_Number: formData.phone,
         },
-      })
+      });
       fbEvent({
         action: "ContinuedToPayment",
         params: {
-          "Customer_Name": formData.fullName,
-          "Customer_Number": formData.phone,
-          "Customer_Email": formData.email,
+          Customer_Name: formData.fullName,
+          Customer_Number: formData.phone,
+          Customer_Email: formData.email,
         },
-      })
+      });
 
       toast.success("Information validated! Redirecting to payment...");
       setTimeout(() => {
         router.push(
-          `/cart/checkout/payment?orderId=${orderId}&amount=${total}`
+          `/cart/checkout/payment?orderId=${orderId}&amount=${total}`,
         );
       }, 500);
     } catch (error) {
@@ -898,15 +901,15 @@ export default function CheckoutComponent() {
   const subtotal =
     cart && Array.isArray(cart)
       ? cart.reduce((sum, item) => {
-        if (
-          !item ||
-          typeof item.price !== "number" ||
-          typeof item.quantity !== "number"
-        ) {
-          return sum;
-        }
-        return sum + item.price * item.quantity;
-      }, 0)
+          if (
+            !item ||
+            typeof item.price !== "number" ||
+            typeof item.quantity !== "number"
+          ) {
+            return sum;
+          }
+          return sum + item.price * item.quantity;
+        }, 0)
       : 0;
 
   const isFreeShippingEligible = subtotal >= 5000;
@@ -1016,12 +1019,13 @@ export default function CheckoutComponent() {
                       type="text"
                       value={formData.fullName}
                       onChange={handleInputChange}
-                      className={`w-full border-2 rounded-xl p-4 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${fieldValidation.fullName?.isValid === true
-                        ? "border-green-500 focus:border-green-500"
-                        : fieldValidation.fullName?.isValid === false
-                          ? "border-red-500 focus:border-red-500"
-                          : "border-red-200 focus:border-red-900"
-                        }`}
+                      className={`w-full border-2 rounded-xl p-4 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${
+                        fieldValidation.fullName?.isValid === true
+                          ? "border-green-500 focus:border-green-500"
+                          : fieldValidation.fullName?.isValid === false
+                            ? "border-red-500 focus:border-red-500"
+                            : "border-red-200 focus:border-red-900"
+                      }`}
                       placeholder="Enter your full name"
                       required
                     />
@@ -1059,12 +1063,13 @@ export default function CheckoutComponent() {
                       type="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className={`w-full border-2 rounded-xl p-4 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${fieldValidation.email?.isValid === true
-                        ? "border-green-500 focus:border-green-500"
-                        : fieldValidation.email?.isValid === false
-                          ? "border-red-500 focus:border-red-500"
-                          : "border-red-200 focus:border-red-900"
-                        }`}
+                      className={`w-full border-2 rounded-xl p-4 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${
+                        fieldValidation.email?.isValid === true
+                          ? "border-green-500 focus:border-green-500"
+                          : fieldValidation.email?.isValid === false
+                            ? "border-red-500 focus:border-red-500"
+                            : "border-red-200 focus:border-red-900"
+                      }`}
                       placeholder="your@email.com"
                       required
                     />
@@ -1106,12 +1111,13 @@ export default function CheckoutComponent() {
                       type="tel"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className={`w-full border-2 rounded-xl p-4 pl-16 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${fieldValidation.phone?.isValid === true
-                        ? "border-green-500 focus:border-green-500"
-                        : fieldValidation.phone?.isValid === false
-                          ? "border-red-500 focus:border-red-500"
-                          : "border-red-200 focus:border-red-900"
-                        }`}
+                      className={`w-full border-2 rounded-xl p-4 pl-16 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${
+                        fieldValidation.phone?.isValid === true
+                          ? "border-green-500 focus:border-green-500"
+                          : fieldValidation.phone?.isValid === false
+                            ? "border-red-500 focus:border-red-500"
+                            : "border-red-200 focus:border-red-900"
+                      }`}
                       placeholder="9876543210"
                       maxLength="10"
                       pattern="[6-9][0-9]{9}"
@@ -1210,7 +1216,9 @@ export default function CheckoutComponent() {
                   >
                     Postal Code
                     <span className="text-xs text-gray-500 ml-1">
-                      {ENABLE_PINCODE_API ? "(Auto-validated)" : "(Default validation)"}
+                      {ENABLE_PINCODE_API
+                        ? "(Auto-validated)"
+                        : "(Default validation)"}
                     </span>
                   </label>
 
@@ -1222,12 +1230,13 @@ export default function CheckoutComponent() {
                       type="text"
                       value={formData.postalCode}
                       onChange={handleInputChange}
-                      className={`w-full border-2 rounded-xl p-4 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${postalCodeValidation.isValid === true
-                        ? "border-green-500 focus:border-green-500"
-                        : postalCodeValidation.isValid === false
-                          ? "border-red-500 focus:border-red-500"
-                          : "border-red-200 focus:border-red-900"
-                        }`}
+                      className={`w-full border-2 rounded-xl p-4 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${
+                        postalCodeValidation.isValid === true
+                          ? "border-green-500 focus:border-green-500"
+                          : postalCodeValidation.isValid === false
+                            ? "border-red-500 focus:border-red-500"
+                            : "border-red-200 focus:border-red-900"
+                      }`}
                       placeholder="110001"
                       maxLength="6"
                       pattern="[0-9]*"
@@ -1254,7 +1263,8 @@ export default function CheckoutComponent() {
                       <div className="flex items-center gap-2 mb-2">
                         <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
                         <span className="text-sm font-semibold text-green-800">
-                          Delivery Available {!ENABLE_PINCODE_API && "(Default)"}
+                          Delivery Available{" "}
+                          {!ENABLE_PINCODE_API && "(Default)"}
                         </span>
                       </div>
                       <div className="text-xs text-green-700 space-y-2">
@@ -1319,12 +1329,13 @@ export default function CheckoutComponent() {
                     return (
                       <label
                         key={key}
-                        className={`flex items-center p-4 border-2 rounded-xl transition-all duration-200 ${isDisabled
-                          ? "border-gray-200 bg-gray-50 cursor-not-allowed opacity-60"
-                          : shippingMethod === key
-                            ? "border-red-900 bg-red-50 ring-2 ring-red-200 cursor-pointer"
-                            : "border-red-200 hover:border-red-300 hover:bg-red-50 cursor-pointer"
-                          }`}
+                        className={`flex items-center p-4 border-2 rounded-xl transition-all duration-200 ${
+                          isDisabled
+                            ? "border-gray-200 bg-gray-50 cursor-not-allowed opacity-60"
+                            : shippingMethod === key
+                              ? "border-red-900 bg-red-50 ring-2 ring-red-200 cursor-pointer"
+                              : "border-red-200 hover:border-red-300 hover:bg-red-50 cursor-pointer"
+                        }`}
                       >
                         <input
                           type="radio"
@@ -1337,26 +1348,29 @@ export default function CheckoutComponent() {
                             }
                           }}
                           disabled={isDisabled}
-                          className={`w-4 h-4 focus:ring-2 ${isDisabled
-                            ? "text-gray-400 cursor-not-allowed"
-                            : "text-red-900 focus:ring-red-500 cursor-pointer"
-                            }`}
+                          className={`w-4 h-4 focus:ring-2 ${
+                            isDisabled
+                              ? "text-gray-400 cursor-not-allowed"
+                              : "text-red-900 focus:ring-red-500 cursor-pointer"
+                          }`}
                         />
                         <div className="ml-4 flex-1">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                               <span
-                                className={`text-2xl ${isDisabled ? "opacity-50" : ""
-                                  }`}
+                                className={`text-2xl ${
+                                  isDisabled ? "opacity-50" : ""
+                                }`}
                               >
                                 {icon}
                               </span>
                               <div>
                                 <p
-                                  className={`font-bold ${isDisabled
-                                    ? "text-gray-400"
-                                    : "text-gray-900"
-                                    }`}
+                                  className={`font-bold ${
+                                    isDisabled
+                                      ? "text-gray-400"
+                                      : "text-gray-900"
+                                  }`}
                                 >
                                   {name}
                                   {isDisabled && (
@@ -1366,10 +1380,11 @@ export default function CheckoutComponent() {
                                   )}
                                 </p>
                                 <p
-                                  className={`text-sm ${isDisabled
-                                    ? "text-gray-400"
-                                    : "text-gray-600"
-                                    }`}
+                                  className={`text-sm ${
+                                    isDisabled
+                                      ? "text-gray-400"
+                                      : "text-gray-600"
+                                  }`}
                                 >
                                   {days}
                                 </p>
@@ -1391,8 +1406,9 @@ export default function CheckoutComponent() {
                             </div>
                             <div className="text-right">
                               <span
-                                className={`font-bold text-lg ${isDisabled ? "text-gray-400" : "text-red-900"
-                                  }`}
+                                className={`font-bold text-lg ${
+                                  isDisabled ? "text-gray-400" : "text-red-900"
+                                }`}
                               >
                                 {isDisabled
                                   ? `₹${price}`
@@ -1412,7 +1428,7 @@ export default function CheckoutComponent() {
                         </div>
                       </label>
                     );
-                  }
+                  },
                 )}
               </div>
             </div>
@@ -1439,7 +1455,11 @@ export default function CheckoutComponent() {
 
                     return (
                       <div
-                        key={item.id + (item.selectedSize || "") + (item.selectedColor || "")}
+                        key={
+                          item.id +
+                          (item.selectedSize || "") +
+                          (item.selectedColor || "")
+                        }
                         className="bg-red-50/50 rounded-xl border border-red-100 p-4"
                       >
                         <div className="flex items-center space-x-3">
@@ -1489,7 +1509,6 @@ export default function CheckoutComponent() {
 
                 {/* Summary Section */}
                 <div className="border-t-2 border-red-100 pt-4 space-y-3">
-
                   {/* Delivery Info Summary */}
                   {postalCodeValidation.deliveryInfo && (
                     <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
@@ -1564,10 +1583,11 @@ export default function CheckoutComponent() {
                 <button
                   onClick={handlePayment}
                   disabled={postalCodeValidation.isValidating || isProcessing}
-                  className={`w-full py-4 rounded-xl font-bold text-lg transform transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 ${postalCodeValidation.isValidating || isProcessing
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-gradient-to-r from-red-900 to-red-800 text-white hover:from-red-800 hover:to-red-700 hover:scale-105"
-                    }`}
+                  className={`w-full py-4 rounded-xl font-bold text-lg transform transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 ${
+                    postalCodeValidation.isValidating || isProcessing
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-gradient-to-r from-red-900 to-red-800 text-white hover:from-red-800 hover:to-red-700 hover:scale-105"
+                  }`}
                 >
                   {postalCodeValidation.isValidating ? (
                     <>

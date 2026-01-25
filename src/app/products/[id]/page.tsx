@@ -1,0 +1,118 @@
+import productApi from "@/app/api/v0/product-service";
+import ProductModule from "@/modules/(gulbhahar)/products";
+import { Product, SimilarProduct } from "@/modules/(gulbhahar)/products/types";
+import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { cache } from "react";
+
+/* ------------------------------------------------------------------ */
+/* Types */
+/* ------------------------------------------------------------------ */
+
+type PageParams = {
+  params: Promise<{
+    id: string;
+  }>;
+};
+
+/* ------------------------------------------------------------------ */
+/* 🔥 SINGLE SHARED CACHED FETCH */
+/* ------------------------------------------------------------------ */
+
+const getProductBundle = cache(
+  async (
+    productID: string,
+  ): Promise<{
+    product: Product | null;
+    similarProducts: SimilarProduct[];
+  }> => {
+    try {
+      const [product, similarProducts] = await Promise.all([
+        productApi.productById(productID),
+        productApi.getSimilarProducts(productID),
+      ]);
+
+      return {
+        product,
+        similarProducts: similarProducts ?? [],
+      };
+    } catch (error) {
+      console.error("Product bundle fetch failed:", error);
+      return { product: null, similarProducts: [] };
+    }
+  },
+);
+
+/* ------------------------------------------------------------------ */
+
+export const revalidate = 3600;
+export const dynamicParams = true;
+
+/* ------------------------------------------------------------------ */
+/* Metadata */
+/* ------------------------------------------------------------------ */
+
+export async function generateMetadata(props: PageParams): Promise<Metadata> {
+  const params = await props.params;
+  const { product } = await getProductBundle(params.id);
+
+  if (!product) {
+    return {
+      title: "Gulbhahar | Crafting Luxury – Handmade Juttis & Designer Bags",
+      description:
+        "Gulbhahar offers luxury handmade juttis and designer bags crafted by skilled artisans.",
+      alternates: {
+        canonical: "https://www.gulbhahar.com",
+      },
+    };
+  }
+
+  const title = product.title
+    ? `${product.title.slice(0, 43)}... - Gulbhahar`
+    : "Gulbhahar";
+
+  const description =
+    product.details?.[0] ?? "Shop handcrafted products at Gulbhahar";
+  const ogImage = product.images?.[0]?.[0];
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `https://www.gulbhahar.com/products/${params.id}`,
+    },
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      locale: "en_US",
+      siteName: "Gulbhahar",
+      url: `https://www.gulbhahar.com/products/${params.id}`,
+      images: ogImage
+        ? [
+            {
+              url: ogImage,
+              width: 800,
+              height: 600,
+              alt: product.name ?? "Product Image",
+            },
+          ]
+        : undefined,
+    },
+  };
+}
+
+/* ------------------------------------------------------------------ */
+/* Page */
+/* ------------------------------------------------------------------ */
+
+export default async function CollectionPage(props: PageParams) {
+  const params = await props.params;
+  const { product, similarProducts } = await getProductBundle(params.id);
+
+  if (!product) {
+    redirect("/not-found");
+  }
+
+  return <ProductModule product={product} similarProducts={similarProducts} />;
+}
