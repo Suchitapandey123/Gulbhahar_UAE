@@ -120,7 +120,7 @@ export default function Home_OurShowcase() {
         </p>
       </div>
 
-      <div className="flex overflow-x-auto gap-6  no-scrollbar snap-x snap-mandatory cursor-grab active:cursor-grabbing">
+      <div className="flex justify-center overflow-x-auto gap-6  no-scrollbar snap-x snap-mandatory cursor-grab active:cursor-grabbing">
         {CULTURAL_REELS.map((reel) => (
           <ReelItem key={reel.id} reel={reel} />
         ))}
