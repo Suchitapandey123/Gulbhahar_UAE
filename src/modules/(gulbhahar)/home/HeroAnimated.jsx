@@ -2,12 +2,12 @@
 import {
   motion,
   useScroll,
-  useTransform,
   useSpring,
+  useTransform,
 } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState, useRef } from "react";
-import { ArrowUpRight, Play, Pause } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 export default function ModernHeroAnimated() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -59,8 +59,8 @@ export default function ModernHeroAnimated() {
   const heroData = [
     {
       id: 1,
-      image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/hero-section/1.webp",
-      mobileImage: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/hero-section/1-mobile.webp",
+      image: "https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/1.webp",
+      mobileImage: "https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/1-mobile.webp",
       title: "GULBHAHAR",
       subtitle: "Heritage Reimagined",
       description: "Where traditional craftsmanship meets contemporary design",
@@ -79,8 +79,8 @@ export default function ModernHeroAnimated() {
     },
     {
       id: 2,
-      image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/hero-section/2.webp",
-      mobileImage: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/hero-section/2-mobile.webp",
+      image: "https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/2.webp",
+      mobileImage: "https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/2-mobile.webp",
       title: "ARTISAN",
       subtitle: "Handcrafted Excellence",
       description: "Each piece tells a story of generations of artistry",
@@ -98,8 +98,8 @@ export default function ModernHeroAnimated() {
     },
     {
       id: 3,
-      image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/hero-section/3.webp",
-      mobileImage: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/hero-section/3-mobile.webp",
+      image: "https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/3.webp",
+      mobileImage: "https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/3-mobile.webp",
       title: "LEGACY",
       subtitle: "Timeless Elegance",
       description: "Preserving tradition while embracing innovation",

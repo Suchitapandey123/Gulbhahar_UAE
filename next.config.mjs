@@ -58,6 +58,10 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "https://d21ojmskh8ksuv.cloudfront.net", // CloudFront CDN
+      },
+      {
+        protocol: "https",
         hostname: "d21ojmskh8ksuv.cloudfront.net", // CloudFront CDN
       },
       {

@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, } from 'react';
-import { ChevronDown, MapPin, Clock, Users, Award, Sparkles, Heart, Star } from 'lucide-react';
+import { Award, ChevronDown, Clock, Heart, MapPin, Star, Users } from 'lucide-react';
+import { useState, } from 'react';
 
 const LuxuryCulturePage = () => {
   const [selectedCraft, setSelectedCraft] = useState(null);
@@ -73,7 +73,7 @@ const LuxuryCulturePage = () => {
       description: "Gemstone work is a craft where small details matter. Crystal and Kundan work have been used in indian dressing, mainly for celebrations and important events. This craft is done with a light hand, keeping the look clean and wearable.",
       fullDescription: "At Gulbhahar, stones are placed carefully so they add shine without making the outfit feel heavy or uncomfortable. Crystal and Kundan give a neat festive touch to our suits that works well for both day and evening events. This craft adds beauty to sarees while staying easy to wear for long hours. Lehngas use gemstone work, which is perfect for weddings and family functions.Small stone details on juttis add charm and pair well with festive outfits. Bags carry light stone work that makes them stand out. Jewellery naturally completes the fit, as kundan and crystals are often the focus of traditional designs. These pieces are made to match the embroidered and handwoven outfits, creating a balanced look. Every piece of Gulbhahar is made by hand, where each artisans place each stone with focus and care.",
       image: "/heritage-culture/gemstone-craft2-optimized.webp",
-      // image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-8.png",
+      // image: "https://d21ojmskh8ksuv.cloudfront.net/gulbhahar-8.png",
       color: "from-rose-700 via-pink-600 to-red-500",
       accent: "border-rose-400",
       heritage: "600+ Years",

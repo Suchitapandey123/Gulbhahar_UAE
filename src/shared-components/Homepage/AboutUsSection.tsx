@@ -18,7 +18,7 @@ const stories: StorySection[] = [
   {
     id: 1,
     // image: "/home-page/Crafted-Through-Generations-optimized.webp",
-    image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/soul-of-gulbhahar/1.webp",
+    image: "https://d21ojmskh8ksuv.cloudfront.net/static/home/soul-of-gulbhahar/1.webp",
     category: "The Heritage",
     title: "Made with Love & Care",
     description:
@@ -27,7 +27,7 @@ const stories: StorySection[] = [
   },
   {
     id: 2,
-    image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/soul-of-gulbhahar/2.webp",
+    image: "https://d21ojmskh8ksuv.cloudfront.net/static/home/soul-of-gulbhahar/2.webp",
     category: "The Vision",
     title: "A Tradition That Is Perfect For Today",
     description:
@@ -36,7 +36,7 @@ const stories: StorySection[] = [
   },
   {
     id: 3,
-    image: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/soul-of-gulbhahar/3.webp",
+    image: "https://d21ojmskh8ksuv.cloudfront.net/static/home/soul-of-gulbhahar/3.webp",
     category: "The Ethics",
     title: "Crafting Luxury With Care",
     description:

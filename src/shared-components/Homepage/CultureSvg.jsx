@@ -1,4 +1,3 @@
-import React from 'react';
 
 const CultureImageText = () => {
   return (
@@ -8,7 +7,7 @@ const CultureImageText = () => {
         font-[900] 
         tracking-[0.1em] 
         m-0 
-        bg-[url('https://gulbahar-backend.s3.ap-south-1.amazonaws.com/gulbhahar-6.png')] 
+        bg-[url('https://d21ojmskh8ksuv.cloudfront.net/gulbhahar-6.png')] 
         bg-cover 
         bg-center 
         bg-no-repeat 

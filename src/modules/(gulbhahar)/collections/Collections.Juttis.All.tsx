@@ -1,8 +1,8 @@
 
+import productApi from "@/app/api/v0/product-service";
 import Image from "next/image";
 import { Fragment } from "react";
 import ProductCard from "../common/ProductCard";
-import productApi from "@/app/api/v0/product-service";
 
 
 export default async function Collections_Juttis_All() {
@@ -44,7 +44,7 @@ export default async function Collections_Juttis_All() {
                 {index === 4 && (
                   <div className="col-span-full w-full my-4">
                     <Image
-                      src="https://gulbahar-backend.s3.ap-south-1.amazonaws.com/public/banner-image.jpg"
+                      src="https://d21ojmskh8ksuv.cloudfront.net/public/banner-image.jpg"
                       height={500}
                       width={1000}
                       alt="Gulbhahar Collection Banner"

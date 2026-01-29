@@ -6,28 +6,28 @@ import Link from "next/link";
 export default function MatchSareeSection() {
   const sareeMatchData = [
     {
-      img: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/sold_out/engagement-saree-collection/engagement-saree-collection_2.jpg",
+      img: "https://d21ojmskh8ksuv.cloudfront.net/sold_out/engagement-saree-collection/engagement-saree-collection_2.jpg",
       link: "/collections/engagement-saree",
       label: "Engagement Saree",
       jutti: "Ivory Pearl Jutti",
       isNew: true,
     },
     {
-      img: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/sold_out/bridal-look-in-saree/bridal-look-in-saree_5.jpg",
+      img: "https://d21ojmskh8ksuv.cloudfront.net/sold_out/bridal-look-in-saree/bridal-look-in-saree_5.jpg",
       link: "/collections/bridal-saree",
       label: "Bridal Saree",
       jutti: "Red Zardozi Jutti",
       isNew: false,
     },
     {
-      img: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/sold_out/cotton-bandhani-saree/cotton-bandhani-saree_5.jpg",
+      img: "https://d21ojmskh8ksuv.cloudfront.net/sold_out/cotton-bandhani-saree/cotton-bandhani-saree_5.jpg",
       link: "/collections/bandhani-saree",
       label: "Bandhani Saree",
       jutti: "Yellow Thread Jutti",
       isNew: false,
     },
     {
-      img: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/sold_out/chiffon-banarasi-saree/chiffon-banarasi-saree_1.jpg",
+      img: "https://d21ojmskh8ksuv.cloudfront.net/sold_out/chiffon-banarasi-saree/chiffon-banarasi-saree_1.jpg",
       link: "/collections/banarasi-saree",
       label: "Banarasi Saree",
       jutti: "Gold Beaded Jutti",

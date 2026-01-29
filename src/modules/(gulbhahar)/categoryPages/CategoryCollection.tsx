@@ -2,7 +2,7 @@
 import { fbEvent } from "@/utils/fb/metaPixels";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import productApi from "../../../app/api/v0/product-service";
 import ProductCard from "../common/ProductCard";
 import CategoryCollection_Filters from "./CategoryCollection.Filters";
@@ -198,7 +198,7 @@ export default function CategoryCollection() {
                   {index === 4 && (
                     <div className="col-span-full w-full my-4">
                       <Image
-                        src="https://gulbahar-backend.s3.ap-south-1.amazonaws.com/public/banner-image.jpg"
+                        src="https://d21ojmskh8ksuv.cloudfront.net/public/banner-image.jpg"
                         height={500}
                         width={1000}
                         alt="Collection Banner"

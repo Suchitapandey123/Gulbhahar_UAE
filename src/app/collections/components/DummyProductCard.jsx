@@ -1,12 +1,12 @@
 "use client";
-import { useState } from "react";
 import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 
 const FALLBACK_IMAGES = [
-  "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/sold_out/engagement-saree-collection/engagement-saree-collection_2.jpg",
-  "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/sold_out/bridal-look-in-saree/bridal-look-in-saree_5.jpg",
-  "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/sold_out/cotton-bandhani-saree/cotton-bandhani-saree_5.jpg",
+  "https://d21ojmskh8ksuv.cloudfront.net/sold_out/engagement-saree-collection/engagement-saree-collection_2.jpg",
+  "https://d21ojmskh8ksuv.cloudfront.net/sold_out/bridal-look-in-saree/bridal-look-in-saree_5.jpg",
+  "https://d21ojmskh8ksuv.cloudfront.net/sold_out/cotton-bandhani-saree/cotton-bandhani-saree_5.jpg",
 ];
 
 // Dummy product data
@@ -90,7 +90,7 @@ export default function DummyProductCard({
   // If error, use fallback image based on index (cycles through 3 fallback images)
   const imageSrc = imageError
     ? FALLBACK_IMAGES[index % FALLBACK_IMAGES.length]
-    : `https://gulbahar-backend.s3.ap-south-1.amazonaws.com/sold_out/${slug}/${slug}_${item.num}.jpg`;
+    : `https://d21ojmskh8ksuv.cloudfront.net/sold_out/${slug}/${slug}_${item.num}.jpg`;
 
   return (
     <div

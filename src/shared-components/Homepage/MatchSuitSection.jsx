@@ -6,28 +6,28 @@ import Link from "next/link";
 export default function MatchSuitSection() {
   const suitMatchData = [
     {
-      img: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/sold_out/lavender-suit/lavender-suit_2.jpg",
+      img: "https://d21ojmskh8ksuv.cloudfront.net/sold_out/lavender-suit/lavender-suit_2.jpg",
       link: "/collections/plain-suit",
       label: "Lavender Suit Set",
       jutti: "Pink Thread Jutti",
       isNew: true,
     },
     {
-      img: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/sold_out/indo-western-suit/indo-western-suit_3.jpg",
+      img: "https://d21ojmskh8ksuv.cloudfront.net/sold_out/indo-western-suit/indo-western-suit_3.jpg",
       link: "/collections/designer-suits",
       label: "Designer Suit Set",
       jutti: "Golden Bead Jutti",
       isNew: false,
     },
     {
-      img: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/sold_out/indo-western-suit/indo-western-suit_2.jpg",
+      img: "https://d21ojmskh8ksuv.cloudfront.net/sold_out/indo-western-suit/indo-western-suit_2.jpg",
       link: "/collections/anarkali-suits",
       label: "Anarkali Suit Set",
       jutti: "Maroon Zari Jutti",
       isNew: false,
     },
     {
-      img: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/sold_out/cotton-suit/cotton-suit_1.jpg",
+      img: "https://d21ojmskh8ksuv.cloudfront.net/sold_out/cotton-suit/cotton-suit_1.jpg",
       link: "/collections/cotton-suits",
       label: "Cotton Suit Set",
       jutti: "Beige Handwork Jutti",

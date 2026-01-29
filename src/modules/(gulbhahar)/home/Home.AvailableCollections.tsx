@@ -8,31 +8,31 @@ const CATEGORIES = [
   {
     name: "Sarees",
     image:
-      "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/available-collections/saree.webp",
+      "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/saree.webp",
     slug: "sarees",
   },
   {
     name: "Bags",
     image:
-      "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/available-collections/bags.webp",
+      "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
     slug: "bags",
   },
   {
     name: "Suits",
     image:
-      "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/available-collections/suits.webp",
+      "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/suits.webp",
     slug: "suits",
   },
   {
     name: "Lehengas",
     image:
-      "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/available-collections/lehenga.webp",
+      "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/lehenga.webp",
     slug: "lehenga",
   },
   {
     name: "Juttis",
     image:
-      "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/available-collections/juttis.webp",
+      "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/juttis.webp",
     slug: "juttis",
   },
   
@@ -40,13 +40,13 @@ const CATEGORIES = [
   // {
   //   name: "Gowns",
   //   image:
-  //     "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/available-collections/suits.webp",
+  //     "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/suits.webp",
   //   slug: "gowns",
   // },
   {
     name: "Jewellery",
     image:
-      "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/available-collections/jewellery.webp",
+      "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/jewellery.webp",
     slug: "jewellery",
   },
 ];

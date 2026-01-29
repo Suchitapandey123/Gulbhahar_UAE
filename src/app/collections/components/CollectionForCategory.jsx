@@ -5,13 +5,11 @@ import { useCart } from "@/providers/ContextProviders/CartContext";
 import { GulbharLoader } from "@/shared-components/loader/GulbharLoader";
 import { fbEvent } from "@/utils/fb/metaPixels";
 import { useQuery } from "@tanstack/react-query";
-import { Grid, List, SlidersHorizontal } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import productApi from "../../api/v0/product-service";
 import DummyProductCard from "./DummyProductCard";
-import FilterSidebar from "./FilterSidebar";
 import ProductCard from "./ProductCard";
 
 const seasons = [
@@ -354,7 +352,7 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
                         {index === 4 && (
                           <div className="col-span-full w-full my-4">
                             <Image
-                              src="https://gulbahar-backend.s3.ap-south-1.amazonaws.com/public/banner-image.jpg"
+                              src="https://d21ojmskh8ksuv.cloudfront.net/public/banner-image.jpg"
                               height={500}
                               width={1000}
                               alt="Collection Banner"
@@ -391,7 +389,7 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
                 {/* Banner after dummy products */}
                 <div className="col-span-full w-full my-4">
                   <Image
-                    src="https://gulbahar-backend.s3.ap-south-1.amazonaws.com/public/banner-image.jpg"
+                    src="https://d21ojmskh8ksuv.cloudfront.net/public/banner-image.jpg"
                     height={500}
                     width={1000}
                     alt="Similar Products Below"
@@ -445,7 +443,7 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
                   {index === 4 && (
                     <div className="col-span-full w-full my-4">
                       <Image
-                        src="https://gulbahar-backend.s3.ap-south-1.amazonaws.com/public/banner-image.jpg"
+                        src="https://d21ojmskh8ksuv.cloudfront.net/public/banner-image.jpg"
                         height={500}
                         width={1000}
                         alt="Gulbhahar Collection Banner"

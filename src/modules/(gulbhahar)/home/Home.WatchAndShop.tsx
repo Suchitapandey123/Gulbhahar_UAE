@@ -9,73 +9,73 @@ const REELS_DATA = [
   {
     id: 1,
     videoUrl:
-      "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/watch-and-shop/saree.mp4",
+      "https://d21ojmskh8ksuv.cloudfront.net/static/home/watch-and-shop/saree.mp4",
     title: "The Ethereal Saree",
     product: {
       name: "Handcrafted Silk Saree",
       price: "₹14,999",
       image:
-        "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/available-collections/saree.webp",
+        "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/saree.webp",
     },
   },
   {
     id: 2,
     videoUrl:
-      "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/watch-and-shop/suits.mp4",
+      "https://d21ojmskh8ksuv.cloudfront.net/static/home/watch-and-shop/suits.mp4",
     title: "Royal Suit Edit",
     product: {
       name: "Embroidered Velvet Suit",
       price: "₹12,499",
       image:
-        "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/available-collections/suits.webp",
+        "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/suits.webp",
     },
   },
   {
     id: 3,
     videoUrl:
-      "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/watch-and-shop/lehenga.mp4",
+      "https://d21ojmskh8ksuv.cloudfront.net/static/home/watch-and-shop/lehenga.mp4",
     title: "The Grand Lehenga",
     product: {
       name: "Bridal Heritage Lehenga",
       price: "₹45,999",
       image:
-        "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/available-collections/lehenga.webp",
+        "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/lehenga.webp",
     },
   },
   {
     id: 4,
     videoUrl:
-      "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/watch-and-shop/jewellery.mp4",
+      "https://d21ojmskh8ksuv.cloudfront.net/static/home/watch-and-shop/jewellery.mp4",
     title: "Timeless Jewels",
     product: {
       name: "Kundan Statement Set",
       price: "₹8,499",
       image:
-        "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/available-collections/jewellery.webp",
+        "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/jewellery.webp",
     },
   },
   {
     id: 5,
     videoUrl:
-      "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/watch-and-shop/bags.mp4",
+      "https://d21ojmskh8ksuv.cloudfront.net/static/home/watch-and-shop/bags.mp4",
     title: "Artisan Bags",
     product: {
       name: "Hand-Embroidered Potli",
       price: "₹3,299",
       image:
-        "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/available-collections/bags.webp",
+        "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
     },
   },
   {
     id: 6,
     videoUrl:
-      "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/watch-and-shop/juttis.mp4",
+      "https://d21ojmskh8ksuv.cloudfront.net/static/home/watch-and-shop/juttis.mp4",
     title: "The Soulful Juttis",
     product: {
       name: "Traditional Leather Juttis",
       price: "₹2,499",
       image:
-        "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/available-collections/juttis.webp",
+        "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/juttis.webp",
     },
   },
 ];

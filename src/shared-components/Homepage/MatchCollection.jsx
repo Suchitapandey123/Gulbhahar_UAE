@@ -7,19 +7,19 @@ export default function MatchCollection() {
 
   const data = [
     {
-      img: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/sold_out/engagement-saree-collection/engagement-saree-collection_2.jpg",
+      img: "https://d21ojmskh8ksuv.cloudfront.net/sold_out/engagement-saree-collection/engagement-saree-collection_2.jpg",
       link: "/collections/bridal-saree-collection",
       label: "Sarees",
       isNew: true,
     },
     {
-      img: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/sold_out/lavender-suit/lavender-suit_2.jpg",
+      img: "https://d21ojmskh8ksuv.cloudfront.net/sold_out/lavender-suit/lavender-suit_2.jpg",
       link: "collections/plain-suit",
       label: "Suits",
       isNew: true,
     },
     {
-      img: "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/sold_out/chiffon-banarasi-saree/chiffon-banarasi-saree_1.jpg",
+      img: "https://d21ojmskh8ksuv.cloudfront.net/sold_out/chiffon-banarasi-saree/chiffon-banarasi-saree_1.jpg",
       link: "/collections/chiffon-banarasi-saree",
       label: "Banarasi Saree",
       isNew: true,
@@ -91,7 +91,7 @@ export default function MatchCollection() {
        
         <div className="col-span-full w-full my-4">
                           <Image
-                            src="https://gulbahar-backend.s3.ap-south-1.amazonaws.com/public/banner-image.jpg"
+                            src="https://d21ojmskh8ksuv.cloudfront.net/public/banner-image.jpg"
                             height={656}
                             width={1000}
                             alt="Similar Products Below"

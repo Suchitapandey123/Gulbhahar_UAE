@@ -13,10 +13,10 @@ const MONGO_URI = "mongodb://localhost:27017"; // update if needed
 const DB_NAME = "testing";
 const COLLECTION_NAME = "productv2";
 
-const OLD_BASE = "https://gulbahar-backend.s3.ap-south-1.amazonaws.com";
-const NEW_BASE = "https://d21ojmskh8ksuv.cloudfront.net";
-// const S3_URL = 'https://gulbahar-backend.s3.ap-south-1.amazonaws.com/public/banner-image.jpg';
-//         const CF_URL = 'https://d21ojmskh8ksuv.cloudfront.net/public/banner-image.jpg';
+const OLD_BASE = "https://d21ojmskh8ksuv.cloudfront.net";
+const NEW_BASE = "https://https://d21ojmskh8ksuv.cloudfront.net";
+// const S3_URL = 'https://d21ojmskh8ksuv.cloudfront.net/public/banner-image.jpg';
+//         const CF_URL = 'https://https://d21ojmskh8ksuv.cloudfront.net/public/banner-image.jpg';
 
 async function run() {
   const client = new MongoClient(MONGO_URI);

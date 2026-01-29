@@ -13,25 +13,25 @@ const CULTURAL_REELS: ReelData[] = [
   {
     id: 1,
     videoUrl:
-      "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/stories-in-motion/1.mp4",
+      "https://d21ojmskh8ksuv.cloudfront.net/static/home/stories-in-motion/1.mp4",
     title: "The Art of Zardozi",
   },
   {
     id: 2,
     videoUrl:
-      "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/stories-in-motion/2.mp4",
+      "https://d21ojmskh8ksuv.cloudfront.net/static/home/stories-in-motion/2.mp4",
     title: "Handloom Heritage",
   },
   {
     id: 3,
     videoUrl:
-      "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/stories-in-motion/3.mp4",
+      "https://d21ojmskh8ksuv.cloudfront.net/static/home/stories-in-motion/3.mp4",
     title: "Mastering Silk",
   },
   {
     id: 4,
     videoUrl:
-      "https://gulbahar-backend.s3.ap-south-1.amazonaws.com/static/home/stories-in-motion/4.mp4",
+      "https://d21ojmskh8ksuv.cloudfront.net/static/home/stories-in-motion/4.mp4",
     title: "The Craftsmanship Story",
   },
 ];
