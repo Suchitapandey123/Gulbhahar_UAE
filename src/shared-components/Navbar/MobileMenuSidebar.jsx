@@ -1,8 +1,8 @@
 import { LogOut, Package, Settings, User, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect } from "react";
-import MobileUserSection from "./MobileUserSection";
 import MobileNavigationLinks from "./MobileNavigationLinks";
+import MobileUserSection from "./MobileUserSection";
 
 const MobileMenuSidebar = ({
   isMenuOpen,
@@ -19,19 +19,19 @@ const MobileMenuSidebar = ({
   // Prevent body scroll when menu is open
   useEffect(() => {
     if (isMenuOpen) {
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
+      document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.width = "100%";
     } else {
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
     }
 
     return () => {
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
     };
   }, [isMenuOpen]);
 
@@ -42,32 +42,44 @@ const MobileMenuSidebar = ({
       items: [
         {
           name: "Juttis",
-          slug: "/collections/juttis"
+          slug: "/collections/juttis",
         },
         {
           name: "Punjabi Juttis",
-          slug: "/collections/punjabi-juttis"
+          slug: "/collections/punjabi-juttis",
         },
         {
           name: "Bridal Juttis",
-          slug: "/collections/bridal-juttis"
+          slug: "/collections/bridal-juttis",
         },
         {
           name: "Punjabi Juttis For Ladies",
-          slug: "/collections/punjabi-juttis-for-ladies"
+          slug: "/collections/punjabi-juttis-for-ladies",
         },
         {
           name: "Juttis For Women",
-          slug: "/collections/juttis-for-women"
-        }
-      ]
+          slug: "/collections/juttis-for-women",
+        },
+      ],
     },
   ];
 
   const userMenuItems = [
-    { icon: User, label: "My Profile", href: "/account/account-centre/profile" },
-    { icon: Package, label: "My Orders", href: "/account/account-centre/my-order" },
-    { icon: Settings, label: "Settings", href: "/account/account-centre/settings" },
+    {
+      icon: User,
+      label: "My Profile",
+      href: "/account/account-centre/profile",
+    },
+    {
+      icon: Package,
+      label: "My Orders",
+      href: "/account/account-centre/my-order",
+    },
+    {
+      icon: Settings,
+      label: "Settings",
+      href: "/account/account-centre/settings",
+    },
   ];
 
   const toggleCategory = (index) => {
@@ -90,18 +102,10 @@ const MobileMenuSidebar = ({
 
   return (
     <>
-      {/* Backdrop/Overlay */}
-      {isMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity duration-300"
-          onClick={toggleMenu}
-        />
-      )}
-
       {/* Sidebar */}
       <div
         className={`
-          md:hidden fixed inset-y-0 left-0 z-50 
+          md:hidden fixed inset-y-0 left-0 z-[10001] 
           w-[280px] xs:w-[300px] sm:w-80 bg-white shadow-xl
           transition-transform duration-300 ease-out
           ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}

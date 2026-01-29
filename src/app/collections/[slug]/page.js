@@ -1,4 +1,3 @@
-import CategoryCollection from "@/modules/(gulbhahar)/categoryPages/CategoryCollection";
 import CategoryCollection_DummyProducts from "@/modules/(gulbhahar)/categoryPages/CategoryCollection.DummyProducts";
 import CategoryCollection_MatchingProducts from "@/modules/(gulbhahar)/categoryPages/CategoryCollection.MatchingProducts";
 import { redirect } from "next/navigation";

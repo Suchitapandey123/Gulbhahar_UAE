@@ -80,12 +80,19 @@ export default function JuttisCollectionClient({
   const filteredProducts = useMemo(() => {
     const priceRange = parsePriceRange(collectionFilters.price);
 
+    const getPrice = (item: any) => {
+      if (typeof item.price === "number") return item.price;
+      const cleaned = String(item.price || "0").replace(/[^0-9.]/g, "");
+      return parseFloat(cleaned) || 0;
+    };
+
     return initialProducts
       .filter((item: any) => {
+        const itemPrice = getPrice(item);
         // Price filter
         const matchesPrice =
           !priceRange ||
-          (item.price >= priceRange[0] && item.price <= priceRange[1]);
+          (itemPrice >= priceRange[0] && itemPrice <= priceRange[1]);
 
         // Size filter - support both formats
         const productSizes: string[] =
@@ -151,17 +158,19 @@ export default function JuttisCollectionClient({
           matchesFabric
         );
       })
-      .sort((a: Product, b: Product) => {
+      .sort((a: any, b: any) => {
+        const priceA = getPrice(a);
+        const priceB = getPrice(b);
+
         switch (collectionFilters.sortBy) {
           case "price-desc":
-            return b.price - a.price;
+            return priceB - priceA;
           case "price-asc":
-            return a.price - b.price;
+            return priceA - priceB;
           case "newest":
-            return (
-              new Date(b.createdAt || 0).getTime() -
-              new Date(a.createdAt || 0).getTime()
-            );
+            const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+            const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+            return dateB - dateA;
           default:
             return 0;
         }
@@ -177,7 +186,7 @@ export default function JuttisCollectionClient({
 
   return (
     <div className="w-full lg:px-2">
-      <div className="border-b-2 border-red-200 mb-6">
+      <div className="border-b mb-3 pb-3">
         <CategoryCollection_Filters
           onFilterChange={handleCollectionFilterChange}
           resultCount={filteredProducts.length}

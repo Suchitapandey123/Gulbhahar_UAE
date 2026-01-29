@@ -97,7 +97,7 @@ console.log(categoryField)
   return (
     <div
       ref={ref}
-      className="max-w-[1600px] mx-auto px-2 sm:px-6 lg:px-8 py-8"
+      className=""
     >
       {/* Header Section */}
       <div className="flex justify-between items-center mb-12">

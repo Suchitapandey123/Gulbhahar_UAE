@@ -9,5 +9,4 @@ const All_Collections = () => {
     </>
   )
 }
-
 export default All_Collections

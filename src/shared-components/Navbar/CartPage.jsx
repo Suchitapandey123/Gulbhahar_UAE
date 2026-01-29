@@ -1,23 +1,13 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import {
-  X,
-  ShoppingBag,
-  Plus,
-  Minus,
-  Trash2,
-  Eye,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react";
-import Image from "next/image";
-import { useCart } from "@/providers/ContextProviders/CartContext";
-import { gaEvent } from "@/utils/gtm/gtag";
-import { fbEvent } from "@/utils/fb/metaPixels";
 import analyticsAPI from "@/app/api/analytics/analytics";
+import { useCart } from "@/providers/ContextProviders/CartContext";
+import { fbEvent } from "@/utils/fb/metaPixels";
+import { gaEvent } from "@/utils/gtm/gtag";
+import { ChevronDown, ChevronUp, ShoppingBag, Trash2, X } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const CartPage = () => {
   const {
@@ -135,7 +125,6 @@ const CartPage = () => {
     }
   };
 
-
   // Get the current image for display with cache-busting
   const getCurrentImage = (item) => {
     let imageUrl = null;
@@ -164,12 +153,12 @@ const CartPage = () => {
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 z-40"
+        className="fixed inset-0 bg-black bg-opacity-50 z-[10001]"
         onClick={toggleCart}
       />
 
       {/* Cart Sidebar */}
-      <div className="fixed mt-[88px] right-0 top-0 h-[calc(100%-88px)] w-full max-w-md bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out">
+      <div className="fixed mt-[88px] right-0 top-0 h-[calc(100%-88px)] w-full max-w-md bg-white shadow-xl z-[10002] transform transition-transform duration-300 ease-in-out">
         <div className="flex  flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
@@ -245,7 +234,10 @@ const CartPage = () => {
                   .filter((item) => !loadingItems.has(item.id))
                   .map((item) => (
                     <div
-                      key={item.cartId || `${item.id}-${item.selectedColor}-${item.selectedSize}`} // ✅ unique key
+                      key={
+                        item.cartId ||
+                        `${item.id}-${item.selectedColor}-${item.selectedSize}`
+                      } // ✅ unique key
                       className="border border-red-200 rounded-lg"
                     >
                       {/* Main Item Row */}
@@ -301,7 +293,12 @@ const CartPage = () => {
                           <div className="flex items-center gap-2 mt-2">
                             <button
                               onClick={() =>
-                                updateQuantity(item.id, item.quantity - 1, item.selectedColor, item.selectedSize)
+                                updateQuantity(
+                                  item.id,
+                                  item.quantity - 1,
+                                  item.selectedColor,
+                                  item.selectedSize,
+                                )
                               }
                             >
                               -
@@ -311,19 +308,29 @@ const CartPage = () => {
 
                             <button
                               onClick={() =>
-                                updateQuantity(item.id, item.quantity + 1, item.selectedColor, item.selectedSize)
+                                updateQuantity(
+                                  item.id,
+                                  item.quantity + 1,
+                                  item.selectedColor,
+                                  item.selectedSize,
+                                )
                               }
                             >
                               +
                             </button>
 
                             <button
-                              onClick={() => removeFromCart(item.id, item.selectedColor, item.selectedSize)}
+                              onClick={() =>
+                                removeFromCart(
+                                  item.id,
+                                  item.selectedColor,
+                                  item.selectedSize,
+                                )
+                              }
                               className="p-1 hover:bg-red-100 text-red-600 rounded transition-colors ml-2"
                             >
                               <Trash2 size={14} />
                             </button>
-
                           </div>
                         </div>
 
@@ -336,18 +343,18 @@ const CartPage = () => {
                           {/* Toggle Variant Selector Button */}
                           {((item.colors && item.colors.length > 1) ||
                             (item.sizes && item.sizes.length > 1)) && (
-                              <button
-                                onClick={() => toggleVariantSelector(item.id)}
-                                className="p-1 hover:bg-gray-100 rounded transition-colors text-gray-500 hover:text-gray-700"
-                                title="Change color/size"
-                              >
-                                {expandedItems.has(item.id) ? (
-                                  <ChevronUp size={16} />
-                                ) : (
-                                  <ChevronDown size={16} />
-                                )}
-                              </button>
-                            )}
+                            <button
+                              onClick={() => toggleVariantSelector(item.id)}
+                              className="p-1 hover:bg-gray-100 rounded transition-colors text-gray-500 hover:text-gray-700"
+                              title="Change color/size"
+                            >
+                              {expandedItems.has(item.id) ? (
+                                <ChevronUp size={16} />
+                              ) : (
+                                <ChevronDown size={16} />
+                              )}
+                            </button>
+                          )}
                         </div>
                       </div>
 
@@ -371,21 +378,23 @@ const CartPage = () => {
                                         handleColorChange(
                                           item,
                                           color,
-                                          colorIndex
+                                          colorIndex,
                                         )
                                       }
                                       disabled={loadingItems.has(item.id)}
-                                      className={`w-8 h-10 rounded-md overflow-hidden border-2 transition-all duration-200 ${item.selectedColor === color
-                                        ? "border-red-900 scale-105"
-                                        : "border-gray-200 hover:border-gray-400"
-                                        } ${loadingItems.has(item.id)
+                                      className={`w-8 h-10 rounded-md overflow-hidden border-2 transition-all duration-200 ${
+                                        item.selectedColor === color
+                                          ? "border-red-900 scale-105"
+                                          : "border-gray-200 hover:border-gray-400"
+                                      } ${
+                                        loadingItems.has(item.id)
                                           ? "opacity-50 cursor-not-allowed"
                                           : ""
-                                        }`}
+                                      }`}
                                       title={color}
                                     >
                                       {item.images &&
-                                        item.images[colorIndex] ? (
+                                      item.images[colorIndex] ? (
                                         <Image
                                           src={
                                             item.images[colorIndex][0] ||
@@ -413,10 +422,11 @@ const CartPage = () => {
                                     </button>
                                     {/* Color Name */}
                                     <span
-                                      className={`text-xs font-medium px-1 text-center min-w-0 max-w-[60px] truncate ${item.selectedColor === color
-                                        ? "text-red-900"
-                                        : "text-gray-600"
-                                        }`}
+                                      className={`text-xs font-medium px-1 text-center min-w-0 max-w-[60px] truncate ${
+                                        item.selectedColor === color
+                                          ? "text-red-900"
+                                          : "text-gray-600"
+                                      }`}
                                       title={color}
                                     >
                                       {color}
@@ -439,13 +449,15 @@ const CartPage = () => {
                                     key={size}
                                     onClick={() => handleSizeChange(item, size)}
                                     disabled={loadingItems.has(item.id)}
-                                    className={`px-3 py-1 text-xs border rounded transition-all duration-200 ${item.selectedSize === size
-                                      ? "border-red-900 bg-red-900 text-white"
-                                      : "border-gray-200 hover:border-gray-400 hover:bg-gray-100"
-                                      } ${loadingItems.has(item.id)
+                                    className={`px-3 py-1 text-xs border rounded transition-all duration-200 ${
+                                      item.selectedSize === size
+                                        ? "border-red-900 bg-red-900 text-white"
+                                        : "border-gray-200 hover:border-gray-400 hover:bg-gray-100"
+                                    } ${
+                                      loadingItems.has(item.id)
                                         ? "opacity-50 cursor-not-allowed"
                                         : ""
-                                      }`}
+                                    }`}
                                   >
                                     {size}
                                   </button>
@@ -463,10 +475,11 @@ const CartPage = () => {
                   <button
                     onClick={clearCart}
                     disabled={loadingItems.size > 0}
-                    className={`w-full py-2 text-sm text-red-600 hover:bg-red-50 border border-red-200 rounded-lg transition-colors ${loadingItems.size > 0
-                      ? "opacity-50 cursor-not-allowed"
-                      : ""
-                      }`}
+                    className={`w-full py-2 text-sm text-red-600 hover:bg-red-50 border border-red-200 rounded-lg transition-colors ${
+                      loadingItems.size > 0
+                        ? "opacity-50 cursor-not-allowed"
+                        : ""
+                    }`}
                   >
                     Clear All Items
                   </button>
@@ -489,31 +502,30 @@ const CartPage = () => {
               {/* Checkout Buttons */}
               <div className="space-y-2">
                 <button
-                  onClick={async() => {
+                  onClick={async () => {
                     gaEvent({
                       action: "redirected To checkout page ",
                       params: {
-                        "First_Product_Name": cart[0].name,
-                        "Product_Ids": cart.map(item => item.productId),
+                        First_Product_Name: cart[0].name,
+                        Product_Ids: cart.map((item) => item.productId),
                       },
-                    })
+                    });
                     fbEvent({
                       action: "InitiateCheckout",
                       params: {
-                        "First_Product_Name": cart[0].name,
-                        "content_ids": cart.map(item => item.productId),
+                        First_Product_Name: cart[0].name,
+                        content_ids: cart.map((item) => item.productId),
                       },
-                    })
+                    });
 
                     try {
-                        const res = await analyticsAPI.trackProceedToCheckout()
-                        // console.log(res)
+                      const res = await analyticsAPI.trackProceedToCheckout();
+                      // console.log(res)
                     } catch (error) {
-                      console.error(error)
+                      console.error(error);
                     }
-                  
 
-                    window.location.href = "/cart/checkout"
+                    window.location.href = "/cart/checkout";
                   }}
                   className="w-full bg-red-900 hover:bg-red-800 text-white py-3 rounded-lg font-semibold transition-colors"
                 >

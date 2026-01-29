@@ -1,6 +1,7 @@
 "use client";
 
-import { ChevronDown, X } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { ArrowUpDown, ChevronDown, Filter, RotateCcw, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 interface FilterOption {
@@ -44,58 +45,86 @@ const DropdownFilter: React.FC<DropdownFilterProps> = ({
     if (!isOpen) return;
 
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         onToggle();
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
   }, [isOpen, onToggle]);
 
-  const selectedLabel = options.find((opt) => opt.value === value)?.label;
-  const hasSelection = value !== "all";
+  const selectedOption = options.find((opt) => opt.value === value);
+  const selectedLabel = selectedOption?.label || label;
+  const isSort = label === "Sort";
+  const hasSelection = value !== "all" && value !== "relevance";
+
 
   return (
     <div ref={containerRef} className=" relative ">
       <button
         onClick={onToggle}
-        className={`flex items-center gap-2 px-3 py-2  bg-slate-200 transition-all duration-200 whitespace-nowrap  text-sm ${
+        className={cn(
+          "flex items-center gap-2 px-3 py-2 transition-all duration-200 whitespace-nowrap text-sm font-semibold ",
           isOpen
-            ? "border-red-400 shadow-md bg-red-50"
-            : hasSelection
-            ? "border-red-300 bg-red-50"
-            : "border-gray-300 hover:border-gray-400 hover:shadow-sm"
-        }`}
+            ? "border-b-2 border-gray-100 bg-gray-50 rounded-b-none"
+            : hasSelection || (isSort && value !== "relevance")
+              ? "border border-red-900/20 bg-red-50/30 text-red-900"
+              : "border border-gray-200 bg-white text-gray-900 shadow-sm hover:border-gray-300",
+        )}
       >
-        <span className="font-medium text-gray-900">
-          {label}
-          {hasSelection ? `: ${selectedLabel}` : ""}
+        {isSort && <ArrowUpDown size={16} className="text-gray-700" />}
+        <span className="font-medium text-gray-900 transition-all hidden sm:flex items-center">
+          {isSort ? (
+            <span className="flex items-center">
+              <span className="hidden sm:inline">Sort: </span>
+              <span className="ml-1">{selectedLabel}</span>
+            </span>
+          ) : (
+            <>
+              <span>{label}</span>
+              {hasSelection && (
+                <span className="hidden md:inline font-bold">
+                  : {selectedLabel}
+                </span>
+              )}
+            </>
+          )}
         </span>
         <ChevronDown
           size={16}
-          className={`text-gray-700 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          className={cn(
+            "text-gray-700 transition-transform duration-200 ml-1",
+            isOpen ? "rotate-180" : "",
+            isSort ? "hidden sm:block" : "",
+          )}
         />
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-xl max-h-64 overflow-y-auto z-50">
-          {options.map((option) => (
-            <button
-              key={option.value}
-              onClick={() => {
-                onChange(option.value);
-                onToggle();
-              }}
-              className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 transition-all duration-150 ${
-                value === option.value
-                  ? "bg-red-50 text-red-900 font-semibold"
-                  : "text-gray-700"
-              }`}
-            >
-              {option.label}
-            </button>
-          ))}
+        <div className="absolute top-full border right-0 sm:left-0 mt-2 w-48 bg-white  border-gray-100 shadow-2xl overflow-hidden z-[10003] animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="max-h-64 overflow-y-auto pt-1 pb-1">
+            {options.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => {
+                  onChange(option.value);
+                  onToggle();
+                }}
+                className={cn(
+                  "w-full text-left px-4 py-2.5 text-sm transition-all duration-150",
+                  value === option.value
+                    ? "bg-red-50 text-red-900 font-bold"
+                    : "text-gray-700 hover:bg-gray-50",
+                )}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
         </div>
       )}
     </div>
@@ -107,6 +136,7 @@ export default function CategoryCollection_Filters({
   resultCount = 0,
 }: CollectionFiltersProps) {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const [filters, setFilters] = useState({
     size: "all",
     color: "all",
@@ -116,6 +146,14 @@ export default function CategoryCollection_Filters({
     price: "all",
     sortBy: "relevance",
   });
+
+  useEffect(() => {
+    if (isMobileDrawerOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+  }, [isMobileDrawerOpen]);
 
   const handleFilterChange = (key: string, value: string) => {
     const newFilters = { ...filters, [key]: value };
@@ -228,7 +266,9 @@ export default function CategoryCollection_Filters({
 
     Object.entries(filters).forEach(([key, value]) => {
       if (value !== "all" && key !== "sortBy") {
-        const option = allFilterOptions[key]?.find((opt) => opt.value === value);
+        const option = allFilterOptions[key]?.find(
+          (opt) => opt.value === value,
+        );
         if (option) {
           active.push({ key, label: option.label });
         }
@@ -240,10 +280,45 @@ export default function CategoryCollection_Filters({
   const activeFilters = getActiveFilters();
 
   return (
-    <div className="w-full bg-white">
-      <div className="max-w-[1800px] mx-auto">
-        {/* Filters Row */}
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3 py-4">
+    <div className="w-full bg-white ">
+      <div className="max-w-[1800px] mx-auto ">
+        {/* Mobile Filter Button Row */}
+        <div className="flex md:hidden items-center justify-between gap-4  bg-white sticky top-0 z-[40]">
+          <div className="flex-1">
+            {resultCount > 0 && (
+              <span className="text-[12px] sm:text-base font-bold text-gray-400 uppercase tracking-widest">
+                {resultCount} {resultCount === 1 ? "Product" : "Products"}
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setIsMobileDrawerOpen(true)}
+              className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 text-sm font-semibold text-gray-900 shadow-sm active:scale-95 transition-all"
+            >
+              <Filter size={16} className="text-gray-900" />
+              <span className="hidden sm:inline">Filters</span>
+              {activeFilters.length > 0 && (
+                <span className="flex items-center justify-center w-5 h-5 bg-red-900 text-white text-[10px] font-bold rounded-full">
+                  {activeFilters.length}
+                </span>
+              )}
+            </button>
+
+            <DropdownFilter
+              label="Sort"
+              options={sortOptions}
+              value={filters.sortBy}
+              onChange={(value) => handleFilterChange("sortBy", value)}
+              isOpen={openDropdown === "sort"}
+              onToggle={() => toggleDropdown("sort")}
+            />
+          </div>
+        </div>
+
+        {/* Desktop Filters Row */}
+        <div className="hidden md:flex flex-wrap items-center gap-2 sm:gap-3 py-4">
           <DropdownFilter
             label="Size"
             options={sizeOptions}
@@ -311,12 +386,100 @@ export default function CategoryCollection_Filters({
           </div>
         </div>
 
+        {/* Mobile Filter Drawer */}
+        <div
+          className={cn(
+            "fixed inset-0 z-[10002] transition-opacity duration-300 md:hidden",
+            isMobileDrawerOpen
+              ? "opacity-100 pointer-events-auto"
+              : "opacity-0 pointer-events-none",
+          )}
+        >
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setIsMobileDrawerOpen(false)}
+          />
+          <div
+            className={cn(
+              "absolute bottom-0 left-0 right-0 max-h-[90vh] bg-white rounded-t-[2.5rem] shadow-2xl transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] transform flex flex-col",
+              isMobileDrawerOpen ? "translate-y-0" : "translate-y-full",
+            )}
+          >
+            {/* Drawer Handle */}
+            <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mt-4 mb-2" />
+
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+              <h2 className="text-xl font-semibold text-gray-900">Filters</h2>
+              <button
+                onClick={clearAllFilters}
+                className="text-sm font-medium text-red-600 flex items-center gap-1 active:scale-95 transition-transform"
+              >
+                <RotateCcw size={14} />
+                Reset
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto px-2 py-4 space-y-6">
+              {[
+                { name: "size", label: "Size", options: sizeOptions },
+                { name: "color", label: "Color", options: colorOptions },
+                { name: "season", label: "Season", options: seasonOptions },
+                { name: "fabric", label: "Fabrics", options: fabricOptions },
+                {
+                  name: "collections",
+                  label: "Collections",
+                  options: collectionsOptions,
+                },
+                { name: "price", label: "Price", options: priceOptions },
+              ].map((section) => (
+                <div key={section.name} className="space-y-4">
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500">
+                    {section.label}
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {section.options.map((option) => (
+                      <button
+                        key={option.value}
+                        onClick={() =>
+                          handleFilterChange(section.name, option.value)
+                        }
+                        className={cn(
+                          "px-4 py-2 text-sm transition-all border",
+                          filters[section.name as keyof typeof filters] ===
+                            option.value
+                            ? "bg-red-900  text-white shadow-md scale-105"
+                            : "bg-gray-50 border-gray-200 text-gray-700 hover:border-gray-300",
+                        )}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="p-2 border-t border-gray-100 bg-gray-50/50">
+              <button
+                onClick={() => setIsMobileDrawerOpen(false)}
+                className="w-full py-3 bg-gray-900 text-white rounded-2xl font-semibold shadow-lg active:scale-[0.98] transition-all"
+              >
+                Show Results
+              </button>
+            </div>
+          </div>
+        </div>
+
         {/* Active Filters and Result Count */}
         {(activeFilters.length > 0 || resultCount > 0) && (
-          <div className="pb-4 flex flex-wrap items-center gap-2">
+          <div className="hidden md:flex flex-wrap items-center gap-2">
             {resultCount > 0 && (
-              <span className="text-sm text-gray-600 mr-2">
+              <span className="text-gray-600 mr-2">
+                {resultCount > 0 && (
+              <span className="text-[12px] sm:text-base font-bold text-gray-400 uppercase tracking-widest">
                 {resultCount} {resultCount === 1 ? "Product" : "Products"}
+              </span>
+            )}
               </span>
             )}
 

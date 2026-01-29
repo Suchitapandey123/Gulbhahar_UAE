@@ -1,10 +1,10 @@
 "use client";
+import GulbhaharSidebar from "@/modules/(gulbhahar)/sidebar/Sidebar";
 import { useAuth } from "@/providers/ContextProviders/AuthContext";
 import { useCart } from "@/providers/ContextProviders/CartContext";
 import CartPage from "@/shared-components/Navbar/CartPage";
 import CollectionsDropdown from "@/shared-components/Navbar/CollectionsDropdown";
 import DesktopNav from "@/shared-components/Navbar/DesktopNav";
-import MobileMenuSidebar from "@/shared-components/Navbar/MobileMenuSidebar";
 import MobileNav from "@/shared-components/Navbar/MobileNav";
 import SearchPopup from "@/shared-components/Navbar/SearchPopup";
 import { Menu, X } from "lucide-react";
@@ -218,16 +218,8 @@ const Navbar = () => {
       <SearchPopup isOpen={isSearchOpen} onClose={toggleSearchPopup} />
       {isCartOpen && <CartPage />}
 
-      {/* Enhanced Mobile Backdrop with Blur */}
-      {isMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9998] transition-all duration-500 ease-in-out md:hidden"
-          onClick={toggleMenu}
-        />
-      )}
-
       <nav
-        className={`fixed top-0 left-0 right-0 z-[9999] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+        className={` fixed top-0 left-0 right-0 z-[9999] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${
           isScrolled || pathname !== "/"
             ? "bg-white/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] py-1.5 lg:py-2 border-b border-gray-200/30"
             : "bg-transparent py-4 lg:py-6 border-b border-white/5"
@@ -290,13 +282,13 @@ const Navbar = () => {
         />
       </nav>
 
-      {/* Mobile Menu Sidebar */}
-      <MobileMenuSidebar
-        isMenuOpen={isMenuOpen}
-        toggleMenu={toggleMenu}
-        openCategoryIndex={openCategoryIndex}
-        setOpenCategoryIndex={setOpenCategoryIndex}
-        {...sharedProps}
+      {/* Gulbhahar Sidebar */}
+      <GulbhaharSidebar
+        isOpen={isMenuOpen}
+        onClose={toggleMenu}
+        userData={userData}
+        isAuthenticated={isAuthenticated}
+        onLogout={handleLogout}
       />
     </>
   );
