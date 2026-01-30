@@ -1,4 +1,3 @@
-"use client";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -142,7 +141,7 @@ const Home_NewCulture: React.FC = () => {
         {/* Heritage showcase */}
         <div className="max-w-8xl mx-auto">
           {/* Desktop - Premium grid layout */}
-          <div className="hidden lg:block px-6">
+          <div className="hidden lg:block">
             <Link href="/heritage-culture">
               <div className="grid grid-cols-12 grid-rows-8 gap-6 h-[900px]">
                 {/* Featured Royal Embroidery */}

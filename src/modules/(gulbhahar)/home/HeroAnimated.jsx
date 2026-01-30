@@ -1,10 +1,5 @@
 "use client";
-import {
-  motion,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -21,7 +16,7 @@ export default function ModernHeroAnimated() {
   useEffect(() => {
     const originalOverflow = document.body.style.overflowX;
     document.body.style.overflowX = 'hidden';
-    
+
     const timer = setTimeout(() => {
       document.body.style.overflowX = originalOverflow;
       setIsFirstLoad(false);
@@ -33,29 +28,6 @@ export default function ModernHeroAnimated() {
     };
   }, []);
 
-  // Parallax scrolling effect
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
-
-  // Reduced parallax intensity
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
-  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "10%"]);
-
-  // Spring animations for smoother parallax
-  const smoothBgY = useSpring(backgroundY, {
-    stiffness: 120,
-    damping: 20,
-    mass: 0.5,
-  });
-
-  const smoothTextY = useSpring(textY, {
-    stiffness: 120,
-    damping: 20,
-    mass: 0.5,
-  });
-
   const heroData = [
     {
       id: 1,
@@ -66,7 +38,6 @@ export default function ModernHeroAnimated() {
       description: "Where traditional craftsmanship meets contemporary design",
       accent: "Spring '25",
       color: "#8B4513",
-      // REVERSE ZOOM CONFIG - 6 seconds
       zoomConfig: {
         startScale: 1.15,
         endScale: 1.0,
@@ -135,15 +106,15 @@ export default function ModernHeroAnimated() {
 
     timerRef.current = setTimeout(() => {
       setIsTransitioning(true);
-      
+
       setTimeout(() => {
         setCurrentIndex((prev) => {
           const next = (prev + 1) % heroData.length;
           return next;
         });
         setIsTransitioning(false);
-      }, 600); // Transition duration
-    }, 6000); // Total time per slide = 6 seconds
+      }, 600);
+    }, 6000);
 
     return () => {
       if (timerRef.current) {
@@ -152,7 +123,7 @@ export default function ModernHeroAnimated() {
     };
   }, [currentIndex, isPlaying, heroData.length, isTransitioning]);
 
-  // Text animation variants
+  // Text animation variants - removed blur
   const textContainerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -169,51 +140,30 @@ export default function ModernHeroAnimated() {
       opacity: 0,
       y: isFirstLoad ? 20 : 100,
       rotateX: isFirstLoad ? 0 : 90,
-      filter: isFirstLoad ? "blur(2px)" : "blur(0px)",
     },
     visible: {
       opacity: 1,
       y: 0,
       rotateX: 0,
-      filter: "blur(0px)",
       transition: {
         duration: isFirstLoad ? 1.2 : 0.8,
         ease: isFirstLoad ? [0.16, 1, 0.3, 1] : [0.23, 1, 0.32, 1],
         opacity: { duration: isFirstLoad ? 0.8 : 0.6 },
-        filter: { duration: isFirstLoad ? 0.6 : 0.4 },
       },
     },
-  };
-
-  // Reverse zoom variants
-  const zoomVariants = {
-    initial: {
-      scale: currentSlide.zoomConfig.startScale,
-      y: currentSlide.zoomConfig.startY,
-      x: currentSlide.zoomConfig.startX,
-    },
-    animate: {
-      scale: currentSlide.zoomConfig.endScale,
-      y: currentSlide.zoomConfig.endY,
-      x: currentSlide.zoomConfig.endX,
-      transition: {
-        duration: currentSlide.zoomConfig.duration,
-        ease: "linear"
-      }
-    }
   };
 
   // Handle manual slide change
   const handleSlideChange = (index) => {
     if (index === currentIndex || isTransitioning) return;
-    
+
     setIsFirstLoad(false);
     setIsTransitioning(true);
-    
+
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
-    
+
     setTimeout(() => {
       setCurrentIndex(index);
       setIsTransitioning(false);
@@ -232,7 +182,6 @@ export default function ModernHeroAnimated() {
           max-width: 100vw;
         }
 
-        /* Smooth scrolling for better performance */
         html {
           scroll-behavior: smooth;
         }
@@ -268,7 +217,7 @@ export default function ModernHeroAnimated() {
           display: none;
         }
       `}</style>
-      
+
       <div
         className="relative w-full no-scrollbar"
         style={{
@@ -283,7 +232,6 @@ export default function ModernHeroAnimated() {
         <motion.section
           ref={containerRef}
           className="relative min-h-screen overflow-hidden bg-black"
-          style={{ perspective: '1000px' }}
           initial="hidden"
           animate="visible"
           variants={textContainerVariants}
@@ -297,10 +245,8 @@ export default function ModernHeroAnimated() {
               const isCurrent = index === currentIndex;
               const isNext = index === nextIndex;
               const isFirstImage = index === 0;
-
-              // Only load first image with priority to speed up initial load
               const shouldUsePriority = isFirstImage;
-              
+
               return (
                 <motion.div
                   key={`image-${slide.id}`}
@@ -374,35 +320,11 @@ export default function ModernHeroAnimated() {
             })}
           </motion.div>
 
-          {/* Play/Pause button */}
-          {/* <motion.button
-            onClick={togglePlay}
-            className="absolute top-20 sm:top-24 right-6 z-40 p-3 rounded-full bg-black/30 backdrop-blur-md border border-white/20 hover:bg-black/50 transition-all duration-300 group"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            {isPlaying ? (
-              <Pause className="w-5 h-5 text-white/80 group-hover:text-white" />
-            ) : (
-              <Play className="w-5 h-5 text-white/80 group-hover:text-white" />
-            )}
-          </motion.button> */}
-
-          {/* MODERN CONTENT LAYOUT (ORIGINAL STRUCTURE) */}
+          {/* MODERN CONTENT LAYOUT */}
           <div className="relative z-40 min-h-screen flex flex-col justify-center">
             <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20 mt-16 sm:mt-20 md:mt-16">
-              <motion.div
-                style={{ 
-                  y: smoothTextY,
-                  transform: 'translateZ(0)',
-                  willChange: 'transform',
-                }}
-                className="max-w-[1500px] mx-auto w-full"
-              >
-                {/* Main content grid - ORIGINAL STRUCTURE */}
+              <div className="max-w-[1500px] mx-auto w-full">
+                {/* Main content grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-16 items-center lg:items-end">
                   {/* Left side - Main text */}
                   <div className="lg:col-span-7 space-y-4 sm:space-y-6 md:space-y-8 text-center lg:text-left">
@@ -411,8 +333,8 @@ export default function ModernHeroAnimated() {
                       variants={textVariants}
                       className="space-y-2 sm:space-y-3 md:space-y-4"
                     >
-                      <h2 
-                        style={{ fontFamily: "oldstandard" }} 
+                      <h2
+                        style={{ fontFamily: "oldstandard" }}
                         className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-light tracking-tighter text-white leading-[0.9] sm:leading-tight"
                       >
                         {currentSlide.title}
@@ -462,14 +384,14 @@ export default function ModernHeroAnimated() {
                         </span>
                       </div>
 
-                      {/* Custom slide indicators */}
+                      {/* Custom slide indicators - removed backdrop-blur */}
                       <div className="space-y-2 sm:space-y-3">
                         {heroData.map((item, index) => (
                           <motion.button
                             key={item.id}
                             onClick={() => handleSlideChange(index)}
                             disabled={isTransitioning}
-                            className={`w-full text-left p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl backdrop-blur-2xl border transition-all duration-300 ${
+                            className={`w-full text-left p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl border transition-all duration-300 ${
                               index === currentIndex
                                 ? "bg-white/20 border-white/30 text-white"
                                 : "bg-white/10 border-white/20 text-white/70 hover:bg-white/15 hover:border-white/30 hover:text-white/90"
@@ -516,11 +438,11 @@ export default function ModernHeroAnimated() {
                           className="h-full rounded-full"
                           style={{ backgroundColor: currentSlide.color }}
                           initial={{ width: "0%" }}
-                          animate={{ 
+                          animate={{
                             width: isPlaying && !isTransitioning ? "100%" : "0%",
                           }}
                           transition={{
-                            duration: 6, // 6 seconds
+                            duration: 6,
                             ease: "linear",
                             repeat: isPlaying && !isTransitioning ? Infinity : 0,
                           }}
@@ -530,7 +452,7 @@ export default function ModernHeroAnimated() {
                     </motion.div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             </div>
           </div>
 
