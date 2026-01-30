@@ -44,7 +44,7 @@ export default async function Collections_Juttis_All() {
                 {index === 4 && (
                   <div className="col-span-full w-full my-4">
                     <Image
-                      src="https://d21ojmskh8ksuv.cloudfront.net/public/banner-image.jpg"
+                      src="https://d21ojmskh8ksuv.cloudfront.net/static/banners/banner-image.jpg"
                       height={500}
                       width={1000}
                       alt="Gulbhahar Collection Banner"

@@ -15,8 +15,8 @@ const COLLECTION_NAME = "productv2";
 
 const OLD_BASE = "https://d21ojmskh8ksuv.cloudfront.net";
 const NEW_BASE = "https://https://d21ojmskh8ksuv.cloudfront.net";
-// const S3_URL = 'https://d21ojmskh8ksuv.cloudfront.net/public/banner-image.jpg';
-//         const CF_URL = 'https://https://d21ojmskh8ksuv.cloudfront.net/public/banner-image.jpg';
+// const S3_URL = 'https://d21ojmskh8ksuv.cloudfront.net/static/banners/banner-image.jpg';
+//         const CF_URL = 'https://https://d21ojmskh8ksuv.cloudfront.net/static/banners/banner-image.jpg';
 
 async function run() {
   const client = new MongoClient(MONGO_URI);

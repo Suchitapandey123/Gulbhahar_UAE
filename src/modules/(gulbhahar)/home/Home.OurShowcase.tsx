@@ -58,7 +58,7 @@ export default function Home_OurShowcase() {
       </div>
 
       {/* Client components for video interactivity */}
-      <div className="flex justify-start 2xl:justify-center overflow-x-auto gap-6 no-scrollbar snap-x snap-mandatory cursor-grab active:cursor-grabbing">
+      <div className="flex 2xl:pl-10 justify-start 2xl:justify-center overflow-x-auto gap-6 no-scrollbar snap-x snap-mandatory cursor-grab active:cursor-grabbing">
         {CULTURAL_REELS.map((reel) => (
           <ShowcaseReelItem key={reel.id} reel={reel} />
         ))}
