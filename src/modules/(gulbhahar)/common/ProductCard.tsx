@@ -1,9 +1,9 @@
 "use client";
-import { useRef, useEffect, useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { ShoppingBag } from "lucide-react";
 import { useCart } from "@/providers/ContextProviders/CartContext";
+import { ShoppingBag } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 interface AvailableSize {
@@ -54,8 +54,10 @@ export default function ProductCard({
     : (imagesArr as string[]);
 
   // Support both old format (sizes: string[]) and new format (availableSizes: {name: string}[])
-  const sizes: string[] = item.sizes || item.availableSizes?.map(s => s.name) || [];
-  const colors: string[] = item.colors || item.availableColors?.map(c => c.name) || [];
+  const sizes: string[] =
+    item.sizes || item.availableSizes?.map((s) => s.name) || [];
+  const colors: string[] =
+    item.colors || item.availableColors?.map((c) => c.name) || [];
 
   const handleMouseEnter = () => {
     if (imagesToShow.length <= 1) return;
@@ -100,7 +102,7 @@ export default function ProductCard({
 
       if (result.success) {
         toast.success(
-          `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`
+          `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`,
         );
       } else {
         toast.error("Failed to add item to cart. Please try again.");
@@ -135,7 +137,7 @@ export default function ProductCard({
                   quality={65}
                   placeholder="blur"
                   blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${
+                  className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out group-hover:scale-110 ${
                     currentImageIndex === idx ? "opacity-100" : "opacity-0"
                   }`}
                 />
@@ -174,7 +176,8 @@ export default function ProductCard({
             {item.originalPrice && item.originalPrice > item.price && (
               <span className="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded z-10">
                 {Math.round(
-                  ((item.originalPrice - item.price) / item.originalPrice) * 100
+                  ((item.originalPrice - item.price) / item.originalPrice) *
+                    100,
                 )}
                 % OFF
               </span>
@@ -250,9 +253,7 @@ export default function ProductCard({
                   </span>
                 ))}
                 {sizes.length > 2 && (
-                  <span className="text-gray-500">
-                    +{sizes.length - 2}
-                  </span>
+                  <span className="text-gray-500">+{sizes.length - 2}</span>
                 )}
               </div>
             </div>

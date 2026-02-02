@@ -7,6 +7,7 @@ import Logo from "./Logo";
 
 const DesktopNav = ({
   isScrolled,
+  isNavSolid,
   pathname,
   router,
   isCollectionDropdownOpen,
@@ -58,6 +59,7 @@ const DesktopNav = ({
           href="/collections"
           hasDropdown={true}
           isScrolled={isScrolled}
+          isNavSolid={isNavSolid}
           pathname={pathname}
           router={router}
           isActive={isCollectionDropdownOpen || pathname.startsWith("/collections")}
@@ -71,6 +73,7 @@ const DesktopNav = ({
         <NavLink
           href="/about"
           isScrolled={isScrolled}
+          isNavSolid={isNavSolid}
           pathname={pathname}
           router={router}
           isActive={pathname === "/about"}
@@ -78,34 +81,33 @@ const DesktopNav = ({
           About
         </NavLink>
       </div>
-      <Logo isScrolled={isScrolled} pathname={pathname} />
+      <Logo isScrolled={isScrolled} isNavSolid={isNavSolid} pathname={pathname} />
 
       {/* Right Navigation */}
       <div className="hidden md:flex items-center space-x-2 lg:space-x-6">
         <SearchButton
-          isScrolled={isScrolled}
-          pathname={pathname}
+          isNavSolid={isNavSolid}
           isSearchOpen={isSearchOpen}
           toggleSearchPopup={toggleSearchPopup}
         />
-        <CartButton {...props} isScrolled={isScrolled} pathname={pathname} />
-        <UserSection {...props} isScrolled={isScrolled} pathname={pathname} />
+        <CartButton {...props} isScrolled={isScrolled} isNavSolid={isNavSolid} pathname={pathname} />
+        <UserSection {...props} isScrolled={isScrolled} isNavSolid={isNavSolid} pathname={pathname} />
       </div>
     </>
   );
 };
 
-const SearchButton = ({ isScrolled, pathname, isSearchOpen, toggleSearchPopup }) => (
+const SearchButton = ({ isNavSolid, isSearchOpen, toggleSearchPopup }) => (
   <button
     onClick={toggleSearchPopup}
     className={`
-      flex items-center space-x-1 lg:space-x-2 text-xs sm:text-sm font-semibold 
+      flex items-center space-x-1 lg:space-x-2 text-xs sm:text-sm font-semibold
       uppercase tracking-wide transition-all duration-300 ease-out group
       ${
-        isSearchOpen || pathname === "/search"
-          ? `${isScrolled || pathname !== "/" ? "text-[#800000]" : "text-white"} scale-105`
+        isSearchOpen
+          ? `${isNavSolid ? "text-[#800000]" : "text-white"} scale-105`
           : `${
-              isScrolled || pathname !== "/"
+              isNavSolid
                 ? "text-gray-800 hover:text-[#800000]"
                 : "text-white/90 hover:text-white"
             } hover:scale-105`

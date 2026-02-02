@@ -28,20 +28,14 @@ export const ProductVariants = ({
   sizeRange,
 }: ProductVariantsProps) => {
   const availableColors = useMemo(() => {
-    if (product.availableColors && product.availableColors.length > 0) {
-      return product.availableColors.map((color) => ({
-        name: typeof color === "string" ? color : color.name,
-        hexcode:
-          typeof color === "string" ? "#e5ab0b" : color.hexcode || "#e5ab0b",
-      }));
+    if (!product.availableColors || product.availableColors.length === 0) {
+      return [];
     }
-    return (
-      product.colors?.map((color) => ({
-        name: color,
-        hexcode: "#e5ab0b",
-      })) || []
-    );
-  }, [product.availableColors, product.colors]);
+    return product.availableColors.map((color) => ({
+      name: typeof color === "string" ? color : color.name,
+      hexcode: typeof color === "string" ? "#e5ab0b" : color.hexcode || "#e5ab0b",
+    }));
+  }, [product.availableColors]);
 
   const currentColor = availableColors[selectedColorIndex]?.name || "";
 
@@ -70,7 +64,6 @@ export const ProductVariants = ({
                 <div
                   className="w-5 h-5 rounded-full border border-gray-300"
                   style={{ backgroundColor: color.hexcode }}
-                  title={color.name}
                 />
                 <span>{color.name}</span>
               </button>

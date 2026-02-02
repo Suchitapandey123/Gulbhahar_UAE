@@ -1,7 +1,9 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { ZoomIn } from "lucide-react";
 import NextImage from "next/image";
+import { cn } from "@/lib/utils";
 import { Product } from "../types";
 
 interface ProductImageGridProps {
@@ -17,33 +19,135 @@ export const ProductImageGrid = ({
   cacheVersion,
   onImageClick,
 }: ProductImageGridProps) => {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [imageOpacity, setImageOpacity] = useState(1);
+
+  const getImageSrc = (img: string) =>
+    img.startsWith("/") ? img : `${img}${cacheVersion}`;
+
+  const handleImageChange = (index: number) => {
+    if (index === selectedIndex) return;
+
+    // Start transition - fade out
+    setImageOpacity(0);
+    setIsLoading(true);
+
+    // Change image after fade out
+    setTimeout(() => {
+      setSelectedIndex(index);
+    }, 150);
+  };
+
+  // Reset loading state when image loads
+  const handleImageLoad = () => {
+    setIsLoading(false);
+    setImageOpacity(1);
+  };
+
+  // Reset selectedIndex when images change (e.g., color change)
+  useEffect(() => {
+    setSelectedIndex(0);
+  }, [currentImages]);
+
   return (
     <div className="w-full">
-      <div className="grid grid-cols-2 sm:grid-cols-2 gap-3 lg:gap-4">
-        {currentImages.map((img, idx) => (
-          <div
-            key={idx}
-            className="relative w-full overflow-hidden bg-gray-100 rounded cursor-pointer"
-            style={{ aspectRatio: "3 / 4" }}
-            onClick={() => onImageClick(idx)}
-          >
-            <NextImage
-              src={img.startsWith("/") ? img : `${img}${cacheVersion}`}
-              alt={`${product.name} - Image ${idx + 1}`}
-              fill
-              className="object-cover hover:scale-105 transition-transform duration-300"
-              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 40vw, 30vw"
-              priority={idx < 4}
-              loading="eager"
-              quality={60}
-              unoptimized={false}
-            />
-            {/* Zoom Indicator */}
-            <div className="absolute top-4 right-4 bg-white bg-opacity-80 backdrop-blur-sm rounded-full p-2 opacity-0 hover:opacity-100 transition-opacity duration-200">
-              <ZoomIn className="w-5 h-5 text-gray-700" />
+      {/* Mobile Layout: Single image + thumbnails (below md) */}
+      <div className="flex flex-col gap-4 md:hidden">
+        {/* Main large image */}
+        <div
+          className="relative w-full overflow-hidden bg-gray-100 rounded-lg cursor-pointer"
+          style={{ aspectRatio: "3 / 4" }}
+          onClick={() => onImageClick(selectedIndex)}
+        >
+          {/* Shimmer loading effect */}
+          {isLoading && (
+            <div className="absolute inset-0 z-10 bg-gray-100">
+              <div
+                className="absolute inset-0 animate-shimmer"
+                style={{
+                  background:
+                    "linear-gradient(90deg, #f3f4f6 0%, #e5e7eb 50%, #f3f4f6 100%)",
+                  backgroundSize: "200% 100%",
+                }}
+              />
             </div>
+          )}
+
+          <NextImage
+            key={selectedIndex}
+            src={getImageSrc(currentImages[selectedIndex])}
+            alt={`${product.name} - View ${selectedIndex + 1}`}
+            fill
+            className="object-cover transition-opacity duration-300 ease-out"
+            style={{ opacity: imageOpacity }}
+            sizes="100vw"
+            priority
+            loading="eager"
+            quality={80}
+            onLoad={handleImageLoad}
+          />
+          {/* Zoom Indicator */}
+          <div className="absolute top-3 right-3 bg-white bg-opacity-80 backdrop-blur-sm rounded-full p-1.5 opacity-70">
+            <ZoomIn className="w-4 h-4 text-gray-700" />
           </div>
-        ))}
+        </div>
+
+        {/* Thumbnail gallery - centered */}
+        <div className="flex gap-2 justify-center flex-wrap">
+          {currentImages.map((img, index) => (
+            <button
+              key={index}
+              onClick={() => handleImageChange(index)}
+              className={cn(
+                "flex-shrink-0 w-14 h-[70px] rounded-md overflow-hidden transition-all duration-300 ease-out",
+                "hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-red-900 focus:ring-offset-1",
+                selectedIndex === index
+                  ? "ring-2 ring-red-900 opacity-100"
+                  : "opacity-60 hover:opacity-80"
+              )}
+              aria-label={`View image ${index + 1}`}
+            >
+              <NextImage
+                src={getImageSrc(img)}
+                alt={`${product.name} thumbnail ${index + 1}`}
+                width={56}
+                height={70}
+                className="w-full h-full object-cover"
+                quality={40}
+              />
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop Layout: 2x2 Grid (md and above) */}
+      <div className="hidden md:block">
+        <div className="grid grid-cols-2 gap-3 lg:gap-4">
+          {currentImages.map((img, idx) => (
+            <div
+              key={idx}
+              className="relative w-full overflow-hidden bg-gray-100 rounded cursor-pointer group"
+              style={{ aspectRatio: "3 / 4" }}
+              onClick={() => onImageClick(idx)}
+            >
+              <NextImage
+                src={getImageSrc(img)}
+                alt={`${product.name} - Image ${idx + 1}`}
+                fill
+                className="object-cover hover:scale-105 transition-transform duration-300"
+                sizes="(max-width: 1024px) 40vw, 30vw"
+                priority={idx < 4}
+                loading="eager"
+                quality={60}
+              />
+              {/* Zoom Indicator */}
+              <div className="absolute top-4 right-4 bg-white bg-opacity-80 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <ZoomIn className="w-5 h-5 text-gray-700" />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

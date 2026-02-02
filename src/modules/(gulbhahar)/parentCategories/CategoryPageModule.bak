@@ -1,0 +1,188 @@
+"use client";
+
+import categoryContent from "@/app/data/categoryContent.json";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import CategoryCollection from "../categoryPages/CategoryCollection";
+
+interface CategoryPageModuleProps {
+  parentCategory: string;
+}
+
+export default function CategoryPageModule({
+  parentCategory,
+}: CategoryPageModuleProps) {
+  // Find category content based on slug
+  const content =
+    categoryContent.collections.find(
+      (c) => c.id.toLowerCase() === parentCategory.toLowerCase(),
+    ) || categoryContent.collections[1]; // Default to juttis if not found
+
+  // Map category to hero image
+  const heroImages: Record<string, string> = {
+    juttis: "/images/juttis-hero.png",
+    "bridal-juttis": "/images/juttis-hero.png",
+    sarees: "/images/sarees-hero.png",
+    lehenga: "/images/sarees-hero.png",
+    bags: "/images/luxury-hero.png",
+    jewellery: "/images/luxury-hero.png",
+  };
+
+  const heroImage =
+    heroImages[parentCategory.toLowerCase()] || "/images/luxury-hero.png";
+
+  return (
+    <div className="bg-white min-h-screen font-raleway">
+      {/* --- PREMIUM HERO SECTION --- */}
+      <section className="relative h-[60vh] md:h-[75vh] w-full overflow-hidden">
+        <Image
+          src={heroImage}
+          alt={content.title}
+          fill
+          priority
+          className="object-cover object-center scale-105"
+        />
+        {/* Elegant Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-white" />
+
+        {/* Hero Content */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="max-w-4xl"
+          >
+            <span className="text-white/90 text-xs md:text-sm font-bold tracking-[0.4em] uppercase mb-4 block">
+              The Gulbhahar Collection
+            </span>
+            <h1 className="text-4xl md:text-7xl lg:text-8xl text-white font-serif leading-tight mb-6">
+              {content.title.split(" ").map((word, i) => (
+                <span
+                  key={i}
+                  className={i % 2 !== 0 ? "italic serif-italics" : ""}
+                >
+                  {word}{" "}
+                </span>
+              ))}
+            </h1>
+            <p className="text-white/80 text-lg md:text-xl font-light tracking-wide max-w-2xl mx-auto italic">
+              {content.subtitle}
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* --- INTRODUCTION & STORY --- */}
+      <section className="py-20 px-4 md:px-8 max-w-[1200px] mx-auto text-center">
+        <div className="flex flex-col items-center gap-6">
+          <div className="w-12 h-px bg-red-900/30" />
+          <h2 className="text-3xl md:text-5xl font-serif text-gray-900 leading-tight italic">
+            A Journey of{" "}
+            <span className="text-red-900 not-italic uppercase tracking-tighter font-bold">
+              Heritage
+            </span>{" "}
+            & Style
+          </h2>
+          <p className="text-gray-600 text-lg md:text-xl leading-relaxed max-w-3xl font-light italic">
+            {content.introduction}
+          </p>
+          <div className="w-12 h-px bg-red-900/30" />
+        </div>
+      </section>
+
+      {/* --- PRODUCT COLLECTION --- */}
+      <section className="pb-24">
+        <div className="px-4 md:px-8 mb-12">
+          <div className="max-w-[1600px] mx-auto">
+            <div className="flex items-center gap-4 mb-8">
+              <h3 className="text-2xl font-serif text-gray-900 uppercase tracking-widest px-2">
+                Explore{" "}
+                <span className="italic text-red-900 lowercase">
+                  {parentCategory}
+                </span>
+              </h3>
+              <div className="h-px bg-gray-100 flex-1" />
+            </div>
+          </div>
+        </div>
+
+        <CategoryCollection initialParentCategory={parentCategory} />
+      </section>
+
+      {/* --- CRAFTSMANSHIP SECTIONS --- */}
+      <section className="bg-stone-50 py-24 px-4 md:px-8 overflow-hidden">
+        <div className="max-w-[1400px] mx-auto">
+          {content.sections.map((section, idx) => (
+            <div
+              key={idx}
+              className={`flex flex-col ${idx % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} items-center gap-12 md:gap-20 mb-24 last:mb-0`}
+            >
+              <div className="w-full md:w-1/2 relative aspect-square group">
+                <div className="absolute -inset-4 border border-red-900/10 rounded-full animate-[spin_20s_linear_infinite]" />
+                <div className="relative w-full h-full overflow-hidden rounded-2xl shadow-2xl">
+                  <Image
+                    src={`https://images.unsplash.com/photo-${idx === 0 ? "1603912627214-12130998c5fd" : "1583391733956-3750e0ff4e8b"}?auto=format&fit=crop&q=80&w=1000`}
+                    alt={section.title}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-1000"
+                  />
+                </div>
+              </div>
+
+              <div className="w-full md:w-1/2 space-y-8">
+                <span className="text-red-900 text-6xl opacity-20 font-serif">
+                  0{idx + 1}
+                </span>
+                <h3 className="text-4xl md:text-5xl font-serif text-gray-900">
+                  {section.icon} {section.title}
+                </h3>
+                <p className="text-gray-600 text-lg leading-relaxed">
+                  {section.content}
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4">
+                  {section.features.map((feature, fIdx) => (
+                    <div
+                      key={fIdx}
+                      className="space-y-2 p-4 bg-white rounded-xl shadow-sm border border-black/5 hover:border-red-900/20 transition-colors"
+                    >
+                      <span className="text-2xl block">{feature.icon}</span>
+                      <h4 className="font-bold text-xs uppercase tracking-widest text-gray-900">
+                        {feature.title}
+                      </h4>
+                      <p className="text-xs text-gray-500 line-clamp-2">
+                        {feature.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* --- CONCLUSION --- */}
+      <section className="relative py-32 px-4 text-center overflow-hidden">
+        <div className="absolute inset-0 floral-pattern opacity-[0.03]" />
+        <div className="max-w-3xl mx-auto space-y-8 relative z-10">
+          <div className="inline-block p-4 rounded-full border border-red-900/20 mb-4">
+            <span className="text-3xl">✨</span>
+          </div>
+          <h2 className="text-4xl md:text-6xl font-serif text-gray-900 italic leading-tight">
+            {content.conclusion.title}
+          </h2>
+          <p className="text-gray-600 text-xl font-light italic leading-relaxed">
+            {content.conclusion.content}
+          </p>
+          <div className="pt-8">
+            <p className="text-red-900 font-serif text-2xl italic">
+              {content.conclusion.finalNote}
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

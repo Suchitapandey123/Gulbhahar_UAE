@@ -6,7 +6,6 @@ import { Product } from "../types";
 interface ProductPurchaseSectionProps {
   product: Product;
   selectedSize: string;
-  availableQuantity: number;
   addingToCart: boolean;
   onAddToCart: () => void;
   customRed: string;
@@ -15,7 +14,6 @@ interface ProductPurchaseSectionProps {
 export const ProductPurchaseSection = ({
   product,
   selectedSize,
-  availableQuantity,
   addingToCart,
   onAddToCart,
   customRed,
@@ -50,9 +48,9 @@ export const ProductPurchaseSection = ({
       <div className="space-y-3 pt-2">
         <button
           onClick={onAddToCart}
-          disabled={addingToCart || !selectedSize || availableQuantity === 0}
+          disabled={addingToCart || !selectedSize }
           className={`w-full py-3.5 text-white rounded-lg font-medium text-lg transition-all flex items-center justify-center gap-3 active:scale-[0.98] ${
-            addingToCart || !selectedSize || availableQuantity === 0
+            addingToCart || !selectedSize 
               ? "opacity-50 cursor-not-allowed"
               : "hover:opacity-90"
           }`}
@@ -65,8 +63,6 @@ export const ProductPurchaseSection = ({
             </>
           ) : !selectedSize ? (
             "SELECT SIZE"
-          ) : availableQuantity === 0 ? (
-            "OUT OF STOCK"
           ) : (
             <>
               <ShoppingCart className="w-5 h-5" />

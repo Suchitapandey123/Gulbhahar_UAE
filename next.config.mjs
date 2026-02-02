@@ -50,7 +50,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "imgs.search.brave.com",
+        hostname: "images.unsplash.com",
       },
       {
         protocol: "https",

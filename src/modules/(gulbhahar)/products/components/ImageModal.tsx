@@ -1,8 +1,8 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, Loader2, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import NextImage from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Product } from "../types";
 
 interface ImageModalProps {
@@ -15,12 +15,6 @@ interface ImageModalProps {
   currentColor?: string;
 }
 
-const withVersion = (url: string, version: string | number) => {
-  if (!url) return url;
-  const sep = url.includes("?") ? "&" : "?";
-  return `${url}${sep}v=${version}`;
-};
-
 export const ImageModal = ({
   isModalOpen,
   closeModal,
@@ -28,58 +22,28 @@ export const ImageModal = ({
   modalImageIndex = 0,
   setModalImageIndex,
   product,
-  currentColor = "",
 }: ImageModalProps) => {
-  const [imageLoading, setImageLoading] = useState(true);
-  const [thumbnailsLoading, setThumbnailsLoading] = useState<Set<number>>(
-    new Set(),
-  );
-  const [preloadedImages, setPreloadedImages] = useState<Set<string>>(
-    new Set(),
-  );
-  const modalRef = useRef<HTMLDivElement>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const images = currentImages || [];
-  const safeModalIndex = Math.min(
-    modalImageIndex,
-    Math.max(0, images.length - 1),
-  );
+  const safeIndex = Math.min(modalImageIndex, Math.max(0, images.length - 1));
+  const currentImageUrl = images[safeIndex] || "";
+  const cacheVersion = product?.updatedAt ? `?v=${product.updatedAt}` : "";
 
-  useEffect(() => {
-    if (isModalOpen && images.length > 0) {
-      const currentImageUrl = images[safeModalIndex];
-      if (!preloadedImages.has(currentImageUrl)) {
-        setImageLoading(true);
-      } else {
-        setImageLoading(false);
-      }
-    }
-  }, [safeModalIndex, images, preloadedImages, isModalOpen]);
-
-  const imageVersion = product?.updatedAt || Date.now();
-
-  const handleThumbnailLoad = useCallback((index: number) => {
-    setThumbnailsLoading((prev) => {
-      const newSet = new Set(prev);
-      newSet.delete(index);
-      return newSet;
-    });
-  }, []);
+  const getImageSrc = (img: string) =>
+    img.startsWith("/") ? img : `${img}${cacheVersion}`;
 
   const prevImage = useCallback(() => {
     if (images.length === 0) return;
-    const newIndex =
-      safeModalIndex > 0 ? safeModalIndex - 1 : images.length - 1;
-    setModalImageIndex(newIndex);
-  }, [safeModalIndex, images.length, setModalImageIndex]);
+    setModalImageIndex(safeIndex > 0 ? safeIndex - 1 : images.length - 1);
+  }, [safeIndex, images.length, setModalImageIndex]);
 
   const nextImage = useCallback(() => {
     if (images.length === 0) return;
-    const newIndex =
-      safeModalIndex < images.length - 1 ? safeModalIndex + 1 : 0;
-    setModalImageIndex(newIndex);
-  }, [safeModalIndex, images.length, setModalImageIndex]);
+    setModalImageIndex(safeIndex < images.length - 1 ? safeIndex + 1 : 0);
+  }, [safeIndex, images.length, setModalImageIndex]);
 
+  // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isModalOpen) return;
@@ -91,119 +55,128 @@ export const ImageModal = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isModalOpen, prevImage, nextImage, closeModal]);
 
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isModalOpen]);
+
+  // Reset loading state when image changes
+  useEffect(() => {
+    setIsLoading(true);
+  }, [safeIndex]);
+
   if (!isModalOpen || images.length === 0) return null;
 
-  const currentImageUrl = images[safeModalIndex] || "";
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center">
-      <div
-        ref={modalRef}
-        className="relative w-full h-full flex items-start sm:items-center justify-center"
-      >
+    <div className="fixed inset-0 z-[9999] bg-black flex flex-col">
+      {/* Header */}
+      <div className="flex-shrink-0 flex items-center justify-between p-3 md:p-4">
+        <span className="text-white text-sm md:text-base font-medium">
+          {safeIndex + 1} / {images.length}
+        </span>
         <button
           onClick={closeModal}
-          className="absolute top-4 right-4 z-10 w-12 h-12 bg-white bg-opacity-20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-opacity-30 transition-all duration-200"
-          aria-label="Close modal"
+          className="w-10 h-10 md:w-11 md:h-11 bg-white rounded-full flex items-center justify-center active:bg-gray-200"
+          aria-label="Close"
         >
-          <X className="w-6 h-6 text-white" />
+          <X className="w-6 h-6 text-black" />
         </button>
+      </div>
 
+      {/* Main image area */}
+      <div className="flex-1 relative flex items-center justify-center min-h-0">
+        {/* Navigation arrows - visible on all screens */}
         {images.length > 1 && (
           <>
             <button
               onClick={prevImage}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-white bg-opacity-20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-opacity-30 transition-all duration-200"
-              aria-label="Previous image"
+              className="absolute left-2 md:left-4 z-20 w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-lg active:bg-gray-200 hover:bg-gray-100"
+              aria-label="Previous"
             >
-              <ChevronLeft className="w-6 h-6 text-white" />
+              <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-black" />
             </button>
             <button
               onClick={nextImage}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-white bg-opacity-20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-opacity-30 transition-all duration-200"
-              aria-label="Next image"
+              className="absolute right-2 md:right-4 z-20 w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-lg active:bg-gray-200 hover:bg-gray-100"
+              aria-label="Next"
             >
-              <ChevronRight className="w-6 h-6 text-white" />
+              <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-black" />
             </button>
           </>
         )}
 
-        <div className="relative max-w-xl sm:mt-0 mt-20 max-h-screen p-4">
-          <div className="relative min-h-[400px] min-w-[300px] flex">
-            {imageLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-lg z-10">
-                <div className="flex flex-col items-center space-y-3">
-                  <Loader2 className="w-8 h-8 text-white animate-spin" />
-                  <span className="text-white text-sm">Loading image...</span>
-                </div>
-              </div>
-            )}
-
-            <div
-              className={`transition-opacity h-full w-full duration-300 ${imageLoading ? "opacity-0" : "opacity-100"}`}
-            >
-              <NextImage
-                src={
-                  currentImageUrl
-                    ? withVersion(currentImageUrl, imageVersion)
-                    : "/about/lal-ishq-1.jpg"
-                }
-                alt={`${product?.name || "Product"} - ${currentColor || ""} - Image ${safeModalIndex + 1}`}
-                className="max-w-full max-h-full object-contain select-none mx-auto"
-                width={1200}
-                height={800}
-                quality={75}
-                loading="eager"
-                onLoad={() => {
-                  setImageLoading(false);
-                  if (currentImageUrl) {
-                    setPreloadedImages(
-                      (prev) => new Set([...prev, currentImageUrl]),
-                    );
-                  }
-                }}
+        {/* Dot indicators */}
+        {images.length > 1 && (
+          <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20">
+            {images.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setModalImageIndex(idx)}
+                className={`w-2 h-2 rounded-full transition-colors ${
+                  safeIndex === idx ? "bg-white" : "bg-white/40"
+                }`}
+                aria-label={`Go to image ${idx + 1}`}
               />
-            </div>
+            ))}
           </div>
-        </div>
+        )}
 
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white bg-opacity-20 backdrop-blur-sm rounded-full px-4 py-2">
-          <span className="text-white text-sm font-medium">
-            {safeModalIndex + 1} / {images.length}
-          </span>
-        </div>
+        {/* Loading spinner */}
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center z-10">
+            <div className="w-10 h-10 border-3 border-white/20 border-t-white rounded-full animate-spin" />
+          </div>
+        )}
 
-        <div className="absolute bottom-16 left-1/2 py-1 transform -translate-x-1/2 flex gap-2 max-w-screen-sm overflow-x-auto px-4 scrollbar-hide">
-          {images.map((img, idx) => (
-            <button
-              key={idx}
-              onClick={() => setModalImageIndex(idx)}
-              className={`relative flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
-                safeModalIndex === idx
-                  ? "border-white shadow-lg scale-110"
-                  : "border-transparent opacity-70 hover:opacity-100"
-              }`}
-            >
-              {thumbnailsLoading.has(idx) && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-10">
-                  <Loader2 className="w-4 h-4 text-white animate-spin" />
-                </div>
-              )}
-              <NextImage
-                src={
-                  img ? withVersion(img, imageVersion) : "/about/lal-ishq-1.jpg"
-                }
-                alt={`Thumbnail ${idx + 1}`}
-                className={`object-cover w-full h-full transition-opacity duration-200 ${thumbnailsLoading.has(idx) ? "opacity-0" : "opacity-100"}`}
-                width={64}
-                height={64}
-                quality={60}
-                onLoad={() => handleThumbnailLoad(idx)}
-              />
-            </button>
-          ))}
+        {/* Image */}
+        <div className="relative w-full h-full">
+          <NextImage
+            src={getImageSrc(currentImageUrl)}
+            alt={`${product?.name || "Product"} - Image ${safeIndex + 1}`}
+            fill
+            className={`object-contain transition-opacity duration-200 ${isLoading ? "opacity-0" : "opacity-100"}`}
+            sizes="100vw"
+            quality={90}
+            priority
+            onLoad={() => setIsLoading(false)}
+          />
         </div>
       </div>
+
+      {/* Thumbnails - only on desktop */}
+      {images.length > 1 && (
+        <div className="flex-shrink-0 hidden md:block py-4 px-4 bg-black/80">
+          <div className="flex gap-2 justify-center overflow-x-auto max-w-2xl mx-auto">
+            {images.map((img, idx) => (
+              <button
+                key={idx}
+                onClick={() => setModalImageIndex(idx)}
+                className={`relative flex-shrink-0 w-16 h-16 rounded overflow-hidden border-2 transition-all ${
+                  safeIndex === idx
+                    ? "border-white opacity-100"
+                    : "border-transparent opacity-50 hover:opacity-80"
+                }`}
+              >
+                <NextImage
+                  src={getImageSrc(img)}
+                  alt={`Thumbnail ${idx + 1}`}
+                  fill
+                  className="object-cover"
+                  sizes="64px"
+                  quality={30}
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

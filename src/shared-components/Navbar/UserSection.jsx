@@ -6,6 +6,7 @@ const UserSection = ({
   isAuthenticated,
   userData,
   isScrolled,
+  isNavSolid,
   pathname,
   isUserDropdownOpen,
   setIsUserDropdownOpen,
@@ -68,9 +69,9 @@ const UserSection = ({
               pathname.startsWith("/profile") ||
               pathname.startsWith("/orders") ||
               pathname.startsWith("/settings")
-                ? `${isScrolled || pathname !== "/" ? "text-[#800000]" : "text-white"} scale-105`
+                ? `${isNavSolid ? "text-[#800000]" : "text-white"} scale-105`
                 : `${
-                    isScrolled || pathname !== "/"
+                    isNavSolid
                       ? "text-gray-800 hover:text-[#800000]"
                       : "text-white/90 hover:text-white"
                   } hover:scale-105`
@@ -113,7 +114,7 @@ const UserSection = ({
         flex items-center space-x-1 lg:space-x-2 text-xs sm:text-sm font-semibold 
         uppercase tracking-wide transition-all duration-300 ease-out group
         ${
-          isScrolled || pathname !== "/"
+          isNavSolid
             ? "text-gray-800 hover:text-[#800000]"
             : "text-white/90 hover:text-white"
         } hover:scale-105

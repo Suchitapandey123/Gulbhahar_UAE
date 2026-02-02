@@ -7,9 +7,9 @@ import { Product } from "../types";
 import { DeliveryChecker } from "./DeliveryChecker";
 import { ImageModal } from "./ImageModal";
 import { ProductImageGrid } from "./ProductImageGrid";
+import { ProductInfo } from "./ProductInfo";
 import { ProductPurchaseSection } from "./ProductPurchaseSection";
 import { ProductVariants } from "./ProductVariants";
-import Reviews from "./Reviews";
 import { SizeGuideModal } from "./SizeGuideModal";
 
 // Size configurations
@@ -102,12 +102,14 @@ export const ProductView = ({ product, customRed }: ProductViewProps) => {
     SIZE_CONFIGS[categoryName?.toLowerCase()] || SIZE_CONFIGS.default;
 
   const sizeRange = useMemo(() => {
+    const mappedSizes = product.availableSizes?.map((s) => s.name) || [];
+
     return generateSizeRange(
       product.inventory || [],
       Array.isArray(product.category) ? product.category : [product.category],
-      product.sizes,
+      mappedSizes,
     );
-  }, [product.inventory, product.category, product.sizes]);
+  }, [product.inventory, product.category, product.availableSizes]);
 
   useEffect(() => {
     window.scrollTo({ top: 0});
@@ -129,22 +131,12 @@ export const ProductView = ({ product, customRed }: ProductViewProps) => {
       const color = product.availableColors[selectedColorIndex];
       return typeof color === "string" ? color : color.name;
     }
-    return product.colors?.[selectedColorIndex] || "";
-  }, [product.availableColors, product.colors, selectedColorIndex]);
+    return "";
+  }, [product.availableColors, selectedColorIndex]);
 
   const currentImages =
     product.images?.[selectedColorIndex] || product.images?.[0] || [];
   const cacheVersion = product.updatedAt ? `?v=${product.updatedAt}` : "";
-
-  const availableQuantity = useMemo(() => {
-    if (!product.inventory || !selectedSize || !currentColor) return 0;
-    const item = product.inventory.find(
-      (i) =>
-        i.size === selectedSize &&
-        i.color?.toLowerCase() === currentColor.toLowerCase(),
-    );
-    return item?.quantity || 0;
-  }, [product.inventory, selectedSize, currentColor]);
 
   const handleAddToCart = async () => {
     if (!product.productId && !product.id) {
@@ -159,18 +151,10 @@ export const ProductView = ({ product, customRed }: ProductViewProps) => {
       return;
     }
 
-    // Check if enough quantity is available
-    if (availableQuantity < quantity) {
-      toast.error(
-        `Only ${availableQuantity} items available in this size/color`,
-      );
-      return;
-    }
-
     try {
       const cartSelectedColor =
-        currentColor || product.colors?.[0] || "default";
-      const cartSelectedSize = selectedSize || product.sizes?.[0] || "default";
+        currentColor || product.availableColors?.[0]?.name || "default";
+      const cartSelectedSize = selectedSize || product.availableSizes?.[0]?.name || "default";
 
       const cartItem = {
         ...product,
@@ -198,14 +182,10 @@ export const ProductView = ({ product, customRed }: ProductViewProps) => {
     }
   };
 
-  const discountPercentage = Math.round(
-    ((product.originalPrice - product.price) / product.originalPrice) * 100,
-  );
-
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 lg:gap-8 w-full max-w-[1600px] mx-auto">
-        <div className="md:col-span-7 lg:col-span-8">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-4 lg:gap-8 w-full max-w-[1600px] mx-auto">
+        <div className="md:col-span-6 lg:col-span-6">
           <ProductImageGrid
             product={product}
             currentImages={currentImages}
@@ -217,67 +197,68 @@ export const ProductView = ({ product, customRed }: ProductViewProps) => {
           />
         </div>
 
-        <div className="md:col-span-5 lg:col-span-4 space-y-6 md:sticky md:top-40 md:self-start">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-              {product.name}
-            </h1>
-          </div>
+        <div className="md:col-span-6 lg:col-span-6 md:sticky md:top-40 md:self-start w-full">
+          {/* Classic card wrapper for right side content */}
+          <div className="relative w-full bg-white md:bg-gradient-to-br md:from-white md:via-stone-50/30 md:to-gray-50/50  lg:p-8 md:border md:border-gray-100">
+            {/* Corner accents - only on md+ */}
+            <div className="hidden md:block absolute top-0 left-0 w-10 lg:w-12 h-10 lg:h-12 border-t-2 border-l-2 border-[#800000]/20" />
+            <div className="hidden md:block absolute top-0 right-0 w-10 lg:w-12 h-10 lg:h-12 border-t-2 border-r-2 border-[#800000]/20" />
+            <div className="hidden md:block absolute bottom-0 left-0 w-10 lg:w-12 h-10 lg:h-12 border-b-2 border-l-2 border-[#800000]/20" />
+            <div className="hidden md:block absolute bottom-0 right-0 w-10 lg:w-12 h-10 lg:h-12 border-b-2 border-r-2 border-[#800000]/20" />
 
-          {/* Pricing */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-3">
-              <span className="text-2xl md:text-3xl font-bold text-gray-900">
-                ₹{product.price}
-              </span>
-              {product.originalPrice > product.price && (
-                <>
-                  <span className="text-lg md:text-xl text-gray-500 line-through">
-                    ₹{product.originalPrice}
-                  </span>
-                  <span
-                    className="px-2 py-1 rounded text-sm font-semibold"
-                    style={{
-                      backgroundColor: `${customRed}20`,
-                      color: customRed,
-                    }}
-                  >
-                    {discountPercentage}% Off
-                  </span>
-                </>
-              )}
+            <div className="space-y-4 md:space-y-6">
+              <ProductInfo product={product} customRed={customRed} />
+
+              <ProductVariants
+                product={product}
+                selectedColorIndex={selectedColorIndex}
+                setSelectedColorIndex={setSelectedColorIndex}
+                selectedSize={selectedSize}
+                setSelectedSize={setSelectedSize}
+                customRed={customRed}
+                setShowSizeGuide={setShowSizeGuide}
+                categoryConfig={categoryConfig}
+                sizeRange={sizeRange}
+              />
+
+              <ProductPurchaseSection
+                product={product}
+                selectedSize={selectedSize}
+                addingToCart={addingToCart === (product.productId || product.id)}
+                onAddToCart={handleAddToCart}
+                customRed={customRed}
+              />
+               <DeliveryChecker customRed={customRed} />
+
+
+              {/* Elegant note */}
+              <div className="relative mt-4 md:mt-6 pt-4 md:pt-6 border-t border-dashed border-gray-200">
+                <div className="flex items-start gap-2 md:gap-3">
+                  <span className="text-[#800000]/60 text-xs md:text-sm mt-0.5 flex-shrink-0">✦</span>
+                  <p className="text-[11px] md:text-[13px] text-gray-500 leading-relaxed">
+                    <span className="font-medium text-gray-600">Note:</span>{" "}
+                    Colors may vary slightly due to screen settings. Each piece is handcrafted with care.
+                  </p>
+                </div>
+              </div>
+
+              {/* Trust badges - responsive */}
+              <div className="flex items-center justify-center gap-4 sm:gap-6 pt-3 md:pt-4">
+                <div className="flex flex-col items-center gap-0.5 md:gap-1">
+                  <span className="text-[8px] md:text-[10px] tracking-[0.1em] md:tracking-[0.15em] uppercase text-gray-400">Authentic</span>
+                  <div className="w-6 md:w-8 h-px bg-[#800000]/30" />
+                </div>
+                <div className="flex flex-col items-center gap-0.5 md:gap-1">
+                  <span className="text-[8px] md:text-[10px] tracking-[0.1em] md:tracking-[0.15em] uppercase text-gray-400">Handcrafted</span>
+                  <div className="w-6 md:w-8 h-px bg-[#800000]/30" />
+                </div>
+                <div className="flex flex-col items-center gap-0.5 md:gap-1">
+                  <span className="text-[8px] md:text-[10px] tracking-[0.1em] md:tracking-[0.15em] uppercase text-gray-400">Premium</span>
+                  <div className="w-6 md:w-8 h-px bg-[#800000]/30" />
+                </div>
+              </div>
             </div>
-            <p className="text-sm text-gray-500">Inclusive Of All Taxes</p>
           </div>
-          <ProductVariants
-            product={product}
-            selectedColorIndex={selectedColorIndex}
-            setSelectedColorIndex={setSelectedColorIndex}
-            selectedSize={selectedSize}
-            setSelectedSize={setSelectedSize}
-            customRed={customRed}
-            setShowSizeGuide={setShowSizeGuide}
-            categoryConfig={categoryConfig}
-            sizeRange={sizeRange}
-          />
-
-          <DeliveryChecker customRed={customRed} />
-
-          <ProductPurchaseSection
-            product={product}
-            selectedSize={selectedSize}
-            availableQuantity={availableQuantity}
-            addingToCart={addingToCart === (product.productId || product.id)}
-            onAddToCart={handleAddToCart}
-            customRed={customRed}
-          />
-          <p className="text-[14px] md:text-[16px] text-gray-500 italic mt-4 leading-relaxed bg-gray-50 p-3 rounded-lg border border-gray-100">
-            <span className="font-semibold not-italic text-gray-700">
-              Note:
-            </span>{" "}
-            The color of the product may vary slightly, as screen resolution
-            differs on devices used to view our website.
-          </p>
         </div>
 
         <ImageModal
@@ -294,87 +275,8 @@ export const ProductView = ({ product, customRed }: ProductViewProps) => {
           isOpen={showSizeGuide}
           onClose={() => setShowSizeGuide(false)}
           category={product.category}
-          productSizes={product.sizes}
+          productSizes={product.availableSizes?.map((s) => s.name)}
         />
-      </div>
-      <div className="pt-16 border-gray-100">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-          {/* Left Side: Overview & Details */}
-          <div className="space-y-10 lg:sticky lg:top-28 lg:self-start">
-            {product.overview && product.overview.length > 0 && (
-              <section>
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-1 h-6 bg-red-900 rounded-full" />
-                  <h3 className="text-xl font-bold text-gray-900 uppercase tracking-wider">
-                    Product Overview
-                  </h3>
-                </div>
-                <ul className="space-y-4 text-gray-600 leading-relaxed">
-                  {product.overview.map((item, idx) => (
-                    <li key={idx} className="flex gap-3">
-                      <span className="text-red-900 font-bold mt-1">•</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )}
-
-            {product.details && product.details.length > 0 && (
-              <section>
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-1 h-6 bg-red-900 rounded-full" />
-                  <h3 className="text-xl font-bold text-gray-900 uppercase tracking-wider">
-                    Details & Features
-                  </h3>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-1 gap-x-8 gap-y-4 bg-gray-50 p-6 rounded-xl border border-gray-100">
-                  {product.details.map((detail, idx) => (
-                    <div key={idx} className="flex gap-2 text-sm">
-                      <span className="text-gray-400">•</span>
-                      <span className="text-gray-700">{detail}</span>
-                    </div>
-                  ))}
-                  {product.material && (
-                    <div className="flex gap-2 text-sm col-span-full mt-2 pt-2 border-t border-gray-200">
-                      <span className="font-semibold text-gray-900">
-                        Material:
-                      </span>
-                      <span className="text-gray-700">{product.material}</span>
-                    </div>
-                  )}
-                </div>
-              </section>
-            )}
-
-            {!product.overview?.length && !product.details?.length && (
-              <section>
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-1 h-6 bg-red-900 rounded-full" />
-                  <h3 className="text-xl font-bold text-gray-900 uppercase tracking-wider">
-                    Product Description
-                  </h3>
-                </div>
-                <p className="text-gray-600 leading-relaxed whitespace-pre-line">
-                  {product.description ||
-                    "Elegant handcrafted creation from Gulbhahar."}
-                </p>
-              </section>
-            )}
-          </div>
-
-          {/* Right Side: Reviews */}
-          <div className="lg:border-l lg:pl-4 border-gray-100">
-            <Reviews
-              variant="mobile"
-              productId={product.productId || product.id || ""}
-            />
-            <Reviews
-              variant="desktop"
-              productId={product.productId || product.id || ""}
-            />
-          </div>
-        </div>
       </div>
     </>
   );

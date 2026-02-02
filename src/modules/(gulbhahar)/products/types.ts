@@ -6,7 +6,8 @@ export type Product = {
   price: number;
   originalPrice: number;
   description?: string;
-  category: string | string[];
+  category: string[];
+  parentCategory: string[];
   details?: string[];
   overview?: string[];
   material?: string;
@@ -14,19 +15,28 @@ export type Product = {
   updatedAt?: string;
   inventory?: InventoryItem[];
   availableColors?: ColorOption[];
-  colors?: string[];
-  sizes?: string[];
+  availableCollections : SizeOption[];
+  availableSizes : SizeOption[];
+  seo : Seo
 };
 
-export type InventoryItem = {
+export type Seo = {
   size: string;
+  metaTitle: string;
+  metaDescription: number;
+};
+export type InventoryItem = {
+  keywords: string[];
   color: string;
-  quantity: number;
+  quantity: string;
 };
 
 export type ColorOption = {
   name: string;
   hexcode: string;
+};
+export type SizeOption = {
+  name: string;
 };
 
 export type SimilarProduct = {

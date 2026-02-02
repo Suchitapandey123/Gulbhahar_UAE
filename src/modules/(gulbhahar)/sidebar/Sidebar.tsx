@@ -12,6 +12,7 @@ import {
 } from "@/modules/(gulbhahar)/common/ui/collapsible";
 import {
   ChevronDown,
+  ChevronUp,
   Crown,
   Gem,
   Heart,
@@ -223,7 +224,7 @@ const GulbhaharSidebar = ({
 
         {/* Main Navigation */}
         <nav className="flex-1 overflow-y-auto px-3 py-2">
-          <p className="sidebar-section-title mb-2">Account</p>
+          {/* <p className="sidebar-section-title mb-2">Account</p>
           <div className="space-y-1">
             {navItems.map((item, index) => (
               <Link
@@ -249,11 +250,11 @@ const GulbhaharSidebar = ({
                 </div>
               </Link>
             ))}
-          </div>
+          </div> */}
 
           {/* Decorative Divider */}
-          <div className="my-5 px-2">
-            <div className="decorative-line relative">
+          <div className=" px-2">
+            <div className=" mb-2 decorative-line relative">
               <div className="absolute left-1/2 -translate-x-1/2 -top-2 bg-sidebar px-3">
                 <Sparkles className="w-4 h-4 text-primary/30" />
               </div>
@@ -270,10 +271,7 @@ const GulbhaharSidebar = ({
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <button className="p-1 rounded-md hover:bg-muted transition-colors duration-200">
-                  <Plus className="w-3.5 h-3.5 text-muted-foreground" />
-                </button>
-                <ChevronDown
+                <ChevronUp
                   className={cn(
                     "w-4 h-4 text-muted-foreground transition-transform duration-300",
                     collectionsOpen && "rotate-180",
@@ -308,9 +306,6 @@ const GulbhaharSidebar = ({
                         {collection.name}
                       </span>
                     </div>
-                    <span className="text-[10px] bg-muted group-hover:bg-primary/10 px-2.5 py-1 rounded-full transition-colors duration-300">
-                      {collection.count}
-                    </span>
                   </Link>
                 ))}
               </div>
@@ -375,36 +370,26 @@ const GulbhaharSidebar = ({
         </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t border-sidebar-border/50">
-          {/* Quick Stats */}
-          {/* <div className="flex items-center justify-around mb-4 p-3 bg-muted/30 rounded-xl">
-            <div className="text-center">
-              <p className="text-lg font-display font-semibold text-foreground">
-                12
-              </p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
-                Orders
-              </p>
+        <div className="p-2 border-t border-sidebar-border/50">
+          {/* Account Section */}
+          <div className="mb-4 p-3 bg-muted/30 rounded-xl">
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-3 px-1">
+              Account
+            </p>
+            <div className="flex items-center gap-2">
+              {navItems.map((item) => (
+                <Link
+                  key={item.path}
+                  href={item.path}
+                  onClick={onClose}
+                  className="flex-1 flex items-center justify-center gap-2 px-3 py-2 text-xs font-medium text-foreground bg-muted/50 hover:bg-primary/10 rounded-lg transition-all duration-300"
+                >
+                  <item.icon className="w-3.5 h-3.5" />
+                  <span >{item.label}</span>
+                </Link>
+              ))}
             </div>
-            <div className="w-px h-8 bg-border" />
-            <div className="text-center">
-              <p className="text-lg font-display font-semibold text-foreground">
-                5
-              </p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
-                Wishlist
-              </p>
-            </div>
-            <div className="w-px h-8 bg-border" />
-            <div className="text-center">
-              <p className="text-lg font-display font-semibold text-primary">
-                VIP
-              </p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
-                Status
-              </p>
-            </div>
-          </div> */}
+          </div>
 
           {isAuthenticated ? (
             <button

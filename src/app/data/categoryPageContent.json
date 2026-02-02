@@ -1,0 +1,1026 @@
+{
+  "categories": {
+    "juttis": {
+      "id": "juttis",
+      "slug": "juttis",
+      "meta": {
+        "title": "Handcrafted Juttis Collection | Gulbhahar",
+        "description": "Discover our exquisite collection of handcrafted juttis. Traditional Indian footwear crafted with love by skilled artisans.",
+        "keywords": ["juttis", "handcrafted juttis", "traditional footwear", "Indian juttis", "ethnic footwear"]
+      },
+      "hero": {
+        "title": "Traditional Juttis",
+        "subtitle": "Handcrafted Comfort for Everyday Elegance",
+        "backgroundImage": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+        "badge": "The Gulbhahar Collection"
+      },
+      "story": {
+        "tagline": "Our Heritage",
+        "title": "The Art of Jutti Making",
+        "description": "Juttis have been a beloved part of Indian heritage for centuries. At Gulbhahar, we honor this tradition while infusing modern comfort and design. Each pair tells a story of skilled artisans who have passed down their craft through generations.",
+        "highlights": [
+          {
+            "icon": "needle",
+            "title": "Hand Embroidered",
+            "description": "Every stitch is crafted by hand using traditional techniques passed down through generations."
+          },
+          {
+            "icon": "crown",
+            "title": "Royal Heritage",
+            "description": "Inspired by the footwear of Mughal royalty, our designs carry centuries of cultural richness."
+          },
+          {
+            "icon": "heart",
+            "title": "Made with Love",
+            "description": "Each pair is a labor of love, taking skilled artisans days to complete with meticulous attention to detail."
+          }
+        ],
+        "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+      },
+      "features": {
+        "tagline": "Why Choose Gulbhahar",
+        "title": "Crafted for You",
+        "items": [
+          {
+            "icon": "sparkles",
+            "title": "Premium Materials",
+            "description": "We source only the finest leathers, silks, and embroidery threads to ensure lasting quality and comfort.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+          },
+          {
+            "icon": "palette",
+            "title": "Unique Designs",
+            "description": "From classic motifs to contemporary patterns, our collection offers something for every style and occasion.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+          },
+          {
+            "icon": "shield",
+            "title": "Comfort Guaranteed",
+            "description": "Cushioned insoles and ergonomic design ensure your feet stay comfortable all day long.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+          },
+          {
+            "icon": "recycle",
+            "title": "Sustainable Craft",
+            "description": "We support traditional artisan communities and use eco-friendly practices wherever possible.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+          }
+        ]
+      },
+      "gallery": {
+        "title": "The Collection",
+        "images": [
+          {
+            "src": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "alt": "Embroidered bridal juttis",
+            "caption": "Bridal Collection"
+          },
+          {
+            "src": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "alt": "Traditional punjabi juttis",
+            "caption": "Classic Punjabi"
+          },
+          {
+            "src": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "alt": "Modern designer juttis",
+            "caption": "Contemporary"
+          },
+          {
+            "src": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "alt": "Festive occasion juttis",
+            "caption": "Festive Special"
+          }
+        ]
+      },
+      "testimonials": {
+        "tagline": "Customer Love",
+        "title": "What Our Customers Say",
+        "reviews": [
+          {
+            "id": 1,
+            "name": "Priya Sharma",
+            "location": "Delhi",
+            "rating": 5,
+            "text": "The most comfortable juttis I've ever worn! The craftsmanship is incredible and they look absolutely stunning with my lehenga.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "verified": true
+          },
+          {
+            "id": 2,
+            "name": "Ananya Reddy",
+            "location": "Bangalore",
+            "rating": 5,
+            "text": "I ordered these for my sister's wedding and received so many compliments! The quality exceeded my expectations.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "verified": true
+          },
+          {
+            "id": 3,
+            "name": "Meera Patel",
+            "location": "Mumbai",
+            "rating": 5,
+            "text": "Beautiful design and super comfortable. I wore them for 8 hours straight at a wedding with no discomfort!",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "verified": true
+          }
+        ]
+      },
+      "faq": {
+        "title": "Frequently Asked Questions",
+        "items": [
+          {
+            "question": "How do I find my correct jutti size?",
+            "answer": "We recommend measuring your foot length in centimeters and referring to our size chart. Juttis typically stretch slightly with wear, so we suggest ordering your regular size. If you're between sizes, go for the smaller one."
+          },
+          {
+            "question": "How should I care for my juttis?",
+            "answer": "Store your juttis in a cool, dry place away from direct sunlight. Use a soft brush to remove dust and stuff them with tissue paper to maintain their shape. Avoid getting them wet and never machine wash."
+          },
+          {
+            "question": "Are these juttis comfortable for all-day wear?",
+            "answer": "Yes! Our juttis feature cushioned insoles and are designed to mold to your feet with wear. Most customers find them comfortable for extended periods, including long wedding ceremonies."
+          },
+          {
+            "question": "Can I customize my juttis?",
+            "answer": "We offer customization services for bridal orders and bulk purchases. Contact us directly to discuss your requirements and we'll work with our artisans to create your perfect pair."
+          },
+          {
+            "question": "What is the return policy?",
+            "answer": "We offer easy returns within 7 days of delivery for unworn items in original packaging. Please refer to our return policy page for complete details."
+          }
+        ]
+      },
+      "content": {
+        "tagline": "Learn More",
+        "title": "Everything You Need to Know About Juttis",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "content": "Juttis, also known as Mojaris, are traditional Indian footwear that have been adorning feet for centuries. Originating from the royal courts of Mughal India, these handcrafted shoes have transcended time to become a beloved part of Indian fashion heritage. At Gulbhahar, we honor this rich tradition while adding our own touch of contemporary elegance."
+          },
+          {
+            "type": "heading",
+            "content": "The History and Heritage of Juttis"
+          },
+          {
+            "type": "paragraph",
+            "content": "The art of jutti-making dates back to the Mughal era when skilled craftsmen created exquisite footwear for royalty. These artisans, known as 'mochis,' developed intricate techniques that have been passed down through generations. Punjab, Rajasthan, and parts of North India became renowned centers for jutti craftsmanship, each region developing its own distinctive style and embroidery patterns."
+          },
+          {
+            "type": "paragraph",
+            "content": "What makes juttis truly special is the dedication that goes into each pair. A single pair can take anywhere from several days to weeks to complete, depending on the complexity of the design. The process involves hand-stitching, embroidery, and careful attention to every detail – a labor of love that results in wearable art."
+          },
+          {
+            "type": "heading",
+            "content": "Why Choose Handcrafted Juttis?"
+          },
+          {
+            "type": "list",
+            "content": "",
+            "items": [
+              "Unique Craftsmanship: Each pair is one-of-a-kind, with slight variations that add character and authenticity",
+              "Superior Comfort: Traditional techniques create footwear that molds to your feet over time",
+              "Cultural Connection: Wearing juttis connects you to centuries of Indian artistic tradition",
+              "Sustainable Fashion: Handcrafted items support artisan communities and traditional skills",
+              "Versatile Style: Perfect for weddings, festivals, casual wear, and even formal occasions"
+            ]
+          },
+          {
+            "type": "quote",
+            "content": "Every pair of Gulbhahar juttis carries within it the dreams of artisans and the beauty of tradition – crafted not just for your feet, but for your soul."
+          },
+          {
+            "type": "heading",
+            "content": "Styling Your Juttis"
+          },
+          {
+            "type": "paragraph",
+            "content": "The beauty of juttis lies in their versatility. Pair them with traditional Indian wear like kurtas, lehengas, and sarees for a classic look. For a fusion twist, wear them with jeans, palazzo pants, or even summer dresses. The key is to let your juttis be a statement piece that adds a touch of ethnic elegance to any outfit."
+          },
+          {
+            "type": "paragraph",
+            "content": "At Gulbhahar, we believe that every step you take should be a celebration of tradition and style. Our collection offers something for everyone – from brides seeking the perfect wedding juttis to fashion enthusiasts looking to add ethnic charm to their everyday wardrobe. Explore our range and find your perfect pair today."
+          }
+        ]
+      }
+    },
+    "suits": {
+      "id": "bridal-juttis",
+      "slug": "bridal-juttis",
+      "meta": {
+        "title": "Bridal Juttis Collection | Gulbhahar",
+        "description": "Make your wedding day special with our handcrafted bridal juttis. Luxurious designs for the modern bride.",
+        "keywords": ["bridal juttis", "wedding juttis", "bridal footwear", "wedding shoes", "ethnic bridal shoes"]
+      },
+      "hero": {
+        "title": "Bridal Juttis",
+        "subtitle": "Where Tradition Meets Timeless Elegance",
+        "backgroundImage": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+        "badge": "The Gulbhahar Collection"
+      },
+      "story": {
+        "tagline": "For Your Special Day",
+        "title": "The Charm of Bridal Juttis",
+        "description": "Your wedding day deserves nothing but the best. Our bridal juttis are crafted with the finest materials and adorned with intricate embroidery, pearls, and crystals. Each pair is a masterpiece designed to complement your bridal attire and keep you comfortable throughout your celebrations.",
+        "highlights": [
+          {
+            "icon": "gem",
+            "title": "Luxurious Details",
+            "description": "Embellished with Swarovski crystals, pearls, and intricate zardozi work for that perfect bridal sparkle."
+          },
+          {
+            "icon": "heart",
+            "title": "Bridal Comfort",
+            "description": "Extra cushioning and support designed specifically for the long ceremonies and celebrations."
+          },
+          {
+            "icon": "sparkles",
+            "title": "Customizable",
+            "description": "Personalize your bridal juttis with your name, wedding date, or special message embroidered inside."
+          }
+        ],
+        "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+      },
+      "features": {
+        "tagline": "Why Brides Choose Us",
+        "title": "Made for Your Big Day",
+        "items": [
+          {
+            "icon": "crown",
+            "title": "Bridal Exclusive Designs",
+            "description": "Collections designed specifically for brides, matching every bridal color from ivory to deep reds.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+          },
+          {
+            "icon": "palette",
+            "title": "Color Matching",
+            "description": "Send us a swatch of your lehenga and we'll create juttis that perfectly complement your bridal attire.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+          },
+          {
+            "icon": "gift",
+            "title": "Beautiful Packaging",
+            "description": "Each bridal pair comes in a luxurious keepsake box, perfect for preserving your wedding memories.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+          },
+          {
+            "icon": "clock",
+            "title": "Rush Orders Available",
+            "description": "Need them quickly? We offer expedited crafting for brides with tight timelines.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+          }
+        ]
+      },
+      "gallery": {
+        "title": "Bridal Inspirations",
+        "images": [
+          {
+            "src": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "alt": "Red bridal juttis with zardozi",
+            "caption": "Classic Red"
+          },
+          {
+            "src": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "alt": "Ivory bridal juttis with pearls",
+            "caption": "Ivory Dreams"
+          },
+          {
+            "src": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "alt": "Pink bridal juttis with crystals",
+            "caption": "Blush Pink"
+          },
+          {
+            "src": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "alt": "Gold bridal juttis",
+            "caption": "Golden Glamour"
+          }
+        ]
+      },
+      "testimonials": {
+        "tagline": "Bride Stories",
+        "title": "Happy Brides, Beautiful Moments",
+        "reviews": [
+          {
+            "id": 1,
+            "name": "Simran Kaur",
+            "location": "Chandigarh",
+            "rating": 5,
+            "text": "These juttis made my wedding outfit complete! The customization with my wedding date embroidered inside made them even more special.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "verified": true
+          },
+          {
+            "id": 2,
+            "name": "Riya Mehta",
+            "location": "Jaipur",
+            "rating": 5,
+            "text": "I danced for hours at my sangeet and my feet didn't hurt at all! The comfort level is unmatched. Plus, they're absolutely gorgeous!",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "verified": true
+          },
+          {
+            "id": 3,
+            "name": "Kavya Nair",
+            "location": "Chennai",
+            "rating": 5,
+            "text": "The color matching service was amazing - they perfectly matched my maroon lehenga. Highly recommend for all brides!",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "verified": true
+          }
+        ]
+      },
+      "faq": {
+        "title": "Bridal FAQs",
+        "items": [
+          {
+            "question": "How far in advance should I order my bridal juttis?",
+            "answer": "We recommend ordering at least 4-6 weeks before your wedding date to allow time for customization and any adjustments. Rush orders can be accommodated for an additional fee."
+          },
+          {
+            "question": "Can you match my lehenga color exactly?",
+            "answer": "Yes! Send us a fabric swatch or high-quality photo of your bridal outfit, and our artisans will create a custom color match for your juttis."
+          },
+          {
+            "question": "Do you offer bridal packages for the whole wedding party?",
+            "answer": "Absolutely! We offer special discounts for bridal parties ordering 5 or more pairs. Contact us for bulk pricing and coordinated designs."
+          },
+          {
+            "question": "What customization options are available?",
+            "answer": "We can embroider names, initials, wedding dates, or short messages inside your juttis. We also offer custom embellishment choices and color combinations."
+          },
+          {
+            "question": "Are the juttis comfortable for mehendi and sangeet ceremonies too?",
+            "answer": "Yes! Our bridal juttis are designed for all your wedding functions. Many brides choose different pairs for different events - contact us for multi-pair packages."
+          }
+        ]
+      },
+      "content": {
+        "tagline": "Bridal Guide",
+        "title": "The Complete Guide to Bridal Juttis",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "content": "Your wedding day is one of the most memorable occasions of your life, and every detail matters – including your footwear. Bridal juttis have become an essential part of the modern Indian bride's trousseau, offering the perfect blend of tradition, comfort, and elegance. At Gulbhahar, we understand the significance of this special day and craft each bridal pair with extraordinary care and attention."
+          },
+          {
+            "type": "heading",
+            "content": "Why Brides Are Choosing Juttis"
+          },
+          {
+            "type": "paragraph",
+            "content": "Gone are the days when uncomfortable heels were the only option for brides. Today's brides are smart, stylish, and practical. They want footwear that complements their stunning lehengas while allowing them to dance, walk, and celebrate without pain. Bridal juttis offer exactly that – timeless beauty combined with all-day comfort."
+          },
+          {
+            "type": "list",
+            "content": "",
+            "items": [
+              "Comfort for long ceremonies: Wedding functions can last hours – juttis keep you comfortable throughout",
+              "Traditional elegance: Nothing complements ethnic bridal wear better than beautifully crafted juttis",
+              "Photo-perfect: Juttis add a touch of charm to those special 'feet shots' photographers love",
+              "Keepsake value: Unlike heels you might never wear again, juttis become treasured memories",
+              "Matching possibilities: Can be customized to perfectly match your bridal outfit"
+            ]
+          },
+          {
+            "type": "heading",
+            "content": "Choosing the Perfect Bridal Juttis"
+          },
+          {
+            "type": "paragraph",
+            "content": "Selecting bridal juttis requires consideration of several factors. First, consider the color and embroidery style of your lehenga or saree. Our color-matching service ensures a perfect complement. Next, think about the embellishments – from delicate pearls for a subtle look to elaborate zardozi and crystal work for maximum impact."
+          },
+          {
+            "type": "quote",
+            "content": "A bride deserves to feel like royalty on her special day. Our bridal juttis are designed to make every step feel like you're walking on clouds while looking like you've stepped out of a fairy tale."
+          },
+          {
+            "type": "heading",
+            "content": "Personalizing Your Bridal Juttis"
+          },
+          {
+            "type": "paragraph",
+            "content": "One of the most cherished aspects of Gulbhahar bridal juttis is the option for personalization. Many brides choose to have their wedding date, initials, or a special message embroidered inside the sole – a beautiful secret that makes the juttis uniquely yours. Some couples even get matching juttis as a symbol of their journey together."
+          },
+          {
+            "type": "paragraph",
+            "content": "Whether you're planning an intimate ceremony or a grand celebration, the right pair of bridal juttis can elevate your entire look. Start your bridal footwear journey with Gulbhahar and step into your happily ever after with style and comfort."
+          }
+        ]
+      }
+    },
+    "sarees": {
+      "id": "sarees",
+      "slug": "sarees",
+      "meta": {
+        "title": "Handwoven Sarees Collection | Gulbhahar",
+        "description": "Explore our collection of handwoven sarees. From Banarasi to Kanjeevaram, discover timeless Indian elegance.",
+        "keywords": ["sarees", "handwoven sarees", "silk sarees", "Banarasi sarees", "Indian sarees"]
+      },
+      "hero": {
+        "title": "Handwoven Sarees",
+        "subtitle": "Six Yards of Pure Elegance",
+        "backgroundImage": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+        "badge": "The Gulbhahar Collection"
+      },
+      "story": {
+        "tagline": "Timeless Tradition",
+        "title": "The Legacy of Indian Weaving",
+        "description": "The saree is more than just a garment - it's a canvas of India's rich textile heritage. At Gulbhahar, we celebrate this legacy by curating sarees from master weavers across India. Each piece represents months of painstaking work and generations of artistic tradition.",
+        "highlights": [
+          {
+            "icon": "fabric",
+            "title": "Handwoven Excellence",
+            "description": "Each saree is handwoven on traditional looms, taking weeks to complete with intricate patterns."
+          },
+          {
+            "icon": "map",
+            "title": "Regional Specialties",
+            "description": "From Banaras to Kanchipuram, we source authentic sarees from India's finest weaving clusters."
+          },
+          {
+            "icon": "certificate",
+            "title": "GI Tagged",
+            "description": "Many of our sarees carry Geographical Indication tags, ensuring authenticity and supporting local artisans."
+          }
+        ],
+        "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+      },
+      "features": {
+        "tagline": "Our Promise",
+        "title": "Why Our Sarees Stand Apart",
+        "items": [
+          {
+            "icon": "certificate",
+            "title": "Authentic Handloom",
+            "description": "Every saree comes with an authenticity certificate and details about the weaver and region.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+          },
+          {
+            "icon": "sparkles",
+            "title": "Pure Materials",
+            "description": "Only pure silk, cotton, and natural dyes. No synthetic blends or machine-made imitations.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+          },
+          {
+            "icon": "users",
+            "title": "Artisan Direct",
+            "description": "We work directly with weaver cooperatives, ensuring fair wages and sustainable livelihoods.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+          },
+          {
+            "icon": "truck",
+            "title": "Careful Packaging",
+            "description": "Each saree is carefully folded and packaged to preserve its drape and prevent damage.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+          }
+        ]
+      },
+      "gallery": {
+        "title": "Saree Showcase",
+        "images": [
+          {
+            "src": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "alt": "Banarasi silk saree",
+            "caption": "Banarasi Silk"
+          },
+          {
+            "src": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "alt": "Kanjeevaram saree",
+            "caption": "Kanjeevaram"
+          },
+          {
+            "src": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "alt": "Chanderi saree",
+            "caption": "Chanderi"
+          },
+          {
+            "src": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "alt": "Tussar silk saree",
+            "caption": "Tussar Silk"
+          }
+        ]
+      },
+      "testimonials": {
+        "tagline": "Customer Stories",
+        "title": "Draped in Elegance",
+        "reviews": [
+          {
+            "id": 1,
+            "name": "Lakshmi Venkatesh",
+            "location": "Chennai",
+            "rating": 5,
+            "text": "The Kanjeevaram saree I purchased is absolutely stunning. The quality of silk and the zari work is exceptional. A true heirloom piece!",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "verified": true
+          },
+          {
+            "id": 2,
+            "name": "Shweta Agarwal",
+            "location": "Kolkata",
+            "rating": 5,
+            "text": "I love that I can trace my saree back to the weaver who made it. The authenticity and story behind each piece makes it so special.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "verified": true
+          },
+          {
+            "id": 3,
+            "name": "Deepa Krishnan",
+            "location": "Hyderabad",
+            "rating": 5,
+            "text": "Beautiful Banarasi saree with intricate motifs. The drape is perfect and the colors are exactly as shown. Will definitely buy again!",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "verified": true
+          }
+        ]
+      },
+      "faq": {
+        "title": "Saree Care & Questions",
+        "items": [
+          {
+            "question": "How do I care for my silk saree?",
+            "answer": "Dry clean only for the first few wears. Store in a cool, dry place wrapped in muslin cloth. Refold periodically to prevent permanent creases."
+          },
+          {
+            "question": "Do your sarees come with a blouse piece?",
+            "answer": "Yes, most of our sarees come with an unstitched blouse piece. Product descriptions specify if a blouse piece is included."
+          },
+          {
+            "question": "How can I verify the authenticity of my saree?",
+            "answer": "Each saree comes with an authenticity card detailing the weave type, region, and weaver information. GI-tagged sarees include official certification."
+          },
+          {
+            "question": "What is the difference between handloom and powerloom sarees?",
+            "answer": "Handloom sarees are woven entirely by hand on traditional looms, resulting in unique textures and slight variations that add character. We only sell authentic handloom sarees."
+          },
+          {
+            "question": "Can you help me choose a saree for a specific occasion?",
+            "answer": "Absolutely! Contact our styling team with details about your occasion, and we'll recommend the perfect saree based on the event type, season, and your preferences."
+          }
+        ]
+      },
+      "content": {
+        "tagline": "Saree Stories",
+        "title": "The Timeless Art of the Handwoven Saree",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "content": "The saree is not merely a garment – it is a six-yard canvas that tells the story of India's incredible textile heritage. For thousands of years, the saree has draped Indian women in elegance, each weave carrying within it the dreams and dedication of master artisans. At Gulbhahar, we are proud custodians of this living heritage, bringing you authentic handwoven sarees from India's finest weaving clusters."
+          },
+          {
+            "type": "heading",
+            "content": "The Magic of Handloom Weaving"
+          },
+          {
+            "type": "paragraph",
+            "content": "In an age of mass production, handloom sarees stand as a testament to human skill and patience. Each saree begins as raw silk or cotton threads, which are then dyed, prepared, and painstakingly woven on traditional looms. A single Banarasi saree can take anywhere from 15 days to 6 months to complete, depending on the intricacy of the design."
+          },
+          {
+            "type": "paragraph",
+            "content": "The weaver's loom is like a musical instrument – the rhythmic click-clack of the shuttle, the careful lifting of warp threads, the gradual emergence of patterns – it's a symphony of skill and tradition. This is what sets handloom apart from machine-made textiles and makes each saree truly unique."
+          },
+          {
+            "type": "heading",
+            "content": "Regional Weaving Traditions"
+          },
+          {
+            "type": "list",
+            "content": "",
+            "items": [
+              "Banarasi (Varanasi): Known for rich silk, gold and silver zari, and Mughal-inspired motifs",
+              "Kanjeevaram (Tamil Nadu): Famous for heavy silk with contrasting borders and temple designs",
+              "Chanderi (Madhya Pradesh): Lightweight fabric with shimmering texture and delicate patterns",
+              "Paithani (Maharashtra): Distinguished by peacock motifs and oblique square designs",
+              "Tussar (Bihar/Jharkhand): Wild silk with natural golden sheen and tribal patterns",
+              "Sambalpuri (Odisha): Known for tie-dye technique (Ikat) creating geometric patterns"
+            ]
+          },
+          {
+            "type": "quote",
+            "content": "A handwoven saree is not just fabric – it is tradition you can wear, art you can drape, and heritage you can pass on to future generations."
+          },
+          {
+            "type": "heading",
+            "content": "Investing in Handloom Heritage"
+          },
+          {
+            "type": "paragraph",
+            "content": "When you purchase a handwoven saree from Gulbhahar, you're not just buying a garment – you're supporting an entire ecosystem of artisans, their families, and centuries-old traditions. Many weaving communities have practiced their craft for generations, and your purchase helps ensure this knowledge is preserved and passed on."
+          },
+          {
+            "type": "paragraph",
+            "content": "Our sarees come with authenticity certificates that trace the origin of each piece, connecting you directly to the weaver who created it. This transparency reflects our commitment to ethical fashion and fair trade practices. Every saree has a story, and we believe you deserve to know it."
+          }
+        ]
+      }
+    },
+    "bags": {
+      "id": "bags",
+      "slug": "bags",
+      "meta": {
+        "title": "Handcrafted Bags & Clutches | Gulbhahar",
+        "description": "Complete your ethnic look with our handcrafted bags and clutches. Traditional embroidery meets modern functionality.",
+        "keywords": ["ethnic bags", "handcrafted clutches", "embroidered bags", "potli bags", "Indian accessories"]
+      },
+      "hero": {
+        "title": "Handcrafted Bags",
+        "subtitle": "The Perfect Accessory for Every Occasion",
+        "backgroundImage": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+        "badge": "The Gulbhahar Collection"
+      },
+      "story": {
+        "tagline": "Carry Elegance",
+        "title": "The Art of Accessorizing",
+        "description": "A beautiful bag completes any outfit. Our collection of handcrafted bags and clutches brings together traditional Indian embroidery with contemporary designs. From ornate potli bags to sleek clutches, each piece is crafted to be both beautiful and functional.",
+        "highlights": [
+          {
+            "icon": "needle",
+            "title": "Artisan Embroidery",
+            "description": "Traditional embroidery techniques including zardozi, thread work, and mirror work adorn each piece."
+          },
+          {
+            "icon": "gem",
+            "title": "Premium Embellishments",
+            "description": "Crystals, pearls, and semi-precious stones carefully placed by skilled craftsmen."
+          },
+          {
+            "icon": "layers",
+            "title": "Functional Design",
+            "description": "Thoughtfully designed interiors with pockets and secure closures for your essentials."
+          }
+        ],
+        "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+      },
+      "features": {
+        "tagline": "Our Collection",
+        "title": "Bags for Every Occasion",
+        "items": [
+          {
+            "icon": "gift",
+            "title": "Potli Bags",
+            "description": "Traditional drawstring bags perfect for weddings and festive occasions. Available in silk, velvet, and brocade.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+          },
+          {
+            "icon": "sparkles",
+            "title": "Evening Clutches",
+            "description": "Elegant clutches with intricate detailing, designed to complement your ethnic and fusion wear.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+          },
+          {
+            "icon": "briefcase",
+            "title": "Box Clutches",
+            "description": "Structured clutches with traditional motifs, perfect for making a statement at any event.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+          },
+          {
+            "icon": "shopping-bag",
+            "title": "Tote Bags",
+            "description": "Spacious ethnic totes for everyday elegance, blending traditional craft with modern utility.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+          }
+        ]
+      },
+      "gallery": {
+        "title": "Bag Collection",
+        "images": [
+          {
+            "src": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "alt": "Embroidered potli bag",
+            "caption": "Bridal Potli"
+          },
+          {
+            "src": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "alt": "Crystal clutch",
+            "caption": "Crystal Evening"
+          },
+          {
+            "src": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "alt": "Velvet box clutch",
+            "caption": "Velvet Box"
+          },
+          {
+            "src": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "alt": "Silk tote bag",
+            "caption": "Silk Tote"
+          }
+        ]
+      },
+      "testimonials": {
+        "tagline": "Customer Reviews",
+        "title": "Loved by Our Customers",
+        "reviews": [
+          {
+            "id": 1,
+            "name": "Nisha Gupta",
+            "location": "Delhi",
+            "rating": 5,
+            "text": "The potli bag I bought for my sister's wedding was a showstopper! Beautiful embroidery and just the right size for all essentials.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "verified": true
+          },
+          {
+            "id": 2,
+            "name": "Fatima Khan",
+            "location": "Lucknow",
+            "rating": 5,
+            "text": "I love my box clutch! The zardozi work is exquisite and it goes perfectly with my sarees. Quality is amazing.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "verified": true
+          },
+          {
+            "id": 3,
+            "name": "Tanya Bhatia",
+            "location": "Pune",
+            "rating": 5,
+            "text": "Bought matching potli bags for all my bridesmaids. They were a hit! Beautiful packaging made them perfect gifts.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "verified": true
+          }
+        ]
+      },
+      "faq": {
+        "title": "Bag Care & Questions",
+        "items": [
+          {
+            "question": "How do I care for embroidered bags?",
+            "answer": "Store in a dust bag away from direct sunlight. Spot clean gently with a soft cloth. Avoid contact with water or perfumes."
+          },
+          {
+            "question": "What fits in a potli bag?",
+            "answer": "Our standard potli bags comfortably fit a phone, lipstick, small mirror, tissues, and cards. We also offer larger sizes for those who need more space."
+          },
+          {
+            "question": "Can I get a bag customized to match my outfit?",
+            "answer": "Yes! We offer customization services where we can create bags to match your specific outfit colors and embroidery style."
+          },
+          {
+            "question": "Are the bags suitable for everyday use?",
+            "answer": "Our ethnic totes and some clutch styles are designed for regular use. Heavily embellished pieces are best reserved for special occasions."
+          },
+          {
+            "question": "Do you offer gift packaging?",
+            "answer": "Yes, all our bags come in beautiful packaging. We also offer premium gift wrapping and personalized notes for an additional fee."
+          }
+        ]
+      },
+      "content": {
+        "tagline": "Accessory Guide",
+        "title": "The Art of the Perfect Accessory",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "content": "In the world of ethnic fashion, accessories are not mere afterthoughts – they are the finishing touches that complete a look and tell your personal style story. A beautifully crafted bag can elevate even the simplest outfit, while a statement clutch can be the talking point of your entire ensemble. At Gulbhahar, we create bags and clutches that are as much works of art as they are functional accessories."
+          },
+          {
+            "type": "heading",
+            "content": "The Heritage of Indian Bags"
+          },
+          {
+            "type": "paragraph",
+            "content": "Traditional Indian bags have a rich history dating back centuries. The potli, for instance, originated as a practical pouch for carrying coins and small items. Over time, it evolved into an ornate accessory adorned with embroidery, beadwork, and precious stones. Today, these bags carry forward that legacy while adapting to modern needs and aesthetics."
+          },
+          {
+            "type": "paragraph",
+            "content": "Our artisans employ time-honored techniques such as zardozi (gold thread embroidery), aari work (hook embroidery), gota patti (gold ribbon work), and mirror work to create bags that are truly extraordinary. Each piece undergoes hours of meticulous handwork, resulting in accessories that are both beautiful and meaningful."
+          },
+          {
+            "type": "heading",
+            "content": "Choosing the Right Bag for Your Occasion"
+          },
+          {
+            "type": "list",
+            "content": "",
+            "items": [
+              "Weddings & Sangeet: Ornate potli bags or embellished clutches that match your outfit",
+              "Festive Occasions: Bright, colorful bags with traditional motifs and mirror work",
+              "Formal Events: Elegant box clutches with subtle embroidery in classic colors",
+              "Casual Ethnic Wear: Everyday totes with ethnic prints or light embroidery",
+              "Gifting: Beautifully packaged bags make thoughtful presents for bridesmaids and loved ones"
+            ]
+          },
+          {
+            "type": "quote",
+            "content": "A bag is more than storage – it's a companion to your outfit, a keeper of your essentials, and a reflection of your style. Choose one that speaks to you."
+          },
+          {
+            "type": "heading",
+            "content": "Caring for Your Ethnic Bags"
+          },
+          {
+            "type": "paragraph",
+            "content": "Handcrafted bags require special care to maintain their beauty. Store them in dust bags away from direct sunlight and humidity. Avoid contact with perfumes, makeup, and water. For cleaning, gently use a soft, dry cloth – never machine wash or use harsh chemicals. With proper care, your Gulbhahar bag will remain a treasured accessory for years to come."
+          },
+          {
+            "type": "paragraph",
+            "content": "Whether you're looking for the perfect wedding accessory, a statement piece for festivities, or an everyday bag with ethnic charm, our collection has something for every occasion and style preference. Explore our range and discover accessories that complement your unique fashion journey."
+          }
+        ]
+      }
+    },
+    "jewellery": {
+      "id": "jewellery",
+      "slug": "jewellery",
+      "meta": {
+        "title": "Traditional Jewellery Collection | Gulbhahar",
+        "description": "Adorn yourself with our curated collection of traditional Indian jewellery. From kundan to temple jewellery.",
+        "keywords": ["Indian jewellery", "traditional jewellery", "kundan jewellery", "ethnic jewelry", "bridal jewellery"]
+      },
+      "hero": {
+        "title": "Traditional Jewellery",
+        "subtitle": "Adorn Yourself in Timeless Beauty",
+        "backgroundImage": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+        "badge": "The Gulbhahar Collection"
+      },
+      "story": {
+        "tagline": "Timeless Adornments",
+        "title": "The Art of Indian Jewellery",
+        "description": "Indian jewellery is more than adornment - it's a celebration of artistry, heritage, and tradition. Our collection brings together exquisite pieces crafted by skilled artisans who have inherited their craft through generations. Each piece tells a story of India's rich cultural heritage.",
+        "highlights": [
+          {
+            "icon": "gem",
+            "title": "Kundan & Polki",
+            "description": "Traditional uncut diamond setting techniques that have adorned royalty for centuries."
+          },
+          {
+            "icon": "sparkles",
+            "title": "Temple Jewellery",
+            "description": "Inspired by the ornaments of deities, featuring intricate gold-plated designs."
+          },
+          {
+            "icon": "crown",
+            "title": "Meenakari Work",
+            "description": "Colorful enamel work from Rajasthan that adds vibrant beauty to every piece."
+          }
+        ],
+        "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+      },
+      "features": {
+        "tagline": "Our Collections",
+        "title": "Jewellery for Every Occasion",
+        "items": [
+          {
+            "icon": "crown",
+            "title": "Bridal Sets",
+            "description": "Complete bridal jewellery sets including necklaces, earrings, maang tikka, and more.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+          },
+          {
+            "icon": "circle",
+            "title": "Earrings",
+            "description": "From delicate studs to statement jhumkas, earrings for every style and occasion.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+          },
+          {
+            "icon": "link",
+            "title": "Necklaces",
+            "description": "Chokers, long chains, and layered pieces in kundan, pearls, and gold-plated designs.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+          },
+          {
+            "icon": "star",
+            "title": "Hair Accessories",
+            "description": "Maang tikkas, matha pattis, and hair pins to complete your bridal look.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp"
+          }
+        ]
+      },
+      "gallery": {
+        "title": "Jewellery Gallery",
+        "images": [
+          {
+            "src": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "alt": "Kundan bridal set",
+            "caption": "Kundan Bridal"
+          },
+          {
+            "src": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "alt": "Temple jewellery necklace",
+            "caption": "Temple Gold"
+          },
+          {
+            "src": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "alt": "Meenakari jhumkas",
+            "caption": "Meenakari"
+          },
+          {
+            "src": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "alt": "Pearl choker",
+            "caption": "Pearl Elegance"
+          }
+        ]
+      },
+      "testimonials": {
+        "tagline": "Customer Love",
+        "title": "Adorned & Adored",
+        "reviews": [
+          {
+            "id": 1,
+            "name": "Pooja Sharma",
+            "location": "Jaipur",
+            "rating": 5,
+            "text": "The kundan set I bought for my wedding was absolutely breathtaking! Received so many compliments. Worth every penny.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "verified": true
+          },
+          {
+            "id": 2,
+            "name": "Aisha Syed",
+            "location": "Hyderabad",
+            "rating": 5,
+            "text": "Beautiful temple jewellery that looks so authentic. The gold plating is excellent and hasn't tarnished at all.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "verified": true
+          },
+          {
+            "id": 3,
+            "name": "Sneha Reddy",
+            "location": "Bangalore",
+            "rating": 5,
+            "text": "I love my meenakari jhumkas! They're lightweight and comfortable despite their size. Perfect for long events.",
+            "image": "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+            "verified": true
+          }
+        ]
+      },
+      "faq": {
+        "title": "Jewellery Care & Questions",
+        "items": [
+          {
+            "question": "How do I care for my jewellery?",
+            "answer": "Store in the provided pouch away from moisture. Avoid contact with perfumes, lotions, and water. Clean gently with a soft, dry cloth."
+          },
+          {
+            "question": "Is your jewellery hypoallergenic?",
+            "answer": "Most of our pieces are made with hypoallergenic materials. Check product descriptions for specific material information if you have sensitivities."
+          },
+          {
+            "question": "What is the difference between kundan and polki?",
+            "answer": "Kundan uses glass stones set in gold foil, while polki uses uncut, unpolished diamonds. Both are traditional Indian techniques with distinct beauty."
+          },
+          {
+            "question": "Can I wear gold-plated jewellery daily?",
+            "answer": "We recommend reserving heavily embellished pieces for special occasions. For daily wear, opt for our simpler designs and follow care instructions."
+          },
+          {
+            "question": "Do you offer jewellery repair services?",
+            "answer": "Yes, we offer repair and restoration services for jewellery purchased from us. Contact customer service with photos of the damage for a quote."
+          }
+        ]
+      },
+      "content": {
+        "tagline": "Jewellery Heritage",
+        "title": "The Timeless Beauty of Indian Jewellery",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "content": "Indian jewellery is among the most exquisite in the world, representing thousands of years of artistic evolution and cultural significance. From the temple jewellery of South India to the kundan creations of Rajasthan, each piece carries within it stories of royalty, tradition, and timeless beauty. At Gulbhahar, we bring you this magnificent heritage, crafted by artisans who have dedicated their lives to this ancient art."
+          },
+          {
+            "type": "heading",
+            "content": "The Rich Traditions of Indian Jewellery Making"
+          },
+          {
+            "type": "paragraph",
+            "content": "India's jewellery traditions are as diverse as its culture. Each region has developed its own distinctive style, influenced by local customs, available materials, and historical patronage. The Mughal courts elevated jewellery making to unprecedented heights, while temple traditions in the South created designs inspired by deities and sacred motifs."
+          },
+          {
+            "type": "list",
+            "content": "",
+            "items": [
+              "Kundan: The art of setting gemstones in gold using lac, originating in Rajasthan",
+              "Polki: Using uncut, natural diamonds for a royal, traditional look",
+              "Meenakari: Colorful enamel work that adds vibrant beauty to gold jewellery",
+              "Temple Jewellery: Gold-plated designs featuring gods, goddesses, and temple motifs",
+              "Jadau: Embedding precious stones in gold using ancient techniques",
+              "Filigree: Delicate metalwork creating intricate lace-like patterns"
+            ]
+          },
+          {
+            "type": "heading",
+            "content": "Jewellery for Every Occasion"
+          },
+          {
+            "type": "paragraph",
+            "content": "Indian jewellery isn't just for weddings – though bridal jewellery holds a special place in our collection. From statement jhumkas that transform a simple kurta into an elegant outfit, to delicate everyday pieces that add a touch of tradition to Western wear, there's a perfect piece for every occasion and style."
+          },
+          {
+            "type": "quote",
+            "content": "Jewellery is not just about adornment – it's about carrying forward traditions, celebrating milestones, and expressing your unique identity. Each piece you wear tells your story."
+          },
+          {
+            "type": "heading",
+            "content": "Caring for Your Treasures"
+          },
+          {
+            "type": "paragraph",
+            "content": "To maintain the beauty of your jewellery, proper care is essential. Store pieces separately in soft pouches to prevent scratching. Keep away from moisture, perfumes, and cosmetics. Clean gently with a soft cloth after each wear. Kundan and polki pieces require extra care – avoid contact with water and store in airtight containers."
+          },
+          {
+            "type": "paragraph",
+            "content": "At Gulbhahar, we believe that beautiful jewellery should be accessible to everyone. Our collection ranges from everyday essentials to bridal showstoppers, all crafted with the same dedication to quality and authenticity. Discover pieces that resonate with your style and become treasured parts of your jewellery collection."
+          }
+        ]
+      }
+    }
+  }
+}

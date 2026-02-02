@@ -6,6 +6,7 @@ const NavLink = ({
   hasDropdown = false,
   className = "",
   isScrolled,
+  isNavSolid,
   pathname,
   router,
   isActive,
@@ -35,9 +36,9 @@ const NavLink = ({
           uppercase tracking-wide transition-all duration-300 ease-out
           ${
             isActive
-              ? `${isScrolled || pathname !== "/" ? "text-[#800000]" : "text-white"} scale-105`
+              ? `${isNavSolid ? "text-[#800000]" : "text-white"} scale-105`
               : `${
-                  isScrolled || pathname !== "/"
+                  isNavSolid
                     ? "text-gray-800 hover:text-[#800000]"
                     : "text-white/90 hover:text-white"
                 } hover:scale-105`

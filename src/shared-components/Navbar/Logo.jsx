@@ -2,7 +2,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 
-const Logo = ({ isScrolled, pathname }) => {
+const Logo = ({ isScrolled, isNavSolid, pathname }) => {
   return (
     <div className="flex-1 flex items-center justify-center md:flex-initial">
       <Link href="/" className="relative group">
@@ -32,13 +32,7 @@ const Logo = ({ isScrolled, pathname }) => {
               text-xl sm:text-2xl md:text-4xl lg:text-5xl font-normal sm:tracking-[0.2em]
               transition-all duration-700 ease-out transform relative z-10
               ${pathname === "/" ? "group-hover:scale-105 group-hover:tracking-[0.2em]" : ""}
-              ${
-                pathname !== "/"
-                  ? "text-[#800000]"
-                  : isScrolled
-                  ? "text-[#800000]"
-                  : "text-white"
-              }
+              ${isNavSolid ? "text-[#800000]" : "text-white"}
               opacity-100 translate-y-0
             `}
             style={{ fontFamily: "Old Standard TT, serif" }}
@@ -47,15 +41,15 @@ const Logo = ({ isScrolled, pathname }) => {
           </span>
 
           {/* Effects */}
-          <LogoEffects isScrolled={isScrolled} pathname={pathname} />
+          <LogoEffects isNavSolid={isNavSolid} pathname={pathname} />
         </div>
       </Link>
     </div>
   );
 };
 
-const LogoEffects = ({ isScrolled, pathname }) => {
-  const showEffects = pathname !== "/" || isScrolled;
+const LogoEffects = ({ isNavSolid, pathname }) => {
+  const showEffects = isNavSolid;
 
   return (
     <>

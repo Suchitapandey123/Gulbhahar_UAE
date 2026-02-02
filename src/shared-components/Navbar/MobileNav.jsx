@@ -6,6 +6,7 @@ const MobileNav = ({
   isMenuOpen,
   toggleMenu,
   isScrolled,
+  isNavSolid,
   pathname,
   isAuthenticated,
   userData,
@@ -36,7 +37,7 @@ const MobileNav = ({
         <button
           onClick={toggleSearchPopup}
           className={`p-1.5 sm:p-2 transition-all duration-300 transform hover:scale-110 active:scale-95 ${
-            isScrolled
+            isNavSolid
               ? "text-gray-800 hover:text-[#800000]"
               : "text-white hover:text-white/80"
           }`}
@@ -49,6 +50,7 @@ const MobileNav = ({
           <MobileUserButton
             {...props}
             isScrolled={isScrolled}
+            isNavSolid={isNavSolid}
             pathname={pathname}
             userData={userData}
             isUserDropdownOpen={isUserDropdownOpen}
@@ -62,7 +64,7 @@ const MobileNav = ({
           <button
             onClick={handleLogin}
             className={`p-1.5 sm:p-2 transition-all duration-300 transform hover:scale-110 active:scale-95 ${
-              isScrolled || pathname !== "/"
+              isNavSolid
                 ? "text-gray-800 hover:text-[#800000]"
                 : "text-white hover:text-white/80"
             }`}
@@ -75,6 +77,7 @@ const MobileNav = ({
         <CartButton
           {...props}
           isScrolled={isScrolled}
+          isNavSolid={isNavSolid}
           pathname={pathname}
           itemsCount={itemsCount}
           toggleCart={toggleCart}
@@ -88,6 +91,7 @@ const MobileNav = ({
 // Mobile User Button Component
 const MobileUserButton = ({
   isScrolled,
+  isNavSolid,
   pathname,
   userData,
   isUserDropdownOpen,
@@ -102,7 +106,7 @@ const MobileUserButton = ({
     <button
       onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
       className={`p-1 sm:p-1.5 transition-all duration-300 transform hover:scale-110 active:scale-95 ${
-        isScrolled || pathname !== "/"
+        isNavSolid
           ? "text-gray-800 hover:text-[#800000]"
           : "text-white hover:text-white/80"
       }`}

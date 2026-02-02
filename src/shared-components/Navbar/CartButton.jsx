@@ -5,20 +5,21 @@ const CartButton = ({
   isCartOpen,
   pathname,
   isScrolled,
+  isNavSolid,
   itemsCount,
   isMobile = false,
 }) => (
   <button
     onClick={toggleCart}
     className={`
-      ${isMobile ? "p-1.5 sm:p-2" : ""} flex items-center space-x-1 lg:space-x-2 text-xs sm:text-sm font-semibold 
+      ${isMobile ? "p-1.5 sm:p-2" : ""} flex items-center space-x-1 lg:space-x-2 text-xs sm:text-sm font-semibold
       uppercase tracking-wide transition-all duration-300 ease-out group relative
       transform hover:scale-110 active:scale-95
       ${
         isCartOpen || pathname === "/cart"
-          ? `${isScrolled || pathname !== "/" ? "text-[#800000]" : "text-white"} scale-105`
+          ? `${isNavSolid ? "text-[#800000]" : "text-white"} scale-105`
           : `${
-              isScrolled || pathname !== "/"
+              isNavSolid
                 ? "text-gray-800 hover:text-[#800000]"
                 : "text-white/90 hover:text-white"
             } hover:scale-105`

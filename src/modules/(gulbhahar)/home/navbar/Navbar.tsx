@@ -12,6 +12,9 @@ import { signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+// Routes where navbar should have transparent background when not scrolled
+const transparentNavRoutes = ["/" , "/juttis" ,  "/sarees", "/lehenga", "/bags", "/suits" , "/jewellery"];
+
 const Navbar = () => {
   const {
     isAuthenticated,
@@ -182,9 +185,13 @@ const Navbar = () => {
     setProfileImageError(false);
   };
 
+  // Determine if navbar should show solid background
+  const isNavSolid = isScrolled || !transparentNavRoutes.includes(pathname);
+
   // Shared props for child components
   const sharedProps = {
     isScrolled,
+    isNavSolid,
     pathname,
     router,
     isAuthenticated,
@@ -220,7 +227,7 @@ const Navbar = () => {
 
       <nav
         className={` fixed top-0 left-0 right-0 z-[9999] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${
-          isScrolled || pathname !== "/"
+          isNavSolid
             ? "bg-white/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] py-1.5 lg:py-2 border-b border-gray-200/30"
             : "bg-transparent py-4 lg:py-6 border-b border-white/5"
         }`}
@@ -232,7 +239,7 @@ const Navbar = () => {
               <button
                 onClick={toggleMenu}
                 className={`group p-2.5 rounded-full transition-all duration-300 ${
-                  isScrolled || pathname !== "/"
+                  isNavSolid
                     ? "text-gray-900 hover:bg-[#800000]/5 hover:text-[#800000]"
                     : "text-white hover:bg-white/10 hover:text-white/80"
                 }`}
