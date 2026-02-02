@@ -43,7 +43,7 @@ const SIZE_CONFIGS: any = {
   },
   default: {
     label: "Sizes",
-    sizes: ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+    sizes: ["35", "36", "37", "38", "39", "40", "41"],
     type: "clothing",
   },
 };
