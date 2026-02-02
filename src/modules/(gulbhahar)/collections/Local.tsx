@@ -1,23 +1,21 @@
-
 import productApi from "@/app/api/v0/product-service";
 import Image from "next/image";
 import { Fragment } from "react";
 import ProductCard from "../common/ProductCard";
 
-
 export default async function LocalCollection() {
   const products = await productApi.getProductsByCategory("juttis");
-   console.log(products)
+  console.log(products);
   if (products.length === 0) {
     return (
-      <div className="mt-20 lg:mt-24 pt-4 flex items-center justify-center min-h-[50vh]">
+      <div className="mt-16 pt-2 lg:mt-20 flex items-center justify-center min-h-[50vh]">
         <p className="text-gray-500">No products found</p>
       </div>
     );
   }
 
   return (
-    <div className="mt-20 lg:mt-24 pt-4">
+    <div className="mt-16 pt-2 lg:mt-20 ">
       <div className="max-w-[1600px] mx-auto px-2 lg:px-4">
         {/* Header Section */}
         <div className="text-center mb-10 lg:mb-14">
@@ -33,7 +31,8 @@ export default async function LocalCollection() {
             <span className="h-[1px] w-12 bg-red-800" />
           </div>
           <p className="mt-4 text-gray-600 max-w-xl mx-auto text-sm sm:text-base">
-            Discover our exquisite collection of handcrafted juttis, blending traditional artistry with contemporary elegance.
+            Discover our exquisite collection of handcrafted juttis, blending
+            traditional artistry with contemporary elegance.
           </p>
         </div>
 

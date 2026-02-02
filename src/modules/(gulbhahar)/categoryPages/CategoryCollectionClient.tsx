@@ -167,11 +167,11 @@ export default function CategoryCollectionClient({
   );
 
   return (
-    <div className="mt-20 lg:mt-24 pt-4">
+    <div className="pt-2">
       <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row px-2">
         <div className="w-full lg:px-2">
           {/* Filters */}
-          <div className="border-b-2 border-red-200 mb-6">
+          <div className="border-b  border-gray-200 pb-3 mb-3">
             <CategoryCollection_Filters
               onFilterChange={handleCollectionFilterChange}
               resultCount={filteredProducts.length}
@@ -182,7 +182,6 @@ export default function CategoryCollectionClient({
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-5">
             {paginatedProducts.length > 0 ? (
               paginatedProducts
-                .slice(0, 4)
                 .map((item: Product, index: number) => (
                   <React.Fragment key={item.productId || item._id || index}>
                     {index === 4 && (

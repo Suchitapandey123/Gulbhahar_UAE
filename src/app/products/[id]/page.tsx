@@ -56,6 +56,8 @@ export async function generateMetadata(props: PageParams): Promise<Metadata> {
   const params = await props.params;
   const { product } = await getProductBundle(params.id);
 
+  console.log(product)
+
   if (!product) {
     return {
       title: "Gulbhahar | Crafting Luxury – Handmade Juttis & Designer Bags",
@@ -67,20 +69,16 @@ export async function generateMetadata(props: PageParams): Promise<Metadata> {
     };
   }
 
-  const title = product.title
-    ? `${product.title.slice(0, 43)}... - Gulbhahar`
-    : "Gulbhahar";
-
-  const description =
-    product.details?.[0] ?? "Shop handcrafted products at Gulbhahar";
-  const ogImage = product.images?.[0]?.[0];
-
+  const title = product.seo.metaTitle
+  const description = product.seo.metaTitle
+  const keywords = product.seo.keywords
   return {
     title,
     description,
     alternates: {
       canonical: `https://www.gulbhahar.com/products/${params.id}`,
     },
+    keywords ,
     openGraph: {
       title,
       description,
@@ -88,16 +86,6 @@ export async function generateMetadata(props: PageParams): Promise<Metadata> {
       locale: "en_US",
       siteName: "Gulbhahar",
       url: `https://www.gulbhahar.com/products/${params.id}`,
-      images: ogImage
-        ? [
-            {
-              url: ogImage,
-              width: 800,
-              height: 600,
-              alt: product.name ?? "Product Image",
-            },
-          ]
-        : undefined,
     },
   };
 }

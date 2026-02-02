@@ -33,12 +33,12 @@ const ITEMS_PER_PAGE = 24;
 
 export default function Collection({ parentCategory = null, slug = null }) {
   useEffect(() => {
-     fbEvent({
+    fbEvent({
       action: "ViewContent",
       params: {
-        "content_name" : "Juttis Page"
-      }
-    })
+        content_name: "Juttis Page",
+      },
+    });
   }, [parentCategory]);
 
   const [currentImageIndices, setCurrentImageIndices] = useState({});
@@ -55,13 +55,10 @@ export default function Collection({ parentCategory = null, slug = null }) {
 
   const sarees = staticProductsimage;
   const { addToCart, addingToCart } = useCart();
-  const {ToastContainer } = useToast();
+  const { ToastContainer } = useToast();
   // let category = "juttis"
   let category = parentCategory || slug || "all";
-console.log("CATEGORY INSIDE COLLECTION:", category);
-
-
-
+  console.log("CATEGORY INSIDE COLLECTION:", category);
 
   // Data Fetching - Fetch ALL products and filter on frontend
   const {
@@ -70,12 +67,11 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
     error,
   } = useQuery({
     queryKey: ["getProductsByCategory", category],
-    queryFn: () =>
-         productApi.getAllProduct(),
+    queryFn: () => productApi.getAllProduct(),
     enabled: true,
   });
 
-  console.log(allProducts)
+  console.log(allProducts);
 
   // Filter products by parentCategory on frontend
   const apiData = React.useMemo(() => {
@@ -93,11 +89,11 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
     if (!category || category === "all") return products;
 
     // Filter products where parentCategory array includes the category
-    const filtered = products.filter(product => {
+    const filtered = products.filter((product) => {
       const productCategories = product.parentCategory || [];
       if (Array.isArray(productCategories)) {
-        return productCategories.some(cat =>
-          cat?.toLowerCase?.() === category.toLowerCase()
+        return productCategories.some(
+          (cat) => cat?.toLowerCase?.() === category.toLowerCase(),
         );
       }
       return productCategories?.toLowerCase?.() === category.toLowerCase();
@@ -110,18 +106,16 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
   // Fallback: Fetch juttis when suit/saree has no products (after primary query completes)
   const isSuitOrSaree = parentCategory && parentCategory !== "juttis";
   const primaryQueryDone = !isLoading;
-  const noProductsFound = !apiData || (Array.isArray(apiData) && apiData.length === 0);
-  const shouldFetchJuttis = isSuitOrSaree && primaryQueryDone && noProductsFound;
+  const noProductsFound =
+    !apiData || (Array.isArray(apiData) && apiData.length === 0);
+  const shouldFetchJuttis =
+    isSuitOrSaree && primaryQueryDone && noProductsFound;
 
-  const {
-    data: juttisData,
-    isLoading: juttisLoading,
-  } = useQuery({
+  const { data: juttisData, isLoading: juttisLoading } = useQuery({
     queryKey: ["getJuttisForFallback"],
     queryFn: () => productApi.getProductsByCategory("juttis"),
     enabled: Boolean(shouldFetchJuttis),
   });
-
 
   // Transform API data
   const transformApiData = (apiProducts) => {
@@ -134,16 +128,20 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
       name: product.name || "Product",
       price: product.price || 0,
       parentCategory: Array.isArray(product.parentCategory)
-      ? product.parentCategory
-      : product.parentCategory
-      ? [product.parentCategory]
-      : [],
+        ? product.parentCategory
+        : product.parentCategory
+          ? [product.parentCategory]
+          : [],
       category: product.category || product.parentCategory || "",
       originalPrice: product.originalPrice,
       image:
         product.images && product.images.length > 0
           ? product.images
-          : ["/about/lal-ishq-1.jpg", "/about/lal-ishq-1.jpg", "/about/lal-ishq-1.jpg"],
+          : [
+              "/about/lal-ishq-1.jpg",
+              "/about/lal-ishq-1.jpg",
+              "/about/lal-ishq-1.jpg",
+            ],
       season: product.season?.toLowerCase() || "winter",
       stock: product.stock || Math.floor(Math.random() * 15) + 6,
       size: product.sizes && product.sizes.length > 0 ? product.sizes[0] : "M",
@@ -153,11 +151,10 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
       details: product.details || [],
       isActive: product.isActive !== false,
       createdAt: product.createdAt,
-      updatedAt: product.updatedAt
+      updatedAt: product.updatedAt,
     }));
   };
-// console.log("CATEGORY FROM URL:", category);
-
+  // console.log("CATEGORY FROM URL:", category);
 
   //  REPLACE OLD handleAddToCart WITH THIS NEW ONE:
   const handleAddToCart = async (e, item) => {
@@ -190,7 +187,7 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
 
       if (result.success) {
         toast.success(
-          `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`
+          `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`,
         );
       } else {
         toast.error("Failed to add item to cart. Please try again.", "error");
@@ -201,7 +198,8 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
   };
 
   // Use API data - don't use fallback, let it be empty if no data
-  const collections = apiData && Array.isArray(apiData) ? transformApiData(apiData) : [];
+  const collections =
+    apiData && Array.isArray(apiData) ? transformApiData(apiData) : [];
 
   // DEBUG: Check API response
   // console.log("API DATA RAW:", apiData);
@@ -247,7 +245,6 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
     setCurrentImageIndices(initialIndices);
   }, [collections.length]);
 
-
   // Extract unique sizes
   const sizes = [
     ...new Set(collections.flatMap((item) => item.sizes || [])),
@@ -256,34 +253,34 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
     sizes.length > 0 ? sizes : ["XXS", "XS", "S", "M", "L", "XL", "XXL"];
 
   // Filter collections
-  const filteredCollections = collections.filter((item) => {
-  if (item.isActive === false) return false;
+  const filteredCollections = collections
+    .filter((item) => {
+      if (item.isActive === false) return false;
 
-  const normalize = (val) =>
-    typeof val === "string" ? val.toLowerCase().trim() : "";
+      const normalize = (val) =>
+        typeof val === "string" ? val.toLowerCase().trim() : "";
 
-  const matchesCategory = category && category !== "all"
-  ? Array.isArray(item.parentCategory) &&
-    item.parentCategory.some(
-      (cat) => normalize(cat) === normalize(category)
-    )
-  : true; // if category = "all", show all products
+      const matchesCategory =
+        category && category !== "all"
+          ? Array.isArray(item.parentCategory) &&
+            item.parentCategory.some(
+              (cat) => normalize(cat) === normalize(category),
+            )
+          : true; // if category = "all", show all products
 
+      const matchesSeason =
+        selectedSeason === "all" ||
+        item.season?.toLowerCase() === selectedSeason.toLowerCase();
 
-  const matchesSeason =
-    selectedSeason === "all" ||
-    item.season?.toLowerCase() === selectedSeason.toLowerCase();
+      const matchesPrice =
+        item.price >= priceRange[0] && item.price <= priceRange[1];
 
-  const matchesPrice =
-    item.price >= priceRange[0] && item.price <= priceRange[1];
+      const matchesSize =
+        selectedSizes.length === 0 ||
+        selectedSizes.some((size) => item.sizes && item.sizes.includes(size));
 
-  const matchesSize =
-    selectedSizes.length === 0 ||
-    selectedSizes.some((size) => item.sizes && item.sizes.includes(size));
-
-  return matchesCategory && matchesSeason && matchesPrice && matchesSize;
-})
-
+      return matchesCategory && matchesSeason && matchesPrice && matchesSize;
+    })
 
     .sort((a, b) => {
       switch (sortBy) {
@@ -302,7 +299,7 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
   const safePage = Math.min(currentPage, Math.max(1, totalPages));
   const paginatedCollections = filteredCollections.slice(
     (safePage - 1) * ITEMS_PER_PAGE,
-    safePage * ITEMS_PER_PAGE
+    safePage * ITEMS_PER_PAGE,
   );
 
   const clearFilters = () => {
@@ -329,7 +326,7 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
   }
 
   return (
-    <div className=" mt-20 lg:mt-24 pt-4">
+    <div className=" mt-16 pt-2 lg:mt-20 ">
       <ToastContainer />
 
       {/* <div className="max-w-[1600px] ml-2 mx-auto flex flex-col lg:flex-row"> */}
@@ -404,19 +401,21 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
             <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
               <div className="flex bg-white border-2 border-red-200 rounded-lg p-1 shadow-sm">
                 <button
-                  className={`p-2 rounded-md transition-all ${viewMode === "grid"
-                    ? "bg-red-900 text-white shadow-md"
-                    : "text-red-900 hover:bg-red-50"
-                    }`}
+                  className={`p-2 rounded-md transition-all ${
+                    viewMode === "grid"
+                      ? "bg-red-900 text-white shadow-md"
+                      : "text-red-900 hover:bg-red-50"
+                  }`}
                   onClick={() => setViewMode("grid")}
                 >
                   <Grid size={15} />
                 </button>
                 <button
-                  className={`p-2 rounded-md transition-all ${viewMode === "list"
-                    ? "bg-red-900 text-white shadow-md"
-                    : "text-red-900 hover:bg-red-50"
-                    }`}
+                  className={`p-2 rounded-md transition-all ${
+                    viewMode === "list"
+                      ? "bg-red-900 text-white shadow-md"
+                      : "text-red-900 hover:bg-red-50"
+                  }`}
                   onClick={() => setViewMode("list")}
                 >
                   <List size={15} />
@@ -461,10 +460,11 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
                   setSelectedSeason(season);
                   setCurrentPage(1);
                 }}
-                className={`px-4 sm:px-6 py-2 sm:py-3 border-2 font-bold text-xs sm:text-sm rounded-lg transition-all duration-200 transform hover:scale-105 whitespace-nowrap flex-shrink-0 ${selectedSeason === season
-                  ? "bg-red-900 text-white border-red-900 shadow-lg"
-                  : "bg-white text-red-900 border-red-300 hover:bg-red-50 hover:border-red-900"
-                  }`}
+                className={`px-4 sm:px-6 py-2 sm:py-3 border-2 font-bold text-xs sm:text-sm rounded-lg transition-all duration-200 transform hover:scale-105 whitespace-nowrap flex-shrink-0 ${
+                  selectedSeason === season
+                    ? "bg-red-900 text-white border-red-900 shadow-lg"
+                    : "bg-white text-red-900 border-red-300 hover:bg-red-50 hover:border-red-900"
+                }`}
               >
                 {season !== "all"
                   ? `${season.toUpperCase()}`
@@ -475,10 +475,11 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
 
           {/* Product Grid */}
           <div
-            className={`px-1 ${viewMode === "grid"
-              ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8"
-              : "flex flex-col gap-4"
-              }`}
+            className={`px-1 ${
+              viewMode === "grid"
+                ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8"
+                : "flex flex-col gap-4"
+            }`}
           >
             {parentCategory !== null && parentCategory !== "juttis" ? (
               <>
@@ -487,7 +488,9 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
                   <>
                     {/* Show real suit/saree products */}
                     {paginatedCollections.map((item, index) => (
-                      <React.Fragment key={item.productId || item.id || `product-${index}`}>
+                      <React.Fragment
+                        key={item.productId || item.id || `product-${index}`}
+                      >
                         {/* Banner after 4th product */}
                         {index === 4 && (
                           <div className="col-span-full w-full my-4">
@@ -526,31 +529,33 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
                       />
                     ))}
 
-                {/* Banner after dummy products */}
-                <div className="col-span-full w-full my-4">
-                  <Image
-                    src="https://d21ojmskh8ksuv.cloudfront.net/static/banners/banner-image.jpg"
-                    height={500}
-                    width={1000}
-                    alt="Similar Products Below"
-                    loading="lazy"
-                    quality={75}
-                    placeholder="blur"
-                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                    className="w-full h-auto sm:h-[220px] md:h-[420px] object-cover rounded-lg shadow-lg"
-                  />
-                </div>
+                    {/* Banner after dummy products */}
+                    <div className="col-span-full w-full my-4">
+                      <Image
+                        src="https://d21ojmskh8ksuv.cloudfront.net/static/banners/banner-image.jpg"
+                        height={500}
+                        width={1000}
+                        alt="Similar Products Below"
+                        loading="lazy"
+                        quality={75}
+                        placeholder="blur"
+                        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                        className="w-full h-auto sm:h-[220px] md:h-[420px] object-cover rounded-lg shadow-lg"
+                      />
+                    </div>
 
-                {/* Heading for Real Products */}
-                <div className="col-span-full w-full my-6 text-center space-y-2">
-                  <h2 className="text-2xl sm:text-3xl font-bold text-red-900">
-                    Complete Your {parentCategory?.charAt(0).toUpperCase() + parentCategory?.slice(1)} Look With These Juttis
-                  </h2>
-                  <p className="text-sm text-gray-600">
-                    Perfect footwear to pair with your dream outfit
-                  </p>
-                </div>
-
+                    {/* Heading for Real Products */}
+                    <div className="col-span-full w-full my-6 text-center space-y-2">
+                      <h2 className="text-2xl sm:text-3xl font-bold text-red-900">
+                        Complete Your{" "}
+                        {parentCategory?.charAt(0).toUpperCase() +
+                          parentCategory?.slice(1)}{" "}
+                        Look With These Juttis
+                      </h2>
+                      <p className="text-sm text-gray-600">
+                        Perfect footwear to pair with your dream outfit
+                      </p>
+                    </div>
 
                     {/* Show Juttis Products as fallback */}
                     {juttisLoading ? (
@@ -558,19 +563,21 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
                         <p className="text-gray-500">Loading juttis...</p>
                       </div>
                     ) : (
-                      transformApiData(juttisData || []).slice(0, 8).map((item, index) => (
-                        <ProductCard
-                          key={item.productId || item.id || `jutti-${index}`}
-                          item={item}
-                          index={index}
-                          viewMode={viewMode}
-                          category="juttis"
-                          currentImageIndices={currentImageIndices}
-                          setCurrentImageIndices={setCurrentImageIndices}
-                          handleAddToCart={handleAddToCart}
-                          addingToCart={addingToCart}
-                        />
-                      ))
+                      transformApiData(juttisData || [])
+                        .slice(0, 8)
+                        .map((item, index) => (
+                          <ProductCard
+                            key={item.productId || item.id || `jutti-${index}`}
+                            item={item}
+                            index={index}
+                            viewMode={viewMode}
+                            category="juttis"
+                            currentImageIndices={currentImageIndices}
+                            setCurrentImageIndices={setCurrentImageIndices}
+                            handleAddToCart={handleAddToCart}
+                            addingToCart={addingToCart}
+                          />
+                        ))
                     )}
                   </>
                 )}
@@ -578,7 +585,9 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
             ) : (
               // Show real products for juttis or when parentCategory is null
               paginatedCollections.map((item, index) => (
-                <React.Fragment key={item.productId || item.id || `product-${index}`}>
+                <React.Fragment
+                  key={item.productId || item.id || `product-${index}`}
+                >
                   {/* Banner after 4th product */}
                   {index === 4 && (
                     <div className="col-span-full w-full my-4">
@@ -682,10 +691,11 @@ console.log("CATEGORY INSIDE COLLECTION:", category);
                     <button
                       key={pageNum}
                       onClick={() => setCurrentPage(pageNum)}
-                      className={`px-3 py-2 rounded-lg font-bold transition-all ${safePage === pageNum
-                        ? "bg-red-900 text-white"
-                        : "bg-white text-red-900 border-2 border-red-300 hover:bg-red-50"
-                        }`}
+                      className={`px-3 py-2 rounded-lg font-bold transition-all ${
+                        safePage === pageNum
+                          ? "bg-red-900 text-white"
+                          : "bg-white text-red-900 border-2 border-red-300 hover:bg-red-50"
+                      }`}
                     >
                       {pageNum}
                     </button>

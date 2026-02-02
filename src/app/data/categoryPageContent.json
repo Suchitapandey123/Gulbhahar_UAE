@@ -202,6 +202,12 @@
             "content": "At Gulbhahar, we believe that every step you take should be a celebration of tradition and style. Our collection offers something for everyone – from brides seeking the perfect wedding juttis to fashion enthusiasts looking to add ethnic charm to their everyday wardrobe. Explore our range and find your perfect pair today."
           }
         ]
+      },
+      "cta": {
+        "title": "Find Your Perfect Juttis",
+        "description": "Explore our handcrafted collection and step into tradition with style.",
+        "buttonText": "Shop Juttis",
+        "buttonLink": "/juttis"
       }
     },
     "suits": {
@@ -406,6 +412,12 @@
             "content": "Whether you're planning an intimate ceremony or a grand celebration, the right pair of bridal juttis can elevate your entire look. Start your bridal footwear journey with Gulbhahar and step into your happily ever after with style and comfort."
           }
         ]
+      },
+      "cta": {
+        "title": "Begin Your Bridal Journey",
+        "description": "Discover our exclusive bridal collection and find the perfect pair for your special day.",
+        "buttonText": "Shop Bridal Juttis",
+        "buttonLink": "/suits"
       }
     },
     "sarees": {
@@ -611,6 +623,12 @@
             "content": "Our sarees come with authenticity certificates that trace the origin of each piece, connecting you directly to the weaver who created it. This transparency reflects our commitment to ethical fashion and fair trade practices. Every saree has a story, and we believe you deserve to know it."
           }
         ]
+      },
+      "cta": {
+        "title": "Drape Yourself in Elegance",
+        "description": "Explore our handwoven saree collection and discover six yards of pure artistry.",
+        "buttonText": "Shop Sarees",
+        "buttonLink": "/sarees"
       }
     },
     "bags": {
@@ -815,6 +833,12 @@
             "content": "Whether you're looking for the perfect wedding accessory, a statement piece for festivities, or an everyday bag with ethnic charm, our collection has something for every occasion and style preference. Explore our range and discover accessories that complement your unique fashion journey."
           }
         ]
+      },
+      "cta": {
+        "title": "Complete Your Look",
+        "description": "Discover our handcrafted bags and clutches to elevate your ethnic ensemble.",
+        "buttonText": "Shop Bags",
+        "buttonLink": "/bags"
       }
     },
     "jewellery": {
@@ -1020,6 +1044,12 @@
             "content": "At Gulbhahar, we believe that beautiful jewellery should be accessible to everyone. Our collection ranges from everyday essentials to bridal showstoppers, all crafted with the same dedication to quality and authenticity. Discover pieces that resonate with your style and become treasured parts of your jewellery collection."
           }
         ]
+      },
+      "cta": {
+        "title": "Adorn Yourself in Tradition",
+        "description": "Explore our exquisite jewellery collection and find pieces that celebrate your unique style.",
+        "buttonText": "Shop Jewellery",
+        "buttonLink": "/jewellery"
       }
     }
   }

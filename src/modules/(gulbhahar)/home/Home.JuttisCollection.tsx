@@ -12,10 +12,11 @@ interface Product {
 
 interface HomeJuttisCollectionProps {
   newCollection: Product[];
+  name : string;
 }
 
 const Home_JuttisCollection: React.FC<HomeJuttisCollectionProps> = ({
-  newCollection,
+  newCollection,name
 }) => {
   const getSafeImageUrl = (product: Product): string => {
      try {
@@ -45,7 +46,7 @@ const Home_JuttisCollection: React.FC<HomeJuttisCollectionProps> = ({
          {/* Header Section */}
          <div className="flex justify-between items-center mb-6">
            <h1 className="text-xl lg:text-5xl sm:text-4xl font-bold text-customRed font-raleway">
-             NEW COLLECTION
+             {name}
            </h1>
  
            <div>

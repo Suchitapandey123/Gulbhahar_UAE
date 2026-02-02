@@ -1,10 +1,10 @@
 import categoryPageContent from "@/app/data/categoryPageContent.json";
-import CategoryStorySection from "./CategoryStorySection";
-import CategoryFeaturesSection from "./CategoryFeaturesSection";
-import CategoryTestimonialsSection from "./CategoryTestimonialsSection";
-import CategoryFAQSection from "./CategoryFAQSection";
 import CategoryCTASection from "./CategoryCTASection";
-import CategoryParagraphSection from "./CategoryParagraphSection";
+import CategoryFAQSection from "./CategoryFAQSection";
+import CategoryFeaturesSection from "./CategoryFeaturesSection";
+import CategoryParagraphSection, { ContentBlock } from "./CategoryParagraphSection";
+import CategoryStorySection from "./CategoryStorySection";
+import CategoryTestimonialsSection from "./CategoryTestimonialsSection";
 
 interface CategoryContentSectionProps {
   categorySlug: string;
@@ -25,7 +25,7 @@ export default function CategoryContentSection({
   }
 
   return (
-    <div className="font-raleway">
+    <div className="font-raleway space-y-8">
       {/* Story Section */}
       {content.story && (
         <CategoryStorySection
@@ -51,7 +51,7 @@ export default function CategoryContentSection({
         <CategoryParagraphSection
           tagline={content.content.tagline}
           title={content.content.title}
-          blocks={content.content.blocks}
+          blocks={content.content.blocks as ContentBlock[]}
         />
       )}
 
@@ -66,7 +66,10 @@ export default function CategoryContentSection({
 
       {/* FAQ Section */}
       {content.faq && (
-        <CategoryFAQSection title={content.faq.title} items={content.faq.items} />
+        <CategoryFAQSection
+          title={content.faq.title}
+          items={content.faq.items}
+        />
       )}
 
       {/* CTA Section */}

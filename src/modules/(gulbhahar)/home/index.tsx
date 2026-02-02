@@ -8,10 +8,10 @@ import ModernHeroAnimated from "./HeroAnimated";
 import Home_JuttisCollection from "./Home.JuttisCollection";
 import productApi from "@/app/api/v0/product-service";
 
-async function getProducts(): Promise<Product[]> {
+async function getProducts(parentCategory: string): Promise<Product[]> {
   try {
-    const data = await productApi.getAllProduct();
-    return data || [];
+    const data1 = await productApi.getProductsByParentCategory(parentCategory);
+    return data1 || [];
   } catch (error) {
     console.error("Error fetching products:", error);
     return [];
@@ -19,7 +19,8 @@ async function getProducts(): Promise<Product[]> {
 }
 
 const HomePage = async () => {
-  const data = await getProducts();
+  const juttisProducts = await getProducts("juttis");
+  const suitsProducts = await getProducts("suit");
 
   return (
     <>
@@ -27,7 +28,8 @@ const HomePage = async () => {
       <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto w-full px-2 space-y-8">
         <Home_WatchAndShop />
         <Home_AvailableCollections />
-        <Home_JuttisCollection newCollection={data} />
+        <Home_JuttisCollection name ={'Juttis Collection'} newCollection={juttisProducts} />
+        <Home_JuttisCollection name ={'Suits Collection'} newCollection={suitsProducts} />
         <AboutUsSection />
         <Home_NewCulture />
         <Home_OurShowcase />

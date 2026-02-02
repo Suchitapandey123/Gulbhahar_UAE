@@ -1,5 +1,6 @@
 import categoryContent from "@/app/data/categoryContent.json";
-import CategoryHero from "./CategoryHero";
+import { Suspense } from "react";
+import CategoryCollection from "../categoryPages/CategoryCollection";
 import { CategoryContentSection } from "./content";
 
 interface CategoryPageModuleProps {
@@ -9,7 +10,7 @@ interface CategoryPageModuleProps {
 // Loading skeleton for the collection section
 function CollectionSkeleton() {
   return (
-    <div className="mt-20 lg:mt-24 pt-4">
+    <div className="mt-16 pt-2 lg:mt-20 ">
       <div className="max-w-[1600px] mx-auto px-2">
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-5">
           {[...Array(8)].map((_, i) => (
@@ -49,25 +50,24 @@ export default function CategoryPageModule({
 
   return (
     <>
-    {/* Hero Section */}
-      <CategoryHero
+      {/* Hero Section */}
+      {/* <CategoryHero
         title={content.title}
         subtitle={content.subtitle}
         heroImage={heroImage}
-      />
-       <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto  border-4 border-red-800 font-raleway">
-      {/* Product Collection Section */}
-      {/* <section className="pb-24">
-        <CategoryCollectionHeader parentCategory={parentCategory} />
-        <Suspense fallback={<CollectionSkeleton />}>
-          <CategoryCollection initialParentCategory={parentCategory} />
-        </Suspense>
-      </section> */}
+      /> */}
+      <div className="max-w-7xl mt-16 pt-2 lg:mt-20 2xl:max-w-[1600px] mx-auto  font-raleway">
+        {/* Product Collection Section */}
+        <section className="pb-24">
+          {/* <CategoryCollectionHeader parentCategory={parentCategory} /> */}
+          <Suspense fallback={<CollectionSkeleton />}>
+            <CategoryCollection initialParentCategory={parentCategory} />
+          </Suspense>
+        </section>
 
-      {/* Content Sections (Story, Features, Testimonials, FAQ, CTA) */}
-      <CategoryContentSection categorySlug={parentCategory.toLowerCase()} />
-    </div>
+        {/* Content Sections (Story, Features, Testimonials, FAQ, CTA) */}
+        <CategoryContentSection categorySlug={parentCategory.toLowerCase()} />
+      </div>
     </>
- 
   );
 }

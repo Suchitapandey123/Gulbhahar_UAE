@@ -13,7 +13,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 // Routes where navbar should have transparent background when not scrolled
-const transparentNavRoutes = ["/" , "/juttis" ,  "/sarees", "/lehenga", "/bags", "/suits" , "/jewellery"];
+const transparentNavRoutes = ["/" ];
+// const transparentNavRoutes = ["/" , "/juttis" ,  "/sarees", "/lehenga", "/bags", "/suits" , "/jewellery"];
 
 const Navbar = () => {
   const {
@@ -239,7 +240,7 @@ const Navbar = () => {
               <button
                 onClick={toggleMenu}
                 className={`group p-2.5 rounded-full transition-all duration-300 ${
-                  isNavSolid
+                  isScrolled || !transparentNavRoutes.includes(pathname)
                     ? "text-gray-900 hover:bg-[#800000]/5 hover:text-[#800000]"
                     : "text-white hover:bg-white/10 hover:text-white/80"
                 }`}

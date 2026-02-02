@@ -1,4 +1,4 @@
-interface ContentBlock {
+export interface ContentBlock {
   type: "paragraph" | "heading" | "list" | "quote";
   content: string;
   items?: string[];

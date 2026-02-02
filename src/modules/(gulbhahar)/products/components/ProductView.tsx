@@ -33,7 +33,7 @@ const SIZE_CONFIGS: any = {
   sarees: { label: "Saree Sizes", sizes: ["Free Size"], type: "clothing" },
   suits: {
     label: "Suit Sizes",
-    sizes: ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+    sizes: ["35", "36", "37", "38", "39", "40", "41"],
     type: "clothing",
   },
   clothing: {
@@ -53,10 +53,10 @@ const generateSizeRange = (
   category: string[],
   availableSizes: string[] = [],
 ) => {
-  if (!inventory || inventory.length === 0) return [];
   const categoryKey = category[0]?.toLowerCase();
   const config = SIZE_CONFIGS[categoryKey] || SIZE_CONFIGS.default;
 
+  // For dimensions type (like bags), use availableSizes directly
   if (config.type === "dimensions") {
     return availableSizes.map((size) => ({
       size,
@@ -65,19 +65,29 @@ const generateSizeRange = (
     }));
   }
 
-  const availableSizeQuantities: any = {};
-  inventory.forEach((item) => {
-    if (item.size && item.quantity > 0) {
-      availableSizeQuantities[item.size] =
-        (availableSizeQuantities[item.size] || 0) + item.quantity;
-    }
-  });
+  // If we have inventory data, use it for quantity tracking
+  if (inventory && inventory.length > 0) {
+    const availableSizeQuantities: any = {};
+    inventory.forEach((item) => {
+      if (item.size && item.quantity > 0) {
+        availableSizeQuantities[item.size] =
+          (availableSizeQuantities[item.size] || 0) + item.quantity;
+      }
+    });
 
+    return config.sizes.map((size: string) => ({
+      size,
+      available:
+        !!availableSizeQuantities[size] && availableSizeQuantities[size] > 0,
+      quantity: availableSizeQuantities[size] || 0,
+    }));
+  }
+
+  // Show all config sizes, but only mark as available if in availableSizes
   return config.sizes.map((size: string) => ({
     size,
-    available:
-      !!availableSizeQuantities[size] && availableSizeQuantities[size] > 0,
-    quantity: availableSizeQuantities[size] || 0,
+    available: availableSizes.includes(size),
+    quantity: availableSizes.includes(size) ? 1 : 0,
   }));
 };
 
@@ -103,12 +113,9 @@ export const ProductView = ({ product, customRed }: ProductViewProps) => {
 
   const sizeRange = useMemo(() => {
     const mappedSizes = product.availableSizes?.map((s) => s.name) || [];
+    const category = Array.isArray(product.category) ? product.category : [product.category];
 
-    return generateSizeRange(
-      product.inventory || [],
-      Array.isArray(product.category) ? product.category : [product.category],
-      mappedSizes,
-    );
+    return generateSizeRange(product.inventory || [], category, mappedSizes);
   }, [product.inventory, product.category, product.availableSizes]);
 
   useEffect(() => {
@@ -181,7 +188,6 @@ export const ProductView = ({ product, customRed }: ProductViewProps) => {
       toast.error("Failed to add item to cart. Please try again.", error);
     }
   };
-
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-4 lg:gap-8 w-full max-w-[1600px] mx-auto">
@@ -199,7 +205,7 @@ export const ProductView = ({ product, customRed }: ProductViewProps) => {
 
         <div className="md:col-span-6 lg:col-span-6 md:sticky md:top-40 md:self-start w-full">
           {/* Classic card wrapper for right side content */}
-          <div className="relative w-full bg-white md:bg-gradient-to-br md:from-white md:via-stone-50/30 md:to-gray-50/50  lg:p-8 md:border md:border-gray-100">
+          <div className="relative w-full bg-white md:bg-gradient-to-br md:from-white md:via-stone-50/30 md:to-gray-50/50 md:p-4 md:border md:border-gray-100">
             {/* Corner accents - only on md+ */}
             <div className="hidden md:block absolute top-0 left-0 w-10 lg:w-12 h-10 lg:h-12 border-t-2 border-l-2 border-[#800000]/20" />
             <div className="hidden md:block absolute top-0 right-0 w-10 lg:w-12 h-10 lg:h-12 border-t-2 border-r-2 border-[#800000]/20" />

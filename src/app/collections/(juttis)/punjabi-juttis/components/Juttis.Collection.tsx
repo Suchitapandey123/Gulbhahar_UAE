@@ -7,7 +7,7 @@ export default async function JuttisCollection() {
 
   if (!products || products.length === 0) {
     return (
-      <div className="mt-20 lg:mt-24 pt-4 flex flex-col items-center justify-center min-h-[40vh]">
+      <div className="mt-16 lg:mt-24 pt-4 flex flex-col items-center justify-center min-h-[40vh]">
         <h1 className="text-2xl font-serif font-bold text-gray-900 mb-2">
           Our Collection
         </h1>
@@ -19,7 +19,7 @@ export default async function JuttisCollection() {
   }
 
   return (
-    <div className="mt-20 lg:mt-24 pt-4">
+    <div className="mt-16 pt-2 lg:mt-20">
       <div className="max-w-[1600px] mx-auto px-2 lg:px-4">
         {/* Client Component for Filtering and Grid */}
         <JuttisCollectionClient initialProducts={products} />

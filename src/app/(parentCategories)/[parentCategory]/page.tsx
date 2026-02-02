@@ -38,8 +38,9 @@ export async function generateMetadata({
 const page = async ({ params }: PageProps) => {
   const { parentCategory } = await params;
 
+
   return (
-    <main className="">
+    <main className="px-2 md:px-0">
       <CategoryPageModule parentCategory={parentCategory} />
     </main>
   );

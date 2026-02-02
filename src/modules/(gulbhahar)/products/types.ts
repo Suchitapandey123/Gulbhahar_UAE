@@ -21,7 +21,7 @@ export type Product = {
 };
 
 export type Seo = {
-  size: string;
+  keywords: string[];
   metaTitle: string;
   metaDescription: number;
 };

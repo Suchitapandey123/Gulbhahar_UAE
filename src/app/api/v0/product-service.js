@@ -112,7 +112,7 @@ const productApi = {
   getProductsByCategory: async (categoryName) => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/api/products/get-all-product-by-category`,
+        `${API_BASE_URL}/new-api/products/get-product-by-category`,
         {
           method: "POST",
           headers: {
@@ -120,6 +120,38 @@ const productApi = {
             Accept: "application/json",
           },
           body: JSON.stringify({ category: categoryName }),
+          next: {
+            revalidate: 3600,
+            tags: ["products", "collections", "collection-juttis"],
+          },
+        }
+      );
+
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const products = data?.products || data?.data || data;
+      console.log(products)
+      return Array.isArray(products) ? products : [];
+    } catch (error) {
+      console.error("Error fetching juttis products:", error);
+      return [];
+    }
+  },
+  getProductsByParentCategory: async (parentCategory) => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/new-api/products/get-product-by-parentCategory`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({ parentCategory: parentCategory }),
           next: {
             revalidate: 3600,
             tags: ["products", "collections", "collection-juttis"],
