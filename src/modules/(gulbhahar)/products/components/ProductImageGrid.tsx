@@ -93,31 +93,33 @@ export const ProductImageGrid = ({
           </div>
         </div>
 
-        {/* Thumbnail gallery - centered */}
-        <div className="flex gap-2 justify-center flex-wrap">
-          {currentImages.map((img, index) => (
-            <button
-              key={index}
-              onClick={() => handleImageChange(index)}
-              className={cn(
-                "flex-shrink-0 w-14 h-[70px] rounded-md overflow-hidden transition-all duration-300 ease-out",
-                "hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-red-900 focus:ring-offset-1",
-                selectedIndex === index
-                  ? "ring-2 ring-red-900 opacity-100"
-                  : "opacity-60 hover:opacity-80"
-              )}
-              aria-label={`View image ${index + 1}`}
-            >
-              <NextImage
-                src={getImageSrc(img)}
-                alt={`${product.name} thumbnail ${index + 1}`}
-                width={56}
-                height={70}
-                className="w-full h-full object-cover"
-                quality={40}
-              />
-            </button>
-          ))}
+        {/* Thumbnail gallery - horizontal scroll */}
+        <div className="overflow-x-auto overflow-y-hidden">
+          <div className="flex gap-2 justify-start w-max px-1">
+            {currentImages.map((img, index) => (
+              <button
+                key={index}
+                onClick={() => handleImageChange(index)}
+                className={cn(
+                  "flex-shrink-0 w-14 h-[70px] rounded-md overflow-hidden transition-all duration-300 ease-out",
+                  "hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-red-900 focus:ring-offset-1",
+                  selectedIndex === index
+                    ? "ring-2 ring-red-900 opacity-100"
+                    : "opacity-60 hover:opacity-80"
+                )}
+                aria-label={`View image ${index + 1}`}
+              >
+                <NextImage
+                  src={getImageSrc(img)}
+                  alt={`${product.name} thumbnail ${index + 1}`}
+                  width={56}
+                  height={70}
+                  className="w-full h-full object-cover"
+                  quality={40}
+                />
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
