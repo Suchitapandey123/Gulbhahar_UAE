@@ -1,5 +1,5 @@
 "use client";
-import { Eye, Play, Store, Volume2, VolumeX } from "lucide-react";
+import { Eye, Play, Store } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -98,7 +98,10 @@ const ReelCard = ({ reel }: { reel: ReelData }) => {
           </p>
         </div>
         <button
-          onClick={() => router.push(`/${reel.slug}`)}
+          onClick={(e) => {
+            e.stopPropagation();
+            router.push(`/${reel.slug}`);
+          }}
           className="w-full py-4 bg-white text-black text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#800000] hover:text-white transition-all duration-500 flex items-center justify-center gap-3 group/btn shadow-xl active:scale-[0.98]"
         >
           <Store
