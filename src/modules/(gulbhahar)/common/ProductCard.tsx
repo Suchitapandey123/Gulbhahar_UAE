@@ -1,6 +1,5 @@
 "use client";
 import { useCart } from "@/providers/ContextProviders/CartContext";
-import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -103,7 +102,9 @@ export default function ProductCard({
       setCurrentImageIndex((prev) => (prev + 1) % imagesToShow.length);
     } else {
       // Swipe right → previous image
-      setCurrentImageIndex((prev) => (prev - 1 + imagesToShow.length) % imagesToShow.length);
+      setCurrentImageIndex(
+        (prev) => (prev - 1 + imagesToShow.length) % imagesToShow.length,
+      );
     }
   };
 
@@ -156,7 +157,10 @@ export default function ProductCard({
 
   return (
     <div className="group w-full">
-      <Link href={`/products/${item.productId || item.id}`} onClick={handleLinkClick}>
+      <Link
+        href={`/products/${item.productId || item.id}`}
+        onClick={handleLinkClick}
+      >
         <div
           className="cursor-pointer relative space-y-3"
           onMouseEnter={handleMouseEnter}
@@ -179,7 +183,7 @@ export default function ProductCard({
                   priority={priority && idx === 0}
                   loading={priority && idx === 0 ? undefined : "lazy"}
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                  quality={65}
+                  quality={95}
                   placeholder="blur"
                   blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                   className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out md:group-hover:scale-110 ${

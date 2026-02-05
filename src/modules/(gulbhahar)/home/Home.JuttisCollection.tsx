@@ -14,13 +14,13 @@ interface Product {
 interface HomeJuttisCollectionProps {
   newCollection: Product[];
   name: string;
-  slug :string
+  slug: string;
 }
 
 const Home_JuttisCollection: React.FC<HomeJuttisCollectionProps> = ({
   newCollection,
   name,
-  slug
+  slug,
 }) => {
   const getSafeImageUrl = (product: Product): string => {
     try {
@@ -86,7 +86,7 @@ const Home_JuttisCollection: React.FC<HomeJuttisCollectionProps> = ({
                             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                             priority={index < 2}
                             loading={index < 2 ? undefined : "lazy"}
-                            quality={70}
+                            quality={95}
                             className="object-cover transition-transform duration-300 group-hover:scale-105"
                           />
 

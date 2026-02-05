@@ -154,7 +154,7 @@ const Home_NewCulture: React.FC = () => {
                         src={heritageElements[0].image}
                         alt={heritageElements[0].title}
                         fill
-                        priority
+                        quality={95}
                         className="object-cover opacity-50"
                       />
                     </div>
@@ -199,7 +199,7 @@ const Home_NewCulture: React.FC = () => {
                         src={heritageElements[1].image}
                         alt={heritageElements[1].title}
                         fill
-                        priority
+                        quality={95}
                         className="object-cover opacity-50"
                       />
                     </div>
@@ -237,7 +237,7 @@ const Home_NewCulture: React.FC = () => {
                         src={heritageElements[2].image}
                         alt={heritageElements[2].title}
                         fill
-                        priority
+                        quality={95}
                         className="object-cover opacity-50"
                       />
                     </div>
@@ -275,7 +275,7 @@ const Home_NewCulture: React.FC = () => {
                         src={heritageElements[3].image}
                         alt={heritageElements[3].title}
                         fill
-                        priority
+                        quality={95}
                         className="object-cover opacity-50"
                       />
                     </div>
@@ -315,7 +315,7 @@ const Home_NewCulture: React.FC = () => {
                         src={heritageElements[4].image}
                         alt={heritageElements[4].title}
                         fill
-                        priority
+                        quality={95}
                         className="object-cover opacity-50"
                       />
                     </div>
@@ -362,8 +362,8 @@ const Home_NewCulture: React.FC = () => {
                         <Image
                           src={element.image}
                           alt={element.title}
-                          priority
                           fill
+                          quality={95}
                           className="object-cover opacity-50"
                         />
                       </div>
@@ -417,4 +417,4 @@ const Home_NewCulture: React.FC = () => {
   );
 };
 
-export default Home_NewCulture
+export default Home_NewCulture;

@@ -1,3 +1,4 @@
+import { parentCategoryPageService } from "@/app/api/page-service/parentCategoryPageService";
 import categoryMetadata from "@/app/data/categoryMetadata.json";
 import ParentCategoryPageModule from "@/modules/(gulbhahar)/parentCategories/ParentCategoryPageModule";
 import { Metadata } from "next";
@@ -37,6 +38,8 @@ export async function generateMetadata({
 
 const page = async ({ params }: PageProps) => {
   const { parentCategory } = await params;
+  const response = await parentCategoryPageService.getParentCategoryPageBySlug(parentCategory)
+  const page = response.data
 
 
   return (

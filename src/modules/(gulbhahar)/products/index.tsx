@@ -18,9 +18,9 @@ export default function ProductModule({
   product,
   similarProducts,
 }: ProductModuleProps) {
-  const categoryName = Array.isArray(product.category)
-    ? product.category[0]
-    : product.category;
+  const categoryName = Array.isArray(product.parentCategory)
+    ? product.parentCategory[0]
+    : product.parentCategory;
 
   const cacheVersion = product.updatedAt ? `?v=${product.updatedAt}` : "";
   const firstColorImages = product.images?.[0] || [];

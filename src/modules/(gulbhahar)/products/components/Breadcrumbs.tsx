@@ -28,7 +28,7 @@ export const Breadcrumbs = ({
             className="hover:text-gray-900 transition-colors"
             style={{ color: customRed }}
           >
-            Shop
+            Products
           </Link>
           <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
           <span
@@ -36,7 +36,7 @@ export const Breadcrumbs = ({
             style={{ color: customRed }}
             title={category}
           >
-            {category}
+            {category?.charAt(0).toUpperCase() + category?.slice(1)}
           </span>
           <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
           <span

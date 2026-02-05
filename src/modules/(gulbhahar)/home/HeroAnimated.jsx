@@ -15,7 +15,7 @@ export default function ModernHeroAnimated() {
   // Add effect to prevent horizontal scroll on mount
   useEffect(() => {
     const originalOverflow = document.body.style.overflowX;
-    document.body.style.overflowX = 'hidden';
+    document.body.style.overflowX = "hidden";
 
     const timer = setTimeout(() => {
       document.body.style.overflowX = originalOverflow;
@@ -31,60 +31,66 @@ export default function ModernHeroAnimated() {
   const heroData = [
     {
       id: 1,
+      // image: "/1.webp",
       image: "https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/1.webp",
-      mobileImage: "https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/1-mobile.webp",
+      mobileImage:
+        "https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/1-mobile.webp",
       title: "GULBHAHAR",
       subtitle: "Heritage Reimagined",
       description: "Where traditional craftsmanship meets contemporary design",
       accent: "Spring '25",
       color: "#8B4513",
       zoomConfig: {
-        startScale: 1.15,
+        startScale: 1.08,
         endScale: 1.0,
         startY: "-2%",
         startX: "1%",
         endY: "0%",
         endX: "0%",
-        duration: 6.0
-      }
+        duration: 6.0,
+      },
     },
     {
       id: 2,
+      // image: "/2.webp",/
       image: "https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/2.webp",
-      mobileImage: "https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/2-mobile.webp",
+      mobileImage:
+        "https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/2-mobile.webp",
       title: "ARTISAN",
       subtitle: "Handcrafted Excellence",
       description: "Each piece tells a story of generations of artistry",
       accent: "Limited Edition",
       color: "#DC143C",
       zoomConfig: {
-        startScale: 1.18,
+        startScale: 1.1,
         endScale: 1.0,
         startY: "1%",
         startX: "-1%",
         endY: "0%",
         endX: "0%",
-        duration: 6.0
-      }
+        duration: 6.0,
+      },
     },
     {
       id: 3,
+      // image: "/3.webp",
       image: "https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/3.webp",
-      mobileImage: "https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/3-mobile.webp",
+      mobileImage:
+        "https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/3-mobile.webp",
       title: "LEGACY",
       subtitle: "Timeless Elegance",
       description: "Preserving tradition while embracing innovation",
       accent: "Signature Collection",
       color: "#DAA520",
       zoomConfig: {
-        startScale: 1.12,
+        startScale: 1.06,
         endScale: 1.0,
         startY: "-1%",
         startX: "-1%",
         endY: "0%",
         endX: "0%",
-        duration: 6.0
-      }
+        duration: 6.0,
+      },
     },
   ];
 
@@ -177,7 +183,8 @@ export default function ModernHeroAnimated() {
   return (
     <>
       <style jsx global>{`
-        html, body {
+        html,
+        body {
           overflow-x: hidden;
           max-width: 100vw;
         }
@@ -190,14 +197,10 @@ export default function ModernHeroAnimated() {
           transform: translateZ(0);
           backface-visibility: hidden;
           perspective: 1000;
-          will-change: transform, opacity;
         }
 
         .hero-image {
-          will-change: transform, opacity;
           transform: translateZ(0);
-          image-rendering: -webkit-optimize-contrast;
-          image-rendering: crisp-edges;
         }
 
         .reverse-zoom-container {
@@ -206,7 +209,6 @@ export default function ModernHeroAnimated() {
           height: 100%;
           position: absolute;
           inset: 0;
-          will-change: transform;
         }
 
         .no-scrollbar {
@@ -221,12 +223,12 @@ export default function ModernHeroAnimated() {
       <div
         className="relative w-full no-scrollbar"
         style={{
-          width: '100vw',
-          position: 'relative',
-          left: '50%',
-          right: '50%',
-          marginLeft: '-50vw',
-          marginRight: '-50vw',
+          width: "100vw",
+          position: "relative",
+          left: "50%",
+          right: "50%",
+          marginLeft: "-50vw",
+          marginRight: "-50vw",
         }}
       >
         <motion.section
@@ -237,9 +239,7 @@ export default function ModernHeroAnimated() {
           variants={textContainerVariants}
         >
           {/* BACKGROUND WITH REVERSE ZOOM */}
-          <motion.div
-            className="absolute inset-0 w-full h-full overflow-hidden"
-          >
+          <motion.div className="absolute inset-0 w-full h-full overflow-hidden">
             {/* ALL IMAGES STACKED WITH REVERSE ZOOM */}
             {heroData.map((slide, index) => {
               const isCurrent = index === currentIndex;
@@ -254,14 +254,14 @@ export default function ModernHeroAnimated() {
                   initial={false}
                   animate={{
                     opacity: isCurrent ? 1 : 0,
-                    zIndex: isCurrent ? 20 : (isNext ? 15 : 10),
+                    zIndex: isCurrent ? 20 : isNext ? 15 : 10,
                   }}
                   transition={{
                     duration: 0.6,
                     ease: [0.22, 1, 0.36, 1],
                   }}
                   style={{
-                    pointerEvents: isCurrent ? 'auto' : 'none',
+                    pointerEvents: isCurrent ? "auto" : "none",
                   }}
                 >
                   {/* REVERSE ZOOM CONTAINER */}
@@ -273,14 +273,23 @@ export default function ModernHeroAnimated() {
                       x: slide.zoomConfig.startX,
                     }}
                     animate={{
-                      scale: isCurrent && isPlaying ? slide.zoomConfig.endScale : slide.zoomConfig.startScale,
-                      y: isCurrent && isPlaying ? slide.zoomConfig.endY : slide.zoomConfig.startY,
-                      x: isCurrent && isPlaying ? slide.zoomConfig.endX : slide.zoomConfig.startX,
+                      scale:
+                        isCurrent && isPlaying
+                          ? slide.zoomConfig.endScale
+                          : slide.zoomConfig.startScale,
+                      y:
+                        isCurrent && isPlaying
+                          ? slide.zoomConfig.endY
+                          : slide.zoomConfig.startY,
+                      x:
+                        isCurrent && isPlaying
+                          ? slide.zoomConfig.endX
+                          : slide.zoomConfig.startX,
                     }}
                     transition={{
                       duration: slide.zoomConfig.duration,
                       ease: "linear",
-                      delay: isCurrent && isFirstLoad ? 0.3 : 0
+                      delay: isCurrent && isFirstLoad ? 0.3 : 0,
                     }}
                   >
                     {/* Desktop Image */}
@@ -292,7 +301,7 @@ export default function ModernHeroAnimated() {
                         sizes="100vw"
                         className="object-cover hero-image"
                         priority={shouldUsePriority}
-                        quality={75}
+                        quality={95}
                         loading={shouldUsePriority ? undefined : "lazy"}
                       />
                     </div>
@@ -306,14 +315,14 @@ export default function ModernHeroAnimated() {
                         sizes="100vw"
                         className="object-cover hero-image"
                         priority={shouldUsePriority}
-                        quality={75}
+                        quality={95}
                         loading={shouldUsePriority ? undefined : "lazy"}
                       />
                     </div>
 
                     {/* Gradient overlays */}
-                    <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-black/60 via-black/40 to-transparent" />
-                    <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                    {/* <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-black/60 via-black/40 to-transparent" />
+                    <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-black/40 via-transparent to-transparent" /> */}
                   </motion.div>
                 </motion.div>
               );
@@ -358,7 +367,7 @@ export default function ModernHeroAnimated() {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       className="inline-flex items-center gap-2 sm:gap-3 md:gap-4 px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 rounded-full bg-white text-black hover:bg-white/90 transition-all duration-300 cursor-pointer group"
-                      onClick={()=>window.location.href="/collections"}
+                      onClick={() => (window.location.href = "/collections")}
                     >
                       <span className="font-medium tracking-wider text-sm sm:text-base">
                         EXPLORE COLLECTION
@@ -396,8 +405,18 @@ export default function ModernHeroAnimated() {
                                 ? "bg-white/20 border-white/30 text-white"
                                 : "bg-white/10 border-white/20 text-white/70 hover:bg-white/15 hover:border-white/30 hover:text-white/90"
                             } ${isTransitioning ? "opacity-70 cursor-not-allowed" : ""}`}
-                            whileHover={{ scale: index === currentIndex || isTransitioning ? 1 : 1.02 }}
-                            whileTap={{ scale: index === currentIndex || isTransitioning ? 1 : 0.98 }}
+                            whileHover={{
+                              scale:
+                                index === currentIndex || isTransitioning
+                                  ? 1
+                                  : 1.02,
+                            }}
+                            whileTap={{
+                              scale:
+                                index === currentIndex || isTransitioning
+                                  ? 1
+                                  : 0.98,
+                            }}
                           >
                             <div className="flex items-center justify-between">
                               <div>
@@ -439,12 +458,14 @@ export default function ModernHeroAnimated() {
                           style={{ backgroundColor: currentSlide.color }}
                           initial={{ width: "0%" }}
                           animate={{
-                            width: isPlaying && !isTransitioning ? "100%" : "0%",
+                            width:
+                              isPlaying && !isTransitioning ? "100%" : "0%",
                           }}
                           transition={{
                             duration: 6,
                             ease: "linear",
-                            repeat: isPlaying && !isTransitioning ? Infinity : 0,
+                            repeat:
+                              isPlaying && !isTransitioning ? Infinity : 0,
                           }}
                           key={`progress-${currentIndex}-${isPlaying}`}
                         />
@@ -461,8 +482,8 @@ export default function ModernHeroAnimated() {
             variants={textVariants}
             className="absolute bottom-6 sm:bottom-8 md:bottom-10 text-white/60"
             style={{
-              left: 'calc(50vw - 60px)',
-              transform: 'translateX(-50%)',
+              left: "calc(50vw - 60px)",
+              transform: "translateX(-50%)",
               zIndex: 50,
             }}
           >
@@ -472,7 +493,11 @@ export default function ModernHeroAnimated() {
               </div>
               <motion.div
                 animate={{ y: [0, 8, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
                 className="w-6 h-10 sm:w-7 sm:h-12 border border-white/30 rounded-full flex justify-center items-start mx-auto"
               >
                 <motion.div
