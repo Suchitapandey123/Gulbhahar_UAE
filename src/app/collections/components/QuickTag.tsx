@@ -7,7 +7,11 @@ const oldStandardTT = Old_Standard_TT({
   subsets: ["latin"],
 });
 
-export default function QuickTag({ popularTags = [] }) {
+interface QuickTagProps {
+  popularTags?: string[];
+}
+
+export default function QuickTag({ popularTags = [] }: QuickTagProps) {
   // If no tags, don't render
   if (!popularTags || popularTags.length === 0) return null;
 

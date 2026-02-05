@@ -1,4 +1,4 @@
-import ProductNotAvailable from '../productssss/[id]/components/ProductNotFound/ProductNotFound'
+import ProductNotAvailable from '@/modules/(gulbhahar)/common/ProductNotFound/ProductNotFound'
 
 const page = () => {
   return (

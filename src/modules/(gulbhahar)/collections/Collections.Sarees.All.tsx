@@ -5,7 +5,6 @@ import ProductCard from "../common/ProductCard";
 
 export default async function Collections_Sarees_All() {
   const products = await productApi.getProductsByParentCategory("saree");
-  console.log(products);
   if (products.length === 0) {
     return (
       <div className="mt-16 pt-2 lg:mt-20  flex items-center justify-center min-h-[50vh]">

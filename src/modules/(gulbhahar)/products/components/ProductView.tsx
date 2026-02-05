@@ -11,6 +11,7 @@ import { ProductInfo } from "./ProductInfo";
 import { ProductPurchaseSection } from "./ProductPurchaseSection";
 import { ProductVariants } from "./ProductVariants";
 import { SizeGuideModal } from "./SizeGuideModal";
+import ProductReels from "./ProductReels";
 
 // Size configurations
 const SIZE_CONFIGS: any = {
@@ -30,7 +31,7 @@ const SIZE_CONFIGS: any = {
     type: "footwear",
   },
   bags: { label: "Bag Dimensions", sizes: [], type: "dimensions" },
-  sarees: { label: "Saree Sizes", sizes: ["Free Size"], type: "clothing" },
+  saree: { label: "Saree Sizes", sizes: ["Free Size"], type: "clothing" },
   suits: {
     label: "Suit Sizes",
     sizes: ["35", "36", "37", "38", "39", "40", "41"],
@@ -54,7 +55,9 @@ const generateSizeRange = (
   availableSizes: string[] = [],
 ) => {
   const categoryKey = category[0]?.toLowerCase();
+
   const config = SIZE_CONFIGS[categoryKey] || SIZE_CONFIGS.default;
+
 
   // For dimensions type (like bags), use availableSizes directly
   if (config.type === "dimensions") {
@@ -105,18 +108,18 @@ export const ProductView = ({ product, customRed }: ProductViewProps) => {
   const [modalImageIndex, setModalImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
-  const categoryName = Array.isArray(product.category)
-    ? product.category[0]
-    : product.category;
+  const parentCategoryName = Array.isArray(product.parentCategory)
+    ? product.parentCategory[0]
+    : product.parentCategory;
   const categoryConfig =
-    SIZE_CONFIGS[categoryName?.toLowerCase()] || SIZE_CONFIGS.default;
+    SIZE_CONFIGS[parentCategoryName?.toLowerCase()] || SIZE_CONFIGS.default;
 
   const sizeRange = useMemo(() => {
     const mappedSizes = product.availableSizes?.map((s) => s.name) || [];
-    const category = Array.isArray(product.category) ? product.category : [product.category];
+    const category = Array.isArray(product.parentCategory) ? product.parentCategory : [product.parentCategory];
 
     return generateSizeRange(product.inventory || [], category, mappedSizes);
-  }, [product.inventory, product.category, product.availableSizes]);
+  }, [product.inventory, product.parentCategory, product.availableSizes]);
 
   useEffect(() => {
     window.scrollTo({ top: 0});
@@ -234,7 +237,14 @@ export const ProductView = ({ product, customRed }: ProductViewProps) => {
                 onAddToCart={handleAddToCart}
                 customRed={customRed}
               />
+              <div className="md:block hidden">
+
                <DeliveryChecker customRed={customRed} />
+              </div>
+              <div className="block md:hidden">
+
+               <ProductReels videos = {product.videos || []} />
+              </div>
 
 
               {/* Elegant note */}
@@ -249,7 +259,7 @@ export const ProductView = ({ product, customRed }: ProductViewProps) => {
               </div>
 
               {/* Trust badges - responsive */}
-              <div className="flex items-center justify-center gap-4 sm:gap-6 pt-3 md:pt-4">
+              <div className="flex items-center justify-center gap-4 sm:gap-6 pt-3 pb-3 md:pt-4">
                 <div className="flex flex-col items-center gap-0.5 md:gap-1">
                   <span className="text-[8px] md:text-[10px] tracking-[0.1em] md:tracking-[0.15em] uppercase text-gray-400">Authentic</span>
                   <div className="w-6 md:w-8 h-px bg-[#800000]/30" />

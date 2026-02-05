@@ -19,13 +19,6 @@ export default function CollectionsPage({ collections = [] }) {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const ref = useRef(null);
 
-  // Debug: Log collections to see actual data
-  useEffect(() => {
-    console.log("Collections data:", collections);
-    console.log("Unique parentCategories:", 
-      Array.from(new Set(collections.flatMap(c => c.parentCategory || [])))
-    );
-  }, [collections]);
 
   // Fixed filter logic - Check both parentCategory AND category field
   const filteredCollections = selectedCategory === "all"

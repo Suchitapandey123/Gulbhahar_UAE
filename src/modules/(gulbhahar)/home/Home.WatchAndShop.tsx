@@ -1,6 +1,11 @@
+"use client";
+
+import { useState } from "react";
+import HorizontalCarousel from "@/shared-components/Scrollbar/HorizontalCarousel";
+import FullscreenReelViewer from "../common/FullscreenReelViewer";
 import ReelCard from "./components/ReelCard";
 
-// Sample Reel Data - server-side defined, passed to client
+// Sample Reel Data
 const REELS_DATA = [
   {
     id: 1,
@@ -13,6 +18,7 @@ const REELS_DATA = [
       image:
         "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/saree.webp",
     },
+    slug: "saree",
   },
   {
     id: 2,
@@ -25,6 +31,7 @@ const REELS_DATA = [
       image:
         "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/suits.webp",
     },
+    slug: "suit",
   },
   {
     id: 3,
@@ -37,6 +44,7 @@ const REELS_DATA = [
       image:
         "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/lehenga.webp",
     },
+    slug: "lehenga",
   },
   {
     id: 4,
@@ -49,6 +57,7 @@ const REELS_DATA = [
       image:
         "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/jewellery.webp",
     },
+    slug: "jewellery",
   },
   {
     id: 5,
@@ -61,6 +70,7 @@ const REELS_DATA = [
       image:
         "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
     },
+    slug: "bags",
   },
   {
     id: 6,
@@ -73,13 +83,21 @@ const REELS_DATA = [
       image:
         "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/juttis.webp",
     },
+    slug: "juttis",
   },
 ];
 
 const Home_WatchAndShop = () => {
+  const [fullscreenIndex, setFullscreenIndex] = useState<number | null>(null);
+
+  const fullscreenReels = REELS_DATA.map((r) => ({
+    videoUrl: r.videoUrl,
+    title: r.title,
+  }));
+
   return (
     <section className="overflow-hidden mt-8">
-      {/* Server-rendered header for SEO */}
+      {/* Header */}
       <div className="flex flex-col space-y-4 justify-center mb-6">
         <div className="flex justify-center items-center gap-3">
           <span className="w-16 h-px bg-[#800000]" />
@@ -99,19 +117,24 @@ const Home_WatchAndShop = () => {
         </p>
       </div>
 
-      {/* Horizontal Reels Container - Client components for interactivity */}
-      <div className="relative">
-        <div className="flex overflow-x-auto gap-4 no-scrollbar snap-x snap-proximity md:snap-mandatory cursor-grab active:cursor-grabbing">
-          {REELS_DATA.map((reel) => (
-            <div key={reel.id} className="snap-center">
-              <ReelCard reel={reel} />
-            </div>
-          ))}
+      {/* Reels carousel */}
+      <HorizontalCarousel className="flex overflow-x-auto gap-4 snap-x snap-proximity md:snap-mandatory cursor-grab active:cursor-grabbing pb-8">
+        {REELS_DATA.map((reel, idx) => (
+          <div key={reel.id} className="snap-center" onClick={() => setFullscreenIndex(idx)}>
+            <ReelCard reel={reel} />
+          </div>
+        ))}
+        <div className="flex-none w-12" />
+      </HorizontalCarousel>
 
-          {/* Trailer space */}
-          <div className="flex-none w-12" />
-        </div>
-      </div>
+      {/* Fullscreen viewer */}
+      {fullscreenIndex !== null && (
+        <FullscreenReelViewer
+          reels={fullscreenReels}
+          initialIndex={fullscreenIndex}
+          onClose={() => setFullscreenIndex(null)}
+        />
+      )}
     </section>
   );
 };

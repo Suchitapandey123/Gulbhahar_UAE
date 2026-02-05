@@ -23,7 +23,7 @@ export const SimilarProductCard = ({
       <Link href={`/products/${item.productId}`} className="block">
         <div className="cursor-pointer relative space-y-3">
           {/* Image Container */}
-          <div className="relative overflow-hidden w-full aspect-[3/4] bg-gray-100 rounded-lg">
+          <div className="relative overflow-hidden w-full aspect-[3/4] bg-gray-100">
             <NextImage
               fill
               loading="lazy"

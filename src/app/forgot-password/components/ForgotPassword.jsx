@@ -168,9 +168,7 @@ const EmailConfirmationStep = ({ email, setEmail, goToNextStep }) => {
     // mutationFn: forgotPasswordAPI,
     mutationFn: forgotPasswordAPI.forgotPassword,
     onSuccess: (data) => {
-      // // console.log('Email sent successfully:', data);
-      // showToast('Verification email sent successfully!', 'success');
-      // toast.success('Email verified successfully!');
+  
       toast.success('Verification email sent successfully!');
 
       goToNextStep();
@@ -331,7 +329,6 @@ const VerificationCodeStep = ({ email, goToNextStep, goToPrevStep, setVerificati
     // mutationFn: forgotPasswordAPI,
     mutationFn: forgotPasswordAPI.forgotPassword,
     onSuccess: (data) => {
-      // // console.log('Email resent successfully:', data);
       setError('');
       setSuccessMessage('Verification code resent successfully!');
       // showToast('Verification code resent successfully!', 'success');

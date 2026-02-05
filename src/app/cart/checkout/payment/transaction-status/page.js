@@ -76,8 +76,7 @@ const TransactionStatusContent = () => {
     if (savedCheckoutData) {
       try {
         checkoutData = JSON.parse(savedCheckoutData);
-        // console.log("📦 Checkout data from localStorage:", checkoutData);
-
+        
         // 🔥 User data extract karo Meta Pixel ke liye
         if (checkoutData.email) {
           const email = checkoutData.email.trim().toLowerCase();
@@ -105,8 +104,6 @@ const TransactionStatusContent = () => {
 
           // 🆕 REF mein bhi save karo for immediate access
           userDataRef.current = extractedUserData;
-
-          // console.log("👤 User data extracted for Meta Pixel:", extractedUserData);
         }
       } catch (e) {
         console.warn("Could not parse checkout data from localStorage:", e);
@@ -196,12 +193,11 @@ const TransactionStatusContent = () => {
     apiCallInProgress.current = true;
     setBackendProcessing(true);
 
-    // console.log("✅ Payment successful! Sending complete order data to backend...");
-    // console.log("💳 Payment Method:", transactionData.paymentMethod);
+   
 
     // 🆕 User data source decide karo (parameter ya ref)
     const finalUserData = userDataParam || userDataRef.current || userData;
-    // console.log("👤 Final User Data for Pixel:", finalUserData);
+   
 
     try {
       const generateSessionId = () => {
@@ -406,11 +402,6 @@ const TransactionStatusContent = () => {
         },
       };
 
-      // console.log(
-      //   "📤 Sending complete order data to backend:",
-      //   JSON.stringify(completeOrderData, null, 2)
-      // );
-
       // Send to backend with timeout
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
@@ -433,7 +424,7 @@ const TransactionStatusContent = () => {
 
         try {
             const res = await analyticsAPI.trackOrderFailed()
-            // console.log(res)
+          
           } catch (error) {
             console.error(error)
           }
@@ -445,7 +436,7 @@ const TransactionStatusContent = () => {
       }
 
       const result = await response.json();
-      // console.log("✅ Backend response:", result);
+     
 
       gaEvent({
         action: "Final Order Placed SuccessFully",
@@ -465,7 +456,7 @@ const TransactionStatusContent = () => {
 
       try {
             const res = await analyticsAPI.trackOrderConfirmed()
-            // console.log(res)
+           
           } catch (error) {
             console.error(error)
           }
@@ -485,11 +476,11 @@ const TransactionStatusContent = () => {
         localStorage.removeItem("checkoutFormData");
         localStorage.removeItem("shopping-cart");
         clearCart();
-        // console.log("🗑️ Checkout data cleared from localStorage");
+     
 
         // 🛒 Clear cart only on successful transaction
         localStorage.removeItem("cart");
-        // console.log("🛒 Cart cleared from localStorage");
+        
 
         // Dispatch custom event to notify cart context of the change
         window.dispatchEvent(new Event("cartCleared"));
@@ -505,9 +496,9 @@ const TransactionStatusContent = () => {
 
       // Only set as completed if it's a permanent error (not network issues)
       if (error.name === "AbortError" || error.message.includes("network")) {
-        // console.log("🔄 Network error - manual retry available");
+     
       } else {
-        // console.log("❌ Permanent error - marking as completed");
+        
         apiCallCompleted.current = true;
       }
     }
@@ -516,26 +507,23 @@ const TransactionStatusContent = () => {
   // 🎯 Manual retry function with better protection
   const retryBackendRequest = () => {
     if (apiCallInProgress.current) {
-      // console.log("⏭️ API call already in progress, cannot retry");
       return;
     }
 
     if (apiCallCompleted.current) {
-      // console.log(
-      //   "⏭️ API call already completed successfully, no retry needed"
-      // );
+  
       return;
     }
 
     if (paymentData && paymentData.status === "success") {
-      // console.log("🔄 Manual retry initiated");
+   
       // Reset only the necessary flags for retry
       apiCallInProgress.current = false;
       setBackendSent(false);
       setBackendProcessing(false);
       sendCompleteOrderDataToBackend(paymentData);
     } else {
-      // console.log("❌ Cannot retry - payment not successful");
+
     }
   };
 

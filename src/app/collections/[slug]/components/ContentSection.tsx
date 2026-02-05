@@ -1,7 +1,16 @@
 import { redirect } from "next/navigation";
+import { PageData } from "../../../api/page-service/pageService";
+
+interface ParsedDetail {
+  description: string;
+  highlight: string;
+  points: string[];
+  keyValues: { key: string; value: string }[];
+  subTitle1: string;
+}
 
 // Function to parse additional details content
-const parseDetailsContent = (detail) => {
+const parseDetailsContent = (detail: any): ParsedDetail => {
   if (!detail)
     return {
       description: "",
@@ -41,8 +50,8 @@ const parseDetailsContent = (detail) => {
     if (tagsMatch) {
       points = tagsMatch[1]
         .split(",")
-        .map((tag) => tag.trim())
-        .filter((tag) => tag);
+        .map((tag: string) => tag.trim())
+        .filter((tag: string) => tag);
       description = description.replace(tagsMatch[0], "").trim();
     }
 
@@ -51,8 +60,8 @@ const parseDetailsContent = (detail) => {
     if (kvMatch) {
       keyValues = kvMatch[1]
         .split("\n")
-        .filter((line) => line.includes(":"))
-        .map((line) => {
+        .filter((line: string) => line.includes(":"))
+        .map((line: string) => {
           const [k, v] = line.split(":");
           return { key: k.trim(), value: v.trim() };
         });
@@ -75,7 +84,11 @@ const parseDetailsContent = (detail) => {
   };
 };
 
-const ContentSection = ({ page }) => {
+interface ContentSectionProps {
+  page: PageData;
+}
+
+const ContentSection = ({ page }: ContentSectionProps) => {
   if (!page) return null;
 
   if (page.isFeatured === false) {
@@ -83,17 +96,15 @@ const ContentSection = ({ page }) => {
   }
 
   // Parse additional details to extract structured data on the server
-  const parsedAdditionalDetails =
+  const parsedAdditionalDetails: ParsedDetail[] =
     page.additionalDetails && Array.isArray(page.additionalDetails)
-      ? page.additionalDetails.map((detail) => parseDetailsContent(detail))
+      ? page.additionalDetails.map((detail: any) => parseDetailsContent(detail))
       : [];
 
-  const pageWithParsedDetails = {
+  const p = {
     ...page,
     parsedAdditionalDetails,
   };
-
-  const p = pageWithParsedDetails;
 
   return (
     <div className="max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 py-8 sm:py-12 lg:py-16">
@@ -430,13 +441,13 @@ const ContentSection = ({ page }) => {
         )}
 
         {/* FAQ Section */}
-        {p.faq?.length > 0 && (
+        {Array.isArray(p.faq) && p.faq.length > 0 && (
           <section className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
             <span className="text-xl sm:text-2xl md:text-3xl font-bold text-red-900 mb-4 sm:mb-6">
               Frequently Asked Questions
             </span>
             <div className="space-y-4 sm:space-y-6">
-              {p.faq.map((item, idx) => (
+              {p.faq.map((item: any, idx: number) => (
                 <div
                   key={idx}
                   className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-red-100"

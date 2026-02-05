@@ -55,7 +55,6 @@ const CartPage = () => {
 
   // Handle color change with loading state
   const handleColorChange = async (item, newColor, newColorIndex) => {
-    // // console.log("🎨 Changing color for item:", item.id, "to:", newColor);
 
     try {
       // Set loading state
@@ -80,8 +79,6 @@ const CartPage = () => {
       // Add back with new color
       await addToCart(updatedItem);
       updateItemVariant(item, updatedItem);
-
-      // // console.log("✅ Color updated successfully");
     } catch (error) {
       console.error("❌ Error updating color:", error);
     } finally {
@@ -96,7 +93,7 @@ const CartPage = () => {
 
   // Handle size change with loading state
   const handleSizeChange = async (item, newSize) => {
-    // console.log("📏 Changing size for item:", item.id, "to:", newSize);
+
 
     try {
       setLoadingItems((prev) => new Set(prev).add(item.id));
@@ -113,7 +110,7 @@ const CartPage = () => {
       };
 
       await addToCart(updatedItem);
-      // console.log("✅ Size updated successfully");
+
     } catch (error) {
       console.error("❌ Error updating size:", error);
     } finally {
@@ -520,7 +517,7 @@ const CartPage = () => {
 
                     try {
                       const res = await analyticsAPI.trackProceedToCheckout();
-                      // console.log(res)
+          
                     } catch (error) {
                       console.error(error);
                     }

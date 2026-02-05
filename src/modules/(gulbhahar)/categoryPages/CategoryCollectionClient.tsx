@@ -8,40 +8,25 @@ import CategoryCollection_Filters from "./CategoryCollection.Filters";
 
 const ITEMS_PER_PAGE = 24;
 
-interface Product {
-  _id?: string;
-  productId?: string;
-  name?: string;
-  title?: string;
-  price: number;
-  originalPrice?: number;
-  images?: string[][];
-  availableSizes?: { name: string }[];
-  availableColors?: { name: string; hexcode: string }[];
-  parentCategory?: string[];
-  category?: string[];
-  stock?: number;
-  isActive?: boolean;
-  createdAt?: string;
-  season?: string;
-  fabric?: string;
-}
+import { Product } from "../products/types";
 
 interface CategoryCollectionClientProps {
   products: Product[];
   initialParentCategory?: string;
+  show ?: boolean
 }
 
 export default function CategoryCollectionClient({
   products,
   initialParentCategory = "all",
+  show
 }: CategoryCollectionClientProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const [collectionFilters, setCollectionFilters] = useState({
     size: "all",
     color: "all",
-    collections: initialParentCategory,
+    collections: initialParentCategory.toLowerCase().trim(),
     season: "all",
     fabric: "all",
     price: "all",
@@ -113,9 +98,13 @@ export default function CategoryCollectionClient({
           );
 
         // Collections filter
+        const collections = [
+          ...(item.parentCategory || []),
+          ...(item.availableCollections?.map((c) => c.name) || []),
+        ];
         const matchesCollections =
           collectionFilters.collections === "all" ||
-          (item.parentCategory || []).some(
+          collections.some(
             (cat) =>
               normalize(cat) === normalize(collectionFilters.collections),
           );
@@ -124,14 +113,19 @@ export default function CategoryCollectionClient({
         const matchesSeason =
           collectionFilters.season === "all" ||
           normalize(item.season) === normalize(collectionFilters.season) ||
-          (collectionFilters.season === "all-season" &&
+          (normalize(collectionFilters.season) === "all-season" &&
             normalize(item.season) === "all season");
 
-        // Fabric filter
+              const fabrics = [
+          ...(item.parentCategory || []),
+          ...(item.availableFabrics?.map((c) => c.name) || []),
+        ];
         const matchesFabric =
           collectionFilters.fabric === "all" ||
-          normalize(item.fabric).includes(normalize(collectionFilters.fabric));
-
+          fabrics.some(
+            (cat) =>
+              normalize(cat) === normalize(collectionFilters.fabric),
+          );
         return (
           matchesPrice &&
           matchesSize &&
@@ -175,37 +169,33 @@ export default function CategoryCollectionClient({
             <CategoryCollection_Filters
               onFilterChange={handleCollectionFilterChange}
               resultCount={filteredProducts.length}
+              products={products}
             />
           </div>
 
           {/* Product Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-5">
             {paginatedProducts.length > 0 ? (
-              paginatedProducts
-                .map((item: Product, index: number) => (
-                  <React.Fragment key={item.productId || item._id || index}>
-                    {index === 4 && (
-                      <div className="col-span-full w-full my-4">
-                        <Image
-                          src="https://d21ojmskh8ksuv.cloudfront.net/static/banners/banner-image.jpg"
-                          height={500}
-                          width={1000}
-                          alt="Collection Banner"
-                          loading="lazy"
-                          quality={75}
-                          placeholder="blur"
-                          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                          className="w-full h-auto sm:h-[220px] md:h-[420px] object-cover rounded-lg"
-                        />
-                      </div>
-                    )}
-                    <ProductCard
-                      item={item}
-                      index={index}
-                      priority={index < 4}
-                    />
-                  </React.Fragment>
-                ))
+              paginatedProducts.map((item: Product, index: number) => (
+                <React.Fragment key={item.productId || item._id || index}>
+                  {index === 4 && show && (
+                    <div className="col-span-full w-full my-4">
+                      <Image
+                        src="https://d21ojmskh8ksuv.cloudfront.net/static/banners/banner-image.jpg"
+                        height={500}
+                        width={1000}
+                        alt="Collection Banner"
+                        loading="lazy"
+                        quality={75}
+                        placeholder="blur"
+                        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                        className="w-full h-auto sm:h-[220px] md:h-[420px] object-cover rounded-lg"
+                      />
+                    </div>
+                  )}
+                  <ProductCard item={item} index={index} priority={index < 4} />
+                </React.Fragment>
+              ))
             ) : (
               <div className="col-span-full text-center py-12">
                 <p className="text-gray-500 text-lg">

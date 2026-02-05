@@ -27,7 +27,6 @@ export const ProductVariants = ({
   categoryConfig,
   sizeRange,
 }: ProductVariantsProps) => {
-  console.log(sizeRange)
   const availableColors = useMemo(() => {
     if (!product.availableColors || product.availableColors.length === 0) {
       return [];

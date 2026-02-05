@@ -2,7 +2,7 @@ interface CategoryCollectionHeaderProps {
   parentCategory: string;
 }
 
-export default function CategoryCollectionHeader({
+export default function ParentCategoryCollectionHeader({
   parentCategory,
 }: CategoryCollectionHeaderProps) {
   return (

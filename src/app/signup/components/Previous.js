@@ -222,7 +222,7 @@ const SignupPage = () => {
           ...data.user 
         };
         setUserData(userData);
-        // // console.log('User data stored successfully');
+  
         
         setSuccess('Registration complete! Auto-login successful. Redirecting to Homepage...');
         
@@ -364,7 +364,6 @@ const SignupPage = () => {
 
       if (response.ok) {
         const data = await response.json();
-        // // console.log('Phone verified successfully:', data);
         setSuccess('Phone verified successfully! Completing registration...');
         setPhoneVerificationLoading(false);
         

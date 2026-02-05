@@ -76,7 +76,7 @@ const Navbar = () => {
   }, []);
   
 
-  // // console.log("Image URL from localStorage:", iimageUrl);
+ 
 
 
   // 🔥 SIMPLIFIED FUNCTION - NOW USES CONTEXT TOKEN
@@ -88,11 +88,6 @@ const Navbar = () => {
 
     try {
       setProfileImageLoading(true);
-      // // // console.log(
-      //   "🔄 Fetching user profile with token:",
-      //   authToken.substring(0, 20) + "..."
-      // );
-
       const response = await fetch(
         "https://api.gulbhahar.com/api/users/user-by-token",
         {
@@ -106,7 +101,7 @@ const Navbar = () => {
 
       if (response.ok) {
         const data = await response.json();
-        // // // console.log("✅ Profile data fetched successfully:", data);
+    
 
         if (data.user) {
           const updatedUserData = {
@@ -122,7 +117,6 @@ const Navbar = () => {
 
           // 🔥 USE CONTEXT TO UPDATE USER DATA
           updateUserData(updatedUserData);
-          // // // console.log("👤 User profile updated:", updatedUserData);
         }
       } else {
         console.error("❌ Failed to fetch profile:", response.status);
@@ -137,7 +131,7 @@ const Navbar = () => {
   // 🔥 SIMPLIFIED EFFECT - CONTEXT HANDLES AUTH STATE
   useEffect(() => {
     if (isAuthenticated && authToken && !authLoading) {
-      // Fetch fresh profile data when authenticated
+      
       fetchUserProfile();
     }
   }, [isAuthenticated, authToken, authLoading]);
@@ -217,7 +211,7 @@ const Navbar = () => {
 
   // 🔥 SIMPLIFIED LOGOUT - CONTEXT HANDLES EVERYTHING
   const handleLogout = async () => {
-    // console.log('🚪 Navbar logout clicked');
+   
     
     // Close any open dropdowns immediately
     setIsUserDropdownOpen(false);
@@ -225,8 +219,7 @@ const Navbar = () => {
     
     // Let the context handle all the logout logic
     await logout();
-    
-    // console.log('🎉 Logout process initiated');
+
   };
 
   // Enhanced Collections click handler
@@ -259,9 +252,9 @@ const Navbar = () => {
     }
 
     try {
-      // // console.log("Attempting to navigate to /collections");
+
       router.push("/collections");
-      // // console.log("Router.push called successfully");
+
     } catch (error) {
       console.error("Router.push failed:", error);
     }
@@ -1118,7 +1111,6 @@ const Navbar = () => {
                   onMouseDown={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    // // console.log("Button clicked!");
                     router.push("/collections");
                     setIsCollectionDropdownOpen(false);
                     setIsHoverMode(true);

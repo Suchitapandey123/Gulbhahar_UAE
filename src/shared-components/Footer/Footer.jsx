@@ -167,7 +167,7 @@ const { showToast, ToastContainer } = useToast();
           e.preventDefault();
           if (!consent) {
             toast.error("Please accept the terms before subscribing.");
-            // showToast("Please accept the terms before subscribing.", "error");
+        
             return;
           }
 
@@ -176,32 +176,25 @@ const { showToast, ToastContainer } = useToast();
           try {
             const response = await newsletterAPI.subscribe({ email });
 
-            // // console.log("Newsletter response:", response);
+         
 
             toast.success(
               response?.message || "Thank you for subscribing!",
               "success"
             )
 
-            // showToast(
-            //   response?.message || "Thank you for subscribing!",
-            //   "success"
-            // );
+          
 
             setEmail("");
             setConsent(false);
           } catch (error) {
-            // // console.log("Newsletter Error:", error);
+         
 
             toast.error(
                error?.message || "Subscription failed. Try again!",
               "error"
             );
 
-            // showToast(
-            //   error?.message || "Subscription failed. Try again!",
-            //   "error"
-            // );
           } finally {
             setLoading(false);
           }

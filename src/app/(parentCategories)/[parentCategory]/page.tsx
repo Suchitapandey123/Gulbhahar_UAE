@@ -1,5 +1,5 @@
 import categoryMetadata from "@/app/data/categoryMetadata.json";
-import CategoryPageModule from "@/modules/(gulbhahar)/parentCategories/CategoryPageModule";
+import ParentCategoryPageModule from "@/modules/(gulbhahar)/parentCategories/ParentCategoryPageModule";
 import { Metadata } from "next";
 
 interface PageProps {
@@ -41,7 +41,7 @@ const page = async ({ params }: PageProps) => {
 
   return (
     <main className="px-2 md:px-0">
-      <CategoryPageModule parentCategory={parentCategory} />
+      <ParentCategoryPageModule parentCategory={parentCategory} />
     </main>
   );
 };

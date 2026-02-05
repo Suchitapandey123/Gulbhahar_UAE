@@ -18,7 +18,6 @@ interface CollectionCardProps {
 const CollectionCard = ({ category, index }: CollectionCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
-
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -43,7 +42,7 @@ const CollectionCard = ({ category, index }: CollectionCardProps) => {
       className="flex-none w-[80vw] sm:w-[400px] md:w-[400px] snap-start relative border-r border-[#1a1a1a]"
     >
       <Link
-        href={`#`}
+        href={`/${category.slug}`}
         className="block relative h-[500px] md:h-[600px] group overflow-hidden"
       >
         {/* Background Image */}

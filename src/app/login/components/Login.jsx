@@ -266,13 +266,12 @@ const LoginPage = () => {
       // console.log('📱 Sending OTP to:', mobileNumber);
       
       const response = await signupApi.sendMobileLoginOtp(mobileNumber);
-      // console.log('📡 OTP Response status:', response.status);
-      
+   
       const data = await response.json();
-      // console.log('📦 OTP API Response:', data);
+
       
       if (response.ok) {
-        // console.log('✅ OTP sent successfully');
+     
         setShowOtpField(true);
         setIsOtpSent(true);
         setUserId(data.userId || data.user?.id || data.id);
@@ -300,16 +299,16 @@ const LoginPage = () => {
         return;
       }
 
-      // console.log('🔐 Verifying OTP:', { userId, otp });
+
       
       const response = await signupApi.verifyMobileLoginOtp(userId, otp);
-      // console.log('📡 OTP Verification Response status:', response.status);
+      
       
       const data = await response.json();
-      // console.log('📦 OTP Verification API Response:', data);
+
       
       if (response.ok) {
-        // console.log('✅ OTP verified successfully');
+       
         
         const token = data.token || data.accessToken || data.authToken;
         
@@ -359,16 +358,15 @@ const LoginPage = () => {
     setSuccessMessage('');
     
     try {
-      // console.log('🔄 Attempting login with:', { email, password: '***' });
       
       const response = await signupApi.login(email, password);
-      // console.log('📡 Response status:', response.status);
+      
       
       const data = await response.json();
-      // console.log('📦 Full API Response:', data);
+    
       
       if (response.ok) {
-        // console.log('✅ Login successful:', data);
+
         
         const token = data.token || data.accessToken || data.authToken;
         

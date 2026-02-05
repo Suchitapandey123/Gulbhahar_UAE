@@ -787,12 +787,6 @@ export default function CheckoutComponent() {
         },
       };
 
-      console.log("💾 DEBUG - checkoutData object:", checkoutData);
-      // console.log(
-      //   "💾 Saving validated checkout data to localStorage:",
-      //   checkoutData
-      // );
-
       // Save to localStorage
       try {
         localStorage.setItem("checkoutFormData", JSON.stringify(checkoutData));

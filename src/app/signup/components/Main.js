@@ -335,8 +335,7 @@ const SignupPage = () => {
       
       const response = await signupApi.verifyPhoneOTP(phoneSessionId, verificationCode);
       const data = await response.json();
-      // console.log('📱 Phone OTP Verification Response:', data);
-      // console.log('📱 Response Status:', response.status);
+
 
       if (response.ok) {
         // console.log('✅ Phone verified successfully, proceeding to auto-login');

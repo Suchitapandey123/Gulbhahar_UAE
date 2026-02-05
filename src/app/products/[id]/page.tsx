@@ -56,7 +56,6 @@ export async function generateMetadata(props: PageParams): Promise<Metadata> {
   const params = await props.params;
   const { product } = await getProductBundle(params.id);
 
-  console.log(product)
 
   if (!product) {
     return {
@@ -69,9 +68,9 @@ export async function generateMetadata(props: PageParams): Promise<Metadata> {
     };
   }
 
-  const title = product.seo.metaTitle
-  const description = product.seo.metaTitle
-  const keywords = product.seo.keywords
+  const title = product.seo?.metaTitle
+  const description = product.seo?.metaTitle
+  const keywords = product.seo?.keywords
   return {
     title,
     description,

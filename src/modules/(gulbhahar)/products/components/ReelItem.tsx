@@ -7,9 +7,12 @@ import { ReelData } from "./ProductReels";
 
 interface ReelItemProps {
   reel: ReelData;
+  index: number;
+  onClick?: () => void;
 }
 
-const ReelItem = ({ reel }: ReelItemProps) => {
+const ReelItem = ({ reel, index, onClick }: ReelItemProps) => {
+  console.log(reel)
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMuted, setIsMuted] = useState(true);
@@ -40,7 +43,8 @@ const ReelItem = ({ reel }: ReelItemProps) => {
   return (
     <div
       ref={containerRef}
-      className="relative flex-none w-[240px] sm:w-[260px] md:w-[300px] aspect-[9/16] bg-neutral-900 rounded-xl md:rounded-2xl overflow-hidden snap-center group shadow-lg"
+      className="relative flex-none w-[240px] sm:w-[260px] md:w-[300px] aspect-[9/16] bg-neutral-900 rounded-xl md:rounded-2xl overflow-hidden snap-center group shadow-lg cursor-pointer"
+      onClick={onClick}
     >
       {/* Poster fallback - always visible until video loads */}
       <Image
@@ -51,7 +55,7 @@ const ReelItem = ({ reel }: ReelItemProps) => {
           isVideoLoaded ? "opacity-0" : "opacity-100"
         }`}
         sizes="(max-width: 640px) 240px, (max-width: 768px) 260px, 300px"
-        priority={reel.id <= 2}
+        priority={index <= 2}
       />
 
       {/* Video */}
@@ -74,11 +78,6 @@ const ReelItem = ({ reel }: ReelItemProps) => {
         <h3 className="text-white font-medium text-sm line-clamp-2">
           {reel.title}
         </h3>
-        {reel.description && (
-          <p className="text-white/70 text-xs mt-1 line-clamp-1">
-            {reel.description}
-          </p>
-        )}
       </div>
     </div>
   );

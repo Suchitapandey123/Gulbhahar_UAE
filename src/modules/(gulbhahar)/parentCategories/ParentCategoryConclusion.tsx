@@ -6,7 +6,7 @@ interface CategoryConclusionProps {
   };
 }
 
-export default function CategoryConclusion({
+export default function ParentCategoryConclusion({
   conclusion,
 }: CategoryConclusionProps) {
   return (

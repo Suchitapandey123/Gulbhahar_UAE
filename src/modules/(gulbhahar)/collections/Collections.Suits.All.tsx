@@ -5,7 +5,7 @@ import ProductCard from "../common/ProductCard";
 
  export const Collections_Suits_All = async () => {
   const products = await productApi.getProductsByParentCategory("suit");
-  console.log(products);
+ 
   if (products.length === 0) {
     return (
       <div className="mt-16 pt-2 lg:mt-20  flex items-center justify-center min-h-[50vh]">

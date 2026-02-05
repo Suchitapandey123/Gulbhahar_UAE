@@ -21,6 +21,7 @@ async function getProducts(parentCategory: string): Promise<Product[]> {
 const HomePage = async () => {
   const juttisProducts = await getProducts("juttis");
   const suitsProducts = await getProducts("suit");
+  const bagsProducts = await getProducts("bags");
 
   return (
     <>
@@ -28,8 +29,9 @@ const HomePage = async () => {
       <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto w-full px-2 space-y-8">
         <Home_WatchAndShop />
         <Home_AvailableCollections />
-        <Home_JuttisCollection name ={'Juttis Collection'} newCollection={juttisProducts} />
-        <Home_JuttisCollection name ={'Suits Collection'} newCollection={suitsProducts} />
+        <Home_JuttisCollection slug={"/suit"} name={'Suits Collection'} newCollection={suitsProducts} />
+        <Home_JuttisCollection slug={"/bags"} name={'Bags Collection'} newCollection={bagsProducts} />
+        <Home_JuttisCollection slug={"/juttis"} name={'Juttis Collection'} newCollection={juttisProducts} />
         <AboutUsSection />
         <Home_NewCulture />
         <Home_OurShowcase />

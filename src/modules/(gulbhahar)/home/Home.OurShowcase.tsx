@@ -1,3 +1,8 @@
+"use client";
+
+import { useState } from "react";
+import HorizontalCarousel from "@/shared-components/Scrollbar/HorizontalCarousel";
+import FullscreenReelViewer from "../common/FullscreenReelViewer";
 import ShowcaseReelItem from "./components/ShowcaseReelItem";
 
 interface ReelData {
@@ -34,9 +39,16 @@ const CULTURAL_REELS: ReelData[] = [
 ];
 
 export default function Home_OurShowcase() {
+  const [fullscreenIndex, setFullscreenIndex] = useState<number | null>(null);
+
+  const fullscreenReels = CULTURAL_REELS.map((r) => ({
+    videoUrl: r.videoUrl,
+    title: r.title,
+  }));
+
   return (
     <section className="bg-white py-5 overflow-hidden">
-      {/* Server-rendered header for SEO */}
+      {/* Header */}
       <div className="max-w-[1600px] mx-auto mb-4">
         <div className="flex flex-col items-center gap-4 mb-4">
           <div className="flex items-center gap-3">
@@ -57,14 +69,26 @@ export default function Home_OurShowcase() {
         </p>
       </div>
 
-      {/* Client components for video interactivity */}
-      <div className="flex 2xl:pl-10 justify-start 2xl:justify-center overflow-x-auto gap-6 no-scrollbar snap-x snap-mandatory cursor-grab active:cursor-grabbing">
-        {CULTURAL_REELS.map((reel) => (
-          <ShowcaseReelItem key={reel.id} reel={reel} />
+      {/* Reels carousel */}
+      <HorizontalCarousel className="flex 2xl:pl-10 justify-start 2xl:justify-center overflow-x-auto gap-6 snap-x snap-mandatory cursor-grab active:cursor-grabbing pb-8">
+        {CULTURAL_REELS.map((reel, idx) => (
+          <ShowcaseReelItem
+            key={reel.id}
+            reel={reel}
+            onClick={() => setFullscreenIndex(idx)}
+          />
         ))}
-        {/* Placeholder for spacing at the end */}
         <div className="flex-none w-1" />
-      </div>
+      </HorizontalCarousel>
+
+      {/* Fullscreen viewer */}
+      {fullscreenIndex !== null && (
+        <FullscreenReelViewer
+          reels={fullscreenReels}
+          initialIndex={fullscreenIndex}
+          onClose={() => setFullscreenIndex(null)}
+        />
+      )}
     </section>
   );
 }

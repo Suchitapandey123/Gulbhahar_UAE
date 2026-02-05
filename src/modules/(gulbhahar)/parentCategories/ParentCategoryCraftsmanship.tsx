@@ -17,7 +17,7 @@ interface CategoryCraftsmanshipProps {
   sections: CraftsmanshipSection[];
 }
 
-export default function CategoryCraftsmanship({
+export default function ParentCategoryCraftsmanship({
   sections,
 }: CategoryCraftsmanshipProps) {
   return (

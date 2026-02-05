@@ -6,7 +6,7 @@ interface CategoryHeroProps {
   heroImage: string;
 }
 
-export default function CategoryHero({
+export default function ParentCategoryHero({
   title,
   subtitle,
   heroImage,

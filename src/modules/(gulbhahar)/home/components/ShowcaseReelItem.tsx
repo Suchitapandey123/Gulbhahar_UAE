@@ -9,7 +9,7 @@ interface ReelData {
   title: string;
 }
 
-const ShowcaseReelItem = ({ reel }: { reel: ReelData }) => {
+const ShowcaseReelItem = ({ reel, onClick }: { reel: ReelData; onClick?: () => void }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
@@ -35,7 +35,7 @@ const ShowcaseReelItem = ({ reel }: { reel: ReelData }) => {
   }, []);
 
   return (
-    <div className="relative flex-none w-[300px] md:w-[380px] aspect-[9/16] bg-neutral-100 rounded-2xl overflow-hidden snap-center group">
+    <div className="relative flex-none w-[300px] md:w-[380px] aspect-[9/16] bg-neutral-100 rounded-2xl overflow-hidden snap-center group cursor-pointer" onClick={onClick}>
       <video
         ref={videoRef}
         src={reel.videoUrl}
@@ -54,17 +54,7 @@ const ShowcaseReelItem = ({ reel }: { reel: ReelData }) => {
         </div>
       )}
 
-      <div className="absolute top-4 right-4 z-10">
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            setIsMuted(!isMuted);
-          }}
-          className="p-2 rounded-full bg-black/20 backdrop-blur-md text-white border border-white/10"
-        >
-          {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-        </button>
-      </div>
+     
     </div>
   );
 };

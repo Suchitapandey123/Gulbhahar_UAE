@@ -7,21 +7,36 @@ const oldStandardTT = Old_Standard_TT({
   subsets: ["latin"],
 });
 
-async function getQuickLinks(parentCategory, currentSlug) {
+interface QuickLinksData {
+  [category: string]: string[];
+}
+
+async function getQuickLinks(
+  parentCategory: string,
+  currentSlug: string,
+): Promise<QuickLinksData> {
   const { pageService } = await import("../../api/page-service/pageService");
   const response = await pageService.getQuickLinks(parentCategory, currentSlug);
-  
+
   if (response.success && response.data) {
     return response.data;
   }
   return {};
 }
 
-export default async function QuickLinks({ parentCategory, currentSlug }) {
+interface QuickLinksProps {
+  parentCategory: string;
+  currentSlug: string;
+}
+
+export default async function QuickLinks({
+  parentCategory,
+  currentSlug,
+}: QuickLinksProps) {
   if (!parentCategory || !currentSlug) return null;
 
   const quickLinks = await getQuickLinks(parentCategory, currentSlug);
-  
+
   if (!Object.keys(quickLinks).length) return null;
 
   return (
@@ -39,12 +54,17 @@ export default async function QuickLinks({ parentCategory, currentSlug }) {
         } else if (category.toLowerCase() === "lehenga") {
           headingText = "Trending Lehengas";
         } else {
-          headingText = category.charAt(0).toUpperCase() + category.slice(1) + " Popular Searches";
+          headingText =
+            category.charAt(0).toUpperCase() +
+            category.slice(1) +
+            " Popular Searches";
         }
 
         return (
           <div key={category} className="mb-8">
-            <span className={`${oldStandardTT.variable} text-2xl lg:text-3xl font-semibold mb-6`}>
+            <span
+              className={`${oldStandardTT.variable} text-2xl lg:text-3xl font-semibold mb-6`}
+            >
               <span className="bg-gradient-to-r from-red-900 via-red-600 to-red-900 bg-clip-text text-transparent">
                 {headingText}
               </span>

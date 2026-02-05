@@ -37,7 +37,7 @@ export const analyticsAPI = {
      
           const response  = await res.json()
             if (!response.success) {
-                // console.log(response)
+          
                 throw new Error(response.message || "Error Found");
             }
 
@@ -52,7 +52,7 @@ export const analyticsAPI = {
 
 
     trackContinueToPayment: async (userData) => {
-        // console.log(userData)
+     
         try {
             const res = await fetch(`${API_BASE_URL}/api/v1/analytics/continue-to-payment`, {
                 method: 'POST',
@@ -64,7 +64,7 @@ export const analyticsAPI = {
      
           const response  = await res.json()
             if (!response.success) {
-                // console.log(response)
+               
                 throw new Error(response.message || "Error Found");
             }
 
@@ -78,7 +78,7 @@ export const analyticsAPI = {
 
 
     trackPaymentMethod: async (paymentMethod) => {
-        console.log(paymentMethod)
+    
         try {
             const res = await fetch(`${API_BASE_URL}/api/v1/analytics/payment-method`, {
                 method: 'POST',
@@ -90,7 +90,7 @@ export const analyticsAPI = {
      
           const response  = await res.json()
             if (!response.success) {
-                // console.log(response)
+          
                 throw new Error(response.message || "Error Found");
             }
 
@@ -104,7 +104,7 @@ export const analyticsAPI = {
 
 
     trackOrderConfirmed: async (paymentMethod) => {
-        // console.log(paymentMethod)
+
         try {
             const res = await fetch(`${API_BASE_URL}/api/v1/analytics/order-confirmed`, {
                 method: 'POST',
@@ -115,7 +115,7 @@ export const analyticsAPI = {
      
           const response  = await res.json()
             if (!response.success) {
-                // console.log(response)
+       
                 throw new Error(response.message || "Error Found");
             }
 
@@ -128,7 +128,7 @@ export const analyticsAPI = {
     },
 
      trackOrderFailed: async (paymentMethod) => {
-        // console.log(paymentMethod)
+    
         try {
             const res = await fetch(`${API_BASE_URL}/api/v1/analytics/order-failed`, {
                 method: 'POST',
@@ -139,7 +139,7 @@ export const analyticsAPI = {
      
           const response  = await res.json()
             if (!response.success) {
-                // console.log(response)
+               
                 throw new Error(response.message || "Error Found");
             }
 

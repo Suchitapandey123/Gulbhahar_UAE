@@ -1,4 +1,5 @@
 import { Breadcrumbs } from "./components/Breadcrumbs";
+import { DeliveryChecker } from "./components/DeliveryChecker";
 import { ProductDetails } from "./components/ProductDetails";
 import ProductReels from "./components/ProductReels";
 import { ProductView } from "./components/ProductView";
@@ -49,8 +50,13 @@ export default function ProductModule({
           />
 
           <ProductView product={product} customRed={CUSTOM_RED} />
+          <div className="md:block hidden">
 
-          <ProductReels />
+          <ProductReels videos={product.videos || []} />
+          </div>
+          <div className="block md:hidden">
+          <DeliveryChecker customRed={CUSTOM_RED}  />
+          </div>
 
           {/* Server-rendered product details section */}
           <div className="pt-16 border-gray-100">

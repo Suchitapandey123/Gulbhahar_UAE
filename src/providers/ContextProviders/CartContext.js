@@ -45,12 +45,12 @@ export const CartProvider = ({ children }) => {
 
   const addToCart = async (product) => {
     try {
-      // // console.log('🛒 Adding to cart:', product);
+    
 
       // 🔥 STANDARDIZED CART ID GENERATION
       const standardizedCartId = `${product.productId || product.id}-${product.selectedColor || product.colors?.[0] || 'default'}-${product.selectedSize || product.sizes?.[0] || 'default'}`;
 
-      // // console.log('🔑 Standardized Cart ID:', standardizedCartId);
+  
 
       setAddingToCart(product.productId || product.id);
 
@@ -65,7 +65,7 @@ export const CartProvider = ({ children }) => {
         });
 
         if (existingItem) {
-          // // console.log('📈 Found existing item, updating quantity');
+         
           return prevCart.map(item => {
             const itemCartId = `${item.productId || item.id}-${item.selectedColor || item.colors?.[0] || 'default'}-${item.selectedSize || item.sizes?.[0] || 'default'}`;
             return itemCartId === standardizedCartId
@@ -86,7 +86,7 @@ export const CartProvider = ({ children }) => {
             addedAt: new Date().toISOString()
           };
 
-          // // console.log('🆕 New cart item:', newCartItem);
+      
           return [...prevCart, newCartItem];
         }
       });
@@ -109,12 +109,11 @@ export const CartProvider = ({ children }) => {
 
       try {
         const res = await analyticsAPI.trackAddToCart(product.productId)
-        // console.log(res)
+ 
       } catch (error) {
         
       }
 
-      // // console.log('✅ Item added to cart successfully');
       return {
         success: true,
         message: `${product.name}${product.selectedSize ? ` (${product.selectedSize})` : ''}${product.selectedColor ? ` (${product.selectedColor})` : ''} added to cart!`
@@ -128,7 +127,7 @@ export const CartProvider = ({ children }) => {
   };
 
   const removeFromCart = (productId, selectedColor, selectedSize) => {
-    // setCart(prevCart => prevCart.filter(item => item.id !== productId));
+   
     setCart((prevCart) =>
       prevCart.filter((item) => {
         const itemCartId = `${item.productId || item.id}-${item.selectedColor || item.colors?.[0] || 'default'}-${item.selectedSize || item.sizes?.[0] || 'default'}`;
@@ -227,7 +226,6 @@ export const CartProvider = ({ children }) => {
         }
       });
 
-      // // console.log('🧹 Cleaned up cart:', uniqueItems);
       return uniqueItems;
     });
   };

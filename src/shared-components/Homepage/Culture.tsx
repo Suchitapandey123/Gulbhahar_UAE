@@ -81,18 +81,6 @@ const ReelItem = ({ reel }: { reel: ReelData }) => {
         </div>
       )}
 
-      <div className="absolute top-4 right-4 z-10">
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            setIsMuted(!isMuted);
-          }}
-          className="p-2 rounded-full bg-black/20 backdrop-blur-md text-white border border-white/10"
-        >
-          {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-        </button>
-      </div>
-
       <div className="absolute bottom-6 left-6 right-6">
         <h3 className="text-white font-serif text-xl leading-tight translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 uppercase tracking-wider">
           {reel.title}

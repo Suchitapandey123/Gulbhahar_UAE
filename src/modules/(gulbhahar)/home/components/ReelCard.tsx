@@ -1,12 +1,13 @@
 "use client";
-
 import { Eye, Play, Store, Volume2, VolumeX } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 interface ReelData {
   id: number;
   videoUrl: string;
   title: string;
+  slug: string;
   product: {
     name: string;
     price: string;
@@ -15,11 +16,12 @@ interface ReelData {
 }
 
 const ReelCard = ({ reel }: { reel: ReelData }) => {
+  const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isMuted, setIsMuted] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const [viewCount] = useState(
-    () => (Math.random() * (25 - 1.5) + 1.5).toFixed(1) + "k"
+    () => (Math.random() * (25 - 1.5) + 1.5).toFixed(1) + "k",
   );
 
   useEffect(() => {
@@ -37,7 +39,7 @@ const ReelCard = ({ reel }: { reel: ReelData }) => {
           }
         });
       },
-      { threshold: 0.6 }
+      { threshold: 0.6 },
     );
 
     if (videoRef.current) {
@@ -83,12 +85,6 @@ const ReelCard = ({ reel }: { reel: ReelData }) => {
             {viewCount} Views
           </span>
         </div>
-        <button
-          onClick={toggleMute}
-          className="p-2.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all active:scale-95"
-        >
-          {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-        </button>
       </div>
 
       {/* Reel Info */}
@@ -101,7 +97,10 @@ const ReelCard = ({ reel }: { reel: ReelData }) => {
             Featured Collection
           </p>
         </div>
-        <button className="w-full py-4 bg-white text-black text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#800000] hover:text-white transition-all duration-500 flex items-center justify-center gap-3 group/btn shadow-xl active:scale-[0.98]">
+        <button
+          onClick={() => router.push(`/${reel.slug}`)}
+          className="w-full py-4 bg-white text-black text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[#800000] hover:text-white transition-all duration-500 flex items-center justify-center gap-3 group/btn shadow-xl active:scale-[0.98]"
+        >
           <Store
             size={15}
             className="group-hover/btn:scale-110 transition-transform"

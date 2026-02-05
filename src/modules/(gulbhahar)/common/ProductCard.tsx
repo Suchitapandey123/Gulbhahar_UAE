@@ -73,6 +73,46 @@ export default function ProductCard({
     setCurrentImageIndex(0);
   };
 
+  // Touch swipe support for mobile
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+  const isSwiping = useRef(false);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchEndX.current = e.touches[0].clientX;
+    isSwiping.current = false;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+    if (Math.abs(touchStartX.current - touchEndX.current) > 10) {
+      isSwiping.current = true;
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (imagesToShow.length <= 1) return;
+    const diff = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 30;
+
+    if (Math.abs(diff) < minSwipeDistance) return;
+
+    if (diff > 0) {
+      // Swipe left → next image
+      setCurrentImageIndex((prev) => (prev + 1) % imagesToShow.length);
+    } else {
+      // Swipe right → previous image
+      setCurrentImageIndex((prev) => (prev - 1 + imagesToShow.length) % imagesToShow.length);
+    }
+  };
+
+  const handleLinkClick = (e: React.MouseEvent) => {
+    if (isSwiping.current) {
+      e.preventDefault();
+    }
+  };
+
   useEffect(() => {
     return () => {
       clearInterval(slideIntervalRef.current as NodeJS.Timeout);
@@ -116,14 +156,19 @@ export default function ProductCard({
 
   return (
     <div className="group w-full">
-      <Link href={`/products/${item.productId || item.id}`}>
+      <Link href={`/products/${item.productId || item.id}`} onClick={handleLinkClick}>
         <div
           className="cursor-pointer relative space-y-3"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
           {/* Image Section */}
-          <div className="relative overflow-hidden w-full aspect-[3/4]">
+          <div
+            className="relative overflow-hidden w-full aspect-[3/4]"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
             <div className="relative w-full h-full bg-white">
               {imagesToShow.map((image, idx) => (
                 <Image
@@ -137,14 +182,14 @@ export default function ProductCard({
                   quality={65}
                   placeholder="blur"
                   blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                  className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out group-hover:scale-110 ${
+                  className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out md:group-hover:scale-110 ${
                     currentImageIndex === idx ? "opacity-100" : "opacity-0"
                   }`}
                 />
               ))}
 
               {/* Hover overlay */}
-              <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-black opacity-0 md:group-hover:opacity-10 transition-opacity duration-300" />
             </div>
 
             {/* Indicators */}
@@ -183,8 +228,8 @@ export default function ProductCard({
               </span>
             )}
 
-            {/* Add to Cart Button */}
-            <div className="absolute bottom-0 left-0 right-0 bg-red-900 text-white text-center py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-full group-hover:translate-y-0 z-10">
+            {/* Add to Cart Button - temporarily hidden */}
+            {/* <div className="absolute bottom-0 left-0 right-0 bg-red-900 text-white text-center py-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 transform translate-y-0 md:translate-y-full md:group-hover:translate-y-0 z-10">
               <button
                 onClick={handleAddToCart}
                 disabled={isAddingThis}
@@ -202,7 +247,7 @@ export default function ProductCard({
                   </>
                 )}
               </button>
-            </div>
+            </div> */}
           </div>
 
           {/* Product Info */}

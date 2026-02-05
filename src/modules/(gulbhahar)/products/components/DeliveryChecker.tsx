@@ -54,7 +54,7 @@ export const DeliveryChecker = ({ customRed }: DeliveryCheckerProps) => {
   return (
     <div className="border-t border-b border-gray-200 py-6 space-y-4">
       <h3 className="text-base font-medium text-gray-900">Delivery For</h3>
-      <div className="flex gap-2 max-w-md">
+      <div className="flex gap-2 w-full md:max-w-md">
         <input
           type="text"
           value={pincode}

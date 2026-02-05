@@ -35,13 +35,13 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
       }
 
       const data = await orderHistoryAPI.getOrderHistory();
-      // // console.log('📦 FULL API RESPONSE:', JSON.stringify(data, null, 2));
+     
 
       const ordersData = data.orders || [];
       const transformedOrders = transformOrderData(ordersData);
       setOrders(transformedOrders);
 
-      // console.log('✅ Orders transformed and set:', transformedOrders.length, 'orders');
+    
 
     } catch (err) {
       console.error('Error fetching order history:', err);
@@ -53,7 +53,6 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
 
   const transformOrderData = (apiOrders) => {
     if (!apiOrders || !Array.isArray(apiOrders)) {
-      // console.log('⚠️ No orders data found in API response');
       return [];
     }
 
@@ -181,11 +180,7 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
   const handleViewDetails = (order, e) => {
     e.stopPropagation();
 
-    // console.log('🖱️ === VIEW DETAILS CLICKED ===');
-    // console.log('📦 Order object:', order);
-
     if (onOrderClick) {
-      // console.log('🚀 Calling onOrderClick with order...');
       onOrderClick(order);
     } else {
       console.error('❌ CRITICAL: onOrderClick prop is undefined!');

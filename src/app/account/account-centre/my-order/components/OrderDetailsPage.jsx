@@ -136,7 +136,6 @@ const fetchUserData = () => {
       const value = localStorage.getItem(key);
       if (value && value.includes('@')) {
         foundEmail = value;
-        // console.log(`Found email in key '${key}':`, foundEmail);
         break;
       }
     }
@@ -208,13 +207,7 @@ const formatAddress = (addressData) => {
   
   useEffect(() => {
     if (selectedOrder) {
-      // console.log('SelectedOrder found, checking for data...');
-      // console.log('SelectedOrder structure:', {
-      //   hasOriginalData: !!selectedOrder.originalData,
-      //   hasItems: !!selectedOrder.items,
-      //   hasOrderId: !!selectedOrder.orderId,
-      //   keys: Object.keys(selectedOrder)
-      // });
+  
   
       if (selectedOrder.originalData) {
        
@@ -228,7 +221,7 @@ const formatAddress = (addressData) => {
       }
 
       else if (selectedOrder.items || selectedOrder.orderId) {
-        // console.log('🔄 Using selectedOrder directly as order data');
+        
         try {
           const transformedData = transformOrderDetails(selectedOrder);
           setOrderData(transformedData);
@@ -239,7 +232,7 @@ const formatAddress = (addressData) => {
       }
       // Method 3: If no proper data found
       else {
-        // console.log('⚠️ No structured order data found, using fallback');
+   
         try {
           const fallbackData = getFallbackOrderData(selectedOrder);
           setOrderData(fallbackData);
@@ -270,19 +263,13 @@ const formatAddress = (addressData) => {
   }, [showCancelModal]);
 
   const fetchUserDataForCancellation = () => {
-    // console.log("Fetching user data for cancellation...");
+  
     
     const userEmailFromStorage = localStorage.getItem("userEmail");
     const userNameFromStorage = localStorage.getItem("userName");
     const userDataStr = localStorage.getItem("user");
     const authTokenStr = localStorage.getItem("authToken");
-    
-    // // console.log(" Found in localStorage:", {
-    //   userEmail: userEmailFromStorage,
-    //   userName: userNameFromStorage,
-    //   hasUserData: !!userDataStr,
-    //   hasAuthToken: !!authTokenStr
-    // });
+  
 
     let foundEmail = "";
     let foundName = "";
@@ -329,7 +316,7 @@ const formatAddress = (addressData) => {
         const [name, value] = cookie.trim().split('=');
         if (name.includes('email') || name.includes('Email')) {
           foundEmail = value;
-          // console.log("Found email in cookie:", foundEmail);
+
           break;
         }
       }
@@ -341,7 +328,7 @@ const formatAddress = (addressData) => {
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         const value = localStorage.getItem(key);
-        // console.log(`${key}:`, value);
+     
       }
     }
 
@@ -356,10 +343,6 @@ const formatAddress = (addressData) => {
       setUserName(foundName);
     }
 
-    // console.log(" Final user data for cancellation:", {
-    //   email: foundEmail || "Not found",
-    //   name: foundName || "Not found"
-    // });
   };
 
   
@@ -373,7 +356,6 @@ const formatAddress = (addressData) => {
     if (!userEmail) {
       setApiError("User email not found. Please ensure you are logged in.");
       console.error(" User email is empty when trying to send OTP");
-      // // console.log("📊 Current user data:", { userEmail, userName });
       
       // Try to fetch again
       fetchUserDataForCancellation();
@@ -392,11 +374,6 @@ const formatAddress = (addressData) => {
     setApiError("");
     
     try {
-      // console.log('Sending OTP for cancellation:', {
-      //   email: userEmail,
-      //   userName: userName || "User",
-      //   orderId: orderData.orderId
-      // });
       
       const response = await orderHistoryAPI.sendOtpForCancellation({
         email: userEmail,
@@ -404,7 +381,6 @@ const formatAddress = (addressData) => {
         orderId: orderData.orderId
       });
 
-      // console.log(' OTP sent successfully:', response);
       setIsSendingOtp(false);
       setOtpSent(true);
       setCountdown(30); 
@@ -423,7 +399,7 @@ const formatAddress = (addressData) => {
     if (!/^\d*$/.test(value)) return;
     
     if (value.length === 6) {
-      // console.log("📋 Pasting OTP:", value);
+   
       const digits = value.split('');
       const newOtp = [...otp];
       
@@ -466,7 +442,7 @@ const formatAddress = (addressData) => {
   const handlePaste = (e) => {
     e.preventDefault();
     const pastedData = e.clipboardData.getData('text').trim();
-    // console.log("📋 Pasted data:", pastedData);
+ 
     
     // Check if it's a 6-digit number
     if (/^\d{6}$/.test(pastedData)) {
@@ -480,7 +456,7 @@ const formatAddress = (addressData) => {
 
   const handleVerifyOtp = async () => {
     const enteredOtp = otp.join('');
-    // console.log('🔍 OTP entered:', enteredOtp);
+   
     
     if (enteredOtp.length !== 6) {
       setApiError('Please enter all 6 digits of the OTP');
@@ -491,7 +467,7 @@ const formatAddress = (addressData) => {
     setApiError("");
     
     try {
-      // console.log('📤 Calling verify OTP API...');
+     
       
       const requestBody = {
         email: userEmail,
@@ -501,11 +477,11 @@ const formatAddress = (addressData) => {
         cancellationReason: cancelReason
       };
       
-      // console.log('Request body:', requestBody);
+      
       
       const response = await orderHistoryAPI.verifyOtpForCancellation(requestBody);
 
-      // console.log('Order cancelled successfully:', response);
+   
       
      
       setIsVerifyingOtp(false);

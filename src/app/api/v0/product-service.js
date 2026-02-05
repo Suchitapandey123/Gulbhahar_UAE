@@ -134,7 +134,6 @@ const productApi = {
 
       const data = await response.json();
       const products = data?.products || data?.data || data;
-      console.log(products)
       return Array.isArray(products) ? products : [];
     } catch (error) {
       console.error("Error fetching juttis products:", error);
@@ -166,7 +165,6 @@ const productApi = {
 
       const data = await response.json();
       const products = data?.products || data?.data || data;
-      console.log(products)
       return Array.isArray(products) ? products : [];
     } catch (error) {
       console.error("Error fetching juttis products:", error);

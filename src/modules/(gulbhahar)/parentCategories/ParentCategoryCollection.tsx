@@ -1,19 +1,17 @@
 import productApi from "@/app/api/v0/product-service";
 import { Product } from "../products/types";
-import CategoryCollectionClient from "./CategoryCollectionClient";
+import CategoryCollectionClient from "../categoryPages/CategoryCollectionClient";
+
 
 interface CategoryCollectionProps {
   initialParentCategory?: string;
   products?: Product[];
 }
 
-export default async function CategoryCollection({
-  initialParentCategory = "all",
-  products: initialProducts,
+export default async function ParentCategoryCollection({
+  initialParentCategory = "all"
 }: CategoryCollectionProps) {
-  const products =
-    initialProducts ||
-    (await productApi.getProductsByParentCategory(initialParentCategory));
+  const products = await productApi.getProductsByParentCategory(initialParentCategory);
 
   if (!products || products.length === 0) {
     return (
@@ -28,9 +26,15 @@ export default async function CategoryCollection({
   }
 
   return (
-    <CategoryCollectionClient
-      products={products}
-      initialParentCategory={initialParentCategory}
-    />
+    <>
+      {products.length > 0 && (
+        <CategoryCollectionClient
+        show = {false}
+          products={products}
+          initialParentCategory={initialParentCategory}
+        />
+      )}
+    </>
+
   );
 }

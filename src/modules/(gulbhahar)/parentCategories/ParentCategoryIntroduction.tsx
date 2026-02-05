@@ -2,7 +2,7 @@ interface CategoryIntroductionProps {
   introduction: string;
 }
 
-export default function CategoryIntroduction({
+export default function ParentCategoryIntroduction({
   introduction,
 }: CategoryIntroductionProps) {
   return (

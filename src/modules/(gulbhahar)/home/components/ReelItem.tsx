@@ -105,20 +105,6 @@ const ReelItem = ({ reel }: ReelItemProps) => {
         </button>
       )}
 
-      {/* Mute/Unmute button */}
-      <div className="absolute top-4 right-4 z-20">
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsMuted(!isMuted);
-          }}
-          className="p-2.5 rounded-full bg-black/30 backdrop-blur-md text-white border border-white/10 transition-colors hover:bg-black/50"
-          aria-label={isMuted ? "Unmute" : "Mute"}
-        >
-          {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-        </button>
-      </div>
-
       {/* Title overlay at bottom */}
       <div className="absolute bottom-0 left-0 right-0 p-4 z-10">
         <h3 className="text-white font-medium text-sm md:text-base line-clamp-2">

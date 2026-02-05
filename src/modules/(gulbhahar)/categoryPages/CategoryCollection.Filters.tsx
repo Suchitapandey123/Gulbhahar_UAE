@@ -2,7 +2,8 @@
 
 import { cn } from "@/lib/utils";
 import { ArrowUpDown, ChevronDown, Filter, RotateCcw, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Product } from "../products/types";
 
 interface FilterOption {
   label: string;
@@ -20,6 +21,7 @@ interface CollectionFiltersProps {
     sortBy?: string;
   }) => void;
   resultCount?: number;
+  products: Product[];
 }
 
 interface DropdownFilterProps {
@@ -61,7 +63,6 @@ const DropdownFilter: React.FC<DropdownFilterProps> = ({
   const selectedLabel = selectedOption?.label || label;
   const isSort = label === "Sort";
   const hasSelection = value !== "all" && value !== "relevance";
-
 
   return (
     <div ref={containerRef} className=" relative ">
@@ -134,6 +135,7 @@ const DropdownFilter: React.FC<DropdownFilterProps> = ({
 export default function CategoryCollection_Filters({
   onFilterChange,
   resultCount = 0,
+  products = [],
 }: CollectionFiltersProps) {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
@@ -185,55 +187,90 @@ export default function CategoryCollection_Filters({
     setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
   };
 
-  const sizeOptions: FilterOption[] = [
-    { label: "All Sizes", value: "all" },
-    { label: "35", value: "35" },
-    { label: "36", value: "36" },
-    { label: "37", value: "37" },
-    { label: "38", value: "38" },
-    { label: "39", value: "39" },
-    { label: "40", value: "40" },
-    { label: "41", value: "41" },
-  ];
+  const sizeOptions = useMemo(() => {
+    const uniqueSizes = new Set<string>();
+    products.forEach((p) => {
+      p.availableSizes?.forEach((s) => {
+        if (s.name) uniqueSizes.add(s.name);
+      });
+    });
+    return [
+      { label: "All Sizes", value: "all" },
+      ...Array.from(uniqueSizes)
+        .sort()
+        .map((s) => ({ label: s, value: s.toLowerCase() })),
+    ];
+  }, [products]);
 
-  const colorOptions: FilterOption[] = [
-    { label: "All Colors", value: "all" },
-    { label: "Red", value: "red" },
-    { label: "Blue", value: "blue" },
-    { label: "Green", value: "green" },
-    { label: "Black", value: "black" },
-    { label: "White", value: "white" },
-    { label: "Gold", value: "gold" },
-    { label: "Silver", value: "silver" },
-    { label: "Pink", value: "pink" },
-    { label: "Maroon", value: "maroon" },
-  ];
+  const colorOptions = useMemo(() => {
+    const uniqueColors = new Set<string>();
+    products.forEach((p) => {
+      p.availableColors?.forEach((c) => {
+        if (c.name) uniqueColors.add(c.name);
+      });
+    });
+    return [
+      { label: "All Colors", value: "all" },
+      ...Array.from(uniqueColors)
+        .sort()
+        .map((c) => ({ label: c, value: c.toLowerCase() })),
+    ];
+  }, [products]);
 
-  const collectionsOptions: FilterOption[] = [
-    { label: "All Collections", value: "all" },
-    { label: "Juttis", value: "juttis" },
-    { label: "Suits", value: "suits" },
-    { label: "Sarees", value: "sarees" },
-  ];
 
-  const seasonOptions: FilterOption[] = [
-    { label: "All Seasons", value: "all" },
-    { label: "Summer", value: "summer" },
-    { label: "Winter", value: "winter" },
-    { label: "Monsoon", value: "monsoon" },
-    { label: "Spring", value: "spring" },
-    { label: "All Season", value: "all-season" },
-  ];
+  const seasonOptions = useMemo(() => {
+    const uniqueSeasons = new Set<string>();
+    products.forEach((p) => {
+      if (p.season) uniqueSeasons.add(p.season);
+    });
+    return [
+      { label: "All Seasons", value: "all" },
+      ...Array.from(uniqueSeasons)
+        .sort()
+        .map((s) => ({
+          label: s,
+          value: s.toLowerCase().replace(/\s+/g, "-"),
+        })),
+    ];
+  }, [products]);
 
-  const fabricOptions: FilterOption[] = [
-    { label: "All Fabrics", value: "all" },
-    { label: "Silk", value: "silk" },
-    { label: "Cotton", value: "cotton" },
-    { label: "Velvet", value: "velvet" },
-    { label: "Leather", value: "leather" },
-    { label: "Embroidered", value: "embroidered" },
-    { label: "Handcrafted", value: "handcrafted" },
-  ];
+    const collectionsOptions = useMemo(() => {
+    const uniqueCollections = new Set<string>();
+    products.forEach((p) => {
+      p.availableCollections?.forEach((c) => {
+        if (c.name) uniqueCollections.add(c.name);
+      });
+      // Also include parentCategory if availableCollections is empty
+      if (!p.availableCollections || p.availableCollections.length === 0) {
+        p.parentCategory?.forEach((pc) => uniqueCollections.add(pc));
+      }
+    });
+    return [
+      { label: "All Collections", value: "all" },
+      ...Array.from(uniqueCollections)
+        .sort()
+        .map((c) => ({ label: c, value: c.toLowerCase() })),
+    ];
+  }, [products]);
+
+  const fabricOptions = useMemo(() => {
+    const uniqueFabrics = new Set<string>();
+    products.forEach((p) => {
+      p.availableFabrics?.forEach((f) => {
+        if (f.name) uniqueFabrics.add(f.name);
+      });
+      // Also include parentCategory if availableCollections is empty
+      if (!p.availableFabrics || p.availableFabrics.length === 0) {
+        p.parentCategory?.forEach((pc) => uniqueFabrics.add(pc));
+      }
+    });
+    return [
+      { label: "All Fabrics", value: "all" },
+      ...Array.from(uniqueFabrics)
+        .sort()
+        .map((f) => ({ label: f, value: f.toLowerCase() })),
+    ];
+  }, [products]);
 
   const priceOptions: FilterOption[] = [
     { label: "All Prices", value: "all" },
@@ -256,7 +293,7 @@ export default function CategoryCollection_Filters({
     size: sizeOptions,
     color: colorOptions,
     collections: collectionsOptions,
-    season: seasonOptions,
+    // season: seasonOptions,
     fabric: fabricOptions,
     price: priceOptions,
   };
@@ -337,14 +374,14 @@ export default function CategoryCollection_Filters({
             onToggle={() => toggleDropdown("color")}
           />
 
-          <DropdownFilter
+          {/* <DropdownFilter
             label="Season"
             options={seasonOptions}
             value={filters.season}
             onChange={(value) => handleFilterChange("season", value)}
             isOpen={openDropdown === "season"}
             onToggle={() => toggleDropdown("season")}
-          />
+          /> */}
 
           <DropdownFilter
             label="Fabric"
@@ -476,10 +513,10 @@ export default function CategoryCollection_Filters({
             {resultCount > 0 && (
               <span className="text-gray-600 mr-2">
                 {resultCount > 0 && (
-              <span className="text-[12px] sm:text-base font-bold text-gray-400 uppercase tracking-widest">
-                {resultCount} {resultCount === 1 ? "Product" : "Products"}
-              </span>
-            )}
+                  <span className="text-[12px] sm:text-base font-bold text-gray-400 uppercase tracking-widest">
+                    {resultCount} {resultCount === 1 ? "Product" : "Products"}
+                  </span>
+                )}
               </span>
             )}
 

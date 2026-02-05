@@ -1,5 +1,6 @@
 export type Product = {
   productId: string;
+  _id?: string;
   id?: string;
   name?: string;
   title?: string;
@@ -13,11 +14,15 @@ export type Product = {
   material?: string;
   images?: string[][];
   updatedAt?: string;
+  createdAt?: string;
   inventory?: InventoryItem[];
+  season?: string;
   availableColors?: ColorOption[];
-  availableCollections : SizeOption[];
-  availableSizes : SizeOption[];
-  seo : Seo
+  availableCollections?: SizeOption[];
+  availableSizes?: SizeOption[];
+  availableFabrics?: SizeOption[];
+  seo?: Seo;
+  videos?: VideosOption[]
 };
 
 export type Seo = {
@@ -35,6 +40,12 @@ export type ColorOption = {
   name: string;
   hexcode: string;
 };
+
+export type VideosOption = {
+  posterUrl :string;
+  videoUrl : string
+  title : string
+}
 export type SizeOption = {
   name: string;
 };

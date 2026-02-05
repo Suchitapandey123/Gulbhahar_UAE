@@ -227,7 +227,7 @@ const Navbar = () => {
       {isCartOpen && <CartPage />}
 
       <nav
-        className={` fixed top-0 left-0 right-0 z-[9999] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+        className={` fixed top-0 left-0 right-0 z-[100] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${
           isNavSolid
             ? "bg-white/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] py-1.5 lg:py-2 border-b border-gray-200/30"
             : "bg-transparent py-4 lg:py-6 border-b border-white/5"

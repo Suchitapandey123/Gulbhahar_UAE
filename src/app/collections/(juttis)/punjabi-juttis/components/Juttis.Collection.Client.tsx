@@ -1,30 +1,12 @@
 "use client";
 import CategoryCollection_Filters from "@/modules/(gulbhahar)/categoryPages/CategoryCollection.Filters";
 import ProductCard from "@/modules/(gulbhahar)/common/ProductCard";
+import { Product } from "@/modules/(gulbhahar)/products/types";
 import { fbEvent } from "@/utils/fb/metaPixels";
 import Image from "next/image";
 import { Fragment, useMemo, useState } from "react";
 
 const ITEMS_PER_PAGE = 24;
-
-interface Product {
-  _id?: string;
-  productId?: string;
-  name?: string;
-  title?: string;
-  price: number;
-  originalPrice?: number;
-  images?: string[][];
-  availableSizes?: { name: string }[];
-  availableColors?: { name: string; hexcode: string }[];
-  parentCategory?: string[];
-  category?: string[];
-  stock?: number;
-  isActive?: boolean;
-  createdAt?: string;
-  season?: string;
-  fabric?: string;
-}
 
 interface JuttisCollectionClientProps {
   initialProducts: Product[];
@@ -183,6 +165,7 @@ export default function JuttisCollectionClient({
     (safePage - 1) * ITEMS_PER_PAGE,
     safePage * ITEMS_PER_PAGE,
   );
+  console.log(initialProducts)
 
   return (
     <div className="w-full lg:px-2">
@@ -190,6 +173,7 @@ export default function JuttisCollectionClient({
         <CategoryCollection_Filters
           onFilterChange={handleCollectionFilterChange}
           resultCount={filteredProducts.length}
+          products={initialProducts}
         />
       </div>
 

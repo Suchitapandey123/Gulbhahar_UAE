@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { ZoomIn } from "lucide-react";
 import NextImage from "next/image";
 import { cn } from "@/lib/utils";
@@ -26,6 +26,31 @@ export const ProductImageGrid = ({
   const getImageSrc = (img: string) =>
     img.startsWith("/") ? img : `${img}${cacheVersion}`;
 
+  // Reset loading state when image loads
+  const handleImageLoad = () => {
+    setIsLoading(false);
+    setImageOpacity(1);
+  };
+
+  // Auto-slide for mobile big image
+  const autoSlideTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const selectedIndexRef = useRef(selectedIndex);
+  selectedIndexRef.current = selectedIndex;
+
+  const startAutoSlide = useCallback(() => {
+    if (autoSlideTimer.current) clearInterval(autoSlideTimer.current);
+    if (currentImages.length <= 1) return;
+
+    autoSlideTimer.current = setInterval(() => {
+      const nextIndex = (selectedIndexRef.current + 1) % currentImages.length;
+      setImageOpacity(0);
+      setIsLoading(true);
+      setTimeout(() => {
+        setSelectedIndex(nextIndex);
+      }, 150);
+    }, 3000);
+  }, [currentImages.length]);
+
   const handleImageChange = (index: number) => {
     if (index === selectedIndex) return;
 
@@ -37,12 +62,48 @@ export const ProductImageGrid = ({
     setTimeout(() => {
       setSelectedIndex(index);
     }, 150);
+
+    // Reset auto-slide timer on manual interaction
+    startAutoSlide();
   };
 
-  // Reset loading state when image loads
-  const handleImageLoad = () => {
-    setIsLoading(false);
-    setImageOpacity(1);
+  useEffect(() => {
+    startAutoSlide();
+    return () => {
+      if (autoSlideTimer.current) clearInterval(autoSlideTimer.current);
+    };
+  }, [startAutoSlide]);
+
+  // Touch swipe support for mobile
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+  const isSwiping = useRef(false);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchEndX.current = e.touches[0].clientX;
+    isSwiping.current = false;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+    const diff = Math.abs(touchStartX.current - touchEndX.current);
+    if (diff > 10) isSwiping.current = true;
+  };
+
+  const handleTouchEnd = () => {
+    const diff = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 50;
+
+    if (Math.abs(diff) < minSwipeDistance) return;
+
+    if (diff > 0 && selectedIndex < currentImages.length - 1) {
+      // Swipe left → next image
+      handleImageChange(selectedIndex + 1);
+    } else if (diff < 0 && selectedIndex > 0) {
+      // Swipe right → previous image
+      handleImageChange(selectedIndex - 1);
+    }
   };
 
   // Reset selectedIndex when images change (e.g., color change)
@@ -58,7 +119,12 @@ export const ProductImageGrid = ({
         <div
           className="relative w-full overflow-hidden bg-gray-100 rounded-lg cursor-pointer"
           style={{ aspectRatio: "3 / 4" }}
-          onClick={() => onImageClick(selectedIndex)}
+          onClick={() => {
+            if (!isSwiping.current) onImageClick(selectedIndex);
+          }}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
           {/* Shimmer loading effect */}
           {isLoading && (
@@ -94,7 +160,7 @@ export const ProductImageGrid = ({
         </div>
 
         {/* Thumbnail gallery - horizontal scroll */}
-        <div className="overflow-x-auto overflow-y-hidden">
+        <div className="overflow-x-auto overflow-y-hidden py-2">
           <div className="flex gap-2 justify-start w-max px-1">
             {currentImages.map((img, index) => (
               <button

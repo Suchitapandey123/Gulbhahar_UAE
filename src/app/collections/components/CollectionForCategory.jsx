@@ -59,7 +59,7 @@ export default function CollectionForCategory({
   const { ToastContainer } = useToast();
   // let category = "juttis"
   let category = parentCategory || slug || "all";
-  console.log("CATEGORY INSIDE COLLECTION:", category);
+
 
   // Data Fetching - Fetch ALL products and filter on frontend
   const {
@@ -78,12 +78,11 @@ export default function CollectionForCategory({
     const products = allProducts?.products || allProducts?.data || allProducts;
 
     if (!products || !Array.isArray(products)) {
-      // console.log("ALL PRODUCTS RAW:", allProducts);
-      // console.log("EXTRACTED PRODUCTS:", products);
+      
       return [];
     }
 
-    // console.log("TOTAL PRODUCTS FROM API:", products.length);
+
 
     if (!category || category === "all") return products;
 
@@ -98,7 +97,7 @@ export default function CollectionForCategory({
       return productCategories?.toLowerCase?.() === category.toLowerCase();
     });
 
-    // console.log(`Filtered ${filtered.length} products for category: ${category}`);
+ 
     return filtered;
   }, [allProducts, category]);
 
@@ -153,7 +152,6 @@ export default function CollectionForCategory({
       updatedAt: product.updatedAt,
     }));
   };
-  // console.log("CATEGORY FROM URL:", category);
 
   //  REPLACE OLD handleAddToCart WITH THIS NEW ONE:
   const handleAddToCart = async (e, item) => {
@@ -179,10 +177,8 @@ export default function CollectionForCategory({
         addedAt: new Date().toISOString(),
       };
 
-      // // console.log(' Standardized cart item:', cartItemWithVariants);
-
       const result = await addToCart(cartItemWithVariants);
-      // console.log(result)
+      
 
       if (result.success) {
         toast.success(
@@ -199,13 +195,6 @@ export default function CollectionForCategory({
   // Use API data - don't use fallback, let it be empty if no data
   const collections =
     apiData && Array.isArray(apiData) ? transformApiData(apiData) : [];
-
-  // DEBUG: Check API response
-  // console.log("API DATA RAW:", apiData);
-  // console.log("COLLECTIONS LENGTH:", collections.length);
-  // console.log("SHOULD FETCH JUTTIS:", shouldFetchJuttis);
-  // console.log("JUTTIS DATA:", juttisData?.length || 0);
-
   // Update price range based on actual data
   useEffect(() => {
     if (collections.length > 0) {

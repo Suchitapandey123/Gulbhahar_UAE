@@ -1,3 +1,4 @@
+import HorizontalCarousel from "@/shared-components/Scrollbar/HorizontalCarousel";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import CollectionCard from "./components/CollectionCard";
@@ -19,7 +20,7 @@ const CATEGORIES = [
     name: "Sarees",
     image:
       "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/saree.webp",
-    slug: "sarees",
+    slug: "saree",
   },
   {
     name: "Jewellery",
@@ -28,11 +29,11 @@ const CATEGORIES = [
     slug: "jewellery",
   },
   {
-   name: "Suits",
-   image:
-     "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/suits.webp",
-   slug: "suits",
- },
+    name: "Suits",
+    image:
+      "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/suits.webp",
+    slug: "suit",
+  },
   {
     name: "Juttis",
     image:
@@ -43,7 +44,7 @@ const CATEGORIES = [
 
 const Home_AvailableCollections = () => {
   return (
-    <section className="py-24 bg-white overflow-hidden">
+    <section className="py-8 bg-white overflow-hidden">
       <div className="flex flex-col space-y-4 justify-center mb-6">
         <div className="flex justify-center items-center gap-3">
           <span className="w-16 h-px bg-[#800000]" />
@@ -64,33 +65,35 @@ const Home_AvailableCollections = () => {
         </p>
       </div>
 
-      <div className="relative">
-        <div className="flex overflow-x-auto no-scrollbar snap-x snap-mandatory cursor-grab active:cursor-grabbing">
-          {CATEGORIES.map((category, index) => (
-            <CollectionCard key={category.slug} category={category} index={index} />
-          ))}
+      <HorizontalCarousel className="flex overflow-x-auto snap-x snap-mandatory cursor-grab active:cursor-grabbing pb-8">
+        {CATEGORIES.map((category, index) => (
+          <CollectionCard
+            key={category.slug}
+            category={category}
+            index={index}
+          />
+        ))}
 
-          {/* Last trailing space with a bold end block */}
-          <div className="flex-none w-[60vw] md:w-[20vw] bg-[#1a1a1a] flex flex-col justify-center px-8 md:px-12 text-white snap-start">
-            <p className="text-[10px] font-bold tracking-[1em] uppercase opacity-40 mb-4">
-              Fin.
-            </p>
-            <h4 className="text-2xl md:text-3xl font-serif leading-tight">
-              Explore
-              <br />
-              Complete
-              <br />
-              Series
-            </h4>
-            <Link
-              href="/collections"
-              className="mt-8 w-12 h-12 rounded-full bg-[#800000] flex items-center justify-center hover:scale-110 transition-transform"
-            >
-              <ArrowRight size={20} />
-            </Link>
-          </div>
+        {/* Last trailing space with a bold end block */}
+        <div className="flex-none w-[60vw] md:w-[20vw] bg-[#1a1a1a] flex flex-col justify-center px-8 md:px-12 text-white snap-start">
+          <p className="text-[10px] font-bold tracking-[1em] uppercase opacity-40 mb-4">
+            Fin.
+          </p>
+          <h4 className="text-2xl md:text-3xl font-serif leading-tight">
+            Explore
+            <br />
+            Complete
+            <br />
+            Series
+          </h4>
+          <Link
+            href="/collections"
+            className="mt-8 w-12 h-12 rounded-full bg-[#800000] flex items-center justify-center hover:scale-110 transition-transform"
+          >
+            <ArrowRight size={20} />
+          </Link>
         </div>
-      </div>
+      </HorizontalCarousel>
     </section>
   );
 };

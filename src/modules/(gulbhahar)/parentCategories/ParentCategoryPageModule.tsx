@@ -1,7 +1,8 @@
 import categoryContent from "@/app/data/categoryContent.json";
 import { Suspense } from "react";
-import CategoryCollection from "../categoryPages/CategoryCollection";
-import { CategoryContentSection } from "./content";
+import ParentCategoryContentSection from "./content/ParentCategoryContentSection";
+import ParentCategoryCollection from "./ParentCategoryCollection";
+import { parentCategoryPageService } from "@/app/api/page-service/parentCategoryPageService";
 
 interface CategoryPageModuleProps {
   parentCategory: string;
@@ -26,27 +27,12 @@ function CollectionSkeleton() {
   );
 }
 
-export default function CategoryPageModule({
+export default async function ParentCategoryPageModule({
   parentCategory,
 }: CategoryPageModuleProps) {
-  // Find category content based on slug
-  const content =
-    categoryContent.collections.find(
-      (c) => c.id.toLowerCase() === parentCategory.toLowerCase(),
-    ) || categoryContent.collections[1]; // Default to juttis if not found
-
-  // Map category to hero image
-  const heroImages: Record<string, string> = {
-    juttis: "/images/juttis-hero.png",
-    "bridal-juttis": "/images/juttis-hero.png",
-    sarees: "/images/sarees-hero.png",
-    lehenga: "/images/sarees-hero.png",
-    bags: "/images/luxury-hero.webp",
-    jewellery: "/images/luxury-hero.png",
-  };
-
-  const heroImage =
-    heroImages[parentCategory.toLowerCase()] || "/images/luxury-hero.png";
+  const response = await parentCategoryPageService.getParentCategoryPageBySlug(parentCategory)
+  const page = response.data
+  if (!page) return null
 
   return (
     <>
@@ -61,12 +47,14 @@ export default function CategoryPageModule({
         <section className="pb-24">
           {/* <CategoryCollectionHeader parentCategory={parentCategory} /> */}
           <Suspense fallback={<CollectionSkeleton />}>
-            <CategoryCollection initialParentCategory={parentCategory} />
+            <ParentCategoryCollection initialParentCategory={parentCategory} />
           </Suspense>
         </section>
 
         {/* Content Sections (Story, Features, Testimonials, FAQ, CTA) */}
-        <CategoryContentSection categorySlug={parentCategory.toLowerCase()} />
+        <ParentCategoryContentSection
+          page={page}
+        />
       </div>
     </>
   );
