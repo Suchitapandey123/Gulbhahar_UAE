@@ -1,5 +1,5 @@
 import productApi from "@/app/api/v0/product-service";
-import Image from "next/image";
+import Link from "next/link";
 import { Fragment } from "react";
 import ProductCard from "../common/ProductCard";
 
@@ -22,7 +22,7 @@ export default async function Collections_Juttis_All() {
             Handcrafted with Love
           </p>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-gray-900 mb-4">
-            Our Juttis Collection
+            Our Juttis Collections
           </h1>
           <div className="flex items-center justify-center gap-3">
             <span className="h-[1px] w-12 bg-red-800" />
@@ -36,23 +36,10 @@ export default async function Collections_Juttis_All() {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-          {products.map((product: any, index: number) => {
+          {products.slice(0, 8).map((product: any, index: number) => {
             const key = product.productId || product._id || `product-${index}`;
             return (
               <Fragment key={key}>
-                {index === 4 && (
-                  <div className="col-span-full w-full my-4">
-                    <Image
-                      src="https://d21ojmskh8ksuv.cloudfront.net/static/banners/banner-image.jpg"
-                      height={500}
-                      width={1000}
-                      alt="Gulbhahar Collection Banner"
-                      loading="lazy"
-                      quality={75}
-                      className="w-full   rounded-lg"
-                    />
-                  </div>
-                )}
                 <ProductCard
                   item={product}
                   index={index}
@@ -61,6 +48,18 @@ export default async function Collections_Juttis_All() {
               </Fragment>
             );
           })}
+        </div>
+
+        <div className="flex justify-center mt-12 mb-8">
+          <Link
+            href="/juttis"
+            className="group relative px-8 py-3 bg-transparent overflow-hidden rounded-none border border-[#800000] text-[#800000] transition-colors hover:text-white"
+          >
+            <div className="absolute inset-0 w-0 bg-[#800000] transition-all duration-300 ease-out group-hover:w-full" />
+            <span className="relative text-sm font-medium tracking-[0.2em] uppercase">
+              See All Juttis
+            </span>
+          </Link>
         </div>
       </div>
     </div>

@@ -3,8 +3,8 @@ import Link from "next/link";
 import { Fragment } from "react";
 import ProductCard from "../common/ProductCard";
 
-export const Collections_Suits_All = async () => {
-  const products = await productApi.getProductsByParentCategory("suit");
+export const Collections_Bags_All = async () => {
+  const products = await productApi.getProductsByParentCategory("bags");
 
   if (products.length === 0) {
     return (
@@ -23,7 +23,7 @@ export const Collections_Suits_All = async () => {
             Handcrafted with Love
           </p> */}
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-gray-900 mb-4">
-            Our Suits Collections
+            Our Bags Collections
           </h1>
           <div className="flex items-center justify-center gap-3">
             <span className="h-[1px] w-12 bg-red-800" />
@@ -53,12 +53,12 @@ export const Collections_Suits_All = async () => {
 
         <div className="flex justify-center mt-12 mb-8">
           <Link
-            href="/suit"
+            href="/bags"
             className="group relative px-8 py-3 bg-transparent overflow-hidden rounded-none border border-[#800000] text-[#800000] transition-colors hover:text-white"
           >
             <div className="absolute inset-0 w-0 bg-[#800000] transition-all duration-300 ease-out group-hover:w-full" />
             <span className="relative text-sm font-medium tracking-[0.2em] uppercase">
-              See All Suits
+              See All Bags
             </span>
           </Link>
         </div>
