@@ -155,7 +155,8 @@ const CartPage = () => {
       />
 
       {/* Cart Sidebar */}
-      <div className="fixed mt-[88px] right-0 top-0 h-[calc(100%-88px)] w-full max-w-md bg-white shadow-xl z-[10002] transform transition-transform duration-300 ease-in-out">
+      <div className="fixed 
+       right-0 top-0 h-[calc(100%-0px)] w-full max-w-md bg-white shadow-xl z-[10002] transform transition-transform duration-300 ease-in-out">
         <div className="flex  flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200">

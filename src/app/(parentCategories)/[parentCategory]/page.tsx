@@ -1,26 +1,25 @@
 import { parentCategoryPageService } from "@/app/api/page-service/parentCategoryPageService";
-import categoryMetadata from "@/app/data/categoryMetadata.json";
 import ParentCategoryPageModule from "@/modules/(gulbhahar)/parentCategories/ParentCategoryPageModule";
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 interface PageProps {
   params: Promise<{ parentCategory: string }>;
 }
 
+const ALLOWED_PARENT_CATEGORIES = ['suit', 'saree', 'lehenga', 'bags', 'jewellery', 'juttis'];
+
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { parentCategory } = await params;
+
+  if (!ALLOWED_PARENT_CATEGORIES.includes(parentCategory)) {
+    notFound();
+  }
+
   const response = await parentCategoryPageService.getParentCategoryPageBySlug(parentCategory)
   const page = response.data
-
-
-  const meta = categoryMetadata[
-    parentCategory as keyof typeof categoryMetadata
-  ] || {
-    title: `${parentCategory} | Gulbhahar Luxury Ethnic Wear`,
-    description: `Explore our exquisite collection of ${parentCategory}. Handcrafted luxury for every occasion.`,
-  };
   
   return {
     title: page.metaTitle ||  `${parentCategory} | Gulbhahar Luxury Ethnic Wear`,
@@ -38,6 +37,9 @@ export async function generateMetadata({
 const page = async ({ params }: PageProps) => {
   const { parentCategory } = await params;
 
+  if (!ALLOWED_PARENT_CATEGORIES.includes(parentCategory)) {
+    notFound();
+  }
 
   return (
     <main className="px-2 md:px-0">

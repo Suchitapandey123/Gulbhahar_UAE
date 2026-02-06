@@ -686,7 +686,7 @@ const handleAddToCart = async (e, item) => {
   }
 
   return (
-    <div className="min-h-screen mt-16 lg:mt-24">
+    <div className="min-h-screen mt-5 lg:mt-5">
       <ToastContainer />
 
       <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row">
@@ -726,7 +726,7 @@ const handleAddToCart = async (e, item) => {
   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-maroon-50 to-transparent rounded-xl opacity-60"></div>
   
   {/* Content */}
-  <div className="relative py-6 px-4">
+  <div className="relative py-6 hidden px-4">
     {/* Icon */}
     <div className="w-12 h-12 bg-red-900 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-md">
       <ShoppingBag className="h-6 w-6 text-white" />

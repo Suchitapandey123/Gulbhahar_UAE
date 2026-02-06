@@ -55,13 +55,6 @@ export function middleware(request: NextRequest) {
   // ❌ 404 ONLY for single-level unknown routes like "/xcvcx"
   const segments = cleanPath.split("/").filter(Boolean);
 
-  if (segments.length === 1) {
-    // single segment and not allowed, not redirectable → 404
-    const url = request.nextUrl.clone();
-    url.pathname = "/not-found";
-    return NextResponse.rewrite(url);
-  }
-
   // ✅ Allow deeper routes like "/xczfsd/csdf"
   return NextResponse.next();
 }

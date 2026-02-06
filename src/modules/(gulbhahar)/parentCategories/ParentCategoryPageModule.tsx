@@ -10,7 +10,7 @@ interface CategoryPageModuleProps {
 // Loading skeleton for the collection section
 function CollectionSkeleton() {
   return (
-    <div className="mt-10 mt-16 pt-2 lg:mt-10">
+    <div className="mt-16 pt-2 lg:mt-10">
       <div className="max-w-[1600px] mx-auto px-2">
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-5">
           {[...Array(8)].map((_, i) => (
@@ -32,7 +32,6 @@ export default async function ParentCategoryPageModule({
   const response = await parentCategoryPageService.getParentCategoryPageBySlug(parentCategory)
   const page = response.data
   if (!page) return null
-
   return (
     <>
       {/* Hero Section */}
@@ -41,7 +40,7 @@ export default async function ParentCategoryPageModule({
         subtitle={content.subtitle}
         heroImage={heroImage}
       /> */}
-      <div className="max-w-7xl mt-10 mt-16 pt-2 lg:mt-102xl:max-w-[1600px] mx-auto  font-raleway">
+      <div className="max-w-7xl  mt-16 pt-2 lg:mt-102xl:max-w-[1600px] mx-auto  font-raleway">
         {/* Product Collection Section */}
         <section className="pb-24">
           {/* <CategoryCollectionHeader parentCategory={parentCategory} /> */}
