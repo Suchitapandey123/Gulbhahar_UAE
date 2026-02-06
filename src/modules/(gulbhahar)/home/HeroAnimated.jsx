@@ -35,6 +35,7 @@ export default function ModernHeroAnimated() {
       image: "https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/1.webp",
       mobileImage:
         "https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/1-mobile.webp",
+        // mobileImage : "/1-mobile.webp",
       title: "GULBHAHAR",
       subtitle: "Heritage Reimagined",
       description: "Where traditional craftsmanship meets contemporary design",
@@ -52,10 +53,11 @@ export default function ModernHeroAnimated() {
     },
     {
       id: 2,
-      // image: "/2.webp",/
+      // image: "/2.webp",
       image: "https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/2.webp",
       mobileImage:
         "https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/2-mobile.webp",
+      // mobileImage : "/2-mobile.webp",
       title: "ARTISAN",
       subtitle: "Handcrafted Excellence",
       description: "Each piece tells a story of generations of artistry",
@@ -77,6 +79,7 @@ export default function ModernHeroAnimated() {
       image: "https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/3.webp",
       mobileImage:
         "https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/3-mobile.webp",
+      // mobileImage : "/3-mobile.webp",
       title: "LEGACY",
       subtitle: "Timeless Elegance",
       description: "Preserving tradition while embracing innovation",
@@ -321,8 +324,8 @@ export default function ModernHeroAnimated() {
                     </div>
 
                     {/* Gradient overlays */}
-                    {/* <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-black/60 via-black/40 to-transparent" />
-                    <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-black/40 via-transparent to-transparent" /> */}
+                    <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-black/60 via-black/40 to-transparent" />
+                    <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                   </motion.div>
                 </motion.div>
               );

@@ -8,22 +8,25 @@ export const Collections_Suits_All = async () => {
 
   if (products.length === 0) {
     return (
-      <div className="mt-16 pt-2 lg:mt-20  flex items-center justify-center min-h-[50vh]">
+      <div className="mt-10 pt-2 lg:mt-10 flex items-center justify-center min-h-[50vh]">
         <p className="text-gray-500">No products found</p>
       </div>
     );
   }
 
   return (
-    <div className="mt-16 pt-2 lg:mt-20 ">
+    <div className=" mt-10 pt-2 lg:mt-10">
       <div className="max-w-[1600px] mx-auto px-2 lg:px-4">
         {/* Header Section */}
         <div className="text-center mb-10 lg:mb-14">
           {/* <p className="text-sm tracking-[0.3em] text-red-800 uppercase mb-2">
             Handcrafted with Love
           </p> */}
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-gray-900 mb-4">
-            Our Suits Collections
+          <h1 className="group relative inline-block  bg-transparent overflow-hidden  text-[#000000] mb-4">
+            <div className="absolute inset-0 w-0 transition-all duration-300 ease-out group-hover:w-full" />
+            <span className="relative text-xl sm:text-2xl lg:text-3xl  font-medium tracking-[0.15em] uppercase">
+              Suits
+            </span>
           </h1>
           <div className="flex items-center justify-center gap-3">
             <span className="h-[1px] w-12 bg-red-800" />

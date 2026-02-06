@@ -474,9 +474,9 @@ export default function CategoryCollection_Filters({
                     {section.label}
                   </h3>
                   <div className="flex flex-wrap gap-2">
-                    {section.options.map((option) => (
+                    {section.options.map((option,idx) => (
                       <button
-                        key={option.value}
+                        key={idx}
                         onClick={() =>
                           handleFilterChange(section.name, option.value)
                         }

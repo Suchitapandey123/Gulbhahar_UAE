@@ -57,7 +57,7 @@ const productApi = {
 
   getSimilarProducts: async (productId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/products/get-similar-product?productId=${productId}`, {
+      const response = await fetch(`${API_BASE_URL}/new-api/products/get-similar-products/${productId}?limit=8`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -68,8 +68,11 @@ const productApi = {
           tags: ['products', `product-${productId}-similar`]
         },
       });
+      console.log(`${API_BASE_URL}/new-api/products/get-similar-product/${productId}`)
 
-      if (!response.ok) {
+
+      if (!response) {
+        console.log(response)
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 

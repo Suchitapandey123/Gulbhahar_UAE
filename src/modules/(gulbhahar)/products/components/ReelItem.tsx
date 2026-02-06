@@ -12,7 +12,6 @@ interface ReelItemProps {
 }
 
 const ReelItem = ({ reel, index, onClick }: ReelItemProps) => {
-  console.log(reel)
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMuted, setIsMuted] = useState(true);

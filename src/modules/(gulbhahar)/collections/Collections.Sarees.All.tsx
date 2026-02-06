@@ -7,14 +7,14 @@ export default async function Collections_Sarees_All() {
   const products = await productApi.getProductsByParentCategory("saree");
   if (products.length === 0) {
     return (
-      <div className="mt-16 pt-2 lg:mt-20  flex items-center justify-center min-h-[50vh]">
+      <div className="mt-10 pt-2 lg:mt-10 flex items-center justify-center min-h-[50vh]">
         <p className="text-gray-500">No products found</p>
       </div>
     );
   }
 
   return (
-    <div className="mt-16 pt-2 lg:mt-20 ">
+    <div className=" mt-10 pt-2 lg:mt-10">
       <div className="max-w-[1600px] mx-auto px-2 lg:px-4">
         {/* Header Section */}
         <div className="text-center mb-10 lg:mb-14">
@@ -22,7 +22,7 @@ export default async function Collections_Sarees_All() {
             Handcrafted with Love
           </p>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-gray-900 mb-4">
-            Our Collection
+            Our Collections
           </h1>
           <div className="flex items-center justify-center gap-3">
             <span className="h-[1px] w-12 bg-red-800" />

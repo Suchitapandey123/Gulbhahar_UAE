@@ -11,6 +11,10 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { parentCategory } = await params;
+  const response = await parentCategoryPageService.getParentCategoryPageBySlug(parentCategory)
+  const page = response.data
+
+
   const meta = categoryMetadata[
     parentCategory as keyof typeof categoryMetadata
   ] || {
@@ -19,27 +23,20 @@ export async function generateMetadata({
   };
   
   return {
-    title: meta.title,
-    description: meta.description,
+    title: page.metaTitle ||  `${parentCategory} | Gulbhahar Luxury Ethnic Wear`,
+    description: page.metaDescription || `Explore our exquisite collection of ${parentCategory}. Handcrafted luxury for every occasion.`,
     openGraph: {
-      title: meta.title,
-      description: meta.description,
-      images: [
-        {
-          url: "/images/luxury-hero.png",
-          width: 1200,
-          height: 630,
-          alt: parentCategory,
-        },
-      ],
+       title: page.metaTitle ||  `${parentCategory} | Gulbhahar Luxury Ethnic Wear`,
+    description: page.metaDescription || `Explore our exquisite collection of ${parentCategory}. Handcrafted luxury for every occasion.`,
     },
+    alternates :{
+      canonical : `https://www.gulbhahar.com/${parentCategory}`
+    }
   };
 }
 
 const page = async ({ params }: PageProps) => {
   const { parentCategory } = await params;
-  const response = await parentCategoryPageService.getParentCategoryPageBySlug(parentCategory)
-  const page = response.data
 
 
   return (

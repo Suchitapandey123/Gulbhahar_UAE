@@ -58,8 +58,8 @@ export interface ParentCategoryPageData {
 
 export interface GetParentCategoryPageBySlugResponse {
   success: boolean;
-  data?: ParentCategoryPageData;
-  message?: string;
+  data: ParentCategoryPageData;
+  message: string;
 }
 
 export const parentCategoryPageService = {

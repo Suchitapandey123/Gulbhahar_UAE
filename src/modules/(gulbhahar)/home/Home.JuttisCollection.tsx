@@ -15,12 +15,14 @@ interface HomeJuttisCollectionProps {
   newCollection: Product[];
   name: string;
   slug: string;
+  reverse ?: boolean;
 }
 
 const Home_JuttisCollection: React.FC<HomeJuttisCollectionProps> = ({
   newCollection,
   name,
   slug,
+  reverse
 }) => {
   const getSafeImageUrl = (product: Product): string => {
     try {
@@ -29,6 +31,11 @@ const Home_JuttisCollection: React.FC<HomeJuttisCollectionProps> = ({
       return "/assets/Image/fallback.jpg";
     }
   };
+
+  // Handle reverse sorting
+  const displayCollection = reverse
+    ? [...newCollection].reverse().slice(0, 8)
+    : newCollection.slice(0, 8);
 
   return (
     <section className="relative overflow-visible">
@@ -69,7 +76,7 @@ const Home_JuttisCollection: React.FC<HomeJuttisCollectionProps> = ({
         <div>
           {newCollection && newCollection.length > 0 ? (
             <HorizontalCarousel className="flex overflow-x-auto gap-4 sm:gap-6 lg:gap-8 pb-4 pl-4 md:pl-0 snap-x snap-mandatory">
-              {newCollection.slice(0, 8).map((product, index) => (
+              {displayCollection.map((product, index) => (
                 <div
                   key={`${product.productId}-new-collection`}
                   className="flex-none w-[240px] sm:w-[340px] snap-center"

@@ -24,7 +24,7 @@ const getProductBundle = cache(
     productID: string,
   ): Promise<{
     product: Product | null;
-    similarProducts: SimilarProduct[];
+    similarProducts: SimilarProduct;
   }> => {
     try {
       const [product, similarProducts] = await Promise.all([
@@ -34,11 +34,11 @@ const getProductBundle = cache(
 
       return {
         product,
-        similarProducts: similarProducts ?? [],
+        similarProducts: similarProducts ?? { success: false, count: 0, products: [] },
       };
     } catch (error) {
       console.error("Product bundle fetch failed:", error);
-      return { product: null, similarProducts: [] };
+      return { product: null, similarProducts: { success: false, count: 0, products: [] } };
     }
   },
 );

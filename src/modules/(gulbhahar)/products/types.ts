@@ -20,6 +20,7 @@ export type Product = {
   availableColors?: ColorOption[];
   availableCollections?: SizeOption[];
   availableSizes?: SizeOption[];
+  availableSeasons?: SizeOption[];
   availableFabrics?: SizeOption[];
   seo?: Seo;
   videos?: VideosOption[]
@@ -51,13 +52,7 @@ export type SizeOption = {
 };
 
 export type SimilarProduct = {
-  productId: string;
-  id?: string;
-  name?: string;
-  price: number;
-  originalPrice?: number;
-  images?: string[][];
-  stock?: number;
-  sizes?: string[];
-  colors?: string[];
+ success : boolean
+ count : number
+ products : Product[]
 };

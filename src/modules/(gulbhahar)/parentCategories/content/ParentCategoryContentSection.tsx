@@ -113,7 +113,7 @@ const ParentCategoryContentSection = ({ page }: ContentSectionProps) => {
       {/* Main Heading */}
       <div className="text-center sm:text-start mb-8 sm:mb-12">
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight px-2">
-          {p.metaTitle}{" "}
+          {p.onPageTitle}{" "}
         </h1>
       </div>
 

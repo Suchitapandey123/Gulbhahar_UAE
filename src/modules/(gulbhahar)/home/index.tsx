@@ -30,7 +30,7 @@ const HomePage = async () => {
         <Home_WatchAndShop />
         <Home_AvailableCollections />
         <Home_JuttisCollection slug={"/suit"} name={'Suits Collection'} newCollection={suitsProducts} />
-        <Home_JuttisCollection slug={"/bags"} name={'Bags Collection'} newCollection={bagsProducts} />
+        <Home_JuttisCollection reverse = {true}  slug={"/bags"} name={'Bags Collection'} newCollection={bagsProducts} />
         <Home_JuttisCollection slug={"/juttis"} name={'Juttis Collection'} newCollection={juttisProducts} />
         <AboutUsSection />
         <Home_NewCulture />

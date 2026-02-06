@@ -9,7 +9,7 @@ import { Product, SimilarProduct } from "./types";
 
 interface ProductModuleProps {
   product: Product;
-  similarProducts: SimilarProduct[];
+  similarProducts: SimilarProduct ;
 }
 
 const CUSTOM_RED = "hsl(359.39deg 63.87% 30.39%)";

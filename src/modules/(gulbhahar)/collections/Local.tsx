@@ -8,14 +8,14 @@ export default async function LocalCollection() {
 
   if (products.length === 0) {
     return (
-      <div className="mt-16 pt-2 lg:mt-20 flex items-center justify-center min-h-[50vh]">
+      <div className="mt-10 mt-16 pt-2 lg:mt-10flex items-center justify-center min-h-[50vh]">
         <p className="text-gray-500">No products found</p>
       </div>
     );
   }
 
   return (
-    <div className="mt-16 pt-2 lg:mt-20 ">
+    <div className="mt-10 mt-16 pt-2 lg:mt-10">
       <div className="max-w-[1600px] mx-auto px-2 lg:px-4">
         {/* Header Section */}
         <div className="text-center mb-10 lg:mb-14">

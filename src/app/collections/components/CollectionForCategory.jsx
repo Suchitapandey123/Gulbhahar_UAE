@@ -314,7 +314,7 @@ export default function CollectionForCategory({
   }
 
   return (
-    <div className=" mt-16 pt-2 lg:mt-20">
+    <div className=" mt-10 pt-2 lg:mt-10">
       <ToastContainer />
 
       {/* <div className="max-w-[1600px] ml-2 mx-auto flex flex-col lg:flex-row"> */}
