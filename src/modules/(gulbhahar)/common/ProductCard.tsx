@@ -1,5 +1,6 @@
 "use client";
 import { useCart } from "@/providers/ContextProviders/CartContext";
+import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -232,8 +233,8 @@ export default function ProductCard({
               </span>
             )}
 
-            {/* Add to Cart Button - temporarily hidden */}
-            {/* <div className="absolute bottom-0 left-0 right-0 bg-red-900 text-white text-center py-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 transform translate-y-0 md:translate-y-full md:group-hover:translate-y-0 z-10">
+            {/* Add to Cart Button - Desktop Hover Only */}
+            <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-red-900 text-white text-center py-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-full group-hover:translate-y-0 z-10">
               <button
                 onClick={handleAddToCart}
                 disabled={isAddingThis}
@@ -251,7 +252,7 @@ export default function ProductCard({
                   </>
                 )}
               </button>
-            </div> */}
+            </div>
           </div>
 
           {/* Product Info */}

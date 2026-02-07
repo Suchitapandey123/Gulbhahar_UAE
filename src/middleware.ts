@@ -11,6 +11,7 @@ const REDIRECT_RULES: RedirectRule[] = [
   { match: ["suits"], redirectTo: "/suit" },
   { match: ["sarees"], redirectTo: "/saree" },
   { match: ["bag"], redirectTo: "/bags" },
+  { match: ["collection"], redirectTo: "/collections" },
 ];
 
 const ALLOWED_BASE_ROUTES = REDIRECT_RULES.map(r => r.redirectTo);

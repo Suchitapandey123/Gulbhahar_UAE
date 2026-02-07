@@ -9,6 +9,7 @@ import { PageData, pageService } from "../../api/page-service/pageService";
 import QuickLinks from "../components/QuickLinks";
 import QuickTag from "../components/QuickTag";
 import ContentSection from "./components/ContentSection";
+import { CategoryCollection_ParentCategoryProducts } from "@/modules/(gulbhahar)/categoryPages/CategoryCollection.ParentCategoryProducts";
 
 // ISR Configuration: Revalidate every 7 days (604800 seconds)
 export const revalidate = 604800;
@@ -138,10 +139,13 @@ export default async function Page({ params: rawParams }: Props) {
         <CategoryCollection products={products} />
       )}
       {products.length === 0 && (
-        <CategoryCollection_DummyProducts
+        <>
+         <CategoryCollection_DummyProducts
           parentCategory={parentCategory}
           slug={slug}
         />
+        <CategoryCollection_ParentCategoryProducts parentCategory={parentCategory} />
+        </>
       )}
       <CategoryCollection_MatchingProducts />
       <ContentSection page={page} />

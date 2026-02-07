@@ -94,21 +94,24 @@ export default function DummyProductCard({
 
   return (
     <div
-      className={`group w-full opacity-75 ${viewMode === "list"
+      className={`group w-full opacity-75 ${
+        viewMode === "list"
           ? "bg-white rounded-lg shadow-sm border border-gray-200"
           : ""
-        }`}
+      }`}
     >
       <div
-        className={`cursor-not-allowed relative ${viewMode === "grid" ? "space-y-3" : "flex gap-4 p-4"
-          }`}
+        className={`cursor-not-allowed relative ${
+          viewMode === "grid" ? "space-y-3" : "flex gap-4 p-4"
+        }`}
       >
         {/* Image Section */}
         <div
-          className={`relative overflow-hidden ${viewMode === "grid"
+          className={`relative overflow-hidden ${
+            viewMode === "grid"
               ? "w-full aspect-[3/4]"
               : "w-32 h-32 sm:w-40 sm:h-40 flex-shrink-0 rounded-lg"
-            }`}
+          }`}
         >
           <div className="relative w-full h-full bg-white">
             <Image
@@ -118,8 +121,9 @@ export default function DummyProductCard({
               priority
               src={imageSrc}
               alt={item.name}
-              className={`w-full h-full object-fit ${viewMode === "list" ? "rounded-lg" : ""
-                }`}
+              className={`w-full h-full object-fit ${
+                viewMode === "list" ? "rounded-lg" : ""
+              }`}
               onError={(e) => {
                 // console.log(`Image ${index} failed to load (403 or other error), using fallback: ${FALLBACK_IMAGES[index % FALLBACK_IMAGES.length]}`);
                 setImageError(true);
@@ -135,10 +139,9 @@ export default function DummyProductCard({
             </div>
           </div>
 
-
-          {/* Add to Cart Button - Disabled */}
+          {/* Add to Cart Button - Disabled (Desktop Only) */}
           {viewMode === "grid" && (
-            <div className="absolute bottom-0 left-0 right-0 bg-gray-500 text-white text-center py-2 z-10">
+            <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-gray-500 text-white text-center py-2 z-10">
               <button
                 disabled
                 className="w-full text-sm font-semibold flex items-center justify-center gap-2 cursor-not-allowed opacity-75"
@@ -156,7 +159,8 @@ export default function DummyProductCard({
             <div className="flex items-start justify-between gap-2">
               <div className="flex-1 min-w-0">
                 <h3 className="text-xs sm:text-sm font-semibold text-gray-900 line-clamp-2 leading-tight">
-                  {item.name?.toUpperCase() || "PRODUCT NAME"}{ parentCategory.toUpperCase()}
+                  {item.name?.toUpperCase() || "PRODUCT NAME"}
+                  {parentCategory.toUpperCase()}
                 </h3>
               </div>
               <div className="flex-shrink-0 text-right">
@@ -174,20 +178,15 @@ export default function DummyProductCard({
               </div>
             </div>
             {/* Second Row - Stock Status */}
-          <div className="flex items-center justify-start text-xs">
-            <div className="flex-1">
-              {item.stock && item.stock <= 5 && item.stock > 0 ? (
-                <span className="text-red-600 font-bold">
-                  Out Of Stock
-                </span>
-              ) : (
-               <span className="text-red-600 font-bold">
-                  Out Of Stock
-                </span>
-              )}
+            <div className="flex items-center justify-start text-xs">
+              <div className="flex-1">
+                {item.stock && item.stock <= 5 && item.stock > 0 ? (
+                  <span className="text-red-600 font-bold">Out Of Stock</span>
+                ) : (
+                  <span className="text-red-600 font-bold">Out Of Stock</span>
+                )}
+              </div>
             </div>
-          </div>
- 
           </>
         ) : (
           <div className="flex-1">

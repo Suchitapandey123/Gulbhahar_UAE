@@ -1,8 +1,8 @@
 "use client";
-import { useRef, useEffect } from "react";
-import Link from "next/link";
-import Image from "next/image";
 import { ShoppingBag } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useRef } from "react";
 
 export default function ProductCard({
   item,
@@ -46,27 +46,29 @@ export default function ProductCard({
 
   const imagesArr = Array.isArray(item.image) ? item.image : [item.image];
   const imagesToShow = Array.isArray(imagesArr[0]) ? imagesArr[0] : imagesArr;
-  const currentImageIndex = currentImageIndices[item.id || item.productId || index] || 0;
+  const currentImageIndex =
+    currentImageIndices[item.id || item.productId || index] || 0;
 
-// console.log(`${imagesToShow[0]}${imagesToShow[0].includes("?") ? "&" : "?"}v=${Date.now()}`)
+  // console.log(`${imagesToShow[0]}${imagesToShow[0].includes("?") ? "&" : "?"}v=${Date.now()}`)
 
   const cardContent = (
     <div
-      className={`cursor-pointer relative ${viewMode === "grid" ? "space-y-3" : "flex gap-4 p-4"
-        }`}
+      className={`cursor-pointer relative ${
+        viewMode === "grid" ? "space-y-3" : "flex gap-4 p-4"
+      }`}
       onMouseEnter={() => handleMouseEnter(item.id || item.productId)}
       onMouseLeave={handleMouseLeave}
     >
       {/* Image Section */}
       <div
-        className={`relative overflow-hidden ${viewMode === "grid"
-          ? "w-full aspect-[3/4]"
-          : "w-32 h-32 sm:w-40 sm:h-40 flex-shrink-0 rounded-lg"
-          }`}
+        className={`relative overflow-hidden ${
+          viewMode === "grid"
+            ? "w-full aspect-[3/4]"
+            : "w-32 h-32 sm:w-40 sm:h-40 flex-shrink-0 rounded-lg"
+        }`}
       >
         <div className="relative w-full h-full bg-white">
           {imagesToShow.map((image, idx) => (
-
             <Image
               key={idx}
               src={image || "/about/lal-ishq-1.jpg"}
@@ -74,15 +76,17 @@ export default function ProductCard({
               fill
               priority={index < 2 && idx === 0}
               loading={index < 2 && idx === 0 ? undefined : "lazy"}
-              sizes={viewMode === "grid"
-                ? "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                : "(max-width: 640px) 128px, 160px"
+              sizes={
+                viewMode === "grid"
+                  ? "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                  : "(max-width: 640px) 128px, 160px"
               }
               quality={65}
               placeholder="blur"
               blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${currentImageIndex === idx ? "opacity-100" : "opacity-0"
-                } ${viewMode === "list" ? "rounded-lg" : ""}`}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${
+                currentImageIndex === idx ? "opacity-100" : "opacity-0"
+              } ${viewMode === "list" ? "rounded-lg" : ""}`}
             />
           ))}
 
@@ -96,8 +100,9 @@ export default function ProductCard({
             {imagesToShow.map((_, idx) => (
               <div
                 key={idx}
-                className={`w-2 h-2 rounded-full transition-all ${currentImageIndex === idx ? "bg-red-900 w-3" : "bg-white/80"
-                  }`}
+                className={`w-2 h-2 rounded-full transition-all ${
+                  currentImageIndex === idx ? "bg-red-900 w-3" : "bg-white/80"
+                }`}
               />
             ))}
           </div>
@@ -116,15 +121,15 @@ export default function ProductCard({
         {item.originalPrice && item.originalPrice > item.price && (
           <span className="absolute top-2 right-2 bg-green-600 text-white text-xs px-2 py-1 rounded z-10">
             {Math.round(
-              ((item.originalPrice - item.price) / item.originalPrice) * 100
+              ((item.originalPrice - item.price) / item.originalPrice) * 100,
             )}
             % OFF
           </span>
         )}
 
-        {/* Add to Cart Button */}
+        {/* Add to Cart Button - Desktop Hover Only */}
         {viewMode === "grid" && (
-          <div className="absolute bottom-0 left-0 right-0 bg-red-900 text-white text-center py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-full group-hover:translate-y-0 z-10">
+          <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-red-900 text-white text-center py-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-full group-hover:translate-y-0 z-10">
             <button
               onClick={(e) => handleAddToCart(e, item)}
               disabled={addingToCart === (item.productId || item.id)}
@@ -160,12 +165,11 @@ export default function ProductCard({
                 <span className="text-sm font-bold text-red-600">
                   ₹{item.price.toLocaleString()}
                 </span>
-                {item.originalPrice &&
-                  item.originalPrice > item.price && (
-                    <span className="text-xs text-gray-400 line-through">
-                      ₹{item.originalPrice.toLocaleString()}
-                    </span>
-                  )}
+                {item.originalPrice && item.originalPrice > item.price && (
+                  <span className="text-xs text-gray-400 line-through">
+                    ₹{item.originalPrice.toLocaleString()}
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -177,9 +181,7 @@ export default function ProductCard({
                   {item.stock} left
                 </span>
               ) : (
-                <span className="text-green-600 font-medium">
-                  In Stock
-                </span>
+                <span className="text-green-600 font-medium">In Stock</span>
               )}
             </div>
           </div>
@@ -209,9 +211,7 @@ export default function ProductCard({
               )}
             </div>
           </div>
-
         </>
-
       ) : (
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -227,10 +227,11 @@ export default function ProductCard({
 
   return (
     <div
-      className={`group w-full ${viewMode === "list"
-        ? "bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
-        : ""
-        }`}
+      className={`group w-full ${
+        viewMode === "list"
+          ? "bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+          : ""
+      }`}
     >
       {category !== "sarees" ? (
         <Link href={`/products/${item.productId || item.id}`}>

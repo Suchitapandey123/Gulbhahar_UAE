@@ -1,5 +1,9 @@
+"use client";
+import { useCart } from "@/providers/ContextProviders/CartContext";
+import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { toast } from "sonner";
 import { Product } from "../types";
 import { ImageSlider } from "./ImageSlider";
 
@@ -12,6 +16,8 @@ export const SimilarProductCard = ({
   item,
   customRed,
 }: SimilarProductCardProps) => {
+  const { addToCart, addingToCart } = useCart();
+
   const discount =
     item.originalPrice && item.originalPrice > item.price
       ? Math.round(
@@ -19,19 +25,58 @@ export const SimilarProductCard = ({
         )
       : 0;
 
-  const sizes = item.availableSizes?.map((s) => s.name) || [];
-  const colors = item.availableColors || [];
+  const sizes: string[] =
+    (item as any).sizes || item.availableSizes?.map((s: any) => s.name) || [];
+  const colors: any[] = (item as any).colors || item.availableColors || [];
 
   const imagesToShow: string[] = Array.isArray(item.images?.[0])
-    ? (item.images[0] as string[])
+    ? (item.images![0] as string[])
     : item.images?.[0]
-      ? [item.images[0] as string]
+      ? [item.images![0] as unknown as string]
       : [];
 
   const productName = item.name || "Product";
 
+  const handleAddToCart = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    try {
+      const selectedColor = colors.length > 0 ? colors[0] : "default";
+      const selectedSize = sizes.length > 0 ? sizes[0] : "default";
+
+      const cartItemWithVariants = {
+        ...item,
+        id: item.productId || (item as any).id,
+        productId: item.productId || (item as any).id,
+        selectedColor,
+        selectedSize,
+        colors,
+        sizes,
+      };
+
+      const result = await addToCart(cartItemWithVariants);
+
+      if (result.success) {
+        toast.success(
+          `${productName} (${selectedSize}, ${selectedColor}) added to cart!`,
+        );
+      } else {
+        toast.error("Failed to add item to cart. Please try again.");
+      }
+    } catch (error) {
+      toast.error("Failed to add item to cart.");
+    }
+  };
+
+  const isAddingThis = addingToCart === (item.productId || (item as any).id);
+
   return (
-    <article className="group w-full" itemScope itemType="https://schema.org/Product">
+    <article
+      className="group w-full"
+      itemScope
+      itemType="https://schema.org/Product"
+    >
       <Link
         href={`/products/${item.productId}`}
         className="block"
@@ -65,6 +110,27 @@ export const SimilarProductCard = ({
                 {discount}% OFF
               </span>
             )}
+
+            {/* Add to Cart Button - Desktop Hover Only */}
+            <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-red-900 text-white text-center py-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-full group-hover:translate-y-0 z-10">
+              <button
+                onClick={handleAddToCart}
+                disabled={isAddingThis}
+                className="w-full text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-75"
+              >
+                {isAddingThis ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>Adding...</span>
+                  </>
+                ) : (
+                  <>
+                    <ShoppingBag size={16} />
+                    <span>Add to Cart</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
 
           {/* Product Info — server-rendered for SEO */}
@@ -77,10 +143,18 @@ export const SimilarProductCard = ({
               >
                 {productName}
               </h3>
-              <div className="flex flex-col items-end flex-shrink-0" itemProp="offers" itemScope itemType="https://schema.org/Offer">
+              <div
+                className="flex flex-col items-end flex-shrink-0"
+                itemProp="offers"
+                itemScope
+                itemType="https://schema.org/Offer"
+              >
                 <meta itemProp="priceCurrency" content="INR" />
                 <meta itemProp="price" content={String(item.price)} />
-                <meta itemProp="availability" content="https://schema.org/InStock" />
+                <meta
+                  itemProp="availability"
+                  content="https://schema.org/InStock"
+                />
                 <span
                   className="text-sm sm:text-base font-bold"
                   style={{ color: customRed }}
@@ -100,14 +174,22 @@ export const SimilarProductCard = ({
               <div className="flex items-center justify-between gap-2 pt-0.5">
                 {/* Colors - Left */}
                 {colors.length > 0 ? (
-                  <div className="flex items-center gap-1.5" aria-label="Available colors">
-                    {colors.slice(0, 5).map((color) => (
+                  <div
+                    className="flex items-center gap-1.5"
+                    aria-label="Available colors"
+                  >
+                    {colors.slice(0, 5).map((color: any, index: number) => (
                       <span
-                        key={color.name}
-                        title={color.name}
-                        aria-label={color.name}
+                        key={typeof color === "string" ? color : color.name}
+                        title={typeof color === "string" ? color : color.name}
+                        aria-label={
+                          typeof color === "string" ? color : color.name
+                        }
                         className="w-4 h-4 sm:w-[18px] sm:h-[18px] rounded-full ring-1 ring-gray-200 ring-offset-1"
-                        style={{ backgroundColor: color.hexcode }}
+                        style={{
+                          backgroundColor:
+                            typeof color === "string" ? color : color.hexcode,
+                        }}
                       />
                     ))}
                     {colors.length > 5 && (
@@ -116,15 +198,20 @@ export const SimilarProductCard = ({
                       </span>
                     )}
                   </div>
-                ) : <div />}
+                ) : (
+                  <div />
+                )}
 
                 {/* Sizes - Right */}
                 {sizes.length > 0 && (
-                  <div className="flex items-center gap-1 flex-wrap justify-end" aria-label="Available sizes">
+                  <div
+                    className="flex items-center gap-1 flex-wrap justify-end"
+                    aria-label="Available sizes"
+                  >
                     <span className="text-gray-600 text-[10px] sm:text-xs font-medium px-1.5 py-0.5 rounded">
                       Size :
                     </span>
-                    {sizes.slice(0, 3).map((size) => (
+                    {sizes.slice(0, 3).map((size: string) => (
                       <span
                         key={size}
                         className="bg-gray-100 text-gray-600 text-[10px] sm:text-xs font-medium px-1.5 py-0.5 rounded"

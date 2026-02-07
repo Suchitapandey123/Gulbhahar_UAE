@@ -14,7 +14,7 @@ export default async function Collections_Juttis_All() {
   }
 
   return (
-    <div className="mt-16  pt-2 lg:mt-20">
+    <div className="mt-16  pt-2 lg:mt-16">
       <div className="max-w-[1600px] mx-auto px-2 lg:px-4">
         {/* Header Section */}
         <div className="text-center mb-10 lg:mb-14">

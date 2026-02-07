@@ -1,19 +1,18 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { signOut } from "next-auth/react";
 import { useAuth } from "@/providers/ContextProviders/AuthContext";
 import { useCart } from "@/providers/ContextProviders/CartContext";
+import { signOut } from "next-auth/react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
-import SearchPopup from "./SearchPopup";
+import CollectionsDropdown from "@/modules/(gulbhahar)/home/navbar/Navbar.CollectionDropdown";
+import { Menu, X } from "lucide-react";
 import CartPage from "./CartPage";
-import Logo from "./Logo";
 import DesktopNav from "./DesktopNav";
-import MobileNav from "./MobileNav";
-import CollectionsDropdown from "./CollectionsDropdown";
 import MobileBackdrop from "./MobileBackdrop";
 import MobileMenuSidebar from "./MobileMenuSidebar";
-import { Menu, X } from "lucide-react";
+import MobileNav from "./MobileNav";
+import SearchPopup from "./SearchPopup";
 
 const Navbar = () => {
   const {
@@ -88,7 +87,7 @@ const Navbar = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
           },
-        }
+        },
       );
 
       if (response.ok) {
@@ -234,7 +233,7 @@ const Navbar = () => {
             ? "bg-white/95 shadow-lg py-2.5 lg:py-3 border-b border-gray-100/50"
             : "bg-transparent shadow-none py-3 lg:py-4 border-b border-white/10"
         }`}
-        style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999 }}
+        style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 9999 }}
       >
         <div className="max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-8">
           <div className="flex items-center justify-between">
