@@ -1,3 +1,4 @@
+import { CultureItem } from "@/app/api/home/type";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -14,70 +15,75 @@ interface HeritageElement {
   region: string;
 }
 
-const Home_NewCulture: React.FC = () => {
+interface  CultureProps {
+  Culture : CultureItem[]
+}
+
+
+const Home_NewCulture: React.FC<CultureProps> = ({Culture}) => {
   // Heritage craft elements inspired by traditional Indian artistry
-  const heritageElements: HeritageElement[] = [
-    {
-      id: 1,
-      title: "Royal Embroidery",
-      subtitle: "Zardozi & Gold Thread Work",
-      description:
-        "At Gulbhahar, royal embroidery is part of our daily work and tradition, and each piece is made slowly, with focus on small details, just like in earlier times. Zardozi and gold thread work are old techniques that people in Indian culture have been using for many years. People usually use them for weddings and special occasions. We like to keep our designs simple and true to where they come from",
-      image: "/home-page/royal-embroidery-optimized.webp",
-      color: "from-amber-700 via-yellow-600 to-orange-500",
-      accent: "border-amber-400",
-      heritage: "1000+ Years",
-      region: "Lucknow",
-    },
-    {
-      id: 2,
-      title: "Handwoven Textiles",
-      subtitle: "Banarasi & Silk Weaving",
-      description:
-        "The handloom fabrics have been a tradition in India, and Gulbhahar is carrying forward this tradition with love and care. Banarasi and Silk Weaving are traditional ways of weaving that have been passed down from generation to generation. These Beautiful Fabrics are famous for their beauty and strength.",
-      image: "/home-page/handwoven-optimized.webp",
-      color: "from-purple-700 via-indigo-600 to-blue-500",
-      accent: "border-purple-400",
-      heritage: "800+ Years",
-      region: "Varanasi",
-    },
-    {
-      id: 3,
-      title: "Leather Artistry",
-      subtitle: "Traditional Juttiwork",
-      description:
-        "Traditional juttiwork is an old indian craft; it takes time, skill and patience. The leather is prepared by hand, so it feels soft and easy to wear. Small embroidery details are added, giving each piece a traditional look without making it heavy. This craft blends well with suits that carry light embroidery, adding a complete look.",
-      image: "/home-page/leather-artistry-2-optimized.webp",
-      color: "from-emerald-700 via-teal-600 to-cyan-500",
-      accent: "border-emerald-400",
-      heritage: "500+ Years",
-      region: "Punjab",
-    },
-    {
-      id: 4,
-      title: "Gemstone Craft",
-      subtitle: "Crystal Embellishment & Kundan Work ",
-      description:
-        "Gemstone work is a craft where small details matter. Crystal and Kundan work have been used in indian dressing, mainly for celebrations and important events. This craft is done with a light hand, keeping the look clean and wearable.",
-      image: "/home-page/gemstone-craft2-optimized.webp",
-      color: "from-rose-700 via-pink-600 to-red-500",
-      accent: "border-rose-400",
-      heritage: "600+ Years",
-      region: "Rajasthan",
-    },
-    {
-      id: 5,
-      title: "Ornate Metals",
-      subtitle: "Gota Patti, Sequins & Foil Work",
-      description:
-        "Ornate Metals (Gota Patti, Sequins & Foil Work) Gota patti, sequins, and foil work have been a part of Indian clothing for a very long time. This type of work is generally seen in weddings, festivals, and family functions. At Gulbhahar, this type of work is done in a calm and simple way, without making the clothes feel heavy and uncomfortable.",
-      image: "/home-page/ornate-metals-optimized.webp",
-      color: "from-gray-700 via-slate-600 to-zinc-500",
-      accent: "border-gray-400",
-      heritage: "700+ Years",
-      region: "Bidar",
-    },
-  ];
+  // const Culture: HeritageElement[] = [
+  //   {
+  //     id: 1,
+  //     title: "Royal Embroidery",
+  //     subtitle: "Zardozi & Gold Thread Work",
+  //     description:
+  //       "At Gulbhahar, royal embroidery is part of our daily work and tradition, and each piece is made slowly, with focus on small details, just like in earlier times. Zardozi and gold thread work are old techniques that people in Indian culture have been using for many years. People usually use them for weddings and special occasions. We like to keep our designs simple and true to where they come from",
+  //     image: "/home-page/royal-embroidery-optimized.webp",
+  //     color: "from-amber-700 via-yellow-600 to-orange-500",
+  //     accent: "border-amber-400",
+  //     heritage: "1000+ Years",
+  //     region: "Lucknow",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Handwoven Textiles",
+  //     subtitle: "Banarasi & Silk Weaving",
+  //     description:
+  //       "The handloom fabrics have been a tradition in India, and Gulbhahar is carrying forward this tradition with love and care. Banarasi and Silk Weaving are traditional ways of weaving that have been passed down from generation to generation. These Beautiful Fabrics are famous for their beauty and strength.",
+  //     image: "/home-page/handwoven-optimized.webp",
+  //     color: "from-purple-700 via-indigo-600 to-blue-500",
+  //     accent: "border-purple-400",
+  //     heritage: "800+ Years",
+  //     region: "Varanasi",
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "Leather Artistry",
+  //     subtitle: "Traditional Juttiwork",
+  //     description:
+  //       "Traditional juttiwork is an old indian craft; it takes time, skill and patience. The leather is prepared by hand, so it feels soft and easy to wear. Small embroidery details are added, giving each piece a traditional look without making it heavy. This craft blends well with suits that carry light embroidery, adding a complete look.",
+  //     image: "/home-page/leather-artistry-2-optimized.webp",
+  //     color: "from-emerald-700 via-teal-600 to-cyan-500",
+  //     accent: "border-emerald-400",
+  //     heritage: "500+ Years",
+  //     region: "Punjab",
+  //   },
+  //   {
+  //     id: 4,
+  //     title: "Gemstone Craft",
+  //     subtitle: "Crystal Embellishment & Kundan Work ",
+  //     description:
+  //       "Gemstone work is a craft where small details matter. Crystal and Kundan work have been used in indian dressing, mainly for celebrations and important events. This craft is done with a light hand, keeping the look clean and wearable.",
+  //     image: "/home-page/gemstone-craft2-optimized.webp",
+  //     color: "from-rose-700 via-pink-600 to-red-500",
+  //     accent: "border-rose-400",
+  //     heritage: "600+ Years",
+  //     region: "Rajasthan",
+  //   },
+  //   {
+  //     id: 5,
+  //     title: "Ornate Metals",
+  //     subtitle: "Gota Patti, Sequins & Foil Work",
+  //     description:
+  //       "Ornate Metals (Gota Patti, Sequins & Foil Work) Gota patti, sequins, and foil work have been a part of Indian clothing for a very long time. This type of work is generally seen in weddings, festivals, and family functions. At Gulbhahar, this type of work is done in a calm and simple way, without making the clothes feel heavy and uncomfortable.",
+  //     image: "/home-page/ornate-metals-optimized.webp",
+  //     color: "from-gray-700 via-slate-600 to-zinc-500",
+  //     accent: "border-gray-400",
+  //     heritage: "700+ Years",
+  //     region: "Bidar",
+  //   },
+  // ];
 
   return (
     <section className="w-full relative overflow-hidden bg-gradient-to-br from-cream-50 via-stone-50 to-amber-50">
@@ -147,12 +153,12 @@ const Home_NewCulture: React.FC = () => {
                 {/* Featured Royal Embroidery */}
                 <div className="col-span-6 row-span-5 relative group cursor-pointer">
                   <div
-                    className={`relative w-full h-full bg-gradient-to-br ${heritageElements[0].color} rounded-3xl overflow-hidden shadow-2xl ${heritageElements[0].accent} border-2`}
+                    className={`relative w-full h-full bg-gradient-to-br ${Culture[0].color} rounded-3xl overflow-hidden shadow-2xl ${Culture[0].accent} border-2`}
                   >
                     <div className="absolute inset-0">
                       <Image
-                        src={heritageElements[0].image}
-                        alt={heritageElements[0].title}
+                        src={Culture[0].image}
+                        alt={Culture[0].title}
                         fill
                         quality={95}
                         className="object-cover opacity-50"
@@ -164,25 +170,25 @@ const Home_NewCulture: React.FC = () => {
                         <div className="text-right">
                           <div className="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1 mb-2">
                             <span className="text-white/90 text-sm font-medium">
-                              {heritageElements[0].region}
+                              {Culture[0].region}
                             </span>
                           </div>
                           <div className="bg-amber-500/30 backdrop-blur-sm rounded-lg px-3 py-1">
                             <span className="text-white text-xs">
-                              {heritageElements[0].heritage}
+                              {Culture[0].heritage}
                             </span>
                           </div>
                         </div>
                       </div>
                       <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 md:p-6 border border-white/20">
                         <h3 className="text-2xl md:text-4xl font-light text-white mb-2 md:mb-3">
-                          {heritageElements[0].title}
+                          {Culture[0].title}
                         </h3>
                         <p className="text-white/90 text-base md:text-lg mb-3 md:mb-4 font-light">
-                          {heritageElements[0].subtitle}
+                          {Culture[0].subtitle}
                         </p>
                         <p className="text-white/80 text-sm leading-relaxed">
-                          {heritageElements[0].description}
+                          {Culture[0].description}
                         </p>
                       </div>
                     </div>
@@ -192,12 +198,12 @@ const Home_NewCulture: React.FC = () => {
                 {/* Handwoven Textiles */}
                 <div className="col-span-3 row-span-4 relative group cursor-pointer">
                   <div
-                    className={`relative w-full h-full bg-gradient-to-br ${heritageElements[1].color} rounded-2xl overflow-hidden shadow-xl ${heritageElements[1].accent} border-2`}
+                    className={`relative w-full h-full bg-gradient-to-br ${Culture[1].color} rounded-2xl overflow-hidden shadow-xl ${Culture[1].accent} border-2`}
                   >
                     <div className="absolute inset-0">
                       <Image
-                        src={heritageElements[1].image}
-                        alt={heritageElements[1].title}
+                        src={Culture[1].image}
+                        alt={Culture[1].title}
                         fill
                         quality={95}
                         className="object-cover opacity-50"
@@ -206,21 +212,21 @@ const Home_NewCulture: React.FC = () => {
                     <div className="relative z-10 p-4 md:p-6 h-full flex flex-col justify-between">
                       <div className="flex items-center justify-between">
                         <span className="text-purple-200 text-xs bg-purple-500/20 px-2 py-1 rounded-full">
-                          {heritageElements[1].heritage}
+                          {Culture[1].heritage}
                         </span>
                       </div>
                       <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 md:p-4">
                         <h3 className="text-xl md:text-2xl font-light text-white mb-1 md:mb-2">
-                          {heritageElements[1].title}
+                          {Culture[1].title}
                         </h3>
                         <p className="text-white/80 text-sm">
-                          {heritageElements[1].subtitle}
+                          {Culture[1].subtitle}
                         </p>
                         <p className="text-white/80 my-1 text-sm leading-relaxed line-clamp-3">
-                          {heritageElements[1].description}
+                          {Culture[1].description}
                         </p>
                         <p className="text-white/70 text-xs mt-2">
-                          {heritageElements[1].region}
+                          {Culture[1].region}
                         </p>
                       </div>
                     </div>
@@ -230,12 +236,12 @@ const Home_NewCulture: React.FC = () => {
                 {/* Leather Artistry */}
                 <div className="col-span-3 row-span-4 relative group cursor-pointer">
                   <div
-                    className={`relative w-full h-full bg-gradient-to-br ${heritageElements[2].color} rounded-2xl overflow-hidden shadow-xl ${heritageElements[2].accent} border-2`}
+                    className={`relative w-full h-full bg-gradient-to-br ${Culture[2].color} rounded-2xl overflow-hidden shadow-xl ${Culture[2].accent} border-2`}
                   >
                     <div className="absolute inset-0">
                       <Image
-                        src={heritageElements[2].image}
-                        alt={heritageElements[2].title}
+                        src={Culture[2].image}
+                        alt={Culture[2].title}
                         fill
                         quality={95}
                         className="object-cover opacity-50"
@@ -244,21 +250,21 @@ const Home_NewCulture: React.FC = () => {
                     <div className="relative z-10 p-4 md:p-6 h-full flex flex-col justify-between">
                       <div className="flex items-center justify-between">
                         <span className="text-emerald-200 text-xs bg-emerald-500/20 px-2 py-1 rounded-full">
-                          {heritageElements[2].heritage}
+                          {Culture[2].heritage}
                         </span>
                       </div>
                       <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 md:p-4">
                         <h3 className="text-xl md:text-2xl font-light text-white mb-1 md:mb-2">
-                          {heritageElements[2].title}
+                          {Culture[2].title}
                         </h3>
                         <p className="text-white/80 text-sm">
-                          {heritageElements[2].subtitle}
+                          {Culture[2].subtitle}
                         </p>
                         <p className="text-white/80 my-1 text-sm leading-relaxed line-clamp-3">
-                          {heritageElements[1].description}
+                          {Culture[1].description}
                         </p>
                         <p className="text-white/70 text-xs mt-2">
-                          {heritageElements[2].region}
+                          {Culture[2].region}
                         </p>
                       </div>
                     </div>
@@ -268,12 +274,12 @@ const Home_NewCulture: React.FC = () => {
                 {/* Gemstone Craft */}
                 <div className="col-span-6 row-span-4 relative group cursor-pointer">
                   <div
-                    className={`relative w-full h-full bg-gradient-to-br ${heritageElements[3].color} rounded-2xl overflow-hidden shadow-xl ${heritageElements[3].accent} border-2`}
+                    className={`relative w-full h-full bg-gradient-to-br ${Culture[3].color} rounded-2xl overflow-hidden shadow-xl ${Culture[3].accent} border-2`}
                   >
                     <div className="absolute inset-0">
                       <Image
-                        src={heritageElements[3].image}
-                        alt={heritageElements[3].title}
+                        src={Culture[3].image}
+                        alt={Culture[3].title}
                         fill
                         quality={95}
                         className="object-cover opacity-50"
@@ -283,22 +289,22 @@ const Home_NewCulture: React.FC = () => {
                       <div className="flex items-start justify-between">
                         <div className="text-right">
                           <span className="text-rose-200 text-sm bg-rose-500/20 px-3 py-1 rounded-full">
-                            {heritageElements[3].heritage}
+                            {Culture[3].heritage}
                           </span>
                         </div>
                       </div>
                       <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 md:p-5">
                         <h3 className="text-2xl md:text-3xl font-light text-white mb-2 md:mb-3">
-                          {heritageElements[3].title}
+                          {Culture[3].title}
                         </h3>
                         <p className="text-white/80 text-base md:text-lg mb-2 md:mb-3">
-                          {heritageElements[3].subtitle}
+                          {Culture[3].subtitle}
                         </p>
                         <p className="text-white/70 text-sm leading-relaxed line-clamp-3">
-                          {heritageElements[3].description}
+                          {Culture[3].description}
                         </p>
                         <p className="text-white/60 text-xs mt-2">
-                          {heritageElements[3].region}
+                          {Culture[3].region}
                         </p>
                       </div>
                     </div>
@@ -308,12 +314,12 @@ const Home_NewCulture: React.FC = () => {
                 {/* Metal Artistry */}
                 <div className="col-span-6 row-span-3 relative group cursor-pointer">
                   <div
-                    className={`relative w-full h-full bg-gradient-to-br ${heritageElements[4].color} rounded-2xl overflow-hidden shadow-xl ${heritageElements[4].accent} border-2`}
+                    className={`relative w-full h-full bg-gradient-to-br ${Culture[4].color} rounded-2xl overflow-hidden shadow-xl ${Culture[4].accent} border-2`}
                   >
                     <div className="absolute inset-0">
                       <Image
-                        src={heritageElements[4].image}
-                        alt={heritageElements[4].title}
+                        src={Culture[4].image}
+                        alt={Culture[4].title}
                         fill
                         quality={95}
                         className="object-cover opacity-50"
@@ -322,21 +328,21 @@ const Home_NewCulture: React.FC = () => {
                     <div className="relative z-10 p-4 md:p-6 h-full flex flex-col justify-between">
                       <div className="flex items-center justify-between">
                         <span className="text-gray-200 text-sm bg-gray-500/20 px-3 py-1 rounded-full">
-                          {heritageElements[4].heritage}
+                          {Culture[4].heritage}
                         </span>
                       </div>
                       <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 md:p-5">
                         <h3 className="text-xl md:text-2xl font-light text-white mb-1 md:mb-2">
-                          {heritageElements[4].title}
+                          {Culture[4].title}
                         </h3>
                         <p className="text-white/80 text-base md:text-lg mb-2 md:mb-3">
-                          {heritageElements[4].subtitle}
+                          {Culture[4].subtitle}
                         </p>
                         <p className="text-white/70 text-sm line-clamp-3">
-                          {heritageElements[4].description}
+                          {Culture[4].description}
                         </p>
                         <p className="text-white/60 text-xs mt-2">
-                          {heritageElements[4].region}
+                          {Culture[4].region}
                         </p>
                       </div>
                     </div>
@@ -349,7 +355,7 @@ const Home_NewCulture: React.FC = () => {
           {/* Small Screen Screen - Horizontal Scroll */}
           <div className="lg:hidden">
             <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 no-scrollbar">
-              {heritageElements.map((element) => (
+              {Culture.map((element) => (
                 <div
                   key={element.id}
                   className="flex-none w-[85vw] sm:w-[500px] md:w-[600px] snap-center"

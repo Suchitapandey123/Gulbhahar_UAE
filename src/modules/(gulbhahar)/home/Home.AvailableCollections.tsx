@@ -2,6 +2,7 @@ import HorizontalCarousel from "@/shared-components/Scrollbar/HorizontalCarousel
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import CollectionCard from "./components/CollectionCard";
+import { AvailableCollectionItem } from "@/app/api/home/type";
 
 const CATEGORIES = [
   {
@@ -42,7 +43,11 @@ const CATEGORIES = [
   },
 ];
 
-const Home_AvailableCollections = () => {
+interface AvailableCollectionsProps {
+  AvailableCollections : AvailableCollectionItem[]
+}
+
+const Home_AvailableCollections = ({AvailableCollections} : AvailableCollectionsProps) => {
   return (
     <section className="py-8 bg-white overflow-hidden">
       <div className="flex flex-col space-y-4 justify-center mb-6">
@@ -66,7 +71,7 @@ const Home_AvailableCollections = () => {
       </div>
 
       <HorizontalCarousel className="flex overflow-x-auto snap-x snap-mandatory cursor-grab active:cursor-grabbing pb-8">
-        {CATEGORIES.map((category, index) => (
+        {AvailableCollections.map((category, index) => (
           <CollectionCard
             key={category.slug}
             category={category}

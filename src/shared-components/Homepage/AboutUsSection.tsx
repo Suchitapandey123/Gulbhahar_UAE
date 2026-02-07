@@ -1,49 +1,45 @@
+import { SoulOfGulbhaharItem } from "@/app/api/home/type";
 import { ArrowRight, MoveUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-interface StorySection {
-  id: number;
-  image: string;
-  category: string;
-  title: string;
-  description: string;
-  highlight: string;
+
+// const stories = [
+//   {
+//     id: 1,
+//     image: "https://d21ojmskh8ksuv.cloudfront.net/static/home/soul-of-gulbhahar/1.webp",
+//     category: "The Heritage",
+//     title: "Made with Love & Care",
+//     description:
+//       "Gulbhahar starts with a passion for Indian craft and the people who make it. Each piece is crafted with love and care by skilled craftsmen who have learned their trade over the years. We give care to every small detail to keep the traditions alive.",
+//     highlight: "100+ Years Legacy",
+//   },
+//   {
+//     id: 2,
+//     image: "https://d21ojmskh8ksuv.cloudfront.net/static/home/soul-of-gulbhahar/2.webp",
+//     category: "The Vision",
+//     title: "A Tradition That Is Perfect For Today",
+//     description:
+//       "Traditional methods are used to create designs that are appropriate for today’s world. Gulbhahar retains the essence of tradition but gives it a clean and simple look. The products we offer are easy to use, easy to wear, and blend in seamlessly with today’s world. None of our products has lost its roots.",
+//     highlight: "Modern Innovation",
+//   },
+//   {
+//     id: 3,
+//     image: "https://d21ojmskh8ksuv.cloudfront.net/static/home/soul-of-gulbhahar/3.webp",
+//     category: "The Ethics",
+//     title: "Crafting Luxury With Care",
+//     description:
+//       "Luxury at Gulbhahar means taking care and putting thought into every item. Our products are produced in limited quantities so that craftsmen have the time to do their work well. Materials are selected with care, and waste is minimised. The aim is to have products that are long-lasting and special every time they are worn.",
+//     highlight: "Sustainable Artisans",
+//   },
+// ];
+
+interface AboutUsSectionProps {
+  SoulOfGulbhahar : SoulOfGulbhaharItem[]
 }
 
-const stories: StorySection[] = [
-  {
-    id: 1,
-    // image: "/home-page/Crafted-Through-Generations-optimized.webp",
-    image: "https://d21ojmskh8ksuv.cloudfront.net/static/home/soul-of-gulbhahar/1.webp",
-    category: "The Heritage",
-    title: "Made with Love & Care",
-    description:
-      "Gulbhahar starts with a passion for Indian craft and the people who make it. Each piece is crafted with love and care by skilled craftsmen who have learned their trade over the years. We give care to every small detail to keep the traditions alive.",
-    highlight: "100+ Years Legacy",
-  },
-  {
-    id: 2,
-    image: "https://d21ojmskh8ksuv.cloudfront.net/static/home/soul-of-gulbhahar/2.webp",
-    category: "The Vision",
-    title: "A Tradition That Is Perfect For Today",
-    description:
-      "Traditional methods are used to create designs that are appropriate for today’s world. Gulbhahar retains the essence of tradition but gives it a clean and simple look. The products we offer are easy to use, easy to wear, and blend in seamlessly with today’s world. None of our products has lost its roots.",
-    highlight: "Modern Innovation",
-  },
-  {
-    id: 3,
-    image: "https://d21ojmskh8ksuv.cloudfront.net/static/home/soul-of-gulbhahar/3.webp",
-    category: "The Ethics",
-    title: "Crafting Luxury With Care",
-    description:
-      "Luxury at Gulbhahar means taking care and putting thought into every item. Our products are produced in limited quantities so that craftsmen have the time to do their work well. Materials are selected with care, and waste is minimised. The aim is to have products that are long-lasting and special every time they are worn.",
-    highlight: "Sustainable Artisans",
-  },
-];
-
-const AboutUsSection: React.FC = () => {
+const AboutUsSection: React.FC<AboutUsSectionProps> = ({SoulOfGulbhahar}) => {
   return (
     <section className=" overflow-hidden">
       <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto">
@@ -73,7 +69,7 @@ const AboutUsSection: React.FC = () => {
 
         {/* Story Blocks */}
         <div className="space-y-6 ">
-          {stories.map((story, index) => (
+          {SoulOfGulbhahar.map((story, index) => (
             <div
               key={story.id}
               className={`flex  flex-col ${

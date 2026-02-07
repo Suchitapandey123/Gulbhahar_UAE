@@ -7,6 +7,7 @@ import AboutUsSection from "@/shared-components/Homepage/AboutUsSection";
 import ModernHeroAnimated from "./HeroAnimated";
 import Home_JuttisCollection from "./Home.JuttisCollection";
 import productApi from "@/app/api/v0/product-service";
+import { homePageService } from "@/app/api/home/home-service";
 
 async function getProducts(parentCategory: string): Promise<Product[]> {
   try {
@@ -23,18 +24,21 @@ const HomePage = async () => {
   const suitsProducts = await getProducts("suit");
   const bagsProducts = await getProducts("bags");
 
+  const homeData = await homePageService.getHomeData()
+  console.log(homeData)
+
   return (
     <>
-      <ModernHeroAnimated />
+      <ModernHeroAnimated heroSection={homeData.data?.["hero-section"]} />
       <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto w-full px-2 space-y-8">
-        <Home_WatchAndShop />
-        <Home_AvailableCollections />
+        <Home_WatchAndShop WatchAndShopData={homeData.data?.["watch-and-shop"] || []} />
+        <Home_AvailableCollections AvailableCollections ={homeData.data?.["available-collections"] || []}  />
         <Home_JuttisCollection slug={"/suit"} name={'Suits Collection'} newCollection={suitsProducts} />
         <Home_JuttisCollection reverse = {true}  slug={"/bags"} name={'Bags Collection'} newCollection={bagsProducts} />
         <Home_JuttisCollection slug={"/juttis"} name={'Juttis Collection'} newCollection={juttisProducts} />
-        <AboutUsSection />
-        <Home_NewCulture />
-        <Home_OurShowcase />
+        <AboutUsSection SoulOfGulbhahar = {homeData.data?.["soul-of-gulbhahar"] || []}/>
+        <Home_NewCulture Culture = {homeData.data?.culture || []} />
+        <Home_OurShowcase StoriesInMotion = {homeData.data?.["stories-in-motion"] || []} />
       </div>
     </>
   );

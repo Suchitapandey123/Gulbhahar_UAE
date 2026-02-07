@@ -4,9 +4,10 @@ import { useState } from "react";
 import HorizontalCarousel from "@/shared-components/Scrollbar/HorizontalCarousel";
 import FullscreenReelViewer from "../common/FullscreenReelViewer";
 import ReelCard from "./components/ReelCard";
+import { WatchAndShopItem } from "@/app/api/home/type";
 
 // Sample Reel Data
-const REELS_DATA = [
+const Reels = [
   {
     id: 1,
     videoUrl:
@@ -86,15 +87,19 @@ const REELS_DATA = [
     slug: "juttis",
   },
 ];
+interface WatchAndShopDataProps {
+  WatchAndShopData : WatchAndShopItem[]
+}
 
-const Home_WatchAndShop = () => {
+const Home_WatchAndShop = ({WatchAndShopData} : WatchAndShopDataProps) => {
   const [fullscreenIndex, setFullscreenIndex] = useState<number | null>(null);
 
-  const fullscreenReels = REELS_DATA.map((r) => ({
+  const fullscreenReels = WatchAndShopData.map((r) => ({
     videoUrl: r.videoUrl,
     title: r.title,
   }));
 
+  console.log(WatchAndShopData)
   return (
     <section className="overflow-hidden mt-8">
       {/* Header */}
@@ -119,7 +124,7 @@ const Home_WatchAndShop = () => {
 
       {/* Reels carousel */}
       <HorizontalCarousel className="flex overflow-x-auto gap-4 snap-x snap-proximity md:snap-mandatory cursor-grab active:cursor-grabbing pb-8">
-        {REELS_DATA.map((reel, idx) => (
+        {WatchAndShopData.map((reel, idx) => (
           <div key={reel.id} className="snap-center" onClick={() => setFullscreenIndex(idx)}>
             <ReelCard reel={reel} />
           </div>
