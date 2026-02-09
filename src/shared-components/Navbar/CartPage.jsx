@@ -143,7 +143,7 @@ const CartPage = () => {
       return `${imageUrl}?v=${new Date(item.updatedAt).getTime()}`;
     }
 
-    return imageUrl;
+    return imageUrl || "/about/lal-ishq-1.jpg";
   };
 
   return (

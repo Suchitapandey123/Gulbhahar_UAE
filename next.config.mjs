@@ -58,10 +58,6 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "https://d21ojmskh8ksuv.cloudfront.net", // CloudFront CDN
-      },
-      {
-        protocol: "https",
         hostname: "d21ojmskh8ksuv.cloudfront.net", // CloudFront CDN
       },
       {
@@ -78,6 +74,7 @@ const nextConfig = {
         pathname: '/**',
       }
     ],
+    qualities: [60, 65, 70, 75, 95, 100],
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
