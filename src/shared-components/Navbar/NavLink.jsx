@@ -32,7 +32,7 @@ const NavLink = ({
     >
       <button
         className={`
-          relative flex items-center px-3 lg:px-4 py-2 font-semibold text-xs sm:text-sm 
+          relative flex items-center px- lg:px- py-2 font-semibold text-xs sm:text-sm 
           uppercase tracking-wide transition-all duration-300 ease-out
           ${
             isActive

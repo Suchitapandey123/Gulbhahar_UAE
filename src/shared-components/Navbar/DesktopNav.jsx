@@ -1,9 +1,8 @@
-
-import { Search, ChevronDown } from "lucide-react";
-import NavLink from "./NavLink";
-import UserSection from "./UserSection";
+import { Search } from "lucide-react";
 import CartButton from "./CartButton";
 import Logo from "./Logo";
+import NavLink from "./NavLink";
+import UserSection from "./UserSection";
 
 const DesktopNav = ({
   isScrolled,
@@ -43,11 +42,11 @@ const DesktopNav = ({
 
   const handleMouseLeave = () => {
     if (window.innerWidth >= 768 && isHoverMode) {
-      setIsCollectionDropdownOpen(false);
-      if (hoverTimeoutRef.current) {
-        clearTimeout(hoverTimeoutRef.current);
-        hoverTimeoutRef.current = null;
-      }
+      if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+
+      hoverTimeoutRef.current = setTimeout(() => {
+        setIsCollectionDropdownOpen(false);
+      }, 150);
     }
   };
 
@@ -62,7 +61,9 @@ const DesktopNav = ({
           isNavSolid={isNavSolid}
           pathname={pathname}
           router={router}
-          isActive={isCollectionDropdownOpen || pathname.startsWith("/collections")}
+          isActive={
+            isCollectionDropdownOpen || pathname.startsWith("/collections")
+          }
           dropdownRef={dropdownRef}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
@@ -81,7 +82,11 @@ const DesktopNav = ({
           About
         </NavLink>
       </div>
-      <Logo isScrolled={isScrolled} isNavSolid={isNavSolid} pathname={pathname} />
+      <Logo
+        isScrolled={isScrolled}
+        isNavSolid={isNavSolid}
+        pathname={pathname}
+      />
 
       {/* Right Navigation */}
       <div className="hidden md:flex items-center space-x-2 lg:space-x-6">
@@ -90,8 +95,18 @@ const DesktopNav = ({
           isSearchOpen={isSearchOpen}
           toggleSearchPopup={toggleSearchPopup}
         />
-        <CartButton {...props} isScrolled={isScrolled} isNavSolid={isNavSolid} pathname={pathname} />
-        <UserSection {...props} isScrolled={isScrolled} isNavSolid={isNavSolid} pathname={pathname} />
+        <CartButton
+          {...props}
+          isScrolled={isScrolled}
+          isNavSolid={isNavSolid}
+          pathname={pathname}
+        />
+        <UserSection
+          {...props}
+          isScrolled={isScrolled}
+          isNavSolid={isNavSolid}
+          pathname={pathname}
+        />
       </div>
     </>
   );

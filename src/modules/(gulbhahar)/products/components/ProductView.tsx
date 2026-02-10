@@ -9,9 +9,9 @@ import { ImageModal } from "./ImageModal";
 import { ProductImageGrid } from "./ProductImageGrid";
 import { ProductInfo } from "./ProductInfo";
 import { ProductPurchaseSection } from "./ProductPurchaseSection";
+import ProductReels from "./ProductReels";
 import { ProductVariants } from "./ProductVariants";
 import { SizeGuideModal } from "./SizeGuideModal";
-import ProductReels from "./ProductReels";
 
 // Size configurations
 const SIZE_CONFIGS: any = {
@@ -20,21 +20,21 @@ const SIZE_CONFIGS: any = {
     sizes: ["35", "36", "37", "38", "39", "40", "41"],
     type: "footwear",
   },
-  heels: {
-    label: "Heel Sizes",
-    sizes: ["35", "36", "37", "38", "39", "40", "41"],
-    type: "footwear",
-  },
-  footwear: {
-    label: "Footwear Sizes",
-    sizes: ["35", "36", "37", "38", "39", "40", "41"],
-    type: "footwear",
-  },
   bags: { label: "Bag Dimensions", sizes: [], type: "dimensions" },
   saree: { label: "Saree Sizes", sizes: ["Free Size"], type: "clothing" },
-  suits: {
+  lehenga: {
+    label: "Lehenga Sizes",
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    type: "clothing",
+  },
+  jewellery: {
+    label: "Jewellery Sizes",
+    sizes: ["One Size"],
+    type: "clothing",
+  },
+  suit: {
     label: "Suit Sizes",
-    sizes: ["35", "36", "37", "38", "39", "40", "41"],
+    sizes: ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
     type: "clothing",
   },
   clothing: {
@@ -57,7 +57,6 @@ const generateSizeRange = (
   const categoryKey = category[0]?.toLowerCase();
 
   const config = SIZE_CONFIGS[categoryKey] || SIZE_CONFIGS.default;
-
 
   // For dimensions type (like bags), use availableSizes directly
   if (config.type === "dimensions") {
@@ -116,18 +115,20 @@ export const ProductView = ({ product, customRed }: ProductViewProps) => {
 
   const sizeRange = useMemo(() => {
     const mappedSizes = product.availableSizes?.map((s) => s.name) || [];
-    const category = Array.isArray(product.parentCategory) ? product.parentCategory : [product.parentCategory];
+    const category = Array.isArray(product.parentCategory)
+      ? product.parentCategory
+      : [product.parentCategory];
 
     return generateSizeRange(product.inventory || [], category, mappedSizes);
   }, [product.inventory, product.parentCategory, product.availableSizes]);
 
   useEffect(() => {
-    window.scrollTo({ top: 0});
+    window.scrollTo({ top: 0 });
   }, [product.productId]);
 
   useEffect(() => {
     if (sizeRange.length > 0 && !selectedSize) {
-      const firstAvailable = sizeRange.find((sr:any) => sr.available);
+      const firstAvailable = sizeRange.find((sr: any) => sr.available);
       if (firstAvailable) setSelectedSize(firstAvailable.size);
       else if (sizeRange.length > 0) setSelectedSize(sizeRange[0].size);
     }
@@ -155,7 +156,9 @@ export const ProductView = ({ product, customRed }: ProductViewProps) => {
     }
 
     // Check if selected size is available
-    const selectedSizeData = sizeRange.find((s:any) => s.size === selectedSize);
+    const selectedSizeData = sizeRange.find(
+      (s: any) => s.size === selectedSize,
+    );
     if (!selectedSizeData || !selectedSizeData.available) {
       toast.error("Selected size is not available");
       return;
@@ -164,7 +167,8 @@ export const ProductView = ({ product, customRed }: ProductViewProps) => {
     try {
       const cartSelectedColor =
         currentColor || product.availableColors?.[0]?.name || "default";
-      const cartSelectedSize = selectedSize || product.availableSizes?.[0]?.name || "default";
+      const cartSelectedSize =
+        selectedSize || product.availableSizes?.[0]?.name || "default";
 
       const cartItem = {
         ...product,
@@ -233,27 +237,29 @@ export const ProductView = ({ product, customRed }: ProductViewProps) => {
               <ProductPurchaseSection
                 product={product}
                 selectedSize={selectedSize}
-                addingToCart={addingToCart === (product.productId || product.id)}
+                addingToCart={
+                  addingToCart === (product.productId || product.id)
+                }
                 onAddToCart={handleAddToCart}
                 customRed={customRed}
               />
               <div className="md:block hidden">
-
-               <DeliveryChecker customRed={customRed} />
+                <DeliveryChecker customRed={customRed} />
               </div>
               <div className="block md:hidden">
-
-               <ProductReels videos = {product.videos || []} />
+                <ProductReels videos={product.videos || []} />
               </div>
-
 
               {/* Elegant note */}
               <div className="relative mt-4 md:mt-6 pt-4 md:pt-6 border-t border-dashed border-gray-200">
                 <div className="flex items-start gap-2 md:gap-3">
-                  <span className="text-[#800000]/60 text-xs md:text-sm mt-0.5 flex-shrink-0">✦</span>
+                  <span className="text-[#800000]/60 text-xs md:text-sm mt-0.5 flex-shrink-0">
+                    ✦
+                  </span>
                   <p className="text-[11px] md:text-[13px] text-gray-500 leading-relaxed">
                     <span className="font-medium text-gray-600">Note:</span>{" "}
-                    Colors may vary slightly due to screen settings. Each piece is handcrafted with care.
+                    Colors may vary slightly due to screen settings. Each piece
+                    is handcrafted with care.
                   </p>
                 </div>
               </div>
@@ -261,15 +267,21 @@ export const ProductView = ({ product, customRed }: ProductViewProps) => {
               {/* Trust badges - responsive */}
               <div className="flex items-center justify-center gap-4 sm:gap-6 pt-3 pb-3 md:pt-4">
                 <div className="flex flex-col items-center gap-0.5 md:gap-1">
-                  <span className="text-[8px] md:text-[10px] tracking-[0.1em] md:tracking-[0.15em] uppercase text-gray-400">Authentic</span>
+                  <span className="text-[8px] md:text-[10px] tracking-[0.1em] md:tracking-[0.15em] uppercase text-gray-400">
+                    Authentic
+                  </span>
                   <div className="w-6 md:w-8 h-px bg-[#800000]/30" />
                 </div>
                 <div className="flex flex-col items-center gap-0.5 md:gap-1">
-                  <span className="text-[8px] md:text-[10px] tracking-[0.1em] md:tracking-[0.15em] uppercase text-gray-400">Handcrafted</span>
+                  <span className="text-[8px] md:text-[10px] tracking-[0.1em] md:tracking-[0.15em] uppercase text-gray-400">
+                    Handcrafted
+                  </span>
                   <div className="w-6 md:w-8 h-px bg-[#800000]/30" />
                 </div>
                 <div className="flex flex-col items-center gap-0.5 md:gap-1">
-                  <span className="text-[8px] md:text-[10px] tracking-[0.1em] md:tracking-[0.15em] uppercase text-gray-400">Premium</span>
+                  <span className="text-[8px] md:text-[10px] tracking-[0.1em] md:tracking-[0.15em] uppercase text-gray-400">
+                    Premium
+                  </span>
                   <div className="w-6 md:w-8 h-px bg-[#800000]/30" />
                 </div>
               </div>
