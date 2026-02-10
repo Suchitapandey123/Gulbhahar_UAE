@@ -313,17 +313,32 @@ const LoginPage = () => {
     }
   };
 
-  // Social login handler
-  const handleSocialLogin = async (provider) => {
-    setGeneralError('');
+  // ✅ SIMPLE GOOGLE LOGIN - FIXED
+  const handleGoogleLogin = () => {
+    console.log("Google login clicked");
     setSocialLoginLoading(true);
-    try {
-      await signIn(provider, { callbackUrl: '/auth/callback' });
-    } catch (error) {
-      console.error(`Error starting ${provider} login:`, error);
-      setGeneralError(`Failed to start ${provider} login. Please try again.`);
-      setSocialLoginLoading(false);
-    }
+    
+    // Direct signIn call - SIMPLEST VERSION
+    signIn("google", { callbackUrl: "/" })
+      .catch(error => {
+        console.error("Google login error:", error);
+        setGeneralError("Google login failed. Please try again.");
+        setSocialLoginLoading(false);
+      });
+  };
+
+  // ✅ SIMPLE FACEBOOK LOGIN - FIXED
+  const handleFacebookLogin = () => {
+    console.log("Facebook login clicked");
+    setSocialLoginLoading(true);
+    
+    // Direct signIn call - SIMPLEST VERSION
+    signIn("facebook", { callbackUrl: "/" })
+      .catch(error => {
+        console.error("Facebook login error:", error);
+        setGeneralError("Facebook login failed. Please try again.");
+        setSocialLoginLoading(false);
+      });
   };
 
   const resendOtp = () => {
@@ -350,32 +365,36 @@ const LoginPage = () => {
 
   return (
     <motion.div
-      className="min-h-screen bg-white flex items-center justify-center"
+      className="min-h-screen bg-white flex items-center justify-center p-4 sm:p-6"
       animate={{ backgroundColor: isMounted && typeof window !== 'undefined' && window.innerWidth >= 1024 ? bgColor : '#ffffff' }}
       transition={{ duration: 1, ease: "easeInOut" }}
     >
-      <div className="flex w-full max-w-[1600px] rounded-2xl bg-white md:h-full overflow-hidden">
+      <div className="flex w-full max-w-[1570px] rounded-2xl bg-white md:h-full overflow-hidden shadow-lg md:shadow-xl">
+        {/* Left side image slider - Hidden on mobile */}
         <div className="hidden md:block md:w-1/2">
           <MotionImageSlider onColorChange={setBgColor} />
         </div>
-        <div className="w-full md:w-1/2 relative overflow-hidden min-h-[650px] flex flex-col">
-          <div className="flex-1">
-            <div className="absolute inset-0 p-8 md:p-10 flex flex-col justify-center mb-15">
-              <div className="flex items-center justify-center mb-2 relative">
+        
+        {/* Right side form - Full width on mobile */}
+        <div className="w-full md:w-1/2 flex flex-col">
+          {/* Form Section */}
+          <div className="flex-1 relative min-h-[500px] md:min-h-auto">
+            <div className="absolute inset-0 p-4 sm:p-6 md:p-8 lg:p-10 flex flex-col justify-center">
+              <div className="flex items-center justify-center mb-4 sm:mb-6 relative">
                 <button
                   onClick={() => { window.location.href = '/'; }}
-                  className="absolute left-0 text-[#7f1d1d] hover:text-red-800 transition-colors"
+                  className="absolute left-0 text-[#7f1d1d] hover:text-red-800 transition-colors cursor-pointer"
                 >
                   <FaArrowLeft size={20} />
                 </button>
-                <h2 className="text-3xl text-center font-bold text-[#7f1d1d]">Welcome back</h2>
+                <h2 className="text-2xl sm:text-3xl text-center font-bold text-[#7f1d1d]">Welcome back</h2>
               </div>
-              <p className="text-gray-400 text-center mb-6">
+              <p className="text-gray-500 text-sm sm:text-base text-center mb-4 sm:mb-6">
                 Don't have an account?{" "}
                 <button
                   type="button"
                   onClick={() => { window.location.href = '/signup'; }}
-                  className="text-[#7f1d1d] hover:underline ml-1"
+                  className="text-[#7f1d1d] hover:underline ml-1 cursor-pointer font-medium"
                 >
                   Sign up
                 </button>
@@ -383,25 +402,25 @@ const LoginPage = () => {
 
               {/* Error / Success messages */}
               {generalError && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2.5 rounded-lg text-sm mb-4 text-center">
+                <div className="bg-red-50 border border-red-200 text-red-700 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm mb-4 text-center">
                   {generalError}
                 </div>
               )}
               {successMessage && (
-                <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-2.5 rounded-lg text-sm mb-4 text-center">
+                <div className="bg-green-50 border border-green-200 text-green-700 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm mb-4 text-center">
                   {successMessage}
                 </div>
               )}
 
-              {/* Toggle buttons */}
-              <div className="flex gap-3 justify-center mb-6 mt-2">
+              {/* Toggle buttons - Stack on mobile */}
+              <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
                 <button
                   type="button"
                   onClick={() => {
                     setDirection("backward");
                     switchToMobile();
                   }}
-                  className={`py-3 px-6 rounded-lg shadow-md transition ${
+                  className={`py-3 px-4 sm:px-6 rounded-lg shadow-md transition cursor-pointer text-sm sm:text-base ${
                     loginMethod === "mobile" ? "bg-[#7f1d1d] text-white" : "bg-gray-100 text-gray-700"
                   }`}
                 >
@@ -410,7 +429,7 @@ const LoginPage = () => {
                 <button
                   type="button"
                   onClick={switchToEmail}
-                  className={`py-3 px-6 rounded-lg shadow-md transition ${
+                  className={`py-3 px-4 sm:px-6 rounded-lg shadow-md transition cursor-pointer text-sm sm:text-base ${
                     loginMethod === "email" ? "bg-[#7f1d1d] text-white" : "bg-gray-100 text-gray-700"
                   }`}
                 >
@@ -419,7 +438,7 @@ const LoginPage = () => {
               </div>
 
               {/* Animated form area */}
-              <div className="h-80 flex flex-col justify-start mb-10 relative overflow-hidden">
+              <div className="h-56 sm:h-64 flex flex-col justify-start mb-4 relative overflow-hidden w-full">
                 <AnimatePresence initial={false}>
                   {loginMethod === "email" ? (
                     <motion.form
@@ -430,7 +449,7 @@ const LoginPage = () => {
                       animate="center"
                       exit="exit"
                       transition={{ duration: 0.4, ease: "easeInOut" }}
-                      className="absolute w-full"
+                      className="absolute w-full left-0 right-0"
                       onSubmit={handleEmailLogin}
                     >
                       <input
@@ -438,7 +457,7 @@ const LoginPage = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Email Address"
-                        className="w-full bg-white shadow-md p-3 rounded-lg outline-none mb-4"
+                        className="w-full bg-white shadow-md p-3 sm:p-4 rounded-lg outline-none mb-4 cursor-text text-sm sm:text-base"
                         disabled={isLoading}
                       />
                       <div className="relative mb-4">
@@ -447,22 +466,22 @@ const LoginPage = () => {
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder="Password"
-                          className="w-full bg-white shadow-md p-3 pr-10 rounded-lg outline-none"
+                          className="w-full bg-white shadow-md p-3 sm:p-4 pr-10 rounded-lg outline-none cursor-text text-sm sm:text-base"
                           disabled={isLoading}
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-[#7f1d1d] transition-colors"
+                          className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-[#7f1d1d] transition-colors cursor-pointer"
                         >
                           {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
                         </button>
                       </div>
-                      <div className="flex justify-center items-center text-sm mb-4">
+                      <div className="flex justify-center items-center text-xs sm:text-sm mb-4">
                         <button
                           type="button"
                           onClick={() => { window.location.href = '/forgot-password'; }}
-                          className="text-[#7f1d1d] hover:underline"
+                          className="text-[#7f1d1d] hover:underline cursor-pointer"
                         >
                           Forgot Password?
                         </button>
@@ -470,13 +489,12 @@ const LoginPage = () => {
                       <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full bg-[#7f1d1d] text-white py-3 rounded-lg shadow-lg mb-4 disabled:opacity-50"
+                        className="w-full bg-[#7f1d1d] text-white py-3 sm:py-3.5 rounded-lg shadow-lg mb-4 disabled:opacity-50 cursor-pointer hover:bg-[#8b2525] transition-colors text-sm sm:text-base"
                       >
                         {isLoading ? 'Signing in...' : 'Log in'}
                       </button>
-                      <div className="h-6"></div>
                     </motion.form>
-                  ) : showMobileInput ? (
+                  ) : loginMethod === "mobile" && showMobileInput ? (
                     <motion.div
                       key="mobile-input"
                       variants={innerFormVariants}
@@ -485,74 +503,116 @@ const LoginPage = () => {
                       animate="center"
                       exit="exit"
                       transition={{ duration: 0.4, ease: "easeInOut" }}
-                      className="absolute w-full"
+                      className="absolute w-full left-0 right-0"
                     >
-                      <div className="mb-3"></div>
+                      {/* Mobile number input - ALWAYS visible */}
                       <input
                         type="tel"
                         value={mobileNumber}
                         onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, ''))}
                         placeholder="Mobile Number"
-                        className="w-full bg-white shadow-md p-3 rounded-lg outline-none mb-4"
+                        className="w-full bg-white shadow-md p-3 sm:p-4 rounded-lg outline-none mb-4 cursor-text text-sm sm:text-base"
                         maxLength={10}
                         disabled={isLoading || showOtpInput}
                       />
-                      <input
-                        type="text"
-                        value={otp}
-                        onChange={(e) => {
-                          const value = e.target.value.replace(/\D/g, '').slice(0, 6);
-                          setOtp(value);
-                        }}
-                        placeholder="Enter 6-digit OTP"
-                        maxLength={6}
-                        disabled={!showOtpInput || isLoading}
-                        className="w-full bg-white shadow-md p-3 rounded-lg outline-none disabled:opacity-50 mb-4"
-                      />
-                      <button
-                        type="button"
-                        onClick={showOtpInput ? verifyOtp : sendOtp}
-                        disabled={isLoading}
-                        className="w-full bg-[#7f1d1d] text-white py-3 rounded-lg shadow-lg disabled:opacity-50 mt-6 mb-2"
-                      >
-                        {isLoading ? (showOtpInput ? 'Verifying...' : 'Sending...') : (showOtpInput ? 'Verify OTP' : 'Send OTP')}
-                      </button>
-                      <div className="text-center h-6">
-                        {showOtpInput && (
-                          canResend ? (
-                            <button onClick={resendOtp} className="text-[#7f1d1d] hover:underline">
-                              Resend OTP
-                            </button>
-                          ) : (
-                            <p className="text-gray-500">Resend OTP in {otpTimer}s</p>
-                          )
-                        )}
-                      </div>
+                      
+                      {/* OTP input - ONLY visible after OTP is sent */}
+                      {showOtpInput && (
+                        <>
+                          <input
+                            type="text"
+                            value={otp}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(/\D/g, '').slice(0, 6);
+                              setOtp(value);
+                            }}
+                            placeholder="Enter 6-digit OTP"
+                            maxLength={6}
+                            disabled={isLoading}
+                            className="w-full bg-white shadow-md p-3 sm:p-4 rounded-lg outline-none mb-4 cursor-text text-sm sm:text-base"
+                          />
+                          
+                          {/* VERIFY OTP BUTTON */}
+                          <button
+                            type="button"
+                            onClick={verifyOtp}
+                            disabled={isLoading || otp.length !== 6}
+                            className="w-full bg-[#7f1d1d] text-white py-3 sm:py-3.5 rounded-lg shadow-lg disabled:opacity-50 mb-4 cursor-pointer hover:bg-[#8b2525] transition-colors text-sm sm:text-base"
+                          >
+                            {isLoading ? 'Verifying...' : 'Verify OTP'}
+                          </button>
+                          
+                          {/* Resend OTP section */}
+                          <div className="text-center mb-2">
+                            {canResend ? (
+                              <button 
+                                onClick={resendOtp} 
+                                className="text-[#7f1d1d] hover:underline cursor-pointer text-xs sm:text-sm"
+                              >
+                                Resend OTP
+                              </button>
+                            ) : (
+                              <p className="text-gray-500 text-xs sm:text-sm">Resend OTP in {otpTimer}s</p>
+                            )}
+                          </div>
+                        </>
+                      )}
+                      
+                      {/* SEND OTP BUTTON - Only show when OTP input is NOT visible */}
+                      {!showOtpInput && (
+                        <button
+                          type="button"
+                          onClick={sendOtp}
+                          disabled={isLoading || mobileNumber.length !== 10}
+                          className="w-full bg-[#7f1d1d] text-white py-3 sm:py-3.5 rounded-lg shadow-lg disabled:opacity-50 mb-4 cursor-pointer hover:bg-[#8b2525] transition-colors text-sm sm:text-base"
+                        >
+                          {isLoading ? 'Sending...' : 'Send OTP'}
+                        </button>
+                      )}
                     </motion.div>
                   ) : null}
                 </AnimatePresence>
               </div>
             </div>
           </div>
-          <div className="p-8 md:p-10 pt-0 mt-4">
-            <div className="flex items-center my-6 gap-4">
+          
+          {/* Social buttons section */}
+          <div className="p-4 sm:p-6 md:p-8 lg:p-10 pt-0 relative z-50">
+            <div className="flex items-center my-4 sm:my-6 gap-3 sm:gap-4">
               <hr className="flex-1 border-gray-300" />
-              <span className="text-gray-500 text-sm">Or continue with</span>
+              <span className="text-gray-500 text-xs sm:text-sm">Or continue with</span>
               <hr className="flex-1 border-gray-300" />
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 relative z-50">
+              {/* Google button */}
               <button
-                onClick={() => handleSocialLogin('google')}
-                className="flex items-center justify-center gap-2 p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                type="button"
+                onClick={handleGoogleLogin}
+                disabled={socialLoginLoading}
+                className="flex items-center justify-center gap-2 p-2.5 sm:p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 cursor-pointer relative z-50 text-sm sm:text-base"
+                style={{ pointerEvents: 'auto' }}
               >
-                <FcGoogle size={20} />
+                {socialLoginLoading ? (
+                  <div className="w-4 h-4 border-2 border-[#7f1d1d] border-t-transparent rounded-full animate-spin mr-2"></div>
+                ) : (
+                  <FcGoogle size={18} className="sm:w-5 sm:h-5" />
+                )}
                 <span className="text-gray-700">Google</span>
               </button>
+              
+              {/* Facebook button */}
               <button
-                onClick={() => handleSocialLogin('facebook')}
-                className="flex items-center justify-center cursor-pointer gap-2 p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                type="button"
+                onClick={handleFacebookLogin}
+                disabled={socialLoginLoading}
+                className="flex items-center justify-center gap-2 p-2.5 sm:p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 cursor-pointer relative z-50 text-sm sm:text-base"
+                style={{ pointerEvents: 'auto' }}
               >
-                <FaFacebookF size={16} className="text-blue-600" />
+                {socialLoginLoading ? (
+                  <div className="w-4 h-4 border-2 border-[#7f1d1d] border-t-transparent rounded-full animate-spin mr-2"></div>
+                ) : (
+                  <FaFacebookF size={16} className="text-blue-600 sm:w-5 sm:h-5" />
+                )}
                 <span className="text-gray-700">Facebook</span>
               </button>
             </div>
