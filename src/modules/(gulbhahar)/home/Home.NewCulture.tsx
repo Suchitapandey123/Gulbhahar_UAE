@@ -21,6 +21,13 @@ interface  CultureProps {
 
 
 const Home_NewCulture: React.FC<CultureProps> = ({Culture}) => {
+  const cultureList = Array.isArray(Culture) ? Culture : [];
+
+  // ✅ ADD THIS HERE
+  if (!cultureList || cultureList.length < 5) {
+    return null;   // prevents crashes while data loads
+  }
+
   // Heritage craft elements inspired by traditional Indian artistry
   // const Culture: HeritageElement[] = [
   //   {
@@ -153,12 +160,15 @@ const Home_NewCulture: React.FC<CultureProps> = ({Culture}) => {
                 {/* Featured Royal Embroidery */}
                 <div className="col-span-6 row-span-5 relative group cursor-pointer">
                   <div
-                    className={`relative w-full h-full bg-gradient-to-br ${Culture[0].color} rounded-3xl overflow-hidden shadow-2xl ${Culture[0].accent} border-2`}
+                    className={`relative w-full h-full bg-gradient-to-br ${Culture?.[0]?.color
+} rounded-3xl overflow-hidden shadow-2xl ${Culture?.[0]?.accent}
+ border-2`}
                   >
                     <div className="absolute inset-0">
                       <Image
-                        src={Culture[0].image}
-                        alt={Culture[0].title}
+                        src={cultureList[0]?.image || ""}
+                       alt={cultureList[0]?.title || ""}
+
                         fill
                         quality={95}
                         className="object-cover opacity-50"
@@ -170,25 +180,25 @@ const Home_NewCulture: React.FC<CultureProps> = ({Culture}) => {
                         <div className="text-right">
                           <div className="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1 mb-2">
                             <span className="text-white/90 text-sm font-medium">
-                              {Culture[0].region}
+                              {cultureList[0].region}
                             </span>
                           </div>
                           <div className="bg-amber-500/30 backdrop-blur-sm rounded-lg px-3 py-1">
                             <span className="text-white text-xs">
-                              {Culture[0].heritage}
+                              {cultureList[0].heritage}
                             </span>
                           </div>
                         </div>
                       </div>
                       <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 md:p-6 border border-white/20">
                         <h3 className="text-2xl md:text-4xl font-light text-white mb-2 md:mb-3">
-                          {Culture[0].title}
+                          {cultureList[0].title}
                         </h3>
                         <p className="text-white/90 text-base md:text-lg mb-3 md:mb-4 font-light">
-                          {Culture[0].subtitle}
+                          {cultureList[0].subtitle}
                         </p>
                         <p className="text-white/80 text-sm leading-relaxed">
-                          {Culture[0].description}
+                          {cultureList[0].description}
                         </p>
                       </div>
                     </div>
@@ -198,12 +208,12 @@ const Home_NewCulture: React.FC<CultureProps> = ({Culture}) => {
                 {/* Handwoven Textiles */}
                 <div className="col-span-3 row-span-4 relative group cursor-pointer">
                   <div
-                    className={`relative w-full h-full bg-gradient-to-br ${Culture[1].color} rounded-2xl overflow-hidden shadow-xl ${Culture[1].accent} border-2`}
+                    className={`relative w-full h-full bg-gradient-to-br ${cultureList[1].color} rounded-2xl overflow-hidden shadow-xl ${cultureList[1].accent} border-2`}
                   >
                     <div className="absolute inset-0">
                       <Image
-                        src={Culture[1].image}
-                        alt={Culture[1].title}
+                        src={cultureList[1].image}
+                        alt={cultureList[1].title}
                         fill
                         quality={95}
                         className="object-cover opacity-50"
@@ -212,21 +222,21 @@ const Home_NewCulture: React.FC<CultureProps> = ({Culture}) => {
                     <div className="relative z-10 p-4 md:p-6 h-full flex flex-col justify-between">
                       <div className="flex items-center justify-between">
                         <span className="text-purple-200 text-xs bg-purple-500/20 px-2 py-1 rounded-full">
-                          {Culture[1].heritage}
+                          {cultureList[1].heritage}
                         </span>
                       </div>
                       <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 md:p-4">
                         <h3 className="text-xl md:text-2xl font-light text-white mb-1 md:mb-2">
-                          {Culture[1].title}
+                          {cultureList[1].title}
                         </h3>
                         <p className="text-white/80 text-sm">
-                          {Culture[1].subtitle}
+                          {cultureList[1].subtitle}
                         </p>
                         <p className="text-white/80 my-1 text-sm leading-relaxed line-clamp-3">
-                          {Culture[1].description}
+                          {cultureList[1].description}
                         </p>
                         <p className="text-white/70 text-xs mt-2">
-                          {Culture[1].region}
+                          {cultureList[1].region}
                         </p>
                       </div>
                     </div>
@@ -236,12 +246,12 @@ const Home_NewCulture: React.FC<CultureProps> = ({Culture}) => {
                 {/* Leather Artistry */}
                 <div className="col-span-3 row-span-4 relative group cursor-pointer">
                   <div
-                    className={`relative w-full h-full bg-gradient-to-br ${Culture[2].color} rounded-2xl overflow-hidden shadow-xl ${Culture[2].accent} border-2`}
+                    className={`relative w-full h-full bg-gradient-to-br ${cultureList[2].color} rounded-2xl overflow-hidden shadow-xl ${cultureList[2].accent} border-2`}
                   >
                     <div className="absolute inset-0">
                       <Image
-                        src={Culture[2].image}
-                        alt={Culture[2].title}
+                        src={cultureList[2].image}
+                        alt={cultureList[2].title}
                         fill
                         quality={95}
                         className="object-cover opacity-50"
@@ -250,21 +260,21 @@ const Home_NewCulture: React.FC<CultureProps> = ({Culture}) => {
                     <div className="relative z-10 p-4 md:p-6 h-full flex flex-col justify-between">
                       <div className="flex items-center justify-between">
                         <span className="text-emerald-200 text-xs bg-emerald-500/20 px-2 py-1 rounded-full">
-                          {Culture[2].heritage}
+                          {cultureList[2].heritage}
                         </span>
                       </div>
                       <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 md:p-4">
                         <h3 className="text-xl md:text-2xl font-light text-white mb-1 md:mb-2">
-                          {Culture[2].title}
+                          {cultureList[2].title}
                         </h3>
                         <p className="text-white/80 text-sm">
-                          {Culture[2].subtitle}
+                          {cultureList[2].subtitle}
                         </p>
                         <p className="text-white/80 my-1 text-sm leading-relaxed line-clamp-3">
-                          {Culture[1].description}
+                          {cultureList[1].description}
                         </p>
                         <p className="text-white/70 text-xs mt-2">
-                          {Culture[2].region}
+                          {cultureList[2].region}
                         </p>
                       </div>
                     </div>
@@ -274,12 +284,12 @@ const Home_NewCulture: React.FC<CultureProps> = ({Culture}) => {
                 {/* Gemstone Craft */}
                 <div className="col-span-6 row-span-4 relative group cursor-pointer">
                   <div
-                    className={`relative w-full h-full bg-gradient-to-br ${Culture[3].color} rounded-2xl overflow-hidden shadow-xl ${Culture[3].accent} border-2`}
+                    className={`relative w-full h-full bg-gradient-to-br ${cultureList[3].color} rounded-2xl overflow-hidden shadow-xl ${cultureList[3].accent} border-2`}
                   >
                     <div className="absolute inset-0">
                       <Image
-                        src={Culture[3].image}
-                        alt={Culture[3].title}
+                        src={cultureList[3].image}
+                        alt={cultureList[3].title}
                         fill
                         quality={95}
                         className="object-cover opacity-50"
@@ -289,22 +299,22 @@ const Home_NewCulture: React.FC<CultureProps> = ({Culture}) => {
                       <div className="flex items-start justify-between">
                         <div className="text-right">
                           <span className="text-rose-200 text-sm bg-rose-500/20 px-3 py-1 rounded-full">
-                            {Culture[3].heritage}
+                            {cultureList[3].heritage}
                           </span>
                         </div>
                       </div>
                       <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 md:p-5">
                         <h3 className="text-2xl md:text-3xl font-light text-white mb-2 md:mb-3">
-                          {Culture[3].title}
+                          {cultureList[3].title}
                         </h3>
                         <p className="text-white/80 text-base md:text-lg mb-2 md:mb-3">
-                          {Culture[3].subtitle}
+                          {cultureList[3].subtitle}
                         </p>
                         <p className="text-white/70 text-sm leading-relaxed line-clamp-3">
-                          {Culture[3].description}
+                          {cultureList[3].description}
                         </p>
                         <p className="text-white/60 text-xs mt-2">
-                          {Culture[3].region}
+                          {cultureList[3].region}
                         </p>
                       </div>
                     </div>
@@ -314,12 +324,12 @@ const Home_NewCulture: React.FC<CultureProps> = ({Culture}) => {
                 {/* Metal Artistry */}
                 <div className="col-span-6 row-span-3 relative group cursor-pointer">
                   <div
-                    className={`relative w-full h-full bg-gradient-to-br ${Culture[4].color} rounded-2xl overflow-hidden shadow-xl ${Culture[4].accent} border-2`}
+                    className={`relative w-full h-full bg-gradient-to-br ${cultureList[4].color} rounded-2xl overflow-hidden shadow-xl ${cultureList[4].accent} border-2`}
                   >
                     <div className="absolute inset-0">
                       <Image
-                        src={Culture[4].image}
-                        alt={Culture[4].title}
+                        src={cultureList[4].image}
+                        alt={cultureList[4].title}
                         fill
                         quality={95}
                         className="object-cover opacity-50"
@@ -328,21 +338,21 @@ const Home_NewCulture: React.FC<CultureProps> = ({Culture}) => {
                     <div className="relative z-10 p-4 md:p-6 h-full flex flex-col justify-between">
                       <div className="flex items-center justify-between">
                         <span className="text-gray-200 text-sm bg-gray-500/20 px-3 py-1 rounded-full">
-                          {Culture[4].heritage}
+                          {cultureList[4].heritage}
                         </span>
                       </div>
                       <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 md:p-5">
                         <h3 className="text-xl md:text-2xl font-light text-white mb-1 md:mb-2">
-                          {Culture[4].title}
+                          {cultureList[4].title}
                         </h3>
                         <p className="text-white/80 text-base md:text-lg mb-2 md:mb-3">
-                          {Culture[4].subtitle}
+                          {cultureList[4].subtitle}
                         </p>
                         <p className="text-white/70 text-sm line-clamp-3">
-                          {Culture[4].description}
+                          {cultureList[4].description}
                         </p>
                         <p className="text-white/60 text-xs mt-2">
-                          {Culture[4].region}
+                          {cultureList[4].region}
                         </p>
                       </div>
                     </div>
@@ -355,7 +365,7 @@ const Home_NewCulture: React.FC<CultureProps> = ({Culture}) => {
           {/* Small Screen Screen - Horizontal Scroll */}
           <div className="lg:hidden">
             <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 no-scrollbar">
-              {Culture.map((element) => (
+              {cultureList.map((element) => (
                 <div
                   key={element.id}
                   className="flex-none w-[85vw] sm:w-[500px] md:w-[600px] snap-center"

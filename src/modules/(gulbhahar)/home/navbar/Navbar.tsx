@@ -118,7 +118,8 @@ const Navbar = () => {
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          setIsScrolled(window.scrollY > 850);
+          setIsScrolled(window.scrollY > 50);
+
           ticking = false;
         });
         ticking = true;
@@ -231,9 +232,10 @@ const Navbar = () => {
     transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]
     py-1 lg:py-1
     ${
-      isNavSolid
-        ? "bg-white/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] border-b border-gray-200/30 opacity-100 translate-y-0 pointer-events-auto"
-        : "bg-transparent border-b border-white/5 opacity-0 -translate-y-3 pointer-events-none"
+     isNavSolid
+  ? "bg-white/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] border-b border-gray-200/30"
+  : "bg-transparent border-b border-white/5"
+
     }
   `}
       >
@@ -289,7 +291,7 @@ const Navbar = () => {
         {/* Subtle Decorative Line for Scrolled State */}
         <div
           className={`absolute bottom-0 left-0 h-[1px] bg-gradient-to-r from-transparent via-[#800000]/20 to-transparent transition-all duration-1000 ${
-            isScrolled ? "w-full opacity-100" : "w-0 opacity-0"
+            isScrolled ? "w-full opacity-100" : "w-0 "
           }`}
         />
       </nav>

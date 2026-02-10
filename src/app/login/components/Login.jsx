@@ -354,11 +354,11 @@ const LoginPage = () => {
       animate={{ backgroundColor: isMounted && typeof window !== 'undefined' && window.innerWidth >= 1024 ? bgColor : '#ffffff' }}
       transition={{ duration: 1, ease: "easeInOut" }}
     >
-      <div className="flex w-full max-w-6xl rounded-2xl bg-white md:h-full overflow-hidden">
+      <div className="flex w-full max-w-[1600px] rounded-2xl bg-white md:h-full overflow-hidden">
         <div className="hidden md:block md:w-1/2">
           <MotionImageSlider onColorChange={setBgColor} />
         </div>
-        <div className="w-full md:w-1/2 relative overflow-hidden min-h-[600px] flex flex-col">
+        <div className="w-full md:w-1/2 relative overflow-hidden min-h-[650px] flex flex-col">
           <div className="flex-1">
             <div className="absolute inset-0 p-8 md:p-10 flex flex-col justify-center mb-15">
               <div className="flex items-center justify-center mb-2 relative">
