@@ -146,17 +146,19 @@ const CollectionsDropdown: React.FC<CollectionsDropdownProps> = ({
     if (window.innerWidth >= 768) {
       if (hoverTimeoutRef.current) {
         clearTimeout(hoverTimeoutRef.current);
+        hoverTimeoutRef.current = null;
       }
+      setIsCollectionDropdownOpen(true);
     }
   };
 
   const handleMouseLeave = () => {
     if (window.innerWidth >= 768) {
-      setIsCollectionDropdownOpen(false);
-      if (hoverTimeoutRef.current) {
-        clearTimeout(hoverTimeoutRef.current);
-        hoverTimeoutRef.current = null;
-      }
+      if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+
+      hoverTimeoutRef.current = setTimeout(() => {
+        setIsCollectionDropdownOpen(false);
+      }, 150);
     }
   };
 

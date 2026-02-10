@@ -4,7 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
-export default function ModernHeroAnimated() {
+export default function ModernHeroAnimated({ heroSection }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
@@ -97,8 +97,8 @@ export default function ModernHeroAnimated() {
     },
   ];
 
-  const currentSlide = heroData[currentIndex];
-  const nextIndex = (currentIndex + 1) % heroData.length;
+  const currentSlide = heroSection[currentIndex];
+  const nextIndex = (currentIndex + 1) % heroSection.length;
 
   // Auto-advance carousel with 6-second timing
   useEffect(() => {
@@ -118,7 +118,7 @@ export default function ModernHeroAnimated() {
 
       setTimeout(() => {
         setCurrentIndex((prev) => {
-          const next = (prev + 1) % heroData.length;
+          const next = (prev + 1) % heroSection.length;
           return next;
         });
         setIsTransitioning(false);
@@ -130,7 +130,7 @@ export default function ModernHeroAnimated() {
         clearTimeout(timerRef.current);
       }
     };
-  }, [currentIndex, isPlaying, heroData.length, isTransitioning]);
+  }, [currentIndex, isPlaying, heroSection.length, isTransitioning]);
 
   // Text animation variants - removed blur
   const textContainerVariants = {
@@ -244,7 +244,7 @@ export default function ModernHeroAnimated() {
           {/* BACKGROUND WITH REVERSE ZOOM */}
           <motion.div className="absolute inset-0 w-full h-full overflow-hidden">
             {/* ALL IMAGES STACKED WITH REVERSE ZOOM */}
-            {heroData.map((slide, index) => {
+            {heroSection.map((slide, index) => {
               const isCurrent = index === currentIndex;
               const isNext = index === nextIndex;
               const isFirstImage = index === 0;
@@ -392,13 +392,13 @@ export default function ModernHeroAnimated() {
                         </span>
                         <span className="text-white/60 text-xs sm:text-sm">
                           {String(currentIndex + 1).padStart(2, "0")} /{" "}
-                          {String(heroData.length).padStart(2, "0")}
+                          {String(heroSection.length).padStart(2, "0")}
                         </span>
                       </div>
 
                       {/* Custom slide indicators - removed backdrop-blur */}
                       <div className="space-y-2 sm:space-y-3">
-                        {heroData.map((item, index) => (
+                        {heroSection.map((item, index) => (
                           <motion.button
                             key={item.id}
                             onClick={() => handleSlideChange(index)}

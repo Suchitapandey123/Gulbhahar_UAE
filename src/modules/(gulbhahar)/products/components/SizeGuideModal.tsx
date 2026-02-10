@@ -43,6 +43,29 @@ const SAREE_SIZE_CHART = [
   },
 ];
 
+const LEHENGA_SIZE_CHART = [
+  { size: "XS", waist: "26", hips: "36", length: "40-42" },
+  { size: "S", waist: "28", hips: "38", length: "40-42" },
+  { size: "M", waist: "30", hips: "40", length: "40-42" },
+  { size: "L", waist: "32", hips: "42", length: "42-44" },
+  { size: "XL", waist: "34", hips: "44", length: "42-44" },
+  { size: "XXL", waist: "36", hips: "46", length: "42-44" },
+];
+
+const JEWELLERY_SIZE_CHART = [
+  {
+    type: "Rings (US)",
+    sizes: "5, 6, 7, 8, 9",
+    notes: "Diameter from 15.7mm to 19mm",
+  },
+  { type: "Bangles", sizes: "2.2, 2.4, 2.6, 2.8", notes: "Diameter in inches" },
+  {
+    type: "Necklaces",
+    sizes: "One Size",
+    notes: "Usually 16-18 inches with adjustable chain",
+  },
+];
+
 const MEASUREMENT_STEPS = [
   {
     number: "1",
@@ -76,6 +99,60 @@ const MEASUREMENT_STEPS = [
   },
 ];
 
+const CLOTHING_MEASUREMENT_STEPS = [
+  {
+    number: "1",
+    title: "Chest/Bust",
+    description:
+      "Measure around the fullest part of your chest, keeping the tape horizontal.",
+  },
+  {
+    number: "2",
+    title: "Waist",
+    description:
+      "Measure around the narrowest part of your waistline, usually where your body bends side to side.",
+  },
+  {
+    number: "3",
+    title: "Hips",
+    description:
+      "Stand with your feet together and measure around the fullest part of your hips.",
+  },
+  {
+    number: "4",
+    title: "Shoulders",
+    description:
+      "Measure from the edge of one shoulder across your back to the edge of the other shoulder.",
+  },
+];
+
+const LEHENGA_MEASUREMENT_STEPS = [
+  {
+    number: "1",
+    title: "Waist",
+    description:
+      "Measure around your waist where you want the lehenga skirt to sit.",
+  },
+  {
+    number: "2",
+    title: "Hips",
+    description:
+      "Measure around the fullest part of your hips to ensure a comfortable fit.",
+  },
+  {
+    number: "3",
+    title: "Lehenga Length",
+    description:
+      "Measure from your waist down to the floor, including the height of the heels you plan to wear.",
+  },
+  {
+    number: "4",
+    title: "Blouse/Choli",
+    description:
+      "Follow standard clothing measurements for the bust and shoulder to ensure a good blouse fit.",
+  },
+];
+
 interface SizeGuideModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -99,11 +176,21 @@ export const SizeGuideModal = ({
   const isFootwear = ["juttis", "heels", "footwear"].includes(
     categoryLower || "",
   );
-  const isBag = categoryLower === "bags";
-  const isSaree = categoryLower === "sarees";
-  const isClothing = ["suits", "clothing", "clothes"].includes(
+  const isBag = ["bags", "bag"].includes(categoryLower || "");
+  const isSaree = ["sarees", "saree"].includes(categoryLower || "");
+  const isLehenga = ["lehenga", "lehengas"].includes(categoryLower || "");
+  const isJewellery = ["jewellery", "jewelry", "accessories"].includes(
     categoryLower || "",
   );
+  const isClothing = [
+    "suits",
+    "clothing",
+    "clothes",
+    "lehenga",
+    "lehengas",
+    "sarees",
+    "saree",
+  ].includes(categoryLower || "");
 
   const fitTips = [
     {
@@ -144,9 +231,37 @@ export const SizeGuideModal = ({
     },
   ];
 
+  const lehengaFitTips = [
+    {
+      title: "How to Ensure Your Lehenga Fits Perfectly",
+      points: [
+        "The waistband should sit comfortably on your natural waist or higher hip",
+        "Length should allow for the height of your heels",
+        "Ensure the blouse/choli allows for comfortable arm movement",
+        "The dupatta should be light enough to drape easily",
+        "Check that you can sit and walk comfortably without the hem dragging too much",
+      ],
+    },
+  ];
+
+  const jewelleryFitTips = [
+    {
+      title: "Jewellery Care & Fit",
+      points: [
+        "Rings should be snug enough not to fall off but loose enough to slide over your knuckle",
+        "Bangles should slide over your hand but stay comfortably on your wrist",
+        "Necklaces should sit at the intended level (choker, princess, or opera length)",
+        "Store in a cool, dry place to prevent tarnishing",
+        "Avoid contact with perfumes and chemicals",
+      ],
+    },
+  ];
+
   const getCurrentFitTips = () => {
     if (isFootwear) return fitTips;
     if (isSaree) return sareeFitTips;
+    if (isLehenga) return lehengaFitTips;
+    if (isJewellery) return jewelleryFitTips;
     if (isClothing) return clothingFitTips;
     return [];
   };
@@ -189,7 +304,7 @@ export const SizeGuideModal = ({
               <span className="text-lg">📏</span> Size Chart
             </button>
 
-            {isFootwear && (
+            {(isFootwear || isClothing || isLehenga) && (
               <button
                 onClick={() => setActiveTab("measure")}
                 className={`px-4 py-3 font-medium text-sm flex items-center gap-2 whitespace-nowrap ${activeTab === "measure" ? "border-b-2" : "text-gray-500 hover:text-gray-700"}`}
@@ -339,6 +454,94 @@ export const SizeGuideModal = ({
                     </tbody>
                   </table>
                 </div>
+              ) : isLehenga ? (
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse bg-white rounded-lg shadow-sm">
+                    <thead>
+                      <tr className="bg-gray-50">
+                        <th className="border border-gray-200 px-4 py-3 text-left font-semibold text-gray-900">
+                          Size
+                        </th>
+                        <th className="border border-gray-200 px-4 py-3 text-left font-semibold text-gray-900">
+                          Waist (inches)
+                        </th>
+                        <th className="border border-gray-200 px-4 py-3 text-left font-semibold text-gray-900">
+                          Hips (inches)
+                        </th>
+                        <th className="border border-gray-200 px-4 py-3 text-left font-semibold text-gray-900">
+                          Length (inches)
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {LEHENGA_SIZE_CHART.map((size, index) => (
+                        <tr
+                          key={size.size}
+                          className={
+                            index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                          }
+                        >
+                          <td
+                            className="border border-gray-200 px-4 py-3 font-semibold"
+                            style={{ color: CUSTOM_RED }}
+                          >
+                            {size.size}
+                          </td>
+                          <td className="border border-gray-200 px-4 py-3 text-gray-700">
+                            {size.waist}
+                          </td>
+                          <td className="border border-gray-200 px-4 py-3 text-gray-700">
+                            {size.hips}
+                          </td>
+                          <td className="border border-gray-200 px-4 py-3 text-gray-700">
+                            {size.length}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : isJewellery ? (
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse bg-white rounded-lg shadow-sm">
+                    <thead>
+                      <tr className="bg-gray-50">
+                        <th className="border border-gray-200 px-4 py-3 text-left font-semibold text-gray-900">
+                          Type
+                        </th>
+                        <th className="border border-gray-200 px-4 py-3 text-left font-semibold text-gray-900">
+                          Available Sizes
+                        </th>
+                        <th className="border border-gray-200 px-4 py-3 text-left font-semibold text-gray-900">
+                          Notes
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {JEWELLERY_SIZE_CHART.map((item, index) => (
+                        <tr
+                          key={item.type}
+                          className={
+                            index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                          }
+                        >
+                          <td
+                            className="border border-gray-200 px-4 py-3 font-semibold"
+                            style={{ color: CUSTOM_RED }}
+                          >
+                            {item.type}
+                          </td>
+                          <td className="border border-gray-200 px-4 py-3 text-gray-700">
+                            {item.sizes}
+                          </td>
+                          <td className="border border-gray-200 px-4 py-3 text-gray-700">
+                            {item.notes}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               ) : isClothing ? (
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse bg-white rounded-lg shadow-sm">
@@ -397,37 +600,47 @@ export const SizeGuideModal = ({
             </div>
           )}
 
-          {activeTab === "measure" && isFootwear && (
-            <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-gray-900">
-                How to Measure Your Feet
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {MEASUREMENT_STEPS.map((step, index) => (
-                  <div key={index} className="bg-gray-50 rounded-lg p-6">
-                    <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0">
-                        <div
-                          className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg"
-                          style={{ backgroundColor: CUSTOM_RED }}
-                        >
-                          {step.number}
+          {activeTab === "measure" &&
+            (isFootwear || isClothing || isLehenga) && (
+              <div className="space-y-6">
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {isFootwear
+                    ? "How to Measure Your Feet"
+                    : isLehenga
+                      ? "How to Measure for Your Lehenga"
+                      : "How to Take Your Measurements"}
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {(isFootwear
+                    ? MEASUREMENT_STEPS
+                    : isLehenga
+                      ? LEHENGA_MEASUREMENT_STEPS
+                      : CLOTHING_MEASUREMENT_STEPS
+                  ).map((step, index) => (
+                    <div key={index} className="bg-gray-50 rounded-lg p-6">
+                      <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0">
+                          <div
+                            className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg"
+                            style={{ backgroundColor: CUSTOM_RED }}
+                          >
+                            {step.number}
+                          </div>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-gray-900 mb-2">
+                            {step.title}
+                          </h4>
+                          <p className="text-gray-600 text-sm">
+                            {step.description}
+                          </p>
                         </div>
                       </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-900 mb-2">
-                          {step.title}
-                        </h4>
-                        <p className="text-gray-600 text-sm">
-                          {step.description}
-                        </p>
-                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
           {activeTab === "tips" && (
             <div className="space-y-6">

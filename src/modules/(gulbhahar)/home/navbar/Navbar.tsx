@@ -118,7 +118,7 @@ const Navbar = () => {
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          setIsScrolled(window.scrollY > 150);
+          setIsScrolled(window.scrollY > 850);
           ticking = false;
         });
         ticking = true;
@@ -227,13 +227,17 @@ const Navbar = () => {
       {isCartOpen && <CartPage />}
 
       <nav
-        className={` fixed top-0 left-0 right-0 z-[100] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${
-          isNavSolid
-            ? "bg-white/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] py-1.5 lg:py-2 border-b border-gray-200/30"
-            : "bg-transparent py-4 lg:py-6 border-b border-white/5"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-[100]
+    transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]
+    py-1 lg:py-1
+    ${
+      isNavSolid
+        ? "bg-white/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] border-b border-gray-200/30 opacity-100 translate-y-0 pointer-events-auto"
+        : "bg-transparent border-b border-white/5 opacity-0 -translate-y-3 pointer-events-none"
+    }
+  `}
       >
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-2 lg:px-2">
+        <div className="2xl:max-w-[1600px] max-w-7xl mx-auto px-4 sm:px-2 lg:px-2">
           <div className="flex items-center justify-between relative">
             {/* Mobile Menu Toggle - Refined */}
             <div className="flex items-center md:hidden">
