@@ -24,6 +24,7 @@ export type Product = {
   availableFabrics?: SizeOption[];
   seo?: Seo;
   videos?: VideosOption[]
+  totalSizes : string[]
 };
 
 export type Seo = {

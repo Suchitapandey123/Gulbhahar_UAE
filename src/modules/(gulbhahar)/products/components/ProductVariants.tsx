@@ -12,7 +12,6 @@ interface ProductVariantsProps {
   setSelectedSize: (size: string) => void;
   customRed: string;
   setShowSizeGuide: (show: boolean) => void;
-  categoryConfig: any;
   sizeRange: { size: string; available: boolean; quantity: number }[];
 }
 
@@ -24,7 +23,6 @@ export const ProductVariants = ({
   setSelectedSize,
   customRed,
   setShowSizeGuide,
-  categoryConfig,
   sizeRange,
 }: ProductVariantsProps) => {
   const availableColors = useMemo(() => {
@@ -85,10 +83,13 @@ export const ProductVariants = ({
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <h3 className="text-base font-medium text-gray-900">
-            {categoryConfig.label}:
+            {"Available Sizes"}:
           </h3>
           <button
-            onClick={() => setShowSizeGuide(true)}
+            onClick={() => {
+              console.log("clicked");
+              setShowSizeGuide(true);
+            }}
             className="text-sm hover:underline flex items-center gap-1 font-medium"
             style={{ color: customRed }}
           >

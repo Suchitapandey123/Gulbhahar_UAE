@@ -12,60 +12,13 @@ import { ProductPurchaseSection } from "./ProductPurchaseSection";
 import ProductReels from "./ProductReels";
 import { ProductVariants } from "./ProductVariants";
 import { SizeGuideModal } from "./SizeGuideModal";
-
-// Size configurations
-const SIZE_CONFIGS: any = {
-  juttis: {
-    label: "Juttis Sizes",
-    sizes: ["35", "36", "37", "38", "39", "40", "41"],
-    type: "footwear",
-  },
-  bags: { label: "Bag Dimensions", sizes: [], type: "dimensions" },
-  saree: { label: "Saree Sizes", sizes: ["Free Size"], type: "clothing" },
-  lehenga: {
-    label: "Lehenga Sizes",
-    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
-    type: "clothing",
-  },
-  jewellery: {
-    label: "Jewellery Sizes",
-    sizes: ["One Size"],
-    type: "clothing",
-  },
-  suit: {
-    label: "Suit Sizes",
-    sizes: ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
-    type: "clothing",
-  },
-  clothing: {
-    label: "Clothing Sizes",
-    sizes: ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
-    type: "clothing",
-  },
-  default: {
-    label: "Sizes",
-    sizes: ["35", "36", "37", "38", "39", "40", "41"],
-    type: "clothing",
-  },
-};
+import { SizeChartData } from "@/app/api/v0/type";
 
 const generateSizeRange = (
   inventory: any[],
-  category: string[],
+  totalSizes: string[],
   availableSizes: string[] = [],
 ) => {
-  const categoryKey = category[0]?.toLowerCase();
-
-  const config = SIZE_CONFIGS[categoryKey] || SIZE_CONFIGS.default;
-
-  // For dimensions type (like bags), use availableSizes directly
-  if (config.type === "dimensions") {
-    return availableSizes.map((size) => ({
-      size,
-      available: true,
-      quantity: 1,
-    }));
-  }
 
   // If we have inventory data, use it for quantity tracking
   if (inventory && inventory.length > 0) {
@@ -77,7 +30,7 @@ const generateSizeRange = (
       }
     });
 
-    return config.sizes.map((size: string) => ({
+    return totalSizes.map((size: string) => ({
       size,
       available:
         !!availableSizeQuantities[size] && availableSizeQuantities[size] > 0,
@@ -86,7 +39,7 @@ const generateSizeRange = (
   }
 
   // Show all config sizes, but only mark as available if in availableSizes
-  return config.sizes.map((size: string) => ({
+  return totalSizes.map((size: string) => ({
     size,
     available: availableSizes.includes(size),
     quantity: availableSizes.includes(size) ? 1 : 0,
@@ -96,9 +49,11 @@ const generateSizeRange = (
 interface ProductViewProps {
   product: Product;
   customRed: string;
+  sizeChart : SizeChartData
 }
 
-export const ProductView = ({ product, customRed }: ProductViewProps) => {
+export const ProductView = ({ sizeChart , product, customRed }: ProductViewProps) => {
+  console.log(sizeChart)
   const { addToCart, addingToCart } = useCart();
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
@@ -107,20 +62,11 @@ export const ProductView = ({ product, customRed }: ProductViewProps) => {
   const [modalImageIndex, setModalImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
-  const parentCategoryName = Array.isArray(product.parentCategory)
-    ? product.parentCategory[0]
-    : product.parentCategory;
-  const categoryConfig =
-    SIZE_CONFIGS[parentCategoryName?.toLowerCase()] || SIZE_CONFIGS.default;
 
   const sizeRange = useMemo(() => {
     const mappedSizes = product.availableSizes?.map((s) => s.name) || [];
-    const category = Array.isArray(product.parentCategory)
-      ? product.parentCategory
-      : [product.parentCategory];
-
-    return generateSizeRange(product.inventory || [], category, mappedSizes);
-  }, [product.inventory, product.parentCategory, product.availableSizes]);
+    return generateSizeRange(product.inventory || [], product.totalSizes, mappedSizes);
+  }, [product.totalSizes, , product.availableSizes]);
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
@@ -230,7 +176,6 @@ export const ProductView = ({ product, customRed }: ProductViewProps) => {
                 setSelectedSize={setSelectedSize}
                 customRed={customRed}
                 setShowSizeGuide={setShowSizeGuide}
-                categoryConfig={categoryConfig}
                 sizeRange={sizeRange}
               />
 
@@ -302,8 +247,7 @@ export const ProductView = ({ product, customRed }: ProductViewProps) => {
         <SizeGuideModal
           isOpen={showSizeGuide}
           onClose={() => setShowSizeGuide(false)}
-          category={product.category}
-          productSizes={product.availableSizes?.map((s) => s.name)}
+          sizeChart ={sizeChart}
         />
       </div>
     </>
