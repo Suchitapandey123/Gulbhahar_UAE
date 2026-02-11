@@ -126,9 +126,6 @@ export const SizeGuideModal = ({
                   key={idx}
                   className="relative pl-4 border-l-2 border-gray-200 hover:border-[#800000] transition-colors"
                 >
-                  <span className="text-xs font-bold text-[#800000] tracking-wider uppercase mb-1 block">
-                    Step {step.number || idx + 1}
-                  </span>
                   <h4 className="font-medium text-gray-900 mb-1">
                     {step.title}
                   </h4>
