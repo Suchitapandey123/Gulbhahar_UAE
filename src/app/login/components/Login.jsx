@@ -50,7 +50,7 @@ function MotionImageSlider({ onColorChange }) {
   }, []);
 
   return (
-    <div className="relative w-full h-full overflow-hidden rounded-l-2xl">
+    <div className="relative w-full h-full overflow-hidden md:rounded-l-2xl">
       <AnimatePresence>
         <motion.div
           key={index}
@@ -118,9 +118,9 @@ const LoginPage = () => {
   // Show loading state during OAuth or if already authenticated
   if (authLoading || (status === 'authenticated' && !isAuthenticated) || socialLoginLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-white to-red-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#7f1d1d] mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#7f1d1d] mx-auto mb-4"></div>
           <p className="text-[#7f1d1d] font-medium">
             {socialLoginLoading ? 'Completing social login...' : 'Loading...'}
           </p>
@@ -131,7 +131,7 @@ const LoginPage = () => {
 
   if (isAuthenticated) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-white to-red-50">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-[#7f1d1d] mb-4">Redirecting...</h2>
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7f1d1d] mx-auto"></div>
@@ -365,11 +365,11 @@ const LoginPage = () => {
 
   return (
     <motion.div
-      className="min-h-screen bg-white flex items-center justify-center p-4 sm:p-6"
+      className="min-h-screen bg-gradient-to-br from-white to-red-50 flex items-center justify-center p-0 sm:p-4 md:p-6"
       animate={{ backgroundColor: isMounted && typeof window !== 'undefined' && window.innerWidth >= 1024 ? bgColor : '#ffffff' }}
       transition={{ duration: 1, ease: "easeInOut" }}
     >
-      <div className="flex w-full max-w-[1570px] rounded-2xl bg-white md:h-full overflow-hidden shadow-lg md:shadow-xl">
+      <div className="flex w-full max-w-[1570px] rounded-none md:rounded-2xl bg-white md:h-[680px] lg:h-[750px] overflow-hidden shadow-none md:shadow-xl">
         {/* Left side image slider - Hidden on mobile */}
         <div className="hidden md:block md:w-1/2">
           <MotionImageSlider onColorChange={setBgColor} />
@@ -377,51 +377,66 @@ const LoginPage = () => {
         
         {/* Right side form - Full width on mobile */}
         <div className="w-full md:w-1/2 flex flex-col">
-          {/* Form Section */}
-          <div className="flex-1 relative min-h-[500px] md:min-h-auto">
-            <div className="absolute inset-0 p-4 sm:p-6 md:p-8 lg:p-10 flex flex-col justify-center">
-              <div className="flex items-center justify-center mb-4 sm:mb-6 relative">
-                <button
-                  onClick={() => { window.location.href = '/'; }}
-                  className="absolute left-0 text-[#7f1d1d] hover:text-red-800 transition-colors cursor-pointer"
-                >
-                  <FaArrowLeft size={20} />
-                </button>
-                <h2 className="text-2xl sm:text-3xl text-center font-bold text-[#7f1d1d]">Welcome back</h2>
+          {/* Form Section - Fixed height for desktop */}
+          <div className="flex-1 relative min-h-[500px] md:min-h-auto flex flex-col justify-center">
+            <div className="p-5 sm:p-6 md:p-8 lg:p-10 flex flex-col justify-center flex-1">
+              {/* HEADER - Made sticky for mobile */}
+              <div className="sticky top-0 z-10 bg-white pt-4 pb-3 -mx-5 px-5 sm:static sm:bg-transparent sm:mx-0 sm:px-0">
+                <div className="flex items-center justify-center mb-4 relative">
+                  <button
+                    onClick={() => { window.location.href = '/'; }}
+                    className="absolute left-0 text-[#7f1d1d] hover:text-red-800 transition-all duration-300 cursor-pointer p-2 rounded-full hover:bg-red-50"
+                  >
+                    <FaArrowLeft size={22} />
+                  </button>
+                  <h2 className="text-2xl sm:text-3xl text-center font-bold text-[#7f1d1d] bg-gradient-to-r from-[#7f1d1d] to-red-700 bg-clip-text text-transparent">
+                    Welcome back
+                  </h2>
+                </div>
+                <p className="text-gray-600 text-sm sm:text-base text-center mb-5">
+                  Don't have an account?{" "}
+                  <button
+                    type="button"
+                    onClick={() => { window.location.href = '/signup'; }}
+                    className="text-[#7f1d1d] hover:text-red-800 font-semibold ml-1 cursor-pointer transition-all duration-300 hover:underline underline-offset-2"
+                  >
+                    Sign up
+                  </button>
+                </p>
               </div>
-              <p className="text-gray-500 text-sm sm:text-base text-center mb-4 sm:mb-6">
-                Don't have an account?{" "}
-                <button
-                  type="button"
-                  onClick={() => { window.location.href = '/signup'; }}
-                  className="text-[#7f1d1d] hover:underline ml-1 cursor-pointer font-medium"
-                >
-                  Sign up
-                </button>
-              </p>
 
               {/* Error / Success messages */}
               {generalError && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm mb-4 text-center">
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm mb-4 text-center shadow-sm"
+                >
                   {generalError}
-                </div>
+                </motion.div>
               )}
               {successMessage && (
-                <div className="bg-green-50 border border-green-200 text-green-700 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm mb-4 text-center">
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm mb-4 text-center shadow-sm"
+                >
                   {successMessage}
-                </div>
+                </motion.div>
               )}
 
-              {/* Toggle buttons - Stack on mobile */}
-              <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
+              {/* Toggle buttons */}
+              <div className="flex flex-row gap-3 justify-center mb-5">
                 <button
                   type="button"
                   onClick={() => {
                     setDirection("backward");
                     switchToMobile();
                   }}
-                  className={`py-3 px-4 sm:px-6 rounded-lg shadow-md transition cursor-pointer text-sm sm:text-base ${
-                    loginMethod === "mobile" ? "bg-[#7f1d1d] text-white" : "bg-gray-100 text-gray-700"
+                  className={`flex-1 py-3 px-4 rounded-xl shadow-md transition-all duration-300 cursor-pointer text-sm sm:text-base font-medium ${
+                    loginMethod === "mobile" 
+                      ? "bg-gradient-to-r from-[#7f1d1d] to-red-800 text-white shadow-lg" 
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-md"
                   }`}
                 >
                   Login with Mobile
@@ -429,8 +444,10 @@ const LoginPage = () => {
                 <button
                   type="button"
                   onClick={switchToEmail}
-                  className={`py-3 px-4 sm:px-6 rounded-lg shadow-md transition cursor-pointer text-sm sm:text-base ${
-                    loginMethod === "email" ? "bg-[#7f1d1d] text-white" : "bg-gray-100 text-gray-700"
+                  className={`flex-1 py-3 px-4 rounded-xl shadow-md transition-all duration-300 cursor-pointer text-sm sm:text-base font-medium ${
+                    loginMethod === "email" 
+                      ? "bg-gradient-to-r from-[#7f1d1d] to-red-800 text-white shadow-lg" 
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-md"
                   }`}
                 >
                   Login with Email
@@ -438,7 +455,7 @@ const LoginPage = () => {
               </div>
 
               {/* Animated form area */}
-              <div className="h-56 sm:h-64 flex flex-col justify-start mb-4 relative overflow-hidden w-full">
+              <div className="h-64 sm:h-72 flex flex-col justify-start mb-3 relative overflow-hidden w-full">
                 <AnimatePresence initial={false}>
                   {loginMethod === "email" ? (
                     <motion.form
@@ -457,7 +474,7 @@ const LoginPage = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Email Address"
-                        className="w-full bg-white shadow-md p-3 sm:p-4 rounded-lg outline-none mb-4 cursor-text text-sm sm:text-base"
+                        className="w-full bg-white shadow-sm p-4 rounded-xl outline-none mb-4 cursor-text text-base border border-gray-200 focus:border-[#7f1d1d] focus:ring-2 focus:ring-[#7f1d1d]/20 transition-all duration-300"
                         disabled={isLoading}
                       />
                       <div className="relative mb-4">
@@ -466,22 +483,22 @@ const LoginPage = () => {
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder="Password"
-                          className="w-full bg-white shadow-md p-3 sm:p-4 pr-10 rounded-lg outline-none cursor-text text-sm sm:text-base"
+                          className="w-full bg-white shadow-sm p-4 rounded-xl outline-none cursor-text text-base border border-gray-200 focus:border-[#7f1d1d] focus:ring-2 focus:ring-[#7f1d1d]/20 transition-all duration-300 pr-12"
                           disabled={isLoading}
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-[#7f1d1d] transition-colors cursor-pointer"
+                          className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-[#7f1d1d] transition-colors cursor-pointer"
                         >
-                          {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                          {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
                         </button>
                       </div>
-                      <div className="flex justify-center items-center text-xs sm:text-sm mb-4">
+                      <div className="flex justify-center items-center text-sm mb-4">
                         <button
                           type="button"
                           onClick={() => { window.location.href = '/forgot-password'; }}
-                          className="text-[#7f1d1d] hover:underline cursor-pointer"
+                          className="text-[#7f1d1d] hover:text-red-800 cursor-pointer font-medium transition-all duration-300 hover:underline underline-offset-2"
                         >
                           Forgot Password?
                         </button>
@@ -489,9 +506,14 @@ const LoginPage = () => {
                       <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full bg-[#7f1d1d] text-white py-3 sm:py-3.5 rounded-lg shadow-lg mb-4 disabled:opacity-50 cursor-pointer hover:bg-[#8b2525] transition-colors text-sm sm:text-base"
+                        className="w-full bg-gradient-to-r from-[#7f1d1d] to-red-800 text-white py-4 rounded-xl shadow-lg mb-2 disabled:opacity-50 cursor-pointer hover:shadow-xl active:scale-[0.98] transition-all duration-300 text-base font-semibold"
                       >
-                        {isLoading ? 'Signing in...' : 'Log in'}
+                        {isLoading ? (
+                          <span className="flex items-center justify-center">
+                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                            Signing in...
+                          </span>
+                        ) : 'Log in'}
                       </button>
                     </motion.form>
                   ) : loginMethod === "mobile" && showMobileInput ? (
@@ -505,18 +527,16 @@ const LoginPage = () => {
                       transition={{ duration: 0.4, ease: "easeInOut" }}
                       className="absolute w-full left-0 right-0"
                     >
-                      {/* Mobile number input - ALWAYS visible */}
                       <input
                         type="tel"
                         value={mobileNumber}
                         onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, ''))}
                         placeholder="Mobile Number"
-                        className="w-full bg-white shadow-md p-3 sm:p-4 rounded-lg outline-none mb-4 cursor-text text-sm sm:text-base"
+                        className="w-full bg-white shadow-sm p-4 rounded-xl outline-none mb-4 cursor-text text-base border border-gray-200 focus:border-[#7f1d1d] focus:ring-2 focus:ring-[#7f1d1d]/20 transition-all duration-300"
                         maxLength={10}
                         disabled={isLoading || showOtpInput}
                       />
                       
-                      {/* OTP input - ONLY visible after OTP is sent */}
                       {showOtpInput && (
                         <>
                           <input
@@ -529,44 +549,51 @@ const LoginPage = () => {
                             placeholder="Enter 6-digit OTP"
                             maxLength={6}
                             disabled={isLoading}
-                            className="w-full bg-white shadow-md p-3 sm:p-4 rounded-lg outline-none mb-4 cursor-text text-sm sm:text-base"
+                            className="w-full bg-white shadow-sm p-4 rounded-xl outline-none mb-4 cursor-text text-base border border-gray-200 focus:border-[#7f1d1d] focus:ring-2 focus:ring-[#7f1d1d]/20 transition-all duration-300 text-center tracking-widest"
                           />
                           
-                          {/* VERIFY OTP BUTTON */}
                           <button
                             type="button"
                             onClick={verifyOtp}
                             disabled={isLoading || otp.length !== 6}
-                            className="w-full bg-[#7f1d1d] text-white py-3 sm:py-3.5 rounded-lg shadow-lg disabled:opacity-50 mb-4 cursor-pointer hover:bg-[#8b2525] transition-colors text-sm sm:text-base"
+                            className="w-full bg-gradient-to-r from-[#7f1d1d] to-red-800 text-white py-4 rounded-xl shadow-lg disabled:opacity-50 mb-2 cursor-pointer hover:shadow-xl active:scale-[0.98] transition-all duration-300 text-base font-semibold"
                           >
-                            {isLoading ? 'Verifying...' : 'Verify OTP'}
+                            {isLoading ? (
+                              <span className="flex items-center justify-center">
+                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                                Verifying...
+                              </span>
+                            ) : 'Verify OTP'}
                           </button>
                           
-                          {/* Resend OTP section */}
                           <div className="text-center mb-2">
                             {canResend ? (
                               <button 
                                 onClick={resendOtp} 
-                                className="text-[#7f1d1d] hover:underline cursor-pointer text-xs sm:text-sm"
+                                className="text-[#7f1d1d] hover:text-red-800 cursor-pointer text-sm font-medium transition-all duration-300 hover:underline underline-offset-2"
                               >
                                 Resend OTP
                               </button>
                             ) : (
-                              <p className="text-gray-500 text-xs sm:text-sm">Resend OTP in {otpTimer}s</p>
+                              <p className="text-gray-500 text-sm">Resend OTP in <span className="font-semibold">{otpTimer}s</span></p>
                             )}
                           </div>
                         </>
                       )}
                       
-                      {/* SEND OTP BUTTON - Only show when OTP input is NOT visible */}
                       {!showOtpInput && (
                         <button
                           type="button"
                           onClick={sendOtp}
                           disabled={isLoading || mobileNumber.length !== 10}
-                          className="w-full bg-[#7f1d1d] text-white py-3 sm:py-3.5 rounded-lg shadow-lg disabled:opacity-50 mb-4 cursor-pointer hover:bg-[#8b2525] transition-colors text-sm sm:text-base"
+                          className="w-full bg-gradient-to-r from-[#7f1d1d] to-red-800 text-white py-4 rounded-xl shadow-lg disabled:opacity-50 mb-2 cursor-pointer hover:shadow-xl active:scale-[0.98] transition-all duration-300 text-base font-semibold"
                         >
-                          {isLoading ? 'Sending...' : 'Send OTP'}
+                          {isLoading ? (
+                            <span className="flex items-center justify-center">
+                              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                              Sending...
+                            </span>
+                          ) : 'Send OTP'}
                         </button>
                       )}
                     </motion.div>
@@ -576,42 +603,38 @@ const LoginPage = () => {
             </div>
           </div>
           
-          {/* Social buttons section */}
-          <div className="p-4 sm:p-6 md:p-8 lg:p-10 pt-0 relative z-50">
-            <div className="flex items-center my-4 sm:my-6 gap-3 sm:gap-4">
+          {/* Social buttons section - REDUCED GAP */}
+          <div className="p-5 sm:p-6 md:p-8 lg:p-10 pt-0">
+            <div className="flex items-center my-2 sm:my-4 gap-3">
               <hr className="flex-1 border-gray-300" />
-              <span className="text-gray-500 text-xs sm:text-sm">Or continue with</span>
+              <span className="text-gray-500 text-xs sm:text-sm font-medium">Or continue with</span>
               <hr className="flex-1 border-gray-300" />
             </div>
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 relative z-50">
-              {/* Google button */}
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
               <button
                 type="button"
                 onClick={handleGoogleLogin}
                 disabled={socialLoginLoading}
-                className="flex items-center justify-center gap-2 p-2.5 sm:p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 cursor-pointer relative z-50 text-sm sm:text-base"
-                style={{ pointerEvents: 'auto' }}
+                className="flex items-center justify-center gap-2 p-3.5 sm:p-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition-all duration-300 disabled:opacity-50 cursor-pointer hover:shadow-md active:scale-[0.98] text-sm sm:text-base font-medium"
               >
                 {socialLoginLoading ? (
-                  <div className="w-4 h-4 border-2 border-[#7f1d1d] border-t-transparent rounded-full animate-spin mr-2"></div>
+                  <div className="w-5 h-5 border-2 border-[#7f1d1d] border-t-transparent rounded-full animate-spin mr-2"></div>
                 ) : (
-                  <FcGoogle size={18} className="sm:w-5 sm:h-5" />
+                  <FcGoogle size={22} className="sm:w-5 sm:h-5" />
                 )}
                 <span className="text-gray-700">Google</span>
               </button>
               
-              {/* Facebook button */}
               <button
                 type="button"
                 onClick={handleFacebookLogin}
                 disabled={socialLoginLoading}
-                className="flex items-center justify-center gap-2 p-2.5 sm:p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 cursor-pointer relative z-50 text-sm sm:text-base"
-                style={{ pointerEvents: 'auto' }}
+                className="flex items-center justify-center gap-2 p-3.5 sm:p-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition-all duration-300 disabled:opacity-50 cursor-pointer hover:shadow-md active:scale-[0.98] text-sm sm:text-base font-medium"
               >
                 {socialLoginLoading ? (
-                  <div className="w-4 h-4 border-2 border-[#7f1d1d] border-t-transparent rounded-full animate-spin mr-2"></div>
+                  <div className="w-5 h-5 border-2 border-[#7f1d1d] border-t-transparent rounded-full animate-spin mr-2"></div>
                 ) : (
-                  <FaFacebookF size={16} className="text-blue-600 sm:w-5 sm:h-5" />
+                  <FaFacebookF size={20} className="text-blue-600 sm:w-5 sm:h-5" />
                 )}
                 <span className="text-gray-700">Facebook</span>
               </button>
