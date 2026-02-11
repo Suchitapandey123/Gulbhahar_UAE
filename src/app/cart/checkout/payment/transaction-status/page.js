@@ -124,6 +124,8 @@ const TransactionStatusContent = () => {
     let detectedMethod = "online";
     if (method) {
       detectedMethod = method.toLowerCase();
+    } else if (checkoutData.paymentMethod === "PARTIAL_COD") {
+      detectedMethod = "partial_cod";
     } else if (trackingId && trackingId.startsWith("COD_")) {
       detectedMethod = "cod";
     } else if (bankRefNo || statusMessage?.toLowerCase().includes("bank")) {
@@ -168,9 +170,10 @@ const TransactionStatusContent = () => {
       setIsLoading(false);
     }, 500);
   }, []);
-
   // 🛡️ Enhanced function to prevent duplicate API calls
   const sendCompleteOrderDataToBackend = async (transactionData, checkoutData, userDataParam) => {
+
+   
     if (apiCallInProgress.current) {
       return;
     }
@@ -292,6 +295,16 @@ const TransactionStatusContent = () => {
             bankRefNo: null,
             gateway: "COD",
           };
+        } else if (transactionData.paymentMethod === "partial_cod" || checkoutData.paymentMethod === "PARTIAL_COD") {
+          return {
+            ...basePayment,
+            method: "PARTIAL_COD",
+            bankRefNo: transactionData.bankRefNo,
+            gateway: "CCAvenue",
+            partialAmountPaid: transactionData.amount ? parseFloat(transactionData.amount) : 0,
+            totalOrderAmount: checkoutData.orderTotal || 0,
+            codAmount: (checkoutData.orderTotal || 0) - (transactionData.amount ? parseFloat(transactionData.amount) : 0),
+          };
         } else {
           return {
             ...basePayment,
@@ -329,9 +342,7 @@ const TransactionStatusContent = () => {
             (transactionData.amount ? parseFloat(transactionData.amount) : 0),
           shipping: checkoutData.orderShipping || 0,
           discount: 0,
-          total: transactionData.amount
-            ? parseFloat(transactionData.amount)
-            : checkoutData.orderTotal || 0,
+          total: checkoutData.orderTotal || (transactionData.amount ? parseFloat(transactionData.amount) : 0),
           currency: "INR",
         },
 
@@ -383,7 +394,9 @@ const TransactionStatusContent = () => {
           notes:
             transactionData.paymentMethod === "cod"
               ? "COD Order - OTP Verified"
-              : null,
+              : (transactionData.paymentMethod === "partial_cod" || checkoutData.paymentMethod === "PARTIAL_COD")
+                ? `Partial COD - Paid ₹${transactionData.amount || 0} online, ₹${(checkoutData.orderTotal || 0) - parseFloat(transactionData.amount || 0)} COD`
+                : null,
           paymentCompletedAt: new Date().toISOString(),
         },
 
@@ -402,6 +415,8 @@ const TransactionStatusContent = () => {
         },
       };
 
+    
+
       // Send to backend with timeout
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
@@ -417,6 +432,7 @@ const TransactionStatusContent = () => {
           signal: controller.signal,
         }
       );
+    
 
       clearTimeout(timeoutId);
 
@@ -494,13 +510,7 @@ const TransactionStatusContent = () => {
       apiCallInProgress.current = false;
       setBackendProcessing(false);
 
-      // Only set as completed if it's a permanent error (not network issues)
-      if (error.name === "AbortError" || error.message.includes("network")) {
-     
-      } else {
-        
-        apiCallCompleted.current = true;
-      }
+      // Allow retry for all error types
     }
   };
 
@@ -510,20 +520,28 @@ const TransactionStatusContent = () => {
       return;
     }
 
-    if (apiCallCompleted.current) {
-  
+    if (backendSent && apiCallCompleted.current) {
       return;
     }
 
     if (paymentData && paymentData.status === "success") {
-   
-      // Reset only the necessary flags for retry
+      // Reset flags for retry
       apiCallInProgress.current = false;
+      apiCallCompleted.current = false;
       setBackendSent(false);
       setBackendProcessing(false);
-      sendCompleteOrderDataToBackend(paymentData);
-    } else {
 
+      // Re-read checkout data from localStorage
+      let retryCheckoutData = {};
+      let retryUserData = userDataRef.current;
+      try {
+        const saved = localStorage.getItem("checkoutFormData");
+        if (saved) retryCheckoutData = JSON.parse(saved);
+      } catch (e) {
+        console.error("Error reading checkout data for retry:", e);
+      }
+
+      sendCompleteOrderDataToBackend(paymentData, retryCheckoutData, retryUserData);
     }
   };
 
@@ -531,27 +549,27 @@ const TransactionStatusContent = () => {
     switch (paymentStatus) {
       case "success":
         return (
-          <CheckCircle className="w-16 h-16 sm:w-20 sm:w-20 lg:w-24 lg:h-24 text-green-500 animate-bounce-gentle status-icon" />
+          <CheckCircle className="w-16 h-16  sm:w-20 lg:w-24 lg:h-24 text-green-500 animate-bounce-gentle status-icon" />
         );
       case "failed":
       case "failure":
         return (
-          <XCircle className="w-16 h-16 sm:w-20 sm:w-20 lg:w-24 lg:h-24 text-red-500 animate-pulse status-icon" />
+          <XCircle className="w-16 h-16  sm:w-20 lg:w-24 lg:h-24 text-red-500 animate-pulse status-icon" />
         );
       case "cancelled":
       case "aborted":
         return (
-          <AlertTriangle className="w-16 h-16 sm:w-20 sm:w-20 lg:w-24 lg:h-24 text-yellow-500 animate-pulse status-icon" />
+          <AlertTriangle className="w-16 h-16  sm:w-20 lg:w-24 lg:h-24 text-yellow-500 animate-pulse status-icon" />
         );
       default:
         return (
-          <AlertTriangle className="w-16 h-16 sm:w-20 sm:w-20 lg:w-24 lg:h-24 text-gray-500 status-icon" />
+          <AlertTriangle className="w-16 h-16 sm:w-20 lg:w-24 lg:h-24 text-gray-500 status-icon" />
         );
     }
   };
 
   const getPaymentMethodIcon = () => {
-    if (paymentMethod === "cod") {
+    if (paymentMethod === "cod" || paymentMethod === "partial_cod") {
       return <Banknote className="h-5 w-5 text-red-900" />;
     } else {
       return <CreditCard className="h-5 w-5 text-red-900" />;
@@ -559,7 +577,14 @@ const TransactionStatusContent = () => {
   };
 
   const getPaymentMethodText = () => {
-    if (paymentMethod === "cod") {
+    if (paymentMethod === "partial_cod") {
+      return {
+        text: "Partial Cash on Delivery",
+        color: "text-red-900",
+        bgColor: "bg-red-50",
+        borderColor: "border-red-200",
+      };
+    } else if (paymentMethod === "cod") {
       return {
         text: "Cash on Delivery",
         color: "text-red-900",
@@ -581,13 +606,17 @@ const TransactionStatusContent = () => {
       case "success":
         return {
           title:
-            paymentMethod === "cod"
-              ? "COD Order Confirmed! 🎉"
-              : "Payment Successful! 🎉",
+            paymentMethod === "partial_cod"
+              ? "Order Confirmed! 🎉"
+              : paymentMethod === "cod"
+                ? "COD Order Confirmed! 🎉"
+                : "Payment Successful! 🎉",
           message:
-            paymentMethod === "cod"
-              ? "Your COD order has been confirmed. Pay when your order is delivered to your doorstep!"
-              : "Your payment has been processed successfully. Your order is confirmed!",
+            paymentMethod === "partial_cod"
+              ? "Your advance payment is confirmed! Pay the remaining amount when your order is delivered."
+              : paymentMethod === "cod"
+                ? "Your COD order has been confirmed. Pay when your order is delivered to your doorstep!"
+                : "Your payment has been processed successfully. Your order is confirmed!",
           color: "text-green-600",
           bgColor: "from-green-50 to-white",
         };
@@ -595,13 +624,17 @@ const TransactionStatusContent = () => {
       case "failure":
         return {
           title:
-            paymentMethod === "cod"
-              ? "COD Order Failed 😞"
-              : "Payment Failed 😞",
+            paymentMethod === "partial_cod"
+              ? "Payment Failed 😞"
+              : paymentMethod === "cod"
+                ? "COD Order Failed 😞"
+                : "Payment Failed 😞",
           message:
-            paymentMethod === "cod"
-              ? "Your COD order could not be processed. Please try again or contact support."
-              : "Your payment could not be processed. Please try again or use a different payment method.",
+            paymentMethod === "partial_cod"
+              ? "Your advance payment could not be processed. Please try again or use a different payment method."
+              : paymentMethod === "cod"
+                ? "Your COD order could not be processed. Please try again or contact support."
+                : "Your payment could not be processed. Please try again or use a different payment method.",
           color: "text-red-600",
           bgColor: "from-red-50 to-white",
         };
@@ -609,13 +642,17 @@ const TransactionStatusContent = () => {
       case "aborted":
         return {
           title:
-            paymentMethod === "cod"
-              ? "COD Order Cancelled ⏹️"
-              : "Payment Cancelled ⏹️",
+            paymentMethod === "partial_cod"
+              ? "Payment Cancelled ⏹️"
+              : paymentMethod === "cod"
+                ? "COD Order Cancelled ⏹️"
+                : "Payment Cancelled ⏹️",
           message:
-            paymentMethod === "cod"
-              ? "You have cancelled the COD order process. Your order has not been placed."
-              : "You have cancelled the payment process. Your order has not been placed.",
+            paymentMethod === "partial_cod"
+              ? "You have cancelled the payment process. Your order has not been placed."
+              : paymentMethod === "cod"
+                ? "You have cancelled the COD order process. Your order has not been placed."
+                : "You have cancelled the payment process. Your order has not been placed.",
           color: "text-yellow-600",
           bgColor: "from-yellow-50 to-white",
         };
@@ -788,9 +825,11 @@ const TransactionStatusContent = () => {
                     <CheckCircle className="h-5 w-5 text-green-600" />
                   </div>
                   <span className="text-sm sm:text-base text-green-800 font-semibold">
-                    {paymentMethod === "cod"
-                      ? "COD Order Created Successfully"
-                      : "Order Created Successfully"}
+                    {paymentMethod === "partial_cod"
+                      ? "Partial COD Order Created Successfully"
+                      : paymentMethod === "cod"
+                        ? "COD Order Created Successfully"
+                        : "Order Created Successfully"}
                   </span>
                 </div>
               ) : backendProcessing || apiCallInProgress.current ? (
@@ -799,9 +838,11 @@ const TransactionStatusContent = () => {
                     <Loader2 className="h-5 w-5 text-red-900 animate-spin" />
                   </div>
                   <span className="text-sm sm:text-base text-red-900 font-semibold">
-                    {paymentMethod === "cod"
-                      ? "Creating Your COD Order..."
-                      : "Creating Your Order..."}
+                    {paymentMethod === "partial_cod"
+                      ? "Creating Your Partial COD Order..."
+                      : paymentMethod === "cod"
+                        ? "Creating Your COD Order..."
+                        : "Creating Your Order..."}
                   </span>
                 </div>
               ) : (
@@ -895,12 +936,14 @@ const TransactionStatusContent = () => {
               </strong>
               <br />
               <span className="text-green-700">
-                {paymentMethod === "cod"
-                  ? "💰 Your COD order is confirmed. Pay when it's delivered to your doorstep!"
-                  : "📧 You will receive an order confirmation email shortly."}
+                {paymentMethod === "partial_cod"
+                  ? "💰 Your advance payment is done! Pay the remaining amount on delivery."
+                  : paymentMethod === "cod"
+                    ? "💰 Your COD order is confirmed. Pay when it's delivered to your doorstep!"
+                    : "📧 You will receive an order confirmation email shortly."}
               </span>
             </p>
-            {paymentMethod !== "cod" && (
+            {paymentMethod !== "cod" && paymentMethod !== "partial_cod" && (
               <div className="mt-4 text-xs text-green-600 bg-white rounded-lg p-3 border border-green-200">
                 💡 <strong>Pro Tip:</strong> Check your email (including spam
                 folder) for order updates

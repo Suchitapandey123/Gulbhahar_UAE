@@ -445,13 +445,10 @@ export default function CheckoutComponent() {
       return;
     }
 
-    // console.log(validatePostalCode)
+  
 
     // 🔧 CHECK IF API IS ENABLED
     if (!ENABLE_PINCODE_API) {
-      // ✅ DEFAULT VALIDATION WITHOUT API
-      // console.log("📍 Pincode API disabled - using default validation");
-
       // Simulate a brief validation delay
       setPostalCodeValidation((prev) => ({
         ...prev,
@@ -480,8 +477,6 @@ export default function CheckoutComponent() {
         toast.success(
           `✅ Postal code ${postalCode} - Default validation (API disabled)`,
         );
-
-        // showToast(`✅ Postal code ${postalCode} - Default validation (API disabled)`, "success");
       }, 500);
 
       return;
@@ -512,25 +507,10 @@ export default function CheckoutComponent() {
         toast.success(
           `✅ Postal code valid for ${result.deliveryInfo.city}, ${result.deliveryInfo.district}`,
         );
-
-        // showToast(
-        //   `✅ Postal code valid for ${result.deliveryInfo.city}, ${result.deliveryInfo.district}`,
-        //   "success"
-        // );
       } else {
         toast.error(`❌ ${result.error}`);
-        // showToast(result.error, "error");
+       
       }
-      // } catch (error) {
-      //   setPostalCodeValidation({
-      //     isValidating: false,
-      //     isValid: false,
-      //     error: error.message || "Unable to validate postal code",
-      //     deliveryInfo: null,
-      //   });
-      //   showToast(error.message || "Unable to validate postal code", "error");
-
-      // }
     } catch (error) {
       let errorMessage = "Unable to validate postal code";
       if (error.code === "ECONNABORTED") {
@@ -553,8 +533,6 @@ export default function CheckoutComponent() {
       });
 
       toast.error(`❌ ${errorMessage}`);
-
-      // showToast(errorMessage, "error");
     }
   };
 
@@ -680,17 +658,13 @@ export default function CheckoutComponent() {
       if (formData.postalCode) {
         if (postalCodeValidation.isValidating) {
           toast.warning("Please wait for postal code validation to complete");
-          // showToast(
-          //   "Please wait for postal code validation to complete",
-          //   "warning"
-          // );
           setIsProcessing(false);
           return;
         }
 
         if (postalCodeValidation.isValid === false) {
           toast.error("Please enter a valid postal code for delivery");
-          // showToast("Please enter a valid postal code for delivery", "error");
+
           setIsProcessing(false);
           return;
         }
@@ -847,7 +821,7 @@ export default function CheckoutComponent() {
           Customer_Email: formData.email,
         },
       });
-
+  console.log(total)
       toast.success("Information validated! Redirecting to payment...");
       setTimeout(() => {
         router.push(
@@ -856,8 +830,7 @@ export default function CheckoutComponent() {
       }, 500);
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
-      // console.error("Error processing checkout:", error);
-      // showToast("Something went wrong. Please try again.", "error");
+
     } finally {
       setIsProcessing(false);
     }

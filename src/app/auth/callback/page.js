@@ -51,35 +51,14 @@ const OAuthCallbackPage = () => {
               throw new Error(result.error);
             }
              userData = result.userData;
-            // console.log('📦 User data from backend:', userData);
+         
           }
-          
-          // console.log('🔑 Completing social login...');
+         
           const loginSuccess = await login(token, userData);
-            // const data = response.data.user;
-            // // console.log('📦 User data from backend:', data);
-            
-          //   userData = {
-          //     email: data.email,
-          //     name: data.name,
-          //     firstName: data.firstName || data.first_name || data.user?.firstName || '',
-          //     lastName: data.lastName || data.last_name || data.user?.lastName || '',
-          //     userId: data.userId || data.id || data.user?.id || '',
-          //     location: data.location || data.user?.location || '',
-          //     phoneNumber: data.phoneNumber || data.phone || data.user?.phoneNumber || '',
-          //     profilePicture: data.profilePicture || data.avatar || data.user?.profilePicture || data?.image || '',
-          //     emailVerified: data.emailVerified !== undefined ? data.emailVerified : true,
-          //     phoneVerified: data.phoneVerified !== undefined ? data.phoneVerified : true,
-          //     ...data.user
-          //   };
-          // }
-          
-          // // console.log('🔑 Completing social login...');
-          // const loginSuccess = await login(token, userData);
+      
           
           if (loginSuccess) {
-            // console.log('✅ Social login successful, redirecting to home...');
-            // Direct redirect to home page
+          
             window.location.href = '/';
           } else {
             throw new Error('Failed to complete login process');
@@ -96,8 +75,6 @@ const OAuthCallbackPage = () => {
           setIsProcessing(false);
         }
       } else if (status === 'unauthenticated') {
-        // No valid session, redirect to login
-        // console.log('❌ No valid OAuth session, redirecting to login');
         router.push('/login');
       }
     };
