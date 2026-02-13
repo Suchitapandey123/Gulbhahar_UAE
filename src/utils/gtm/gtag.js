@@ -1,3 +1,4 @@
+/** @param {{ action: any, params?: object, callback?: () => void }} options */
 export const gaEvent = ({ action, params, callback }) => {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", action, {

@@ -53,7 +53,6 @@ interface ProductViewProps {
 }
 
 export const ProductView = ({ sizeChart , product, customRed }: ProductViewProps) => {
-  console.log(sizeChart)
   const { addToCart, addingToCart } = useCart();
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
@@ -177,6 +176,7 @@ export const ProductView = ({ sizeChart , product, customRed }: ProductViewProps
                 customRed={customRed}
                 setShowSizeGuide={setShowSizeGuide}
                 sizeRange={sizeRange}
+                shouldShowSizeGuide={sizeChart.isActive!}
               />
 
               <ProductPurchaseSection

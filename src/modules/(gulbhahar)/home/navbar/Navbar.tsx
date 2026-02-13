@@ -2,7 +2,7 @@
 import GulbhaharSidebar from "@/modules/(gulbhahar)/sidebar/Sidebar";
 import { useAuth } from "@/providers/ContextProviders/AuthContext";
 import { useCart } from "@/providers/ContextProviders/CartContext";
-import CartPage from "@/shared-components/Navbar/CartPage";
+import CartPage from "@/modules/(gulbhahar)/cart/CartPage";
 import DesktopNav from "@/shared-components/Navbar/DesktopNav";
 import MobileNav from "@/shared-components/Navbar/MobileNav";
 import SearchPopup from "@/shared-components/Navbar/SearchPopup";

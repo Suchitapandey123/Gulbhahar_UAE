@@ -19,7 +19,7 @@ import Image from "next/image";
 import SearchPopup from "./SearchPopup";
 import { useAuth } from "@/providers/ContextProviders/AuthContext"; // 🔥 ADD THIS IMPORT
 import { useCart } from "@/providers/ContextProviders/CartContext";
-import CartPage from "./CartPage";
+import CartPage from "@/modules/(gulbhahar)/cart/CartPage";
 import { signOut } from "next-auth/react";
 
 const Navbar = () => {

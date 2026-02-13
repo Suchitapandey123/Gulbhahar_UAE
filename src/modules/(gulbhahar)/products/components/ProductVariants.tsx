@@ -12,6 +12,7 @@ interface ProductVariantsProps {
   setSelectedSize: (size: string) => void;
   customRed: string;
   setShowSizeGuide: (show: boolean) => void;
+  shouldShowSizeGuide:boolean;
   sizeRange: { size: string; available: boolean; quantity: number }[];
 }
 
@@ -22,10 +23,13 @@ export const ProductVariants = ({
   selectedSize,
   setSelectedSize,
   customRed,
-  setShowSizeGuide,
   sizeRange,
+  setShowSizeGuide,
+  shouldShowSizeGuide,
 }: ProductVariantsProps) => {
+  console.log(shouldShowSizeGuide)
   const availableColors = useMemo(() => {
+
     if (!product.availableColors || product.availableColors.length === 0) {
       return [];
     }
@@ -85,7 +89,9 @@ export const ProductVariants = ({
           <h3 className="text-base font-medium text-gray-900">
             {"Available Sizes"}:
           </h3>
+          {shouldShowSizeGuide && (
           <button
+            disabled={!shouldShowSizeGuide}
             onClick={() => {
               console.log("clicked");
               setShowSizeGuide(true);
@@ -96,6 +102,7 @@ export const ProductVariants = ({
             <Ruler className="w-4 h-4" />
             Size Guide
           </button>
+          )}
         </div>
         <div className="flex flex-wrap gap-2">
           {sizeRange.map(({ size, available, quantity }) => (

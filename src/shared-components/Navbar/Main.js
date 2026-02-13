@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 
 import CollectionsDropdown from "@/modules/(gulbhahar)/home/navbar/Navbar.CollectionDropdown";
 import { Menu, X } from "lucide-react";
-import CartPage from "./CartPage";
+import CartPage from "@/modules/(gulbhahar)/cart/CartPage";
 import DesktopNav from "./DesktopNav";
 import MobileBackdrop from "./MobileBackdrop";
 import MobileMenuSidebar from "./MobileMenuSidebar";

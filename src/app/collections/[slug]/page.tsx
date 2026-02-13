@@ -147,7 +147,7 @@ export default async function Page({ params: rawParams }: Props) {
         <CategoryCollection_ParentCategoryProducts parentCategory={parentCategory} />
         </>
       )}
-      <CategoryCollection_MatchingProducts />
+      <CategoryCollection_MatchingProducts parentCategory={parentCategory}  />
       <ContentSection page={page} />
       <QuickLinks parentCategory={parentCategory} currentSlug={slug} />
       <QuickTag popularTags={page?.keywords || []} />

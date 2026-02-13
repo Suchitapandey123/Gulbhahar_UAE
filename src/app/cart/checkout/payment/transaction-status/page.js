@@ -36,7 +36,7 @@ const TransactionStatusContent = () => {
     email: null,
     firstName: null,
     lastName: null,
-    phone: null
+    phone: null,
   });
 
   // 🎯 Refs to prevent duplicate API calls
@@ -49,7 +49,7 @@ const TransactionStatusContent = () => {
     email: null,
     firstName: null,
     lastName: null,
-    phone: null
+    phone: null,
   });
 
   useEffect(() => {
@@ -70,13 +70,13 @@ const TransactionStatusContent = () => {
       email: null,
       firstName: null,
       lastName: null,
-      phone: null
+      phone: null,
     };
 
     if (savedCheckoutData) {
       try {
         checkoutData = JSON.parse(savedCheckoutData);
-        
+
         // 🔥 User data extract karo Meta Pixel ke liye
         if (checkoutData.email) {
           const email = checkoutData.email.trim().toLowerCase();
@@ -86,12 +86,16 @@ const TransactionStatusContent = () => {
 
           // Full name se first aur last name extract karo
           if (checkoutData.fullName) {
-            const nameParts = checkoutData.fullName.trim().split(' ');
+            const nameParts = checkoutData.fullName.trim().split(" ");
             if (nameParts[0]) {
-              firstName = nameParts[0].replace(/[^a-zA-Z]/g, '').toLowerCase();
+              firstName = nameParts[0].replace(/[^a-zA-Z]/g, "").toLowerCase();
             }
             if (nameParts.length > 1) {
-              lastName = nameParts.slice(1).join(' ').replace(/[^a-zA-Z]/g, '').toLowerCase();
+              lastName = nameParts
+                .slice(1)
+                .join(" ")
+                .replace(/[^a-zA-Z]/g, "")
+                .toLowerCase();
             }
           }
 
@@ -99,7 +103,7 @@ const TransactionStatusContent = () => {
             email,
             firstName,
             lastName,
-            phone
+            phone,
           };
 
           // 🆕 REF mein bhi save karo for immediate access
@@ -154,7 +158,11 @@ const TransactionStatusContent = () => {
       processedTransactionId.current = trackingId;
 
       // 🆕 User data directly pass karo (extractedUserData se)
-      sendCompleteOrderDataToBackend(transactionData, checkoutData, extractedUserData);
+      sendCompleteOrderDataToBackend(
+        transactionData,
+        checkoutData,
+        extractedUserData,
+      );
     } else {
       console.warn("❌ Missing required parameters:", {
         status,
@@ -171,9 +179,11 @@ const TransactionStatusContent = () => {
     }, 500);
   }, []);
   // 🛡️ Enhanced function to prevent duplicate API calls
-  const sendCompleteOrderDataToBackend = async (transactionData, checkoutData, userDataParam) => {
-
-   
+  const sendCompleteOrderDataToBackend = async (
+    transactionData,
+    checkoutData,
+    userDataParam,
+  ) => {
     if (apiCallInProgress.current) {
       return;
     }
@@ -196,11 +206,8 @@ const TransactionStatusContent = () => {
     apiCallInProgress.current = true;
     setBackendProcessing(true);
 
-   
-
     // 🆕 User data source decide karo (parameter ya ref)
     const finalUserData = userDataParam || userDataRef.current || userData;
-   
 
     try {
       const generateSessionId = () => {
@@ -223,7 +230,7 @@ const TransactionStatusContent = () => {
           const platform = navigator.platform;
 
           const fingerprint = btoa(
-            `${canvas.toDataURL()}_${screen}_${timezone}_${language}_${platform}`
+            `${canvas.toDataURL()}_${screen}_${timezone}_${language}_${platform}`,
           );
           return `FP_${fingerprint.substring(0, 16)}`;
         } catch (error) {
@@ -295,15 +302,22 @@ const TransactionStatusContent = () => {
             bankRefNo: null,
             gateway: "COD",
           };
-        } else if (transactionData.paymentMethod === "partial_cod" || checkoutData.paymentMethod === "PARTIAL_COD") {
+        } else if (
+          transactionData.paymentMethod === "partial_cod" ||
+          checkoutData.paymentMethod === "PARTIAL_COD"
+        ) {
           return {
             ...basePayment,
             method: "PARTIAL_COD",
             bankRefNo: transactionData.bankRefNo,
             gateway: "CCAvenue",
-            partialAmountPaid: transactionData.amount ? parseFloat(transactionData.amount) : 0,
+            partialAmountPaid: transactionData.amount
+              ? parseFloat(transactionData.amount)
+              : 0,
             totalOrderAmount: checkoutData.orderTotal || 0,
-            codAmount: (checkoutData.orderTotal || 0) - (transactionData.amount ? parseFloat(transactionData.amount) : 0),
+            codAmount:
+              (checkoutData.orderTotal || 0) -
+              (transactionData.amount ? parseFloat(transactionData.amount) : 0),
           };
         } else {
           return {
@@ -314,7 +328,6 @@ const TransactionStatusContent = () => {
           };
         }
       };
-
 
       const completeOrderData = {
         tracking_id: transactionData.trackingId,
@@ -335,14 +348,16 @@ const TransactionStatusContent = () => {
           itemCount: (checkoutData.orderItems || []).length,
           totalQuantity: (checkoutData.orderItems || []).reduce(
             (sum, item) => sum + item.quantity,
-            0
+            0,
           ),
           subtotal:
             checkoutData.orderSubtotal ||
             (transactionData.amount ? parseFloat(transactionData.amount) : 0),
           shipping: checkoutData.orderShipping || 0,
           discount: 0,
-          total: checkoutData.orderTotal || (transactionData.amount ? parseFloat(transactionData.amount) : 0),
+          total:
+            checkoutData.orderTotal ||
+            (transactionData.amount ? parseFloat(transactionData.amount) : 0),
           currency: "INR",
         },
 
@@ -394,7 +409,8 @@ const TransactionStatusContent = () => {
           notes:
             transactionData.paymentMethod === "cod"
               ? "COD Order - OTP Verified"
-              : (transactionData.paymentMethod === "partial_cod" || checkoutData.paymentMethod === "PARTIAL_COD")
+              : transactionData.paymentMethod === "partial_cod" ||
+                  checkoutData.paymentMethod === "PARTIAL_COD"
                 ? `Partial COD - Paid ₹${transactionData.amount || 0} online, ₹${(checkoutData.orderTotal || 0) - parseFloat(transactionData.amount || 0)} COD`
                 : null,
           paymentCompletedAt: new Date().toISOString(),
@@ -415,36 +431,28 @@ const TransactionStatusContent = () => {
         },
       };
 
-    
-
       // Send to backend with timeout
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
 
-      const response = await fetch(
-        `${API_BASE_URL}/guestorderRoutes/order`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(completeOrderData),
-          signal: controller.signal,
-        }
-      );
-    
+      const response = await fetch(`${API_BASE_URL}/guestorderRoutes/order`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(completeOrderData),
+        signal: controller.signal,
+      });
 
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-
         try {
-            const res = await analyticsAPI.trackOrderFailed()
-          
-          } catch (error) {
-            console.error(error)
-          }
-      
+          const res = await analyticsAPI.trackOrderFailed();
+        } catch (error) {
+          console.error(error);
+        }
+
         const errorData = await response
           .json()
           .catch(() => ({ message: "Unknown error" }));
@@ -452,37 +460,30 @@ const TransactionStatusContent = () => {
       }
 
       const result = await response.json();
-     
 
       gaEvent({
         action: "Final Order Placed SuccessFully",
         params: {
-          "payment_method": transactionData.paymentMethod,
-        }
-      })
+          payment_method: transactionData.paymentMethod,
+        },
+      });
 
-       fbEvent({
+      fbEvent({
         action: "Purchase",
         params: {
-          "content_name": `${transactionData.paymentMethod}_Order_Placed_SuccessFully`,
-          "content_type" : transactionData.paymentMethod
-        }
-      })
-
+          content_name: `${transactionData.paymentMethod}_Order_Placed_SuccessFully`,
+          content_type: transactionData.paymentMethod,
+        },
+      });
 
       try {
-            const res = await analyticsAPI.trackOrderConfirmed()
-           
-          } catch (error) {
-            console.error(error)
-          }
-      
-
+        const res = await analyticsAPI.trackOrderConfirmed();
+      } catch (error) {
+        console.error(error);
+      }
 
       // 🎯 Mark as successfully completed
       apiCallCompleted.current = true;
-      
-      
 
       setBackendSent(true);
       setBackendProcessing(false);
@@ -492,11 +493,9 @@ const TransactionStatusContent = () => {
         localStorage.removeItem("checkoutFormData");
         localStorage.removeItem("shopping-cart");
         clearCart();
-     
 
         // 🛒 Clear cart only on successful transaction
         localStorage.removeItem("cart");
-        
 
         // Dispatch custom event to notify cart context of the change
         window.dispatchEvent(new Event("cartCleared"));
@@ -541,7 +540,11 @@ const TransactionStatusContent = () => {
         console.error("Error reading checkout data for retry:", e);
       }
 
-      sendCompleteOrderDataToBackend(paymentData, retryCheckoutData, retryUserData);
+      sendCompleteOrderDataToBackend(
+        paymentData,
+        retryCheckoutData,
+        retryUserData,
+      );
     }
   };
 
@@ -694,10 +697,11 @@ const TransactionStatusContent = () => {
       className={`min-h-screen mt-14 sm:mt-[72px] bg-gradient-to-br ${statusInfo.bgColor} flex items-center justify-center px-4 py-8`}
     >
       <div
-        className={`bg-white rounded-3xl shadow-2xl border border-red-100 p-6 sm:p-8 lg:p-10 w-full max-w-md sm:max-w-lg lg:max-w-2xl text-center transform transition-all duration-1000 ${showContent
+        className={`bg-white rounded-3xl shadow-2xl border border-red-100 p-6 sm:p-8 lg:p-10 w-full max-w-md sm:max-w-lg lg:max-w-2xl text-center transform transition-all duration-1000 ${
+          showContent
             ? "scale-100 opacity-100 translate-y-0"
             : "scale-95 opacity-0 translate-y-8"
-          }`}
+        }`}
       >
         {/* Status Icon with Enhanced Animation */}
         <div className="mb-8 flex justify-center relative">
