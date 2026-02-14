@@ -791,8 +791,7 @@ function PaymentContent() {
 
     // Determine the amount to charge
     const chargeAmount = partialAmount || checkoutData?.orderTotal;
-    console.log("Charging amount:", chargeAmount);
-    console.log("object",checkoutData)
+
 
     // Add form fields
     const formData = {
@@ -834,10 +833,6 @@ function PaymentContent() {
       promo_code: "",
       customer_identifier: checkoutData?.phone || "",
     };
-
-    console.log(formData)
-
-    console.log("dvfkjehdson")
     // Create hidden inputs
     Object.keys(formData).forEach((key) => {
       const input = document.createElement("input");

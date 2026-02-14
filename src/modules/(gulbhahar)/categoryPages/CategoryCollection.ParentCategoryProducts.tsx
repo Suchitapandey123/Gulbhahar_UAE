@@ -2,19 +2,21 @@ import productApi from "@/app/api/v0/product-service";
 import Link from "next/link";
 import { Fragment } from "react";
 import ProductCard from "../common/ProductCard";
+import CategoryCollectionPreOrderProducts from "./CategoryCollection.PreOrderProducts";
 
 interface ParentCategoryProps {
   parentCategory: string;
+  slug?: string ;
 }
 
 export const CategoryCollection_ParentCategoryProducts = async ({
-  parentCategory,
+  parentCategory,slug
 }: ParentCategoryProps) => {
   // Use the dynamic parentCategory prop for the API call
   const products = await productApi.getProductsByParentCategory(parentCategory);
 
   if (products.length === 0) {
-    return null;
+    return <CategoryCollectionPreOrderProducts parentCategory={parentCategory} slug={slug} />;
   }
 
   // Format parentCategory for display (e.g., 'suit' -> 'Suits')

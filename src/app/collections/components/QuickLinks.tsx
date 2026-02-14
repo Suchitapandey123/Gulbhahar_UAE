@@ -30,8 +30,8 @@ interface QuickLinksProps {
 }
 
 export default async function QuickLinks({
-  parentCategory,
-  currentSlug,
+  parentCategory = "lehenga",
+  currentSlug = "kanjivaram-lehenga",
 }: QuickLinksProps) {
   if (!parentCategory || !currentSlug) return null;
 

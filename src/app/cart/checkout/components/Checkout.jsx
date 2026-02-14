@@ -821,7 +821,7 @@ export default function CheckoutComponent() {
           Customer_Email: formData.email,
         },
       });
-  console.log(total)
+  // console.log(total)
       toast.success("Information validated! Redirecting to payment...");
       setTimeout(() => {
         router.push(

@@ -165,7 +165,6 @@ export default function JuttisCollectionClient({
     (safePage - 1) * ITEMS_PER_PAGE,
     safePage * ITEMS_PER_PAGE,
   );
-  console.log(initialProducts)
 
   return (
     <div className="w-full lg:px-2">

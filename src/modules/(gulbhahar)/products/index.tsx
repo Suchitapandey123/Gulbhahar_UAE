@@ -19,7 +19,7 @@ export default async function ProductModule({ product, similarProducts }: Produc
 
 
   const sizeChart = await sizeChartService.getSizeChartByParentCategory(product.parentCategory[0])
-  console.log(sizeChart)
+
   const parentCategoryName = Array.isArray(product.parentCategory) ? product.parentCategory[0] : product.parentCategory;
   const cacheVersion = product.updatedAt ? `?v=${product.updatedAt}` : "";
   const firstColorImages = product.images?.[0] || [];

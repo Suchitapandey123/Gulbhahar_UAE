@@ -20,7 +20,7 @@ export default async function JuttisCollection() {
 
   return (
     <div className="mt-16 pt-2 lg:mt-20">
-      <div className="max-w-[1600px] mx-auto px-2 lg:px-4">
+      <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto px-2 lg:px-4">
         {/* Client Component for Filtering and Grid */}
         <JuttisCollectionClient initialProducts={products} />
       </div>

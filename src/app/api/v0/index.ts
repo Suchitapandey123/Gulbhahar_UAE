@@ -15,6 +15,4 @@ export const sizeChartService = {
     if (!res.ok) return { success: false };
     return res.json();
   },
-
-
 };

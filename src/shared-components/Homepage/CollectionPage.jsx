@@ -26,7 +26,6 @@ export default function CollectionsPage({ collections = [] }) {
     : collections.filter(collection => {
         const parentCategories = collection.parentCategory || [];
         const categoryField = collection.category || "";
-console.log(categoryField)
         // Check parentCategory array first
         const matchesParentCategory = parentCategories.some(
           cat => cat?.toLowerCase().trim() === selectedCategory.toLowerCase().trim()

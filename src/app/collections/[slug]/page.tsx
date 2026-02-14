@@ -1,7 +1,7 @@
 import productApi from "@/app/api/v0/product-service";
 import CategoryCollection from "@/modules/(gulbhahar)/categoryPages/CategoryCollection";
-import CategoryCollection_DummyProducts from "@/modules/(gulbhahar)/categoryPages/CategoryCollection.DummyProducts";
 import CategoryCollection_MatchingProducts from "@/modules/(gulbhahar)/categoryPages/CategoryCollection.MatchingProducts";
+import { CategoryCollection_ParentCategoryProducts } from "@/modules/(gulbhahar)/categoryPages/CategoryCollection.ParentCategoryProducts";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { cache } from "react";
@@ -9,7 +9,6 @@ import { PageData, pageService } from "../../api/page-service/pageService";
 import QuickLinks from "../components/QuickLinks";
 import QuickTag from "../components/QuickTag";
 import ContentSection from "./components/ContentSection";
-import { CategoryCollection_ParentCategoryProducts } from "@/modules/(gulbhahar)/categoryPages/CategoryCollection.ParentCategoryProducts";
 
 // ISR Configuration: Revalidate every 7 days (604800 seconds)
 export const revalidate = 604800;
@@ -29,6 +28,7 @@ const validateSlugCached = cache(async (slug: string) => {
   }
 });
 
+
 const getPageDataCached = cache(
   async (slug: string): Promise<PageData | null> => {
     try {
@@ -40,6 +40,8 @@ const getPageDataCached = cache(
     }
   },
 );
+
+
 
 export async function generateMetadata({
   params: rawParams,
@@ -132,22 +134,19 @@ export default async function Page({ params: rawParams }: Props) {
   const page = await getPageDataCached(slug);
   if (!page) redirect("/not-found");
   const parentCategory = page.parentCategory[0];
-   const products = await productApi.getProductsByCategory(slug);
+  const products = await productApi.getProductsByCategory(slug);
   return (
     <div className="mt-24 px-2 max-w-7xl 2xl:max-w-[1600px] mx-auto">
-      {products.length > 0 && (
-        <CategoryCollection products={products} />
-      )}
+      {products.length > 0 && <CategoryCollection products={products} />}
       {products.length === 0 && (
         <>
-         <CategoryCollection_DummyProducts
-          parentCategory={parentCategory}
-          slug={slug}
-        />
-        <CategoryCollection_ParentCategoryProducts parentCategory={parentCategory} />
+          <CategoryCollection_ParentCategoryProducts
+            parentCategory={parentCategory}
+            slug={slug}
+          />
         </>
       )}
-      <CategoryCollection_MatchingProducts parentCategory={parentCategory}  />
+      <CategoryCollection_MatchingProducts parentCategory={parentCategory} />
       <ContentSection page={page} />
       <QuickLinks parentCategory={parentCategory} currentSlug={slug} />
       <QuickTag popularTags={page?.keywords || []} />

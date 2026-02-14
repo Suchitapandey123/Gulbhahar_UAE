@@ -27,7 +27,7 @@ export const ProductVariants = ({
   setShowSizeGuide,
   shouldShowSizeGuide,
 }: ProductVariantsProps) => {
-  console.log(shouldShowSizeGuide)
+  
   const availableColors = useMemo(() => {
 
     if (!product.availableColors || product.availableColors.length === 0) {
@@ -93,7 +93,7 @@ export const ProductVariants = ({
           <button
             disabled={!shouldShowSizeGuide}
             onClick={() => {
-              console.log("clicked");
+     
               setShowSizeGuide(true);
             }}
             className="text-sm hover:underline flex items-center gap-1 font-medium"
