@@ -27,7 +27,7 @@ export async function GET(
     }
 
     const page = sitemapId;
-    const limit = 500; // adjust if needed
+    const limit = 4000; // adjust if needed
     const apiRes = await fetch(`${SITEMAPS_API}?page=${page}&limit=${limit}`, {
       next: { revalidate: 2 * 60 * 5 }, // revalidate every 5 minutes
     });
