@@ -12,6 +12,7 @@ export const Breadcrumbs = ({
   productName,
   customRed,
 }: BreadcrumbsProps) => {
+  console.log(parentCategoryName)
   return (
     <div className="mb-4 lg:mb-6">
       <nav className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm text-gray-600 overflow-x-auto pb-1">
@@ -24,7 +25,7 @@ export const Breadcrumbs = ({
           </Link>
           <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
           <Link
-            href="/shop"
+            href={`/${parentCategoryName}`}
             className="hover:text-gray-900 transition-colors"
             style={{ color: customRed }}
           >
