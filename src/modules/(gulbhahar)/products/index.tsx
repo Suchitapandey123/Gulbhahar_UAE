@@ -1,3 +1,4 @@
+import { sizeChartService } from "@/app/api/v0";
 import { Breadcrumbs } from "./components/Breadcrumbs";
 import { DeliveryChecker } from "./components/DeliveryChecker";
 import { ProductDetails } from "./components/ProductDetails";
@@ -9,25 +10,20 @@ import { Product, SimilarProduct } from "./types";
 
 interface ProductModuleProps {
   product: Product;
-  similarProducts: SimilarProduct ;
+  similarProducts: SimilarProduct;
 }
 
 const CUSTOM_RED = "hsl(359.39deg 63.87% 30.39%)";
 
-export default function ProductModule({
-  product,
-  similarProducts,
-}: ProductModuleProps) {
-  const categoryName = Array.isArray(product.parentCategory)
-    ? product.parentCategory[0]
-    : product.parentCategory;
+export default async function ProductModule({ product, similarProducts }: ProductModuleProps) {
 
+
+  const sizeChart = await sizeChartService.getSizeChartByParentCategory(product.parentCategory[0])
+
+  const parentCategoryName = Array.isArray(product.parentCategory) ? product.parentCategory[0] : product.parentCategory;
   const cacheVersion = product.updatedAt ? `?v=${product.updatedAt}` : "";
   const firstColorImages = product.images?.[0] || [];
-  const imagesToPreload = firstColorImages
-    .slice(0, 3)
-    .map((img) => (img.includes("?") ? img : `${img}${cacheVersion}`));
-
+  const imagesToPreload = firstColorImages.slice(0, 3).map((img) => (img.includes("?") ? img : `${img}${cacheVersion}`));
   return (
     <>
       {/* Preload ONLY LCP-critical images */}
@@ -44,18 +40,18 @@ export default function ProductModule({
       <div className="bg-white py-4 mt-10 sm:mt-0 px-2 sm:py-3 sm:px-3 lg:py-4 lg:px-4 font-raleway">
         <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto mt-6 sm:mt-10 md:mt-24">
           <Breadcrumbs
-            category={categoryName}
+            parentCategoryName={parentCategoryName}
             productName={product.name || ""}
             customRed={CUSTOM_RED}
           />
 
-          <ProductView product={product} customRed={CUSTOM_RED} />
+          <ProductView sizeChart ={sizeChart.data!} product={product} customRed={CUSTOM_RED} />
           <div className="md:block hidden">
 
-          <ProductReels videos={product.videos || []} />
+            <ProductReels videos={product.videos || []} />
           </div>
           <div className="block md:hidden">
-          <DeliveryChecker customRed={CUSTOM_RED}  />
+            <DeliveryChecker customRed={CUSTOM_RED} />
           </div>
 
           {/* Server-rendered product details section */}

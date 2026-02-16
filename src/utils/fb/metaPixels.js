@@ -1,3 +1,4 @@
+/** @param {{ action: any, params?: object, callback?: () => void }} options */
 export const fbEvent = ({ action, params = {}, callback }) => {
   if (typeof window !== "undefined" && window.fbq) {
     // console.log('FB Pixel Event:', action, params); // Debug log

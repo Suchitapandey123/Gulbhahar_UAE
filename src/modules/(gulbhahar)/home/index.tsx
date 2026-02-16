@@ -8,6 +8,7 @@ import ModernHeroAnimated from "./HeroAnimated";
 import Home_JuttisCollection from "./Home.JuttisCollection";
 import productApi from "@/app/api/v0/product-service";
 import { homePageService } from "@/app/api/home/home-service";
+import QuickLinks from "@/app/collections/components/QuickLinks";
 
 async function getProducts(parentCategory: string): Promise<Product[]> {
   try {
@@ -25,8 +26,6 @@ const HomePage = async () => {
   const bagsProducts = await getProducts("bags");
 
   const homeData = await homePageService.getHomeData()
-  console.log(homeData)
-
   return (
     <>
       <ModernHeroAnimated heroSection={homeData.data?.["hero-section"]} />
@@ -39,6 +38,7 @@ const HomePage = async () => {
         <AboutUsSection SoulOfGulbhahar = {homeData.data?.["soul-of-gulbhahar"] || []}/>
         <Home_NewCulture Culture = {homeData.data?.culture || []} />
         <Home_OurShowcase StoriesInMotion = {homeData.data?.["stories-in-motion"] || []} />
+        <QuickLinks parentCategory={"lehenga"} currentSlug={"kanjivaram-lehenga"} />
       </div>
     </>
   );

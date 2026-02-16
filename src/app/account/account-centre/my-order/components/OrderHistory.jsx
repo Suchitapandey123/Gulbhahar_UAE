@@ -428,7 +428,7 @@ const OrderHistory = () => {
 
   return (
     <div className="relative bg-white min-h-screen">
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <div className="relative max-w-7xl mx-auto">
 
         {activeView === OrderView.MAIN && (
           <div className="animate-fadeIn">

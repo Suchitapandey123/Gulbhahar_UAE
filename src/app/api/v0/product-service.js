@@ -68,11 +68,7 @@ const productApi = {
           tags: ['products', `product-${productId}-similar`]
         },
       });
-      console.log(`${API_BASE_URL}/new-api/products/get-similar-product/${productId}`)
-
-
       if (!response) {
-        console.log(response)
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 

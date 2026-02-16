@@ -98,8 +98,6 @@ const Home_WatchAndShop = ({WatchAndShopData} : WatchAndShopDataProps) => {
     videoUrl: r.videoUrl,
     title: r.title,
   }));
-
-  console.log(WatchAndShopData)
   return (
     <section className="overflow-hidden mt-8">
       {/* Header */}

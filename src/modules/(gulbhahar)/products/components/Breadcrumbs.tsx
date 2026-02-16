@@ -2,13 +2,13 @@ import { ChevronRight, Home } from "lucide-react";
 import Link from "next/link";
 
 interface BreadcrumbsProps {
-  category: string;
+  parentCategoryName: string;
   productName: string;
   customRed: string;
 }
 
 export const Breadcrumbs = ({
-  category,
+  parentCategoryName,
   productName,
   customRed,
 }: BreadcrumbsProps) => {
@@ -34,9 +34,9 @@ export const Breadcrumbs = ({
           <span
             className="whitespace-nowrap max-w-[80px] sm:max-w-none truncate"
             style={{ color: customRed }}
-            title={category}
+            title={parentCategoryName}
           >
-            {category?.charAt(0).toUpperCase() + category?.slice(1)}
+            {parentCategoryName?.charAt(0).toUpperCase() + parentCategoryName?.slice(1)}
           </span>
           <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
           <span

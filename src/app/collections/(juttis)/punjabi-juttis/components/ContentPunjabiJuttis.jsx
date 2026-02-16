@@ -2,7 +2,7 @@ import React from 'react';
 
 const ContentPunjabiJuttis = () => {
   return (
-    <div className='max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 py-8 sm:py-12 lg:py-16'>
+    <div className='2xl:max-w-[1600px] max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-8 sm:py-12 lg:py-16'>
         {/* Main Heading */}
         <div className="text-center sm:text-start mb-8 sm:mb-12">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight px-2">

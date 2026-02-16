@@ -90,7 +90,7 @@ export const pageService = {
         {
           next: {
             revalidate: 604800,
-            tags: ["collections", `collection-${currentSlug}`],
+            tags: [`quicklinks-${currentSlug}`],
           },
         },
       );

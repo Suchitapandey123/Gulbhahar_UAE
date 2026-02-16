@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useMutation } from '@tanstack/react-query';
 import contactAPI from "@/app/api/contact/contact";
+import { toast } from "sonner";
 
 
 
@@ -38,7 +39,7 @@ export default function ContactPage() {
     mutationFn: contactAPI.createContactSupport,
     onSuccess: (data) => {
       // console.log('Contact form submitted successfully:', data);
-      setShowSuccessMessage(true);
+      toast.success(data.message || 'Contact form submitted successfully!');
       // Reset form
       setFormData({
         fullName: "",
@@ -48,14 +49,11 @@ export default function ContactPage() {
         message: ""
       });
       setQueryType("");
-      // Hide success message after 5 seconds
-      setTimeout(() => {
-        setShowSuccessMessage(false);
-      }, 5000);
+
     },
     onError: (error) => {
       console.error('Error submitting contact form:', error);
-      alert(error.response?.data?.message || 'Failed to submit contact form. Please try again.');
+      toast.error(error.response?.data?.message || 'Failed to submit contact form. Please try again.');
     },
   });
 

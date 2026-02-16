@@ -8,6 +8,26 @@ import { ChevronDown, ChevronUp, ShoppingBag, Trash2, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { ColorOption, SizeOption } from "../products/types";
+
+
+interface CartItem {
+  id: string;
+  productId: string;
+  cartId: string;
+  name: string;
+  price: number;
+  quantity: number;
+  selectedColor: string;
+  selectedSize: string;
+  selectedColorIndex?: number;
+  availableColors?: ColorOption[];
+  availableSizes?: SizeOption[];
+  images?: string[][];
+  image?: string[][];
+  currentMainImage?: string;
+  updatedAt?: string;
+}
 
 const CartPage = () => {
   const {
@@ -23,25 +43,20 @@ const CartPage = () => {
   } = useCart();
   const router = useRouter();
 
-  const handleNavigateToProduct = (itemId) => {
-    // Close the cart first
+  const handleNavigateToProduct = (itemId: string) => {
     toggleCart();
-    // Small delay to allow cart closing animation, then navigate
     setTimeout(() => {
       router.push(`/collections/${itemId}`);
-    }, 200); // Adjust delay as needed for your animation
+    }, 200);
   };
 
   const itemsCount = getCartItemsCount();
   const total = getCartTotal();
 
-  // State for managing expanded variant selectors
-  const [expandedItems, setExpandedItems] = useState(new Set());
-  // State for managing loading items during variant changes
-  const [loadingItems, setLoadingItems] = useState(new Set());
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+  const [loadingItems, setLoadingItems] = useState<Set<string>>(new Set());
 
-  // Toggle variant selector for an item
-  const toggleVariantSelector = (itemId) => {
+  const toggleVariantSelector = (itemId: string) => {
     setExpandedItems((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(itemId)) {
@@ -53,36 +68,32 @@ const CartPage = () => {
     });
   };
 
-  // Handle color change with loading state
-  const handleColorChange = async (item, newColor, newColorIndex) => {
-
+  const handleColorChange = async (
+    item: CartItem,
+    newColor: string,
+    newColorIndex: number,
+  ) => {
     try {
-      // Set loading state
       setLoadingItems((prev) => new Set(prev).add(item.id));
 
-      // Small delay to show loading state
       await new Promise((resolve) => setTimeout(resolve, 300));
 
-      // Remove the current item
       removeFromCart(item.id, item.selectedColor, item.selectedSize);
 
-      // Add the same item with new color
       const updatedItem = {
         ...item,
         selectedColor: newColor,
         selectedColorIndex: newColorIndex,
-        // Update the main image to the new color's first image
         currentMainImage:
-          item.images?.[newColorIndex]?.[0] || item.image?.[newColorIndex]?.[0],
+          item.images?.[newColorIndex]?.[0] ||
+          item.image?.[newColorIndex]?.[0],
       };
 
-      // Add back with new color
       await addToCart(updatedItem);
       updateItemVariant(item, updatedItem);
     } catch (error) {
-      console.error("❌ Error updating color:", error);
+      console.error("Error updating color:", error);
     } finally {
-      // Remove loading state
       setLoadingItems((prev) => {
         const newSet = new Set(prev);
         newSet.delete(item.id);
@@ -91,28 +102,22 @@ const CartPage = () => {
     }
   };
 
-  // Handle size change with loading state
-  const handleSizeChange = async (item, newSize) => {
-
-
+  const handleSizeChange = async (item: CartItem, newSize: string) => {
     try {
       setLoadingItems((prev) => new Set(prev).add(item.id));
 
       await new Promise((resolve) => setTimeout(resolve, 300));
 
-      // ✅ remove old variant using color + size
       removeFromCart(item.id, item.selectedColor, item.selectedSize);
 
-      // ✅ then add updated one
       const updatedItem = {
         ...item,
         selectedSize: newSize,
       };
 
       await addToCart(updatedItem);
-
     } catch (error) {
-      console.error("❌ Error updating size:", error);
+      console.error("Error updating size:", error);
     } finally {
       setLoadingItems((prev) => {
         const newSet = new Set(prev);
@@ -122,23 +127,19 @@ const CartPage = () => {
     }
   };
 
-  // Get the current image for display with cache-busting
-  const getCurrentImage = (item) => {
-    let imageUrl = null;
+  const getCurrentImage = (item: CartItem): string | null => {
+    let imageUrl: string | null = null;
 
-    // Check if it's images (plural) - array of arrays
     if (item.images && Array.isArray(item.images)) {
       if (item.images.length > 0 && Array.isArray(item.images[0])) {
-        imageUrl = item.images[0][0]; // First image from first array
+        imageUrl = item.images[0][0];
       }
     }
 
-    // Check if it's image (singular) - single array
     if (!imageUrl && item.image && Array.isArray(item.image)) {
-      imageUrl = item.image[0][0]; // First image from array
+      imageUrl = item.image[0][0];
     }
 
-    // Add cache-busting parameter if we have an image and updatedAt
     if (imageUrl && item.updatedAt) {
       return `${imageUrl}?v=${new Date(item.updatedAt).getTime()}`;
     }
@@ -155,9 +156,8 @@ const CartPage = () => {
       />
 
       {/* Cart Sidebar */}
-      <div className="fixed 
-       right-0 top-0 h-[calc(100%-0px)] w-full max-w-md bg-white shadow-xl z-[10002] transform transition-transform duration-300 ease-in-out">
-        <div className="flex  flex-col h-full">
+      <div className="fixed right-0 top-0 h-[calc(100%-0px)] w-full max-w-md bg-white shadow-xl z-[10002] transform transition-transform duration-300 ease-in-out">
+        <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
             <h2 className="text-lg font-bold text-gray-900">
@@ -185,17 +185,14 @@ const CartPage = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                {/* Show loading placeholders for items being updated */}
+                {/* Loading placeholders for items being updated */}
                 {Array.from(loadingItems).map((loadingId) => (
                   <div
                     key={`loading-${loadingId}`}
                     className="border border-gray-200 rounded-lg"
                   >
                     <div className="flex gap-3 p-3 animate-pulse">
-                      {/* Loading Image */}
                       <div className="w-16 h-16 bg-gray-200 rounded-md flex-shrink-0"></div>
-
-                      {/* Loading Content */}
                       <div className="flex-1 min-w-0">
                         <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
                         <div className="h-3 bg-gray-200 rounded w-1/2 mb-2"></div>
@@ -209,15 +206,11 @@ const CartPage = () => {
                           <div className="h-8 w-8 bg-gray-200 rounded"></div>
                         </div>
                       </div>
-
-                      {/* Loading Price */}
                       <div className="text-right">
                         <div className="h-4 bg-gray-200 rounded w-16 mb-2"></div>
                         <div className="h-6 w-6 bg-gray-200 rounded"></div>
                       </div>
                     </div>
-
-                    {/* Loading indicator */}
                     <div className="px-3 pb-3 flex items-center justify-center">
                       <div className="flex items-center gap-2 text-sm text-gray-500">
                         <div className="w-4 h-4 border-2 border-red-900 border-t-transparent rounded-full animate-spin"></div>
@@ -227,26 +220,26 @@ const CartPage = () => {
                   </div>
                 ))}
 
-                {/* Show actual cart items (excluding those being updated) */}
+                {/* Cart items */}
                 {cart
-                  .filter((item) => !loadingItems.has(item.id))
-                  .map((item) => (
+                  .filter((item: CartItem) => !loadingItems.has(item.id))
+                  .map((item: CartItem) => (
                     <div
                       key={
                         item.cartId ||
                         `${item.id}-${item.selectedColor}-${item.selectedSize}`
-                      } // ✅ unique key
+                      }
                       className="border border-red-200 rounded-lg"
                     >
                       {/* Main Item Row */}
                       <div className="flex gap-3 p-3">
-                        {/* Product Image - Clickable */}
+                        {/* Product Image */}
                         <div
                           onClick={() => handleNavigateToProduct(item.id)}
                           className="w-16 h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0 hover:opacity-80 transition-opacity cursor-pointer"
                         >
                           <Image
-                            src={getCurrentImage(item)}
+                            src={getCurrentImage(item) || "/about/lal-ishq-1.jpg"}
                             alt={item.name}
                             width={64}
                             height={64}
@@ -260,7 +253,6 @@ const CartPage = () => {
 
                         {/* Product Details */}
                         <div className="flex-1 min-w-0">
-                          {/* Product Name - Clickable */}
                           <div
                             onClick={() => handleNavigateToProduct(item.id)}
                             className="block cursor-pointer"
@@ -273,7 +265,7 @@ const CartPage = () => {
                             ₹{item.price.toLocaleString()}
                           </p>
 
-                          {/* Current Variants Display */}
+                          {/* Current Variants */}
                           <div className="flex items-center gap-2 mt-1">
                             {item.selectedColor && (
                               <span className="text-xs bg-gray-100 px-2 py-1 rounded">
@@ -338,21 +330,20 @@ const CartPage = () => {
                             ₹{(item.price * item.quantity).toLocaleString()}
                           </p>
 
-                          {/* Toggle Variant Selector Button */}
-                          {((item.colors && item.colors.length > 1) ||
-                            (item.sizes && item.sizes.length > 1)) && (
-                            <button
-                              onClick={() => toggleVariantSelector(item.id)}
-                              className="p-1 hover:bg-gray-100 rounded transition-colors text-gray-500 hover:text-gray-700"
-                              title="Change color/size"
-                            >
-                              {expandedItems.has(item.id) ? (
-                                <ChevronUp size={16} />
-                              ) : (
-                                <ChevronDown size={16} />
-                              )}
-                            </button>
-                          )}
+                          {((item.availableColors && item.availableColors.length > 1) ||
+                            (item.availableSizes && item.availableSizes.length > 1)) && (
+                              <button
+                                onClick={() => toggleVariantSelector(item.id)}
+                                className="p-1 hover:bg-gray-100 rounded transition-colors text-gray-500 hover:text-gray-700"
+                                title="Change color/size"
+                              >
+                                {expandedItems.has(item.id) ? (
+                                  <ChevronUp size={16} />
+                                ) : (
+                                  <ChevronDown size={16} />
+                                )}
+                              </button>
+                            )}
                         </div>
                       </div>
 
@@ -360,104 +351,110 @@ const CartPage = () => {
                       {expandedItems.has(item.id) && (
                         <div className="px-3 pb-3 border-t border-gray-100 bg-gray-50">
                           {/* Color Selection */}
-                          {item.colors && item.colors.length > 1 && (
+                          {item.availableColors && item.availableColors.length > 1 && (
                             <div className="mb-3">
                               <h5 className="text-xs font-semibold text-gray-700 mb-2 mt-2">
                                 Color: {item.selectedColor}
                               </h5>
                               <div className="flex gap-2 flex-wrap">
-                                {item.colors.map((color, colorIndex) => (
-                                  <div
-                                    key={color}
-                                    className="flex flex-col items-center gap-1"
-                                  >
-                                    <button
-                                      onClick={() =>
-                                        handleColorChange(
-                                          item,
-                                          color,
-                                          colorIndex,
-                                        )
-                                      }
-                                      disabled={loadingItems.has(item.id)}
-                                      className={`w-8 h-10 rounded-md overflow-hidden border-2 transition-all duration-200 ${
-                                        item.selectedColor === color
-                                          ? "border-red-900 scale-105"
-                                          : "border-gray-200 hover:border-gray-400"
-                                      } ${
-                                        loadingItems.has(item.id)
-                                          ? "opacity-50 cursor-not-allowed"
-                                          : ""
-                                      }`}
-                                      title={color}
+                                {item.availableColors.map((color, colorIndex) => {
+                                  const colorName =
+                                    typeof color === "string"
+                                      ? color
+                                      : color.name;
+                                  return (
+                                    <div
+                                      key={colorName}
+                                      className="flex flex-col items-center gap-1"
                                     >
-                                      {item.images &&
-                                      item.images[colorIndex] ? (
-                                        <Image
-                                          src={
-                                            item.images[colorIndex][0] ||
-                                            "/about/lal-ishq-1.jpg"
-                                          }
-                                          alt={color}
-                                          priority
-                                          width={32}
-                                          height={40}
-                                          className="w-full h-full object-cover"
-                                        />
-                                      ) : (
-                                        <div
-                                          className="w-full h-full flex items-center justify-center text-xs font-medium text-gray-600"
-                                          style={{
-                                            backgroundColor:
-                                              color.toLowerCase() === "white"
-                                                ? "#f3f4f6"
-                                                : color.toLowerCase(),
-                                          }}
-                                        >
-                                          {color.charAt(0)}
-                                        </div>
-                                      )}
-                                    </button>
-                                    {/* Color Name */}
-                                    <span
-                                      className={`text-xs font-medium px-1 text-center min-w-0 max-w-[60px] truncate ${
-                                        item.selectedColor === color
-                                          ? "text-red-900"
-                                          : "text-gray-600"
-                                      }`}
-                                      title={color}
-                                    >
-                                      {color}
-                                    </span>
-                                  </div>
-                                ))}
+                                      <button
+                                        onClick={() =>
+                                          handleColorChange(
+                                            item,
+                                            colorName,
+                                            colorIndex,
+                                          )
+                                        }
+                                        disabled={loadingItems.has(item.id)}
+                                        className={`w-8 h-10 rounded-md overflow-hidden border-2 transition-all duration-200 ${item.selectedColor === colorName
+                                            ? "border-red-900 scale-105"
+                                            : "border-gray-200 hover:border-gray-400"
+                                          } ${loadingItems.has(item.id)
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                          }`}
+                                        title={colorName}
+                                      >
+                                        {item.images &&
+                                          item.images[colorIndex] ? (
+                                          <Image
+                                            src={
+                                              item.images[colorIndex][0] ||
+                                              "/about/lal-ishq-1.jpg"
+                                            }
+                                            alt={colorName}
+                                            priority
+                                            width={32}
+                                            height={40}
+                                            className="w-full h-full object-cover"
+                                          />
+                                        ) : (
+                                          <div
+                                            className="w-full h-full flex items-center justify-center text-xs font-medium text-gray-600"
+                                            style={{
+                                              backgroundColor:
+                                                colorName.toLowerCase() ===
+                                                  "white"
+                                                  ? "#f3f4f6"
+                                                  : typeof color === "string"
+                                                    ? colorName.toLowerCase()
+                                                    : color.hexcode ||
+                                                    colorName.toLowerCase(),
+                                            }}
+                                          >
+                                            {colorName.charAt(0)}
+                                          </div>
+                                        )}
+                                      </button>
+                                      <span
+                                        className={`text-xs font-medium px-1 text-center min-w-0 max-w-[60px] truncate ${item.selectedColor === colorName
+                                            ? "text-red-900"
+                                            : "text-gray-600"
+                                          }`}
+                                        title={colorName}
+                                      >
+                                        {colorName}
+                                      </span>
+                                    </div>
+                                  );
+                                })}
                               </div>
                             </div>
                           )}
 
                           {/* Size Selection */}
-                          {item.sizes && item.sizes.length > 1 && (
+                          {item.availableSizes && item.availableSizes.length > 1 && (
                             <div>
                               <h5 className="text-xs font-semibold text-gray-700 mb-2">
                                 Size: {item.selectedSize}
                               </h5>
                               <div className="flex gap-2 flex-wrap">
-                                {item.sizes.map((size) => (
+                                {item.availableSizes.map((size , idx) => (
                                   <button
-                                    key={size}
-                                    onClick={() => handleSizeChange(item, size)}
+                                    key={idx}
+                                    onClick={() =>
+                                      handleSizeChange(item, size.name)
+                                    }
                                     disabled={loadingItems.has(item.id)}
-                                    className={`px-3 py-1 text-xs border rounded transition-all duration-200 ${
-                                      item.selectedSize === size
+                                    className={`px-3 py-1 text-xs border rounded transition-all duration-200 ${item.selectedSize === size.name
                                         ? "border-red-900 bg-red-900 text-white"
                                         : "border-gray-200 hover:border-gray-400 hover:bg-gray-100"
-                                    } ${
-                                      loadingItems.has(item.id)
+                                      } ${loadingItems.has(item.id)
                                         ? "opacity-50 cursor-not-allowed"
                                         : ""
-                                    }`}
+                                      }`}
                                   >
-                                    {size}
+                                    {size.name}
                                   </button>
                                 ))}
                               </div>
@@ -473,11 +470,10 @@ const CartPage = () => {
                   <button
                     onClick={clearCart}
                     disabled={loadingItems.size > 0}
-                    className={`w-full py-2 text-sm text-red-600 hover:bg-red-50 border border-red-200 rounded-lg transition-colors ${
-                      loadingItems.size > 0
+                    className={`w-full py-2 text-sm text-red-600 hover:bg-red-50 border border-red-200 rounded-lg transition-colors ${loadingItems.size > 0
                         ? "opacity-50 cursor-not-allowed"
                         : ""
-                    }`}
+                      }`}
                   >
                     Clear All Items
                   </button>
@@ -489,7 +485,6 @@ const CartPage = () => {
           {/* Footer */}
           {cart.length > 0 && (
             <div className="border-t border-gray-200 p-4 space-y-4">
-              {/* Total */}
               <div className="flex justify-between items-center">
                 <span className="text-lg font-bold text-gray-900">Total:</span>
                 <span className="text-lg font-bold text-red-900">
@@ -497,7 +492,6 @@ const CartPage = () => {
                 </span>
               </div>
 
-              {/* Checkout Buttons */}
               <div className="space-y-2">
                 <button
                   onClick={async () => {
@@ -505,20 +499,22 @@ const CartPage = () => {
                       action: "redirected To checkout page ",
                       params: {
                         First_Product_Name: cart[0].name,
-                        Product_Ids: cart.map((item) => item.productId),
+                        Product_Ids: cart.map(
+                          (item: CartItem) => item.productId,
+                        ),
                       },
                     });
                     fbEvent({
                       action: "InitiateCheckout",
                       params: {
                         First_Product_Name: cart[0].name,
-                        content_ids: cart.map((item) => item.productId),
+                        content_ids: cart.map(
+                          (item: CartItem) => item.productId,
+                        ),
                       },
                     });
-
                     try {
-                      const res = await analyticsAPI.trackProceedToCheckout();
-          
+                      await analyticsAPI.trackProceedToCheckout();
                     } catch (error) {
                       console.error(error);
                     }

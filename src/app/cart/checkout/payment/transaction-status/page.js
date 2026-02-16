@@ -48,7 +48,7 @@ const TransactionStatusContent = () => {
     email: null,
     firstName: null,
     lastName: null,
-    phone: null
+    phone: null,
   });
 
   // 🎯 Refs to prevent duplicate API calls
@@ -61,7 +61,7 @@ const TransactionStatusContent = () => {
     email: null,
     firstName: null,
     lastName: null,
-    phone: null
+    phone: null,
   });
 
   useEffect(() => {
@@ -82,36 +82,13 @@ const TransactionStatusContent = () => {
       email: null,
       firstName: null,
       lastName: null,
-      phone: null
+      phone: null,
     };
 
     if (savedCheckoutData) {
       try {
         checkoutData = JSON.parse(savedCheckoutData);
-        
-        // Order summary extract karo
-        if (checkoutData.orderItems) {
-          setOrderSummary({
-            items: checkoutData.orderItems,
-            subtotal: checkoutData.orderSubtotal || 0,
-            shipping: checkoutData.orderShipping || 0,
-            total: checkoutData.orderTotal || 0
-          });
-        }
 
-        // User info extract karo
-        if (checkoutData.fullName || checkoutData.email || checkoutData.phone) {
-          setUserInfo({
-            name: checkoutData.fullName || "Guest",
-            email: checkoutData.email || "Not provided",
-            phone: checkoutData.phone || "Not provided",
-            address: checkoutData.address || "Not provided",
-            city: checkoutData.city || "Not provided",
-            region: checkoutData.region || "Not provided",
-            postalCode: checkoutData.postalCode || "Not provided"
-          });
-        }
-        
         // 🔥 User data extract karo Meta Pixel ke liye
         if (checkoutData.email) {
           const email = checkoutData.email.trim().toLowerCase();
@@ -121,12 +98,16 @@ const TransactionStatusContent = () => {
 
           // Full name se first aur last name extract karo
           if (checkoutData.fullName) {
-            const nameParts = checkoutData.fullName.trim().split(' ');
+            const nameParts = checkoutData.fullName.trim().split(" ");
             if (nameParts[0]) {
-              firstName = nameParts[0].replace(/[^a-zA-Z]/g, '').toLowerCase();
+              firstName = nameParts[0].replace(/[^a-zA-Z]/g, "").toLowerCase();
             }
             if (nameParts.length > 1) {
-              lastName = nameParts.slice(1).join(' ').replace(/[^a-zA-Z]/g, '').toLowerCase();
+              lastName = nameParts
+                .slice(1)
+                .join(" ")
+                .replace(/[^a-zA-Z]/g, "")
+                .toLowerCase();
             }
           }
 
@@ -134,7 +115,7 @@ const TransactionStatusContent = () => {
             email,
             firstName,
             lastName,
-            phone
+            phone,
           };
 
           // 🆕 REF mein bhi save karo for immediate access
@@ -159,6 +140,8 @@ const TransactionStatusContent = () => {
     let detectedMethod = "online";
     if (method) {
       detectedMethod = method.toLowerCase();
+    } else if (checkoutData.paymentMethod === "PARTIAL_COD") {
+      detectedMethod = "partial_cod";
     } else if (trackingId && trackingId.startsWith("COD_")) {
       detectedMethod = "cod";
     } else if (bankRefNo || statusMessage?.toLowerCase().includes("bank")) {
@@ -187,7 +170,11 @@ const TransactionStatusContent = () => {
       processedTransactionId.current = trackingId;
 
       // 🆕 User data directly pass karo (extractedUserData se)
-      sendCompleteOrderDataToBackend(transactionData, checkoutData, extractedUserData);
+      sendCompleteOrderDataToBackend(
+        transactionData,
+        checkoutData,
+        extractedUserData,
+      );
     } else {
       console.warn("❌ Missing required parameters:", {
         status,
@@ -203,9 +190,12 @@ const TransactionStatusContent = () => {
       setIsLoading(false);
     }, 500);
   }, []);
-
   // 🛡️ Enhanced function to prevent duplicate API calls
-  const sendCompleteOrderDataToBackend = async (transactionData, checkoutData, userDataParam) => {
+  const sendCompleteOrderDataToBackend = async (
+    transactionData,
+    checkoutData,
+    userDataParam,
+  ) => {
     if (apiCallInProgress.current) {
       return;
     }
@@ -252,7 +242,7 @@ const TransactionStatusContent = () => {
           const platform = navigator.platform;
 
           const fingerprint = btoa(
-            `${canvas.toDataURL()}_${screen}_${timezone}_${language}_${platform}`
+            `${canvas.toDataURL()}_${screen}_${timezone}_${language}_${platform}`,
           );
           return `FP_${fingerprint.substring(0, 16)}`;
         } catch (error) {
@@ -324,6 +314,23 @@ const TransactionStatusContent = () => {
             bankRefNo: null,
             gateway: "COD",
           };
+        } else if (
+          transactionData.paymentMethod === "partial_cod" ||
+          checkoutData.paymentMethod === "PARTIAL_COD"
+        ) {
+          return {
+            ...basePayment,
+            method: "PARTIAL_COD",
+            bankRefNo: transactionData.bankRefNo,
+            gateway: "CCAvenue",
+            partialAmountPaid: transactionData.amount
+              ? parseFloat(transactionData.amount)
+              : 0,
+            totalOrderAmount: checkoutData.orderTotal || 0,
+            codAmount:
+              (checkoutData.orderTotal || 0) -
+              (transactionData.amount ? parseFloat(transactionData.amount) : 0),
+          };
         } else {
           return {
             ...basePayment,
@@ -353,16 +360,16 @@ const TransactionStatusContent = () => {
           itemCount: (checkoutData.orderItems || []).length,
           totalQuantity: (checkoutData.orderItems || []).reduce(
             (sum, item) => sum + item.quantity,
-            0
+            0,
           ),
           subtotal:
             checkoutData.orderSubtotal ||
             (transactionData.amount ? parseFloat(transactionData.amount) : 0),
           shipping: checkoutData.orderShipping || 0,
           discount: 0,
-          total: transactionData.amount
-            ? parseFloat(transactionData.amount)
-            : checkoutData.orderTotal || 0,
+          total:
+            checkoutData.orderTotal ||
+            (transactionData.amount ? parseFloat(transactionData.amount) : 0),
           currency: "INR",
         },
 
@@ -414,7 +421,10 @@ const TransactionStatusContent = () => {
           notes:
             transactionData.paymentMethod === "cod"
               ? "COD Order - OTP Verified"
-              : null,
+              : transactionData.paymentMethod === "partial_cod" ||
+                  checkoutData.paymentMethod === "PARTIAL_COD"
+                ? `Partial COD - Paid ₹${transactionData.amount || 0} online, ₹${(checkoutData.orderTotal || 0) - parseFloat(transactionData.amount || 0)} COD`
+                : null,
           paymentCompletedAt: new Date().toISOString(),
         },
 
@@ -437,17 +447,14 @@ const TransactionStatusContent = () => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
 
-      const response = await fetch(
-        `${API_BASE_URL}/guestorderRoutes/order`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(completeOrderData),
-          signal: controller.signal,
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}/guestorderRoutes/order`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(completeOrderData),
+        signal: controller.signal,
+      });
 
       clearTimeout(timeoutId);
 
@@ -469,16 +476,16 @@ const TransactionStatusContent = () => {
       gaEvent({
         action: "Final Order Placed SuccessFully",
         params: {
-          "payment_method": transactionData.paymentMethod,
-        }
+          payment_method: transactionData.paymentMethod,
+        },
       });
 
       fbEvent({
         action: "Purchase",
         params: {
-          "content_name": `${transactionData.paymentMethod}_Order_Placed_SuccessFully`,
-          "content_type": transactionData.paymentMethod
-        }
+          content_name: `${transactionData.paymentMethod}_Order_Placed_SuccessFully`,
+          content_type: transactionData.paymentMethod,
+        },
       });
 
       try {
@@ -514,12 +521,7 @@ const TransactionStatusContent = () => {
       apiCallInProgress.current = false;
       setBackendProcessing(false);
 
-      // Only set as completed if it's a permanent error (not network issues)
-      if (error.name === "AbortError" || error.message.includes("network")) {
-        // Network error, don't mark as completed
-      } else {
-        apiCallCompleted.current = true;
-      }
+      // Allow retry for all error types
     }
   };
 
@@ -529,501 +531,82 @@ const TransactionStatusContent = () => {
       return;
     }
 
-    if (apiCallCompleted.current) {
+    if (backendSent && apiCallCompleted.current) {
       return;
     }
 
     if (paymentData && paymentData.status === "success") {
-      // Reset only the necessary flags for retry
+      // Reset flags for retry
       apiCallInProgress.current = false;
+      apiCallCompleted.current = false;
       setBackendSent(false);
       setBackendProcessing(false);
-      sendCompleteOrderDataToBackend(paymentData);
-    } else {
-      // Handle other cases if needed
+
+      // Re-read checkout data from localStorage
+      let retryCheckoutData = {};
+      let retryUserData = userDataRef.current;
+      try {
+        const saved = localStorage.getItem("checkoutFormData");
+        if (saved) retryCheckoutData = JSON.parse(saved);
+      } catch (e) {
+        console.error("Error reading checkout data for retry:", e);
+      }
+
+      sendCompleteOrderDataToBackend(
+        paymentData,
+        retryCheckoutData,
+        retryUserData,
+      );
     }
   };
 
-  // ✅ DOWNLOAD ORDER SUMMARY AS TEXT FILE
-  const downloadOrderSummary = () => {
-    setIsAnimating(true);
-    
-    const orderDate = new Date().toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-    
-    const orderTime = new Date().toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-
-    // Create comprehensive order summary content
-    const orderDetails = `
-╔══════════════════════════════════════════════════════════╗
-║                    COD ORDER CONFIRMATION                ║
-║                    🛒 YOUR STORE NAME                    ║
-╚══════════════════════════════════════════════════════════╝
-
-ORDER DETAILS
-─────────────
-📋 Order ID:      ${paymentData?.orderId || "N/A"}
-🔢 Tracking ID:   ${paymentData?.trackingId || "N/A"}
-📅 Date:          ${orderDate}
-⏰ Time:          ${orderTime}
-📦 Order Type:    Cash on Delivery (COD)
-
-CUSTOMER INFORMATION
-────────────────────
-👤 Name:          ${userInfo?.name || "Guest"}
-📧 Email:         ${userInfo?.email || "Not provided"}
-📱 Phone:         ${userInfo?.phone || "Not provided"}
-📍 Address:       ${userInfo?.address || "Not provided"}
-                   ${userInfo?.city ? userInfo.city + ', ' : ''}${userInfo?.region || ''} ${userInfo?.postalCode || ''}
-
-PAYMENT INFORMATION
-───────────────────
-💰 Payment Method: Cash on Delivery
-💵 Amount to Pay:  ₹${paymentData?.amount ? parseFloat(paymentData.amount).toLocaleString('en-IN') : "0"}
-⚡ Status:        PAID ON DELIVERY
-
-ORDER SUMMARY
-─────────────
-${orderSummary?.items?.map((item, index) => `
-${index + 1}. ${item.name}
-   ├─ Quantity: ${item.quantity}
-   ├─ Unit Price: ₹${item.price}
-   ${item.selectedColor ? `├─ Color: ${item.selectedColor}` : ''}
-   ${item.selectedSize ? `├─ Size: ${item.selectedSize}` : ''}
-   └─ Total: ₹${item.price * item.quantity}
-`).join('')}
-
-BILL SUMMARY
-────────────
-Subtotal:        ₹${orderSummary?.subtotal || 0}
-Shipping:        ₹${orderSummary?.shipping || 0}
-────────────────────────────────────
-GRAND TOTAL:     ₹${orderSummary?.total || paymentData?.amount || "0"}
-────────────────────────────────────
-
-DELIVERY INFORMATION
-────────────────────
-🚚 Method:        Standard Delivery
-📅 Estimated:      3-5 business days
-💰 Payment:        Pay Cash on Delivery
-📞 Contact:        Keep phone ready for delivery call
-
-ORDER STATUS TIMELINE
-─────────────────────
-✅ Order Placed:   ${orderDate} ${orderTime}
-⏳ Processing:     Within 24-48 hours
-🚚 Shipped:        Will be updated
-📦 Delivered:      Expected in 3-5 days
-
-IMPORTANT NOTES
-───────────────
-• Please keep exact cash ready for delivery
-• Delivery agent will call before arrival
-• Check your email for order updates
-• Contact support for any queries
-
-CONTACT INFORMATION
-───────────────────
-📞 Support:        +91-XXXXXXXXXX
-📧 Email:          support@yourstore.com
-🌐 Website:        www.yourstore.com
-
-══════════════════════════════════════════════════════════════
-            THANK YOU FOR SHOPPING WITH US! 🎉
-══════════════════════════════════════════════════════════════
-
-Order Generated: ${new Date().toLocaleString()}
-This is a computer generated invoice.
-    `;
-
-    // Create blob and download
-    const blob = new Blob([orderDetails], { type: 'text/plain;charset=utf-8' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `COD_Order_${paymentData?.orderId || 'Summary'}_${new Date().getTime()}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    
-    // Clean up
-    setTimeout(() => {
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-      setIsAnimating(false);
-      
-      // Show success message
-      alert('✅ Order summary downloaded successfully!');
-    }, 100);
-  };
-
-  // ✅ PRINT ORDER SUMMARY
-  const printOrderSummary = () => {
-    const printContent = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Order Summary - ${paymentData?.orderId || 'COD Order'}</title>
-        <style>
-          body { font-family: Arial, sans-serif; margin: 40px; }
-          .header { text-align: center; margin-bottom: 30px; }
-          .header h1 { color: #7f0001; margin: 0; }
-          .section { margin-bottom: 20px; }
-          .section-title { background: #f0f0f0; padding: 10px; font-weight: bold; }
-          table { width: 100%; border-collapse: collapse; margin: 10px 0; }
-          th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-          th { background: #f5f5f5; }
-          .total-row { font-weight: bold; background: #f9f9f9; }
-          .note { background: #fff8e1; padding: 10px; border-left: 4px solid #ffc107; margin: 20px 0; }
-          .footer { text-align: center; margin-top: 40px; color: #666; }
-          @media print {
-            body { margin: 0; }
-            .no-print { display: none; }
-          }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <h1>COD ORDER CONFIRMATION</h1>
-          <p>Order ID: ${paymentData?.orderId || 'N/A'} | Date: ${new Date().toLocaleDateString()}</p>
-        </div>
-        
-        <div class="section">
-          <div class="section-title">Customer Information</div>
-          <p><strong>Name:</strong> ${userInfo?.name || 'Guest'}</p>
-          <p><strong>Email:</strong> ${userInfo?.email || 'Not provided'}</p>
-          <p><strong>Phone:</strong> ${userInfo?.phone || 'Not provided'}</p>
-          <p><strong>Address:</strong> ${userInfo?.address || 'Not provided'}</p>
-        </div>
-        
-        <div class="section">
-          <div class="section-title">Order Summary</div>
-          <table>
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${orderSummary?.items?.map(item => `
-                <tr>
-                  <td>${item.name} ${item.selectedColor ? `(${item.selectedColor})` : ''}</td>
-                  <td>${item.quantity}</td>
-                  <td>₹${item.price}</td>
-                  <td>₹${item.price * item.quantity}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-            <tfoot>
-              <tr class="total-row">
-                <td colspan="3">Subtotal</td>
-                <td>₹${orderSummary?.subtotal || 0}</td>
-              </tr>
-              <tr class="total-row">
-                <td colspan="3">Shipping</td>
-                <td>₹${orderSummary?.shipping || 0}</td>
-              </tr>
-              <tr class="total-row">
-                <td colspan="3"><strong>Total Amount to Pay</strong></td>
-                <td><strong>₹${orderSummary?.total || paymentData?.amount || "0"}</strong></td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-        
-        <div class="section">
-          <div class="section-title">Payment Information</div>
-          <p><strong>Payment Method:</strong> Cash on Delivery</p>
-          <p><strong>Amount:</strong> ₹${paymentData?.amount ? parseFloat(paymentData.amount).toLocaleString() : "0"}</p>
-          <p><strong>Status:</strong> Pay on Delivery</p>
-        </div>
-        
-        <div class="note">
-          <strong>Important Note:</strong> Please keep exact cash ready. Delivery agent will call before arrival.
-        </div>
-        
-        <div class="footer">
-          <p>Thank you for shopping with us! 🎉</p>
-          <p>Generated on ${new Date().toLocaleString()}</p>
-        </div>
-        
-        <div class="no-print" style="text-align: center; margin-top: 30px;">
-          <button onclick="window.print()" style="padding: 10px 20px; background: #7f0001; color: white; border: none; cursor: pointer;">
-            Print this Order Summary
-          </button>
-          <button onclick="window.close()" style="padding: 10px 20px; background: #666; color: white; border: none; cursor: pointer; margin-left: 10px;">
-            Close
-          </button>
-        </div>
-      </body>
-      </html>
-    `;
-
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(printContent);
-    printWindow.document.close();
-    printWindow.focus();
-  };
-
-  // ✅ COMPACT & MODERN COD CONFIRMATION PAGE
-  if (paymentStatus === "success") {
-    return (
-      <div className={`min-h-screen mt-20 bg-gradient-to-br from-gray-50 to-white flex items-center justify-center p-4 sm:p-6 transition-all duration-500 ${showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-        
-        {/* Simple Background Effect */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#7f0001]/5 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#7f0001]/5 rounded-full blur-3xl"></div>
-        </div>
-
-        {/* Main Container */}
-        <div className="relative w-full max-w-2xl">
-          
-          {/* Success Card - Clean & Modern */}
-          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-            
-            {/* Success Header */}
-            <div className="relative p-8 text-center border-b border-gray-100">
-              {/* Success Icon */}
-              <div className="relative w-20 h-20 mx-auto mb-6">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#7f0001]/20 to-[#7f0001]/5 rounded-full animate-pulse"></div>
-                <div className="relative w-20 h-20 bg-gradient-to-br from-[#7f0001] to-[#a00001] rounded-full flex items-center justify-center shadow-lg">
-                  <CheckCircle className="w-10 h-10 text-white" />
-                </div>
-              </div>
-              
-              {/* Main Title */}
-              <h1 className="text-3xl font-bold text-gray-900 mb-3">
-                COD Order Confirmed! 🎉
-              </h1>
-              <p className="text-gray-600 text-lg">
-                Pay when your order arrives at your doorstep
-              </p>
-            </div>
-
-            {/* Order Details */}
-            <div className="p-8">
-              
-              {/* Amount Card */}
-              <div className="bg-gradient-to-r from-[#7f0001]/5 to-gray-50 rounded-xl p-6 mb-8 border border-gray-200">
-                <div className="text-center mb-4">
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-gray-300 mb-2">
-                    <Banknote className="w-4 h-4 text-[#7f0001]" />
-                    <span className="text-sm font-medium text-gray-700">Amount to Pay on Delivery</span>
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="flex items-baseline justify-center gap-2">
-                    <span className="text-2xl text-gray-700">₹</span>
-                    <h3 className="text-5xl md:text-6xl font-bold text-[#7f0001]">
-                      {paymentData?.amount ? parseFloat(paymentData.amount).toLocaleString() : "0"}
-                    </h3>
-                  </div>
-                </div>
-              </div>
-
-              {/* Quick Info Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-8 h-8 bg-[#7f0001]/10 rounded-lg flex items-center justify-center">
-                      <Package className="w-4 h-4 text-[#7f0001]" />
-                    </div>
-                    <span className="text-sm font-medium text-gray-600">Order ID</span>
-                  </div>
-                  <p className="font-mono text-gray-900 font-semibold text-sm">
-                    #{paymentData?.orderId?.slice(-8) || "N/A"}
-                  </p>
-                </div>
-
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-8 h-8 bg-[#7f0001]/10 rounded-lg flex items-center justify-center">
-                      <Calendar className="w-4 h-4 text-[#7f0001]" />
-                    </div>
-                    <span className="text-sm font-medium text-gray-600">Date & Time</span>
-                  </div>
-                  <p className="font-semibold text-gray-900 text-sm">
-                    {new Date().toLocaleDateString()} • {new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                  </p>
-                </div>
-              </div>
-
-              {/* Order Summary Section */}
-              {orderSummary && (
-                <div className="mb-8">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-[#7f0001]" />
-                    Order Summary
-                  </h3>
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <div className="space-y-3">
-                      {orderSummary.items?.map((item, index) => (
-                        <div key={index} className="flex justify-between items-center py-2 border-b border-gray-200 last:border-0">
-                          <div className="flex-1">
-                            <p className="font-medium text-gray-900">{item.name}</p>
-                            <p className="text-sm text-gray-600">
-                              {item.selectedColor && `Color: ${item.selectedColor}`}
-                              {item.selectedSize && ` | Size: ${item.selectedSize}`}
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-sm text-gray-600">₹{item.price} × {item.quantity}</p>
-                            <p className="text-[#7f0001] font-bold">₹{item.price * item.quantity}</p>
-                          </div>
-                        </div>
-                      ))}
-                      <div className="pt-3 border-t border-gray-300 space-y-2">
-                        <div className="flex justify-between">
-                          <span className="text-gray-600">Subtotal</span>
-                          <span className="font-semibold">₹{orderSummary.subtotal}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-gray-600">Shipping</span>
-                          <span className="font-semibold">₹{orderSummary.shipping}</span>
-                        </div>
-                        <div className="flex justify-between text-lg font-bold text-[#7f0001] pt-2 border-t border-gray-300">
-                          <span>Total</span>
-                          <span>₹{orderSummary.total}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Download & Action Buttons */}
-              <div className="space-y-4 mb-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <button
-                    onClick={downloadOrderSummary}
-                    className={`w-full bg-gradient-to-r from-[#7f0001] to-[#a00001] text-white font-semibold py-4 rounded-xl hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-3 ${isAnimating ? 'animate-bounce' : ''}`}
-                  >
-                    <Download className="w-5 h-5" />
-                    Download Summary
-                  </button>
-                  
-                  <button
-                    onClick={printOrderSummary}
-                    className="w-full bg-white border-2 border-[#7f0001] text-[#7f0001] font-semibold py-4 rounded-xl hover:bg-[#7f0001] hover:text-white transition-all duration-300 flex items-center justify-center gap-3"
-                  >
-                    <FileText className="w-5 h-5" />
-                    Print Invoice
-                  </button>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <button
-                    onClick={() => router.push("/orders")}
-                    className="w-full bg-white border-2 border-gray-300 text-gray-700 font-semibold py-4 rounded-xl hover:border-[#7f0001] hover:text-[#7f0001] transition-all duration-300 flex items-center justify-center gap-3"
-                  >
-                    <Truck className="w-5 h-5" />
-                    Track Order
-                  </button>
-                  
-                  <button
-                    onClick={() => router.push("/")}
-                    className="w-full bg-white border-2 border-gray-300 text-gray-700 font-semibold py-4 rounded-xl hover:border-[#7f0001] hover:text-[#7f0001] transition-all duration-300 flex items-center justify-center gap-3"
-                  >
-                    <ShoppingBag className="w-5 h-5" />
-                    Shop More
-                  </button>
-                </div>
-              </div>
-
-              {/* Next Steps */}
-              <div className="mb-8">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-[#7f0001]" />
-                  What happens next?
-                </h3>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-6 h-6 bg-[#7f0001]/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-xs font-bold text-[#7f0001]">1</span>
-                    </div>
-                    <span className="text-gray-700">Order confirmation email sent</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-6 h-6 bg-[#7f0001]/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-xs font-bold text-[#7f0001]">2</span>
-                    </div>
-                    <span className="text-gray-700">Order processing (24-48 hours)</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-6 h-6 bg-[#7f0001]/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-xs font-bold text-[#7f0001]">3</span>
-                    </div>
-                    <span className="text-gray-700">Delivery at your doorstep (3-5 days)</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Help Footer */}
-            <div className="bg-gray-50 p-6 text-center border-t border-gray-200">
-              <p className="text-gray-600 text-sm mb-2">
-                Need help with your order?
-              </p>
-              <button 
-                onClick={() => router.push("/contact")}
-                className="text-[#7f0001] font-medium hover:underline text-sm flex items-center justify-center gap-2"
-              >
-                <MessageCircle className="w-4 h-4" />
-                Contact our support team →
-              </button>
-            </div>
-          </div>
-
-          {/* Simple Footer */}
-          <div className="mt-8 text-center">
-            <p className="text-gray-500 text-sm">
-              Thank you for shopping with us! 🛒
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // ✅ For failed/cancelled payments - Keep existing (unchanged)
   const getStatusIcon = () => {
     switch (paymentStatus) {
+      case "success":
+        return (
+          <CheckCircle className="w-16 h-16  sm:w-20 lg:w-24 lg:h-24 text-green-500 animate-bounce-gentle status-icon" />
+        );
       case "failed":
       case "failure":
         return (
-          <XCircle className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-red-500 animate-pulse status-icon" />
+          <XCircle className="w-16 h-16  sm:w-20 lg:w-24 lg:h-24 text-red-500 animate-pulse status-icon" />
         );
       case "cancelled":
       case "aborted":
         return (
-          <AlertTriangle className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-amber-500 animate-pulse status-icon" />
+          <AlertTriangle className="w-16 h-16  sm:w-20 lg:w-24 lg:h-24 text-yellow-500 animate-pulse status-icon" />
         );
       default:
         return (
-          <AlertTriangle className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-gray-500 status-icon" />
+          <AlertTriangle className="w-16 h-16 sm:w-20 lg:w-24 lg:h-24 text-gray-500 status-icon" />
         );
     }
   };
 
   const getPaymentMethodIcon = () => {
-    if (paymentMethod === "cod") {
-      return <Banknote className="h-5 w-5 text-[#7f0001]" />;
+    if (paymentMethod === "cod" || paymentMethod === "partial_cod") {
+      return <Banknote className="h-5 w-5 text-red-900" />;
     } else {
       return <CreditCard className="h-5 w-5 text-[#7f0001]" />;
     }
   };
 
   const getPaymentMethodText = () => {
-    if (paymentMethod === "cod") {
+    if (paymentMethod === "partial_cod") {
+      return {
+        text: "Partial Cash on Delivery",
+        color: "text-red-900",
+        bgColor: "bg-red-50",
+        borderColor: "border-red-200",
+      };
+    } else if (paymentMethod === "cod") {
+      return {
+        text: "Cash on Delivery",
+        color: "text-red-900",
+        bgColor: "bg-red-50",
+        borderColor: "border-red-200",
+      };
+    } else if (paymentMethod === "cod") {
       return {
         text: "Cash on Delivery",
         color: "text-[#7f0001]",
@@ -1042,33 +625,58 @@ This is a computer generated invoice.
 
   const getStatusMessage = () => {
     switch (paymentStatus) {
+      case "success":
+        return {
+          title:
+            paymentMethod === "partial_cod"
+              ? "Order Confirmed! 🎉"
+              : paymentMethod === "cod"
+                ? "COD Order Confirmed! 🎉"
+                : "Payment Successful! 🎉",
+          message:
+            paymentMethod === "partial_cod"
+              ? "Your advance payment is confirmed! Pay the remaining amount when your order is delivered."
+              : paymentMethod === "cod"
+                ? "Your COD order has been confirmed. Pay when your order is delivered to your doorstep!"
+                : "Your payment has been processed successfully. Your order is confirmed!",
+          color: "text-green-600",
+          bgColor: "from-green-50 to-white",
+        };
       case "failed":
       case "failure":
         return {
           title:
-            paymentMethod === "cod"
-              ? "COD Order Failed 😞"
-              : "Payment Failed 😞",
+            paymentMethod === "partial_cod"
+              ? "Payment Failed 😞"
+              : paymentMethod === "cod"
+                ? "COD Order Failed 😞"
+                : "Payment Failed 😞",
           message:
-            paymentMethod === "cod"
-              ? "Your COD order could not be processed. Please try again or contact support."
-              : "Your payment could not be processed. Please try again or use a different payment method.",
-          color: "text-red-700",
-          bgColor: "from-red-50/80 to-white",
+            paymentMethod === "partial_cod"
+              ? "Your advance payment could not be processed. Please try again or use a different payment method."
+              : paymentMethod === "cod"
+                ? "Your COD order could not be processed. Please try again or contact support."
+                : "Your payment could not be processed. Please try again or use a different payment method.",
+          color: "text-red-600",
+          bgColor: "from-red-50 to-white",
         };
       case "cancelled":
       case "aborted":
         return {
           title:
-            paymentMethod === "cod"
-              ? "COD Order Cancelled ⏹️"
-              : "Payment Cancelled ⏹️",
+            paymentMethod === "partial_cod"
+              ? "Payment Cancelled ⏹️"
+              : paymentMethod === "cod"
+                ? "COD Order Cancelled ⏹️"
+                : "Payment Cancelled ⏹️",
           message:
-            paymentMethod === "cod"
-              ? "You have cancelled the COD order process. Your order has not been placed."
-              : "You have cancelled the payment process. Your order has not been placed.",
-          color: "text-amber-700",
-          bgColor: "from-amber-50/80 to-white",
+            paymentMethod === "partial_cod"
+              ? "You have cancelled the payment process. Your order has not been placed."
+              : paymentMethod === "cod"
+                ? "You have cancelled the COD order process. Your order has not been placed."
+                : "You have cancelled the payment process. Your order has not been placed.",
+          color: "text-yellow-600",
+          bgColor: "from-yellow-50 to-white",
         };
       default:
         return {
@@ -1108,10 +716,11 @@ This is a computer generated invoice.
       className={`min-h-screen mt-20 bg-gradient-to-br ${statusInfo.bgColor} flex items-center justify-center px-4 py-8 sm:py-12 backdrop-blur-sm`}
     >
       <div
-        className={`bg-white/80 backdrop-blur-sm rounded-3xl border border-gray-200 shadow-xl p-6 sm:p-8 lg:p-10 w-full max-w-md sm:max-w-lg lg:max-w-2xl text-center transform transition-all duration-1000 ${showContent
+        className={`bg-white rounded-3xl shadow-2xl border border-red-100 p-6 sm:p-8 lg:p-10 w-full max-w-md sm:max-w-lg lg:max-w-2xl text-center transform transition-all duration-1000 ${
+          showContent
             ? "scale-100 opacity-100 translate-y-0"
             : "scale-95 opacity-0 translate-y-8"
-          }`}
+        }`}
       >
         {/* Status Icon with Enhanced Animation */}
         <div className="mb-8 flex justify-center relative">
@@ -1224,6 +833,60 @@ This is a computer generated invoice.
           </div>
         )}
 
+        {/* Enhanced Order Status Message with Retry Option */}
+        {paymentStatus === "success" && (
+          <div
+            className={`${methodInfo.bgColor} border-2 ${methodInfo.borderColor} rounded-2xl p-6 mb-8 shadow-lg`}
+          >
+            <div className="flex flex-col items-center gap-4">
+              {backendSent && apiCallCompleted.current ? (
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                  </div>
+                  <span className="text-sm sm:text-base text-green-800 font-semibold">
+                    {paymentMethod === "partial_cod"
+                      ? "Partial COD Order Created Successfully"
+                      : paymentMethod === "cod"
+                        ? "COD Order Created Successfully"
+                        : "Order Created Successfully"}
+                  </span>
+                </div>
+              ) : backendProcessing || apiCallInProgress.current ? (
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
+                    <Loader2 className="h-5 w-5 text-red-900 animate-spin" />
+                  </div>
+                  <span className="text-sm sm:text-base text-red-900 font-semibold">
+                    {paymentMethod === "partial_cod"
+                      ? "Creating Your Partial COD Order..."
+                      : paymentMethod === "cod"
+                        ? "Creating Your COD Order..."
+                        : "Creating Your Order..."}
+                  </span>
+                </div>
+              ) : (
+                <div className="text-center">
+                  <div className="flex items-center justify-center gap-3 mb-3">
+                    <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                      <AlertTriangle className="h-5 w-5 text-yellow-600" />
+                    </div>
+                    <span className="text-sm sm:text-base text-yellow-800 font-semibold">
+                      Order Creation Pending
+                    </span>
+                  </div>
+                  <button
+                    onClick={retryBackendRequest}
+                    className="bg-red-900 text-white px-6 py-2 rounded-xl hover:bg-red-800 transition-all duration-300 font-semibold text-sm shadow-lg hover:shadow-xl transform hover:scale-105"
+                  >
+                    Retry Order Creation
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Enhanced Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 mb-8">
           <button
@@ -1255,6 +918,37 @@ This is a computer generated invoice.
             </a>
           </div>
         </div>
+
+        {/* Enhanced Success Message */}
+        {paymentStatus === "success" && (
+          <div className="text-center bg-gradient-to-r from-green-50 via-green-100 to-green-50 p-6 rounded-2xl border-2 border-green-200 shadow-lg">
+            <div className="mb-4">
+              <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                <CheckCircle className="w-6 h-6 text-white" />
+              </div>
+            </div>
+            <p className="text-sm sm:text-base text-green-800 leading-relaxed font-medium">
+              🎊{" "}
+              <strong className="text-green-900">
+                Thank you for your order!
+              </strong>
+              <br />
+              <span className="text-green-700">
+                {paymentMethod === "partial_cod"
+                  ? "💰 Your advance payment is done! Pay the remaining amount on delivery."
+                  : paymentMethod === "cod"
+                    ? "💰 Your COD order is confirmed. Pay when it's delivered to your doorstep!"
+                    : "📧 You will receive an order confirmation email shortly."}
+              </span>
+            </p>
+            {paymentMethod !== "cod" && paymentMethod !== "partial_cod" && (
+              <div className="mt-4 text-xs text-green-600 bg-white rounded-lg p-3 border border-green-200">
+                💡 <strong>Pro Tip:</strong> Check your email (including spam
+                folder) for order updates
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       <style jsx>{`

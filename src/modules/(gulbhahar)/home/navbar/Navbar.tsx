@@ -2,7 +2,7 @@
 import GulbhaharSidebar from "@/modules/(gulbhahar)/sidebar/Sidebar";
 import { useAuth } from "@/providers/ContextProviders/AuthContext";
 import { useCart } from "@/providers/ContextProviders/CartContext";
-import CartPage from "@/shared-components/Navbar/CartPage";
+import CartPage from "@/modules/(gulbhahar)/cart/CartPage";
 import DesktopNav from "@/shared-components/Navbar/DesktopNav";
 import MobileNav from "@/shared-components/Navbar/MobileNav";
 import SearchPopup from "@/shared-components/Navbar/SearchPopup";
@@ -118,8 +118,7 @@ const Navbar = () => {
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          setIsScrolled(window.scrollY > 50);
-
+          setIsScrolled(window.scrollY > 150);
           ticking = false;
         });
         ticking = true;
@@ -232,10 +231,9 @@ const Navbar = () => {
     transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]
     py-1 lg:py-1
     ${
-     isNavSolid
-  ? "bg-white/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] border-b border-gray-200/30"
-  : "bg-transparent border-b border-white/5"
-
+      isNavSolid
+        ? "bg-white/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] border-b border-gray-200/30"
+        : "bg-transparent border-b border-white/5"
     }
   `}
       >
@@ -291,7 +289,7 @@ const Navbar = () => {
         {/* Subtle Decorative Line for Scrolled State */}
         <div
           className={`absolute bottom-0 left-0 h-[1px] bg-gradient-to-r from-transparent via-[#800000]/20 to-transparent transition-all duration-1000 ${
-            isScrolled ? "w-full opacity-100" : "w-0 "
+            "w-full opacity-100"
           }`}
         />
       </nav>
