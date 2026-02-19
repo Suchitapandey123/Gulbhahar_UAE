@@ -4,36 +4,51 @@ import { FiCheck } from 'react-icons/fi';
 
 const ProgressSteps = ({ step }) => {
   const steps = [
-    { number: 1, title: "Step 1", subtitle: "Personal Info" },
-    { number: 2, title: "Step 2", subtitle: "Security" },
-    { number: 3, title: "Step 3", subtitle: "Phone Verify (Required)" },
-    { number: 4, title: "Step 4", subtitle: "Profile Image (Optional)" }
+    { number: 1, title: "Personal", subtitle: "Your details" },
+    { number: 2, title: "Security", subtitle: "Password setup" },
+    { number: 3, title: "Phone", subtitle: "Verification" },
+    { number: 4, title: "Profile", subtitle: "Optional" }
   ];
 
   return (
-    <div className="mb-8 bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-red-200 shadow-lg">
+    <div className="mb-8">
       <div className="flex items-center justify-between">
         {steps.map((stepItem, index) => (
           <div key={stepItem.number} className="flex items-center flex-1">
-            {/* Step Circle */}
             <div className="flex items-center">
-              <div className={`flex items-center justify-center w-12 h-12 rounded-full border-2 transition-all duration-300 ${
-                step >= stepItem.number ? 'bg-red-900 border-red-900 text-white shadow-lg' : 
-                step === stepItem.number ? 'bg-red-100 border-red-900 text-red-900' : 'bg-white border-red-300 text-red-600'
+              {/* Step Circle */}
+              <div className={`relative flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all duration-500 ${
+                step > stepItem.number
+                  ? 'bg-[#800000] border-[#800000] text-white shadow-sm shadow-[#800000]/20'
+                  : step === stepItem.number
+                  ? 'bg-[#800000]/5 border-[#800000] text-[#800000] shadow-sm shadow-[#800000]/10'
+                  : 'bg-gray-50 border-gray-200 text-gray-300'
               }`}>
-                {step > stepItem.number ? <FiCheck className="w-6 h-6" /> : stepItem.number}
+                {step > stepItem.number ? (
+                  <FiCheck className="w-4 h-4" strokeWidth={3} />
+                ) : (
+                  <span className="text-xs font-bold">{stepItem.number}</span>
+                )}
               </div>
-              <div className="ml-3 hidden sm:block">
-                <div className="text-sm font-semibold text-red-900">{stepItem.title}</div>
-                <div className="text-xs text-red-600">{stepItem.subtitle}</div>
+              <div className="ml-2.5 hidden sm:block">
+                <div className={`text-xs font-semibold transition-colors duration-300 ${
+                  step >= stepItem.number ? 'text-gray-800' : 'text-gray-300'
+                }`}>{stepItem.title}</div>
+                <div className={`text-[11px] transition-colors duration-300 ${
+                  step >= stepItem.number ? 'text-gray-400' : 'text-gray-200'
+                }`}>{stepItem.subtitle}</div>
               </div>
             </div>
-            
+
             {/* Connector Line */}
             {index < steps.length - 1 && (
-              <div className={`flex-1 h-1 mx-4 rounded-full transition-all duration-300 ${
-                step > stepItem.number ? 'bg-red-900' : 'bg-red-200'
-              }`}></div>
+              <div className="flex-1 h-[2px] mx-3 bg-gray-100 rounded-full overflow-hidden">
+                <div
+                  className={`h-full bg-[#800000] rounded-full transition-all duration-700 ease-out ${
+                    step > stepItem.number ? 'w-full' : 'w-0'
+                  }`}
+                />
+              </div>
             )}
           </div>
         ))}

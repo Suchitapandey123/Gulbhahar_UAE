@@ -10,6 +10,7 @@ import {
   CheckCircle,
   CreditCard,
   Loader2,
+  Lock,
   Mail,
   MapPin,
   Phone,
@@ -23,459 +24,223 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 
-// TESTING: Set to 1 for testing, 300 for production
 const PARTIAL_COD_AMOUNT = 300;
 
-const Breadcrumb = () => (
-  <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-8">
-    <span className="hover:text-red-900 transition-colors cursor-pointer">
-      Home
-    </span>
-    <span className="text-gray-300">/</span>
-    <span className="hover:text-red-900 transition-colors cursor-pointer">
-      Cart
-    </span>
-    <span className="text-gray-300">/</span>
-    <span className="hover:text-red-900 transition-colors cursor-pointer">
-      Checkout
-    </span>
-    <span className="text-gray-300">/</span>
-    <span className="text-red-900 font-medium bg-red-50 px-3 py-1 rounded-full">
-      Payment
-    </span>
-  </nav>
+/* ── Checkout Progress Bar ──────────────────────────────── */
+const steps = ["Cart", "Checkout", "Payment"];
+const CheckoutProgress = () => (
+  <div className="mb-10">
+    <div className="flex items-center gap-0">
+      {steps.map((step, i) => {
+        const isActive = i === steps.length - 1;
+        const isDone = i < steps.length - 1;
+        return (
+          <div key={step} className="flex items-center flex-1 last:flex-none">
+            <div className="flex items-center gap-2.5 flex-shrink-0">
+              {/* Circle */}
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold transition-all ${
+                isActive
+                  ? "bg-red-800 text-white shadow-md shadow-red-800/30"
+                  : isDone
+                    ? "bg-stone-200 text-stone-500"
+                    : "bg-stone-100 text-stone-400"
+              }`}>
+                {isDone ? <CheckCircle className="w-3.5 h-3.5" /> : i + 1}
+              </div>
+              {/* Label */}
+              <span className={`text-xs font-semibold tracking-wide ${
+                isActive ? "text-red-800" : "text-stone-400"
+              }`}>{step}</span>
+            </div>
+            {/* Connector */}
+            {i < steps.length - 1 && (
+              <div className="flex-1 mx-3 h-px bg-stone-200 relative">
+                <div className={`absolute inset-y-0 left-0 bg-red-800 transition-all duration-500 ${isDone ? "w-full" : "w-0"}`} />
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  </div>
 );
 
-// Enhanced Phone OTP Verification Modal Component - MOBILE KEYBOARD FIXED
-const PhoneOTPModal = ({
-  isOpen,
-  onClose,
-  onVerify,
-  phone,
-  isVerifying,
-  error,
-  sessionId,
-}) => {
-  const [verificationCode, setVerificationCode] = useState([
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-  ]);
+/* ── OTP Modal ──────────────────────────────────────────── */
+const PhoneOTPModal = ({ isOpen, onClose, onVerify, phone, isVerifying, error, sessionId }) => {
+  const [verificationCode, setVerificationCode] = useState(["","","","","",""]);
   const [timeLeft, setTimeLeft] = useState(120);
   const [canResend, setCanResend] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const [localError, setLocalError] = useState("");
   const inputRefs = useRef([]);
 
-  // Clear local error when external error changes
-  useEffect(() => {
-    if (error) {
-      setLocalError("");
-    }
-  }, [error]);
-
-  // Timer effect
+  useEffect(() => { if (error) setLocalError(""); }, [error]);
   useEffect(() => {
     if (isOpen && timeLeft > 0) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-      return () => clearTimeout(timer);
-    } else if (timeLeft === 0) {
-      setCanResend(true);
-    }
+      const t = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+      return () => clearTimeout(t);
+    } else if (timeLeft === 0) setCanResend(true);
   }, [isOpen, timeLeft]);
-
-  // Auto-focus first input when modal opens
   useEffect(() => {
-    if (isOpen && inputRefs.current[0]) {
-      setTimeout(() => {
-        inputRefs.current[0]?.focus();
-      }, 300);
-    }
+    if (isOpen) setTimeout(() => inputRefs.current[0]?.focus(), 300);
   }, [isOpen]);
 
-  // Enhanced input change handler
   const handleCodeChange = (index, value) => {
-    // Clear any local errors when user starts typing
     if (localError) setLocalError("");
-
-    // Only allow single digit
-    if (value.length > 1) {
-      value = value.slice(-1);
-    }
-
-    // Only allow digits
-    if (!/^\d*$/.test(value)) {
-      return;
-    }
-
+    if (value.length > 1) value = value.slice(-1);
+    if (!/^\d*$/.test(value)) return;
     const newCode = [...verificationCode];
     newCode[index] = value;
     setVerificationCode(newCode);
-
-    // Auto-focus next input
-    if (value && index < 5) {
-      inputRefs.current[index + 1]?.focus();
-    }
+    if (value && index < 5) inputRefs.current[index + 1]?.focus();
   };
-
-  // Enhanced keyboard handler
   const handleKeyDown = (index, e) => {
-    // Handle backspace
-    if (e.key === "Backspace") {
-      if (!verificationCode[index] && index > 0) {
-        // Move to previous input if current is empty
-        inputRefs.current[index - 1]?.focus();
-      }
-      return;
-    }
-
-    // Handle paste
-    if (e.key === "v" && (e.ctrlKey || e.metaKey)) {
-      e.preventDefault();
-      handlePaste(index);
-      return;
-    }
-
-    // Handle Enter key
-    if (e.key === "Enter") {
-      e.preventDefault();
-      if (verificationCode.join("").length === 6) {
-        handleVerify();
-      }
-      return;
-    }
-
-    // Handle arrow keys
-    if (e.key === "ArrowLeft" && index > 0) {
-      e.preventDefault();
-      inputRefs.current[index - 1]?.focus();
-    } else if (e.key === "ArrowRight" && index < 5) {
-      e.preventDefault();
-      inputRefs.current[index + 1]?.focus();
-    }
+    if (e.key === "Backspace" && !verificationCode[index] && index > 0) inputRefs.current[index - 1]?.focus();
+    if (e.key === "v" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); handlePaste(index); }
+    if (e.key === "Enter" && verificationCode.join("").length === 6) { e.preventDefault(); handleVerify(); }
+    if (e.key === "ArrowLeft" && index > 0) { e.preventDefault(); inputRefs.current[index - 1]?.focus(); }
+    if (e.key === "ArrowRight" && index < 5) { e.preventDefault(); inputRefs.current[index + 1]?.focus(); }
   };
-
-  // Enhanced paste handler
   const handlePaste = async (startIndex) => {
     try {
-      const clipboardText = await navigator.clipboard.readText();
-      const digits = clipboardText.replace(/\D/g, "").slice(0, 6);
-
-      if (digits.length > 0) {
-        const newCode = [...verificationCode];
-        for (let i = 0; i < digits.length && startIndex + i < 6; i++) {
-          newCode[startIndex + i] = digits[i];
-        }
-        setVerificationCode(newCode);
-
-        // Focus the next empty input or the last filled input
-        const nextIndex = Math.min(startIndex + digits.length, 5);
-        inputRefs.current[nextIndex]?.focus();
-      }
-    } catch (err) {
-      // // console.log('Paste not supported or denied');
-    }
+      const digits = (await navigator.clipboard.readText()).replace(/\D/g, "").slice(0, 6);
+      if (!digits.length) return;
+      const newCode = [...verificationCode];
+      for (let i = 0; i < digits.length && startIndex + i < 6; i++) newCode[startIndex + i] = digits[i];
+      setVerificationCode(newCode);
+      inputRefs.current[Math.min(startIndex + digits.length, 5)]?.focus();
+    } catch {}
   };
-
-  // Enhanced verification handler
   const handleVerify = () => {
-    const codeString = verificationCode.join("");
-    if (codeString.length !== 6) {
-      setLocalError("Please enter complete 6-digit code");
-      return;
-    }
-
-    // Clear any errors
+    const code = verificationCode.join("");
+    if (code.length !== 6) { setLocalError("Please enter the complete 6-digit code"); return; }
     setLocalError("");
-    onVerify(codeString, sessionId, false);
+    onVerify(code, sessionId, false);
   };
-
-  // Enhanced resend handler
   const handleResend = async () => {
-    setIsResending(true);
-    setLocalError("");
-
+    setIsResending(true); setLocalError("");
     try {
-      const response = await fetch(
-        "https://api.gulbhahar.com/codRoutes/initiate",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            phone: phone.replace(/\D/g, ""),
-          }),
-        },
-      );
-
-      if (response.ok) {
-        const result = await response.json();
-        if (result.success) {
-          setTimeLeft(120);
-          setCanResend(false);
-          setVerificationCode(["", "", "", "", "", ""]);
-          // Focus first input after resend
-          setTimeout(() => {
-            inputRefs.current[0]?.focus();
-          }, 100);
-          onVerify(null, result.sessionId, true);
-        } else {
-          throw new Error(result.message || "Failed to resend OTP");
-        }
-      } else {
-        throw new Error("Failed to resend OTP");
-      }
-    } catch (error) {
-      console.error("❌ Error resending OTP:", error);
+      const res = await fetch("https://api.gulbhahar.com/codRoutes/initiate", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: phone.replace(/\D/g, "") }),
+      });
+      const result = await res.json();
+      if (res.ok && result.success) {
+        setTimeLeft(120); setCanResend(false);
+        setVerificationCode(["","","","","",""]);
+        setTimeout(() => inputRefs.current[0]?.focus(), 100);
+        onVerify(null, result.sessionId, true);
+      } else throw new Error(result.message || "Failed to resend OTP");
+    } catch (err) {
+      console.error(err);
       setLocalError("Failed to resend OTP. Please try again.");
-    } finally {
-      setIsResending(false);
-    }
+    } finally { setIsResending(false); }
   };
-
-  // Format time display
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
+  const formatTime = (s) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, "0")}`;
 
   if (!isOpen) return null;
-
   const displayError = error || localError;
   const isCodeComplete = verificationCode.join("").length === 6;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8 relative animate-in slide-in-from-bottom-4 duration-300 mx-4">
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all duration-200"
-          aria-label="Close modal"
-        >
-          <X className="w-5 h-5" />
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 sm:p-10 relative mx-4">
+        <button onClick={onClose} className="absolute top-5 right-5 p-2 text-stone-300 hover:text-stone-500 hover:bg-stone-50 rounded-full transition-all" aria-label="Close">
+          <X className="w-4 h-4" />
         </button>
-
-        {/* Header */}
-        <div className="text-center mb-6 sm:mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-red-800 to-red-900 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-            <Smartphone className="w-8 h-8 text-white" />
+        <div className="text-center mb-8">
+          <div className="w-14 h-14 bg-red-800 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-lg shadow-red-900/20">
+            <Smartphone className="w-6 h-6 text-white" />
           </div>
-          <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">
-            Verify Your Phone
-          </h3>
-          <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
-            We've sent a 6-digit verification code via WhatsApp to
-            <br />
-            <span className="font-semibold text-red-900">{phone}</span>
+          <h3 className="text-xl font-bold text-gray-900 mb-1.5 tracking-tight">Verify Your Phone</h3>
+          <p className="text-stone-400 text-sm leading-relaxed">
+            6-digit code sent via WhatsApp to <span className="font-semibold text-red-800">{phone}</span>
           </p>
         </div>
-
-        <div className="space-y-6">
-          {/* OTP Input Fields - MOBILE KEYBOARD OPTIMIZED */}
-          <div className="flex justify-center gap-2 sm:gap-3">
+        <div className="space-y-5">
+          <div className="flex justify-center gap-2.5">
             {verificationCode.map((digit, index) => (
               <input
-                key={index}
-                ref={(el) => (inputRefs.current[index] = el)}
-                type="tel"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                value={digit}
+                key={index} ref={(el) => (inputRefs.current[index] = el)}
+                type="tel" inputMode="numeric" pattern="[0-9]*" value={digit}
                 onChange={(e) => handleCodeChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
-                onPaste={(e) => {
-                  e.preventDefault();
-                  handlePaste(index);
-                }}
-                className={`w-10 h-12 sm:w-12 sm:h-12 text-center text-lg sm:text-xl font-bold border-2 rounded-lg transition-all outline-none ${
-                  digit
-                    ? "border-red-900 bg-red-50 text-red-900"
-                    : "border-gray-200 focus:border-red-900 focus:ring-2 focus:ring-red-200"
-                } ${displayError ? "border-red-500" : ""}`}
-                maxLength="1"
-                autoComplete="one-time-code"
-                aria-label={`Digit ${index + 1}`}
+                onPaste={(e) => { e.preventDefault(); handlePaste(index); }}
+                className={`w-11 h-12 text-center text-lg font-bold rounded-xl outline-none border-2 transition-all duration-150 ${
+                  digit ? "border-red-800 bg-red-50 text-red-900"
+                  : displayError ? "border-red-300 bg-red-50/30"
+                  : "border-stone-200 bg-stone-50 focus:border-red-700 focus:bg-white"
+                }`}
+                maxLength="1" autoComplete="one-time-code" aria-label={`Digit ${index + 1}`}
               />
             ))}
           </div>
-
-          {/* Error Display */}
           {displayError && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-              <div className="flex items-center gap-2">
-                <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0" />
-                <span className="text-red-800 font-medium text-sm">
-                  {displayError}
-                </span>
-              </div>
+            <div className="bg-red-50 border border-red-100 rounded-xl p-3 flex items-center gap-2.5">
+              <AlertCircle className="h-4 w-4 text-red-600 flex-shrink-0" />
+              <span className="text-red-700 text-sm">{displayError}</span>
             </div>
           )}
-
-          {/* Timer and Resend */}
           <div className="text-center">
-            {!canResend ? (
-              <div className="flex items-center justify-center gap-2">
-                <div className="w-2 h-2 bg-red-900 rounded-full animate-pulse"></div>
-                <p className="text-gray-600 text-sm">
-                  Resend OTP in{" "}
-                  <span className="font-bold text-red-900">
-                    {formatTime(timeLeft)}
-                  </span>
-                </p>
-              </div>
-            ) : (
-              <button
-                onClick={handleResend}
-                disabled={isResending}
-                className="inline-flex items-center gap-2 text-red-900 font-semibold hover:text-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <RefreshCw
-                  className={`h-4 w-4 ${isResending ? "animate-spin" : ""}`}
-                />
-                {isResending ? "Resending..." : "Resend OTP"}
-              </button>
-            )}
+            {!canResend
+              ? <p className="text-stone-400 text-sm">Resend in <span className="font-semibold text-red-800">{formatTime(timeLeft)}</span></p>
+              : <button onClick={handleResend} disabled={isResending} className="inline-flex items-center gap-1.5 text-red-800 text-sm font-semibold hover:text-red-700 transition-colors disabled:opacity-50">
+                  <RefreshCw className={`h-3.5 w-3.5 ${isResending ? "animate-spin" : ""}`} />
+                  {isResending ? "Resending..." : "Resend OTP"}
+                </button>
+            }
           </div>
-
-          {/* Verify Button */}
           <button
-            onClick={handleVerify}
-            disabled={!isCodeComplete || isVerifying}
-            className={`w-full py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all duration-200 flex items-center justify-center gap-2 ${
+            onClick={handleVerify} disabled={!isCodeComplete || isVerifying}
+            className={`w-full py-3.5 rounded-xl font-bold text-sm tracking-wide transition-all duration-200 flex items-center justify-center gap-2 ${
               isCodeComplete && !isVerifying
-                ? "bg-red-900 text-white hover:bg-red-800 shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
-                : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                ? "bg-red-800 text-white hover:bg-red-900 shadow-md shadow-red-800/20 hover:shadow-lg hover:shadow-red-800/30 hover:-translate-y-0.5"
+                : "bg-stone-100 text-stone-400 cursor-not-allowed"
             }`}
           >
-            {isVerifying ? (
-              <>
-                <Loader2 className="h-5 w-5 animate-spin" />
-                Verifying...
-              </>
-            ) : isCodeComplete ? (
-              <>
-                <CheckCircle className="h-5 w-5" />
-                Verify & Place Order
-              </>
-            ) : (
-              <>
-                <Smartphone className="h-5 w-5" />
-                Enter 6-digit code
-              </>
-            )}
+            {isVerifying ? <><Loader2 className="h-4 w-4 animate-spin" />Verifying...</>
+              : isCodeComplete ? <><CheckCircle className="h-4 w-4" />Verify & Place Order</>
+              : <><Smartphone className="h-4 w-4" />Enter 6-digit code</>}
           </button>
-
-          {/* Help Text */}
-          <div className="text-center space-y-2">
-            <p className="text-xs text-gray-500">
-              💡 Tip: You can paste the OTP code directly into any field
-            </p>
-            <p className="text-xs text-gray-500">
-              Didn't receive the code? Check your WhatsApp messages
-            </p>
-          </div>
+          <p className="text-center text-xs text-stone-400">You can paste the OTP directly into any field</p>
         </div>
       </div>
     </div>
   );
 };
 
-// Payment Method Card Component
-const PaymentMethodCard = ({
-  icon: Icon,
-  title,
-  description,
-  badges,
-  isSelected,
-  onClick,
-  disabled = false,
-  gradient = "from-blue-500 to-blue-600",
-}) => (
-  <label
-    className={`block cursor-pointer transition-all duration-300 ${disabled ? "cursor-not-allowed opacity-60" : ""}`}
-  >
-    <div
-      className={`relative p-3 border-2 rounded-xl transition-all duration-300 ${
-        isSelected
-          ? "border-red-900 bg-red-50 shadow-lg"
-          : disabled
-            ? "border-gray-200 bg-gray-50"
-            : "border-gray-200 hover:border-red-300 hover:bg-red-25 hover:shadow-md"
+/* ── Segmented Payment Toggle ───────────────────────────── */
+const PaymentToggle = ({ paymentMethod, setPaymentMethod, codAvailable }) => (
+  <div className="bg-[#F3F4F6] rounded-[14px] p-1.5 flex flex-col sm:flex-row gap-2 sm:gap-1.5">
+    <button
+      onClick={() => setPaymentMethod("online")}
+      className={`flex-1 flex items-center justify-center gap-2.5 min-h-[48px] py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-200 ${
+        paymentMethod === "online"
+          ? "bg-white text-[#1a1a1a] shadow-md shadow-black/[0.07]"
+          : "text-[#757575] hover:text-[#1a1a1a] hover:bg-white/50"
       }`}
     >
-      <input
-        type="radio"
-        name="paymentMethod"
-        checked={isSelected}
-        onChange={onClick}
-        disabled={disabled}
-        className="sr-only"
-      />
-
-      {isSelected && (
-        <div className="absolute top-3 right-3">
-          <div className="w-6 h-6 bg-red-900 rounded-full flex items-center justify-center">
-            <CheckCircle className="w-4 h-4 text-white" />
-          </div>
-        </div>
-      )}
-
-      <div className="flex items-start gap-4">
-        <div
-          className={`w-14 h-14 bg-gradient-to-br ${gradient} rounded-xl flex items-center justify-center shadow-lg flex-shrink-0`}
-        >
-          <Icon className="w-7 h-7 text-white" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <h3 className="text-lg font-bold text-gray-900 mb-1">{title}</h3>
-          <p className="text-sm text-gray-600 mb-3 leading-relaxed">
-            {description}
-          </p>
-
-          <div className="flex gap-2 flex-wrap">
-            {badges.map((badge, index) => (
-              <span
-                key={index}
-                className={`px-3 py-1 rounded-full text-xs font-medium ${
-                  badge.type === "success"
-                    ? "bg-green-100 text-green-700"
-                    : badge.type === "warning"
-                      ? "bg-yellow-100 text-yellow-700"
-                      : badge.type === "info"
-                        ? "bg-blue-100 text-blue-700"
-                        : "bg-gray-100 text-gray-600"
-                }`}
-              >
-                {badge.text}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  </label>
-);
-
-// Security Badge Component
-const SecurityBadge = ({ icon: Icon, title, description, color = "red" }) => (
-  <div className="bg-white rounded-lg shadow-md border border-gray-100 p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-    <div
-      className={`w-12 h-12 bg-${color}-100 rounded-full flex items-center justify-center mx-auto mb-4`}
+      <CreditCard className={`h-4 w-4 flex-shrink-0 ${paymentMethod === "online" ? "text-red-800" : "text-stone-400"}`} />
+      <span>Online Payment</span>
+    </button>
+    <button
+      onClick={() => codAvailable && setPaymentMethod("partial-cod")}
+      disabled={!codAvailable}
+      className={`flex-1 flex items-center justify-center gap-2.5 min-h-[48px] py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-200 ${
+        paymentMethod === "partial-cod"
+          ? "bg-white text-[#1a1a1a] shadow-md shadow-black/[0.07]"
+          : !codAvailable
+            ? "text-stone-300 cursor-not-allowed"
+            : "text-[#757575] hover:text-[#1a1a1a] hover:bg-white/50"
+      }`}
     >
-      <Icon className={`h-6 w-6 text-${color}-700`} />
-    </div>
-    <h3 className="font-bold text-gray-900 mb-2">{title}</h3>
-    <p className="text-sm text-gray-600">{description}</p>
+      <Banknote className={`h-4 w-4 flex-shrink-0 ${paymentMethod === "partial-cod" ? "text-red-800" : "text-stone-400"}`} />
+      <span>Partial COD</span>
+    </button>
   </div>
 );
 
-// Separate component that uses useSearchParams
+/* ── Main Content ───────────────────────────────────────── */
 function PaymentContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -483,14 +248,10 @@ function PaymentContent() {
   const [checkoutData, setCheckoutData] = useState(null);
   const [showContent, setShowContent] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("online");
-  const [isProcessingCOD, setIsProcessingCOD] = useState(false);
   const [isProcessingOnline, setIsProcessingOnline] = useState(false);
   const [isProcessingPartialCOD, setIsProcessingPartialCOD] = useState(false);
   const [showPhoneOTPModal, setShowPhoneOTPModal] = useState(false);
-  const [phoneVerification, setPhoneVerification] = useState({
-    isVerifying: false,
-    error: null,
-  });
+  const [phoneVerification, setPhoneVerification] = useState({ isVerifying: false, error: null });
   const [otpSessionId, setOtpSessionId] = useState(null);
 
   const orderId = searchParams.get("orderId");
@@ -498,718 +259,357 @@ function PaymentContent() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-
-    const savedCheckoutData = localStorage.getItem("checkoutFormData");
-
-    if (!savedCheckoutData) {
-      console.warn("⚠️ No checkout data found, redirecting to checkout page");
-      router.push("/cart/checkout");
-      return;
-    }
-
+    const saved = localStorage.getItem("checkoutFormData");
+    if (!saved) { router.push("/cart/checkout"); return; }
     try {
-      const parsedData = JSON.parse(savedCheckoutData);
-      // // console.log('📋 Loaded checkout data:', parsedData);
-      setCheckoutData(parsedData);
-    } catch (e) {
-      console.error("❌ Error parsing checkout data:", e);
-      const defaultData = {
-        fullName: "Test User",
-        email: "test@example.com",
-        phone: "+919876543210",
-        address: "123 Test Street",
-        city: "Mumbai",
-        region: "Maharashtra",
-        postalCode: "400001",
-        country: "India",
-        orderId: orderId || "TEST_ORDER_001",
-        orderTotal: amount || 1200,
-        orderSubtotal: amount ? parseFloat(amount) - 100 : 1100,
-        orderShipping: 100,
-        orderItems: [
-          {
-            id: "test-product-1",
-            name: "Test Product",
-            price: 1100,
-            quantity: 1,
-          },
-        ],
-        deliveryInfo: {
-          cod: true,
-        },
-      };
-      setCheckoutData(defaultData);
+      setCheckoutData(JSON.parse(saved));
+    } catch {
+      setCheckoutData({
+        fullName: "Test User", email: "test@example.com", phone: "+919876543210",
+        address: "123 Test Street", city: "Mumbai", region: "Maharashtra",
+        postalCode: "400001", country: "India", orderId: orderId || "TEST_ORDER_001",
+        orderTotal: amount || 1200, orderSubtotal: amount ? parseFloat(amount) - 100 : 1100,
+        orderShipping: 100, orderItems: [{ id: "1", name: "Test Product", price: 1100, quantity: 1 }],
+        deliveryInfo: { cod: true },
+      });
     }
-
     setIsLoading(false);
-    setTimeout(() => setShowContent(true), 300);
+    setTimeout(() => setShowContent(true), 200);
   }, [orderId, amount, router]);
 
   const handleOnlinePayment = async () => {
     setIsProcessingOnline(true);
-    // Process online payment without auto-redirect
-
-    gaEvent({
-      action: "Whatsapp OTP Verified , ONILNE Initiated",
-      params: {
-        payment_method: "ONLINE",
-        OrderID: checkoutData?.orderId,
-      },
-    });
-
-    fbEvent({
-      action: "ONLINE_Initiated",
-      params: {
-        payment_method: "ONLINE",
-        OrderID: checkoutData?.orderId,
-      },
-    });
-
-    let payMethod = "ONLINE";
-
-    try {
-      const res = await analyticsAPI.trackPaymentMethod(payMethod);
-      // console.log(res)
-    } catch (error) {
-      console.error(error);
-    }
-
-    setTimeout(() => {
-      handleSubmitPayment();
-    }, 1000);
+    gaEvent({ action: "ONLINE_Initiated", params: { payment_method: "ONLINE", OrderID: checkoutData?.orderId } });
+    fbEvent({ action: "ONLINE_Initiated", params: { payment_method: "ONLINE", OrderID: checkoutData?.orderId } });
+    try { await analyticsAPI.trackPaymentMethod("ONLINE"); } catch (e) { console.error(e); }
+    setTimeout(() => handleSubmitPayment(), 1000);
   };
 
   const handlePartialCODPayment = async () => {
     setIsProcessingPartialCOD(true);
-    // Process partial COD payment - pay ₹300 now, rest on delivery
-
-    gaEvent({
-      action: "Partial COD Initiated",
-      params: {
-        payment_method: "PARTIAL_COD",
-        OrderID: checkoutData?.orderId,
-        advance_amount: 300,
-      },
-    });
-
-    fbEvent({
-      action: "PARTIAL_COD_Initiated",
-      params: {
-        payment_method: "PARTIAL_COD",
-        OrderID: checkoutData?.orderId,
-        advance_amount: 300,
-      },
-    });
-
-    let payMethod = "PARTIAL_COD";
-
-    try {
-      const res = await analyticsAPI.trackPaymentMethod(payMethod);
-       
-      // console.log(res)
-    } catch (error) {
-      console.error(error);
-    }
-
-    setTimeout(() => {
-      handleSubmitPayment(PARTIAL_COD_AMOUNT); // Pass the partial amount
-    }, 1000);
+    gaEvent({ action: "Partial_COD_Initiated", params: { payment_method: "PARTIAL_COD", OrderID: checkoutData?.orderId, advance_amount: 300 } });
+    fbEvent({ action: "PARTIAL_COD_Initiated", params: { payment_method: "PARTIAL_COD", OrderID: checkoutData?.orderId, advance_amount: 300 } });
+    try { await analyticsAPI.trackPaymentMethod("PARTIAL_COD"); } catch (e) { console.error(e); }
+    setTimeout(() => handleSubmitPayment(PARTIAL_COD_AMOUNT), 1000);
   };
 
-  // const handleCODPayment = async () => {
-  //   if (!checkoutData) {
-  //     alert("Checkout data not found. Please go back and complete checkout.");
-  //     router.push("/cart/checkout");
-  //     return;
-  //   }
-
-  //   const requiredFields = [
-  //     "fullName",
-  //     "email",
-  //     "phone",
-  //     "orderId",
-  //     "orderTotal",
-  //   ];
-  //   const missingFields = requiredFields.filter(
-  //     (field) => !checkoutData[field],
-  //   );
-
-  //   if (missingFields.length > 0) {
-  //     console.error(
-  //       "❌ Missing required fields in checkout data:",
-  //       missingFields,
-  //     );
-  //     alert(
-  //       `Missing required information: ${missingFields.join(", ")}. Please go back and complete checkout.`,
-  //     );
-  //     router.push("/cart/checkout");
-  //     return;
-  //   }
-
-  //   if (!checkoutData?.deliveryInfo?.cod) {
-  //     alert("COD is not available for this location");
-  //     return;
-  //   }
-
-  //   setIsProcessingCOD(true);
-
-  //   try {
-  //     const cleanPhone = checkoutData.phone.replace(/\D/g, "");
-  //     console.log("object")
-  //     const response = await fetch(
-  //       "https://api.gulbhahar.com/codRoutes/initiate",
-  //       // "http://localhost:9080/codRoutes/initiate",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({
-  //           phone: cleanPhone,
-  //         }),
-  //       },
-  //     );
-
-  //     if (response.ok) {
-  //       const result = await response.json();
-  //       if (result.success) {
-  //         setOtpSessionId(result.sessionId);
-  //         setShowPhoneOTPModal(true);
-  //       } else {
-  //         throw new Error(result.message || "Failed to send OTP");
-  //       }
-  //     } else {
-  //       throw new Error("Failed to send OTP");
-  //     }
-
-  //     setIsProcessingCOD(false);
-  //   } catch (error) {
-  //     console.error("❌ Error sending OTP:", error);
-  //     alert("Failed to send OTP. Please try again.");
-  //     setIsProcessingCOD(false);
-  //   }
-  // };
-
-  // const handlePhoneVerify = async (
-  //   verificationCode,
-  //   sessionId,
-  //   isResend = false,
-  // ) => {
-  //   if (isResend) {
-  //     setOtpSessionId(sessionId);
-  //     return;
-  //   }
-
-  //   setPhoneVerification({ isVerifying: true, error: null });
-
-  //   try {
-  //     const response = await fetch(
-  //       "https://api.gulbhahar.com/codRoutes/verify",
-  //       // "http://localhost:9080/codRoutes/verify",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({
-  //           sessionId: sessionId,
-  //           otp: verificationCode,
-  //         }),
-  //       },
-  //     );
-
-  //     if (response.ok) {
-  //       const result = await response.json();
-
-  //       await processCODOrder();
-  //     } else {
-  //       const errorData = await response
-  //         .json()
-  //         .catch(() => ({ message: "Invalid OTP" }));
-  //       throw new Error(errorData.message || "Invalid OTP");
-  //     }
-  //   } catch (error) {
-  //     console.error("❌ Phone verification failed:", error);
-  //     setPhoneVerification({
-  //       isVerifying: false,
-  //       error: error.message || "Phone verification failed. Please try again.",
-  //     });
-  //   }
-  // };
-
-//   const processCODOrder = async () => {
-// //     gaEvent({
-// //       action: "Whatsapp OTP Verified , COD Initiated",
-// //       params: {
-// //         payment_method: "COD",
-// //         OrderID: checkoutData?.orderId,
-// //       },
-// //     });
-
-// //     fbEvent({
-// //       action: "COD_Initiated",
-// //       params: {
-// //         payment_method: "COD",
-// //         OrderID: checkoutData?.orderId,
-// //       },
-// //     });
-
-// //     let payMethod = "COD";
-
-// //     try {
-// //       const res = await analyticsAPI.trackPaymentMethod(payMethod);
-// //  console.log(payMethod)
-// //       // console.log(res)
-// //     } catch (error) {
-// //       console.error(error);
-// //     }
-   
-//     // const redirectUrl = `/cart/checkout/payment/transaction-status?status=success&orderId=${checkoutData?.orderId}&amount=${checkoutData?.orderTotal}&transactionId=Partil-COD_${Date.now()}&payment_method=PARTIAL_COD`;
-//     // router.push(redirectUrl);
-//   };
-
   const handleSubmitPayment = (partialAmount = null) => {
-    // Save payment method to localStorage for transaction-status page
-    console.log("reached handle Submit pAyment")
+    console.log("reached handle Submit pAyment");
     try {
-      const savedData = JSON.parse(localStorage.getItem("checkoutFormData") || "{}");
-      savedData.paymentMethod = partialAmount ? "PARTIAL_COD" : "ONLINE";
-      savedData.partialAmount = partialAmount || null;
-      localStorage.setItem("checkoutFormData", JSON.stringify(savedData));
-    } catch (e) {
-      console.error("Error saving payment method:", e);
-    }
+      const saved = JSON.parse(localStorage.getItem("checkoutFormData") || "{}");
+      saved.paymentMethod = partialAmount ? "PARTIAL_COD" : "ONLINE";
+      saved.partialAmount = partialAmount || null;
+      localStorage.setItem("checkoutFormData", JSON.stringify(saved));
+    } catch (e) { console.error(e); }
 
-
-
-    // Create form element programmatically
     const form = document.createElement("form");
     form.method = "POST";
     form.action = "https://api.gulbhahar.com/ccavRequestHandler";
-    // form.action = "http://localhost:9080/ccavRequestHandler";
     form.style.display = "none";
-
-    // Determine the amount to charge
     const chargeAmount = partialAmount || checkoutData?.orderTotal;
-
-
-    // Add form fields
-    const formData = {
-      merchant_id: "4371009",
-      order_id: checkoutData?.orderId || "TEST_ORDER_001",
-      currency: "INR",
-      amount: chargeAmount.toString(),
+    const fields = {
+      merchant_id: "4371009", order_id: checkoutData?.orderId || "TEST_ORDER_001",
+      currency: "INR", amount: chargeAmount.toString(),
       redirect_url: "https://api.gulbhahar.com/ccavResponseHandler",
-      // redirect_url: "http://localhost:9080/ccavResponseHandler",
       cancel_url: "https://api.gulbhahar.com/ccavResponseHandler",
-      // cancel_url: "http://localhost:9080/ccavResponseHandler",
-      language: "EN",
-      billing_name: checkoutData?.fullName ,
-      billing_address: checkoutData?.address,
-      billing_city: checkoutData?.city ,
-      billing_state: checkoutData?.region,
-      billing_zip: checkoutData?.postalCode ,
-      billing_country: checkoutData?.country ,
-      billing_tel: checkoutData?.phone ,
-      billing_email: checkoutData?.email,
-      delivery_name: checkoutData?.fullName ,
-      delivery_address: checkoutData?.address ,
-      delivery_city: checkoutData?.city,
-      delivery_state: checkoutData?.region ,
-      delivery_zip: checkoutData?.postalCode ,
-      delivery_country: checkoutData?.country ,
-      delivery_tel: checkoutData?.phone ,
+      language: "EN", billing_name: checkoutData?.fullName, billing_address: checkoutData?.address,
+      billing_city: checkoutData?.city, billing_state: checkoutData?.region,
+      billing_zip: checkoutData?.postalCode, billing_country: checkoutData?.country,
+      billing_tel: checkoutData?.phone, billing_email: checkoutData?.email,
+      delivery_name: checkoutData?.fullName, delivery_address: checkoutData?.address,
+      delivery_city: checkoutData?.city, delivery_state: checkoutData?.region,
+      delivery_zip: checkoutData?.postalCode, delivery_country: checkoutData?.country,
+      delivery_tel: checkoutData?.phone,
       merchant_param1: partialAmount ? "PARTIAL_COD" : "FULL_PAYMENT",
-      merchant_param2: partialAmount
-        ? `Advance: ${partialAmount}`
-        : `Full: ${checkoutData?.orderTotal || 0}`,
-      merchant_param3: partialAmount
-        ? `COD_Amount: ${(checkoutData?.orderTotal || 0) - partialAmount}`
-        : "FULL_ONLINE",
-      merchant_param4: partialAmount
-        ? `Total: ${checkoutData?.orderTotal || 0}`
-        : "additional Info.",
+      merchant_param2: partialAmount ? `Advance: ${partialAmount}` : `Full: ${checkoutData?.orderTotal || 0}`,
+      merchant_param3: partialAmount ? `COD_Amount: ${(checkoutData?.orderTotal || 0) - partialAmount}` : "FULL_ONLINE",
+      merchant_param4: partialAmount ? `Total: ${checkoutData?.orderTotal || 0}` : "additional Info.",
       merchant_param5: checkoutData?.orderId || "NO_ORDER_ID",
-      promo_code: "",
-      customer_identifier: checkoutData?.phone || "",
+      promo_code: "", customer_identifier: checkoutData?.phone || "",
     };
-    // Create hidden inputs
-    Object.keys(formData).forEach((key) => {
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = key;
-      input.value = formData[key];
-      form.appendChild(input);
+    Object.entries(fields).forEach(([k, v]) => {
+      const inp = document.createElement("input");
+      inp.type = "hidden"; inp.name = k; inp.value = v;
+      form.appendChild(inp);
     });
-
-    // Append to body and submit
     document.body.appendChild(form);
     form.submit();
     document.body.removeChild(form);
   };
 
-  const handleGoBack = () => {
-    router.push("/cart/checkout");
-  };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen mt-18 bg-gradient-to-br from-red-50/30 via-white to-red-50/20 flex items-center justify-center">
-        <div className="text-center">
-          <div className="relative">
-            <div className="w-16 h-16 border-4 border-red-200 rounded-full animate-spin mx-auto mb-6"></div>
-            <div className="absolute inset-0 w-16 h-16 border-4 border-red-900 border-t-transparent rounded-full animate-spin mx-auto"></div>
-          </div>
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">
-            Loading Payment Gateway
-          </h3>
-          <p className="text-gray-500">
-            Preparing your secure payment experience...
-          </p>
+  if (isLoading) return (
+    <div className="min-h-screen mt-14 sm:mt-20 bg-[#f5f5f7] flex items-center justify-center">
+      <div className="text-center">
+        <div className="relative w-12 h-12 mx-auto mb-5">
+          <div className="w-12 h-12 border-2 border-stone-200 rounded-full animate-spin" />
+          <div className="absolute inset-0 border-2 border-red-800 border-t-transparent rounded-full animate-spin" />
         </div>
+        <p className="text-sm font-medium text-stone-500 tracking-tight">Loading Payment Gateway</p>
       </div>
-    );
-  }
+    </div>
+  );
+
+  const isPaying = isProcessingOnline || isProcessingPartialCOD;
 
   return (
-    <div className="min-h-screen mt-14 sm:mt-20 bg-gradient-to-br from-red-50/30 via-white to-red-50/20">
-      <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto px-2 sm:px-6 lg:px-8 py-6 lg:py-8">
-        <Breadcrumb />
+    <div className="min-h-screen mt-14 sm:mt-20 bg-[#F5F5F7]">
+      <div className="w-full max-w-7xl 2xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 py-7 sm:py-10 lg:py-12">
 
-        <div
-          className={`transform transition-all duration-1000 ${showContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
-        >
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-            {/* Payment Method Selection */}
-            <div className="xl:col-span-2 space-y-8">
-              {/* Header */}
-              <div className="text-center lg:text-left">
-                <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                  Choose Payment Method
+        <CheckoutProgress />
+
+        <div className={`transition-all duration-500 ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 lg:gap-8 items-start">
+
+            {/* ══ LEFT — Payment Options ══ */}
+            <div className="lg:col-span-3 flex flex-col gap-4">
+
+              {/* Page heading */}
+              <div>
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a1a1a] tracking-tight leading-tight">
+                  Secure Payment
                 </h1>
-                <p className="text-gray-600 text-lg mb-8 flex items-center justify-center lg:justify-start gap-2">
-                  <Shield className="h-5 w-5 text-red-900" />
-                  Secure & encrypted payment options
+                <p className="mt-1 text-xs sm:text-sm text-[#757575] flex items-center gap-1.5">
+                  <Lock className="h-3.5 w-3.5 text-red-800 flex-shrink-0" />
+                  All transactions are encrypted & secure
                 </p>
               </div>
 
-              {/* Payment Methods */}
-              <div className="space-y-4">
-                <PaymentMethodCard
-                  icon={CreditCard}
-                  title="Online Payment"
-                  description="Credit/Debit Card, UPI, Net Banking, or Digital Wallets"
-                  badges={[
-                    { text: "Instant Confirmation", type: "success" },
-                    { text: "SSL Encrypted", type: "info" },
-                  ]}
-                  isSelected={paymentMethod === "online"}
-                  onClick={() => setPaymentMethod("online")}
-                  gradient="from-red-800 to-red-900"
-                />
+              {/* Payment method card */}
+              <div className="bg-white rounded-2xl shadow-sm border border-[#E5E7EB] overflow-hidden">
 
-                <PaymentMethodCard
-                  icon={Banknote}
-                  title="Partial Cash on Delivery"
-                  description={`Pay ₹${PARTIAL_COD_AMOUNT} now and remaining amount when your order is delivered to your doorstep.`}
-                  badges={[
-                    { text: `Pay ₹${PARTIAL_COD_AMOUNT}`, type: "warning" },
-                    checkoutData?.deliveryInfo?.cod
-                      ? { text: "Available", type: "success" }
-                      : { text: "Not Available", type: "error" },
-                  ]}
-                  isSelected={paymentMethod === "partial-cod"}
-                  onClick={() =>
-                    checkoutData?.deliveryInfo?.cod &&
-                    setPaymentMethod("partial-cod")
-                  }
-                  disabled={!checkoutData?.deliveryInfo?.cod}
-                  gradient="from-red-800 to-red-900"
-                />
+                {/* Toggle */}
+                <div className="px-4 sm:px-6 pt-5 pb-4">
+                  <p className="text-[10px] font-bold text-stone-400 tracking-widest uppercase mb-3">Select Payment Method</p>
+                  <PaymentToggle
+                    paymentMethod={paymentMethod}
+                    setPaymentMethod={setPaymentMethod}
+                    codAvailable={!!checkoutData?.deliveryInfo?.cod}
+                  />
+                </div>
+
+                {/* Divider */}
+                <div className="border-t border-[#F3F4F6]" />
+
+                {/* Method detail */}
+                <div className="px-4 sm:px-6 py-4">
+                  {paymentMethod === "online" ? (
+                    <div className="flex items-start gap-3.5 p-4 bg-[#F9FAFB] rounded-xl border border-[#E5E7EB]">
+                      <div className="w-10 h-10 bg-red-800 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <CreditCard className="w-4.5 h-4.5 text-white w-5 h-5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-[#1a1a1a] mb-0.5">Online Payment</p>
+                        <p className="text-xs text-[#757575] leading-relaxed mb-3">
+                          Pay securely via Credit / Debit Card, UPI, Net Banking, or Digital Wallets
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                            <CheckCircle className="h-3 w-3" /> Instant Confirmation
+                          </span>
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-100">
+                            <Shield className="h-3 w-3" /> SSL Secured
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-4 bg-[#F9FAFB] rounded-xl border border-[#E5E7EB]">
+                      <div className="flex items-start gap-3.5 mb-4">
+                        <div className="w-10 h-10 bg-red-800 rounded-xl flex items-center justify-center flex-shrink-0">
+                          <Banknote className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-bold text-[#1a1a1a] mb-0.5">Partial Cash on Delivery</p>
+                          <p className="text-xs text-[#757575] leading-relaxed mb-3">
+                            Pay a small advance now, remaining amount collected at doorstep
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-100">
+                              ₹{PARTIAL_COD_AMOUNT} advance
+                            </span>
+                            {checkoutData?.deliveryInfo?.cod
+                              ? <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">✓ Available</span>
+                              : <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-red-50 text-red-700 border border-red-100">Unavailable</span>
+                            }
+                          </div>
+                        </div>
+                      </div>
+                      {/* Split mini cards */}
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="bg-white rounded-xl px-4 py-3 border border-[#E5E7EB] text-center">
+                          <p className="text-[10px] font-semibold text-[#757575] uppercase tracking-wide mb-1">Pay Now</p>
+                          <p className="text-lg font-bold text-red-800">₹{PARTIAL_COD_AMOUNT}</p>
+                        </div>
+                        <div className="bg-white rounded-xl px-4 py-3 border border-[#E5E7EB] text-center">
+                          <p className="text-[10px] font-semibold text-[#757575] uppercase tracking-wide mb-1">On Delivery</p>
+                          <p className="text-lg font-bold text-[#1a1a1a]">
+                            ₹{((checkoutData?.orderTotal || 1200) - PARTIAL_COD_AMOUNT).toLocaleString()}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Divider */}
+                <div className="border-t border-[#F3F4F6]" />
+
+                {/* CTA buttons */}
+                <div className="px-4 sm:px-6 py-4 sm:py-5 space-y-3">
+                  {/* Primary pay button */}
+                  <button
+                    onClick={paymentMethod === "online" ? handleOnlinePayment : handlePartialCODPayment}
+                    disabled={isProcessingOnline || isProcessingPartialCOD}
+                    className="w-full min-h-[52px] bg-red-800 text-white px-6 py-3.5 rounded-xl font-bold text-sm tracking-wide hover:bg-red-900 active:bg-red-950 transition-all duration-150 shadow-md shadow-red-800/20 hover:shadow-lg hover:shadow-red-800/25 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                  >
+                    {(isProcessingOnline || isProcessingPartialCOD)
+                      ? <><Loader2 className="h-4 w-4 animate-spin" />Processing your order...</>
+                      : paymentMethod === "online"
+                        ? <><Lock className="h-4 w-4" />Pay ₹{(checkoutData?.orderTotal || 1200).toLocaleString()} Securely</>
+                        : <><Lock className="h-4 w-4" />Pay ₹{PARTIAL_COD_AMOUNT} Now</>
+                    }
+                  </button>
+
+                  {/* Secondary back button */}
+                  <button
+                    onClick={() => router.push("/cart/checkout")}
+                    className="w-full min-h-[48px] flex items-center justify-center gap-2 text-[#757575] text-sm font-medium hover:text-[#1a1a1a] transition-colors duration-150"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Go back to checkout
+                  </button>
+
+                  <p className="text-center text-[11px] text-[#9CA3AF]">
+                    Redirected to CCAvenue — India's most trusted payment gateway
+                  </p>
+                </div>
               </div>
 
-              {/* Payment Action */}
-              <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
-                {paymentMethod === "online" ? (
-                  <div className="text-center">
-                    <div className="w-20 h-20 bg-gradient-to-br from-red-800 to-red-900 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
-                      <CreditCard className="w-10 h-10 text-white" />
+              {/* Trust badges — row on desktop, 2×2 on mobile */}
+              <div className="bg-white rounded-2xl shadow-sm border border-[#E5E7EB] px-4 sm:px-6 py-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-0 sm:flex sm:items-center sm:justify-around">
+                  {[
+                    { icon: Shield, title: "SSL Encrypted", sub: "256-bit security" },
+                    { icon: CheckCircle, title: "PCI Compliant", sub: "Highest standard" },
+                    { icon: Star, title: "Trusted Gateway", sub: "10M+ customers" },
+                  ].map(({ icon: Icon, title, sub }) => (
+                    <div key={title} className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 bg-red-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Icon className="h-4 w-4 text-red-800" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-[#1a1a1a] leading-tight">{title}</p>
+                        <p className="text-[10px] text-[#9CA3AF] leading-tight">{sub}</p>
+                      </div>
                     </div>
+                  ))}
+                </div>
+              </div>
+            </div>
 
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                      Secure Online Payment
-                    </h3>
+            {/* ══ RIGHT — Order Summary ══ */}
+            <div className="lg:col-span-2">
+              <div className="bg-[#F9FAFB] rounded-2xl border border-[#E5E7EB] overflow-hidden lg:sticky lg:top-8">
 
-                    <p className="text-gray-600 text-lg mb-8 max-w-md mx-auto">
-                      You'll be redirected to our secure payment gateway powered
-                      by CCAvenue to complete your transaction.
-                    </p>
-
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
-                      <button
-                        onClick={handleOnlinePayment}
-                        disabled={isProcessingOnline}
-                        className="flex-1 text-nowrap bg-gradient-to-r from-red-800 to-red-900 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:from-red-900 hover:to-red-800 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {isProcessingOnline ? (
-                          <>
-                            <Loader2 className="h-5 w-5 animate-spin" />
-                            Processing...
-                          </>
-                        ) : (
-                          <>
-                            <CreditCard className="h-5 w-5" />
-                            Pay ₹
-                            {(
-                              checkoutData?.orderTotal || 1200
-                            ).toLocaleString()}
-                          </>
-                        )}
-                      </button>
-
-                      <button
-                        onClick={handleGoBack}
-                        className="flex-1 bg-white border-2 border-red-300 text-red-900 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-red-50 hover:border-red-400 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3"
-                      >
-                        <ArrowLeft className="h-5 w-5" />
-                        Go Back
-                      </button>
+                {/* Header */}
+                <div className="px-5 sm:px-6 py-4 sm:py-5 border-b border-[#E5E7EB] bg-white">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-red-800 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <ShoppingBag className="text-white h-3.5 w-3.5" />
                     </div>
+                    <span className="text-sm font-bold text-[#1a1a1a] tracking-tight">Order Summary</span>
                   </div>
-                ) : (
-                  <div className="text-center">
-                    <div className="w-20 h-20 bg-gradient-to-br from-red-800 to-red-900 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
-                      <Banknote className="w-10 h-10 text-white" />
+                </div>
+
+                {/* Meta rows */}
+                <div className="px-5 sm:px-6 py-4 space-y-2.5 border-b border-[#E5E7EB]">
+                  {[
+                    { label: "Order ID", value: <span className="font-mono text-[11px] bg-white border border-[#E5E7EB] text-stone-500 px-2 py-0.5 rounded-lg">{checkoutData?.orderId || "TEST_ORDER_001"}</span> },
+                    { label: "Customer", value: <span className="text-sm font-semibold text-[#1a1a1a]">{checkoutData?.fullName || "Test User"}</span> },
+                    { label: "Items", value: <span className="text-sm font-bold text-red-800">{checkoutData?.orderItems?.length || 1} item(s)</span> },
+                    { label: "Method", value: <span className="text-[11px] font-bold bg-red-50 border border-red-100 text-red-800 px-2.5 py-1 rounded-full">{paymentMethod === "partial-cod" ? "Partial COD" : "Online"}</span> },
+                  ].map(({ label, value }) => (
+                    <div key={label} className="flex items-center justify-between">
+                      <span className="text-[11px] text-[#9CA3AF] font-medium uppercase tracking-wider">{label}</span>
+                      {value}
                     </div>
+                  ))}
+                </div>
 
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                      Partial Cash on Delivery
-                    </h3>
+                {/* Price breakdown */}
+                <div className="px-5 sm:px-6 py-4 space-y-2 border-b border-[#E5E7EB] bg-white">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-[#757575]">Subtotal</span>
+                    <span className="text-sm font-medium text-[#1a1a1a]">₹{(checkoutData?.orderSubtotal || 1100).toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-[#757575]">Shipping</span>
+                    <span className={`text-sm font-medium ${checkoutData?.orderShipping === 0 ? "text-emerald-600" : "text-[#1a1a1a]"}`}>
+                      {checkoutData?.orderShipping === 0 ? "Free" : `₹${(checkoutData?.orderShipping || 100).toLocaleString()}`}
+                    </span>
+                  </div>
+                  <div className="pt-2 border-t border-[#F3F4F6] flex justify-between items-center">
+                    <span className="text-sm font-semibold text-[#757575]">Total</span>
+                    <span className="text-xl font-bold text-[#1a1a1a]">₹{(checkoutData?.orderTotal || 1200).toLocaleString()}</span>
+                  </div>
+                </div>
 
-                    <p className="text-gray-600 text-lg mb-4 max-w-md mx-auto">
-                      Pay ₹{PARTIAL_COD_AMOUNT} now via our secure payment
-                      gateway.
-                    </p>
-                    <p className="text-gray-600 text-base mb-8 max-w-md mx-auto">
-                      Remaining amount of{" "}
-                      <span className="font-bold text-red-900">
-                        ₹
-                        {(
-                          (checkoutData?.orderTotal || 1200) -
-                          PARTIAL_COD_AMOUNT
-                        ).toLocaleString()}
-                      </span>{" "}
-                      will be collected on delivery.
-                    </p>
-
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
-                      <button
-                        onClick={handlePartialCODPayment}
-                        disabled={isProcessingPartialCOD}
-                        className="flex-1 text-nowrap bg-gradient-to-r from-red-800 to-red-900 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:from-red-900 hover:to-red-800 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {isProcessingPartialCOD ? (
-                          <>
-                            <Loader2 className="h-5 w-5 animate-spin" />
-                            Processing...
-                          </>
-                        ) : (
-                          <>
-                            <CreditCard className="h-5 w-5" />
-                            Pay ₹{PARTIAL_COD_AMOUNT} Now
-                          </>
-                        )}
-                      </button>
-
-                      <button
-                        onClick={handleGoBack}
-                        className="flex-1 bg-white border-2 border-red-300 text-red-900 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-red-50 hover:border-red-400 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3"
-                      >
-                        <ArrowLeft className="h-5 w-5" />
-                        Go Back
-                      </button>
+                {/* Payment split */}
+                {paymentMethod === "partial-cod" && (
+                  <div className="px-5 sm:px-6 py-4 space-y-2 border-b border-[#E5E7EB]">
+                    <div className="flex justify-between items-center py-2.5 px-3 bg-white border border-red-100 rounded-xl">
+                      <span className="text-xs font-medium text-[#757575]">Pay Now (Advance)</span>
+                      <span className="text-sm font-bold text-red-800">₹{PARTIAL_COD_AMOUNT}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2.5 px-3 bg-white border border-amber-100 rounded-xl">
+                      <span className="text-xs font-medium text-[#757575]">On Delivery</span>
+                      <span className="text-sm font-bold text-amber-700">₹{((checkoutData?.orderTotal || 1200) - PARTIAL_COD_AMOUNT).toLocaleString()}</span>
                     </div>
                   </div>
                 )}
-              </div>
-
-              {/* Security Features */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <SecurityBadge
-                  icon={Shield}
-                  title="SSL Encrypted"
-                  description="256-bit encryption protects your data"
-                  color="red"
-                />
-                <SecurityBadge
-                  icon={CheckCircle}
-                  title="PCI Compliant"
-                  description="Meets highest security standards"
-                  color="red"
-                />
-                <SecurityBadge
-                  icon={Star}
-                  title="Trusted Gateway"
-                  description="Used by millions of customers"
-                  color="red"
-                />
-              </div>
-            </div>
-
-            {/* Order Summary */}
-            <div className="xl:col-span-1">
-              <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 lg:p-8 sticky top-8">
-                <div className="flex items-center mb-6">
-                  <div className="w-10 h-10 bg-gradient-to-br from-red-800 to-red-900 rounded-xl flex items-center justify-center mr-3 shadow-lg">
-                    <ShoppingBag className="text-white h-5 w-5" />
-                  </div>
-                  <h2 className="text-xl font-bold text-gray-900">
-                    Order Summary
-                  </h2>
-                </div>
-
-                <div className="space-y-4 mb-6">
-                  <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                    <span className="text-gray-600 font-medium">Order ID:</span>
-                    <span className="font-mono text-sm bg-gray-100 px-3 py-1 rounded-lg">
-                      {checkoutData?.orderId || "TEST_ORDER_001"}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                    <span className="text-gray-600 font-medium">Customer:</span>
-                    <span className="font-semibold text-gray-900 text-right">
-                      {checkoutData?.fullName || "Test User"}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                    <span className="text-gray-600 font-medium">Items:</span>
-                    <span className="font-semibold text-red-900">
-                      {checkoutData?.orderItems?.length || 1} item(s)
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                    <span className="text-gray-600 font-medium">
-                      Payment Method:
-                    </span>
-                    <span
-                      className={`font-semibold px-3 py-1 rounded-full text-sm ${
-                        paymentMethod === "partial-cod"
-                          ? "bg-red-100 text-red-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {paymentMethod === "partial-cod"
-                        ? "Partial Cash on Delivery"
-                        : "Online Payment"}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Price Breakdown */}
-                <div className="bg-gray-50 rounded-xl p-6 mb-6">
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Subtotal:</span>
-                      <span className="font-semibold text-gray-900">
-                        ₹
-                        {(checkoutData?.orderSubtotal || 1100).toLocaleString()}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Shipping:</span>
-                      <span
-                        className={`font-semibold ${(checkoutData?.orderShipping || 100) === 0 ? "text-green-600" : "text-gray-900"}`}
-                      >
-                        {checkoutData?.orderShipping === 0
-                          ? "Free"
-                          : `₹${(checkoutData?.orderShipping).toLocaleString()}`}
-                      </span>
-                    </div>
-                    <div className="border-t pt-3">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-lg font-bold text-gray-900">
-                          Order Total:
-                        </span>
-                        <span className="text-xl font-bold text-gray-900">
-                          ₹{(checkoutData?.orderTotal || 1200).toLocaleString()}
-                        </span>
-                      </div>
-                      {paymentMethod === "partial-cod" && (
-                        <>
-                          <div className="flex justify-between items-center py-2 bg-red-50 px-3 rounded-lg mt-3">
-                            <span className="text-sm font-medium text-gray-700">
-                              Advance Payment (Now):
-                            </span>
-                            <span className="text-lg font-bold text-red-900">
-                              ₹{PARTIAL_COD_AMOUNT}
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center py-2 bg-yellow-50 px-3 rounded-lg mt-2">
-                            <span className="text-sm font-medium text-gray-700">
-                              Cash on Delivery:
-                            </span>
-                            <span className="text-lg font-bold text-yellow-900">
-                              ₹
-                              {(
-                                (checkoutData?.orderTotal || 1200) -
-                                PARTIAL_COD_AMOUNT
-                              ).toLocaleString()}
-                            </span>
-                          </div>
-                        </>
-                      )}
-                      {paymentMethod === "online" && (
-                        <div className="flex text-nowrap justify-between items-center py-2 bg-green-50 px-3 rounded-lg mt-3">
-                          <span className="text-sm font-medium text-gray-700">
-                            Pay Now:
-                          </span>
-                          <span className="text-lg font-bold text-green-900">
-                            ₹
-                            {(
-                              checkoutData?.orderTotal || 1200
-                            ).toLocaleString()}
-                          </span>
-                        </div>
-                      )}
+                {paymentMethod === "online" && (
+                  <div className="px-5 sm:px-6 py-4 border-b border-[#E5E7EB]">
+                    <div className="flex justify-between items-center py-2.5 px-3 bg-white border border-emerald-100 rounded-xl">
+                      <span className="text-xs font-medium text-[#757575]">Pay Now</span>
+                      <span className="text-sm font-bold text-emerald-700">₹{(checkoutData?.orderTotal || 1200).toLocaleString()}</span>
                     </div>
                   </div>
-                </div>
+                )}
 
-                {/* Customer Info */}
-                <div className="space-y-3 text-sm">
-                  <div className="flex items-center gap-3 text-gray-600">
-                    <Mail className="h-4 w-4 text-red-900" />
-                    <span className="truncate">
-                      {checkoutData?.email || "test@example.com"}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3 text-gray-600">
-                    <Phone className="h-4 w-4 text-red-900" />
-                    <span>{checkoutData?.phone || "+919876543210"}</span>
-                  </div>
-                  <div className="flex items-start gap-3 text-gray-600">
-                    <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0 text-red-900" />
-                    <div className="flex-1 min-w-0">
-                      <p className="truncate">
-                        {checkoutData?.address || "123 Test Street"}
-                      </p>
-                      <p className="truncate">
-                        {checkoutData?.city || "Mumbai"},{" "}
-                        {checkoutData?.region || "Maharashtra"}{" "}
-                        {checkoutData?.postalCode || "400001"}
+                {/* Delivery info */}
+                <div className="px-5 sm:px-6 py-4 space-y-2.5 border-b border-[#E5E7EB]">
+                  <p className="text-[10px] font-bold text-[#9CA3AF] tracking-widest uppercase">Delivering To</p>
+                  <div className="flex items-start gap-3">
+                    <MapPin className="h-3.5 w-3.5 mt-0.5 text-red-800 flex-shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold text-[#1a1a1a]">{checkoutData?.fullName || "Test User"}</p>
+                      <p className="text-xs text-[#757575] mt-0.5 leading-relaxed">
+                        {checkoutData?.address || "123 Test Street"}, {checkoutData?.city || "Mumbai"}, {checkoutData?.region || "Maharashtra"} {checkoutData?.postalCode || "400001"}
                       </p>
                     </div>
                   </div>
+                  <div className="flex items-center gap-3">
+                    <Mail className="h-3.5 w-3.5 text-red-800 flex-shrink-0" />
+                    <span className="text-xs text-[#757575] truncate">{checkoutData?.email || "test@example.com"}</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Phone className="h-3.5 w-3.5 text-red-800 flex-shrink-0" />
+                    <span className="text-xs text-[#757575]">{checkoutData?.phone || "+919876543210"}</span>
+                  </div>
+                </div>
+
+                {/* Secure footer */}
+                <div className="px-5 sm:px-6 py-3.5 flex items-center justify-center gap-2">
+                  <Lock className="h-3 w-3 text-[#9CA3AF]" />
+                  <span className="text-[11px] text-[#9CA3AF] font-medium">Secured by CCAvenue</span>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
 
-        {/* Phone OTP Verification Modal */}
+        {/* OTP Modal (commented out) */}
         {/* <PhoneOTPModal
           isOpen={showPhoneOTPModal}
           onClose={() => setShowPhoneOTPModal(false)}
@@ -1226,22 +626,18 @@ function PaymentContent() {
 
 function PaymentLoading() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50/30 via-white to-red-50/20 flex items-center justify-center">
+    <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center">
       <div className="text-center">
-        <div className="relative">
-          <div className="w-16 h-16 border-4 border-red-200 rounded-full animate-spin mx-auto mb-6"></div>
-          <div className="absolute inset-0 w-16 h-16 border-4 border-red-900 border-t-transparent rounded-full animate-spin mx-auto"></div>
+        <div className="relative w-12 h-12 mx-auto mb-5">
+          <div className="w-12 h-12 border-2 border-stone-200 rounded-full animate-spin" />
+          <div className="absolute inset-0 border-2 border-red-800 border-t-transparent rounded-full animate-spin" />
         </div>
-        <h3 className="text-xl font-semibold text-gray-700 mb-2">
-          Loading Payment Page
-        </h3>
-        <p className="text-gray-500">Please wait...</p>
+        <p className="text-sm font-medium text-stone-500">Loading Payment Page</p>
       </div>
     </div>
   );
 }
 
-// Main export component with Suspense boundary
 export default function PaymentPage() {
   return (
     <Suspense fallback={<PaymentLoading />}>
