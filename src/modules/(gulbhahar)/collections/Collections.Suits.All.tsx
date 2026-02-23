@@ -22,12 +22,12 @@ export const Collections_Suits_All = async () => {
           {/* <p className="text-sm tracking-[0.3em] text-red-800 uppercase mb-2">
             Handcrafted with Love
           </p> */}
-          <h1 className="group relative inline-block  bg-transparent overflow-hidden  text-[#000000] mb-4">
+          <h2 className="group relative inline-block  bg-transparent overflow-hidden  text-[#000000] mb-4">
             <div className="absolute inset-0 w-0 transition-all duration-300 ease-out group-hover:w-full" />
             <span className="relative text-xl sm:text-2xl lg:text-3xl  font-medium tracking-[0.15em] uppercase">
               Suits
             </span>
-          </h1>
+          </h2>
           <div className="flex items-center justify-center gap-3">
             <span className="h-[1px] w-12 bg-red-800" />
             <span className="h-2 w-2 rounded-full bg-red-800" />

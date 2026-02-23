@@ -224,6 +224,7 @@ const { showToast, ToastContainer } = useToast();
     { href: "/contact", label: "Contact" },
     ...(isAuthenticated ? [{ href: "/account", label: "My Account" }] : []),
     { href: "/", label: "Careers" },
+    { href: "/heritage-culture", label: "Craft Heritage" },
   ];
 
   const supportLinks = [

@@ -41,6 +41,44 @@ export async function GET() {
         changeFrequency: "monthly",
       },
 
+            // Category pages - high SEO value
+      {
+        url: `${BASE_URL}/lehenga`,
+        lastModified: new Date(),
+        priority: 0.9,
+        changeFrequency: "weekly",
+      },
+      {
+        url: `${BASE_URL}/suit`,
+        lastModified: new Date(),
+        priority: 0.9,
+        changeFrequency: "weekly",
+      },
+      {
+        url: `${BASE_URL}/bags`,
+        lastModified: new Date(),
+        priority: 0.8,
+        changeFrequency: "weekly",
+      },
+      {
+        url: `${BASE_URL}/juttis`,
+        lastModified: new Date(),
+        priority: 0.8,
+        changeFrequency: "weekly",
+      },
+      {
+        url: `${BASE_URL}/jewellery`,
+        lastModified: new Date(),
+        priority: 0.8,
+        changeFrequency: "weekly",
+      },
+      {
+        url: `${BASE_URL}/saree`,
+        lastModified: new Date(),
+        priority: 0.9,
+        changeFrequency: "weekly",
+      },
+
       // Authentication pages - lower priority (not indexed for SEO)
       {
         url: `${BASE_URL}/login`,

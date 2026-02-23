@@ -25,6 +25,9 @@ export async function generateMetadata() {
 const page = () => {
   return (
     <div>
+      <h1 className="sr-only">
+        Login to Your Gulbhahar Account
+      </h1>
       <LoginPage/>
     </div>
   )
