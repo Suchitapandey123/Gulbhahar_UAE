@@ -58,11 +58,11 @@ const Home_AvailableCollections = ({AvailableCollections} : AvailableCollections
           </span>
         </div>
 
-        <h2 className="text-5xl md:text-7xl text-center font-serif text-[#1a1a1a] leading-[1.1]">
+        <h1 className="text-5xl md:text-7xl text-center font-serif text-[#1a1a1a] leading-[1.1]">
           Our{" "}
           <span className="italic text-[#800000] serif-italics">Available</span>{" "}
           Collections
-        </h2>
+        </h1>
 
         <p className="text-gray-500 text-center text-base md:text-lg leading-relaxed font-light">
           Experience our latest silhouettes in motion. Every thread tells a

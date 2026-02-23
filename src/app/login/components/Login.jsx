@@ -6,6 +6,7 @@ import { IoIosArrowBack } from 'react-icons/io';
 import { useAuth } from '@/providers/ContextProviders/AuthContext';
 import { signIn, useSession } from 'next-auth/react';
 import signupApi from "../../api/signup/signup";
+import Link from 'next/link';
 
 // Carousel component (responsive)
 const Carousel = () => {
@@ -794,14 +795,12 @@ const LoginPage = () => {
                 <div className="mt-6 sm:mt-8 text-center">
                   <p className="text-red-700 text-sm sm:text-base">
                     Don't have an account?{' '}
-                    <button 
-                      onClick={handleSignUp}
-                      type="button"
-                      className="font-bold text-red-900 hover:text-red-700 underline decoration-2 underline-offset-2 transition-colors disabled:opacity-50"
-                      disabled={isButtonDisabled}
-                    >
-                      Sign Up
-                    </button>
+                    <Link
+      href="/signup"
+      className="font-bold text-red-900 hover:text-red-700 underline decoration-2 underline-offset-2 transition-colors"
+    >
+      Sign Up
+    </Link>
                   </p>
                 </div>
               </div>
