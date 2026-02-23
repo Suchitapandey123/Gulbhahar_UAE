@@ -28,6 +28,7 @@ const ProfileHeader = ({ formData }) => {
             </p>
           )}
         </div>
+        
       </div>
       <div className="h-1 bg-gradient-to-r from-red-900 via-red-700 to-red-500 rounded-full w-24" />
     </div>

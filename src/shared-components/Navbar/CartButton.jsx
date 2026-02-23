@@ -12,7 +12,7 @@ const CartButton = ({
   <button
     onClick={toggleCart}
     className={`
-      ${isMobile ? "p-1.5 sm:p-2" : ""} flex items-center space-x-1 lg:space-x-2 text-xs sm:text-sm font-semibold
+      ${isMobile ? "p-1.5 mr-1" : ""} flex items-center space-x-1 lg:space-x-2 text-xs sm:text-sm font-semibold
       uppercase tracking-wide transition-all duration-300 ease-out group relative
       transform hover:scale-110 active:scale-95
       ${
