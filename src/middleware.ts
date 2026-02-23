@@ -30,17 +30,17 @@ export function middleware(request: NextRequest) {
 //     longitude,
 //   });
 
-  // ✅ Allow homepage
+  // Allow homepage
   if (cleanPath === "/") {
     return NextResponse.next();
   }
 
-  // ✅ Allow canonical base routes
+  //  Allow canonical base routes
   if (ALLOWED_BASE_ROUTES.includes(cleanPath)) {
     return NextResponse.next();
   }
 
-  // 🔁 Redirect synonyms → canonical base routes (only exact single-level matches)
+  //  Redirect synonyms → canonical base routes (only exact single-level matches)
   for (const rule of REDIRECT_RULES) {
     const isExactSingleMatch = rule.match.some(
       (slug) => cleanPath === `/${slug}`
