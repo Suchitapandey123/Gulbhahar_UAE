@@ -75,14 +75,14 @@ const Carousel = () => {
         {/* Content Overlay */}
         <div className="absolute inset-0 flex flex-col justify-between p-8 z-20">
           {/* Top */}
-          <div className="flex justify-between items-start">
+          {/* <div className="flex justify-between items-start">
             <div className="bg-white/90 backdrop-blur-sm text-gray-800 px-4 py-2 rounded-full text-sm font-medium shadow-lg">
               <span className="flex items-center gap-2">
                 <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                 Join 10,000+ members
               </span>
             </div>
-          </div>
+          </div> */}
 
           {/* Bottom */}
           <div className="space-y-6">
