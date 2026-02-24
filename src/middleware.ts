@@ -30,12 +30,12 @@ export function middleware(request: NextRequest) {
 //     longitude,
 //   });
 
-  // ✅ Allow homepage
+  //  Allow homepage
   if (cleanPath === "/") {
     return NextResponse.next();
   }
 
-  // ✅ Allow canonical base routes
+  // Allow canonical base routes
   if (ALLOWED_BASE_ROUTES.includes(cleanPath)) {
     return NextResponse.next();
   }
