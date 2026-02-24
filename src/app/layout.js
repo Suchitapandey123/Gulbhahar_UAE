@@ -224,7 +224,7 @@ export default function RootLayout({ children }) {
               style={{ display: 'none' }}
               src="https://www.facebook.com/tr?id=1705895113580123&ev=PageView&noscript=1"
               alt="facebook image"
-            /> */}
+            />     */}
           </noscript>
 
           <AuthProvider>
