@@ -454,8 +454,13 @@ const SignupPage = () => {
     <div className="w-full min-h-screen overflow-x-hidden mt-20 bg-[#f8f7f6]">
       <div className="flex min-h-[calc(100vh-80px)] w-full items-center justify-center py-6 px-4 sm:px-6">
       {/* Single Card Container */}
-      <div className="flex w-full max-w-[1570px] rounded-none md:rounded-3xl bg-white md:h-[680px] lg:h-[750px] overflow-hidden shadow-none md:shadow-[0_8px_60px_-12px_rgba(0,0,0,0.08)]">
-
+            <div className="flex w-full max-w-[1200px] 
+      rounded-none md:rounded-3xl 
+      bg-white 
+      md:h-[85vh] 
+      max-h-[720px] 
+      overflow-hidden 
+      shadow-none md:shadow-[0_8px_60px_-12px_rgba(0,0,0,0.08)]">
         {/* Left Side - Carousel (50% width) */}
         <div className="hidden md:block md:w-1/2">
           <div className="h-full">

@@ -23,15 +23,15 @@ const bgColors = [
 const innerFormVariants = {
   enter: (direction) => ({
     x: direction === "forward" ? 500 : -500,
-    opacity: 1,
+    opacity: 0,
   }),
   center: {
     x: 0,
     opacity: 1,
   },
   exit: (direction) => ({
-    x: direction === "forward" ? 500 : -500,
-    opacity: 1,
+    x: direction === "forward" ? -500 : 500,
+    opacity: 0,
   }),
 };
 
@@ -236,7 +236,7 @@ const LoginPage = () => {
       if (response.ok) {
         setShowOtpInput(true);
         setUserId(data.userId || data.user?.id || data.id);
-        setSuccessMessage('OTP sent successfully! Please check your phone.');
+        setSuccessMessage('OTP sent successfully! Please check your WhatsApp.');
         setOtpTimer(30);
         setCanResend(false);
         const timer = setInterval(() => {
@@ -369,7 +369,14 @@ const LoginPage = () => {
       animate={{ backgroundColor: isMounted && typeof window !== 'undefined' && window.innerWidth >= 1024 ? bgColor : '#ffffff' }}
       transition={{ duration: 1, ease: "easeInOut" }}
     >
-      <div className="flex w-full max-w-[1570px] rounded-none md:rounded-2xl bg-white md:h-[680px] lg:h-[750px] overflow-hidden shadow-none md:shadow-xl">
+     
+        <div className="flex w-full max-w-[1200px] 
+rounded-none md:rounded-2xl 
+bg-white 
+md:h-[85vh] 
+max-h-[700px] 
+overflow-hidden 
+shadow-none md:shadow-xl">
         {/* Left side image slider - Hidden on mobile */}
         <div className="hidden md:block md:w-1/2">
           <MotionImageSlider onColorChange={setBgColor} />
@@ -377,9 +384,9 @@ const LoginPage = () => {
         
         {/* Right side form - Full width on mobile */}
         <div className="w-full md:w-1/2 flex flex-col">
-          {/* Form Section - Fixed height for desktop */}
-          <div className="flex-1 relative min-h-[500px] md:min-h-auto flex flex-col justify-center">
-            <div className="p-5 sm:p-6 md:p-8 lg:p-10 flex flex-col justify-center flex-1">
+          {/* Form Section */}
+          <div className="flex-1 relative flex flex-col justify-center">
+            <div className="p-5 sm:p-6 md:p-8 lg:p-10 flex flex-col">
               {/* HEADER - Made sticky for mobile */}
               <div className="sticky top-0 z-10 bg-white pt-4 pb-3 -mx-5 px-5 sm:static sm:bg-transparent sm:mx-0 sm:px-0">
                 <div className="flex items-center justify-center mb-4 relative">
@@ -426,7 +433,7 @@ const LoginPage = () => {
               )}
 
               {/* Toggle buttons */}
-              <div className="flex flex-row gap-3 justify-center mb-5">
+              <div className="flex flex-row gap-3 justify-center mb-4">
                 <button
                   type="button"
                   onClick={() => {
@@ -454,8 +461,15 @@ const LoginPage = () => {
                 </button>
               </div>
 
-              {/* Animated form area */}
-              <div className="h-64 sm:h-72 flex flex-col justify-start mb-3 relative overflow-hidden w-full">
+              {/* Animated form area - height adapts to content */}
+              <div
+                className="relative overflow-hidden w-full transition-[height] duration-300 ease-in-out"
+                style={{
+                  height: loginMethod === 'mobile' && showMobileInput && !showOtpInput
+                    ? '140px'
+                    : '264px'
+                }}
+              >
                 <AnimatePresence initial={false}>
                   {loginMethod === "email" ? (
                     <motion.form
@@ -605,7 +619,7 @@ const LoginPage = () => {
           
           {/* Social buttons section - REDUCED GAP */}
           <div className="p-5 sm:p-6 md:p-8 lg:p-10 pt-0">
-            <div className="flex items-center my-2 sm:my-4 gap-3">
+            <div className="flex items-center my-2 sm:my-3 gap-3">
               <hr className="flex-1 border-gray-300" />
               <span className="text-gray-500 text-xs sm:text-sm font-medium">Or continue with</span>
               <hr className="flex-1 border-gray-300" />
