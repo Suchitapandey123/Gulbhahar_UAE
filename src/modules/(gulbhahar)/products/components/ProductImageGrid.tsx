@@ -26,8 +26,13 @@ export const ProductImageGrid = ({
   const getImageSrc = (img: string) =>
     img.startsWith("/") ? img : `${img}${cacheVersion}`;
 
-  // Reset loading state when image loads
+  // Reset loading/opacity state when image loads or errors
   const handleImageLoad = () => {
+    setIsLoading(false);
+    setImageOpacity(1);
+  };
+
+  const handleImageError = () => {
     setIsLoading(false);
     setImageOpacity(1);
   };
@@ -140,19 +145,21 @@ export const ProductImageGrid = ({
             </div>
           )}
 
-          <NextImage
-            key={selectedIndex}
-            src={getImageSrc(currentImages[selectedIndex])}
-            alt={`${product.name} - View ${selectedIndex + 1}`}
-            fill
-            className="object-cover transition-opacity duration-300 ease-out"
-            style={{ opacity: imageOpacity }}
-            sizes="100vw"
-            priority
-            loading="eager"
-            quality={80}
-            onLoad={handleImageLoad}
-          />
+          {currentImages[selectedIndex] && (
+            <NextImage
+              key={selectedIndex}
+              src={getImageSrc(currentImages[selectedIndex])}
+              alt={`${product.name} - View ${selectedIndex + 1}`}
+              fill
+              className="object-cover transition-opacity duration-300 ease-out"
+              style={{ opacity: imageOpacity }}
+              sizes="(max-width: 768px) 100vw, 50vw"
+              priority
+              quality={75}
+              onLoad={handleImageLoad}
+              onError={handleImageError}
+            />
+          )}
           {/* Zoom Indicator */}
           <div className="absolute top-3 right-3 bg-white bg-opacity-80 backdrop-blur-sm rounded-full p-1.5 opacity-70">
             <ZoomIn className="w-4 h-4 text-gray-700" />
@@ -181,7 +188,7 @@ export const ProductImageGrid = ({
                   width={56}
                   height={70}
                   className="w-full h-full object-cover"
-                  quality={40}
+                  quality={60}
                 />
               </button>
             ))}
