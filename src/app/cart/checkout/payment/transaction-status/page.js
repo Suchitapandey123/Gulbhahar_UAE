@@ -6,12 +6,21 @@ import {
   CheckCircle,
   XCircle,
   AlertTriangle,
-  ArrowRight,
   ShoppingBag,
   Package,
   Loader2,
   Banknote,
   CreditCard,
+  Truck,
+  Clock,
+  ShieldCheck,
+  MessageCircle,
+  FileText,
+  Download,
+  Calendar,
+  User,
+  Phone,
+  MapPin,
 } from "lucide-react";
 import { useCart } from "@/providers/ContextProviders/CartContext";
 import { API_BASE_URL } from "@/utils/envHere";
@@ -30,6 +39,9 @@ const TransactionStatusContent = () => {
   const [backendSent, setBackendSent] = useState(false);
   const [backendProcessing, setBackendProcessing] = useState(false);
   const { clearCart } = useCart();
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [orderSummary, setOrderSummary] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
 
   // User data state for Meta Pixel
   const [userData, setUserData] = useState({
@@ -114,7 +126,7 @@ const TransactionStatusContent = () => {
       }
     }
 
-    // Set user data state (async hota hai)
+    // Set user data state (async hotta hai)
     setUserData(extractedUserData);
 
     // Prevent processing the same transaction multiple times
@@ -575,7 +587,7 @@ const TransactionStatusContent = () => {
     if (paymentMethod === "cod" || paymentMethod === "partial_cod") {
       return <Banknote className="h-5 w-5 text-red-900" />;
     } else {
-      return <CreditCard className="h-5 w-5 text-red-900" />;
+      return <CreditCard className="h-5 w-5 text-[#7f0001]" />;
     }
   };
 
@@ -594,12 +606,19 @@ const TransactionStatusContent = () => {
         bgColor: "bg-red-50",
         borderColor: "border-red-200",
       };
+    } else if (paymentMethod === "cod") {
+      return {
+        text: "Cash on Delivery",
+        color: "text-[#7f0001]",
+        bgColor: "bg-gradient-to-r from-[#7f0001]/10 to-gray-100",
+        borderColor: "border-gray-300",
+      };
     } else {
       return {
         text: "Online Payment",
-        color: "text-red-900",
-        bgColor: "bg-red-50",
-        borderColor: "border-red-200",
+        color: "text-[#7f0001]",
+        bgColor: "bg-gradient-to-r from-[#7f0001]/10 to-gray-100",
+        borderColor: "border-gray-300",
       };
     }
   };
@@ -664,8 +683,8 @@ const TransactionStatusContent = () => {
           title: "Order Status Unknown",
           message:
             "We could not determine your order status. Please contact support.",
-          color: "text-gray-600",
-          bgColor: "from-gray-50 to-white",
+          color: "text-gray-700",
+          bgColor: "from-gray-50/80 to-white",
         };
     }
   };
@@ -675,11 +694,11 @@ const TransactionStatusContent = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen mt-20 bg-gradient-to-br from-red-50/30 to-white flex items-center justify-center px-4">
-        <div className="text-center bg-white rounded-3xl shadow-2xl border border-red-100 p-8 max-w-md w-full">
+      <div className="min-h-screen mt-20 bg-gradient-to-br from-gray-50 via-white to-gray-100 flex items-center justify-center px-4">
+        <div className="text-center bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-gray-200 p-8 max-w-md w-full">
           <div className="relative mb-6">
-            <div className="w-16 h-16 border-4 border-red-200 rounded-full animate-spin mx-auto"></div>
-            <div className="absolute inset-0 w-16 h-16 border-4 border-red-900 border-t-transparent rounded-full animate-spin mx-auto"></div>
+            <div className="w-16 h-16 border-4 border-gray-200 rounded-full animate-spin mx-auto"></div>
+            <div className="absolute inset-0 w-16 h-16 border-4 border-[#7f0001] border-t-transparent rounded-full animate-spin mx-auto"></div>
           </div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">
             Processing Transaction
@@ -694,7 +713,7 @@ const TransactionStatusContent = () => {
 
   return (
     <div
-      className={`min-h-screen mt-14 sm:mt-[72px] bg-gradient-to-br ${statusInfo.bgColor} flex items-center justify-center px-4 py-8`}
+      className={`min-h-screen mt-20 bg-gradient-to-br ${statusInfo.bgColor} flex items-center justify-center px-4 py-8 sm:py-12 backdrop-blur-sm`}
     >
       <div
         className={`bg-white rounded-3xl shadow-2xl border border-red-100 p-6 sm:p-8 lg:p-10 w-full max-w-md sm:max-w-lg lg:max-w-2xl text-center transform transition-all duration-1000 ${
@@ -707,9 +726,6 @@ const TransactionStatusContent = () => {
         <div className="mb-8 flex justify-center relative">
           <div className="relative">
             {getStatusIcon()}
-            {paymentStatus === "success" && (
-              <div className="absolute inset-0 rounded-full bg-green-200 animate-ping opacity-20"></div>
-            )}
           </div>
         </div>
 
@@ -727,7 +743,7 @@ const TransactionStatusContent = () => {
 
         {/* Enhanced Payment Method Badge */}
         <div
-          className={`inline-flex items-center gap-3 px-6 py-3 rounded-2xl ${methodInfo.bgColor} ${methodInfo.borderColor} border-2 mb-8 shadow-lg hover:shadow-xl transition-all duration-300`}
+          className={`inline-flex items-center gap-3 px-6 py-3 rounded-2xl ${methodInfo.bgColor} ${methodInfo.borderColor} border-2 mb-8 shadow-sm hover:shadow-md transition-all duration-300`}
         >
           <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm">
             {getPaymentMethodIcon()}
@@ -739,9 +755,9 @@ const TransactionStatusContent = () => {
 
         {/* Enhanced Transaction Details Card */}
         {paymentData && (
-          <div className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 mb-8 text-left shadow-inner border border-gray-100">
+          <div className="bg-gradient-to-br from-gray-50/80 to-white rounded-2xl p-6 mb-8 text-left shadow-inner border border-gray-100">
             <div className="flex items-center justify-center mb-6">
-              <div className="w-8 h-8 bg-red-900 rounded-lg flex items-center justify-center mr-3">
+              <div className="w-8 h-8 bg-gradient-to-br from-[#7f0001] to-gray-700 rounded-lg flex items-center justify-center mr-3">
                 <Package className="h-5 w-5 text-white" />
               </div>
               <h3 className="font-bold text-gray-900 text-lg">
@@ -752,7 +768,7 @@ const TransactionStatusContent = () => {
               {paymentData.orderId && (
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 border-b border-gray-200 gap-2">
                   <span className="text-gray-600 font-medium">Order ID:</span>
-                  <span className="font-mono text-gray-900 bg-white px-3 py-2 rounded-lg shadow-sm text-sm break-all">
+                  <span className="font-mono text-gray-900 bg-white px-3 py-2 rounded-lg shadow-sm text-sm break-all border border-gray-200">
                     {paymentData.orderId}
                   </span>
                 </div>
@@ -762,7 +778,7 @@ const TransactionStatusContent = () => {
                   <span className="text-gray-600 font-medium">
                     Tracking ID:
                   </span>
-                  <span className="font-mono text-gray-900 bg-white px-3 py-2 rounded-lg shadow-sm text-sm break-all">
+                  <span className="font-mono text-gray-900 bg-white px-3 py-2 rounded-lg shadow-sm text-sm break-all border border-gray-200">
                     {paymentData.trackingId}
                   </span>
                 </div>
@@ -772,7 +788,7 @@ const TransactionStatusContent = () => {
                   <span className="text-gray-600 font-medium">
                     Bank Reference:
                   </span>
-                  <span className="font-mono text-gray-900 bg-white px-3 py-2 rounded-lg shadow-sm text-sm break-all">
+                  <span className="font-mono text-gray-900 bg-white px-3 py-2 rounded-lg shadow-sm text-sm break-all border border-gray-200">
                     {paymentData.bankRefNo}
                   </span>
                 </div>
@@ -781,7 +797,7 @@ const TransactionStatusContent = () => {
                 <span className="text-gray-600 font-medium">
                   Payment Method:
                 </span>
-                <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg shadow-sm">
+                <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg shadow-sm border border-gray-200">
                   {getPaymentMethodIcon()}
                   <span className={`font-bold text-sm ${methodInfo.color}`}>
                     {methodInfo.text}
@@ -793,7 +809,7 @@ const TransactionStatusContent = () => {
                   <span className="text-gray-600 font-medium">
                     Total Amount:
                   </span>
-                  <span className="font-bold text-xl text-red-900 bg-white px-3 py-2 rounded-lg shadow-sm">
+                  <span className="font-bold text-xl text-[#7f0001] bg-white px-3 py-2 rounded-lg shadow-sm border border-gray-200">
                     ₹{parseFloat(paymentData.amount).toLocaleString()}
                   </span>
                 </div>
@@ -804,12 +820,12 @@ const TransactionStatusContent = () => {
 
         {/* Enhanced Error Details */}
         {paymentData?.error && (
-          <div className="bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-200 rounded-2xl p-6 mb-8 shadow-lg">
+          <div className="bg-gradient-to-br from-red-50/80 to-red-100/80 border-2 border-red-200 rounded-2xl p-6 mb-8 shadow-sm">
             <div className="flex items-center justify-center mb-4">
               <XCircle className="h-6 w-6 text-red-600 mr-2" />
               <h3 className="font-bold text-red-800 text-lg">Error Details</h3>
             </div>
-            <div className="bg-white rounded-xl p-4 shadow-inner">
+            <div className="bg-white/80 rounded-xl p-4 shadow-inner border border-red-100">
               <p className="text-sm sm:text-base text-red-700 break-words leading-relaxed">
                 {paymentData.error}
               </p>
@@ -873,52 +889,30 @@ const TransactionStatusContent = () => {
 
         {/* Enhanced Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 mb-8">
-          {paymentStatus === "success" ? (
-            <>
-              <button
-                onClick={() => router.push("/")}
-                className="flex-1 bg-gradient-to-r from-red-900 to-red-800 text-white py-4 px-6 rounded-2xl font-bold hover:from-red-800 hover:to-red-700 transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl flex items-center justify-center gap-3 text-base group"
-              >
-                <ShoppingBag className="w-5 h-5 group-hover:animate-bounce" />
-                <span>Continue Shopping</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <button
-                onClick={() => router.push("/orders")}
-                className="flex-1 bg-white border-2 border-red-900 text-red-900 py-4 px-6 rounded-2xl font-bold hover:bg-red-50 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-base group"
-              >
-                <Package className="w-5 h-5 group-hover:animate-pulse" />
-                <span>Track Order</span>
-              </button>
-            </>
-          ) : (
-            <>
-              <button
-                onClick={() => router.push("/cart/checkout")}
-                className="w-full bg-gradient-to-r from-red-900 to-red-800 text-white py-4 px-6 rounded-2xl font-bold hover:from-red-800 hover:to-red-700 transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl flex items-center justify-center gap-3 text-base"
-              >
-                <span>Try Again</span>
-              </button>
-              <button
-                onClick={() => router.push("/")}
-                className="w-full bg-white border-2 border-red-900 text-red-900 py-4 px-6 rounded-2xl font-bold hover:bg-red-50 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-base group"
-              >
-                <ShoppingBag className="w-5 h-5 group-hover:animate-bounce" />
-                <span>Continue Shopping</span>
-              </button>
-            </>
-          )}
+          <button
+            onClick={() => router.push("/cart/checkout")}
+            className="w-full bg-gradient-to-r from-[#7f0001] to-gray-800 text-white py-4 px-6 rounded-2xl font-bold hover:shadow-lg transform hover:scale-105 transition-all duration-300 shadow-md flex items-center justify-center gap-3 text-base"
+          >
+            <span>Try Again</span>
+          </button>
+          <button
+            onClick={() => router.push("/")}
+            className="w-full bg-white border-2 border-gray-300 text-gray-700 py-4 px-6 rounded-2xl font-bold hover:border-[#7f0001] hover:text-[#7f0001] transition-all duration-300 shadow-sm hover:shadow-md flex items-center justify-center gap-3 text-base group"
+          >
+            <ShoppingBag className="w-5 h-5 group-hover:animate-bounce" />
+            <span>Continue Shopping</span>
+          </button>
         </div>
 
         {/* Enhanced Support Link */}
         <div className="text-center mb-8">
-          <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100">
+          <div className="bg-gradient-to-br from-gray-50/80 to-white rounded-2xl p-4 border border-gray-200">
             <p className="text-sm sm:text-base text-gray-600 mb-2">
               <span className="font-semibold">Need Help?</span>
             </p>
             <a
               href="/contact"
-              className="inline-flex items-center gap-2 text-red-900 hover:text-red-700 font-semibold text-sm sm:text-base transition-colors duration-300 hover:underline"
+              className="inline-flex items-center gap-2 text-[#7f0001] hover:text-gray-800 font-semibold text-sm sm:text-base transition-all duration-300 hover:underline"
             >
               📞 Contact Support Team
             </a>
@@ -969,42 +963,8 @@ const TransactionStatusContent = () => {
           }
         }
 
-        @keyframes bounce-gentle {
-          0%,
-          20%,
-          50%,
-          80%,
-          100% {
-            transform: translateY(0);
-          }
-          40% {
-            transform: translateY(-5px);
-          }
-          60% {
-            transform: translateY(-3px);
-          }
-        }
-
-        @keyframes pulse-glow {
-          0%,
-          100% {
-            box-shadow: 0 0 5px rgba(16, 185, 129, 0.3);
-          }
-          50% {
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
-          }
-        }
-
         .animate-fade-in {
           animation: fade-in 0.8s ease-out;
-        }
-
-        .animate-bounce-gentle {
-          animation: bounce-gentle 2s infinite;
-        }
-
-        .animate-pulse-glow {
-          animation: pulse-glow 2s infinite;
         }
 
         /* Mobile-first responsive improvements */
@@ -1035,11 +995,11 @@ const TransactionStatusContent = () => {
 
 const TransactionStatusLoading = () => {
   return (
-    <div className="min-h-screen mt-16 bg-gradient-to-br from-red-50/30 to-white flex items-center justify-center px-4">
-      <div className="text-center bg-white rounded-3xl shadow-2xl border border-red-100 p-8 max-w-md w-full">
+    <div className="min-h-screen mt-20 bg-gradient-to-br from-gray-50 via-white to-gray-100 flex items-center justify-center px-4">
+      <div className="text-center bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-gray-200 p-8 max-w-md w-full">
         <div className="relative mb-6">
-          <div className="w-16 h-16 border-4 border-red-200 rounded-full animate-spin mx-auto"></div>
-          <div className="absolute inset-0 w-16 h-16 border-4 border-red-900 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <div className="w-16 h-16 border-4 border-gray-200 rounded-full animate-spin mx-auto"></div>
+          <div className="absolute inset-0 w-16 h-16 border-4 border-[#7f0001] border-t-transparent rounded-full animate-spin mx-auto"></div>
         </div>
         <h3 className="text-xl font-bold text-gray-900 mb-2">
           Loading Transaction Status
@@ -1049,13 +1009,13 @@ const TransactionStatusLoading = () => {
         </p>
         <div className="mt-6 flex justify-center">
           <div className="flex space-x-1">
-            <div className="w-2 h-2 bg-red-900 rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-gradient-to-r from-[#7f0001] to-gray-700 rounded-full animate-pulse"></div>
             <div
-              className="w-2 h-2 bg-red-900 rounded-full animate-pulse"
+              className="w-2 h-2 bg-gradient-to-r from-[#7f0001] to-gray-700 rounded-full animate-pulse"
               style={{ animationDelay: "0.2s" }}
             ></div>
             <div
-              className="w-2 h-2 bg-red-900 rounded-full animate-pulse"
+              className="w-2 h-2 bg-gradient-to-r from-[#7f0001] to-gray-700 rounded-full animate-pulse"
               style={{ animationDelay: "0.4s" }}
             ></div>
           </div>

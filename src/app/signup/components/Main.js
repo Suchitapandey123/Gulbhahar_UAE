@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { FiCheck, FiUpload } from 'react-icons/fi';
+import { FaArrowLeft } from 'react-icons/fa6';
 import Carousel from './Carousel';
 import ProgressSteps from './ProgressSteps';
 import PersonalInformation from './PersonalInformation';
@@ -30,7 +31,7 @@ const SignupPage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
     const { login, isAuthenticated, isLoading: authLoading } = useAuth();
-  
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -41,8 +42,8 @@ const SignupPage = () => {
     confirmPassword: '',
     securityQuestion: '',
     securityAnswer: '',
-    emailVerificationCode: ['', '', '', '', '', ''], 
-    phoneVerificationCode: ['', '', '', '', '', '']  
+    emailVerificationCode: ['', '', '', '', '', ''],
+    phoneVerificationCode: ['', '', '', '', '', '']
   });
 
   const emailInputRefs = useRef([]);
@@ -77,13 +78,6 @@ const SignupPage = () => {
     setError('');
 
     try {
-      // const response = await fetch(profileImageUrl, {
-      //   method: 'PUT',
-      //   body: selectedImage,
-      //   headers: {
-      //     'Content-Type': selectedImage.type,
-      //   },
-      // });
       const response = await signupApi.uploadImage(profileImageUrl, selectedImage);
 
 
@@ -111,36 +105,18 @@ const SignupPage = () => {
 
 
      try {
-          // // console.log('🔄 Attempting login with:', { email, password: '***' });
-          
-          // const response = await fetch('https://api.gulbhahar.com/api/users/login', {
-          //   method: 'POST',
-          //   headers: {
-          //     'Content-Type': 'application/json',
-          //   },
-          //   body: JSON.stringify({
-          //     email: formData.email,
-          //     password: formData.password
-          //   }),
-          // });
-
           const response = await signupApi.login(formData.email, formData.password);
-    
-          // console.log('📡 Response status:', response.status);
-          
+
           const data = await response.json();
-          // console.log('📦 Full API Response:', data);
-          
+
           if (response.ok) {
-            // console.log('✅ Login successful:', data);
-            
             const token = data.token || data.accessToken || data.authToken;
-            
+
             if (!token) {
               setError('Login successful but no token received. Please try again.');
               return;
             }
-            
+
             const userData = {
               email: data.user.email || "",
               firstName: data.firstName || data.first_name || data.user?.firstName || data.user.name || '',
@@ -153,9 +129,9 @@ const SignupPage = () => {
               phoneVerified: data.phoneVerified !== undefined ? data.phoneVerified : true,
               ...data.user
             };
-            
+
             const loginSuccess = await login(token, userData);
-            
+
             if (loginSuccess) {
               if (data.emailVerified === false) {
                 setSuccess('Please verify your email to continue.');
@@ -188,8 +164,8 @@ const SignupPage = () => {
             }
           }
         } catch (error) {
-          console.error('🚨 Login error:', error);
-          
+          console.error('Login error:', error);
+
           if (error.name === 'TypeError' && error.message.includes('fetch')) {
             setError('Network error. Please check your connection and try again.');
           } else {
@@ -203,10 +179,10 @@ const SignupPage = () => {
   const handleVerificationCodeChange = (index, value, type) => {
     const fieldName = type === 'email' ? 'emailVerificationCode' : 'phoneVerificationCode';
     const refs = type === 'email' ? emailInputRefs : phoneInputRefs;
-    
+
     const newVerificationCode = [...formData[fieldName]];
     newVerificationCode[index] = value;
-    
+
     setFormData(prevState => ({
       ...prevState,
       [fieldName]: newVerificationCode
@@ -221,26 +197,16 @@ const SignupPage = () => {
     setEmailVerificationLoading(true);
     setError('');
     setSuccess('');
-    
+
     const verificationCode = formData.emailVerificationCode.join('');
-    
+
     if (verificationCode.length !== 6) { // Changed from 4 to 6
       setError('Please enter the complete 6-digit verification code');
       setEmailVerificationLoading(false);
       return;
     }
-    
+
     try {
-      // const response = await fetch('https://api.gulbhahar.com/api/users/verify-email', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     email: formData.email,
-      //     verificationCode: verificationCode
-      //   }),
-      // });
       const response = await signupApi.verifyEmail(formData.email, verificationCode);
 
 
@@ -264,37 +230,24 @@ const SignupPage = () => {
   };
 
   const [phoneSessionId, setPhoneSessionId] = useState(''); // Add this state for sessionId
-  
+
   const initiatePhoneOTP = async () => {
     try {
       setError('');
       setSuccess('');
-      // console.log('🔄 Initiating phone OTP for:', formData.phoneNumber);
-      
-      // const response = await fetch('https://api.gulbhahar.com/codRoutes/initiate', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     phone: formData.phoneNumber
-      //   }),
-      // });
-      
+
       const response = await signupApi.initiatePhoneOTP(formData.phoneNumber);
       const data = await response.json();
-      // console.log('📱 Phone OTP Response:', data);
 
       if (response.ok && data.success) {
         setPhoneSessionId(data.sessionId);
         setSuccess(data.message || 'OTP sent on WhatsApp – verify within 2 min.');
-        // console.log('✅ Phone OTP initiated successfully, sessionId:', data.sessionId);
       } else {
         setError(data.message || 'Failed to send OTP. Please try again.');
-        console.error('❌ Phone OTP initiation failed:', data);
+        console.error('Phone OTP initiation failed:', data);
       }
     } catch (error) {
-      console.error('🚨 Error initiating phone OTP:', error);
+      console.error('Error initiating phone OTP:', error);
       setError('Network error. Please try again.');
     }
   };
@@ -303,10 +256,9 @@ const SignupPage = () => {
     setPhoneVerificationLoading(true);
     setError('');
     setSuccess('');
-    
+
     const verificationCode = formData.phoneVerificationCode.join('');
-    // console.log('🔍 Starting phone verification with code:', verificationCode);
-    
+
     if (verificationCode.length !== 6) {
       setError('Please enter the complete 6-digit verification code');
       setPhoneVerificationLoading(false);
@@ -318,43 +270,28 @@ const SignupPage = () => {
       setPhoneVerificationLoading(false);
       return;
     }
-    
+
     try {
-      // console.log('🔍 Verifying phone OTP:', verificationCode, 'with sessionId:', phoneSessionId);
-      
-      // const response = await fetch('https://api.gulbhahar.com/codRoutes/verify', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     sessionId: phoneSessionId,
-      //     otp: verificationCode
-      //   }),
-      // });
-      
       const response = await signupApi.verifyPhoneOTP(phoneSessionId, verificationCode);
       const data = await response.json();
 
 
       if (response.ok) {
-        // console.log('✅ Phone verified successfully, proceeding to auto-login');
         setSuccess('Phone verified successfully! Completing registration...');
-        
+
         // Clear the session ID after successful verification
         setPhoneSessionId('');
-        
+
         // Call auto-login after 1 second delay
         setTimeout(() => {
-          // console.log('🚀 Calling performAutoLogin...');
           performAutoLogin();
         }, 1000);
       } else {
-        console.error('❌ Phone OTP verification failed:', data);
+        console.error('Phone OTP verification failed:', data);
         setError(data.message || 'Invalid verification code. Please try again.');
       }
     } catch (error) {
-      console.error('🚨 Error verifying phone OTP:', error);
+      console.error('Error verifying phone OTP:', error);
       setError('Network error. Please try again.');
     } finally {
       setPhoneVerificationLoading(false);
@@ -365,20 +302,8 @@ const SignupPage = () => {
     setResendLoading(true);
     setError('');
     setSuccess('');
-    
+
     try {
-      // console.log('🔄 Resending phone OTP for:', formData.phoneNumber);
-      
-      // const response = await fetch('https://api.gulbhahar.com/codRoutes/initiate', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     phone: formData.phoneNumber
-      //   }),
-      // });
-       
       const response = await signupApi.initiatePhoneOTP(formData.phoneNumber);
       const data = await response.json();
 
@@ -390,16 +315,15 @@ const SignupPage = () => {
           ...prevState,
           phoneVerificationCode: ['', '', '', '', '', '']
         }));
-        // console.log('✅ Phone OTP resent successfully, new sessionId:', data.sessionId);
-        
+
         // Clear success message after 3 seconds
         setTimeout(() => setSuccess(''), 3000);
       } else {
         setError(data.message || 'Failed to resend OTP. Please try again.');
-        console.error('❌ Phone OTP resend failed:', data);
+        console.error('Phone OTP resend failed:', data);
       }
     } catch (error) {
-      console.error('🚨 Error resending phone OTP:', error);
+      console.error('Error resending phone OTP:', error);
       setError('Network error. Please try again.');
     } finally {
       setResendLoading(false);
@@ -410,17 +334,8 @@ const SignupPage = () => {
     setResendLoading(true);
     setError('');
     setSuccess('');
-    
+
     try {
-      // const response = await fetch('https://api.gulbhahar.com/api/users/resend-verification-code', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     email: formData.email
-      //   }),
-      // });
       const response = await signupApi.resendVerificationCode(formData.email);
 
       if (response.ok) {
@@ -446,24 +361,6 @@ const SignupPage = () => {
   const handleSignup = async () => {
     setLoading(true);
     setError('');
-    
-    // try {
-    //   const response = await fetch('https://api.gulbhahar.com/api/users/sign-up', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({
-    //       firstName: formData.firstName,
-    //       lastName: formData.lastName,
-    //       email: formData.email,
-    //       password: formData.password,
-    //       location: formData.location,
-    //       phoneNumber: formData.phoneNumber,
-    //       secQues: formData.securityQuestion,
-    //       secAns: formData.securityAnswer
-    //     }),
-    //   });
 
             try {
           const userData = {
@@ -483,15 +380,14 @@ const SignupPage = () => {
 
       if (response.ok) {
         const data = await response.json();
-        
+
         if (data.imgUploadUrl) {
           setProfileImageUrl(data.imgUploadUrl);
         }
-        
+
         // Automatically initiate phone OTP when user account is created
-        // console.log('✅ User account created, initiating phone OTP...');
         await initiatePhoneOTP();
-        
+
         setStep(3);
       } else {
         const errorData = await response.json();
@@ -516,7 +412,7 @@ const SignupPage = () => {
         return false;
       }
     }
-    
+
     if (step === 2) {
       if (!formData.password || !formData.confirmPassword || !formData.securityQuestion || !formData.securityAnswer) {
         setError('Please fill in all required fields');
@@ -531,13 +427,13 @@ const SignupPage = () => {
         return false;
       }
     }
-    
+
     return true;
   };
 
   const nextStep = () => {
     if (!validateStep()) return;
-    
+
     if (step === 2) {
       handleSignup();
     } else {
@@ -555,45 +451,75 @@ const SignupPage = () => {
   };
 
   return (
-    <div className='w-full min-h-screen mt-20'>
-      <div className="flex min-h-[calc(100vh-100px)] w-full items-center justify-center py-8">
-        <div className="mx-auto flex w-full max-w-[1600px] flex-col-reverse md:flex-row gap-8 px-6">
-          
-          {/* Carousel Section */}
-          <div className="hidden md:block md:w-2/5">
-            <div className="h-full min-h-[700px]">
-              <Carousel />
-            </div>
+    <div className="w-full min-h-screen overflow-x-hidden mt-20 bg-[#f8f7f6]">
+      <div className="flex min-h-[calc(100vh-80px)] w-full items-center justify-center py-6 px-4 sm:px-6">
+      {/* Single Card Container */}
+            <div className="flex w-full max-w-[1200px] 
+      rounded-none md:rounded-3xl 
+      bg-white 
+      md:h-[85vh] 
+      max-h-[720px] 
+      overflow-hidden 
+      shadow-none md:shadow-[0_8px_60px_-12px_rgba(0,0,0,0.08)]">
+        {/* Left Side - Carousel (50% width) */}
+        <div className="hidden md:block md:w-1/2">
+          <div className="h-full">
+            <Carousel />
           </div>
+        </div>
 
-          {/* Form Section */}
-          <div className="w-full md:w-3/5 flex flex-col justify-center">
-            
+        {/* Right Side - Form (50% width) */}
+        <div className="w-full md:w-1/2 flex flex-col bg-white">
+          <div className="flex-1 flex flex-col p-6 sm:p-8 md:p-10 lg:p-12 overflow-y-auto">
+
+            {/* Header */}
+            <div className="relative pb-6">
+              <button
+                onClick={() => { window.location.href = '/'; }}
+                className="absolute left-0 top-0 text-[#800000] hover:text-[#600000] transition-all duration-300 cursor-pointer p-2 rounded-full hover:bg-[#800000]/5"
+              >
+                <FaArrowLeft size={18} />
+              </button>
+
+              <div className="text-center space-y-1.5">
+                <p className="text-xs uppercase tracking-[0.2em] text-[#800000] font-medium">
+                  Let&apos;s setup your account
+                </p>
+                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                  Create Account
+                </h2>
+                <p className="text-gray-400 text-sm">
+                  Enter your personal information to get started
+                </p>
+              </div>
+            </div>
+
+
             {/* Progress Steps */}
             <ProgressSteps step={step} />
 
             {/* Form Content */}
-            <div className="mb-8">
+            <div className="flex-1">
               {step === 1 && (
-                <PersonalInformation 
-                  formData={formData} 
-                  handleChange={handleChange} 
-                  error={error} 
+                <PersonalInformation
+                  formData={formData}
+                  handleChange={handleChange}
+                  error={error}
                 />
               )}
               {step === 2 && (
-                <Security 
-                  formData={formData} 
-                  handleChange={handleChange} 
+                <Security
+                  formData={formData}
+                  handleChange={handleChange}
                   showPassword={showPassword}
                   setShowPassword={setShowPassword}
                   showConfirmPassword={showConfirmPassword}
                   setShowConfirmPassword={setShowConfirmPassword}
-                  error={error} 
+                  error={error}
                 />
               )}
               {step === 3 && (
-                <ProfileImageUpload 
+                <ProfileImageUpload
                   selectedImage={selectedImage}
                   previewImage={previewImage}
                   fileInputRef={fileInputRef}
@@ -603,7 +529,7 @@ const SignupPage = () => {
                 />
               )}
               {step === 4 && (
-                <EmailVerification 
+                <EmailVerification
                   formData={formData}
                   emailInputRefs={emailInputRefs}
                   handleVerificationCodeChange={handleVerificationCodeChange}
@@ -614,7 +540,7 @@ const SignupPage = () => {
                 />
               )}
               {step === 5 && (
-                <PhoneVerification 
+                <PhoneVerification
                   formData={formData}
                   phoneInputRefs={phoneInputRefs}
                   handleVerificationCodeChange={handleVerificationCodeChange}
@@ -629,61 +555,61 @@ const SignupPage = () => {
 
             {/* Login/Signup Toggle for Existing Users */}
             {step === 2 && (
-              <div className="mt-6 p-4 bg-red-50 rounded-xl border border-red-200">
-                <p className="text-red-700 text-center mb-3">
+              <div className="mt-6 p-4 bg-[#800000]/[0.03] rounded-2xl border border-[#800000]/8">
+                <p className="text-gray-500 text-center mb-3 text-sm">
                   Already have an account with this email?
                 </p>
                 <button
                   onClick={handleLogin}
                   disabled={loading}
-                  className="w-full bg-white border-2 border-red-300 text-red-900 px-6 py-3 rounded-xl hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-100 transition-all duration-200 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-white border border-gray-200 text-[#800000] px-6 py-3 rounded-xl hover:border-[#800000]/30 hover:bg-[#800000]/[0.02] focus:outline-none transition-all duration-300 font-semibold disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                 >
                   {loading ? 'Checking...' : 'Login Instead'}
                 </button>
               </div>
             )}
-            
+
             {/* Navigation Buttons */}
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center mt-8 pt-6 border-t border-gray-100">
               {step > 1 ? (
                 <button
                   onClick={prevStep}
-                  className="flex items-center px-6 py-3 text-red-700 hover:text-red-900 font-semibold transition-colors group"
+                  className="flex items-center px-5 py-2.5 text-gray-500 hover:text-[#800000] font-medium transition-all duration-300 group text-sm rounded-xl hover:bg-[#800000]/[0.03]"
                   disabled={loading || emailVerificationLoading || phoneVerificationLoading || imageUploadLoading || autoLoginLoading}
                 >
-                  <IoIosArrowBack className='sm:mr-3 mr-1 group-hover:-translate-x-1 transition-transform' />
-                  Previous step
+                  <IoIosArrowBack className='sm:mr-2 mr-1 group-hover:-translate-x-1 transition-transform duration-300' />
+                  Previous
                 </button>
               ) : (
                 <div></div>
               )}
-              
+
               {step < 3 ? (
                 <button
                   onClick={nextStep}
                   disabled={loading}
-                  className="bg-gradient-to-r from-red-900 to-red-800 text-white px-8 py-4 rounded-xl shadow-xl hover:from-red-800 hover:to-red-700 focus:outline-none focus:ring-4 focus:ring-red-200 transition-all duration-200 transform hover:scale-105 flex items-center font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-[#800000] text-white px-10 py-3.5 rounded-xl hover:bg-[#6b0000] focus:outline-none focus:ring-4 focus:ring-[#800000]/15 transition-all duration-300 flex items-center font-semibold disabled:opacity-50 disabled:cursor-not-allowed text-sm tracking-wide"
                 >
                   {loading ? (
                     <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
                       Creating Account...
                     </>
                   ) : (
                     <>
-                      Next
-                      <IoIosArrowForward className='ml-3' />
+                      Continue
+                      <IoIosArrowForward className='ml-2' />
                     </>
                   )}
                 </button>
               ) : step === 3 ? (
-                <div className="flex space-x-4">
+                <div className="flex space-x-3">
                   <button
                     onClick={() => {
                       setStep(4);
                       setError('');
                     }}
-                    className="bg-white border-2 border-red-300 text-red-900 px-6 py-3 rounded-xl hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-100 transition-all duration-200 font-semibold"
+                    className="bg-white border border-gray-200 text-gray-600 px-5 py-3 rounded-xl hover:border-[#800000]/30 hover:text-[#800000] focus:outline-none transition-all duration-300 font-medium text-sm"
                   >
                     Skip for now
                   </button>
@@ -691,16 +617,16 @@ const SignupPage = () => {
                     <button
                       onClick={uploadProfileImage}
                       disabled={imageUploadLoading}
-                      className="bg-gradient-to-r from-red-900 to-red-800 text-white px-8 py-3 rounded-xl shadow-xl hover:from-red-800 hover:to-red-700 focus:outline-none focus:ring-4 focus:ring-red-200 transition-all duration-200 transform hover:scale-105 flex items-center font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="bg-[#800000] text-white px-6 py-3 rounded-xl hover:bg-[#6b0000] focus:outline-none focus:ring-4 focus:ring-[#800000]/15 transition-all duration-300 flex items-center font-semibold disabled:opacity-50 disabled:cursor-not-allowed text-sm tracking-wide"
                     >
                       {imageUploadLoading ? (
                         <>
-                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                          <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
                           Uploading...
                         </>
                       ) : (
                         <>
-                          <FiUpload className='mr-3' />
+                          <FiUpload className='mr-2' />
                           Upload & Continue
                         </>
                       )}
@@ -711,16 +637,16 @@ const SignupPage = () => {
                 <button
                   onClick={handleEmailVerification}
                   disabled={emailVerificationLoading}
-                  className="bg-gradient-to-r text-nowrap from-red-900 to-red-800 text-white sm:px-8 px-4 py-3 sm:py-4 rounded-xl shadow-xl hover:from-red-800 hover:to-red-700 focus:outline-none focus:ring-4 focus:ring-red-200 transition-all duration-200 transform hover:scale-105 flex items-center font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-[#800000] text-nowrap text-white sm:px-10 px-5 py-3 sm:py-3.5 rounded-xl hover:bg-[#6b0000] focus:outline-none focus:ring-4 focus:ring-[#800000]/15 transition-all duration-300 flex items-center font-semibold disabled:opacity-50 disabled:cursor-not-allowed text-sm tracking-wide"
                 >
                   {emailVerificationLoading ? (
                     <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white sm:mr-3 mr-1"></div>
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent sm:mr-2 mr-1"></div>
                       Verifying...
                     </>
                   ) : (
                     <>
-                      <FiCheck className='sm:mr-3 mr-1' />
+                      <FiCheck className='sm:mr-2 mr-1' />
                       Verify Email
                     </>
                   )}
@@ -729,37 +655,40 @@ const SignupPage = () => {
                 <button
                   onClick={handlePhoneVerification}
                   disabled={phoneVerificationLoading || autoLoginLoading}
-                  className="bg-gradient-to-r text-nowrap from-red-900 to-red-800 text-white sm:px-8 px-4 py-3 sm:py-4 rounded-xl shadow-xl hover:from-red-800 hover:to-red-700 focus:outline-none focus:ring-4 focus:ring-red-200 transition-all duration-200 transform hover:scale-105 flex items-center font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-[#800000] text-nowrap text-white sm:px-10 px-5 py-3 sm:py-3.5 rounded-xl hover:bg-[#6b0000] focus:outline-none focus:ring-4 focus:ring-[#800000]/15 transition-all duration-300 flex items-center font-semibold disabled:opacity-50 disabled:cursor-not-allowed text-sm tracking-wide"
                 >
                   {phoneVerificationLoading || autoLoginLoading ? (
                     <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white sm:mr-3 mr-1"></div>
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent sm:mr-2 mr-1"></div>
                       {autoLoginLoading ? 'Logging in...' : 'Verifying...'}
                     </>
                   ) : (
                     <>
-                      <FiCheck className='sm:mr-3 mr-1' />
+                      <FiCheck className='sm:mr-2 mr-1' />
                       Complete Registration
                     </>
                   )}
                 </button>
               )}
             </div>
-            
-            {/* Login Link */}
-            <div className="mt-8 text-center">
-              <p className="text-red-700 text-lg">
-                Already have an account? 
+
+            {/* Bottom Login Link */}
+            <div className="mt-5 text-center">
+              <p className="text-sm text-gray-400">
+                Already have an account?
                 <button
-                onClick={() => window.location.href = '/login'}
-                 className="text-red-900 font-bold underline decoration-2 underline-offset-2 hover:text-red-700 transition-colors ml-2">
+                  onClick={handleLogin}
+                  className="ml-1 font-semibold text-[#800000] hover:text-[#6b0000] hover:underline underline-offset-2 transition-all duration-300"
+                >
                   Login
                 </button>
               </p>
             </div>
+
           </div>
         </div>
-      </div>Welcome Back
+      </div>
+      </div>
     </div>
   );
 };

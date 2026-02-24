@@ -3,6 +3,21 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    /*
+     * overflow-x: clip — prevents horizontal scroll without creating a
+     * new containing block for position:fixed elements.
+     * (overflow:hidden on html breaks fixed nav/cart in iOS Safari)
+     */
+    overflow-x: clip;
+    max-width: 100%;
+  }
+
+  body {
+    overflow-x: hidden; /* belt-and-suspenders for older browsers */
+    max-width: 100%;
+  }
+
   :root {
     --background: 20 20% 98%;
     --foreground: 20 10% 3.9%;

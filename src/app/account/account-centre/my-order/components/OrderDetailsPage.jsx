@@ -866,7 +866,7 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#7f1d1d]/5 to-white flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#7f1d1d]/5 to-white flex items-center justify-center p-4">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#7f1d1d] mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading order details...</p>
@@ -878,8 +878,8 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#7f1d1d]/5 to-white flex items-center justify-center">
-        <div className="text-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#7f1d1d]/5 to-white flex items-center justify-center p-4">
+        <div className="text-center max-w-md">
           <XCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Failed to load order details</h3>
           <p className="text-gray-600 mb-4">{error}</p>
@@ -897,8 +897,8 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
   // Main order data not available
   if (!orderData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#7f1d1d]/5 to-white flex items-center justify-center">
-        <div className="text-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#7f1d1d]/5 to-white flex items-center justify-center p-4">
+        <div className="text-center max-w-md">
           <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-gray-900 mb-2">No Order Selected</h3>
           <p className="text-gray-600 mb-4">Please select an order to view details</p>
@@ -919,42 +919,42 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#7f1d1d]/5 to-white">
-      <div className="max-w-[1600px] mx-auto px-0 xs:px-3 sm:px-4 md:px-6 lg:px-8 py-3 xs:py-4 sm:py-6 md:py-8">
+      <div className="max-w-[1600px] mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-4 md:py-6 lg:py-8">
         {/* Header Navigation */}
-        <div className="mb-4 xs:mb-6 sm:mb-8">
-          <div className="flex items-center gap-1 xs:gap-2 mb-3 xs:mb-4">
+        <div className="mb-3 sm:mb-4 md:mb-6 lg:mb-8">
+          <div className="flex items-center gap-1 sm:gap-2 mb-2 sm:mb-3 md:mb-4">
             <button 
               onClick={onBack}
-              className="flex items-center gap-1 xs:gap-2 text-[#7f1d1d] hover:text-[#991b1b] transition-colors group"
+              className="flex items-center gap-1 sm:gap-2 text-[#7f1d1d] hover:text-[#991b1b] transition-colors group"
             >
-              <ArrowLeft className="w-3 h-3 xs:w-4 xs:h-4 group-hover:-translate-x-1 transition-transform" />
-              <span className="text-xs xs:text-sm sm:text-base font-medium">My Orders</span>
+              <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 group-hover:-translate-x-1 transition-transform" />
+              <span className="text-xs sm:text-sm md:text-base font-medium">My Orders</span>
             </button>
-            <ChevronRight className="w-3 h-3 xs:w-4 xs:h-4 text-gray-400" />
-            <span className="text-gray-700 text-xs xs:text-sm sm:text-base font-medium">Order Details</span>
+            <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
+            <span className="text-gray-700 text-xs sm:text-sm md:text-base font-medium">Order Details</span>
           </div>
         </div>
 
         {/* Order Header Card - Professional Design */}
-        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-6">
-          <div className="flex flex-col lg:flex-row gap-8">
+        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-5 md:p-6 mb-4 sm:mb-5 md:mb-6">
+          <div className="flex flex-col lg:flex-row gap-4 sm:gap-5 md:gap-6 lg:gap-8">
             {/* Left Column - Order Info & Products */}
             <div className="flex-1">
               {/* Order ID and Basic Info */}
-              <div className="flex items-center gap-4 mb-6">
-                <div className="p-3 bg-[#7f1d1d]/10 rounded-xl">
-                  <Package className="w-8 h-8 text-[#7f1d1d]" />
+              <div className="flex flex-col xs:flex-row items-start xs:items-center gap-3 xs:gap-4 mb-4 sm:mb-5 md:mb-6">
+                <div className="p-2 sm:p-3 bg-[#7f1d1d]/10 rounded-xl">
+                  <Package className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-[#7f1d1d]" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900 font-mono tracking-tight">
+                  <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 font-mono tracking-tight break-all">
                     {orderData.orderId}
                   </h1>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-sm text-gray-600">
+                  <div className="flex flex-wrap items-center gap-1 sm:gap-2 mt-1">
+                    <span className="text-xs sm:text-sm text-gray-600">
                       {orderData.totalItems} item{orderData.totalItems > 1 ? 's' : ''}
                     </span>
-                    <span className="text-gray-400">•</span>
-                    <span className="text-sm text-gray-600">
+                    <span className="text-gray-400 hidden xs:inline">•</span>
+                    <span className="text-xs sm:text-sm text-gray-600">
                       {orderData.orderDate}
                     </span>
                   </div>
@@ -962,19 +962,18 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
               </div>
 
               {/* Products Display - New Design */}
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <Package className="w-5 h-5 text-[#7f1d1d]" />
+              <div className="mb-4 sm:mb-5 md:mb-6">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2">
+                  <Package className="w-4 h-4 sm:w-5 sm:h-5 text-[#7f1d1d]" />
                   Products in this order
                 </h3>
                 
-                
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {productsToDisplay.map((product, index) => (
-                    <div key={index} className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                    <div key={index} className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-gray-50 rounded-xl border border-gray-200">
                       {/* Product Image */}
                       <div className="flex-shrink-0">
-                        <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-300 bg-white">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg overflow-hidden border border-gray-300 bg-white">
                           {product.image ? (
                             <Image
                               src={product.image}
@@ -989,7 +988,7 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                              <Package className="w-8 h-8 text-gray-400" />
+                              <Package className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />
                             </div>
                           )}
                         </div>
@@ -997,19 +996,19 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
 
                       {/* Product Details */}
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-semibold text-gray-900 mb-1 truncate">
+                        <h4 className="text-xs sm:text-sm font-semibold text-gray-900 mb-1 truncate">
                           {product.name}
                         </h4>
-                        <div className="flex flex-wrap items-center gap-2 text-xs text-gray-600">
+                        <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs text-gray-600">
                           {product.quantity > 1 && (
-                            <span className="bg-gray-200 px-2 py-0.5 rounded-md">
+                            <span className="bg-gray-200 px-1.5 sm:px-2 py-0.5 rounded-md">
                               Qty: {product.quantity}
                             </span>
                           )}
                           {product.color && product.color !== 'Not specified' && (
                             <span className="flex items-center gap-1">
-                              <span className="w-3 h-3 rounded-full border border-gray-300" style={{backgroundColor: product.color}} />
-                              {product.color}
+                              <span className="w-2 h-2 sm:w-3 sm:h-3 rounded-full border border-gray-300" style={{backgroundColor: product.color}} />
+                              <span className="text-xs">{product.color}</span>
                             </span>
                           )}
                           {product.size && product.size !== 'Not specified' && (
@@ -1024,17 +1023,17 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
                   {hasMoreProducts && (
                     <button
                       onClick={() => setShowAllProducts(!showAllProducts)}
-                      className="flex items-center justify-center gap-2 w-full py-3 text-[#7f1d1d] hover:text-[#991b1b] font-medium border border-gray-300 rounded-xl hover:border-[#7f1d1d]/30 transition-all"
+                      className="flex items-center justify-center gap-2 w-full py-2 sm:py-3 text-[#7f1d1d] hover:text-[#991b1b] font-medium border border-gray-300 rounded-xl hover:border-[#7f1d1d]/30 transition-all text-sm sm:text-base"
                     >
                       {showAllProducts ? (
                         <>
                           <span>Show Less</span>
-                          <ChevronRight className="w-4 h-4 rotate-90" />
+                          <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 rotate-90" />
                         </>
                       ) : (
                         <>
                           <span>Show {orderData.uniqueProducts.length - 3} more items</span>
-                          <ChevronRight className="w-4 h-4 -rotate-90" />
+                          <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 -rotate-90" />
                         </>
                       )}
                     </button>
@@ -1043,88 +1042,68 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
               </div>
 
               {/* Order Information Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Calendar className="w-5 h-5 text-[#7f1d1d]" />
-                    <span className="font-medium text-gray-900">Order Date</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div className="p-3 sm:p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
+                  <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+                    <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-[#7f1d1d]" />
+                    <span className="text-xs sm:text-sm font-medium text-gray-900">Order Date</span>
                   </div>
-                  <p className="text-gray-700">{orderData.orderDate}</p>
+                  <p className="text-xs sm:text-sm text-gray-700 break-words">{orderData.orderDate}</p>
                 </div>
                 
-                <div className="p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Calendar className="w-5 h-5 text-[#7f1d1d]" />
-                    <span className="font-medium text-gray-900">Expected Delivery</span>
+                <div className="p-3 sm:p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
+                  <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+                    <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-[#7f1d1d]" />
+                    <span className="text-xs sm:text-sm font-medium text-gray-900">Expected Delivery</span>
                   </div>
-                  <p className="text-gray-700">{orderData.expectedDelivery}</p>
+                  <p className="text-xs sm:text-sm text-gray-700 break-words">{orderData.expectedDelivery}</p>
                 </div>
                 
-                <div className="p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Truck className="w-5 h-5 text-[#7f1d1d]" />
-                    <span className="font-medium text-gray-900">Tracking Number</span>
+                <div className="p-3 sm:p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
+                  <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+                    <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-[#7f1d1d]" />
+                    <span className="text-xs sm:text-sm font-medium text-gray-900">Tracking Number</span>
                   </div>
-                  <p className="text-gray-700 font-mono text-sm">{orderData.trackingId}</p>
+                  <p className="text-xs sm:text-sm text-gray-700 font-mono break-all">{orderData.trackingId}</p>
                 </div>
                 
-                <div className="p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Package className="w-5 h-5 text-[#7f1d1d]" />
-                    <span className="font-medium text-gray-900">Total Amount</span>
+                <div className="p-3 sm:p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
+                  <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+                    <Package className="w-4 h-4 sm:w-5 sm:h-5 text-[#7f1d1d]" />
+                    <span className="text-xs sm:text-sm font-medium text-gray-900">Total Amount</span>
                   </div>
-                  <p className="text-gray-900 font-bold text-xl">{orderData.totalAmount}</p>
+                  <p className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-gray-900 break-words">{orderData.totalAmount}</p>
                 </div>
               </div>
             </div>
 
             {/* Right Column - Status & Actions */}
-            <div className="lg:w-80 flex-shrink-0">
+            <div className="lg:w-80 flex-shrink-0 mt-4 lg:mt-0">
               {/* Status Card */}
-              <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 p-6 mb-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900">Order Status</h3>
-                  <div className={`w-3 h-3 rounded-full ${orderData.badgeColor}`} />
+              <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 p-4 sm:p-5 md:p-6 mb-4 sm:mb-5 md:mb-6">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900">Order Status</h3>
+                  <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full ${orderData.badgeColor}`} />
                 </div>
                 
-                <div className="flex items-center gap-3 mb-4">
-                  <div className={`p-3 rounded-xl ${orderData.statusColor.split(' ')[0]}`}>
-                    <StatusIcon className="w-8 h-8" />
+                <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                  <div className={`p-2 sm:p-3 rounded-xl ${orderData.statusColor.split(' ')[0]}`}>
+                    <StatusIcon className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8" />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-gray-900">{orderData.status}</p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">{orderData.status}</p>
+                    <p className="text-xs sm:text-sm text-gray-600">
                       Last updated: {orderData.orderDate}
                     </p>
                   </div>
                 </div>
                   
-                  <div className="mb-6">
-  <div className="flex justify-between text-xs text-gray-500 mb-2">
-    <span>Order Placed</span>
-    <span>{orderData.status === 'Cancelled' ? 'Cancelled' : 'Delivered'}</span>
-  </div>
-  <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-    <div 
-      className={`h-full ${orderData.badgeColor} transition-all duration-500`}
-      style={{
-        width: orderData.status === 'Pending' ? '20%' :
-               orderData.status === 'Confirmed' ? '40%' :
-               orderData.status === 'Shipped' ? '70%' :
-               orderData.status === 'Delivered' ? '100%' :
-               orderData.status === 'Cancelled' ? '100%' : '20%'
-      }}
-    />
-  </div>
-</div>
-
-                {/* Status Progress Bar */}
-                {/* <div className="mb-6">
-                  <div className="flex justify-between text-xs text-gray-500 mb-2">
+                <div className="mb-4 sm:mb-5 md:mb-6">
+                  <div className="flex justify-between text-xs text-gray-500 mb-1 sm:mb-2">
                     <span>Order Placed</span>
-                    <span>Delivered</span>
+                    <span>{orderData.status === 'Cancelled' ? 'Cancelled' : 'Delivered'}</span>
                   </div>
-                  <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="h-1.5 sm:h-2 bg-gray-200 rounded-full overflow-hidden">
                     <div 
                       className={`h-full ${orderData.badgeColor} transition-all duration-500`}
                       style={{
@@ -1136,48 +1115,42 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
                       }}
                     />
                   </div>
-                </div> */}
+                </div>
 
                 {/* Action Buttons */}
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   {/* Free Shipping - Conditionally Hide When Cancelled */}
-  {shouldShowFreeShipping() && (
-                  <div className="flex items-center gap-2 text-green-600 text-sm bg-green-50 px-4 py-3 rounded-lg">
-                    <Truck className="w-5 h-5" />
-                    <span>Free Shipping</span>
-                  </div>
-                   )}
+                  {shouldShowFreeShipping() && (
+                    <div className="flex items-center gap-2 text-green-600 text-xs sm:text-sm bg-green-50 px-3 sm:px-4 py-2 sm:py-3 rounded-lg">
+                      <Truck className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <span>Free Shipping</span>
+                    </div>
+                  )}
                   {canCancelOrder() && (
                     <button
                       onClick={handleOpenCancelModal}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-300"
+                      className="w-full flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-300 text-sm sm:text-base"
                     >
-                      <XCircle className="w-5 h-5" />
+                      <XCircle className="w-4 h-4 sm:w-5 sm:h-5" />
                       Cancel Order
                     </button>
                   )}
-
-                  {/* <button className="w-full flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 hover:border-[#7f1d1d] text-gray-700 hover:text-[#7f1d1d] font-medium rounded-lg transition-colors">
-                    <ExternalLink className="w-5 h-5" />
-                    Track Order
-                  </button> */}
                 </div>
               </div>
 
               {/* Quick Info */}
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 sm:p-4">
                 <div className="flex items-start gap-2">
-                  <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <Info className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-blue-800">Need help?</p>
+                    <p className="text-xs sm:text-sm font-medium text-blue-800">Need help?</p>
                     <p className="text-xs text-blue-700 mt-1">
                       Contact our support team for any queries about your order.
                     </p>
                     <Link 
-        href="/contact" className="mt-2 text-xs text-blue-600 hover:text-blue-800 font-medium">
+                      href="/contact" className="mt-2 text-xs text-blue-600 hover:text-blue-800 font-medium block">
                       Contact Support →
-                      </Link>
-                     
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -1187,20 +1160,20 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
 
         {/* Tabs Section */}
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-          <div className="flex border-b border-gray-200 overflow-x-auto">
+          <div className="flex border-b border-gray-200 overflow-x-auto scrollbar-hide">
             {tabs.map((tab) => {
               const TabIcon = tab.icon;
               return (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-6 py-4 font-medium whitespace-nowrap transition-colors flex-shrink-0 ${
+                  className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-3 sm:py-4 font-medium whitespace-nowrap transition-colors flex-shrink-0 text-xs sm:text-sm ${
                     activeTab === tab.id
                       ? "bg-[#7f1d1d] text-white border-b-2 border-[#7f1d1d]"
                       : "text-gray-600 hover:text-[#7f1d1d] hover:bg-[#7f1d1d]/5"
                   }`}
                 >
-                  <TabIcon className="w-5 h-5" />
+                  <TabIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                   <span>{tab.label}</span>
                 </button>
               );
@@ -1208,30 +1181,30 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
           </div>
 
           {/* Tab Content */}
-          <div className="p-6">
+          <div className="p-3 sm:p-4 md:p-6">
             {/* History Tab with Timeline */}
             {activeTab === "history" && (
               <div className="relative">
-                <h3 className="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-[#7f1d1d]" />
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4 sm:mb-6 flex items-center gap-2">
+                  <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-[#7f1d1d]" />
                   Order Timeline
                   {orderData.status === 'Cancelled' && (
-                    <span className="ml-2 px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">
+                    <span className="ml-2 px-1.5 sm:px-2 py-0.5 bg-red-100 text-red-800 text-xs font-medium rounded-full">
                       Cancelled
                     </span>
                   )}
                 </h3>
                 
-                <div className="relative ml-6">
+                <div className="relative ml-3 sm:ml-6">
                   {orderData.timeline.map((stage, index) => {
                     const StageIcon = stage.icon;
                     const isCancelledStage = stage.status === 'cancelled';
                     
                     return (
-                      <div key={index} className="relative pb-8 last:pb-0">
+                      <div key={index} className="relative pb-6 sm:pb-8 last:pb-0">
                         {/* Timeline line */}
                         {index !== orderData.timeline.length - 1 && (
-                          <div className={`absolute left-4 top-8 w-0.5 h-full ${
+                          <div className={`absolute left-3 sm:left-4 top-6 sm:top-8 w-0.5 h-full ${
                             stage.status === 'completed' ? 'bg-[#7f1d1d]' : 
                             isCancelledStage ? 'bg-red-200' :
                             'bg-[#7f1d1d]/20'
@@ -1239,44 +1212,44 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
                         )}
                         
                         {/* Timeline node */}
-                        <div className="flex items-start gap-4">
-                          <div className={`relative z-10 flex items-center justify-center w-8 h-8 rounded-full flex-shrink-0 ${
+                        <div className="flex items-start gap-2 sm:gap-4">
+                          <div className={`relative z-10 flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 rounded-full flex-shrink-0 ${
                             stage.status === 'completed' ? 'bg-[#7f1d1d]' : 
                             isCancelledStage ? 'bg-red-500' :
                             'bg-gray-300'
                           }`}>
-                            <StageIcon className={`w-4 h-4 ${
+                            <StageIcon className={`w-3 h-3 sm:w-4 sm:h-4 ${
                               isCancelledStage ? 'text-white' : 'text-white'
                             }`} />
                           </div>
                           
                           <div className="flex-1 min-w-0">
-                            <div className={`rounded-xl p-4 border ${
+                            <div className={`rounded-lg sm:rounded-xl p-2 sm:p-4 border ${
                               stage.status === 'completed' 
                                 ? 'bg-[#7f1d1d]/5 border-[#7f1d1d]/10' 
                                 : isCancelledStage
                                 ? 'bg-red-50 border-red-200'
                                 : 'bg-gray-50 border-gray-200'
                             }`}>
-                              <div className="flex items-center gap-2 mb-1">
-                                <h4 className={`font-semibold ${
+                              <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-1">
+                                <h4 className={`text-xs sm:text-sm font-semibold ${
                                   isCancelledStage ? 'text-red-800' : 'text-gray-900'
                                 }`}>
                                   {stage.title}
                                 </h4>
                                 {isCancelledStage && (
-                                  <span className="px-2 py-0.5 bg-red-100 text-red-700 text-xs font-medium rounded-full">
+                                  <span className="px-1 sm:px-2 py-0.5 bg-red-100 text-red-700 text-xs font-medium rounded-full">
                                     Cancelled
                                   </span>
                                 )}
                               </div>
-                              <p className="text-sm text-gray-600 mb-2">
+                              <p className="text-xs text-gray-600 mb-1 sm:mb-2 break-words">
                                 {stage.formattedDate}
                               </p>
                               {stage.description && (
-                                <p className={`text-sm ${
+                                <p className={`text-xs ${
                                   isCancelledStage ? 'text-red-700' : 'text-gray-500'
-                                }`}>
+                                } break-words`}>
                                   {stage.description}
                                 </p>
                               )}
@@ -1292,18 +1265,18 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
 
             {activeTab === "details" && (
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-2">
-                  <Package className="w-5 h-5 text-[#7f1d1d]" />
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4 sm:mb-6 flex items-center gap-2">
+                  <Package className="w-4 h-4 sm:w-5 sm:h-5 text-[#7f1d1d]" />
                   Order Items ({orderData.totalItems})
                 </h3>
                 
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {orderData.items.map((item, index) => (
-                    <div key={index} className="flex items-start justify-between p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
-                      <div className="flex items-start gap-4 min-w-0 flex-1">
+                    <div key={index} className="flex flex-col sm:flex-row sm:items-start justify-between p-3 sm:p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
+                      <div className="flex items-start gap-3 sm:gap-4 min-w-0 flex-1">
                         {/* Item Image */}
                         <div className="flex-shrink-0">
-                          <div className="w-20 h-20 rounded-lg overflow-hidden border border-gray-300 bg-white">
+                          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden border border-gray-300 bg-white">
                             {item.productImage && item.productImage.length > 0 ? (
                               <img 
                                 src={item.productImage[0]} 
@@ -1316,7 +1289,7 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center">
-                                <ImageIcon className="w-8 h-8 text-gray-400" />
+                                <ImageIcon className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
                               </div>
                             )}
                           </div>
@@ -1324,24 +1297,24 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
 
                         {/* Item Details */}
                         <div className="min-w-0 flex-1">
-                          <h4 className="font-semibold text-gray-900 mb-1">
+                          <h4 className="text-xs sm:text-sm font-semibold text-gray-900 mb-1 break-words">
                             {item.productName}
                           </h4>
-                          <p className="text-sm text-gray-600 mb-1">
+                          <p className="text-xs text-gray-600 mb-1 break-all">
                             Product ID: <span className="font-mono">{item.productId}</span>
                           </p>
-                          <p className="text-sm text-gray-600 mb-1">
+                          <p className="text-xs text-gray-600 mb-1">
                             {item.selectedColor} | Size {item.selectedSize}
                           </p>
-                          <p className="text-sm text-gray-600">
+                          <p className="text-xs text-gray-600">
                             Quantity: {item.quantity}
                           </p>
                         </div>
                       </div>
                       
                       {/* Price */}
-                      <div className="text-right flex-shrink-0 ml-4">
-                        <p className="text-lg font-semibold text-[#7f1d1d]">
+                      <div className="text-right flex-shrink-0 mt-2 sm:mt-0 sm:ml-4">
+                        <p className="text-sm sm:text-base md:text-lg font-semibold text-[#7f1d1d] break-words">
                           {formatCurrency(item.price * item.quantity)}
                         </p>
                       </div>
@@ -1350,25 +1323,25 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
                 </div>
 
                 {/* Order Summary */}
-                <div className="mt-8 p-6 bg-gray-50 rounded-xl border border-gray-200">
-                  <h4 className="font-semibold text-gray-900 mb-4 text-lg">Order Summary</h4>
-                  <div className="space-y-3">
-                    <div className="flex justify-between">
+                <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-gray-50 rounded-xl border border-gray-200">
+                  <h4 className="text-sm sm:text-base font-semibold text-gray-900 mb-3 sm:mb-4">Order Summary</h4>
+                  <div className="space-y-2 sm:space-y-3">
+                    <div className="flex justify-between text-xs sm:text-sm">
                       <span className="text-gray-600">Subtotal</span>
                       <span className="text-gray-900">
                         {formatCurrency(orderData.originalData.totalAmount || 0)}
                       </span>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex justify-between text-xs sm:text-sm">
                       <span className="text-gray-600">Shipping</span>
                       <span className="text-green-600 font-medium">FREE</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex justify-between text-xs sm:text-sm">
                       <span className="text-gray-600">Tax</span>
                       <span className="text-gray-900">₹ 0</span>
                     </div>
-                    <div className="border-t border-gray-300 pt-4 mt-4">
-                      <div className="flex justify-between font-bold text-lg">
+                    <div className="border-t border-gray-300 pt-3 sm:pt-4 mt-3 sm:mt-4">
+                      <div className="flex justify-between font-bold text-sm sm:text-base md:text-lg">
                         <span className="text-gray-900">Total</span>
                         <span className="text-[#7f1d1d]">{orderData.totalAmount}</span>
                       </div>
@@ -1379,152 +1352,141 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
             )}
 
             {activeTab === "receiver" && (
-  <div>
-    <h3 className="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-2">
-      <User className="w-5 h-5 text-[#7f1d1d]" />
-      Receiver Information
-    </h3>
-    
-    {/* <div className="mb-4">
-      <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
-        <span>Order ID:</span>
-        <span className="font-mono bg-gray-100 px-2 py-1 rounded">
-          {orderData.orderId}
-        </span>
-      </div>
-    </div> */}
-    
-    {/* Loading State */}
-    {isLoadingAddresses && (
-      <div className="text-center py-8">
-        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#7f1d1d] mb-4"></div>
-        <p className="text-gray-600">Loading address information...</p>
-      </div>
-    )}
-    
-    {/* Error State */}
-    {addressError && !isLoadingAddresses && (
-      <div className="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg">
-        <AlertTriangle className="w-12 h-12 text-amber-500 mx-auto mb-3" />
-        <p className="text-gray-600 mb-4">{addressError}</p>
-        <div className="space-y-2">
-          <button
-            onClick={fetchUserAddresses}
-            className="block w-full py-2 bg-[#7f1d1d] text-white rounded-lg hover:bg-[#991b1b] transition-colors"
-          >
-            Retry Loading Address
-          </button>
-          <button
-            onClick={() => {
-              // Use fallback data from original order if available
-              if (orderData.originalData?.shippingAddress) {
-                const fallbackAddress = {
-                  shippingAddress: orderData.originalData.shippingAddress
-                };
-                setSavedAddresses([fallbackAddress]);
-                setSelectedAddress(fallbackAddress);
-                setAddressError(null);
-              }
-            }}
-            className="block w-full py-2 border border-[#7f1d1d] text-[#7f1d1d] rounded-lg hover:bg-[#7f1d1d]/5 transition-colors"
-          >
-            Use Order Data
-          </button>
-        </div>
-      </div>
-    )}
-    
-    {/* No Addresses State */}
-    {!isLoadingAddresses && !addressError && savedAddresses.length === 0 && (
-      <div className="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg">
-        <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-        <p className="text-gray-600 mb-4">No shipping addresses found for this order</p>
-        
-        {/* Check if we have address in original data */}
-        {orderData.originalData?.shippingAddress ? (
-          <div className="mt-4">
-            <p className="text-sm text-gray-500 mb-2">
-              Found address in order data:
-            </p>
-            <div className="bg-gray-50 p-4 rounded-lg text-left">
-              <p className="font-medium">
-                {orderData.originalData.shippingAddress.fullName}
-              </p>
-              <p className="text-sm text-gray-600">
-                {orderData.originalData.shippingAddress.phone}
-              </p>
-              <p className="text-sm text-gray-600 mt-1">
-                {orderData.originalData.shippingAddress.addressLine1}
-              </p>
-              <p className="text-sm text-gray-600">
-                {orderData.originalData.shippingAddress.city}, {orderData.originalData.shippingAddress.state} - {orderData.originalData.shippingAddress.postalCode}
-              </p>
-            </div>
-          </div>
-        ) : (
-          <button
-            onClick={fetchUserAddresses}
-            className="mt-4 text-[#7f1d1d] hover:text-[#991b1b] font-medium"
-          >
-            Try Loading Again
-          </button>
-        )}
-      </div>
-    )}
-    
-    {/* Address Display */}
-    {!isLoadingAddresses && selectedAddress && (
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
-            <div className="flex items-center gap-2 mb-2">
-              <User className="w-5 h-5 text-[#7f1d1d]" />
-              <span className="font-medium text-gray-900">Full Name</span>
-            </div>
-            <p className="text-gray-700">
-              {selectedAddress.shippingAddress?.fullName || 'Not specified'}
-            </p>
-          </div>
-          
-          <div className="p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
-            <div className="flex items-center gap-2 mb-2">
-              <Phone className="w-5 h-5 text-[#7f1d1d]" />
-              <span className="font-medium text-gray-900">Phone</span>
-            </div>
-            <p className="text-gray-700">
-              {selectedAddress.shippingAddress?.phone || 'Not specified'}
-            </p>
-          </div>
-        </div>
-        
-        <div className="p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
-          <div className="flex items-center gap-2 mb-2">
-            <MapPin className="w-5 h-5 text-[#7f1d1d]" />
-            <span className="font-medium text-gray-900">Shipping Address</span>
-          </div>
-          <p className="text-gray-700 whitespace-pre-line">
-            {formatAddress(selectedAddress)}
-          </p>
-        </div>
-        
-        {/* Additional Info if available */}
-        {(selectedAddress.shippingAddress?.email || userEmail) && (
-          <div className="p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
-            <div className="flex items-center gap-2 mb-2">
-              <Mail className="w-5 h-5 text-[#7f1d1d]" />
-              <span className="font-medium text-gray-900">Email</span>
-            </div>
-            <p className="text-gray-700">
-              {selectedAddress.shippingAddress?.email || userEmail || 'Not specified'}
-            </p>
-          </div>
-        )}
-      </div>
-    )}
-    
-   
-  </div>
-)}
+              <div>
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4 sm:mb-6 flex items-center gap-2">
+                  <User className="w-4 h-4 sm:w-5 sm:h-5 text-[#7f1d1d]" />
+                  Receiver Information
+                </h3>
+                
+                {/* Loading State */}
+                {isLoadingAddresses && (
+                  <div className="text-center py-6 sm:py-8">
+                    <div className="inline-block animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-[#7f1d1d] mb-3 sm:mb-4"></div>
+                    <p className="text-xs sm:text-sm text-gray-600">Loading address information...</p>
+                  </div>
+                )}
+                
+                {/* Error State */}
+                {addressError && !isLoadingAddresses && (
+                  <div className="text-center py-6 sm:py-8 border-2 border-dashed border-gray-300 rounded-lg">
+                    <AlertTriangle className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-amber-500 mx-auto mb-2 sm:mb-3" />
+                    <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 px-4">{addressError}</p>
+                    <div className="space-y-2 px-4">
+                      <button
+                        onClick={fetchUserAddresses}
+                        className="block w-full py-2 bg-[#7f1d1d] text-white rounded-lg hover:bg-[#991b1b] transition-colors text-xs sm:text-sm"
+                      >
+                        Retry Loading Address
+                      </button>
+                      <button
+                        onClick={() => {
+                          // Use fallback data from original order if available
+                          if (orderData.originalData?.shippingAddress) {
+                            const fallbackAddress = {
+                              shippingAddress: orderData.originalData.shippingAddress
+                            };
+                            setSavedAddresses([fallbackAddress]);
+                            setSelectedAddress(fallbackAddress);
+                            setAddressError(null);
+                          }
+                        }}
+                        className="block w-full py-2 border border-[#7f1d1d] text-[#7f1d1d] rounded-lg hover:bg-[#7f1d1d]/5 transition-colors text-xs sm:text-sm"
+                      >
+                        Use Order Data
+                      </button>
+                    </div>
+                  </div>
+                )}
+                
+                {/* No Addresses State */}
+                {!isLoadingAddresses && !addressError && savedAddresses.length === 0 && (
+                  <div className="text-center py-6 sm:py-8 border-2 border-dashed border-gray-300 rounded-lg">
+                    <MapPin className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-gray-400 mx-auto mb-2 sm:mb-3" />
+                    <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">No shipping addresses found for this order</p>
+                    
+                    {/* Check if we have address in original data */}
+                    {orderData.originalData?.shippingAddress ? (
+                      <div className="mt-4 px-4">
+                        <p className="text-xs text-gray-500 mb-2">
+                          Found address in order data:
+                        </p>
+                        <div className="bg-gray-50 p-3 sm:p-4 rounded-lg text-left">
+                          <p className="text-xs sm:text-sm font-medium break-words">
+                            {orderData.originalData.shippingAddress.fullName}
+                          </p>
+                          <p className="text-xs text-gray-600 break-words">
+                            {orderData.originalData.shippingAddress.phone}
+                          </p>
+                          <p className="text-xs text-gray-600 mt-1 break-words">
+                            {orderData.originalData.shippingAddress.addressLine1}
+                          </p>
+                          <p className="text-xs text-gray-600 break-words">
+                            {orderData.originalData.shippingAddress.city}, {orderData.originalData.shippingAddress.state} - {orderData.originalData.shippingAddress.postalCode}
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={fetchUserAddresses}
+                        className="mt-4 text-xs sm:text-sm text-[#7f1d1d] hover:text-[#991b1b] font-medium"
+                      >
+                        Try Loading Again
+                      </button>
+                    )}
+                  </div>
+                )}
+                
+                {/* Address Display */}
+                {!isLoadingAddresses && selectedAddress && (
+                  <div className="space-y-4 sm:space-y-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
+                      <div className="p-3 sm:p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
+                        <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+                          <User className="w-4 h-4 sm:w-5 sm:h-5 text-[#7f1d1d]" />
+                          <span className="text-xs sm:text-sm font-medium text-gray-900">Full Name</span>
+                        </div>
+                        <p className="text-xs sm:text-sm text-gray-700 break-words">
+                          {selectedAddress.shippingAddress?.fullName || 'Not specified'}
+                        </p>
+                      </div>
+                      
+                      <div className="p-3 sm:p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
+                        <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+                          <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-[#7f1d1d]" />
+                          <span className="text-xs sm:text-sm font-medium text-gray-900">Phone</span>
+                        </div>
+                        <p className="text-xs sm:text-sm text-gray-700 break-words">
+                          {selectedAddress.shippingAddress?.phone || 'Not specified'}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="p-3 sm:p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
+                      <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+                        <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-[#7f1d1d]" />
+                        <span className="text-xs sm:text-sm font-medium text-gray-900">Shipping Address</span>
+                      </div>
+                      <p className="text-xs sm:text-sm text-gray-700 whitespace-pre-line break-words">
+                        {formatAddress(selectedAddress)}
+                      </p>
+                    </div>
+                    
+                    {/* Additional Info if available */}
+                    {(selectedAddress.shippingAddress?.email || userEmail) && (
+                      <div className="p-3 sm:p-4 bg-[#7f1d1d]/5 rounded-xl border border-[#7f1d1d]/10">
+                        <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+                          <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-[#7f1d1d]" />
+                          <span className="text-xs sm:text-sm font-medium text-gray-900">Email</span>
+                        </div>
+                        <p className="text-xs sm:text-sm text-gray-700 break-words">
+                          {selectedAddress.shippingAddress?.email || userEmail || 'Not specified'}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -1534,28 +1496,28 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl animate-fadeIn">
             {/* Modal Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-lg ${
+            <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className={`p-1.5 sm:p-2 rounded-lg ${
                   cancelStep === 1 ? "bg-amber-100" : 
                   cancelStep === 2 ? "bg-blue-100" : 
                   "bg-red-100"
                 }`}>
                   {cancelStep === 1 ? (
-                    <AlertTriangle className="w-6 h-6 text-amber-600" />
+                    <AlertTriangle className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600" />
                   ) : cancelStep === 2 ? (
-                    <Lock className="w-6 h-6 text-blue-600" />
+                    <Lock className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
                   ) : (
-                    <Key className="w-6 h-6 text-red-600" />
+                    <Key className="w-5 h-5 sm:w-6 sm:h-6 text-red-600" />
                   )}
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900">
+                  <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900">
                     {cancelStep === 1 && "Cancel Order"}
                     {cancelStep === 2 && "Verify Your Identity"}
                     {cancelStep === 3 && "Order Cancelled"}
                   </h3>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-xs sm:text-sm text-gray-500 mt-1">
                     {cancelStep === 1 && "Select reason and confirm"}
                     {cancelStep === 2 && "Enter OTP sent to your email"}
                     {cancelStep === 3 && "Your order has been cancelled"}
@@ -1567,18 +1529,18 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
                   setShowCancelModal(false);
                   resetCancelFlow();
                 }}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                <X className="w-5 h-5 text-gray-500" />
+                <X className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
               </button>
             </div>
 
             {/* Modal Body */}
-            <div className="p-6 space-y-4">
+            <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
               {/* Error Message Display */}
               {apiError && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                  <p className="text-sm text-red-800">
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3 sm:p-4">
+                  <p className="text-xs sm:text-sm text-red-800 break-words">
                     <strong>Error:</strong> {apiError}
                   </p>
                 </div>
@@ -1586,8 +1548,8 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
 
               {/* Success Message Display */}
               {successMessage && (
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <p className="text-sm text-green-800">
+                <div className="bg-green-50 border border-green-200 rounded-lg p-3 sm:p-4">
+                  <p className="text-xs sm:text-sm text-green-800 break-words">
                     <strong>Success:</strong> {successMessage}
                   </p>
                 </div>
@@ -1596,21 +1558,21 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
               {/* Step 1: Cancellation Reason */}
               {cancelStep === 1 && (
                 <>
-                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                    <p className="text-sm text-amber-800">
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 sm:p-4">
+                    <p className="text-xs sm:text-sm text-amber-800">
                       <strong>Note:</strong> Once cancelled, this action cannot be undone. You will receive a refund within 5-7 business days.
                     </p>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-900 mb-3">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-900 mb-2 sm:mb-3">
                       Please select a reason for cancellation <span className="text-red-600">*</span>
                     </label>
-                    <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
+                    <div className="space-y-1.5 sm:space-y-2 max-h-48 sm:max-h-60 overflow-y-auto pr-1 sm:pr-2">
                       {cancellationReasons.map((reason, index) => (
                         <label
                           key={index}
-                          className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                          className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
                         >
                           <input
                             type="radio"
@@ -1618,9 +1580,9 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
                             value={reason}
                             checked={cancelReason === reason}
                             onChange={(e) => setCancelReason(e.target.value)}
-                            className="w-4 h-4 text-[#7f1d1d] focus:ring-[#7f1d1d]"
+                            className="w-3 h-3 sm:w-4 sm:h-4 text-[#7f1d1d] focus:ring-[#7f1d1d]"
                           />
-                          <span className="text-sm text-gray-700">{reason}</span>
+                          <span className="text-xs sm:text-sm text-gray-700 break-words">{reason}</span>
                         </label>
                       ))}
                     </div>
@@ -1630,15 +1592,15 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
 
               {/* Step 2: OTP Verification */}
               {cancelStep === 2 && (
-                <div className="space-y-4">
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <div className="flex items-start gap-3">
-                      <Mail className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <p className="text-sm text-blue-800 font-medium">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4">
+                    <div className="flex items-start gap-2 sm:gap-3">
+                      <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                      <div className="break-words">
+                        <p className="text-xs sm:text-sm text-blue-800 font-medium">
                           Verification code sent to
                         </p>
-                        <p className="text-sm text-blue-900 font-semibold">
+                        <p className="text-xs sm:text-sm text-blue-900 font-semibold break-all">
                           {userEmail}
                         </p>
                         <p className="text-xs text-blue-700 mt-1">
@@ -1650,10 +1612,10 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
 
                   {/* OTP Input */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-900 mb-3">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-900 mb-2 sm:mb-3">
                       Enter 6-digit verification code <span className="text-red-600">*</span>
                     </label>
-                    <div className="flex justify-center gap-2 mb-4">
+                    <div className="flex justify-center gap-1 sm:gap-2 mb-3 sm:mb-4">
                       {[0, 1, 2, 3, 4, 5].map((index) => (
                         <input
                           key={index}
@@ -1672,7 +1634,7 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
                               if (prevInput) prevInput.focus();
                             }
                           }}
-                          className="w-12 h-14 text-center text-xl font-semibold border-2 border-gray-300 rounded-lg focus:border-[#7f1d1d] focus:ring-2 focus:ring-[#7f1d1d]/20 outline-none transition-colors"
+                          className="w-10 h-12 sm:w-12 sm:h-14 text-center text-base sm:text-xl font-semibold border-2 border-gray-300 rounded-lg focus:border-[#7f1d1d] focus:ring-2 focus:ring-[#7f1d1d]/20 outline-none transition-colors"
                           autoFocus={index === 0 && !otp[0]}
                         />
                       ))}
@@ -1681,14 +1643,14 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
                     {/* Resend OTP */}
                     <div className="text-center">
                       {countdown > 0 ? (
-                        <p className="text-sm text-gray-500">
+                        <p className="text-xs sm:text-sm text-gray-500">
                           Resend code in <span className="font-semibold">{countdown}s</span>
                         </p>
                       ) : (
                         <button
                           onClick={handleResendOtp}
                           disabled={isSendingOtp}
-                          className="text-sm text-[#7f1d1d] hover:text-[#991b1b] font-medium disabled:opacity-50"
+                          className="text-xs sm:text-sm text-[#7f1d1d] hover:text-[#991b1b] font-medium disabled:opacity-50"
                         >
                           {isSendingOtp ? 'Sending...' : 'Resend code'}
                         </button>
@@ -1700,17 +1662,17 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
 
               {/* Step 3: Cancellation Confirmation */}
               {cancelStep === 3 && (
-                <div className="text-center py-8">
-                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <CheckCircle className="w-8 h-8 text-green-600" />
+                <div className="text-center py-6 sm:py-8">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                    <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 text-green-600" />
                   </div>
-                  <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                  <h4 className="text-sm sm:text-base md:text-lg font-semibold text-gray-900 mb-2">
                     Order Cancelled Successfully!
                   </h4>
-                  <p className="text-gray-600 mb-4">
+                  <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 px-4 break-words">
                     Your order <span className="font-semibold">{orderData.orderId}</span> has been cancelled.
                   </p>
-                  <div className="animate-pulse text-sm text-gray-500">
+                  <div className="animate-pulse text-xs sm:text-sm text-gray-500">
                     Redirecting to order history...
                   </div>
                 </div>
@@ -1718,7 +1680,7 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
             </div>
 
             {/* Modal Footer */}
-            <div className="flex gap-3 p-6 border-t border-gray-200">
+            <div className="flex gap-2 sm:gap-3 p-4 sm:p-6 border-t border-gray-200">
               {/* Step 1 Buttons */}
               {cancelStep === 1 && (
                 <>
@@ -1728,23 +1690,23 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
                       resetCancelFlow();
                     }}
                     disabled={isCancelling}
-                    className="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors disabled:opacity-50"
+                    className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors disabled:opacity-50 text-xs sm:text-sm"
                   >
                     Keep Order
                   </button>
                   <button
                     onClick={handleCancelOrder}
                     disabled={isCancelling || !cancelReason}
-                    className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm"
                   >
                     {isCancelling ? (
                       <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                         Processing...
                       </>
                     ) : (
                       <>
-                        <Lock className="w-4 h-4" />
+                        <Lock className="w-3 h-3 sm:w-4 sm:h-4" />
                         Verify & Cancel
                       </>
                     )}
@@ -1761,23 +1723,23 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
                       setOtp(["", "", "", "", "", ""]);
                       setApiError("");
                     }}
-                    className="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors"
+                    className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors text-xs sm:text-sm"
                   >
                     Back
                   </button>
                   <button
                     onClick={handleVerifyOtp}
                     disabled={isVerifyingOtp || otp.join('').length !== 6}
-                    className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm"
                   >
                     {isVerifyingOtp ? (
                       <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                         Verifying...
                       </>
                     ) : (
                       <>
-                        <Key className="w-4 h-4" />
+                        <Key className="w-3 h-3 sm:w-4 sm:h-4" />
                         Verify OTP & Cancel
                       </>
                     )}
@@ -1789,7 +1751,7 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
               {cancelStep === 3 && (
                 <button
                   onClick={handleSuccessDone}
-                  className="flex-1 px-4 py-3 bg-[#7f1d1d] hover:bg-[#991b1b] text-white font-medium rounded-lg transition-colors"
+                  className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-[#7f1d1d] hover:bg-[#991b1b] text-white font-medium rounded-lg transition-colors text-xs sm:text-sm"
                 >
                   Done
                 </button>
@@ -1813,6 +1775,14 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
 
         .animate-fadeIn {
           animation: fadeIn 0.2s ease-out forwards;
+        }
+        
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
       `}</style>
     </div>
@@ -1913,7 +1883,7 @@ function getFallbackOrderData(selectedOrder) {
                status === 'Cancelled' ? 'cancelled' : 'pending'
       }
     ];
-
+     
     // Add cancellation stage if order is cancelled
     if (status === 'Cancelled') {
       // Insert cancellation stage after order confirmation

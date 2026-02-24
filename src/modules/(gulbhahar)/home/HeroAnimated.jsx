@@ -97,8 +97,11 @@ export default function ModernHeroAnimated({ heroSection }) {
     },
   ];
 
-  const currentSlide = heroSection[currentIndex];
-  const nextIndex = (currentIndex + 1) % heroSection.length;
+  const slides = heroSection?.length ? heroSection : heroData;
+
+const currentSlide = slides[currentIndex];
+const nextIndex = (currentIndex + 1) % slides.length;
+
 
   // Auto-advance carousel with 6-second timing
   useEffect(() => {
@@ -118,7 +121,8 @@ export default function ModernHeroAnimated({ heroSection }) {
 
       setTimeout(() => {
         setCurrentIndex((prev) => {
-          const next = (prev + 1) % heroSection.length;
+          const next = (prev + 1) % slides.length;
+
           return next;
         });
         setIsTransitioning(false);
@@ -130,7 +134,8 @@ export default function ModernHeroAnimated({ heroSection }) {
         clearTimeout(timerRef.current);
       }
     };
-  }, [currentIndex, isPlaying, heroSection.length, isTransitioning]);
+  }, [currentIndex, isPlaying, slides.length, isTransitioning]);
+
 
   // Text animation variants - removed blur
   const textContainerVariants = {
@@ -244,7 +249,8 @@ export default function ModernHeroAnimated({ heroSection }) {
           {/* BACKGROUND WITH REVERSE ZOOM */}
           <motion.div className="absolute inset-0 w-full h-full overflow-hidden">
             {/* ALL IMAGES STACKED WITH REVERSE ZOOM */}
-            {heroSection.map((slide, index) => {
+            {slides.map((slide, index) => {
+
               const isCurrent = index === currentIndex;
               const isNext = index === nextIndex;
               const isFirstImage = index === 0;
@@ -392,13 +398,15 @@ export default function ModernHeroAnimated({ heroSection }) {
                         </span>
                         <span className="text-white/60 text-xs sm:text-sm">
                           {String(currentIndex + 1).padStart(2, "0")} /{" "}
-                          {String(heroSection.length).padStart(2, "0")}
+                         {String(slides.length).padStart(2, "0")}
+
                         </span>
                       </div>
 
                       {/* Custom slide indicators - removed backdrop-blur */}
                       <div className="space-y-2 sm:space-y-3">
-                        {heroSection.map((item, index) => (
+                        {slides.map((item, index) => (
+
                           <motion.button
                             key={item.id}
                             onClick={() => handleSlideChange(index)}

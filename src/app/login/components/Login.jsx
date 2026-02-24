@@ -1,105 +1,112 @@
 "use client"
 import { useEffect, useState } from 'react';
-import { FaGoogle, FaFacebook } from 'react-icons/fa';
-import { FiUser, FiLock, FiEye, FiEyeOff, FiPhone } from 'react-icons/fi';
-import { IoIosArrowBack } from 'react-icons/io';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaFacebookF, FaArrowLeft } from 'react-icons/fa6';
+import { FcGoogle } from 'react-icons/fc';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { useAuth } from '@/providers/ContextProviders/AuthContext';
 import { signIn, useSession } from 'next-auth/react';
 import signupApi from "../../api/signup/signup";
-import Link from 'next/link';
 
-// Carousel component (responsive)
-const Carousel = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const slides = [
-    "/login/001.webp",
-    "/login/002.webp",
-    "/login/003.webp",
-    "/login/004.webp"
-  ];
+const images = [
+  "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+  "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/lehenga.webp",
+  "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/suits.webp",
+];
+
+const bgColors = [
+  "#665937",
+  "#785025",
+  "#e4c3a6",
+];
+
+const innerFormVariants = {
+  enter: (direction) => ({
+    x: direction === "forward" ? 500 : -500,
+    opacity: 0,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+  },
+  exit: (direction) => ({
+    x: direction === "forward" ? -500 : 500,
+    opacity: 0,
+  }),
+};
+
+function MotionImageSlider({ onColorChange }) {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    onColorChange(bgColors[index]);
+  }, [index, onColorChange]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
-    }, 5000);
-    
+      setIndex((prev) => (prev + 1) % images.length);
+    }, 3500);
     return () => clearInterval(interval);
-  }, [slides.length]);
+  }, []);
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-gradient-to-br from-red-100 to-rose-200 rounded-lg sm:rounded-xl lg:rounded-2xl shadow-lg sm:shadow-xl lg:shadow-2xl">
-      <div className="h-full w-full">
-        {slides.map((slide, index) => (
-          <div
-            key={index}
-            className={`absolute h-full w-full transition-all duration-1000 ${
-              index === currentSlide ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
-            }`}
-          >
-            <img
-              src={slide}
-              alt={`Carousel slide ${index + 1}`}
-              className="h-full w-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-red-900/30 via-transparent to-red-900/10"></div>
-          </div>
-        ))}
-      </div>
-      
-      <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6 lg:p-8">
-        <div className="text-white">
-          <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-1 sm:mb-2">Discover Premium Fashion</h3>
-          <p className="text-red-100 text-sm sm:text-base lg:text-lg">Join thousands of fashion enthusiasts</p>
-        </div>
-      </div>
-      
-      <div className="absolute bottom-3 sm:bottom-4 lg:bottom-6 left-0 right-0 flex justify-center space-x-2 sm:space-x-3">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentSlide(index)}
-            className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 transform hover:scale-125 ${
-              index === currentSlide 
-                ? 'w-6 sm:w-8 bg-white shadow-lg' 
-                : 'w-1.5 sm:w-2 bg-white/50 hover:bg-white/70'
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
+    <div className="relative w-full h-full overflow-hidden md:rounded-l-2xl">
+      <AnimatePresence>
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, scale: 1.05 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1, ease: "easeInOut" }}
+          className="absolute inset-0"
+          style={{ backgroundImage: `url(${images[index]})`, backgroundSize: 'cover', backgroundPosition: 'top center' }}
+        />
+      </AnimatePresence>
+
+      <div className="absolute bottom-8 left-8 flex gap-2 z-10">
+        {images.map((_, i) => (
+          <span
+            key={i}
+            className={`w-2 h-2 rounded-full ${i === index ? "bg-white" : "bg-white/40"}`}
           />
         ))}
       </div>
     </div>
   );
-};
+}
 
 const LoginPage = () => {
   const { login, isAuthenticated, isLoading: authLoading } = useAuth();
-  
-  // State for login method
-  const [loginMethod, setLoginMethod] = useState('email'); // 'email' or 'mobile'
-  
-  // Email login states
+
+  // UI state
+  const [loginMethod, setLoginMethod] = useState("email");
+  const [showMobileInput, setShowMobileInput] = useState(false);
+  const [showOtpInput, setShowOtpInput] = useState(false);
+  const [direction, setDirection] = useState("forward");
+  const [bgColor, setBgColor] = useState(bgColors[0]);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Form state
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  
-  // Mobile login states
   const [mobileNumber, setMobileNumber] = useState('');
   const [otp, setOtp] = useState('');
-  const [showOtpField, setShowOtpField] = useState(false);
-  const [isOtpSent, setIsOtpSent] = useState(false);
   const [userId, setUserId] = useState('');
-  const [mobileError, setMobileError] = useState('');
-  const [otpError, setOtpError] = useState('');
-  
-  // Common states
-  const [generalError, setGeneralError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const [touched, setTouched] = useState({ email: false, password: false, mobile: false });
+
+  // Status state
   const [isLoading, setIsLoading] = useState(false);
   const [socialLoginLoading, setSocialLoginLoading] = useState(false);
+  const [generalError, setGeneralError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [otpTimer, setOtpTimer] = useState(30);
+  const [canResend, setCanResend] = useState(false);
+
   const { data: session, status } = useSession();
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -108,25 +115,13 @@ const LoginPage = () => {
     }
   }, [isAuthenticated, authLoading]);
 
-  // Reset states when switching login methods
-  useEffect(() => {
-    setGeneralError('');
-    setSuccessMessage('');
-    setMobileError('');
-    setOtpError('');
-    setShowOtpField(false);
-    setIsOtpSent(false);
-    setMobileNumber('');
-    setOtp('');
-  }, [loginMethod]);
-
   // Show loading state during OAuth or if already authenticated
   if (authLoading || (status === 'authenticated' && !isAuthenticated) || socialLoginLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-white to-red-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 border-b-2 border-red-900 mx-auto mb-3 sm:mb-4"></div>
-          <p className="text-red-900 font-medium text-sm sm:text-base">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#7f1d1d] mx-auto mb-4"></div>
+          <p className="text-[#7f1d1d] font-medium">
             {socialLoginLoading ? 'Completing social login...' : 'Loading...'}
           </p>
         </div>
@@ -136,246 +131,38 @@ const LoginPage = () => {
 
   if (isAuthenticated) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-white to-red-50">
         <div className="text-center">
-          <h2 className="text-xl sm:text-2xl font-bold text-red-900 mb-3 sm:mb-4">Redirecting...</h2>
-          <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-red-900 mx-auto"></div>
+          <h2 className="text-2xl font-bold text-[#7f1d1d] mb-4">Redirecting...</h2>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7f1d1d] mx-auto"></div>
         </div>
       </div>
     );
   }
 
-  // Email validation
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email) {
-      setEmailError('Email is required');
-      return false;
-    } else if (!emailRegex.test(email)) {
-      setEmailError('Invalid email format');
-      return false;
-    } else {
-      setEmailError('');
-      return true;
-    }
-  };
-
-  // Password validation
-  const validatePassword = (password) => {
-    if (!password) {
-      setPasswordError('Password is required');
-      return false;
-    } else if (password.length < 6) {
-      setPasswordError('Password must be at least 6 characters long');
-      return false;
-    } else {
-      setPasswordError('');
-      return true;
-    }
-  };
-
-  // Mobile number validation
-  const validateMobile = (mobile) => {
-    const mobileRegex = /^[0-9]{10}$/;
-    if (!mobile) {
-      setMobileError('Mobile number is required');
-      return false;
-    } else if (!mobileRegex.test(mobile)) {
-      setMobileError('Please enter a valid 10-digit mobile number');
-      return false;
-    } else {
-      setMobileError('');
-      return true;
-    }
-  };
-
-  // OTP validation
-  const validateOtp = (otp) => {
-    const otpRegex = /^[0-9]{6}$/;
-    if (!otp) {
-      setOtpError('OTP is required');
-      return false;
-    } else if (!otpRegex.test(otp)) {
-      setOtpError('Please enter a valid 6-digit OTP');
-      return false;
-    } else {
-      setOtpError('');
-      return true;
-    }
-  };
-
-  // Handle input changes
-  const handleEmailChange = (e) => {
-    const value = e.target.value;
-    setEmail(value);
-    setGeneralError('');
-    if (touched.email) {
-      validateEmail(value);
-    }
-  };
-
-  const handlePasswordChange = (e) => {
-    const value = e.target.value;
-    setPassword(value);
-    setGeneralError('');
-    if (touched.password) {
-      validatePassword(value);
-    }
-  };
-
-  const handleMobileChange = (e) => {
-    const value = e.target.value.replace(/\D/g, '');
-    setMobileNumber(value);
-    setGeneralError('');
-    if (touched.mobile) {
-      validateMobile(value);
-    }
-  };
-
-  const handleOtpChange = (e) => {
-    const value = e.target.value.replace(/\D/g, '');
-    setOtp(value);
-    if (value.length === 6) {
-      validateOtp(value);
-    }
-  };
-
-  const handleBlur = (field) => {
-    setTouched({ ...touched, [field]: true });
-    if (field === 'email') {
-      validateEmail(email);
-    } else if (field === 'password') {
-      validatePassword(password);
-    } else if (field === 'mobile') {
-      validateMobile(mobileNumber);
-    }
-  };
-
-  // Send OTP for mobile login using the API
-  const handleSendOtp = async () => {
-    setIsLoading(true);
-    setGeneralError('');
-    setOtpError('');
-    
-    try {
-      const isMobileValid = validateMobile(mobileNumber);
-      if (!isMobileValid) {
-        setIsLoading(false);
-        return;
-      }
-
-      // console.log('📱 Sending OTP to:', mobileNumber);
-      
-      const response = await signupApi.sendMobileLoginOtp(mobileNumber);
-   
-      const data = await response.json();
-
-      
-      if (response.ok) {
-     
-        setShowOtpField(true);
-        setIsOtpSent(true);
-        setUserId(data.userId || data.user?.id || data.id);
-        setSuccessMessage('OTP sent successfully! Please check your phone.');
-      } else {
-        setGeneralError(data.message || 'Failed to send OTP. Please try again.');
-      }
-    } catch (error) {
-      console.error('🚨 OTP sending error:', error);
-      setGeneralError('Failed to send OTP. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Verify OTP for mobile login using the API
-  const handleVerifyOtp = async () => {
-    setIsLoading(true);
-    setGeneralError('');
-    
-    try {
-      const isOtpValid = validateOtp(otp);
-      if (!isOtpValid) {
-        setIsLoading(false);
-        return;
-      }
-
-
-      
-      const response = await signupApi.verifyMobileLoginOtp(userId, otp);
-      
-      
-      const data = await response.json();
-
-      
-      if (response.ok) {
-       
-        
-        const token = data.token || data.accessToken || data.authToken;
-        
-        if (!token) {
-          setGeneralError('Login successful but no token received. Please try again.');
-          return;
-        }
-        
-        const userData = {
-          email: data.email || '',
-          firstName: data.firstName || data.first_name || data.user?.firstName || '',
-          lastName: data.lastName || data.last_name || data.user?.lastName || '',
-          userId: data.userId || data.id || data.user?.id || '',
-          location: data.location || data.user?.location || '',
-          phoneNumber: mobileNumber,
-          profilePicture: data.profilePicture || data.avatar || data.user?.profilePicture || '',
-          emailVerified: data.emailVerified !== undefined ? data.emailVerified : true,
-          phoneVerified: data.phoneVerified !== undefined ? data.phoneVerified : true,
-          ...data.user
-        };
-        
-        const loginSuccess = await login(token, userData);
-        
-        if (loginSuccess) {
-          setSuccessMessage('Login successful! Redirecting...');
-          setTimeout(() => {
-            window.location.href = '/';
-          }, 1000);
-        } else {
-          setGeneralError('Failed to save login data. Please try again.');
-        }
-      } else {
-        setGeneralError(data.message || 'Invalid OTP. Please try again.');
-      }
-    } catch (error) {
-      console.error('🚨 OTP verification error:', error);
-      setGeneralError('Failed to verify OTP. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   // Email login handler
-  const handleEmailLogin = async () => {
+  const handleEmailLogin = async (e) => {
+    e.preventDefault();
+    if (!email || !password) {
+      setGeneralError('Please fill in all fields');
+      return;
+    }
     setIsLoading(true);
     setGeneralError('');
     setSuccessMessage('');
-    
-    try {
-      
-      const response = await signupApi.login(email, password);
-      
-      
-      const data = await response.json();
-    
-      
-      if (response.ok) {
 
-        
+    try {
+      const response = await signupApi.login(email, password);
+      const data = await response.json();
+
+      if (response.ok) {
         const token = data.token || data.accessToken || data.authToken;
-        
+
         if (!token) {
           setGeneralError('Login successful but no token received. Please try again.');
           return;
         }
-        
+
         const userData = {
           email: email,
           firstName: data.firstName || data.first_name || data.user?.firstName || '',
@@ -388,25 +175,19 @@ const LoginPage = () => {
           phoneVerified: data.phoneVerified !== undefined ? data.phoneVerified : true,
           ...data.user
         };
-        
+
         const loginSuccess = await login(token, userData);
-        
+
         if (loginSuccess) {
           if (data.emailVerified === false) {
             setSuccessMessage('Please verify your email to continue.');
-            setTimeout(() => {
-              window.location.href = '/verify-email';
-            }, 1500);
+            setTimeout(() => { window.location.href = '/verify-email'; }, 1500);
           } else if (data.phoneVerified === false) {
             setSuccessMessage('Please verify your phone number to continue.');
-            setTimeout(() => {
-              window.location.href = '/verify-phone';
-            }, 1500);
+            setTimeout(() => { window.location.href = '/verify-phone'; }, 1500);
           } else {
             setSuccessMessage('Login successful! Redirecting to Homepage...');
-            setTimeout(() => {
-              window.location.href = '/';
-            }, 500);
+            setTimeout(() => { window.location.href = '/'; }, 500);
           }
         } else {
           setGeneralError('Failed to save login data. Please try again.');
@@ -423,8 +204,7 @@ const LoginPage = () => {
         }
       }
     } catch (error) {
-      console.error('🚨 Login error:', error);
-      
+      console.error('Login error:', error);
       if (error.name === 'TypeError' && error.message.includes('fetch')) {
         setGeneralError('Network error. Please check your connection and try again.');
       } else {
@@ -435,387 +215,448 @@ const LoginPage = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (loginMethod === 'email') {
-      const isEmailValid = validateEmail(email);
-      const isPasswordValid = validatePassword(password);
-      
-      setTouched({ email: true, password: true });
-      
-      if (isEmailValid && isPasswordValid) {
-        await handleEmailLogin();
-      }
-    } else {
-      if (!isOtpSent) {
-        await handleSendOtp();
+  // Send OTP
+  const sendOtp = async () => {
+    const mobileRegex = /^[0-9]{10}$/;
+    if (!mobileNumber) {
+      setGeneralError('Mobile number is required');
+      return;
+    }
+    if (!mobileRegex.test(mobileNumber)) {
+      setGeneralError('Please enter a valid 10-digit mobile number');
+      return;
+    }
+    setIsLoading(true);
+    setGeneralError('');
+
+    try {
+      const response = await signupApi.sendMobileLoginOtp(mobileNumber);
+      const data = await response.json();
+
+      if (response.ok) {
+        setShowOtpInput(true);
+        setUserId(data.userId || data.user?.id || data.id);
+        setSuccessMessage('OTP sent successfully! Please check your WhatsApp.');
+        setOtpTimer(30);
+        setCanResend(false);
+        const timer = setInterval(() => {
+          setOtpTimer((prev) => {
+            if (prev <= 1) {
+              clearInterval(timer);
+              setCanResend(true);
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
       } else {
-        await handleVerifyOtp();
+        setGeneralError(data.message || 'Failed to send OTP. Please try again.');
       }
+    } catch (error) {
+      console.error('OTP sending error:', error);
+      setGeneralError('Failed to send OTP. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Social login handler
-  const handleSocialLogin = async (provider) => {
-    // console.log(`🔄 Starting ${provider} OAuth flow...`);
+  // Verify OTP
+  const verifyOtp = async () => {
+    if (otp.length !== 6) {
+      setGeneralError('Please enter complete 6-digit OTP');
+      return;
+    }
+    setIsLoading(true);
     setGeneralError('');
+
+    try {
+      const response = await signupApi.verifyMobileLoginOtp(userId, otp);
+      const data = await response.json();
+
+      if (response.ok) {
+        const token = data.token || data.accessToken || data.authToken;
+
+        if (!token) {
+          setGeneralError('Login successful but no token received. Please try again.');
+          return;
+        }
+
+        const userData = {
+          email: data.email || '',
+          firstName: data.firstName || data.first_name || data.user?.firstName || '',
+          lastName: data.lastName || data.last_name || data.user?.lastName || '',
+          userId: data.userId || data.id || data.user?.id || '',
+          location: data.location || data.user?.location || '',
+          phoneNumber: mobileNumber,
+          profilePicture: data.profilePicture || data.avatar || data.user?.profilePicture || '',
+          emailVerified: data.emailVerified !== undefined ? data.emailVerified : true,
+          phoneVerified: data.phoneVerified !== undefined ? data.phoneVerified : true,
+          ...data.user
+        };
+
+        const loginSuccess = await login(token, userData);
+
+        if (loginSuccess) {
+          setSuccessMessage('Login successful! Redirecting...');
+          setTimeout(() => { window.location.href = '/'; }, 1000);
+        } else {
+          setGeneralError('Failed to save login data. Please try again.');
+        }
+      } else {
+        setGeneralError(data.message || 'Invalid OTP. Please try again.');
+      }
+    } catch (error) {
+      console.error('OTP verification error:', error);
+      setGeneralError('Failed to verify OTP. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // ✅ SIMPLE GOOGLE LOGIN - FIXED
+  const handleGoogleLogin = () => {
+    console.log("Google login clicked");
     setSocialLoginLoading(true);
     
-    try {
-      await signIn(provider, { 
-        callbackUrl: '/auth/callback'
+    // Direct signIn call - SIMPLEST VERSION
+    signIn("google", { callbackUrl: "/" })
+      .catch(error => {
+        console.error("Google login error:", error);
+        setGeneralError("Google login failed. Please try again.");
+        setSocialLoginLoading(false);
       });
-    } catch (error) {
-      console.error(`❌ Error starting ${provider} login:`, error);
-      setGeneralError(`Failed to start ${provider} login. Please try again.`);
-      setSocialLoginLoading(false);
-    }
   };
 
-  const handleGoHome = () => {
-    window.location.href = '/';
+  // ✅ SIMPLE FACEBOOK LOGIN - FIXED
+  const handleFacebookLogin = () => {
+    console.log("Facebook login clicked");
+    setSocialLoginLoading(true);
+    
+    // Direct signIn call - SIMPLEST VERSION
+    signIn("facebook", { callbackUrl: "/" })
+      .catch(error => {
+        console.error("Facebook login error:", error);
+        setGeneralError("Facebook login failed. Please try again.");
+        setSocialLoginLoading(false);
+      });
   };
 
-  const handleForgotPassword = () => {
-    window.location.href = '/forgot-password';
-  };
-
-  const handleSignUp = () => {
-    window.location.href = '/signup';
-  };
-
-  const handleEditMobile = () => {
-    setShowOtpField(false);
-    setIsOtpSent(false);
+  const resendOtp = () => {
     setOtp('');
-    setSuccessMessage('');
-    setGeneralError('');
+    sendOtp();
   };
 
-  const isButtonDisabled = isLoading || socialLoginLoading;
+  const switchToMobile = () => {
+    setLoginMethod("mobile");
+    setShowMobileInput(true);
+    setGeneralError('');
+    setSuccessMessage('');
+  };
+
+  const switchToEmail = () => {
+    setDirection("forward");
+    setLoginMethod("email");
+    setShowMobileInput(false);
+    setShowOtpInput(false);
+    setGeneralError('');
+    setSuccessMessage('');
+    setOtp('');
+  };
 
   return (
-    <div className='w-full mt-12 sm:mt-16 md:mt-20'>
-      <div className="max-w-[1600px] mx-auto px-3 sm:px-4 md:px-6 pt-3 sm:pt-4 md:pt-6">
-  <button
-    onClick={handleGoHome}
-    className="group hidden sm:flex items-center text-red-700 hover:text-red-900 transition-all duration-200 transform hover:scale-105 text-sm sm:text-base"
-  >
-    <IoIosArrowBack className="mr-2 sm:mr-3 group-hover:-translate-x-1 transition-transform" />
-    <span className='font-medium'>Go to home</span>
-  </button>
-</div>
-
-      <div className="flex w-full items-center justify-center py-4 sm:py-6 md:py-8 lg:py-12">
-        <div className="mx-auto flex w-full max-w-[1600px] flex-col-reverse lg:flex-row gap-4 sm:gap-6 md:gap-8 lg:gap-12 px-3 sm:px-4 md:px-6">
-          
-          {/* Login Form - Mobile first (full width), then half on larger screens */}
-          <div className="w-full lg:w-1/2 flex items-center justify-center">
-            <div className="w-full max-w-md mx-auto">
-              <div className="text-center mb-6 sm:mb-8">
-                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-red-900 mb-2 sm:mb-3">Welcome Back</h1>
-                <p className="text-red-700 text-sm sm:text-base md:text-lg">Sign in to your account to continue</p>
-              </div>
-              <div className="bg-white rounded-lg sm:rounded-xl lg:rounded-2xl shadow-lg sm:shadow-xl lg:shadow-2xl border-0 sm:border border-red-100 p-3 sm:p-6 md:p-8">
-              {/* <div className="bg-white rounded-lg sm:rounded-xl lg:rounded-2xl shadow-lg sm:shadow-xl lg:shadow-2xl border border-red-100 p-4 sm:p-6 md:p-8"> */}
-                {/* Login Method Toggle */}
-                <div className="flex space-x-2 sm:space-x-3 md:space-x-4 mb-4 sm:mb-6">
+    <motion.div
+      className="min-h-screen bg-gradient-to-br from-white to-red-50 flex items-center justify-center p-0 sm:p-4 md:p-6"
+      animate={{ backgroundColor: isMounted && typeof window !== 'undefined' && window.innerWidth >= 1024 ? bgColor : '#ffffff' }}
+      transition={{ duration: 1, ease: "easeInOut" }}
+    >
+     
+        <div className="flex w-full max-w-[1200px] 
+rounded-none md:rounded-2xl 
+bg-white 
+md:h-[85vh] 
+max-h-[700px] 
+overflow-hidden 
+shadow-none md:shadow-xl">
+        {/* Left side image slider - Hidden on mobile */}
+        <div className="hidden md:block md:w-1/2">
+          <MotionImageSlider onColorChange={setBgColor} />
+        </div>
+        
+        {/* Right side form - Full width on mobile */}
+        <div className="w-full md:w-1/2 flex flex-col">
+          {/* Form Section */}
+          <div className="flex-1 relative flex flex-col justify-center">
+            <div className="p-5 sm:p-6 md:p-8 lg:p-10 flex flex-col">
+              {/* HEADER - Made sticky for mobile */}
+              <div className="sticky top-0 z-10 bg-white pt-4 pb-3 -mx-5 px-5 sm:static sm:bg-transparent sm:mx-0 sm:px-0">
+                <div className="flex items-center justify-center mb-4 relative">
                   <button
-                    onClick={() => setLoginMethod('email')}
-                    className={`flex-1 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-medium transition-all duration-200 text-sm sm:text-base ${
-                      loginMethod === 'email'
-                        ? 'bg-red-900 text-white shadow-lg'
-                        : 'bg-red-100 text-red-700 hover:bg-red-200'
-                    }`}
+                    onClick={() => { window.location.href = '/'; }}
+                    className="absolute left-0 text-[#7f1d1d] hover:text-red-800 transition-all duration-300 cursor-pointer p-2 rounded-full hover:bg-red-50"
                   >
-                    Login with Email
+                    <FaArrowLeft size={22} />
                   </button>
-                  <button
-                    onClick={() => setLoginMethod('mobile')}
-                    className={`flex-1 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-medium transition-all duration-200 text-sm sm:text-base ${
-                      loginMethod === 'mobile'
-                        ? 'bg-red-900 text-white shadow-lg'
-                        : 'bg-red-100 text-red-700 hover:bg-red-200'
-                    }`}
-                  >
-                    Login with Mobile
-                  </button>
+                  <h2 className="text-2xl sm:text-3xl text-center font-bold text-[#7f1d1d] bg-gradient-to-r from-[#7f1d1d] to-red-700 bg-clip-text text-transparent">
+                    Welcome back
+                  </h2>
                 </div>
-                
-                <div className="space-y-4 sm:space-y-6">
-                  {generalError && (
-                    <div className="bg-red-50 border border-red-200 text-red-700 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base">
-                      {generalError}
-                    </div>
-                  )}
-                  
-                  {successMessage && (
-                    <div className="bg-green-50 border border-green-200 text-green-700 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl flex items-center text-sm sm:text-base">
-                      {(isLoading || socialLoginLoading) && (
-                        <div className="animate-spin rounded-full h-3 sm:h-4 w-3 sm:w-4 border-b-2 border-green-700 mr-2 sm:mr-3"></div>
-                      )}
-                      {successMessage}
-                    </div>
-                  )}
-                  
-                  {/* Email Login Form */}
-                  {loginMethod === 'email' && (
-                    <>
-                      <div>
-                        <label htmlFor="email" className="block text-base sm:text-lg font-semibold text-red-900 mb-2 sm:mb-3">
-                          Email Address
-                        </label>
-                        <div className="relative group">
-                          <div className="absolute inset-y-0 left-0 flex items-center pl-3 sm:pl-4 pointer-events-none">
-                            <FiUser className={`transition-colors text-sm sm:text-base ${emailError ? 'text-red-500' : 'text-red-600 group-focus-within:text-red-900'}`} />
-                          </div>
-                          <input
-                            type="email"
-                            id="email"
-                            className={`block w-full rounded-lg sm:rounded-xl border-2 ${
-                              emailError 
-                                ? 'border-red-500 focus:border-red-600' 
-                                : 'border-red-200 focus:border-red-900'
-                            } py-3 sm:py-4 pl-10 sm:pl-12 pr-3 sm:pr-4 text-gray-800 placeholder-red-300 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-red-100 transition-all duration-200 bg-red-50/30 text-sm sm:text-base`}
-                            placeholder="name@email.com"
-                            value={email}
-                            onChange={handleEmailChange}
-                            onBlur={() => handleBlur('email')}
-                            disabled={isButtonDisabled}
-                          />
-                        </div>
-                        {touched.email && emailError && (
-                          <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-red-600 flex items-center">
-                            <span className="w-1 h-1 bg-red-600 rounded-full mr-1 sm:mr-2"></span>
-                            {emailError}
-                          </p>
-                        )}
-                      </div>
-                      
-                      <div>
-                        <label htmlFor="password" className="block text-base sm:text-lg font-semibold text-red-900 mb-2 sm:mb-3">
-                          Password
-                        </label>
-                        <div className="relative group">
-                          <div className="absolute inset-y-0 left-0 flex items-center pl-3 sm:pl-4 pointer-events-none">
-                            <FiLock className={`transition-colors text-sm sm:text-base ${passwordError ? 'text-red-500' : 'text-red-600 group-focus-within:text-red-900'}`} />
-                          </div>
-                          <input
-                            type={showPassword ? "text" : "password"}
-                            id="password"
-                            className={`block w-full rounded-lg sm:rounded-xl border-2 ${
-                              passwordError 
-                                ? 'border-red-500 focus:border-red-600' 
-                                : 'border-red-200 focus:border-red-900'
-                            } py-3 sm:py-4 pl-10 sm:pl-12 pr-10 sm:pr-12 text-gray-800 placeholder-red-300 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-red-100 transition-all duration-200 bg-red-50/30 text-sm sm:text-base`}
-                            placeholder="••••••••"
-                            value={password}
-                            onChange={handlePasswordChange}
-                            onBlur={() => handleBlur('password')}
-                            disabled={isButtonDisabled}
-                          />
-                          <button
-                            type="button"
-                            className="absolute inset-y-0 right-0 flex items-center pr-3 sm:pr-4 text-red-600 hover:text-red-900 transition-colors disabled:opacity-50"
-                            onClick={() => setShowPassword(!showPassword)}
-                            disabled={isButtonDisabled}
-                          >
-                            {showPassword ? <FiEyeOff className="text-sm sm:text-base" /> : <FiEye className="text-sm sm:text-base" />}
-                          </button>
-                        </div>
-                        {touched.password && passwordError && (
-                          <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-red-600 flex items-start">
-                            <span className="w-1 h-1 bg-red-600 rounded-full mr-1 sm:mr-2 mt-1.5 sm:mt-2 flex-shrink-0"></span>
-                            {passwordError}
-                          </p>
-                        )}
-                      </div>
-                      
-                      <div className="flex justify-center">
-                        <button 
-                          onClick={handleForgotPassword}
-                          type="button" 
-                          className="text-red-700 hover:text-red-900 font-medium underline decoration-2 underline-offset-2 transition-colors disabled:opacity-50 text-sm sm:text-base"
-                          disabled={isButtonDisabled}
-                        >
-                          Forgot password?
-                        </button>
-                      </div>
-                    </>
-                  )}
-                  
-                  {/* Mobile Login Form */}
-                  {loginMethod === 'mobile' && (
-                    <>
-                      <div>
-                        <label htmlFor="mobile" className="block text-base sm:text-lg font-semibold text-red-900 mb-2 sm:mb-3">
-                          Mobile Number
-                        </label>
-                        <div className="relative group">
-                          <div className="absolute inset-y-0 left-0 flex items-center pl-3 sm:pl-4 pointer-events-none">
-                            <FiPhone className={`transition-colors text-sm sm:text-base ${mobileError ? 'text-red-500' : 'text-red-600 group-focus-within:text-red-900'}`} />
-                          </div>
-                          <input
-                            type="tel"
-                            id="mobile"
-                            className={`block w-full rounded-lg sm:rounded-xl border-2 ${
-                              mobileError 
-                                ? 'border-red-500 focus:border-red-600' 
-                                : 'border-red-200 focus:border-red-900'
-                            } py-3 sm:py-4 pl-10 sm:pl-12 pr-3 sm:pr-4 text-gray-800 placeholder-red-300 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-red-100 transition-all duration-200 bg-red-50/30 text-sm sm:text-base ${
-                              isOtpSent ? 'bg-gray-100 cursor-not-allowed' : ''
-                            }`}
-                            placeholder="Enter 10-digit mobile number"
-                            value={mobileNumber}
-                            onChange={handleMobileChange}
-                            onBlur={() => handleBlur('mobile')}
-                            disabled={isButtonDisabled || isOtpSent}
-                            maxLength={10}
-                          />
-                        </div>
-                        {touched.mobile && mobileError && (
-                          <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-red-600 flex items-center">
-                            <span className="w-1 h-1 bg-red-600 rounded-full mr-1 sm:mr-2"></span>
-                            {mobileError}
-                          </p>
-                        )}
-                        {isOtpSent && (
-                          <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-red-700 flex items-center">
-                            <button
-                              onClick={handleEditMobile}
-                              className="text-red-900 hover:text-red-700 underline font-medium"
-                            >
-                              Edit mobile number
-                            </button>
-                          </p>
-                        )}
-                      </div>
-                      
-                      {showOtpField && (
-                        <div>
-                          <label htmlFor="otp" className="block text-base sm:text-lg font-semibold text-red-900 mb-2 sm:mb-3">
-                            Enter OTP
-                          </label>
-                          <div className="relative group">
-                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 sm:pl-4 pointer-events-none">
-                              <FiLock className={`transition-colors text-sm sm:text-base ${otpError ? 'text-red-500' : 'text-red-600 group-focus-within:text-red-900'}`} />
-                            </div>
-                            <input
-                              type="text"
-                              id="otp"
-                              className={`block w-full rounded-lg sm:rounded-xl border-2 ${
-                                otpError 
-                                  ? 'border-red-500 focus:border-red-600' 
-                                  : 'border-red-200 focus:border-red-900'
-                              } py-3 sm:py-4 pl-10 sm:pl-12 pr-3 sm:pr-4 text-gray-800 placeholder-red-300 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-red-100 transition-all duration-200 bg-red-50/30 text-sm sm:text-base`}
-                              placeholder="Enter 6-digit OTP"
-                              value={otp}
-                              onChange={handleOtpChange}
-                              disabled={isButtonDisabled}
-                              maxLength={6}
-                            />
-                          </div>
-                          {otpError && (
-                            <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-red-600 flex items-center">
-                              <span className="w-1 h-1 bg-red-600 rounded-full mr-1 sm:mr-2"></span>
-                              {otpError}
-                            </p>
-                          )}
-                          <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-red-700">
-                            OTP sent to +91 {mobileNumber}
-                          </p>
-                        </div>
-                      )}
-                    </>
-                  )}
-                  
+                <p className="text-gray-600 text-sm sm:text-base text-center mb-5">
+                  Don't have an account?{" "}
                   <button
                     type="button"
-                    onClick={handleSubmit}
-                    disabled={isButtonDisabled}
-                    className="w-full rounded-lg sm:rounded-xl bg-gradient-to-r from-red-900 to-red-800 py-3 sm:py-4 text-sm sm:text-base md:text-lg font-bold text-white shadow-lg sm:shadow-xl hover:from-red-800 hover:to-red-700 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-red-200 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
+                    onClick={() => { window.location.href = '/signup'; }}
+                    className="text-[#7f1d1d] hover:text-red-800 font-semibold ml-1 cursor-pointer transition-all duration-300 hover:underline underline-offset-2"
                   >
-                    {isLoading ? (
-                      <div className="flex items-center justify-center">
-                        <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2 sm:mr-3"></div>
-                        {loginMethod === 'email' 
-                          ? 'Signing in...' 
-                          : isOtpSent ? 'Verifying...' : 'Sending OTP...'
-                        }
-                      </div>
-                    ) : (
-                      loginMethod === 'email' 
-                        ? 'Sign In' 
-                        : isOtpSent ? 'Verify OTP' : 'Send OTP'
-                    )}
+                    Sign up
                   </button>
-                </div>
-                
-                <div className="mt-6 sm:mt-8">
-                  <div className="relative">
-                    <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-red-200"></div>
-                    </div>
-                    <div className="relative flex justify-center text-xs sm:text-sm">
-                      <span className="bg-white px-2 sm:px-4 text-red-600 font-medium">Or continue with</span>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-4 sm:mt-6 grid grid-cols-2 gap-3 sm:gap-4">
-                    <button
-                      type="button"
-                      onClick={() => handleSocialLogin('google')}
-                      disabled={isButtonDisabled}
-                      className="flex w-full items-center justify-center rounded-lg sm:rounded-xl border-2 border-red-200 bg-white py-2.5 sm:py-3 px-3 sm:px-4 text-xs sm:text-sm font-medium text-red-900 shadow-sm hover:bg-red-50 hover:border-red-300 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-red-100 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:transform-none"
+                </p>
+              </div>
+
+              {/* Error / Success messages */}
+              {generalError && (
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm mb-4 text-center shadow-sm"
+                >
+                  {generalError}
+                </motion.div>
+              )}
+              {successMessage && (
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm mb-4 text-center shadow-sm"
+                >
+                  {successMessage}
+                </motion.div>
+              )}
+
+              {/* Toggle buttons */}
+              <div className="flex flex-row gap-3 justify-center mb-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDirection("backward");
+                    switchToMobile();
+                  }}
+                  className={`flex-1 py-3 px-4 rounded-xl shadow-md transition-all duration-300 cursor-pointer text-sm sm:text-base font-medium ${
+                    loginMethod === "mobile" 
+                      ? "bg-gradient-to-r from-[#7f1d1d] to-red-800 text-white shadow-lg" 
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-md"
+                  }`}
+                >
+                  Login with Mobile
+                </button>
+                <button
+                  type="button"
+                  onClick={switchToEmail}
+                  className={`flex-1 py-3 px-4 rounded-xl shadow-md transition-all duration-300 cursor-pointer text-sm sm:text-base font-medium ${
+                    loginMethod === "email" 
+                      ? "bg-gradient-to-r from-[#7f1d1d] to-red-800 text-white shadow-lg" 
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-md"
+                  }`}
+                >
+                  Login with Email
+                </button>
+              </div>
+
+              {/* Animated form area - height adapts to content */}
+              <div
+                className="relative overflow-hidden w-full transition-[height] duration-300 ease-in-out"
+                style={{
+                  height: loginMethod === 'mobile' && showMobileInput && !showOtpInput
+                    ? '140px'
+                    : '264px'
+                }}
+              >
+                <AnimatePresence initial={false}>
+                  {loginMethod === "email" ? (
+                    <motion.form
+                      key="email-login"
+                      variants={innerFormVariants}
+                      custom={direction}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      transition={{ duration: 0.4, ease: "easeInOut" }}
+                      className="absolute w-full left-0 right-0"
+                      onSubmit={handleEmailLogin}
                     >
-                      {socialLoginLoading ? (
-                        <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-red-900 border-t-transparent rounded-full animate-spin mr-1.5 sm:mr-2"></div>
-                      ) : (
-                        <FaGoogle className='mr-1.5 sm:mr-3 text-red-600 text-sm sm:text-base'/>
-                      )}
-                      Google
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleSocialLogin('facebook')}
-                      disabled={isButtonDisabled}
-                      className="flex w-full items-center justify-center rounded-lg sm:rounded-xl border-2 border-red-200 bg-white py-2.5 sm:py-3 px-3 sm:px-4 text-xs sm:text-sm font-medium text-red-900 shadow-sm hover:bg-red-50 hover:border-red-300 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-red-100 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:transform-none"
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Email Address"
+                        className="w-full bg-white shadow-sm p-4 rounded-xl outline-none mb-4 cursor-text text-base border border-gray-200 focus:border-[#7f1d1d] focus:ring-2 focus:ring-[#7f1d1d]/20 transition-all duration-300"
+                        disabled={isLoading}
+                      />
+                      <div className="relative mb-4">
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          placeholder="Password"
+                          className="w-full bg-white shadow-sm p-4 rounded-xl outline-none cursor-text text-base border border-gray-200 focus:border-[#7f1d1d] focus:ring-2 focus:ring-[#7f1d1d]/20 transition-all duration-300 pr-12"
+                          disabled={isLoading}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-[#7f1d1d] transition-colors cursor-pointer"
+                        >
+                          {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                        </button>
+                      </div>
+                      <div className="flex justify-center items-center text-sm mb-4">
+                        <button
+                          type="button"
+                          onClick={() => { window.location.href = '/forgot-password'; }}
+                          className="text-[#7f1d1d] hover:text-red-800 cursor-pointer font-medium transition-all duration-300 hover:underline underline-offset-2"
+                        >
+                          Forgot Password?
+                        </button>
+                      </div>
+                      <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full bg-gradient-to-r from-[#7f1d1d] to-red-800 text-white py-4 rounded-xl shadow-lg mb-2 disabled:opacity-50 cursor-pointer hover:shadow-xl active:scale-[0.98] transition-all duration-300 text-base font-semibold"
+                      >
+                        {isLoading ? (
+                          <span className="flex items-center justify-center">
+                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                            Signing in...
+                          </span>
+                        ) : 'Log in'}
+                      </button>
+                    </motion.form>
+                  ) : loginMethod === "mobile" && showMobileInput ? (
+                    <motion.div
+                      key="mobile-input"
+                      variants={innerFormVariants}
+                      custom={direction}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      transition={{ duration: 0.4, ease: "easeInOut" }}
+                      className="absolute w-full left-0 right-0"
                     >
-                      {socialLoginLoading ? (
-                        <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-red-900 border-t-transparent rounded-full animate-spin mr-1.5 sm:mr-2"></div>
-                      ) : (
-                        <FaFacebook className='mr-1.5 sm:mr-3 text-red-600 text-sm sm:text-base'/>
+                      <input
+                        type="tel"
+                        value={mobileNumber}
+                        onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, ''))}
+                        placeholder="Mobile Number"
+                        className="w-full bg-white shadow-sm p-4 rounded-xl outline-none mb-4 cursor-text text-base border border-gray-200 focus:border-[#7f1d1d] focus:ring-2 focus:ring-[#7f1d1d]/20 transition-all duration-300"
+                        maxLength={10}
+                        disabled={isLoading || showOtpInput}
+                      />
+                      
+                      {showOtpInput && (
+                        <>
+                          <input
+                            type="text"
+                            value={otp}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(/\D/g, '').slice(0, 6);
+                              setOtp(value);
+                            }}
+                            placeholder="Enter 6-digit OTP"
+                            maxLength={6}
+                            disabled={isLoading}
+                            className="w-full bg-white shadow-sm p-4 rounded-xl outline-none mb-4 cursor-text text-base border border-gray-200 focus:border-[#7f1d1d] focus:ring-2 focus:ring-[#7f1d1d]/20 transition-all duration-300 text-center tracking-widest"
+                          />
+                          
+                          <button
+                            type="button"
+                            onClick={verifyOtp}
+                            disabled={isLoading || otp.length !== 6}
+                            className="w-full bg-gradient-to-r from-[#7f1d1d] to-red-800 text-white py-4 rounded-xl shadow-lg disabled:opacity-50 mb-2 cursor-pointer hover:shadow-xl active:scale-[0.98] transition-all duration-300 text-base font-semibold"
+                          >
+                            {isLoading ? (
+                              <span className="flex items-center justify-center">
+                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                                Verifying...
+                              </span>
+                            ) : 'Verify OTP'}
+                          </button>
+                          
+                          <div className="text-center mb-2">
+                            {canResend ? (
+                              <button 
+                                onClick={resendOtp} 
+                                className="text-[#7f1d1d] hover:text-red-800 cursor-pointer text-sm font-medium transition-all duration-300 hover:underline underline-offset-2"
+                              >
+                                Resend OTP
+                              </button>
+                            ) : (
+                              <p className="text-gray-500 text-sm">Resend OTP in <span className="font-semibold">{otpTimer}s</span></p>
+                            )}
+                          </div>
+                        </>
                       )}
-                      Facebook
-                    </button>
-                  </div>
-                </div>
-                
-                <div className="mt-6 sm:mt-8 text-center">
-                  <p className="text-red-700 text-sm sm:text-base">
-                    Don't have an account?{' '}
-                    <Link
-      href="/signup"
-      className="font-bold text-red-900 hover:text-red-700 underline decoration-2 underline-offset-2 transition-colors"
-    >
-      Sign Up
-    </Link>
-                  </p>
-                </div>
+                      
+                      {!showOtpInput && (
+                        <button
+                          type="button"
+                          onClick={sendOtp}
+                          disabled={isLoading || mobileNumber.length !== 10}
+                          className="w-full bg-gradient-to-r from-[#7f1d1d] to-red-800 text-white py-4 rounded-xl shadow-lg disabled:opacity-50 mb-2 cursor-pointer hover:shadow-xl active:scale-[0.98] transition-all duration-300 text-base font-semibold"
+                        >
+                          {isLoading ? (
+                            <span className="flex items-center justify-center">
+                              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                              Sending...
+                            </span>
+                          ) : 'Send OTP'}
+                        </button>
+                      )}
+                    </motion.div>
+                  ) : null}
+                </AnimatePresence>
               </div>
             </div>
           </div>
           
-          {/* Carousel - Hidden on mobile, shown on medium and up */}
-          <div className="hidden sm:block w-full lg:w-1/2">
-            <div className="h-full">
-              <Carousel />
+          {/* Social buttons section - REDUCED GAP */}
+          <div className="p-5 sm:p-6 md:p-8 lg:p-10 pt-0">
+            <div className="flex items-center my-2 sm:my-3 gap-3">
+              <hr className="flex-1 border-gray-300" />
+              <span className="text-gray-500 text-xs sm:text-sm font-medium">Or continue with</span>
+              <hr className="flex-1 border-gray-300" />
+            </div>
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              <button
+                type="button"
+                onClick={handleGoogleLogin}
+                disabled={socialLoginLoading}
+                className="flex items-center justify-center gap-2 p-3.5 sm:p-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition-all duration-300 disabled:opacity-50 cursor-pointer hover:shadow-md active:scale-[0.98] text-sm sm:text-base font-medium"
+              >
+                {socialLoginLoading ? (
+                  <div className="w-5 h-5 border-2 border-[#7f1d1d] border-t-transparent rounded-full animate-spin mr-2"></div>
+                ) : (
+                  <FcGoogle size={22} className="sm:w-5 sm:h-5" />
+                )}
+                <span className="text-gray-700">Google</span>
+              </button>
+              
+              <button
+                type="button"
+                onClick={handleFacebookLogin}
+                disabled={socialLoginLoading}
+                className="flex items-center justify-center gap-2 p-3.5 sm:p-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition-all duration-300 disabled:opacity-50 cursor-pointer hover:shadow-md active:scale-[0.98] text-sm sm:text-base font-medium"
+              >
+                {socialLoginLoading ? (
+                  <div className="w-5 h-5 border-2 border-[#7f1d1d] border-t-transparent rounded-full animate-spin mr-2"></div>
+                ) : (
+                  <FaFacebookF size={20} className="text-blue-600 sm:w-5 sm:h-5" />
+                )}
+                <span className="text-gray-700">Facebook</span>
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

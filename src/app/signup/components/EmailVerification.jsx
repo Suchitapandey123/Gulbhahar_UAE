@@ -2,49 +2,42 @@
 "use client"
 import { FiMail } from 'react-icons/fi';
 
-const EmailVerification = ({ 
-  formData, 
-  emailInputRefs, 
-  handleVerificationCodeChange, 
-  handleResendVerificationCode, 
-  resendLoading, 
-  error, 
-  success 
+const EmailVerification = ({
+  formData,
+  emailInputRefs,
+  handleVerificationCodeChange,
+  handleResendVerificationCode,
+  resendLoading,
+  error,
+  success
 }) => {
   return (
-    <div className="w-full space-y-8">
-      <div className="text-center">
-        <span className="text-red-600 font-medium text-lg">Let's setup your account</span>
-        <h1 className="text-4xl font-bold text-red-900 mt-2">Create Account</h1>
-        <p className="text-red-700 mt-2">Almost there! Just verify your email</p>
-      </div>
-      
+    <div className="space-y-5">
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-6">
+        <div className="bg-red-50/80 text-red-600 px-4 py-2.5 rounded-xl text-sm border border-red-100">
           {error}
         </div>
       )}
-      
+
       {success && (
-        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl mb-6">
+        <div className="bg-green-50/80 text-green-600 px-4 py-2.5 rounded-xl text-sm border border-green-100">
           {success}
         </div>
       )}
-      
-      <div className="bg-white rounded-2xl shadow-xl border border-red-100 p-8 text-center space-y-8">
-        <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto">
-          <FiMail className="w-12 h-12 text-red-900" />
+
+      <div className="text-center space-y-6 py-6">
+        <div className="w-16 h-16 bg-[#800000]/[0.06] rounded-2xl flex items-center justify-center mx-auto">
+          <FiMail className="w-7 h-7 text-[#800000]" />
         </div>
-        
+
         <div>
-          <h2 className="text-2xl font-bold text-red-900 mb-4">Verify your email address</h2>
-          <p className="text-red-700 text-lg">
-            We've sent a verification code to <span className="font-semibold">{formData.email}</span>
+          <h3 className="text-lg font-semibold text-gray-900">Verify your email</h3>
+          <p className="text-gray-400 text-sm mt-1.5">
+            Code sent to <span className="font-medium text-gray-600">{formData.email}</span>
           </p>
-          <p className="text-red-600 mt-2">Please enter the 6-digit code below to continue</p>
         </div>
-        
-        <div className="flex justify-center space-x-2 sm:space-x-4">
+
+        <div className="flex justify-center gap-2.5 sm:gap-3">
           {[0, 1, 2, 3, 4, 5].map((index) => (
             <input
               key={index}
@@ -55,22 +48,21 @@ const EmailVerification = ({
               value={formData.emailVerificationCode[index]}
               onChange={(e) => handleVerificationCodeChange(index, e.target.value, 'email')}
               onKeyDown={(e) => {
-                // Handle backspace navigation
                 if (e.key === 'Backspace' && !formData.emailVerificationCode[index] && index > 0) {
                   emailInputRefs.current[index - 1]?.focus();
                 }
               }}
-              className="w-12 h-12 sm:w-16 sm:h-16 text-center border-2 border-red-300 rounded-xl text-lg sm:text-2xl font-bold text-red-900 focus:border-red-900 focus:outline-none focus:ring-4 focus:ring-red-100 transition-all duration-200 bg-red-50/30"
+              className="w-11 h-13 sm:w-12 sm:h-14 text-center border-2 border-gray-200 rounded-xl text-lg font-bold text-gray-900 focus:border-[#800000] focus:outline-none focus:ring-4 focus:ring-[#800000]/8 transition-all duration-300 bg-gray-50/50 focus:bg-white"
             />
           ))}
         </div>
-        
-        <div className="text-center">
-          <p className="text-red-600">Didn't receive the code?</p>
-          <button 
+
+        <div>
+          <p className="text-gray-300 text-sm">Didn&apos;t receive the code?</p>
+          <button
             onClick={handleResendVerificationCode}
             disabled={resendLoading}
-            className="text-red-900 font-semibold underline hover:text-red-700 transition-colors mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-[#800000] font-semibold text-sm hover:text-[#6b0000] transition-colors duration-300 mt-1.5 disabled:opacity-50"
           >
             {resendLoading ? 'Sending...' : 'Resend code'}
           </button>

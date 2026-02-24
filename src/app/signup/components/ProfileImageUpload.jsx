@@ -2,56 +2,47 @@
 "use client"
 import { FiCamera, FiUpload } from 'react-icons/fi';
 
-const ProfileImageUpload = ({ 
-  selectedImage, 
-  previewImage, 
-  fileInputRef, 
-  handleImageSelect, 
-  error, 
-  success 
+const ProfileImageUpload = ({
+  selectedImage,
+  previewImage,
+  fileInputRef,
+  handleImageSelect,
+  error,
+  success
 }) => {
   return (
-    <div className="w-full space-y-8">
-      <div className="text-center">
-        <span className="text-red-600 font-medium text-lg">Let's setup your account</span>
-        <h1 className="text-4xl font-bold text-red-900 mt-2">Create Account</h1>
-        <p className="text-red-700 mt-2">Add a profile picture to personalize your account</p>
-      </div>
-      
+    <div className="space-y-5">
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-6">
+        <div className="bg-red-50/80 text-red-600 px-4 py-2.5 rounded-xl text-sm border border-red-100">
           {error}
         </div>
       )}
-      
+
       {success && (
-        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl mb-6">
+        <div className="bg-green-50/80 text-green-600 px-4 py-2.5 rounded-xl text-sm border border-green-100">
           {success}
         </div>
       )}
-      
-      <div className="bg-white rounded-2xl shadow-xl border border-red-100 p-8 text-center space-y-8">
-        <div className="w-32 h-32 bg-red-100 rounded-full flex items-center justify-center mx-auto relative overflow-hidden border-4 border-red-200">
+
+      <div className="text-center space-y-6 py-6">
+        <div className="w-28 h-28 bg-gray-50 rounded-full flex items-center justify-center mx-auto relative overflow-hidden border-2 border-gray-100 shadow-sm">
           {previewImage ? (
             <img
-              src={previewImage} 
-              alt="Profile preview" 
+              src={previewImage}
+              alt="Profile preview"
               className="w-full h-full object-cover"
             />
           ) : (
-            <FiCamera className="w-16 h-16 text-red-600" />
+            <FiCamera className="w-10 h-10 text-gray-300" />
           )}
         </div>
-        
+
         <div>
-          <h2 className="text-2xl font-bold text-red-900 mb-4">Upload Profile Picture</h2>
-          <p className="text-red-700 text-lg">
-            Choose a photo that represents you best
-          </p>
-          <p className="text-red-600 mt-2">This step is optional - you can skip it and add a photo later</p>
+          <h3 className="text-lg font-semibold text-gray-900">Upload Profile Picture</h3>
+          <p className="text-gray-400 text-sm mt-1.5">Optional - you can add a photo later</p>
         </div>
-        
-        <div className="space-y-4">
+
+        <div>
           <input
             ref={fileInputRef}
             type="file"
@@ -59,18 +50,18 @@ const ProfileImageUpload = ({
             onChange={handleImageSelect}
             className="hidden"
           />
-          
+
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="bg-red-100 border-2 border-red-300 border-dashed text-red-900 px-8 py-6 rounded-xl hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-100 transition-all duration-200 flex items-center justify-center mx-auto font-semibold"
+            className="border-2 border-dashed border-gray-200 text-gray-500 px-8 py-4 rounded-2xl hover:border-[#800000]/30 hover:text-[#800000] hover:bg-[#800000]/[0.02] focus:outline-none transition-all duration-300 flex items-center justify-center mx-auto text-sm font-medium"
           >
-            <FiUpload className="mr-3 w-6 h-6" />
+            <FiUpload className="mr-2.5 w-4 h-4" />
             {selectedImage ? 'Change Photo' : 'Choose Photo'}
           </button>
-          
+
           {selectedImage && (
-            <p className="text-red-700 text-sm">
-              Selected: {selectedImage.name}
+            <p className="text-gray-400 text-xs mt-3">
+              {selectedImage.name}
             </p>
           )}
         </div>

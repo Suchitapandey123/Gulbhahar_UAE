@@ -144,7 +144,7 @@ const CartPage = () => {
       return `${imageUrl}?v=${new Date(item.updatedAt).getTime()}`;
     }
 
-    return imageUrl;
+    return imageUrl || "/about/lal-ishq-1.jpg";
   };
 
   return (
@@ -156,7 +156,7 @@ const CartPage = () => {
       />
 
       {/* Cart Sidebar */}
-      <div className="fixed right-0 top-0 h-[calc(100%-0px)] w-full max-w-md bg-white shadow-xl z-[10002] transform transition-transform duration-300 ease-in-out">
+      <div className="fixed right-0 top-0 h-[100dvh] w-full max-w-md bg-white shadow-xl z-[10002] transform transition-transform duration-300 ease-in-out" style={{ marginRight: 'env(safe-area-inset-right, 0px)' }}>
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
@@ -484,7 +484,7 @@ const CartPage = () => {
 
           {/* Footer */}
           {cart.length > 0 && (
-            <div className="border-t border-gray-200 p-4 space-y-4">
+            <div className="border-t border-gray-200 p-4 space-y-4" style={{ paddingBottom: 'calc(1rem + env(safe-area-inset-bottom, 0px))' }}>
               <div className="flex justify-between items-center">
                 <span className="text-lg font-bold text-gray-900">Total:</span>
                 <span className="text-lg font-bold text-red-900">

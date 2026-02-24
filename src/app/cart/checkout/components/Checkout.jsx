@@ -17,6 +17,9 @@ import {
   Shield,
   ShoppingBag,
   User,
+  ChevronRight,
+  Lock,
+  Truck,
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -25,18 +28,22 @@ import { toast } from "sonner";
 import { checkoutApi } from "../../../api/cart/cart";
 
 const Breadcrumb = () => (
-  <nav className="flex items-center space-x-2 text-sm text-gray-600 mt-20 mb-8">
-    <span className="hover:text-red-900 transition-colors cursor-pointer">
+  <nav className="flex items-center gap-2 text-sm text-gray-400 mt-24 mb-8">
+    <span
+      className="hover:text-gray-700 transition-colors cursor-pointer"
+      onClick={() => (window.location.href = "/")}
+    >
       Home
     </span>
-    <span className="text-red-900">/</span>
-    <span className="hover:text-red-900 transition-colors cursor-pointer">
+    <ChevronRight className="w-3.5 h-3.5" />
+    <span
+      className="hover:text-gray-700 transition-colors cursor-pointer"
+      onClick={() => (window.location.href = "/cart")}
+    >
       Cart
     </span>
-    <span className="text-red-900">/</span>
-    <span className="text-red-900 font-semibold bg-red-50 px-3 py-1 rounded-md">
-      Checkout
-    </span>
+    <ChevronRight className="w-3.5 h-3.5" />
+    <span className="text-[#800000] font-medium">Checkout</span>
   </nav>
 );
 
@@ -115,19 +122,19 @@ const CustomStateDropdown = ({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full border-2 rounded-xl p-4 text-left focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 flex items-center justify-between ${
+        className={`w-full border rounded-xl px-4 py-3.5 text-left focus:outline-none focus:ring-4 focus:ring-[#800000]/5 transition-all duration-200 bg-gray-50/50 hover:bg-white flex items-center justify-between ${
           fieldValidation.region?.isValid === true
-            ? "border-green-500"
+            ? "border-emerald-400"
             : fieldValidation.region?.isValid === false
-              ? "border-red-500"
-              : "border-red-200 focus:border-red-900"
-        } ${isOpen ? "border-red-900 ring-2 ring-red-200" : ""}`}
+              ? "border-red-400"
+              : "border-gray-200 hover:border-gray-300 focus:border-[#800000]"
+        } ${isOpen ? "border-[#800000] ring-4 ring-[#800000]/5" : ""}`}
       >
-        <span className={value ? "text-gray-900" : "text-gray-500"}>
+        <span className={value ? "text-gray-900" : "text-gray-400"}>
           {displayLabel}
         </span>
         <ChevronDown
-          className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${
+          className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${
             isOpen ? "rotate-180" : ""
           }`}
         />
@@ -138,14 +145,14 @@ const CustomStateDropdown = ({
         <>
           {/* Mobile Backdrop */}
           <div
-            className="fixed inset-0 bg-black bg-opacity-25 z-40 md:hidden"
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 md:hidden"
             onClick={() => setIsOpen(false)}
           />
 
           {/* Dropdown Content */}
-          <div className="absolute z-50 w-full mt-1 bg-white border-2 border-red-200 rounded-xl shadow-2xl max-h-80 overflow-hidden md:max-h-64">
+          <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-xl max-h-80 overflow-hidden md:max-h-64">
             {/* Search Input */}
-            <div className="p-3 border-b border-red-100 bg-red-50/50 sticky top-0">
+            <div className="p-3 border-b border-gray-100 bg-gray-50/80 sticky top-0">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
@@ -155,7 +162,7 @@ const CustomStateDropdown = ({
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="w-full pl-10 pr-4 py-2 border border-red-200 rounded-lg focus:border-red-900 focus:ring-1 focus:ring-red-200 outline-none text-sm"
+                  className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:border-[#800000] focus:ring-2 focus:ring-[#800000]/5 outline-none text-sm bg-white"
                 />
               </div>
             </div>
@@ -163,8 +170,8 @@ const CustomStateDropdown = ({
             {/* States List */}
             <div className="overflow-y-auto max-h-60 md:max-h-48">
               {filteredStates.length === 0 ? (
-                <div className="p-4 text-center text-gray-500 text-sm">
-                  No states found matching "{searchTerm}"
+                <div className="p-4 text-center text-gray-400 text-sm">
+                  No states found matching &ldquo;{searchTerm}&rdquo;
                 </div>
               ) : (
                 <div className="py-1">
@@ -173,18 +180,18 @@ const CustomStateDropdown = ({
                       key={state.value}
                       type="button"
                       onClick={() => handleStateSelect(state.value)}
-                      className={`w-full text-left px-4 py-3 hover:bg-red-50 focus:bg-red-50 focus:outline-none transition-colors duration-150 flex items-center justify-between group ${
+                      className={`w-full text-left px-4 py-3 hover:bg-[#800000]/5 focus:bg-[#800000]/5 focus:outline-none transition-colors duration-150 flex items-center justify-between group ${
                         value === state.value
-                          ? "bg-red-100 text-red-900 font-semibold"
+                          ? "bg-[#800000]/10 text-[#800000] font-medium"
                           : "text-gray-700"
                       }`}
                     >
-                      <span className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-gray-400 group-hover:text-red-500" />
+                      <span className="flex items-center gap-2.5">
+                        <MapPin className="h-3.5 w-3.5 text-gray-300 group-hover:text-[#800000] transition-colors" />
                         {state.label}
                       </span>
                       {value === state.value && (
-                        <CheckCircle className="h-4 w-4 text-red-900" />
+                        <CheckCircle className="h-4 w-4 text-[#800000]" />
                       )}
                     </button>
                   ))}
@@ -193,11 +200,11 @@ const CustomStateDropdown = ({
             </div>
 
             {/* Footer for mobile */}
-            <div className="md:hidden border-t border-red-100 p-3 bg-red-50/50">
+            <div className="md:hidden border-t border-gray-100 p-3 bg-gray-50/80">
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="w-full py-2 px-4 bg-red-900 text-white rounded-lg font-medium hover:bg-red-800 transition-colors"
+                className="w-full py-2.5 px-4 bg-[#800000] text-white rounded-lg font-medium hover:bg-[#600000] transition-colors text-sm"
               >
                 Close
               </button>
@@ -286,8 +293,7 @@ export default function CheckoutComponent() {
   const [shippingMethod, setShippingMethod] = useState("free");
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // 🔧 TOGGLE FOR PINCODE API VALIDATION
-  const ENABLE_PINCODE_API = true; // ⚠️ Set to true to enable API validation
+  const ENABLE_PINCODE_API = true;
 
   // Field validation states
   const [fieldValidation, setFieldValidation] = useState({
@@ -432,7 +438,6 @@ export default function CheckoutComponent() {
     return () => clearTimeout(timeoutId);
   }, [formData.phone]);
 
-  // 🎯 MODIFIED: Default validation without API (can be easily switched back)
   const validatePostalCode = async (postalCode) => {
     if (!postalCode || postalCode.length < 6) {
       setPostalCodeValidation({
@@ -445,11 +450,7 @@ export default function CheckoutComponent() {
       return;
     }
 
-  
-
-    // 🔧 CHECK IF API IS ENABLED
     if (!ENABLE_PINCODE_API) {
-      // Simulate a brief validation delay
       setPostalCodeValidation((prev) => ({
         ...prev,
         isValidating: true,
@@ -457,7 +458,6 @@ export default function CheckoutComponent() {
       }));
 
       setTimeout(() => {
-        // Default to valid with COD available
         setPostalCodeValidation({
           isValidating: false,
           isValid: true,
@@ -466,22 +466,22 @@ export default function CheckoutComponent() {
             city: "Default City",
             district: "Default District",
             state: "Default State",
-            cod: true, // COD available by default
+            cod: true,
             prepaid: true,
             pickup: true,
             covidZone: "Green",
-            isODA: false, // ✅ No ODA charges by default
+            isODA: false,
           },
         });
 
         toast.success(
-          `✅ Postal code ${postalCode} - Default validation (API disabled)`,
+          `Postal code ${postalCode} - Default validation (API disabled)`,
         );
       }, 500);
 
       return;
     }
-    // 🚀 ORIGINAL API VALIDATION CODE (kept intact)
+
     const DELHIVERY_TOKEN = "8225de";
     if (!DELHIVERY_TOKEN) {
       console.warn("Delhivery API token not configured");
@@ -505,11 +505,10 @@ export default function CheckoutComponent() {
       setPostalCodeValidation(result);
       if (result.isValid) {
         toast.success(
-          `✅ Postal code valid for ${result.deliveryInfo.city}, ${result.deliveryInfo.district}`,
+          `Postal code valid for ${result.deliveryInfo.city}, ${result.deliveryInfo.district}`,
         );
       } else {
-        toast.error(`❌ ${result.error}`);
-       
+        toast.error(`${result.error}`);
       }
     } catch (error) {
       let errorMessage = "Unable to validate postal code";
@@ -532,7 +531,7 @@ export default function CheckoutComponent() {
         deliveryInfo: null,
       });
 
-      toast.error(`❌ ${errorMessage}`);
+      toast.error(errorMessage);
     }
   };
 
@@ -550,9 +549,7 @@ export default function CheckoutComponent() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    // Special handling for phone number - only allow digits and limit to 10
     if (name === "phone") {
-      // Allow only digits and limit to 10 characters
       const cleanValue = value.replace(/\D/g, "").slice(0, 10);
       setFormData({
         ...formData,
@@ -565,7 +562,6 @@ export default function CheckoutComponent() {
       });
     }
 
-    // Clear validation state when user starts typing
     if (fieldValidation[name]) {
       setFieldValidation((prev) => ({
         ...prev,
@@ -595,13 +591,11 @@ export default function CheckoutComponent() {
 
         const isFreeShippingEligible = subtotal >= 5000;
 
-        // Calculate shipping cost
         let shipping = shippingOptions[shippingMethod]?.price || 0;
         if (isFreeShippingEligible && shippingMethod === "free") {
           shipping = 0;
         }
 
-        // Add ODA surcharge if applicable
         const odaSurcharge = postalCodeValidation.deliveryInfo?.isODA ? 50 : 0;
         shipping += odaSurcharge;
 
@@ -610,30 +604,24 @@ export default function CheckoutComponent() {
         return { subtotal, shipping, total };
       };
 
-      // Get current totals
       const { subtotal, shipping, total } = calculateTotals();
 
-      // Validate all required fields
       const requiredFields = ["fullName", "email", "phone", "region"];
       const validationErrors = [];
 
-      // Check if fields are filled
       const missingFields = requiredFields.filter((field) => !formData[field]);
       if (missingFields.length > 0) {
         validationErrors.push(`Please fill : ${missingFields.join(", ")}`);
       }
 
-      // Check field validations
       requiredFields.forEach((field) => {
         if (formData[field]) {
           validateField(field, formData[field]);
         }
       });
 
-      // Wait a bit for validation to complete
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      // Check if any field validation failed
       const hasValidationErrors = requiredFields.some(
         (field) => fieldValidation[field]?.isValid === false,
       );
@@ -649,12 +637,10 @@ export default function CheckoutComponent() {
 
       if (validationErrors.length > 0) {
         toast.error(validationErrors[0], "error");
-        // showToast(validationErrors[0], "error");
         setIsProcessing(false);
         return;
       }
 
-      // Validate postal code
       if (formData.postalCode) {
         if (postalCodeValidation.isValidating) {
           toast.warning("Please wait for postal code validation to complete");
@@ -670,7 +656,6 @@ export default function CheckoutComponent() {
         }
       }
 
-      // Generate unique IDs (keeping your existing logic)
       const generateOrderId = () => {
         const timestamp = Date.now();
         const random = Math.random().toString(36).substring(2, 8);
@@ -718,41 +703,28 @@ export default function CheckoutComponent() {
       const sessionId = generateSessionId();
       const fingerprint = generateFingerprint();
 
-      // Format phone number for storage (without +91)
       const formattedPhone = formatPhoneNumber(formData.phone);
 
-      // Complete checkout data with clean phone number
       const checkoutData = {
-        // Form data with clean phone number (no +91)
         ...formData,
-        phone: formattedPhone, // This will be just the 10 digits
-
-        // Generated IDs
+        phone: formattedPhone,
         orderId: orderId,
         transactionId: transactionId,
         sessionId: sessionId,
         fingerprint: fingerprint,
-
-        // Order details
         deliveryInfo: postalCodeValidation.deliveryInfo,
         shippingMethod,
         orderTotal: total,
         orderSubtotal: subtotal,
         orderShipping: shipping,
         orderItems: cart,
-
-        // Timestamps
         checkoutCompletedAt: new Date().toISOString(),
-
-        // Additional metadata
         userAgent:
           typeof window !== "undefined" ? window.navigator.userAgent : "",
         browserInfo: {
           language: typeof navigator !== "undefined" ? navigator.language : "",
           platform: typeof navigator !== "undefined" ? navigator.platform : "",
         },
-
-        // Validation status
         validationStatus: {
           email: fieldValidation.email?.isValid === true,
           phone: fieldValidation.phone?.isValid === true,
@@ -761,7 +733,6 @@ export default function CheckoutComponent() {
         },
       };
 
-      // Save to localStorage
       try {
         localStorage.setItem("checkoutFormData", JSON.stringify(checkoutData));
         const savedData = localStorage.getItem("checkoutFormData");
@@ -769,9 +740,7 @@ export default function CheckoutComponent() {
           const parsedSavedData = JSON.parse(savedData);
         }
       } catch (error) {
-        // console.error("❌ Error saving checkout data:", error);
         toast.error(" Error saving checkout data. Please try again.");
-
         setIsProcessing(false);
         return;
       }
@@ -797,11 +766,8 @@ export default function CheckoutComponent() {
         })),
       };
 
-      // console.log(userData)
-      // Send Analytics to BAckend
       try {
         const res = await analyticsAPI.trackContinueToPayment(userData);
-        // console.log(res)
       } catch (error) {
         console.error(error);
       }
@@ -821,7 +787,7 @@ export default function CheckoutComponent() {
           Customer_Email: formData.email,
         },
       });
-  // console.log(total)
+
       toast.success("Information validated! Redirecting to payment...");
       setTimeout(() => {
         router.push(
@@ -830,7 +796,6 @@ export default function CheckoutComponent() {
       }, 500);
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
-
     } finally {
       setIsProcessing(false);
     }
@@ -856,12 +821,6 @@ export default function CheckoutComponent() {
       icon: "📦",
       name: "Free Shipping",
     },
-    // express: {
-    //   price: 300,
-    //   days: "1-2 business days",
-    //   icon: "⚡",
-    //   name: "Express Shipping",
-    // },
   };
 
   // Calculate totals from cart - with safety checks
@@ -886,7 +845,6 @@ export default function CheckoutComponent() {
     }
   }, [isFreeShippingEligible, shippingMethod]);
 
-  // Calculate shipping cost based on eligibility and ODA
   let shipping = shippingOptions[shippingMethod]?.price || 0;
   if (isFreeShippingEligible && shippingMethod === "free") {
     shipping = 0;
@@ -897,14 +855,22 @@ export default function CheckoutComponent() {
 
   const total = subtotal + shipping;
 
+  // Helper for input border classes
+  const getInputBorderClass = (fieldName) => {
+    const validation = fieldValidation[fieldName];
+    if (validation?.isValid === true) return "border-emerald-400 focus:border-emerald-500";
+    if (validation?.isValid === false) return "border-red-400 focus:border-[#800000]";
+    return "border-gray-200 hover:border-gray-300 focus:border-[#800000]";
+  };
+
   // Show loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white">
+      <div className="min-h-screen bg-gray-50/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex items-center justify-center mt-8">
-            <div className="flex items-center gap-3 text-gray-600">
-              <div className="w-5 h-5 border-2 border-red-900 border-t-transparent rounded-full animate-spin"></div>
+          <div className="flex items-center justify-center mt-32">
+            <div className="flex flex-col items-center gap-3 text-gray-500">
+              <div className="w-8 h-8 border-2 border-[#800000] border-t-transparent rounded-full animate-spin"></div>
               <span className="text-sm font-medium">Loading checkout...</span>
             </div>
           </div>
@@ -916,15 +882,18 @@ export default function CheckoutComponent() {
   // Redirect if cart is empty
   if (isCartEmpty) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white flex items-center justify-center">
-        <div className="text-center">
-          <ShoppingBag size={64} className="text-gray-300 mb-4 mx-auto" />
-          <h2 className="text-2xl font-bold text-gray-600 mb-4">
+      <div className="min-h-screen bg-gray-50/30 flex items-center justify-center">
+        <div className="text-center px-6">
+          <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <ShoppingBag size={32} className="text-gray-300" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
             Your cart is empty
           </h2>
+          <p className="text-gray-500 mb-6">Add some items to get started</p>
           <button
             onClick={() => router.push("/")}
-            className="bg-red-900 text-white px-6 py-3 rounded-lg hover:bg-red-800 transition-colors"
+            className="bg-[#800000] text-white px-8 py-3 rounded-xl hover:bg-[#600000] transition-all duration-300 font-medium"
           >
             Continue Shopping
           </button>
@@ -934,50 +903,44 @@ export default function CheckoutComponent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white">
+    <div className="min-h-screen bg-gray-50/50">
       <ToastContainer />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         <Breadcrumb />
 
-        {/* 🔧 API STATUS INDICATOR */}
-        {/* {!ENABLE_PINCODE_API && (
-          <div className="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <div className="flex items-center gap-2">
-              <AlertCircle className="h-5 w-5 text-yellow-600" />
-              <span className="text-yellow-800 font-medium">
-                📍 Pincode API is currently disabled - using default validation
-              </span>
-            </div>
-          </div>
-        )} */}
+        {/* Page Header */}
+        {/* <div className="mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-[#800000]">Checkout</h1>
+          <p className="text-gray-500 mt-1">Complete your order details below</p>
+        </div> */}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Left Column - Forms */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-7 space-y-6">
             {/* Shipping Address Card */}
-            <div className="bg-white rounded-2xl shadow-lg border border-red-100 p-6 hover:shadow-xl transition-all duration-300">
-              <div className="flex items-center mb-6">
-                <div className="w-10 h-10 bg-red-900 rounded-full flex items-center justify-center mr-4">
-                  <User className="text-white h-5 w-5" />
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-10 h-10 bg-[#800000] rounded-xl flex items-center justify-center">
+                  <User className="text-white h-4 w-4" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900">
+                  <h3 className="text-lg font-bold text-gray-900">
                     Shipping Address
                   </h3>
-                  <p className="text-sm text-gray-600">
-                    🇮🇳 Delivering within India
+                  <p className="text-sm text-gray-400">
+                   🇮🇳 Delivering within India
                   </p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {/* Full Name */}
                 <div className="md:col-span-2">
                   <label
                     htmlFor="fullName"
-                    className="block text-sm font-semibold text-gray-700 mb-2"
+                    className="block text-sm font-medium text-gray-700 mb-1.5"
                   >
-                    Full Name *
+                    Full Name <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <input
@@ -986,30 +949,22 @@ export default function CheckoutComponent() {
                       type="text"
                       value={formData.fullName}
                       onChange={handleInputChange}
-                      className={`w-full border-2 rounded-xl p-4 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${
-                        fieldValidation.fullName?.isValid === true
-                          ? "border-green-500 focus:border-green-500"
-                          : fieldValidation.fullName?.isValid === false
-                            ? "border-red-500 focus:border-red-500"
-                            : "border-red-200 focus:border-red-900"
-                      }`}
+                      className={`w-full border rounded-xl px-4 py-3.5 text-gray-900 focus:outline-none focus:ring-4 focus:ring-[#800000]/5 transition-all duration-200 bg-gray-50/50 hover:bg-white pr-11 placeholder:text-gray-400 ${getInputBorderClass("fullName")}`}
                       placeholder="Enter your full name"
                       required
                     />
-                    {/* Validation Icon */}
-                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <div className="absolute right-3.5 top-1/2 transform -translate-y-1/2">
                       {fieldValidation.fullName?.isValid === true && (
-                        <CheckCircle className="h-5 w-5 text-green-500" />
+                        <CheckCircle className="h-4 w-4 text-emerald-500" />
                       )}
                       {fieldValidation.fullName?.isValid === false && (
-                        <AlertCircle className="h-5 w-5 text-red-500" />
+                        <AlertCircle className="h-4 w-4 text-red-500" />
                       )}
                     </div>
                   </div>
-                  {/* Error Message */}
                   {fieldValidation.fullName?.error && (
-                    <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                      <AlertCircle className="h-4 w-4" />
+                    <p className="mt-1.5 text-xs text-red-500 flex items-center gap-1">
+                      <AlertCircle className="h-3 w-3" />
                       {fieldValidation.fullName.error}
                     </p>
                   )}
@@ -1019,9 +974,9 @@ export default function CheckoutComponent() {
                 <div>
                   <label
                     htmlFor="email"
-                    className="block text-sm font-semibold text-gray-700 mb-2"
+                    className="block text-sm font-medium text-gray-700 mb-1.5"
                   >
-                    Email Address *
+                    Email Address <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <input
@@ -1030,30 +985,22 @@ export default function CheckoutComponent() {
                       type="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className={`w-full border-2 rounded-xl p-4 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${
-                        fieldValidation.email?.isValid === true
-                          ? "border-green-500 focus:border-green-500"
-                          : fieldValidation.email?.isValid === false
-                            ? "border-red-500 focus:border-red-500"
-                            : "border-red-200 focus:border-red-900"
-                      }`}
-                      placeholder="your@email.com"
+                      className={`w-full border rounded-xl px-4 py-3.5 text-gray-900 focus:outline-none focus:ring-4 focus:ring-[#800000]/5 transition-all duration-200 bg-gray-50/50 hover:bg-white pr-11 placeholder:text-gray-400 ${getInputBorderClass("email")}`}
+                      placeholder="you@example.com"
                       required
                     />
-                    {/* Validation Icon */}
-                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <div className="absolute right-3.5 top-1/2 transform -translate-y-1/2">
                       {fieldValidation.email?.isValid === true && (
-                        <CheckCircle className="h-5 w-5 text-green-500" />
+                        <CheckCircle className="h-4 w-4 text-emerald-500" />
                       )}
                       {fieldValidation.email?.isValid === false && (
-                        <AlertCircle className="h-5 w-5 text-red-500" />
+                        <AlertCircle className="h-4 w-4 text-red-500" />
                       )}
                     </div>
                   </div>
-                  {/* Error Message */}
                   {fieldValidation.email?.error && (
-                    <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                      <AlertCircle className="h-4 w-4" />
+                    <p className="mt-1.5 text-xs text-red-500 flex items-center gap-1">
+                      <AlertCircle className="h-3 w-3" />
                       {fieldValidation.email.error}
                     </p>
                   )}
@@ -1063,14 +1010,15 @@ export default function CheckoutComponent() {
                 <div>
                   <label
                     htmlFor="phone"
-                    className="block text-sm font-semibold text-gray-700 mb-2"
+                    className="block text-sm font-medium text-gray-700 mb-1.5"
                   >
-                    Phone Number *
+                    Phone Number <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
-                    {/* Country Code Prefix */}
-                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-700 font-medium bg-gray-100 px-2 py-1 rounded text-sm border-r border-gray-300">
-                      +91
+                    <div className="absolute left-3.5 top-1/2 transform -translate-y-1/2 flex items-center gap-1.5">
+                      <span className="text-gray-500 text-sm font-medium border-r border-gray-200 pr-2">
+                        +91
+                      </span>
                     </div>
                     <input
                       id="phone"
@@ -1078,41 +1026,32 @@ export default function CheckoutComponent() {
                       type="tel"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className={`w-full border-2 rounded-xl p-4 pl-16 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${
-                        fieldValidation.phone?.isValid === true
-                          ? "border-green-500 focus:border-green-500"
-                          : fieldValidation.phone?.isValid === false
-                            ? "border-red-500 focus:border-red-500"
-                            : "border-red-200 focus:border-red-900"
-                      }`}
+                      className={`w-full border rounded-xl pl-16 pr-11 py-3.5 text-gray-900 focus:outline-none focus:ring-4 focus:ring-[#800000]/5 transition-all duration-200 bg-gray-50/50 hover:bg-white placeholder:text-gray-400 ${getInputBorderClass("phone")}`}
                       placeholder="9876543210"
                       maxLength="10"
                       pattern="[6-9][0-9]{9}"
                       inputMode="numeric"
                       required
                     />
-                    {/* Validation Icon */}
-                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <div className="absolute right-3.5 top-1/2 transform -translate-y-1/2">
                       {fieldValidation.phone?.isValid === true && (
-                        <CheckCircle className="h-5 w-5 text-green-500" />
+                        <CheckCircle className="h-4 w-4 text-emerald-500" />
                       )}
                       {fieldValidation.phone?.isValid === false && (
-                        <AlertCircle className="h-5 w-5 text-red-500" />
+                        <AlertCircle className="h-4 w-4 text-red-500" />
                       )}
                     </div>
                   </div>
-                  {/* Error Message */}
                   {fieldValidation.phone?.error && (
-                    <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                      <AlertCircle className="h-4 w-4" />
+                    <p className="mt-1.5 text-xs text-red-500 flex items-center gap-1">
+                      <AlertCircle className="h-3 w-3" />
                       {fieldValidation.phone.error}
                     </p>
                   )}
-                  {/* Helper text for phone format */}
                   {!fieldValidation.phone?.error &&
                     formData.phone &&
                     fieldValidation.phone?.isValid !== true && (
-                      <p className="mt-1 text-xs text-gray-500">
+                      <p className="mt-1.5 text-xs text-gray-400">
                         Enter 10-digit mobile number starting with 6, 7, 8, or 9
                       </p>
                     )}
@@ -1122,7 +1061,7 @@ export default function CheckoutComponent() {
                 <div className="md:col-span-2">
                   <label
                     htmlFor="address"
-                    className="block text-sm font-semibold text-gray-700 mb-2"
+                    className="block text-sm font-medium text-gray-700 mb-1.5"
                   >
                     Street Address
                   </label>
@@ -1132,7 +1071,7 @@ export default function CheckoutComponent() {
                     type="text"
                     value={formData.address}
                     onChange={handleInputChange}
-                    className="w-full border-2 border-red-200 rounded-xl p-4 text-gray-700 focus:border-red-900 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30"
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 focus:border-[#800000] focus:outline-none focus:ring-4 focus:ring-[#800000]/5 transition-all duration-200 bg-gray-50/50 hover:bg-white hover:border-gray-300 placeholder:text-gray-400"
                     placeholder="House number and street name"
                   />
                 </div>
@@ -1141,7 +1080,7 @@ export default function CheckoutComponent() {
                 <div>
                   <label
                     htmlFor="city"
-                    className="block text-sm font-semibold text-gray-700 mb-2"
+                    className="block text-sm font-medium text-gray-700 mb-1.5"
                   >
                     City
                   </label>
@@ -1151,15 +1090,15 @@ export default function CheckoutComponent() {
                     type="text"
                     value={formData.city}
                     onChange={handleInputChange}
-                    className="w-full border-2 border-red-200 rounded-xl p-4 text-gray-700 focus:border-red-900 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30"
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 focus:border-[#800000] focus:outline-none focus:ring-4 focus:ring-[#800000]/5 transition-all duration-200 bg-gray-50/50 hover:bg-white hover:border-gray-300 placeholder:text-gray-400"
                     placeholder="City"
                   />
                 </div>
 
                 {/* State */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    State/Union Territory
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    State / Union Territory
                   </label>
                   <CustomStateDropdown
                     value={formData.region}
@@ -1168,8 +1107,8 @@ export default function CheckoutComponent() {
                     fieldValidation={fieldValidation}
                   />
                   {fieldValidation.region?.error && (
-                    <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                      <AlertCircle className="h-4 w-4" />
+                    <p className="mt-1.5 text-xs text-red-500 flex items-center gap-1">
+                      <AlertCircle className="h-3 w-3" />
                       {fieldValidation.region.error}
                     </p>
                   )}
@@ -1179,17 +1118,16 @@ export default function CheckoutComponent() {
                 <div className="md:col-span-2 col-span-1">
                   <label
                     htmlFor="postalCode"
-                    className="block text-sm font-semibold text-gray-700 mb-2"
+                    className="block text-sm font-medium text-gray-700 mb-1.5"
                   >
                     Postal Code
-                    <span className="text-xs text-gray-500 ml-1">
+                    <span className="text-xs text-gray-400 ml-1.5">
                       {ENABLE_PINCODE_API
                         ? "(Auto-validated)"
                         : "(Default validation)"}
                     </span>
                   </label>
 
-                  {/* Input and Validation Icons Container */}
                   <div className="relative mb-3">
                     <input
                       id="postalCode"
@@ -1197,12 +1135,12 @@ export default function CheckoutComponent() {
                       type="text"
                       value={formData.postalCode}
                       onChange={handleInputChange}
-                      className={`w-full border-2 rounded-xl p-4 text-gray-700 focus:ring-2 focus:ring-red-200 transition-all duration-200 bg-red-50/30 pr-12 ${
+                      className={`w-full border rounded-xl px-4 py-3.5 text-gray-900 focus:outline-none focus:ring-4 focus:ring-[#800000]/5 transition-all duration-200 bg-gray-50/50 hover:bg-white pr-11 placeholder:text-gray-400 ${
                         postalCodeValidation.isValid === true
-                          ? "border-green-500 focus:border-green-500"
+                          ? "border-emerald-400 focus:border-emerald-500"
                           : postalCodeValidation.isValid === false
-                            ? "border-red-500 focus:border-red-500"
-                            : "border-red-200 focus:border-red-900"
+                            ? "border-red-400 focus:border-[#800000]"
+                            : "border-gray-200 hover:border-gray-300 focus:border-[#800000]"
                       }`}
                       placeholder="110001"
                       maxLength="6"
@@ -1210,52 +1148,47 @@ export default function CheckoutComponent() {
                       inputMode="numeric"
                     />
 
-                    {/* Validation Icons - Positioned absolutely within input */}
-                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <div className="absolute right-3.5 top-1/2 transform -translate-y-1/2">
                       {postalCodeValidation.isValidating && (
-                        <Loader2 className="h-5 w-5 text-blue-500 animate-spin" />
+                        <Loader2 className="h-4 w-4 text-blue-500 animate-spin" />
                       )}
                       {postalCodeValidation.isValid === true && (
-                        <CheckCircle className="h-5 w-5 text-green-500" />
+                        <CheckCircle className="h-4 w-4 text-emerald-500" />
                       )}
                       {postalCodeValidation.isValid === false && (
-                        <AlertCircle className="h-5 w-5 text-red-500" />
+                        <AlertCircle className="h-4 w-4 text-red-500" />
                       )}
                     </div>
                   </div>
 
-                  {/* Delivery Info - Full width and responsive */}
+                  {/* Delivery Info */}
                   {postalCodeValidation.deliveryInfo && (
-                    <div className="mb-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="mb-3 p-3 bg-emerald-50 border border-emerald-100 rounded-xl">
                       <div className="flex items-center gap-2 mb-2">
-                        <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
-                        <span className="text-sm font-semibold text-green-800">
+                        <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0" />
+                        <span className="text-xs font-semibold text-emerald-800">
                           Delivery Available{" "}
                           {!ENABLE_PINCODE_API && "(Default)"}
                         </span>
                       </div>
-                      <div className="text-xs text-green-700 space-y-2">
-                        {/* Badges - Responsive flex */}
-                        <div className="flex flex-col sm:flex-row gap-2">
-                          {postalCodeValidation.deliveryInfo.cod && (
-                            <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs inline-flex items-center gap-1 w-fit">
-                              COD Available
-                            </span>
-                          )}
-                          {postalCodeValidation.deliveryInfo.isODA && (
-                            <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs inline-flex items-center gap-1 w-fit">
-                              Remote Area (+₹50)
-                            </span>
-                          )}
-                        </div>
+                      <div className="flex flex-wrap gap-2">
+                        {postalCodeValidation.deliveryInfo.cod && (
+                          <span className="bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-lg text-xs font-medium">
+                            COD Available
+                          </span>
+                        )}
+                        {postalCodeValidation.deliveryInfo.isODA && (
+                          <span className="bg-amber-100 text-amber-700 px-2.5 py-1 rounded-lg text-xs font-medium">
+                            Remote Area (+₹50)
+                          </span>
+                        )}
                       </div>
                     </div>
                   )}
 
-                  {/* Postal code error */}
                   {postalCodeValidation.error && (
-                    <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                      <AlertCircle className="h-4 w-4" />
+                    <p className="mt-1.5 text-xs text-red-500 flex items-center gap-1">
+                      <AlertCircle className="h-3 w-3" />
                       {postalCodeValidation.error}
                     </p>
                   )}
@@ -1264,22 +1197,22 @@ export default function CheckoutComponent() {
             </div>
 
             {/* Shipping Method Card */}
-            <div className="bg-white rounded-2xl shadow-lg border border-red-100 p-6 hover:shadow-xl transition-all duration-300">
-              <div className="flex items-center mb-6">
-                <div className="w-10 h-10 bg-red-900 rounded-full flex items-center justify-center mr-4">
-                  <Package className="text-white h-5 w-5" />
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-10 h-10 bg-[#800000] rounded-xl flex items-center justify-center">
+                  <Truck className="text-white h-4 w-4" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900">
+                  <h3 className="text-lg font-bold text-gray-900">
                     Shipping Method
                   </h3>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-400">
                     Choose your preferred delivery speed
                   </p>
                 </div>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {Object.entries(shippingOptions).map(
                   ([key, { price, days, icon, name }]) => {
                     const isFreeShippingOption = key === "free";
@@ -1296,12 +1229,12 @@ export default function CheckoutComponent() {
                     return (
                       <label
                         key={key}
-                        className={`flex items-center p-4 border-2 rounded-xl transition-all duration-200 ${
+                        className={`flex items-center p-4 border rounded-xl transition-all duration-200 ${
                           isDisabled
-                            ? "border-gray-200 bg-gray-50 cursor-not-allowed opacity-60"
+                            ? "border-gray-100 bg-gray-50 cursor-not-allowed opacity-50"
                             : shippingMethod === key
-                              ? "border-red-900 bg-red-50 ring-2 ring-red-200 cursor-pointer"
-                              : "border-red-200 hover:border-red-300 hover:bg-red-50 cursor-pointer"
+                              ? "border-[#800000]/20 bg-[#800000]/5 ring-2 ring-[#800000]/10 cursor-pointer"
+                              : "border-gray-200 hover:border-gray-300 hover:bg-gray-50/50 cursor-pointer"
                         }`}
                       >
                         <input
@@ -1317,66 +1250,44 @@ export default function CheckoutComponent() {
                           disabled={isDisabled}
                           className={`w-4 h-4 focus:ring-2 ${
                             isDisabled
-                              ? "text-gray-400 cursor-not-allowed"
-                              : "text-red-900 focus:ring-red-500 cursor-pointer"
+                              ? "text-gray-300 cursor-not-allowed"
+                              : "text-[#800000] focus:ring-[#800000] cursor-pointer"
                           }`}
                         />
                         <div className="ml-4 flex-1">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                              <span
-                                className={`text-2xl ${
-                                  isDisabled ? "opacity-50" : ""
-                                }`}
-                              >
+                              <span className={`text-xl ${isDisabled ? "opacity-50" : ""}`}>
                                 {icon}
                               </span>
                               <div>
-                                <p
-                                  className={`font-bold ${
-                                    isDisabled
-                                      ? "text-gray-400"
-                                      : "text-gray-900"
-                                  }`}
-                                >
+                                <p className={`font-semibold text-sm ${isDisabled ? "text-gray-400" : "text-gray-900"}`}>
                                   {name}
                                   {isDisabled && (
-                                    <span className="ml-2 text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded-full">
-                                      Requires ₹5000+ order
+                                    <span className="ml-2 text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">
+                                      Min. ₹5000
                                     </span>
                                   )}
                                 </p>
-                                <p
-                                  className={`text-sm ${
-                                    isDisabled
-                                      ? "text-gray-400"
-                                      : "text-gray-600"
-                                  }`}
-                                >
+                                <p className={`text-xs mt-0.5 ${isDisabled ? "text-gray-300" : "text-gray-500"}`}>
                                   {days}
                                 </p>
                                 {isFreeShippingEligible &&
                                   isFreeShippingOption && (
-                                    <p className="text-xs text-green-600 font-semibold">
-                                      🎉 Free upgrade - On{" "}
-                                      <strong>prepaid</strong> orders above
-                                      ₹5000+
+                                    <p className="text-xs text-emerald-600 font-medium mt-1">
+                                      Free upgrade on prepaid orders above ₹5000
                                     </p>
                                   )}
                                 {postalCodeValidation.deliveryInfo?.isODA &&
                                   !isDisabled && (
-                                    <p className="text-xs text-orange-600 font-medium">
+                                    <p className="text-xs text-amber-600 font-medium mt-1">
                                       +₹50 Remote area surcharge
                                     </p>
                                   )}
                               </div>
                             </div>
                             <div className="text-right">
-                              <span
-                                className={`font-bold text-lg ${
-                                  isDisabled ? "text-gray-400" : "text-red-900"
-                                }`}
-                              >
+                              <span className={`font-bold ${isDisabled ? "text-gray-300" : "text-gray-900"}`}>
                                 {isDisabled
                                   ? `₹${price}`
                                   : finalPrice === 0
@@ -1386,7 +1297,7 @@ export default function CheckoutComponent() {
                               {isFreeShippingEligible &&
                                 isFreeShippingOption &&
                                 !postalCodeValidation.deliveryInfo?.isODA && (
-                                  <p className="text-xs text-gray-500 line-through">
+                                  <p className="text-xs text-gray-400 line-through">
                                     ₹{price}
                                   </p>
                                 )}
@@ -1402,18 +1313,23 @@ export default function CheckoutComponent() {
           </div>
 
           {/* Right Column - Order Summary */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-2xl shadow-lg border border-red-100 p-6 lg:sticky lg:top-8 hover:shadow-xl transition-all duration-300">
-              <div className="flex items-center mt-6 mb-6">
-                <div className="w-10 h-10 bg-red-900 rounded-full flex items-center justify-center mr-4">
-                  <ShoppingBag className="text-white h-5 w-5" />
+          <div className="lg:col-span-5">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8 lg:sticky lg:top-8">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-10 h-10 bg-[#800000] rounded-xl flex items-center justify-center">
+                  <ShoppingBag className="text-white h-4 w-4" />
                 </div>
-                <h2 className="text-xl font-bold text-gray-900">
-                  Order Summary
-                </h2>
+                <div>
+                  <h2 className="text-lg font-bold text-gray-900">
+                    Order Summary
+                  </h2>
+                  <p className="text-xs text-gray-400">
+                    {cart?.length || 0} item{cart?.length !== 1 ? "s" : ""}
+                  </p>
+                </div>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {/* Cart Items */}
                 {cart &&
                   cart.length > 0 &&
@@ -1427,10 +1343,10 @@ export default function CheckoutComponent() {
                           (item.selectedSize || "") +
                           (item.selectedColor || "")
                         }
-                        className="bg-red-50/50 rounded-xl border border-red-100 p-4"
+                        className="bg-gray-50/80 rounded-xl p-3.5"
                       >
-                        <div className="flex items-center space-x-3">
-                          <div className="w-12 h-12 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
+                        <div className="flex items-center gap-3">
+                          <div className="w-14 h-14 bg-white rounded-lg overflow-hidden flex-shrink-0 border border-gray-100">
                             <Image
                               src={getCurrentImage(item) || "/placeholder.jpg"}
                               alt={item.name || "Product"}
@@ -1440,78 +1356,73 @@ export default function CheckoutComponent() {
                               className="w-full object-cover scale-y-[1.15] h-full"
                             />
                           </div>
-                          <div className="flex-1">
-                            <h3 className="font-bold text-gray-900">
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-sm text-gray-900 truncate">
                               {item.name || "Product"}
                             </h3>
-                            <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
+                            <div className="flex items-center gap-1.5 mt-1 flex-wrap">
                               {item.selectedColor && (
-                                <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full font-medium">
+                                <span className="bg-white text-gray-600 px-2 py-0.5 rounded-md text-xs font-medium border border-gray-100">
                                   {item.selectedColor}
                                 </span>
                               )}
                               {item.selectedSize && (
-                                <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full font-medium">
-                                  Size {item.selectedSize}
+                                <span className="bg-white text-gray-600 px-2 py-0.5 rounded-md text-xs font-medium border border-gray-100">
+                                  {item.selectedSize}
                                 </span>
                               )}
-                            </div>
-                            <div className="text-sm text-gray-600 mt-1 font-medium">
-                              Qty:{" "}
-                              <span className="text-red-900">
-                                {item.quantity || 1}
+                              <span className="text-xs text-gray-400">
+                                Qty: {item.quantity || 1}
                               </span>
                             </div>
                           </div>
-                          <span className="font-bold text-lg text-red-900">
-                            ₹
-                            {(
-                              (item.price || 0) * (item.quantity || 1)
-                            ).toLocaleString()}
+                          <span className="font-bold text-gray-900 text-sm whitespace-nowrap">
+                            ₹{((item.price || 0) * (item.quantity || 1)).toLocaleString()}
                           </span>
                         </div>
                       </div>
                     );
                   })}
 
-                {/* Summary Section */}
-                <div className="border-t-2 border-red-100 pt-4 space-y-3">
-                  {/* Delivery Info Summary */}
-                  {postalCodeValidation.deliveryInfo && (
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <MapPin className="h-4 w-4 text-red-600" />
-                        <span className="text-sm font-semibold text-red-800">
-                          Delivery Details {!ENABLE_PINCODE_API && "(Default)"}
-                        </span>
-                      </div>
-                      <div className="text-xs text-red-700 space-y-1">
-                        <div className="flex gap-2 flex-wrap">
-                          {postalCodeValidation.deliveryInfo.cod && (
-                            <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">
-                              COD ✓
-                            </span>
-                          )}
-                          {postalCodeValidation.deliveryInfo.isODA && (
-                            <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs">
-                              Remote Area
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  )}
+                {/* Divider */}
+                <div className="border-t border-gray-100 my-1"></div>
 
-                  <div className="flex justify-between text-gray-700">
-                    <span className="font-medium">Subtotal</span>
-                    <span className="font-bold">
+                {/* Delivery Info Summary */}
+                {postalCodeValidation.deliveryInfo && (
+                  <div className="bg-gray-50 rounded-xl p-3.5">
+                    <div className="flex items-center gap-2 mb-2">
+                      <MapPin className="h-3.5 w-3.5 text-gray-500" />
+                      <span className="text-xs font-semibold text-gray-700">
+                        Delivery Details {!ENABLE_PINCODE_API && "(Default)"}
+                      </span>
+                    </div>
+                    <div className="flex gap-2 flex-wrap">
+                      {postalCodeValidation.deliveryInfo.cod && (
+                        <span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-md text-xs font-medium">
+                          COD Available
+                        </span>
+                      )}
+                      {postalCodeValidation.deliveryInfo.isODA && (
+                        <span className="bg-amber-50 text-amber-700 px-2 py-0.5 rounded-md text-xs font-medium">
+                          Remote Area
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Summary Numbers */}
+                <div className="space-y-3 pt-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">Subtotal</span>
+                    <span className="font-semibold text-gray-900">
                       ₹{subtotal.toLocaleString()}
                     </span>
                   </div>
-                  <div className="flex justify-between text-gray-700">
-                    <span className="font-medium">Shipping</span>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">Shipping</span>
                     <div className="text-right">
-                      <span className="font-bold text-green-600">
+                      <span className={`font-semibold ${shipping === 0 ? "text-emerald-600" : "text-gray-900"}`}>
                         {shipping === 0
                           ? "FREE"
                           : `₹${shipping.toLocaleString()}`}
@@ -1520,75 +1431,75 @@ export default function CheckoutComponent() {
                         shippingMethod === "free" &&
                         shippingOptions[shippingMethod]?.price > 0 &&
                         !postalCodeValidation.deliveryInfo?.isODA && (
-                          <p className="text-xs text-gray-500 line-through">
+                          <p className="text-xs text-gray-400 line-through">
                             ₹{shippingOptions[shippingMethod].price}
                           </p>
                         )}
                     </div>
                   </div>
 
-                  {/* ODA Surcharge */}
                   {odaSurcharge > 0 && (
-                    <div className="flex justify-between text-gray-700">
-                      <span className="font-medium text-orange-600">
-                        Remote Area Surcharge
-                      </span>
-                      <span className="font-bold text-orange-600">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-amber-600">Remote Surcharge</span>
+                      <span className="font-semibold text-amber-600">
                         ₹{odaSurcharge}
                       </span>
                     </div>
                   )}
 
-                  <div className="border-t-2 border-red-200 pt-3 bg-red-50 p-4 rounded-lg">
-                    <div className="flex justify-between text-xl font-bold text-red-900">
-                      <span>Total</span>
-                      <span>₹{total.toLocaleString()}</span>
+                  {/* Total */}
+                  <div className="border-t border-gray-100 pt-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-base font-bold text-gray-900">Total</span>
+                      <span className="text-2xl font-bold text-[#800000]">₹{total.toLocaleString()}</span>
                     </div>
                   </div>
                 </div>
 
+                {/* Pay Button */}
                 <button
                   onClick={handlePayment}
                   disabled={postalCodeValidation.isValidating || isProcessing}
-                  className={`w-full py-4 rounded-xl font-bold text-lg transform transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 ${
+                  className={`w-full py-4 rounded-xl font-semibold text-base transition-all duration-300 flex items-center justify-center gap-2.5 mt-2 ${
                     postalCodeValidation.isValidating || isProcessing
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-gradient-to-r from-red-900 to-red-800 text-white hover:from-red-800 hover:to-red-700 hover:scale-105"
+                      ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                      : "bg-[#800000] text-white hover:bg-[#600000] shadow-lg shadow-[#800000]/10 hover:shadow-xl hover:shadow-[#800000]/20 hover:-translate-y-0.5"
                   }`}
                 >
                   {postalCodeValidation.isValidating ? (
                     <>
-                      <Loader2 className="h-5 w-5 animate-spin" />
+                      <Loader2 className="h-4 w-4 animate-spin" />
                       Validating...
                     </>
                   ) : isProcessing ? (
                     <>
-                      <Loader2 className="h-5 w-5 animate-spin" />
+                      <Loader2 className="h-4 w-4 animate-spin" />
                       Processing...
                     </>
                   ) : (
                     <>
-                      <CreditCard className="h-5 w-5" />
-                      Continue to Payment →
+                      <CreditCard className="h-4 w-4" />
+                      Continue to Payment
                     </>
                   )}
                 </button>
 
                 {/* Security Notice */}
-                <div className="text-center text-sm text-gray-600 bg-red-50 p-4 rounded-xl border border-red-100">
-                  <div className="flex items-center justify-center gap-2 mb-2">
-                    <Shield className="h-4 w-4 text-red-600" />
-                    <span className="font-semibold text-red-900">
-                      Secure Checkout
-                    </span>
+                <div className="flex items-center justify-center gap-4 pt-3 pb-1">
+                  <div className="flex items-center gap-1.5 text-gray-400">
+                    <Lock className="h-3.5 w-3.5" />
+                    <span className="text-xs font-medium">Secure checkout</span>
                   </div>
-                  <p className="text-xs">
-                    Your payment information is encrypted and secure
-                  </p>
+                  <div className="w-px h-3 bg-gray-200"></div>
+                  <div className="flex items-center gap-1.5 text-gray-400">
+                    <Shield className="h-3.5 w-3.5" />
+                    <span className="text-xs font-medium">Encrypted</span>
+                  </div>
                   {postalCodeValidation.deliveryInfo?.cod && (
-                    <p className="text-xs text-green-700 mt-1">
-                      Cash on Delivery available
-                    </p>
+                    <>
+                      <div className="w-px h-3 bg-gray-200"></div>
+                      <span className="text-xs font-medium text-emerald-500">COD Available</span>
+                    </>
                   )}
                 </div>
               </div>
