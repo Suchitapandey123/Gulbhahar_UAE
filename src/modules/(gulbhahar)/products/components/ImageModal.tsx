@@ -143,7 +143,7 @@ export const ImageModal = ({
             fill
             className={`object-contain transition-opacity duration-200 ${isLoading ? "opacity-0" : "opacity-100"}`}
             sizes="100vw"
-            quality={90}
+            quality={95}
             priority
             onLoad={() => setIsLoading(false)}
           />
@@ -170,7 +170,7 @@ export const ImageModal = ({
                   fill
                   className="object-cover"
                   sizes="64px"
-                  quality={30}
+                  quality={60}
                 />
               </button>
             ))}
