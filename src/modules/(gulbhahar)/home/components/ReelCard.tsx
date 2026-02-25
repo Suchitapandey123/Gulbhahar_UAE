@@ -20,9 +20,11 @@ const ReelCard = ({ reel }: { reel: ReelData }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isMuted, setIsMuted] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [viewCount] = useState(
-    () => (Math.random() * (25 - 1.5) + 1.5).toFixed(1) + "k",
-  );
+  const [viewCount, setViewCount] = useState<string | null>(null);
+
+  useEffect(() => {
+    setViewCount((Math.random() * (25 - 1.5) + 1.5).toFixed(1) + "k");
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
