@@ -506,6 +506,7 @@ function PaymentContent() {
                 </div>
               </div>
             </div>
+              
 
             {/* ══ RIGHT — Order Summary ══ */}
             <div className="lg:col-span-2">
@@ -535,7 +536,7 @@ function PaymentContent() {
                     </div>
                   ))}
                 </div>
-
+                  
                 {/* Price breakdown */}
                 <div className="px-5 sm:px-6 py-4 space-y-2 border-b border-[#E5E7EB] bg-white">
                   <div className="flex justify-between items-center">
@@ -609,6 +610,7 @@ function PaymentContent() {
           </div>
         </div>
 
+
         {/* OTP Modal (commented out) */}
         {/* <PhoneOTPModal
           isOpen={showPhoneOTPModal}
@@ -619,6 +621,7 @@ function PaymentContent() {
           error={phoneVerification.error}
           sessionId={otpSessionId}
         /> */}
+        
       </div>
     </div>
   );
