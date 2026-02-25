@@ -36,25 +36,25 @@ const CheckoutProgress = () => (
         const isDone = i < steps.length - 1;
         return (
           <div key={step} className="flex items-center flex-1 last:flex-none">
-            <div className="flex items-center gap-2.5 flex-shrink-0">
+            <div className="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
               {/* Circle */}
-              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold transition-all ${
+              <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-[10px] sm:text-[11px] font-bold transition-all ${
                 isActive
                   ? "bg-red-800 text-white shadow-md shadow-red-800/30"
                   : isDone
                     ? "bg-stone-200 text-stone-500"
                     : "bg-stone-100 text-stone-400"
               }`}>
-                {isDone ? <CheckCircle className="w-3.5 h-3.5" /> : i + 1}
+                {isDone ? <CheckCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> : i + 1}
               </div>
               {/* Label */}
-              <span className={`text-xs font-semibold tracking-wide ${
+              <span className={`text-[10px] sm:text-xs font-semibold tracking-wide ${
                 isActive ? "text-red-800" : "text-stone-400"
               }`}>{step}</span>
             </div>
             {/* Connector */}
             {i < steps.length - 1 && (
-              <div className="flex-1 mx-3 h-px bg-stone-200 relative">
+              <div className="flex-1 min-w-[16px] mx-1.5 sm:mx-3 h-px bg-stone-200 relative">
                 <div className={`absolute inset-y-0 left-0 bg-red-800 transition-all duration-500 ${isDone ? "w-full" : "w-0"}`} />
               </div>
             )}
@@ -213,17 +213,6 @@ const PhoneOTPModal = ({ isOpen, onClose, onVerify, phone, isVerifying, error, s
 const PaymentToggle = ({ paymentMethod, setPaymentMethod, codAvailable }) => (
   <div className="bg-[#F3F4F6] rounded-[14px] p-1.5 flex flex-col sm:flex-row gap-2 sm:gap-1.5">
     <button
-      onClick={() => setPaymentMethod("online")}
-      className={`flex-1 flex items-center justify-center gap-2.5 min-h-[48px] py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-200 ${
-        paymentMethod === "online"
-          ? "bg-white text-[#1a1a1a] shadow-md shadow-black/[0.07]"
-          : "text-[#757575] hover:text-[#1a1a1a] hover:bg-white/50"
-      }`}
-    >
-      <CreditCard className={`h-4 w-4 flex-shrink-0 ${paymentMethod === "online" ? "text-red-800" : "text-stone-400"}`} />
-      <span>Online Payment</span>
-    </button>
-    <button
       onClick={() => codAvailable && setPaymentMethod("partial-cod")}
       disabled={!codAvailable}
       className={`flex-1 flex items-center justify-center gap-2.5 min-h-[48px] py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-200 ${
@@ -237,6 +226,17 @@ const PaymentToggle = ({ paymentMethod, setPaymentMethod, codAvailable }) => (
       <Banknote className={`h-4 w-4 flex-shrink-0 ${paymentMethod === "partial-cod" ? "text-red-800" : "text-stone-400"}`} />
       <span>Partial COD</span>
     </button>
+    <button
+      onClick={() => setPaymentMethod("online")}
+      className={`flex-1 flex items-center justify-center gap-2.5 min-h-[48px] py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-200 ${
+        paymentMethod === "online"
+          ? "bg-white text-[#1a1a1a] shadow-md shadow-black/[0.07]"
+          : "text-[#757575] hover:text-[#1a1a1a] hover:bg-white/50"
+      }`}
+    >
+      <CreditCard className={`h-4 w-4 flex-shrink-0 ${paymentMethod === "online" ? "text-red-800" : "text-stone-400"}`} />
+      <span>Online Payment</span>
+    </button>
   </div>
 );
 
@@ -247,7 +247,7 @@ function PaymentContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [checkoutData, setCheckoutData] = useState(null);
   const [showContent, setShowContent] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("online");
+  const [paymentMethod, setPaymentMethod] = useState("partial-cod");
   const [isProcessingOnline, setIsProcessingOnline] = useState(false);
   const [isProcessingPartialCOD, setIsProcessingPartialCOD] = useState(false);
   const [showPhoneOTPModal, setShowPhoneOTPModal] = useState(false);

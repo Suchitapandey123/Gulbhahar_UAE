@@ -574,7 +574,7 @@ const formatAddress = (addressData) => {
     if (!(date instanceof Date) || isNaN(date)) {
       return 'Invalid Date';
     }
-
+         
     const day = date.getDate();
     const month = date.toLocaleString('en-US', { month: 'short' });
     const year = date.getFullYear();
@@ -599,7 +599,8 @@ const formatAddress = (addressData) => {
     }
     return `₹ ${amount.toLocaleString('en-IN')}`;
   };
-
+     
+  
   // Determine order status
   const determineOrderStatus = (status) => {
     const statusMap = {

@@ -143,7 +143,7 @@ const GulbhaharSidebar = ({
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed left-0 top-0 h-full w-full max-w-[450px]  bg-sidebar z-[10001]",
+          "fixed left-0 top-0 h-full w-full sm:max-w-[450px] bg-sidebar z-[10001]",
           "transform transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
           "flex flex-col floral-pattern sidebar-glow",
           isOpen ? "translate-x-0" : "-translate-x-full",
