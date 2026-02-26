@@ -306,8 +306,8 @@ const FAQ = () => {
             <button className="bg-gradient-to-r from-red-900 to-red-800 text-white px-6 py-3 rounded-xl font-bold hover:from-red-800 hover:to-red-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
 
               📞 Call us at{" "}
-              <a href="tel:+919876543210" className="">
-                +91 98765 43210
+              <a href="tel:+919220927241" className="">
+                +91 9220927241
               </a>
 
             </button>
