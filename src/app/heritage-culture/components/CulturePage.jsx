@@ -1,3 +1,4 @@
+// src\app\heritage-culture\components\CulturePage.jsx
 "use client";
 import { Award, ChevronDown, Clock, Heart, MapPin, Star, Users } from 'lucide-react';
 import { useState, } from 'react';
@@ -296,14 +297,16 @@ const LuxuryCulturePage = () => {
 
                     {/* Mobile expandable content */}
                     <div className="lg:hidden">
-                      <button
-                        onClick={() => setSelectedCraft(selectedCraft === element.id ? null : element.id)}
-                        className="inline-flex items-center text-amber-600 hover:text-amber-800 transition-colors font-medium"
-                      >
-                        Learn More
-                        <ChevronDown className={`ml-2 w-4 h-4 transition-transform ${selectedCraft === element.id ? 'rotate-180' : ''}`} />
-                      </button>
-                      
+                      {selectedCraft !== element.id && (
+                        <button
+                          onClick={() => setSelectedCraft(element.id)}
+                          className="inline-flex items-center text-amber-600 hover:text-amber-800 transition-colors font-medium"
+                        >
+                          Learn More
+                          <ChevronDown className="ml-2 w-4 h-4 transition-transform" />
+                        </button>
+                      )}
+
                       {selectedCraft === element.id && (
                         <div className="space-y-6 border-t pt-6 mt-4">
                           <p className="text-gray-600 leading-relaxed">
@@ -332,13 +335,23 @@ const LuxuryCulturePage = () => {
                               </div>
                             </div>
                           </div>
+
+                          <button
+                            onClick={() => setSelectedCraft(null)}
+                            className="inline-flex items-center text-amber-600 hover:text-amber-800 transition-colors font-medium"
+                          >
+                            Show Less
+                            <ChevronDown className="ml-2 w-4 h-4 rotate-180 transition-transform" />
+                          </button>
                         </div>
                       )}
                     </div>
                   </div>
                 </div>
               </div>
+              
             ))}
+            
           </div>
         </div>
       </section>
