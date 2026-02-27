@@ -1,12 +1,13 @@
+// src\app\faq\components\Faq.jsx
 'use client';
 
 import React, { useState } from 'react';
-import { 
-  ChevronDown, 
-  HelpCircle, 
-  Package, 
-  RefreshCw, 
-  Palette, 
+import {
+  ChevronDown,
+  HelpCircle,
+  Package,
+  RefreshCw,
+  Palette,
   Info,
   Search,
   Star,
@@ -35,7 +36,7 @@ const allFaqs = [
     answer: "Yes, our juttis are designed with soft leather lining and cushioned soles to ensure maximum comfort for all-day wear.",
     category: "General"
   },
-  
+
   // Shipping FAQs
   {
     question: "Do you ship internationally?",
@@ -52,7 +53,7 @@ const allFaqs = [
     answer: "Once your order is shipped, you'll receive a tracking number via email. You can use this to track your package's journey on our website's order tracking page.",
     category: "Shipping"
   },
-  
+
   // Return FAQs
   {
     question: "What is your return policy?",
@@ -69,7 +70,7 @@ const allFaqs = [
     answer: "Yes, we offer exchanges for different sizes or styles within 14 days of delivery, subject to availability of the requested item.",
     category: "Return"
   },
-  
+
   // Customization FAQs
   {
     question: "Do you offer customization options?",
@@ -86,7 +87,7 @@ const allFaqs = [
     answer: "Absolutely! We welcome specific color requests and custom design ideas. Our artisans will work with you to bring your vision to life.",
     category: "Customization"
   },
-  
+
   // About FAQs
   {
     question: "How should I care for my juttis?",
@@ -115,20 +116,17 @@ const FAQItem = ({ question, answer, isOpen, onClick }) => {
         <span className="text-base sm:text-lg font-bold text-gray-900 pr-4 group-hover:text-red-900 transition-colors">
           {question}
         </span>
-        <div className={`w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-200 ${
-          isOpen ? 'bg-red-900 rotate-180' : 'group-hover:bg-red-200'
-        }`}>
+        <div className={`w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-200 ${isOpen ? 'bg-red-900 rotate-180' : 'group-hover:bg-red-200'
+          }`}>
           <TiltArrow
-            className={`w-4 h-4 transition-colors duration-200 ${
-              isOpen ? 'text-white' : 'text-red-600'
-            }`}
+            className={`w-4 h-4 transition-colors duration-200 ${isOpen ? 'text-white' : 'text-red-600'
+              }`}
           />
         </div>
       </button>
       <div
-        className={`overflow-hidden transition-all duration-300 ${
-          isOpen ? 'max-h-96 pb-4 sm:pb-6' : 'max-h-0'
-        }`}
+        className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-96 pb-4 sm:pb-6' : 'max-h-0'
+          }`}
       >
         <div className="px-4 sm:px-6">
           <div className="border-t border-red-100 pt-4">
@@ -146,7 +144,9 @@ const FAQ = () => {
   const [openIndex, setOpenIndex] = useState(null);
   const [activeCategory, setActiveCategory] = useState("General");
   const [searchTerm, setSearchTerm] = useState("");
-  
+  const [showpopup, setshowpopup] = useState(false)
+
+
   // Category configuration with icons
   const categories = [
     { name: "General", icon: HelpCircle, color: "text-blue-600", bgColor: "bg-blue-50" },
@@ -155,20 +155,20 @@ const FAQ = () => {
     { name: "Customization", icon: Palette, color: "text-purple-600", bgColor: "bg-purple-50" },
     { name: "About", icon: Info, color: "text-gray-600", bgColor: "bg-gray-50" }
   ];
-  
+
   // Filter FAQs based on active category and search term
   const filteredFaqs = allFaqs.filter(faq => {
     const matchesCategory = faq.category === activeCategory;
-    const matchesSearch = searchTerm === "" || 
+    const matchesSearch = searchTerm === "" ||
       faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
       faq.answer.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
-  
+
   const handleClick = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
-  
+
   const handleCategoryClick = (category) => {
     setActiveCategory(category);
     setOpenIndex(null);
@@ -178,18 +178,18 @@ const FAQ = () => {
   return (
     <div className="bg-gradient-to-br from-red-50/30 to-white pt-8 sm:pt-12 lg:pt-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-20">
-        
+
         {/* Header Section */}
         <div className="text-center mb-8 sm:mb-12">
           <div className="inline-flex items-center gap-2 bg-red-50 px-4 py-2 rounded-full mb-4">
             <HelpCircle className="h-5 w-5 text-red-600" />
             <span className="text-sm font-semibold text-red-900">Help Center</span>
           </div>
-          
+
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
             Frequently Asked Questions
           </h1>
-          
+
           <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto mb-6">
             Find answers to the most commonly asked questions about Gulbhahar products and services
           </p>
@@ -217,23 +217,20 @@ const FAQ = () => {
               const IconComponent = category.icon;
               const isActive = activeCategory === category.name;
               const categoryFaqCount = allFaqs.filter(faq => faq.category === category.name).length;
-              
+
               return (
-                <button 
+                <button
                   key={category.name}
-                  className={`p-4 sm:p-6 rounded-xl border-2 transition-all duration-200 text-center ${
-                    isActive 
-                      ? "bg-red-50 border-red-900 text-red-900 shadow-md transform scale-105" 
-                      : "bg-white border-red-200 text-gray-700 hover:border-red-300 hover:bg-red-50/50 hover:scale-102"
-                  }`}
+                  className={`p-4 sm:p-6 rounded-xl border-2 transition-all duration-200 text-center ${isActive
+                    ? "bg-red-50 border-red-900 text-red-900 shadow-md transform scale-105"
+                    : "bg-white border-red-200 text-gray-700 hover:border-red-300 hover:bg-red-50/50 hover:scale-102"
+                    }`}
                   onClick={() => handleCategoryClick(category.name)}
                 >
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 ${
-                    isActive ? 'bg-red-900' : category.bgColor
-                  }`}>
-                    <IconComponent className={`h-6 w-6 ${
-                      isActive ? 'text-white' : category.color
-                    }`} />
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 ${isActive ? 'bg-red-900' : category.bgColor
+                    }`}>
+                    <IconComponent className={`h-6 w-6 ${isActive ? 'text-white' : category.color
+                      }`} />
                   </div>
                   <div className="text-sm sm:text-base font-bold mb-1">{category.name}</div>
                   <div className="text-xs text-gray-500">{categoryFaqCount} questions</div>
@@ -270,7 +267,7 @@ const FAQ = () => {
               />
             ))}
           </div>
-          
+
           {/* No results message */}
           {filteredFaqs.length === 0 && (
             <div className="text-center py-12">
@@ -279,7 +276,7 @@ const FAQ = () => {
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">No questions found</h3>
               <p className="text-gray-600 mb-4">
-                {searchTerm 
+                {searchTerm
                   ? `No questions match "${searchTerm}" in ${activeCategory} category.`
                   : `No questions available in ${activeCategory} category yet.`
                 }
@@ -307,11 +304,33 @@ const FAQ = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button className="bg-gradient-to-r from-red-900 to-red-800 text-white px-6 py-3 rounded-xl font-bold hover:from-red-800 hover:to-red-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
-              Contact Support
+
+              📞 Call us at{" "}
+              <a href="tel:+919220927241" className="">
+                +91 9220927241
+              </a>
+
             </button>
-            <button className="bg-white border-2 border-red-900 text-red-900 px-6 py-3 rounded-xl font-bold hover:bg-red-50 transition-all duration-200 shadow-lg hover:shadow-xl">
+            <button onClick={() => setshowpopup(true)} className="bg-white border-2 border-red-900 text-red-900 px-6 py-3 rounded-xl font-bold hover:bg-red-50 transition-all duration-200 shadow-lg hover:shadow-xl">
               Live Chat
             </button>
+            {showpopup && (
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                <div className="bg-white rounded-2xl p-6 w-80 text-center shadow-xl">
+                  <h2 className="text-lg font-bold mb-3">🚧 Under Development</h2>
+                  <p className="text-gray-600 mb-4">
+                    Live chat is currently under development.
+                    You can contact us through the call option.
+                  </p>
+                  <button
+                    onClick={() => setshowpopup(false)}
+                    className="bg-red-900 text-white px-4 py-2 rounded-lg"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

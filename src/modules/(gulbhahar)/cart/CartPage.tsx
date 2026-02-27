@@ -1,3 +1,4 @@
+// src\modules\(gulbhahar)\cart\CartPage.tsx
 "use client";
 
 import analyticsAPI from "@/app/api/analytics/analytics";
@@ -7,7 +8,7 @@ import { gaEvent } from "@/utils/gtm/gtag";
 import { ChevronDown, ChevronUp, ShoppingBag, Trash2, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { ColorOption, SizeOption } from "../products/types";
 
 
@@ -28,6 +29,7 @@ interface CartItem {
   currentMainImage?: string;
   updatedAt?: string;
 }
+const MAX_QUANTITY = 10;
 
 const CartPage = () => {
   const {
@@ -40,6 +42,7 @@ const CartPage = () => {
     updateItemVariant,
     clearCart,
     addToCart,
+    isCartOpen,
   } = useCart();
   const router = useRouter();
 
@@ -56,6 +59,37 @@ const CartPage = () => {
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
   const [loadingItems, setLoadingItems] = useState<Set<string>>(new Set());
 
+ useEffect(() => {
+  if (isCartOpen) {
+    const scrollY = window.scrollY;
+
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.width = "100%";
+  } else {
+    const scrollY = document.body.style.top;
+
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.left = "";
+    document.body.style.right = "";
+    document.body.style.width = "";
+
+    if (scrollY) {
+      window.scrollTo(0, parseInt(scrollY || "0") * -1);
+    }
+  }
+
+  return () => {
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.left = "";
+    document.body.style.right = "";
+    document.body.style.width = "";
+  };
+}, [isCartOpen]);
   const toggleVariantSelector = (itemId: string) => {
     setExpandedItems((prev) => {
       const newSet = new Set(prev);
@@ -172,7 +206,9 @@ const CartPage = () => {
           </div>
 
           {/* Cart Items */}
-          <div className="flex-1 overflow-y-auto p-4">
+          <div
+          // onWheel={(e)=>e.stopPropagation()}
+  className="flex-1 h-full overflow-y-auto p-4 overscroll-contain">
             {cart.length === 0 && loadingItems.size === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center">
                 <ShoppingBag size={64} className="text-gray-300 mb-4" />
@@ -283,6 +319,7 @@ const CartPage = () => {
                           <div className="flex items-center gap-2 mt-2">
                             <button
                               onClick={() =>
+                              
                                 updateQuantity(
                                   item.id,
                                   item.quantity - 1,
@@ -290,6 +327,8 @@ const CartPage = () => {
                                   item.selectedSize,
                                 )
                               }
+                               
+
                             >
                               -
                             </button>
@@ -297,14 +336,16 @@ const CartPage = () => {
                             <span>{item.quantity}</span>
 
                             <button
-                              onClick={() =>
+                              onClick={() =>{
+                                if (item.quantity<MAX_QUANTITY){}
                                 updateQuantity(
                                   item.id,
                                   item.quantity + 1,
                                   item.selectedColor,
                                   item.selectedSize,
                                 )
-                              }
+                              }}
+                               disabled={item.quantity >= MAX_QUANTITY}
                             >
                               +
                             </button>

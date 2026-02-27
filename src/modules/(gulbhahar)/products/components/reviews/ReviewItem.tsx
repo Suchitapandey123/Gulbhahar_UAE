@@ -1,3 +1,4 @@
+// src\modules\(gulbhahar)\products\components\reviews\ReviewItem.tsx
 "use client";
 import { Edit, Star, ThumbsDown, ThumbsUp, Trash2, User } from "lucide-react";
 import { useState } from "react";
@@ -22,6 +23,8 @@ interface ReviewItemProps {
   formatDate: (date: string) => string;
   variant?: "mobile" | "desktop";
   deleting?: boolean;
+  activeReplyId: string | null;
+  onReplyToggle: (reviewId: string) => void;
 }
 
 export function ReviewItem({
@@ -33,12 +36,14 @@ export function ReviewItem({
   formatDate,
   variant = "desktop",
   deleting = false,
+  activeReplyId,
+  onReplyToggle,
 }: ReviewItemProps) {
-  const [showReply, setShowReply] = useState(false);
   const [editing, setEditing] = useState(false);
 
   const isMobile = variant === "mobile";
   const reviewId = review.reviewId || review._id || "";
+  const showReply = activeReplyId === reviewId;
 
   const handleEditStart = () => {
     setEditing(true);
@@ -164,7 +169,7 @@ export function ReviewItem({
             className={`flex items-center gap-${isMobile ? "3" : "4"} text-${isMobile ? "xs" : "sm"}`}
           >
             <button
-              onClick={() => setShowReply(!showReply)}
+              onClick={() => onReplyToggle(reviewId)}
               className={`text-red-900 hover:text-red-700 transition-colors font-medium ${!isMobile && "hover:underline"}`}
             >
               {showReply ? "Cancel" : "Reply"}
@@ -194,7 +199,7 @@ export function ReviewItem({
       )}
 
       {showReply && !editing && (
-        <ReplySection reviewIndex={index} variant={variant} />
+        <ReplySection reviewId={reviewId} variant={variant} />
       )}
     </div>
   );

@@ -1,3 +1,4 @@
+// src\modules\(gulbhahar)\products\components\ReviewsClient.tsx
 "use client";
 
 import { useAuth } from "@/providers/ContextProviders/AuthContext";
@@ -8,6 +9,7 @@ import { ReviewForm } from "./reviews/ReviewForm";
 import { ReviewItem } from "./reviews/ReviewItem";
 import { ReviewStats } from "./reviews/ReviewStats";
 import { SortDropdown } from "./reviews/SortDropdown";
+import Link from "next/link";
 
 export interface Review {
   reviewId: string;
@@ -48,6 +50,11 @@ export default function ReviewsClient({
 
   // Form state
   const [showReviewForm, setShowReviewForm] = useState(false);
+  const [activeReplyId, setActiveReplyId] = useState<string | null>(null);
+
+  const handleReplyToggle = (reviewId: string) => {
+    setActiveReplyId(activeReplyId === reviewId ? null : reviewId);
+  };
 
   // Check if user has already reviewed this product
   const checkUserReview = () => {
@@ -303,12 +310,15 @@ export default function ReviewsClient({
             Already Reviewed
           </div>
         ) : (
-          <div
+          <Link href={"/login"}>
+         <div
             className={`ml-auto px-${isMobile ? "3" : "4"} py-${isMobile ? "1" : "2"} bg-yellow-100 text-yellow-800 rounded${isMobile ? "-full" : "-lg"} text-${isMobile ? "xs" : "sm"} flex items-center gap-2`}
           >
             <span>👤</span>
             {isMobile ? "Login to Review" : "Login to Write Review"}
+         
           </div>
+          </Link>
         )}
       </div>
 
@@ -395,6 +405,8 @@ export default function ReviewsClient({
                       formatDate={formatDate}
                       variant={variant}
                       deleting={deleting === (review.reviewId || review._id)}
+                      activeReplyId={activeReplyId}
+                      onReplyToggle={handleReplyToggle}
                     />
                   ))}
                 </div>
