@@ -40,7 +40,7 @@ export default async function QuickLinks({
   if (!Object.keys(quickLinks).length) return null;
 
   return (
-    <div className="max-w-[1600px] mx-auto px-4 py-16">
+    <div className="max-w-[1600px] mx-auto py-16">
       {Object.keys(quickLinks).map((category) => {
         const links = quickLinks[category];
         if (!links || !links.length) return null;

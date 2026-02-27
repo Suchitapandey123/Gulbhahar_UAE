@@ -75,6 +75,42 @@ function MotionImageSlider({ onColorChange }) {
   );
 }
 
+function MobileHeroSlider() {
+  const [index, setIndex] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setIndex(p => (p + 1) % images.length), 4000);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <div className="relative w-full h-full overflow-hidden">
+      <AnimatePresence>
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, scale: 1.06 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.2, ease: "easeInOut" }}
+          className="absolute inset-0"
+          style={{ backgroundImage: `url(${images[index]})`, backgroundSize: 'cover', backgroundPosition: 'top center' }}
+        />
+      </AnimatePresence>
+      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/20 to-black/75" />
+      <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center z-10">
+        <p className="text-white/60 text-[9px] font-semibold tracking-[0.3em] uppercase mb-2">Gulbhahar</p>
+        <h1 className="text-white text-[26px] font-serif font-light leading-tight">
+          Welcome<br /><span className="italic">Back</span>
+        </h1>
+        <div className="w-8 h-px bg-white/40 mt-3" />
+      </div>
+      <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-1.5 z-10">
+        {images.map((_, i) => (
+          <span key={i} className={`h-1 rounded-full transition-all duration-300 ${i === index ? "w-5 bg-white" : "w-1.5 bg-white/35"}`} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 const LoginPage = () => {
   const { login, isAuthenticated, isLoading: authLoading } = useAuth();
 

@@ -702,7 +702,7 @@ const RecoverAccountPage = () => {
 
   return (
     <motion.div
-      className="w-full min-h-screen bg-gradient-to-br from-white to-red-50 flex items-start md:items-center justify-center p-0 md:p-6 md:pt-4"
+      className="w-full h-auto md:min-h-screen bg-gradient-to-br from-white to-red-50 flex items-start md:items-center justify-center p-0 md:p-6 md:pt-4"
       animate={{
         backgroundColor: isMounted && typeof window !== 'undefined' && window.innerWidth >= 1024 ? bgColor : '#ffffff',
       }}

@@ -211,7 +211,7 @@ const { showToast, ToastContainer } = useToast();
 
   const shopLinks = [
     { href: "/collections", label: "All Collections" },
-    { href: "/collections", label: "Limited Collections" },
+    // { href: "/collections", label: "Limited Collections" },
     { href: "/refund-policy", label: "Refund And Cancellation Policy" },
     {
       href: "/delivery-shipping-policy",
