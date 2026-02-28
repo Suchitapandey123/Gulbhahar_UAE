@@ -733,7 +733,7 @@ const SignupPage = () => {
         className="md:hidden overflow-y-auto"
         style={{
           height: 'calc(100vh - 80px)',
-          marginTop: '80px',
+          marginTop: '52px',
           background: 'linear-gradient(160deg, #fdf0ec 0%, #fef6f0 40%, #fff8f2 70%, #fffaf5 100%)'
         }}
       >
@@ -757,17 +757,19 @@ const SignupPage = () => {
           style={{
             minHeight: 'calc(100vh - 80px)',
             borderRadius: '28px 28px 0 0',
-            background: 'rgba(255,255,255,0.98)',
+            borderTop: '3px solid transparent',
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.98), rgba(255,255,255,0.98)),
+              linear-gradient(90deg, #911b1b, #b91c1c, #fb7185, #fda4af)
+            `,
+            backgroundOrigin: 'border-box',
+            backgroundClip: 'padding-box, border-box',
+            WebkitBackgroundClip: 'padding-box, border-box',
             backdropFilter: 'blur(28px)',
             WebkitBackdropFilter: 'blur(28px)',
             boxShadow: '0 -10px 52px rgba(180,60,60,0.09), 0 -2px 16px rgba(180,60,60,0.05)',
           }}
         >
-          {/* Gradient accent bar */}
-          <div
-            className="absolute top-0 left-0 right-0 h-[3px] rounded-t-[28px]"
-            style={{ background: 'linear-gradient(90deg, #911b1b 0%, #b91c1c 40%, #fb7185 70%, #fda4af 100%)' }}
-          />
 
           <div className="flex flex-col flex-1 px-5 pt-6 pb-10">
             {/* Drag handle */}

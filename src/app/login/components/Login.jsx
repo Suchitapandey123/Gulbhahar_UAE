@@ -119,8 +119,6 @@ const LoginPage = () => {
   const [showMobileInput, setShowMobileInput] = useState(false);
   const [showOtpInput, setShowOtpInput] = useState(false);
   const [direction, setDirection] = useState("forward");
-  const [bgColor, setBgColor] = useState(bgColors[0]);
-  const [isMounted, setIsMounted] = useState(false);
 
   // Form state
   const [email, setEmail] = useState('');
@@ -138,11 +136,7 @@ const LoginPage = () => {
   const [otpTimer, setOtpTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);
 
-  const { data: session, status } = useSession();
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const { status } = useSession();
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -399,300 +393,283 @@ const LoginPage = () => {
     setOtp('');
   };
 
-  return (
-    <motion.div
-      className="min-h-screen bg-gradient-to-br from-white to-red-50 flex items-center justify-center p-0 sm:p-4 md:p-6"
-      animate={{ backgroundColor: isMounted && typeof window !== 'undefined' && window.innerWidth >= 1024 ? bgColor : '#ffffff' }}
-      transition={{ duration: 1, ease: "easeInOut" }}
-    >
-     
-        <div className="flex w-full max-w-[1200px] 
-rounded-none md:rounded-2xl 
-bg-white 
-md:h-[85vh] 
-max-h-[700px] 
-overflow-hidden 
-shadow-none md:shadow-xl">
-        {/* Left side image slider - Hidden on mobile */}
-        <div className="hidden md:block md:w-1/2">
-          <MotionImageSlider onColorChange={setBgColor} />
-        </div>
-        
-        {/* Right side form - Full width on mobile */}
-        <div className="w-full md:w-1/2 flex flex-col">
-          {/* Form Section */}
-          <div className="flex-1 relative flex flex-col justify-center">
-            <div className="p-5 sm:p-6 md:p-8 lg:p-10 flex flex-col">
-              {/* HEADER - Made sticky for mobile */}
-              <div className="sticky top-0 z-10 bg-white pt-4 pb-3 -mx-5 px-5 sm:static sm:bg-transparent sm:mx-0 sm:px-0">
-                <div className="flex items-center justify-center mb-4 relative">
-                  <button
-                    onClick={() => { window.location.href = '/'; }}
-                    className="absolute left-0 text-[#7f1d1d] hover:text-red-800 transition-all duration-300 cursor-pointer p-2 rounded-full hover:bg-red-50"
-                  >
-                    <FaArrowLeft size={22} />
-                  </button>
-                  <h2 className="text-2xl sm:text-3xl text-center font-bold text-[#7f1d1d] bg-gradient-to-r from-[#7f1d1d] to-red-700 bg-clip-text text-transparent">
-                    Welcome back
-                  </h2>
-                </div>
-                <p className="text-gray-600 text-sm sm:text-base text-center mb-5">
-                  Don't have an account?{" "}
-                  <button
-                    type="button"
-                    onClick={() => { window.location.href = '/signup'; }}
-                    className="text-[#7f1d1d] hover:text-red-800 font-semibold ml-1 cursor-pointer transition-all duration-300 hover:underline underline-offset-2"
-                  >
-                    Sign up
-                  </button>
-                </p>
-              </div>
+  // Shared form content for both mobile and desktop
+  const renderFormContent = () => (
+    <>
+      {/* Error / Success messages */}
+      {generalError && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
+          className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm mb-4 text-center shadow-sm"
+        >
+          {generalError}
+        </motion.div>
+      )}
+      {successMessage && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
+          className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm mb-4 text-center shadow-sm"
+        >
+          {successMessage}
+        </motion.div>
+      )}
 
-              {/* Error / Success messages */}
-              {generalError && (
-                <motion.div 
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm mb-4 text-center shadow-sm"
-                >
-                  {generalError}
-                </motion.div>
-              )}
-              {successMessage && (
-                <motion.div 
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm mb-4 text-center shadow-sm"
-                >
-                  {successMessage}
-                </motion.div>
-              )}
+      {/* Toggle buttons */}
+      <div className="flex flex-row gap-3 justify-center mb-4">
+        <button
+          type="button"
+          onClick={() => { setDirection("backward"); switchToMobile(); }}
+          className={`flex-1 py-3 px-4 rounded-xl shadow-md transition-all duration-300 cursor-pointer text-sm font-medium ${
+            loginMethod === "mobile"
+              ? "bg-gradient-to-r from-[#7f1d1d] to-red-800 text-white shadow-lg"
+              : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-md"
+          }`}
+        >
+          Login with Mobile
+        </button>
+        <button
+          type="button"
+          onClick={switchToEmail}
+          className={`flex-1 py-3 px-4 rounded-xl shadow-md transition-all duration-300 cursor-pointer text-sm font-medium ${
+            loginMethod === "email"
+              ? "bg-gradient-to-r from-[#7f1d1d] to-red-800 text-white shadow-lg"
+              : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-md"
+          }`}
+        >
+          Login with Email
+        </button>
+      </div>
 
-              {/* Toggle buttons */}
-              <div className="flex flex-row gap-3 justify-center mb-4">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setDirection("backward");
-                    switchToMobile();
-                  }}
-                  className={`flex-1 py-3 px-4 rounded-xl shadow-md transition-all duration-300 cursor-pointer text-sm sm:text-base font-medium ${
-                    loginMethod === "mobile" 
-                      ? "bg-gradient-to-r from-[#7f1d1d] to-red-800 text-white shadow-lg" 
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-md"
-                  }`}
-                >
-                  Login with Mobile
-                </button>
-                <button
-                  type="button"
-                  onClick={switchToEmail}
-                  className={`flex-1 py-3 px-4 rounded-xl shadow-md transition-all duration-300 cursor-pointer text-sm sm:text-base font-medium ${
-                    loginMethod === "email" 
-                      ? "bg-gradient-to-r from-[#7f1d1d] to-red-800 text-white shadow-lg" 
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-md"
-                  }`}
-                >
-                  Login with Email
+      {/* Animated form area */}
+      <div
+        className="relative overflow-hidden w-full transition-[height] duration-300 ease-in-out"
+        style={{ height: loginMethod === 'mobile' && showMobileInput && !showOtpInput ? '140px' : '264px' }}
+      >
+        <AnimatePresence initial={false}>
+          {loginMethod === "email" ? (
+            <motion.form
+              key="email-login"
+              variants={innerFormVariants}
+              custom={direction}
+              initial="enter" animate="center" exit="exit"
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+              className="absolute w-full left-0 right-0"
+              onSubmit={handleEmailLogin}
+            >
+              <input
+                type="email" value={email} onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email Address" disabled={isLoading}
+                className="w-full bg-white shadow-sm p-4 rounded-xl outline-none mb-4 cursor-text text-base border border-gray-200 focus:border-[#7f1d1d] focus:ring-2 focus:ring-[#7f1d1d]/20 transition-all duration-300"
+              />
+              <div className="relative mb-4">
+                <input
+                  type={showPassword ? "text" : "password"} value={password}
+                  onChange={(e) => setPassword(e.target.value)} placeholder="Password" disabled={isLoading}
+                  className="w-full bg-white shadow-sm p-4 rounded-xl outline-none cursor-text text-base border border-gray-200 focus:border-[#7f1d1d] focus:ring-2 focus:ring-[#7f1d1d]/20 transition-all duration-300 pr-12"
+                />
+                <button type="button" onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-[#7f1d1d] transition-colors cursor-pointer">
+                  {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
                 </button>
               </div>
-
-              {/* Animated form area - height adapts to content */}
-              <div
-                className="relative overflow-hidden w-full transition-[height] duration-300 ease-in-out"
-                style={{
-                  height: loginMethod === 'mobile' && showMobileInput && !showOtpInput
-                    ? '140px'
-                    : '264px'
-                }}
-              >
-                <AnimatePresence initial={false}>
-                  {loginMethod === "email" ? (
-                    <motion.form
-                      key="email-login"
-                      variants={innerFormVariants}
-                      custom={direction}
-                      initial="enter"
-                      animate="center"
-                      exit="exit"
-                      transition={{ duration: 0.4, ease: "easeInOut" }}
-                      className="absolute w-full left-0 right-0"
-                      onSubmit={handleEmailLogin}
-                    >
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Email Address"
-                        className="w-full bg-white shadow-sm p-4 rounded-xl outline-none mb-4 cursor-text text-base border border-gray-200 focus:border-[#7f1d1d] focus:ring-2 focus:ring-[#7f1d1d]/20 transition-all duration-300"
-                        disabled={isLoading}
-                      />
-                      <div className="relative mb-4">
-                        <input
-                          type={showPassword ? "text" : "password"}
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          placeholder="Password"
-                          className="w-full bg-white shadow-sm p-4 rounded-xl outline-none cursor-text text-base border border-gray-200 focus:border-[#7f1d1d] focus:ring-2 focus:ring-[#7f1d1d]/20 transition-all duration-300 pr-12"
-                          disabled={isLoading}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-[#7f1d1d] transition-colors cursor-pointer"
-                        >
-                          {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
-                        </button>
-                      </div>
-                      <div className="flex justify-center items-center text-sm mb-4">
-                        <button
-                          type="button"
-                          onClick={() => { window.location.href = '/forgot-password'; }}
-                          className="text-[#7f1d1d] hover:text-red-800 cursor-pointer font-medium transition-all duration-300 hover:underline underline-offset-2"
-                        >
-                          Forgot Password?
-                        </button>
-                      </div>
-                      <button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-full bg-gradient-to-r from-[#7f1d1d] to-red-800 text-white py-4 rounded-xl shadow-lg mb-2 disabled:opacity-50 cursor-pointer hover:shadow-xl active:scale-[0.98] transition-all duration-300 text-base font-semibold"
-                      >
-                        {isLoading ? (
-                          <span className="flex items-center justify-center">
-                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                            Signing in...
-                          </span>
-                        ) : 'Log in'}
+              <div className="flex justify-center items-center text-sm mb-4">
+                <button type="button" onClick={() => { window.location.href = '/forgot-password'; }}
+                  className="text-[#7f1d1d] hover:text-red-800 cursor-pointer font-medium transition-all duration-300 hover:underline underline-offset-2">
+                  Forgot Password?
+                </button>
+              </div>
+              <button type="submit" disabled={isLoading}
+                className="w-full bg-gradient-to-r from-[#7f1d1d] to-red-800 text-white py-4 rounded-xl shadow-lg mb-2 disabled:opacity-50 cursor-pointer hover:shadow-xl active:scale-[0.98] transition-all duration-300 text-base font-semibold">
+                {isLoading ? (
+                  <span className="flex items-center justify-center">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Signing in...
+                  </span>
+                ) : 'Log in'}
+              </button>
+            </motion.form>
+          ) : loginMethod === "mobile" && showMobileInput ? (
+            <motion.div
+              key="mobile-input"
+              variants={innerFormVariants}
+              custom={direction}
+              initial="enter" animate="center" exit="exit"
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+              className="absolute w-full left-0 right-0"
+            >
+              <input
+                type="tel" value={mobileNumber}
+                onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, ''))}
+                placeholder="Mobile Number" maxLength={10} disabled={isLoading || showOtpInput}
+                className="w-full bg-white shadow-sm p-4 rounded-xl outline-none mb-4 cursor-text text-base border border-gray-200 focus:border-[#7f1d1d] focus:ring-2 focus:ring-[#7f1d1d]/20 transition-all duration-300"
+              />
+              {showOtpInput && (
+                <>
+                  <input
+                    type="text" value={otp}
+                    onChange={(e) => { const value = e.target.value.replace(/\D/g, '').slice(0, 6); setOtp(value); }}
+                    placeholder="Enter 6-digit OTP" maxLength={6} disabled={isLoading}
+                    className="w-full bg-white shadow-sm p-4 rounded-xl outline-none mb-4 cursor-text text-base border border-gray-200 focus:border-[#7f1d1d] focus:ring-2 focus:ring-[#7f1d1d]/20 transition-all duration-300 text-center tracking-widest"
+                  />
+                  <button type="button" onClick={verifyOtp} disabled={isLoading || otp.length !== 6}
+                    className="w-full bg-gradient-to-r from-[#7f1d1d] to-red-800 text-white py-4 rounded-xl shadow-lg disabled:opacity-50 mb-2 cursor-pointer hover:shadow-xl active:scale-[0.98] transition-all duration-300 text-base font-semibold">
+                    {isLoading ? (
+                      <span className="flex items-center justify-center">
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                        Verifying...
+                      </span>
+                    ) : 'Verify OTP'}
+                  </button>
+                  <div className="text-center mb-2">
+                    {canResend ? (
+                      <button onClick={resendOtp} className="text-[#7f1d1d] hover:text-red-800 cursor-pointer text-sm font-medium transition-all duration-300 hover:underline underline-offset-2">
+                        Resend OTP
                       </button>
-                    </motion.form>
-                  ) : loginMethod === "mobile" && showMobileInput ? (
-                    <motion.div
-                      key="mobile-input"
-                      variants={innerFormVariants}
-                      custom={direction}
-                      initial="enter"
-                      animate="center"
-                      exit="exit"
-                      transition={{ duration: 0.4, ease: "easeInOut" }}
-                      className="absolute w-full left-0 right-0"
-                    >
-                      <input
-                        type="tel"
-                        value={mobileNumber}
-                        onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, ''))}
-                        placeholder="Mobile Number"
-                        className="w-full bg-white shadow-sm p-4 rounded-xl outline-none mb-4 cursor-text text-base border border-gray-200 focus:border-[#7f1d1d] focus:ring-2 focus:ring-[#7f1d1d]/20 transition-all duration-300"
-                        maxLength={10}
-                        disabled={isLoading || showOtpInput}
-                      />
-                      
-                      {showOtpInput && (
-                        <>
-                          <input
-                            type="text"
-                            value={otp}
-                            onChange={(e) => {
-                              const value = e.target.value.replace(/\D/g, '').slice(0, 6);
-                              setOtp(value);
-                            }}
-                            placeholder="Enter 6-digit OTP"
-                            maxLength={6}
-                            disabled={isLoading}
-                            className="w-full bg-white shadow-sm p-4 rounded-xl outline-none mb-4 cursor-text text-base border border-gray-200 focus:border-[#7f1d1d] focus:ring-2 focus:ring-[#7f1d1d]/20 transition-all duration-300 text-center tracking-widest"
-                          />
-                          
-                          <button
-                            type="button"
-                            onClick={verifyOtp}
-                            disabled={isLoading || otp.length !== 6}
-                            className="w-full bg-gradient-to-r from-[#7f1d1d] to-red-800 text-white py-4 rounded-xl shadow-lg disabled:opacity-50 mb-2 cursor-pointer hover:shadow-xl active:scale-[0.98] transition-all duration-300 text-base font-semibold"
-                          >
-                            {isLoading ? (
-                              <span className="flex items-center justify-center">
-                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                                Verifying...
-                              </span>
-                            ) : 'Verify OTP'}
-                          </button>
-                          
-                          <div className="text-center mb-2">
-                            {canResend ? (
-                              <button 
-                                onClick={resendOtp} 
-                                className="text-[#7f1d1d] hover:text-red-800 cursor-pointer text-sm font-medium transition-all duration-300 hover:underline underline-offset-2"
-                              >
-                                Resend OTP
-                              </button>
-                            ) : (
-                              <p className="text-gray-500 text-sm">Resend OTP in <span className="font-semibold">{otpTimer}s</span></p>
-                            )}
-                          </div>
-                        </>
-                      )}
-                      
-                      {!showOtpInput && (
-                        <button
-                          type="button"
-                          onClick={sendOtp}
-                          disabled={isLoading || mobileNumber.length !== 10}
-                          className="w-full bg-gradient-to-r from-[#7f1d1d] to-red-800 text-white py-4 rounded-xl shadow-lg disabled:opacity-50 mb-2 cursor-pointer hover:shadow-xl active:scale-[0.98] transition-all duration-300 text-base font-semibold"
-                        >
-                          {isLoading ? (
-                            <span className="flex items-center justify-center">
-                              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                              Sending...
-                            </span>
-                          ) : 'Send OTP'}
-                        </button>
-                      )}
-                    </motion.div>
-                  ) : null}
-                </AnimatePresence>
-              </div>
-            </div>
+                    ) : (
+                      <p className="text-gray-500 text-sm">Resend OTP in <span className="font-semibold">{otpTimer}s</span></p>
+                    )}
+                  </div>
+                </>
+              )}
+              {!showOtpInput && (
+                <button type="button" onClick={sendOtp} disabled={isLoading || mobileNumber.length !== 10}
+                  className="w-full bg-gradient-to-r from-[#7f1d1d] to-red-800 text-white py-4 rounded-xl shadow-lg disabled:opacity-50 mb-2 cursor-pointer hover:shadow-xl active:scale-[0.98] transition-all duration-300 text-base font-semibold">
+                  {isLoading ? (
+                    <span className="flex items-center justify-center">
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                      Sending...
+                    </span>
+                  ) : 'Send OTP'}
+                </button>
+              )}
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+      </div>
+
+      {/* Divider + social buttons */}
+      <div className="flex items-center my-2 gap-3">
+        <hr className="flex-1 border-gray-300" />
+        <span className="text-gray-500 text-xs font-medium">Or continue with</span>
+        <hr className="flex-1 border-gray-300" />
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <button type="button" onClick={handleGoogleLogin} disabled={socialLoginLoading}
+          className="flex items-center justify-center gap-2 p-3.5 border border-gray-300 rounded-xl hover:bg-gray-50 transition-all duration-300 disabled:opacity-50 cursor-pointer hover:shadow-md active:scale-[0.98] text-sm font-medium">
+          {socialLoginLoading
+            ? <div className="w-5 h-5 border-2 border-[#7f1d1d] border-t-transparent rounded-full animate-spin" />
+            : <FcGoogle size={22} />}
+          <span className="text-gray-700">Google</span>
+        </button>
+        <button type="button" onClick={handleFacebookLogin} disabled={socialLoginLoading}
+          className="flex items-center justify-center gap-2 p-3.5 border border-gray-300 rounded-xl hover:bg-gray-50 transition-all duration-300 disabled:opacity-50 cursor-pointer hover:shadow-md active:scale-[0.98] text-sm font-medium">
+          {socialLoginLoading
+            ? <div className="w-5 h-5 border-2 border-[#7f1d1d] border-t-transparent rounded-full animate-spin" />
+            : <FaFacebookF size={20} className="text-blue-600" />}
+          <span className="text-gray-700">Facebook</span>
+        </button>
+      </div>
+    </>
+  );
+
+  return (
+    <div className="w-full overflow-x-hidden">
+      {/* ══════════════════════════════════════════════════════════════════════
+          MOBILE LAYOUT  (<md)
+          Hero image 35vh sticky · card scrolls over · gradient border
+      ══════════════════════════════════════════════════════════════════════ */}
+      <div className="md:hidden overflow-y-auto"
+        style={{ height: 'calc(100vh - 52px)', marginTop: '52px', background: 'linear-gradient(160deg, #fdf0ec 0%, #fef6f0 40%, #fff8f2 70%, #fffaf5 100%)' }}>
+
+        {/* Hero image — sticky within this scroll container */}
+        <div className="sticky top-0 z-0 flex-shrink-0"
+          style={{ height: '35vh', minHeight: '220px', maxHeight: '300px' }}>
+          <MobileHeroSlider />
+          <button
+            onClick={() => { window.location.href = '/'; }}
+            className="absolute top-4 left-4 z-20 flex items-center gap-1.5 text-white bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/25 transition-all duration-200 px-3 py-1.5 rounded-full text-[12px] font-medium"
+          >
+            <FaArrowLeft size={11} /> Back
+          </button>
+        </div>
+
+        {/* Card — scrolls over image */}
+        <div className="relative z-10 -mt-6"
+          style={{
+            minHeight: 'calc(100vh - 52px)',
+            borderRadius: '28px 28px 0 0',
+            borderTop: '3px solid transparent',
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.98), rgba(255,255,255,0.98)),
+              linear-gradient(90deg, #911b1b, #b91c1c, #fb7185, #fda4af)
+            `,
+            backgroundOrigin: 'border-box',
+            backgroundClip: 'padding-box, border-box',
+            WebkitBackgroundClip: 'padding-box, border-box',
+            backdropFilter: 'blur(28px)',
+            WebkitBackdropFilter: 'blur(28px)',
+            boxShadow: '0 -10px 52px rgba(180,60,60,0.09), 0 -2px 16px rgba(180,60,60,0.05)',
+          }}>
+          <div className="flex flex-col flex-1 px-5 pt-6 pb-10">
+
+            {/* Drag handle */}
+            <div className="w-10 h-[3px] rounded-full mx-auto mb-5"
+              style={{ background: 'linear-gradient(90deg, #fda4af 0%, #f43f5e 50%, #fda4af 100%)' }} />
+
+            {/* Title */}
+            <h2 className="text-[27px] text-[#3d1010] font-light text-center leading-snug mb-1"
+              style={{ fontFamily: "'Old Standard TT', serif" }}>
+              Welcome <em>Back</em>
+            </h2>
+            <p className="text-gray-400 text-[13px] text-center mb-5">
+              Don&apos;t have an account?{' '}
+              <button type="button" onClick={() => { window.location.href = '/signup'; }}
+                className="font-semibold underline underline-offset-2 transition-colors" style={{ color: '#911b1b' }}>
+                Sign up
+              </button>
+            </p>
+
+            {renderFormContent()}
           </div>
-          
-          {/* Social buttons section - REDUCED GAP */}
-          <div className="p-5 sm:p-6 md:p-8 lg:p-10 pt-0">
-            <div className="flex items-center my-2 sm:my-3 gap-3">
-              <hr className="flex-1 border-gray-300" />
-              <span className="text-gray-500 text-xs sm:text-sm font-medium">Or continue with</span>
-              <hr className="flex-1 border-gray-300" />
-            </div>
-            <div className="grid grid-cols-2 gap-3 sm:gap-4">
-              <button
-                type="button"
-                onClick={handleGoogleLogin}
-                disabled={socialLoginLoading}
-                className="flex items-center justify-center gap-2 p-3.5 sm:p-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition-all duration-300 disabled:opacity-50 cursor-pointer hover:shadow-md active:scale-[0.98] text-sm sm:text-base font-medium"
-              >
-                {socialLoginLoading ? (
-                  <div className="w-5 h-5 border-2 border-[#7f1d1d] border-t-transparent rounded-full animate-spin mr-2"></div>
-                ) : (
-                  <FcGoogle size={22} className="sm:w-5 sm:h-5" />
-                )}
-                <span className="text-gray-700">Google</span>
-              </button>
-              
-              <button
-                type="button"
-                onClick={handleFacebookLogin}
-                disabled={socialLoginLoading}
-                className="flex items-center justify-center gap-2 p-3.5 sm:p-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition-all duration-300 disabled:opacity-50 cursor-pointer hover:shadow-md active:scale-[0.98] text-sm sm:text-base font-medium"
-              >
-                {socialLoginLoading ? (
-                  <div className="w-5 h-5 border-2 border-[#7f1d1d] border-t-transparent rounded-full animate-spin mr-2"></div>
-                ) : (
-                  <FaFacebookF size={20} className="text-blue-600 sm:w-5 sm:h-5" />
-                )}
-                <span className="text-gray-700">Facebook</span>
-              </button>
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          DESKTOP LAYOUT  (≥md) — image left · form right (unchanged)
+      ══════════════════════════════════════════════════════════════════════ */}
+      <div className="hidden md:flex min-h-screen items-center justify-center p-4 md:p-6">
+        <div className="flex w-full max-w-[1200px] rounded-2xl bg-white md:h-[85vh] max-h-[700px] overflow-hidden shadow-xl">
+
+          {/* Left — image slider */}
+          <div className="md:w-1/2">
+            <MotionImageSlider onColorChange={() => {}} />
+          </div>
+
+          {/* Right — form */}
+          <div className="w-full md:w-1/2 flex flex-col overflow-y-auto">
+            <div className="flex-1 flex flex-col justify-center p-8 lg:p-10">
+              <div className="flex items-center justify-center mb-4 relative">
+                <button onClick={() => { window.location.href = '/'; }}
+                  className="absolute left-0 text-[#7f1d1d] hover:text-red-800 transition-all duration-300 cursor-pointer p-2 rounded-full hover:bg-red-50">
+                  <FaArrowLeft size={22} />
+                </button>
+                <h2 className="text-2xl sm:text-3xl text-center font-bold text-[#7f1d1d] bg-gradient-to-r from-[#7f1d1d] to-red-700 bg-clip-text text-transparent">
+                  Welcome back
+                </h2>
+              </div>
+              <p className="text-gray-600 text-sm text-center mb-5">
+                Don&apos;t have an account?{' '}
+                <button type="button" onClick={() => { window.location.href = '/signup'; }}
+                  className="text-[#7f1d1d] hover:text-red-800 font-semibold ml-1 cursor-pointer transition-all duration-300 hover:underline underline-offset-2">
+                  Sign up
+                </button>
+              </p>
+              {renderFormContent()}
             </div>
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
