@@ -5,6 +5,29 @@ import { Plus, Trash2 } from "lucide-react";
 import Breadcrumb from "../Profile/Breadcrumb";
 import profileAPI from "../../../../../api/profile/profile";
 
+// Returns a unique fingerprint string for an address to detect duplicates
+const getAddressKey = (address) => {
+  const addr = address.shippingAddress || address;
+  return [
+    (addr.fullName || "").toLowerCase().trim(),
+    (addr.addressLine1 || addr.address || "").toLowerCase().trim(),
+    (addr.city || "").toLowerCase().trim(),
+    (addr.state || addr.region || "").toLowerCase().trim(),
+    (addr.postalCode || "").trim(),
+    (addr.phone || "").trim(),
+  ].join("|");
+};
+
+const deduplicateAddresses = (addresses) => {
+  const seen = new Set();
+  return addresses.filter((address) => {
+    const key = getAddressKey(address);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+};
+
 const AddressBookView = ({ onNavigate, ProfileView }) => {
   const [showForm, setShowForm] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -25,13 +48,12 @@ const AddressBookView = ({ onNavigate, ProfileView }) => {
   const loadAddresses = useCallback(async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const response = await profileAPI.getUserAddresses();
-      // console.log("Address API Response:", response);
 
       if (response.success && Array.isArray(response.data)) {
-        setSavedAddresses(response.data);
+        setSavedAddresses(deduplicateAddresses(response.data));
       } else {
         setSavedAddresses([]);
         console.warn("Unexpected response format:", response);
@@ -56,27 +78,25 @@ const AddressBookView = ({ onNavigate, ProfileView }) => {
 
   const handleRemoveAddress = async (id) => {
     try {
-      // If you have a delete API endpoint, use it here:
       // await profileAPI.deleteAddress(id);
-      
-      // Optimistic update
+
       setSavedAddresses((prev) =>
         prev.filter((address) => {
-          // Make sure we're accessing the correct ID property
-          return address.id !== id && 
-                 address._id !== id && 
-                 address.shippingAddress?.postalCode !== id
+          return (
+            address.id !== id &&
+            address._id !== id &&
+            (address.shippingAddress?.postalCode !== id)
+          );
         })
       );
     } catch (error) {
       console.error("Error deleting address:", error);
-      // Reload addresses to revert optimistic update if needed
       loadAddresses();
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 lg:px-0 mt-6">
+    <div className="max-w-4xl mx-auto mt-6">
       {/* Breadcrumb */}
       <Breadcrumb
         items={[
@@ -85,15 +105,17 @@ const AddressBookView = ({ onNavigate, ProfileView }) => {
         ]}
       />
 
-      {/* Add New Address Button */}
-      <div className="mb-6 flex justify-between items-center">
+      {/* Header */}
+      <div className="mb-6 flex flex-wrap gap-3 justify-between items-start sm:items-center">
         <div>
-          <h1 className="text-2xl font-bold">Address Book</h1>
-          <p className="text-gray-600">Manage your delivery addresses</p>
+          <h1 className="text-xl sm:text-2xl font-bold">Address Book</h1>
+          <p className="text-gray-600 text-sm sm:text-base">
+            Manage your delivery addresses
+          </p>
         </div>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="flex items-center gap-2 bg-red-900 text-white px-5 py-2.5 rounded-lg hover:bg-red-800 transition"
+          className="flex items-center gap-2 bg-red-900 text-white px-4 py-2 sm:px-5 sm:py-2.5 rounded-lg hover:bg-red-800 transition text-sm sm:text-base whitespace-nowrap"
         >
           <Plus className="w-4 h-4" />
           {showForm ? "Hide Form" : "Add New Address"}
@@ -124,18 +146,20 @@ const AddressBookView = ({ onNavigate, ProfileView }) => {
       {/* Address Form */}
       {showForm && !isLoading && (
         <div className="bg-white rounded-xl border border-red-100 shadow-sm mb-6">
-          <div className="bg-red-50 px-6 py-4 border-b border-red-100">
-            <h2 className="text-xl font-semibold">Add New Address</h2>
+          <div className="bg-red-50 px-4 sm:px-6 py-4 border-b border-red-100">
+            <h2 className="text-lg sm:text-xl font-semibold">
+              Add New Address
+            </h2>
           </div>
 
-          <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div className="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <input
               type="text"
               name="fullName"
               value={addressFormData.fullName}
               onChange={handleInputChange}
               placeholder="Full Name"
-              className="border p-3 rounded focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              className="border p-3 rounded focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm sm:text-base"
               required
             />
             <input
@@ -144,7 +168,7 @@ const AddressBookView = ({ onNavigate, ProfileView }) => {
               value={addressFormData.phone}
               onChange={handleInputChange}
               placeholder="Phone Number"
-              className="border p-3 rounded focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              className="border p-3 rounded focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm sm:text-base"
               required
             />
             <input
@@ -153,7 +177,7 @@ const AddressBookView = ({ onNavigate, ProfileView }) => {
               value={addressFormData.addressLine1}
               onChange={handleInputChange}
               placeholder="Address Line 1"
-              className="border p-3 rounded col-span-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              className="border p-3 rounded sm:col-span-2 focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm sm:text-base"
               required
             />
             <input
@@ -162,7 +186,7 @@ const AddressBookView = ({ onNavigate, ProfileView }) => {
               value={addressFormData.city}
               onChange={handleInputChange}
               placeholder="City"
-              className="border p-3 rounded focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              className="border p-3 rounded focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm sm:text-base"
               required
             />
             <input
@@ -171,7 +195,7 @@ const AddressBookView = ({ onNavigate, ProfileView }) => {
               value={addressFormData.state}
               onChange={handleInputChange}
               placeholder="State"
-              className="border p-3 rounded focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              className="border p-3 rounded focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm sm:text-base"
               required
             />
             <input
@@ -180,7 +204,7 @@ const AddressBookView = ({ onNavigate, ProfileView }) => {
               value={addressFormData.postalCode}
               onChange={handleInputChange}
               placeholder="Postal Code"
-              className="border p-3 rounded focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              className="border p-3 rounded focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm sm:text-base"
               required
             />
           </div>
@@ -190,14 +214,17 @@ const AddressBookView = ({ onNavigate, ProfileView }) => {
       {/* Saved Addresses */}
       {!isLoading && !error && (
         <div className="bg-white rounded-xl border border-red-100 shadow-sm">
-          <div className="bg-red-50 px-6 py-4 border-b border-red-100">
-            <h2 className="text-xl font-semibold">Saved Addresses</h2>
+          <div className="bg-red-50 px-4 sm:px-6 py-4 border-b border-red-100">
+            <h2 className="text-lg sm:text-xl font-semibold">
+              Saved Addresses
+            </h2>
             <p className="text-gray-600 text-sm mt-1">
-              {savedAddresses.length} {savedAddresses.length === 1 ? 'address' : 'addresses'} saved
+              {savedAddresses.length}{" "}
+              {savedAddresses.length === 1 ? "address" : "addresses"} saved
             </p>
           </div>
 
-          <div className="p-6 space-y-5">
+          <div className="p-4 sm:p-6 space-y-4">
             {savedAddresses.length === 0 ? (
               <div className="text-center py-10">
                 <p className="text-gray-600 mb-4">No addresses added yet.</p>
@@ -210,48 +237,50 @@ const AddressBookView = ({ onNavigate, ProfileView }) => {
               </div>
             ) : (
               savedAddresses.map((address, index) => {
-                // Add defensive checks for address data
                 const shippingAddress = address.shippingAddress || {};
-                
+
                 return (
                   <div
                     key={address.id || address._id || index}
-                    className="border rounded-xl p-5 flex justify-between items-start hover:border-red-300 transition"
+                    className="border rounded-xl p-4 sm:p-5 flex justify-between items-start gap-3 hover:border-red-300 transition"
                   >
-                    <div className="flex-1">
-                      <p className="font-semibold text-lg">
-                        {shippingAddress.fullName || 'N/A'}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-base sm:text-lg truncate">
+                        {shippingAddress.fullName || "N/A"}
                       </p>
 
-                      <p className="text-sm text-gray-700 mt-1">
-                        Address: {shippingAddress.addressLine1 || 'N/A'}
-                      </p>
-
-                      <p className="text-sm text-gray-600">
-                        {shippingAddress.city || 'N/A'}, {shippingAddress.state || 'N/A'}
+                      <p className="text-sm text-gray-700 mt-1 break-words">
+                        {shippingAddress.addressLine1 || "N/A"}
                       </p>
 
                       <p className="text-sm text-gray-600">
-                        Postal Code: {shippingAddress.postalCode || 'N/A'}
+                        {shippingAddress.city || "N/A"},{" "}
+                        {shippingAddress.state || "N/A"}
                       </p>
 
                       <p className="text-sm text-gray-600">
-                        Phone: {shippingAddress.phone || 'N/A'}
+                        {shippingAddress.postalCode || "N/A"}
                       </p>
 
                       <p className="text-sm text-gray-600">
-                        Country: {shippingAddress.country || 'India'}
+                        {shippingAddress.phone || "N/A"}
+                      </p>
+
+                      <p className="text-sm text-gray-500">
+                        {shippingAddress.country || "India"}
                       </p>
                     </div>
 
                     <button
-                      onClick={() => handleRemoveAddress(
-                        address.id || 
-                        address._id || 
-                        shippingAddress.postalCode || 
-                        index
-                      )}
-                      className="text-red-600 hover:bg-red-50 p-2 rounded ml-4"
+                      onClick={() =>
+                        handleRemoveAddress(
+                          address.id ||
+                            address._id ||
+                            shippingAddress.postalCode ||
+                            index
+                        )
+                      }
+                      className="text-red-600 hover:bg-red-50 p-2 rounded shrink-0"
                       title="Delete address"
                     >
                       <Trash2 className="w-5 h-5" />

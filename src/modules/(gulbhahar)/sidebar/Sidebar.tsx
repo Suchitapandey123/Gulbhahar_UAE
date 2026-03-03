@@ -12,7 +12,6 @@ import {
   Package,
   Settings,
   Sparkles,
-  Star,
   User,
   X,
   UserCircle,
@@ -25,11 +24,12 @@ import {
   Instagram,
   Twitter,
   Youtube,
+  ChevronRight,
+  ArrowRight,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 interface GulbhaharSidebarProps {
   isOpen: boolean;
@@ -40,37 +40,35 @@ interface GulbhaharSidebarProps {
 }
 
 const collections = [
-  {
-    name: "Juttis",
-    href: "/juttis",
-    icon: Heart,
-  },
-  {
-    name: "Sarees",
-    href: "/saree",
-    icon: Sparkles,
-  },
-  {
-    name: "Suits",
-    href: "/suit",
-    icon: Gem,
-  },
-  {
-    name: "Lehenga",
-    href: "/lehenga",
-    icon: Crown,
-  },
-  {
-    name: "Jewellery",
-    href: "/jewellery",
-    icon: Crown,
-  },
-  {
-    name: "Bags",
-    href: "/bags",
-    icon: Crown,
-  },
+  { name: "Juttis",     href: "/juttis",    icon: Heart },
+  { name: "Sarees",    href: "/saree",     icon: Sparkles },
+  { name: "Suits",     href: "/suit",      icon: Gem },
+  { name: "Lehenga",   href: "/lehenga",   icon: Crown },
+  { name: "Jewellery", href: "/jewellery", icon: Crown },
+  { name: "Bags",      href: "/bags",      icon: Crown },
 ];
+
+const importantLinks = [
+  { name: "All Collections", href: "/collections", icon: ShoppingBag },
+  { name: "About Us",        href: "/about-us",    icon: Info },
+  { name: "Contact Us",      href: "/contact",     icon: Phone },
+];
+
+const policies = [
+  { name: "Refund",   href: "/refund-policy" },
+  { name: "Delivery", href: "/delivery-policy" },
+  { name: "Privacy",  href: "/privacy-policy" },
+  { name: "Terms",    href: "/terms-of-use" },
+  { name: "Cookies",  href: "/cookie-policy" },
+];
+
+const accountNavItems = [
+  { path: "/account/account-centre/profile",  label: "Profile",  icon: User },
+  { path: "/account/account-centre/my-order", label: "Orders",   icon: Package },
+  { path: "/account/account-centre/settings", label: "Settings", icon: Settings },
+];
+
+const BRAND = "#800000";
 
 const GulbhaharSidebar = ({
   isOpen,
@@ -79,64 +77,22 @@ const GulbhaharSidebar = ({
   isAuthenticated,
   onLogout,
 }: GulbhaharSidebarProps) => {
-  const pathname = usePathname();
-
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-    return () => {
-      document.body.style.overflow = "unset";
-    };
+    document.body.style.overflow = isOpen ? "hidden" : "unset";
+    return () => { document.body.style.overflow = "unset"; };
   }, [isOpen]);
 
-  const isActive = (path: string) => pathname === path;
-
-  // Navigation items for authenticated users
-  const accountNavItems = [
-    {
-      path: "/account/account-centre/profile",
-      label: "My Profile",
-      icon: User,
-    },
-    {
-      path: "/account/account-centre/my-order",
-      label: "My Orders",
-      icon: Package,
-    },
-    {
-      path: "/account/account-centre/settings",
-      label: "Settings",
-      icon: Settings,
-    },
-  ];
-
-  // Important links
-  const importantLinks = [
-    { name: "All Collections", href: "/collections", icon: ShoppingBag },
-    { name: "About Us", href: "/about-us", icon: Info },
-    { name: "Contact", href: "/contact", icon: Phone },
-  ];
-
-  // Get user display
-  const getUserDisplay = () => {
-    if (isAuthenticated) {
-      return {
+  const userDisplay = isAuthenticated
+    ? {
         name: userData?.name || "User",
-        email: userData?.email || "Welcome back!",
+        email: userData?.email || "Welcome back",
         initial: userData?.firstName?.[0] || userData?.name?.[0] || "U",
+      }
+    : {
+        name: "Welcome",
+        email: "Sign in to your account",
+        initial: null,
       };
-    }
-    return {
-      name: "Guest User",
-      email: "Sign in to access your account",
-      initial: <UserCircle className="w-8 h-8 text-muted-foreground" />,
-    };
-  };
-
-  const userDisplay = getUserDisplay();
 
   return (
     <>
@@ -145,204 +101,260 @@ const GulbhaharSidebar = ({
         className={cn(
           "fixed inset-0 z-[10000] transition-all duration-500",
           isOpen
-            ? "bg-black/60 backdrop-blur-sm opacity-100"
-            : "opacity-0 pointer-events-none",
+            ? "bg-black/30 backdrop-blur-[2px] opacity-100"
+            : "opacity-0 pointer-events-none"
         )}
         onClick={onClose}
       />
 
-      {/* Sidebar */}
+      {/* Drawer */}
       <aside
         className={cn(
-          "fixed left-0 top-0 h-full w-full sm:max-w-[380px] bg-white z-[10001]",
+          "fixed left-0 top-0 h-full w-full sm:max-w-[340px] z-[10001]",
+          "bg-white flex flex-col",
           "transform transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
-          "flex flex-col",
-          isOpen ? "translate-x-0" : "-translate-x-full",
+          isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        {/* Header with Logo and Close */}
-        <div className="flex items-center justify-between p-4 border-b">
-          <Link href="/" onClick={onClose} className="flex items-center gap-2">
+        {/* ─── Header ─── */}
+        <div className="flex items-center justify-between px-6 pt-6 pb-5">
+          <Link href="/" onClick={onClose} className="flex items-center gap-2.5">
             <Image
-              src={"/logo.png"}
+              src="/logo.png"
               alt="Gulbhahar"
-              width={40}
-              height={40}
-              className="w-10 h-10 object-contain"
+              width={30}
+              height={30}
+              className="w-7 h-7 object-contain"
             />
-            <span className="text-lg font-semibold text-[#800000]">
-              GULBHAHAR
+            <span
+              className="text-sm font-semibold tracking-[0.2em] uppercase"
+              style={{ color: BRAND }}
+            >
+              Gulbhahar
             </span>
           </Link>
           <button
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+            className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-neutral-100 transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4 text-neutral-400" strokeWidth={1.5} />
           </button>
         </div>
 
-        {/* User Profile Card */}
-        <div className="p-4 border-b bg-gray-50">
-          <div className="flex items-center gap-3">
-            <Avatar className="w-12 h-12">
+        {/* thin brand rule under header */}
+        <div className="mx-6 h-px bg-neutral-100" />
+
+        {/* ─── Profile Row ─── */}
+        <div className="px-6 py-5">
+          <div className="flex items-center gap-4">
+            <Avatar className="w-11 h-11 ring-2 ring-offset-1" style={{ "--tw-ring-color": `${BRAND}30` } as any}>
               {isAuthenticated ? (
                 <>
                   <AvatarImage src={userData?.imageUrl || ""} />
-                  <AvatarFallback className="bg-[#800000] text-white">
+                  <AvatarFallback
+                    className="text-sm font-semibold text-white"
+                    style={{ background: BRAND }}
+                  >
                     {userDisplay.initial}
                   </AvatarFallback>
                 </>
               ) : (
-                <AvatarFallback className="bg-gray-200">
-                  <UserCircle className="w-6 h-6 text-gray-500" />
+                <AvatarFallback className="bg-neutral-100">
+                  <UserCircle className="w-5 h-5 text-neutral-400" strokeWidth={1.25} />
                 </AvatarFallback>
               )}
             </Avatar>
-            <div>
-              <h3 className="font-medium">{userDisplay.name}</h3>
-              <p className="text-xs text-gray-500">{userDisplay.email}</p>
+
+            <div className="flex-1 min-w-0">
+              <h3 className="text-[14px] font-semibold text-neutral-800 leading-tight truncate">
+                {userDisplay.name}
+              </h3>
+              <p className="text-[11px] text-neutral-400 mt-0.5 truncate">
+                {userDisplay.email}
+              </p>
             </div>
           </div>
 
-          {/* Account Quick Links - Only for authenticated users - Profile ke neeche hi */}
+          {/* Account quick actions */}
           {isAuthenticated && (
-            <div className="flex items-center gap-2 mt-3 pt-2 border-t border-gray-200">
-              {accountNavItems.map((item) => (
+            <div className="flex mt-4 bg-white rounded-2xl border border-neutral-100 shadow-sm overflow-hidden">
+              {accountNavItems.map((item, i) => (
                 <Link
                   key={item.path}
                   href={item.path}
                   onClick={onClose}
-                  className="flex-1 flex flex-col items-center gap-1 px-2 py-2 text-xs font-medium text-gray-700 bg-white rounded-lg hover:bg-[#800000] hover:text-white transition-all duration-300 group"
+                  className={cn(
+                    "flex-1 flex flex-col items-center gap-1 py-3 transition-colors group",
+                    i < accountNavItems.length - 1 && "border-r border-neutral-100"
+                  )}
                 >
-                  <item.icon className="w-4 h-4" />
-                  <span className="text-[10px]">{item.label}</span>
+                  <item.icon
+                    className="w-3.5 h-3.5 text-neutral-400 group-hover:text-[#800000] transition-colors"
+                    strokeWidth={1.25}
+                  />
+                  <span
+                    className="text-[9.5px] font-medium tracking-[0.08em] text-neutral-400 group-hover:text-neutral-700 transition-colors uppercase"
+                  >
+                    {item.label}
+                  </span>
                 </Link>
               ))}
             </div>
           )}
         </div>
 
-        {/* Navigation Links - Scrollable Area */}
-        <div className="flex-1 overflow-y-auto p-4">
-          {/* COLLECTIONS - Sabse pehle */}
-          <div className="mb-8">
-            <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-3">
-              SHOP COLLECTIONS
-            </h4>
-            <div className="space-y-1">
-              {collections.map((collection) => (
+        {/* separator — always shown between profile area and content */}
+        <div className="mx-6 h-px bg-neutral-100" />
+
+        {/* ─── Scrollable Body ─── */}
+        <div className="flex-1 overflow-y-auto px-6 pb-4 pt-5 space-y-7">
+
+          {/* Collections */}
+          <div>
+            <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-neutral-400 mb-3">
+              Shop Collections
+            </p>
+            <div className="grid grid-cols-2 gap-1">
+              {collections.map((item) => (
                 <Link
-                  key={collection.name}
-                  href={collection.href}
+                  key={item.name}
+                  href={item.href}
                   onClick={onClose}
-                  className="flex items-center gap-3 px-3 py-3 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors group"
+                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-neutral-50 transition-colors group"
                 >
-                  <collection.icon className="w-4 h-4 text-gray-500 group-hover:text-[#800000]" />
-                  <span className="group-hover:translate-x-1 transition-transform">
-                    {collection.name}
+                  <item.icon
+                    className="w-3 h-3 flex-shrink-0 transition-colors"
+                    strokeWidth={1.25}
+                    style={{ color: `${BRAND}55` }}
+                  />
+                  <span className="text-[13px] text-neutral-600 font-medium group-hover:text-neutral-900 transition-colors truncate">
+                    {item.name}
                   </span>
                 </Link>
               ))}
             </div>
           </div>
 
-          {/* Important Links */}
-          <div className="mb-8">
-            <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-3">
-              IMPORTANT
-            </h4>
-            <div className="space-y-1">
+          {/* thin divider */}
+          <div className="h-px bg-neutral-100" />
+
+          {/* Explore */}
+          <div>
+            <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-neutral-400 mb-3">
+              Explore
+            </p>
+            <div className="space-y-0.5">
               {importantLinks.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={onClose}
-                  className="flex items-center gap-3 px-3 py-3 text-sm text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-neutral-50 transition-colors group"
                 >
-                  <item.icon className="w-4 h-4 text-gray-500" />
-                  {item.name}
+                  <item.icon
+                    className="w-3.5 h-3.5 flex-shrink-0 text-neutral-400"
+                    strokeWidth={1.5}
+                  />
+                  <span className="flex-1 text-[13px] font-medium text-neutral-700">
+                    {item.name}
+                  </span>
+                  <ChevronRight
+                    className="w-3.5 h-3.5 text-neutral-300 group-hover:text-neutral-500 transition-colors"
+                    strokeWidth={1.5}
+                  />
                 </Link>
               ))}
             </div>
           </div>
 
-          {/* Policies - Chips style */}
-          <div className="mb-8">
-            <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-3">
-              POLICIES
-            </h4>
-            <div className="flex flex-wrap gap-2 px-3">
-              <Link href="/refund-policy" onClick={onClose} className="text-xs text-gray-600 hover:text-[#800000] bg-gray-100 px-3 py-1.5 rounded-full">
-                Refund
-              </Link>
-              <Link href="/delivery-policy" onClick={onClose} className="text-xs text-gray-600 hover:text-[#800000] bg-gray-100 px-3 py-1.5 rounded-full">
-                Delivery
-              </Link>
-              <Link href="/privacy-policy" onClick={onClose} className="text-xs text-gray-600 hover:text-[#800000] bg-gray-100 px-3 py-1.5 rounded-full">
-                Privacy
-              </Link>
-              <Link href="/terms-of-use" onClick={onClose} className="text-xs text-gray-600 hover:text-[#800000] bg-gray-100 px-3 py-1.5 rounded-full">
-                Terms
-              </Link>
-              <Link href="/cookie-policy" onClick={onClose} className="text-xs text-gray-600 hover:text-[#800000] bg-gray-100 px-3 py-1.5 rounded-full">
-                Cookie
-              </Link>
+          {/* thin divider */}
+          <div className="h-px bg-neutral-100" />
+
+          {/* Policies — dot-separated plain text */}
+          <div>
+            <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-neutral-400 mb-3">
+              Policies
+            </p>
+            <div className="flex flex-wrap items-center">
+              {policies.map((p, i) => (
+                <span key={p.href} className="flex items-center">
+                  <Link
+                    href={p.href}
+                    onClick={onClose}
+                    className="text-[11px] text-neutral-400 hover:text-neutral-700 transition-colors"
+                  >
+                    {p.name}
+                  </Link>
+                  {i < policies.length - 1 && (
+                    <span className="text-neutral-300 mx-2 text-[9px]">·</span>
+                  )}
+                </span>
+              ))}
             </div>
           </div>
 
-          {/* Contact Info */}
-          <div className="mb-6 px-3">
-            <div className="space-y-2 text-xs text-gray-500">
-              <div className="flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5" />
-                <span>Delhi, India</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5" />
-                <span>support@gulbhahar.com</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Phone className="w-3.5 h-3.5" />
-                <span>+91 92209 27241</span>
-              </div>
+          {/* thin divider */}
+          <div className="h-px bg-neutral-100" />
+
+          {/* Contact + Social */}
+          <div className="space-y-4">
+            <div className="space-y-2.5">
+              {[
+                { icon: MapPin, text: "Delhi, India" },
+                { icon: Mail,   text: "support@gulbhahar.com" },
+                { icon: Phone,  text: "+91 92209 27241" },
+              ].map(({ icon: Icon, text }) => (
+                <div key={text} className="flex items-center gap-2.5">
+                  <Icon className="w-3 h-3 flex-shrink-0 text-neutral-400" strokeWidth={1.5} />
+                  <span className="text-[11px] text-neutral-400">{text}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Social icons — evenly spaced, brand accent on hover */}
+            <div className="flex items-center justify-between pt-1 pb-2">
+              {[
+                { Icon: Facebook,  label: "Facebook" },
+                { Icon: Instagram, label: "Instagram" },
+                { Icon: Twitter,   label: "Twitter" },
+                { Icon: Youtube,   label: "Youtube" },
+              ].map(({ Icon, label }) => (
+                <a
+                  key={label}
+                  href="#"
+                  aria-label={label}
+                  className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-neutral-50 transition-colors group"
+                >
+                  <Icon
+                    className="w-[17px] h-[17px] text-neutral-400 transition-colors group-hover:text-neutral-700"
+                    strokeWidth={1.5}
+                  />
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* Social Media */}
-          <div className="flex gap-2 px-3 pb-4">
-            <a href="#" className="p-2 bg-gray-100 rounded-full hover:bg-gray-200">
-              <Facebook className="w-3.5 h-3.5" />
-            </a>
-            <a href="#" className="p-2 bg-gray-100 rounded-full hover:bg-gray-200">
-              <Instagram className="w-3.5 h-3.5" />
-            </a>
-            <a href="#" className="p-2 bg-gray-100 rounded-full hover:bg-gray-200">
-              <Twitter className="w-3.5 h-3.5" />
-            </a>
-            <a href="#" className="p-2 bg-gray-100 rounded-full hover:bg-gray-200">
-              <Youtube className="w-3.5 h-3.5" />
-            </a>
-          </div>
         </div>
 
-        {/* Footer with Auth */}
-        <div className="p-4 border-t">
+        {/* ─── Footer CTA ─── */}
+        <div className="px-6 pb-5 pt-3.5 border-t border-neutral-100 flex justify-center">
           {isAuthenticated ? (
             <button
               onClick={onLogout}
-              className="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+              className="flex items-center gap-2 px-8 py-2.5 rounded-full text-[12px] font-semibold tracking-widest uppercase text-white transition-all active:scale-[0.97] hover:opacity-85"
+              style={{ background: BRAND }}
             >
-              <LogOut className="w-4 h-4" />
+              <LogOut className="w-3 h-3" strokeWidth={1.75} />
               Sign Out
             </button>
           ) : (
             <Link
               href="/login"
               onClick={onClose}
-              className="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-medium text-white bg-[#800000] rounded-lg hover:bg-[#660000] transition-colors"
+              className="flex items-center gap-2 px-8 py-2.5 rounded-full text-[12px] font-semibold tracking-widest uppercase text-white transition-all active:scale-[0.97] hover:opacity-85"
+              style={{ background: BRAND }}
             >
-              <User className="w-4 h-4" />
+              <ArrowRight className="w-3 h-3" strokeWidth={1.75} />
               Sign In
             </Link>
           )}
