@@ -54,6 +54,14 @@ const collections = [
   { name: "Bags",      href: "/bags",      icon: BagIcon },
 ];
 
+const featuredLinks = [
+  { name: "Punjabi Juttis",          href: "/collections/punjabi-juttis" },
+  { name: "Bridal Saree Collection", href: "/collections/bridal-saree-collection" },
+  { name: "Casual Juttis",           href: "/collections/juttis" },
+  { name: "Plain Satin Saree",       href: "/collections/plain-satin-saree" },
+  { name: "Lavender Suit",           href: "/collections/lavender-suit" },
+];
+
 const importantLinks = [
   { name: "All Collections", href: "/collections", icon: ShoppingBag },
   { name: "About Us",        href: "/about-us",    icon: Info },
@@ -236,6 +244,35 @@ const GulbhaharSidebar = ({
                     style={{ color: `${BRAND}55` }}
                   />
                   <span className="text-[13px] text-neutral-600 font-medium group-hover:text-neutral-900 transition-colors truncate">
+                    {item.name}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* thin divider */}
+          <div className="h-px bg-neutral-100" />
+
+          {/* Featured Links */}
+          <div>
+            <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-neutral-400 mb-3">
+              Popular Picks
+            </p>
+            <div className="space-y-0.5">
+              {featuredLinks.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={onClose}
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-neutral-50 transition-colors group"
+                >
+                  <ChevronRight
+                    className="w-3 h-3 flex-shrink-0 transition-colors"
+                    strokeWidth={1.5}
+                    style={{ color: `${BRAND}55` }}
+                  />
+                  <span className="text-[13px] text-neutral-600 font-medium group-hover:text-neutral-900 transition-colors">
                     {item.name}
                   </span>
                 </Link>

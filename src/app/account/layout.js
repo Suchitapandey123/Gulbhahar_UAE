@@ -18,7 +18,7 @@ export default function AccountLayout({ children }) {
           </aside>
 
           {/* Main Content Area (Dynamic Page) */}
-          <main className="lg:col-span-9 p-1 xs:p-2 sm:p-3">
+          <main className="lg:col-span-9 px-0 py-1 sm:px-2 sm:py-3">
             {children}
           </main>
         </div>
