@@ -26,6 +26,12 @@ import {
   Youtube,
   ChevronRight,
   ArrowRight,
+  Footprints,
+  Scissors,
+  Shirt,
+  BaggageClaim,
+  Diamond,
+  ShoppingBag as BagIcon,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -40,12 +46,12 @@ interface GulbhaharSidebarProps {
 }
 
 const collections = [
-  { name: "Juttis",     href: "/juttis",    icon: Heart },
-  { name: "Sarees",    href: "/saree",     icon: Sparkles },
-  { name: "Suits",     href: "/suit",      icon: Gem },
+  { name: "Juttis",     href: "/juttis",    icon: Footprints },
+  { name: "Sarees",    href: "/saree",     icon: Scissors },
+  { name: "Suits",     href: "/suit",      icon: Shirt },
   { name: "Lehenga",   href: "/lehenga",   icon: Crown },
-  { name: "Jewellery", href: "/jewellery", icon: Crown },
-  { name: "Bags",      href: "/bags",      icon: Crown },
+  { name: "Jewellery", href: "/jewellery", icon: Diamond },
+  { name: "Bags",      href: "/bags",      icon: BagIcon },
 ];
 
 const importantLinks = [
@@ -118,16 +124,16 @@ const GulbhaharSidebar = ({
       >
         {/* ─── Header ─── */}
         <div className="flex items-center justify-between px-6 pt-6 pb-5">
-          <Link href="/" onClick={onClose} className="flex items-center gap-2.5">
+          <Link href="/" onClick={onClose} className="flex items-center gap-3">
             <Image
               src="/logo.png"
               alt="Gulbhahar"
-              width={30}
-              height={30}
-              className="w-7 h-7 object-contain"
+              width={45}
+              height={45}
+              className="w-9 h-9 object-contain"
             />
             <span
-              className="text-sm font-semibold tracking-[0.2em] uppercase"
+              className="text-lg font-extrabold tracking-[0.22em] uppercase min-w-[150px]"
               style={{ color: BRAND }}
             >
               Gulbhahar
@@ -135,7 +141,7 @@ const GulbhaharSidebar = ({
           </Link>
           <button
             onClick={onClose}
-            className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-neutral-100 transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-neutral-100 transition-colors"
           >
             <X className="w-4 h-4 text-neutral-400" strokeWidth={1.5} />
           </button>
@@ -147,29 +153,31 @@ const GulbhaharSidebar = ({
         {/* ─── Profile Row ─── */}
         <div className="px-6 py-5">
           <div className="flex items-center gap-4">
-            <Avatar className="w-11 h-11 ring-2 ring-offset-1" style={{ "--tw-ring-color": `${BRAND}30` } as any}>
+            <Avatar className="w-14 h-14 ring-2 ring-offset-2 ring-[#800000]/20 shadow-md">
               {isAuthenticated ? (
                 <>
-                  <AvatarImage src={userData?.imageUrl || ""} />
+                  <AvatarImage 
+                    src={userData?.imageUrl || ""} 
+                    className="object-cover"
+                  />
                   <AvatarFallback
-                    className="text-sm font-semibold text-white"
-                    style={{ background: BRAND }}
+                    className="text-base font-semibold text-white bg-gradient-to-br from-[#800000] to-[#a04545]"
                   >
                     {userDisplay.initial}
                   </AvatarFallback>
                 </>
               ) : (
-                <AvatarFallback className="bg-neutral-100">
-                  <UserCircle className="w-5 h-5 text-neutral-400" strokeWidth={1.25} />
+                <AvatarFallback className="bg-gradient-to-br from-neutral-100 to-neutral-200">
+                  <UserCircle className="w-7 h-7 text-neutral-500" strokeWidth={1.25} />
                 </AvatarFallback>
               )}
             </Avatar>
 
             <div className="flex-1 min-w-0">
-              <h3 className="text-[14px] font-semibold text-neutral-800 leading-tight truncate">
+              <h3 className="text-[15px] font-semibold text-neutral-800 leading-tight truncate">
                 {userDisplay.name}
               </h3>
-              <p className="text-[11px] text-neutral-400 mt-0.5 truncate">
+              <p className="text-[12px] text-neutral-500 mt-0.5 truncate">
                 {userDisplay.email}
               </p>
             </div>
@@ -223,7 +231,7 @@ const GulbhaharSidebar = ({
                   className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-neutral-50 transition-colors group"
                 >
                   <item.icon
-                    className="w-3 h-3 flex-shrink-0 transition-colors"
+                    className="w-3 h-3 flex-shrink-0 transition-colors group-hover:text-[#800000]"
                     strokeWidth={1.25}
                     style={{ color: `${BRAND}55` }}
                   />
@@ -311,7 +319,7 @@ const GulbhaharSidebar = ({
               ))}
             </div>
 
-            {/* Social icons — evenly spaced, brand accent on hover */}
+            {/* Social icons — brand accent on hover */}
             <div className="flex items-center justify-between pt-1 pb-2">
               {[
                 { Icon: Facebook,  label: "Facebook" },
@@ -323,10 +331,10 @@ const GulbhaharSidebar = ({
                   key={label}
                   href="#"
                   aria-label={label}
-                  className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-neutral-50 transition-colors group"
+                  className="w-9 h-9 flex items-center justify-center rounded-full transition-colors group hover:bg-[#800000]"
                 >
                   <Icon
-                    className="w-[17px] h-[17px] text-neutral-400 transition-colors group-hover:text-neutral-700"
+                    className="w-[17px] h-[17px] text-neutral-400 transition-colors group-hover:text-white"
                     strokeWidth={1.5}
                   />
                 </a>
