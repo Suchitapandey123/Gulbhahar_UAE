@@ -702,7 +702,7 @@ const RecoverAccountPage = () => {
 
   return (
     <motion.div
-      className="w-full min-h-screen bg-gradient-to-br from-white to-red-50 flex items-start md:items-center justify-center p-0 md:p-6 md:pt-4"
+      className="w-full h-auto md:min-h-screen bg-gradient-to-br from-white to-red-50 flex items-start md:items-center justify-center p-0 md:p-6 md:pt-4"
       animate={{
         backgroundColor: isMounted && typeof window !== 'undefined' && window.innerWidth >= 1024 ? bgColor : '#ffffff',
       }}
@@ -713,36 +713,45 @@ const RecoverAccountPage = () => {
           MOBILE LAYOUT  (<md)
           Luxury 2026: blush gradient bg · hero image 35vh · glassmorphism sheet
       ══════════════════════════════════════════════════════════════════════ */}
-      <div className="md:hidden w-full flex flex-col"
-        style={{ background: 'linear-gradient(160deg, #fdf0ec 0%, #fef6f0 40%, #fff8f2 70%, #fffaf5 100%)' }}>
+      <div className="md:hidden w-full overflow-y-auto"
+        style={{ height: 'calc(100vh - 52px)', marginTop: '52px', background: 'linear-gradient(160deg, #fdf0ec 0%, #fef6f0 40%, #fff8f2 70%, #fffaf5 100%)' }}>
 
-        {/* ── Hero image (max 35vh) ── */}
-        <div className="relative flex-shrink-0" style={{ height: '35vh', minHeight: '220px', maxHeight: '300px' }}>
+        {/* ── Hero image — sticky within scroll container ── */}
+        <div className="sticky top-0 z-0 flex-shrink-0" style={{ height: '35vh', minHeight: '220px', maxHeight: '300px' }}>
           <MobileHeroSlider />
 
           {/* Glassmorphism back button */}
           <button
             onClick={() => { window.location.href = '/login'; }}
-            className="absolute top-[62px] left-4 z-20 flex items-center gap-1.5 text-white bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/25 transition-all duration-200 px-3 py-1.5 rounded-full text-[12px] font-medium"
+            className="absolute top-4 left-4 z-20 flex items-center gap-1.5 text-white bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/25 transition-all duration-200 px-3 py-1.5 rounded-full text-[12px] font-medium"
           >
             <FaArrowLeft size={11} /> Back
           </button>
         </div>
 
         {/* ── Floating bottom-sheet card ── */}
-        <div
-          className="relative -mt-6 flex-1 flex flex-col overflow-y-auto"
-          style={{
-            borderRadius: '28px 28px 0 0',
-            background: 'rgba(255,255,255,0.93)',
-            backdropFilter: 'blur(28px)',
-            WebkitBackdropFilter: 'blur(28px)',
-            boxShadow: '0 -10px 52px rgba(180,60,60,0.09), 0 -2px 16px rgba(180,60,60,0.05)',
-          }}
-        >
+       <div
+  className="relative z-10 -mt-6 flex flex-col"
+  style={{
+    minHeight: 'calc(100vh - 52px)',
+    borderRadius: '28px 28px 0 0',
+    borderTop: '3px solid transparent',
+    backgroundImage: `
+      linear-gradient(rgba(255,255,255,0.96), rgba(255,255,255,0.96)),
+      linear-gradient(90deg, #911b1b, #b91c1c, #fb7185, #fda4af)
+    `,
+    backgroundOrigin: 'border-box',
+    backgroundClip: 'padding-box, border-box',
+    WebkitBackgroundClip: 'padding-box, border-box',
+    backdropFilter: 'blur(28px)',
+    WebkitBackdropFilter: 'blur(28px)',
+    boxShadow: '0 -10px 52px rgba(180,60,60,0.09), 0 -2px 16px rgba(180,60,60,0.05)',
+  }}
+>
+
           {/* Gradient top accent bar */}
-          <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-[28px]"
-            style={{ background: 'linear-gradient(90deg, #911b1b 0%, #b91c1c 40%, #fb7185 70%, #fda4af 100%)' }} />
+          {/* <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-[28px]"
+            style={{ background: 'linear-gradient(90deg, #911b1b 0%, #b91c1c 40%, #fb7185 70%, #fda4af 100%)' }} /> */}
 
           <div className="flex flex-col flex-1 px-6 pt-6 pb-10">
 

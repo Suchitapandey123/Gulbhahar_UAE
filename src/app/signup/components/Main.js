@@ -1,9 +1,12 @@
 // src/app/signup/page.jsx
 "use client"
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { FiCheck, FiUpload } from 'react-icons/fi';
-import { FaArrowLeft } from 'react-icons/fa6';
+import { FaArrowLeft, FaFacebookF } from 'react-icons/fa6';
+import { FcGoogle } from 'react-icons/fc';
+import { signIn } from 'next-auth/react';
 import Carousel from './Carousel';
 import ProgressSteps from './ProgressSteps';
 import PersonalInformation from './PersonalInformation';
@@ -15,6 +18,48 @@ import { useAuth } from '@/providers/ContextProviders/AuthContext';
 import signupApi from "../../api/signup/signup";
 
 
+const images = [
+  "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
+  "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/lehenga.webp",
+  "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/suits.webp",
+];
+
+function MobileHeroSlider() {
+  const [index, setIndex] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setIndex(p => (p + 1) % images.length), 4000);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <div className="relative w-full h-full overflow-hidden">
+      <AnimatePresence>
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, scale: 1.06 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.2, ease: "easeInOut" }}
+          className="absolute inset-0"
+          style={{ backgroundImage: `url(${images[index]})`, backgroundSize: 'cover', backgroundPosition: 'top center' }}
+        />
+      </AnimatePresence>
+      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/20 to-black/75" />
+      <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center z-10">
+        <p className="text-white/60 text-[9px] font-semibold tracking-[0.3em] uppercase mb-2">Gulbhahar</p>
+        <h1 className="text-white text-[26px] font-serif font-light leading-tight">
+          Create<br /><span className="italic">Account</span>
+        </h1>
+        <div className="w-8 h-px bg-white/40 mt-3" />
+      </div>
+      <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-1.5 z-10">
+        {images.map((_, i) => (
+          <span key={i} className={`h-1 rounded-full transition-all duration-300 ${i === index ? "w-5 bg-white" : "w-1.5 bg-white/35"}`} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 const SignupPage = () => {
   const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
@@ -25,6 +70,7 @@ const SignupPage = () => {
   const [resendLoading, setResendLoading] = useState(false);
   const [imageUploadLoading, setImageUploadLoading] = useState(false);
   const [autoLoginLoading, setAutoLoginLoading] = useState(false);
+  const [socialLoginLoading, setSocialLoginLoading] = useState(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [profileImageUrl, setProfileImageUrl] = useState('');
@@ -450,245 +496,348 @@ const SignupPage = () => {
     window.location.href = '/login';
   };
 
-  return (
-    <div className="w-full min-h-screen overflow-x-hidden mt-20 bg-[#f8f7f6]">
-      <div className="flex min-h-[calc(100vh-80px)] w-full items-center justify-center py-6 px-4 sm:px-6">
-      {/* Single Card Container */}
-            <div className="flex w-full max-w-[1200px] 
-      rounded-none md:rounded-3xl 
-      bg-white 
-      md:h-[85vh] 
-      max-h-[720px] 
-      overflow-hidden 
-      shadow-none md:shadow-[0_8px_60px_-12px_rgba(0,0,0,0.08)]">
-        {/* Left Side - Carousel (50% width) */}
-        <div className="hidden md:block md:w-1/2">
-          <div className="h-full">
-            <Carousel />
+  const handleGoogleSignup = async () => {
+    setSocialLoginLoading('google');
+    await signIn('google', { callbackUrl: '/' });
+    setSocialLoginLoading(null);
+  };
+
+  const handleFacebookSignup = async () => {
+    setSocialLoginLoading('facebook');
+    await signIn('facebook', { callbackUrl: '/' });
+    setSocialLoginLoading(null);
+  };
+
+  // Shared form content (used in both mobile and desktop)
+  const renderFormContent = () => (
+    <>
+      {/* Social Login - Step 1 only */}
+      {step === 1 && (
+        <div className="mb-4">
+          <div className="grid grid-cols-2 gap-2.5">
+            <button
+              onClick={handleGoogleSignup}
+              disabled={socialLoginLoading !== null}
+              className="flex items-center justify-center gap-2 border border-gray-200 bg-white text-gray-700 px-3 py-2.5 rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-all duration-300 font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {socialLoginLoading === 'google' ? (
+                <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-400 border-t-transparent" />
+              ) : (
+                <FcGoogle size={18} />
+              )}
+              Google
+            </button>
+            <button
+              onClick={handleFacebookSignup}
+              disabled={socialLoginLoading !== null}
+              className="flex items-center justify-center gap-2 border border-gray-200 bg-white text-gray-700 px-3 py-2.5 rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-all duration-300 font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {socialLoginLoading === 'facebook' ? (
+                <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-400 border-t-transparent" />
+              ) : (
+                <FaFacebookF size={16} className="text-[#1877F2]" />
+              )}
+              Facebook
+            </button>
+          </div>
+          <div className="flex items-center gap-3 mt-3">
+            <hr className="flex-1 border-gray-200" />
+            <span className="text-gray-400 text-xs whitespace-nowrap">Or fill in your details</span>
+            <hr className="flex-1 border-gray-200" />
           </div>
         </div>
+      )}
 
-        {/* Right Side - Form (50% width) */}
-        <div className="w-full md:w-1/2 flex flex-col bg-white">
-          <div className="flex-1 flex flex-col p-6 sm:p-8 md:p-10 lg:p-12 overflow-y-auto">
+      {/* Form Content */}
+      <div>
+        {step === 1 && (
+          <PersonalInformation
+            formData={formData}
+            handleChange={handleChange}
+            error={error}
+          />
+        )}
+        {step === 2 && (
+          <Security
+            formData={formData}
+            handleChange={handleChange}
+            showPassword={showPassword}
+            setShowPassword={setShowPassword}
+            showConfirmPassword={showConfirmPassword}
+            setShowConfirmPassword={setShowConfirmPassword}
+            error={error}
+          />
+        )}
+        {step === 3 && (
+          <ProfileImageUpload
+            selectedImage={selectedImage}
+            previewImage={previewImage}
+            fileInputRef={fileInputRef}
+            handleImageSelect={handleImageSelect}
+            error={error}
+            success={success}
+          />
+        )}
+        {step === 4 && (
+          <EmailVerification
+            formData={formData}
+            emailInputRefs={emailInputRefs}
+            handleVerificationCodeChange={handleVerificationCodeChange}
+            handleResendVerificationCode={handleResendVerificationCode}
+            resendLoading={resendLoading}
+            error={error}
+            success={success}
+          />
+        )}
+        {step === 5 && (
+          <PhoneVerification
+            formData={formData}
+            phoneInputRefs={phoneInputRefs}
+            handleVerificationCodeChange={handleVerificationCodeChange}
+            handleResendPhoneOTP={handleResendPhoneOTP}
+            resendLoading={resendLoading}
+            autoLoginLoading={autoLoginLoading}
+            error={error}
+            success={success}
+          />
+        )}
+      </div>
 
-            {/* Header */}
-            <div className="relative pb-6">
+      {/* Login/Signup Toggle for Step 2 */}
+      {step === 2 && (
+        <div className="mt-3 p-3 bg-[#800000]/[0.03] rounded-xl border border-[#800000]/8 flex items-center justify-between gap-3">
+          <p className="text-gray-500 text-xs">Already have an account?</p>
+          <button
+            onClick={handleLogin}
+            disabled={loading}
+            className="bg-white border border-gray-200 text-[#800000] px-4 py-1.5 rounded-lg hover:border-[#800000]/30 hover:bg-[#800000]/[0.02] focus:outline-none transition-all duration-300 font-semibold disabled:opacity-50 disabled:cursor-not-allowed text-xs whitespace-nowrap"
+          >
+            {loading ? 'Checking...' : 'Login Instead'}
+          </button>
+        </div>
+      )}
+
+      {/* Navigation Buttons */}
+      <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
+        {step > 1 ? (
+          <button
+            onClick={prevStep}
+            className="flex items-center px-4 py-2 text-gray-500 hover:text-[#800000] font-medium transition-all duration-300 group text-sm rounded-xl hover:bg-[#800000]/[0.03]"
+            disabled={loading || emailVerificationLoading || phoneVerificationLoading || imageUploadLoading || autoLoginLoading}
+          >
+            <IoIosArrowBack className='sm:mr-2 mr-1 group-hover:-translate-x-1 transition-transform duration-300' />
+            Previous
+          </button>
+        ) : (
+          <p className="text-xs text-gray-400">
+            Have an account?{' '}
+            <button onClick={handleLogin} className="font-semibold text-[#800000] hover:underline underline-offset-2">
+              Login
+            </button>
+          </p>
+        )}
+
+        {step < 3 ? (
+          <button
+            onClick={nextStep}
+            disabled={loading}
+            className="bg-[#800000] text-white px-10 py-3.5 rounded-xl hover:bg-[#6b0000] focus:outline-none focus:ring-4 focus:ring-[#800000]/15 transition-all duration-300 flex items-center font-semibold disabled:opacity-50 disabled:cursor-not-allowed text-sm tracking-wide"
+          >
+            {loading ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
+                Creating Account...
+              </>
+            ) : (
+              <>
+                Continue
+                <IoIosArrowForward className='ml-2' />
+              </>
+            )}
+          </button>
+        ) : step === 3 ? (
+          <div className="flex space-x-3">
+            <button
+              onClick={() => { setStep(4); setError(''); }}
+              className="bg-white border border-gray-200 text-gray-600 px-5 py-3 rounded-xl hover:border-[#800000]/30 hover:text-[#800000] focus:outline-none transition-all duration-300 font-medium text-sm"
+            >
+              Skip for now
+            </button>
+            {selectedImage && (
               <button
-                onClick={() => { window.location.href = '/'; }}
-                className="absolute left-0 top-0 text-[#800000] hover:text-[#600000] transition-all duration-300 cursor-pointer p-2 rounded-full hover:bg-[#800000]/5"
+                onClick={uploadProfileImage}
+                disabled={imageUploadLoading}
+                className="bg-[#800000] text-white px-6 py-3 rounded-xl hover:bg-[#6b0000] focus:outline-none focus:ring-4 focus:ring-[#800000]/15 transition-all duration-300 flex items-center font-semibold disabled:opacity-50 disabled:cursor-not-allowed text-sm tracking-wide"
               >
-                <FaArrowLeft size={18} />
+                {imageUploadLoading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
+                    Uploading...
+                  </>
+                ) : (
+                  <>
+                    <FiUpload className='mr-2' />
+                    Upload & Continue
+                  </>
+                )}
               </button>
+            )}
+          </div>
+        ) : step === 4 ? (
+          <button
+            onClick={handleEmailVerification}
+            disabled={emailVerificationLoading}
+            className="bg-[#800000] text-nowrap text-white sm:px-10 px-5 py-3 sm:py-3.5 rounded-xl hover:bg-[#6b0000] focus:outline-none focus:ring-4 focus:ring-[#800000]/15 transition-all duration-300 flex items-center font-semibold disabled:opacity-50 disabled:cursor-not-allowed text-sm tracking-wide"
+          >
+            {emailVerificationLoading ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent sm:mr-2 mr-1"></div>
+                Verifying...
+              </>
+            ) : (
+              <>
+                <FiCheck className='sm:mr-2 mr-1' />
+                Verify Email
+              </>
+            )}
+          </button>
+        ) : (
+          <button
+            onClick={handlePhoneVerification}
+            disabled={phoneVerificationLoading || autoLoginLoading}
+            className="bg-[#800000] text-nowrap text-white sm:px-10 px-5 py-3 sm:py-3.5 rounded-xl hover:bg-[#6b0000] focus:outline-none focus:ring-4 focus:ring-[#800000]/15 transition-all duration-300 flex items-center font-semibold disabled:opacity-50 disabled:cursor-not-allowed text-sm tracking-wide"
+          >
+            {phoneVerificationLoading || autoLoginLoading ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent sm:mr-2 mr-1"></div>
+                {autoLoginLoading ? 'Logging in...' : 'Verifying...'}
+              </>
+            ) : (
+              <>
+                <FiCheck className='sm:mr-2 mr-1' />
+                Complete Registration
+              </>
+            )}
+          </button>
+        )}
+      </div>
+    </>
+  );
 
-              <div className="text-center space-y-1.5">
-                <p className="text-xs uppercase tracking-[0.2em] text-[#800000] font-medium">
-                  Let&apos;s setup your account
-                </p>
-                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                  Create Account
-                </h2>
-                <p className="text-gray-400 text-sm">
-                  Enter your personal information to get started
-                </p>
-              </div>
+  return (
+    <div className="w-full overflow-x-hidden">
+
+      {/* ══ MOBILE LAYOUT (<md) ══ */}
+      {/* overflow-y-auto + fixed height = proper scroll container so sticky works */}
+      <div
+        className="md:hidden overflow-y-auto"
+        style={{
+          height: 'calc(100vh - 80px)',
+          marginTop: '52px',
+          background: 'linear-gradient(160deg, #fdf0ec 0%, #fef6f0 40%, #fff8f2 70%, #fffaf5 100%)'
+        }}
+      >
+        {/* Hero image — sticky at top of scroll container */}
+        <div
+          className="sticky top-0 z-0 flex-shrink-0"
+          style={{ height: '35vh', minHeight: '220px', maxHeight: '300px' }}
+        >
+          <MobileHeroSlider />
+          <button
+            onClick={() => { window.location.href = '/'; }}
+            className="absolute top-4 left-4 z-20 flex items-center gap-1.5 text-white bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/25 transition-all duration-200 px-3 py-1.5 rounded-full text-[12px] font-medium"
+          >
+            <FaArrowLeft size={11} /> Back
+          </button>
+        </div>
+
+        {/* Card — scrolls up over the sticky image as user scrolls */}
+        <div
+          className="relative z-10 -mt-6"
+          style={{
+            minHeight: 'calc(100vh - 80px)',
+            borderRadius: '28px 28px 0 0',
+            borderTop: '3px solid transparent',
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.98), rgba(255,255,255,0.98)),
+              linear-gradient(90deg, #911b1b, #b91c1c, #fb7185, #fda4af)
+            `,
+            backgroundOrigin: 'border-box',
+            backgroundClip: 'padding-box, border-box',
+            WebkitBackgroundClip: 'padding-box, border-box',
+            backdropFilter: 'blur(28px)',
+            WebkitBackdropFilter: 'blur(28px)',
+            boxShadow: '0 -10px 52px rgba(180,60,60,0.09), 0 -2px 16px rgba(180,60,60,0.05)',
+          }}
+        >
+
+          <div className="flex flex-col flex-1 px-5 pt-6 pb-10">
+            {/* Drag handle */}
+            <div
+              className="w-10 h-[3px] rounded-full mx-auto mb-4"
+              style={{ background: 'linear-gradient(90deg, #fda4af 0%, #f43f5e 50%, #fda4af 100%)' }}
+            />
+
+            {/* Title */}
+            <div className="text-center mb-3">
+              <p className="text-xs uppercase tracking-[0.2em] text-[#800000] font-medium">Let&apos;s setup your account</p>
+              <h2 className="text-xl font-bold text-gray-900">Create Account</h2>
+              <p className="text-gray-400 text-xs">Enter your personal information to get started</p>
             </div>
-
 
             {/* Progress Steps */}
             <ProgressSteps step={step} />
 
-            {/* Form Content */}
-            <div className="flex-1">
-              {step === 1 && (
-                <PersonalInformation
-                  formData={formData}
-                  handleChange={handleChange}
-                  error={error}
-                />
-              )}
-              {step === 2 && (
-                <Security
-                  formData={formData}
-                  handleChange={handleChange}
-                  showPassword={showPassword}
-                  setShowPassword={setShowPassword}
-                  showConfirmPassword={showConfirmPassword}
-                  setShowConfirmPassword={setShowConfirmPassword}
-                  error={error}
-                />
-              )}
-              {step === 3 && (
-                <ProfileImageUpload
-                  selectedImage={selectedImage}
-                  previewImage={previewImage}
-                  fileInputRef={fileInputRef}
-                  handleImageSelect={handleImageSelect}
-                  error={error}
-                  success={success}
-                />
-              )}
-              {step === 4 && (
-                <EmailVerification
-                  formData={formData}
-                  emailInputRefs={emailInputRefs}
-                  handleVerificationCodeChange={handleVerificationCodeChange}
-                  handleResendVerificationCode={handleResendVerificationCode}
-                  resendLoading={resendLoading}
-                  error={error}
-                  success={success}
-                />
-              )}
-              {step === 5 && (
-                <PhoneVerification
-                  formData={formData}
-                  phoneInputRefs={phoneInputRefs}
-                  handleVerificationCodeChange={handleVerificationCodeChange}
-                  handleResendPhoneOTP={handleResendPhoneOTP}
-                  resendLoading={resendLoading}
-                  autoLoginLoading={autoLoginLoading}
-                  error={error}
-                  success={success}
-                />
-              )}
-            </div>
-
-            {/* Login/Signup Toggle for Existing Users */}
-            {step === 2 && (
-              <div className="mt-6 p-4 bg-[#800000]/[0.03] rounded-2xl border border-[#800000]/8">
-                <p className="text-gray-500 text-center mb-3 text-sm">
-                  Already have an account with this email?
-                </p>
-                <button
-                  onClick={handleLogin}
-                  disabled={loading}
-                  className="w-full bg-white border border-gray-200 text-[#800000] px-6 py-3 rounded-xl hover:border-[#800000]/30 hover:bg-[#800000]/[0.02] focus:outline-none transition-all duration-300 font-semibold disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-                >
-                  {loading ? 'Checking...' : 'Login Instead'}
-                </button>
-              </div>
-            )}
-
-            {/* Navigation Buttons */}
-            <div className="flex justify-between items-center mt-8 pt-6 border-t border-gray-100">
-              {step > 1 ? (
-                <button
-                  onClick={prevStep}
-                  className="flex items-center px-5 py-2.5 text-gray-500 hover:text-[#800000] font-medium transition-all duration-300 group text-sm rounded-xl hover:bg-[#800000]/[0.03]"
-                  disabled={loading || emailVerificationLoading || phoneVerificationLoading || imageUploadLoading || autoLoginLoading}
-                >
-                  <IoIosArrowBack className='sm:mr-2 mr-1 group-hover:-translate-x-1 transition-transform duration-300' />
-                  Previous
-                </button>
-              ) : (
-                <div></div>
-              )}
-
-              {step < 3 ? (
-                <button
-                  onClick={nextStep}
-                  disabled={loading}
-                  className="bg-[#800000] text-white px-10 py-3.5 rounded-xl hover:bg-[#6b0000] focus:outline-none focus:ring-4 focus:ring-[#800000]/15 transition-all duration-300 flex items-center font-semibold disabled:opacity-50 disabled:cursor-not-allowed text-sm tracking-wide"
-                >
-                  {loading ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
-                      Creating Account...
-                    </>
-                  ) : (
-                    <>
-                      Continue
-                      <IoIosArrowForward className='ml-2' />
-                    </>
-                  )}
-                </button>
-              ) : step === 3 ? (
-                <div className="flex space-x-3">
-                  <button
-                    onClick={() => {
-                      setStep(4);
-                      setError('');
-                    }}
-                    className="bg-white border border-gray-200 text-gray-600 px-5 py-3 rounded-xl hover:border-[#800000]/30 hover:text-[#800000] focus:outline-none transition-all duration-300 font-medium text-sm"
-                  >
-                    Skip for now
-                  </button>
-                  {selectedImage && (
-                    <button
-                      onClick={uploadProfileImage}
-                      disabled={imageUploadLoading}
-                      className="bg-[#800000] text-white px-6 py-3 rounded-xl hover:bg-[#6b0000] focus:outline-none focus:ring-4 focus:ring-[#800000]/15 transition-all duration-300 flex items-center font-semibold disabled:opacity-50 disabled:cursor-not-allowed text-sm tracking-wide"
-                    >
-                      {imageUploadLoading ? (
-                        <>
-                          <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
-                          Uploading...
-                        </>
-                      ) : (
-                        <>
-                          <FiUpload className='mr-2' />
-                          Upload & Continue
-                        </>
-                      )}
-                    </button>
-                  )}
-                </div>
-              ) : step === 4 ? (
-                <button
-                  onClick={handleEmailVerification}
-                  disabled={emailVerificationLoading}
-                  className="bg-[#800000] text-nowrap text-white sm:px-10 px-5 py-3 sm:py-3.5 rounded-xl hover:bg-[#6b0000] focus:outline-none focus:ring-4 focus:ring-[#800000]/15 transition-all duration-300 flex items-center font-semibold disabled:opacity-50 disabled:cursor-not-allowed text-sm tracking-wide"
-                >
-                  {emailVerificationLoading ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent sm:mr-2 mr-1"></div>
-                      Verifying...
-                    </>
-                  ) : (
-                    <>
-                      <FiCheck className='sm:mr-2 mr-1' />
-                      Verify Email
-                    </>
-                  )}
-                </button>
-              ) : (
-                <button
-                  onClick={handlePhoneVerification}
-                  disabled={phoneVerificationLoading || autoLoginLoading}
-                  className="bg-[#800000] text-nowrap text-white sm:px-10 px-5 py-3 sm:py-3.5 rounded-xl hover:bg-[#6b0000] focus:outline-none focus:ring-4 focus:ring-[#800000]/15 transition-all duration-300 flex items-center font-semibold disabled:opacity-50 disabled:cursor-not-allowed text-sm tracking-wide"
-                >
-                  {phoneVerificationLoading || autoLoginLoading ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent sm:mr-2 mr-1"></div>
-                      {autoLoginLoading ? 'Logging in...' : 'Verifying...'}
-                    </>
-                  ) : (
-                    <>
-                      <FiCheck className='sm:mr-2 mr-1' />
-                      Complete Registration
-                    </>
-                  )}
-                </button>
-              )}
-            </div>
-
-            {/* Bottom Login Link */}
-            <div className="mt-5 text-center">
-              <p className="text-sm text-gray-400">
-                Already have an account?
-                <button
-                  onClick={handleLogin}
-                  className="ml-1 font-semibold text-[#800000] hover:text-[#6b0000] hover:underline underline-offset-2 transition-all duration-300"
-                >
-                  Login
-                </button>
-              </p>
-            </div>
-
+            {/* Form content */}
+            {renderFormContent()}
           </div>
         </div>
       </div>
+
+      {/* ══ DESKTOP LAYOUT (≥md) ══ */}
+      <div className="hidden md:block w-full mt-20 bg-[#f8f7f6]">
+        <div className="flex w-full md:min-h-[calc(100vh-80px)] items-center justify-center py-8 px-6">
+          <div className="flex w-full max-w-[1200px] rounded-3xl bg-white md:h-[85vh] md:max-h-[720px] overflow-hidden shadow-[0_8px_60px_-12px_rgba(0,0,0,0.08)]">
+            {/* Left Side - Carousel */}
+            <div className="md:w-1/2">
+              <div className="h-full">
+                <Carousel />
+              </div>
+            </div>
+
+            {/* Right Side - Form */}
+            <div className="md:w-1/2 flex flex-col bg-white">
+              <div className="flex flex-col p-8">
+
+                {/* Header */}
+                <div className="relative pb-3">
+                  <button
+                    onClick={() => { window.location.href = '/'; }}
+                    className="absolute left-0 top-0 text-[#800000] hover:text-[#600000] transition-all duration-300 cursor-pointer p-2 rounded-full hover:bg-[#800000]/5"
+                  >
+                    <FaArrowLeft size={18} />
+                  </button>
+                  <div className="text-center space-y-0.5">
+                    <p className="text-xs uppercase tracking-[0.2em] text-[#800000] font-medium">
+                      Let&apos;s setup your account
+                    </p>
+                    <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Create Account</h2>
+                    <p className="text-gray-400 text-xs">Enter your personal information to get started</p>
+                  </div>
+                </div>
+
+                {/* Progress Steps */}
+                <ProgressSteps step={step} />
+
+                {/* Form content */}
+                {renderFormContent()}
+
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
     </div>
   );
 };

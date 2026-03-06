@@ -12,7 +12,7 @@ const ProgressSteps = ({ step }) => {
   ];
 
   return (
-    <div className="mb-8">
+    <div className="mb-4 sm:mb-6">
       <div className="flex items-start w-full">
         {steps.map((stepItem, index) => (
           <React.Fragment key={stepItem.number}>

@@ -55,7 +55,7 @@ const Home_JuttisCollection: React.FC<HomeJuttisCollectionProps> = ({
 
       <div className="w-full relative z-10">
         {/* Header Section */}
-        <div className="flex justify-between items-center mb-6 pl-4 md:pl-0">
+        <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl lg:text-5xl sm:text-4xl font-bold text-customRed font-raleway">
             {""}
           </h2>
@@ -75,7 +75,7 @@ const Home_JuttisCollection: React.FC<HomeJuttisCollectionProps> = ({
         {/* Collections Carousel */}
         <div>
           {newCollection && newCollection.length > 0 ? (
-            <HorizontalCarousel className="flex overflow-x-auto gap-4 sm:gap-6 lg:gap-8 pb-4 pl-4 md:pl-0 snap-x snap-mandatory">
+            <HorizontalCarousel className="flex overflow-x-auto gap-4 sm:gap-6 lg:gap-8 pb-4 snap-x snap-mandatory">
               {displayCollection.map((product, index) => (
                 <div
                   key={`${product.productId}-new-collection`}

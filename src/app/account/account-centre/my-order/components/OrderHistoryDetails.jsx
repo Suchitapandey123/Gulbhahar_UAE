@@ -123,7 +123,7 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
   ══════════════════════════════════════════════════════════ */
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FAFAF9] px-4 sm:px-6 lg:px-6 xl:px-8 pt-6 pb-12">
+      <div className="pt-2 pb-12">
         <style>{`@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}`}</style>
         <div className="flex items-start justify-between mb-8">
           <div className="space-y-2">
@@ -194,7 +194,7 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#FAFAF9] flex items-center justify-center px-6">
+      <div className="flex items-center justify-center py-16 px-2">
         <div className="text-center max-w-[280px]">
           <div className="w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center mx-auto mb-5 border border-rose-100">
             <XCircle className="w-7 h-7 text-rose-600" />
@@ -211,19 +211,13 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFAF9] relative overflow-x-hidden">
+    <div className="relative overflow-x-hidden">
       <style>{`@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}`}</style>
-      
-      {/* Ambient glows */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-        <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-rose-100/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 -left-32 w-80 h-80 bg-amber-50/15 rounded-full blur-3xl" />
-      </div>
 
-      <div className="relative px-4 sm:px-6 lg:px-6 xl:px-8 pt-6 pb-12">
+      <div className="relative pt-2 pb-12">
 
         {/* Page Header */}
-        <div className="flex items-start justify-between mb-8">
+        <div className="flex items-start justify-between mb-5">
           <div>
             <h1 className="text-2xl lg:text-[28px] xl:text-3xl font-bold text-stone-900 tracking-tight leading-tight">
               Order History
