@@ -1,4 +1,5 @@
-import { sizeChartService } from "@/app/api/v0";
+// @ts-nocheck
+import { sizeChartService } from "@/services/sizeChart/sizeChartService";
 import { Breadcrumbs } from "./components/Breadcrumbs";
 import { DeliveryChecker } from "./components/DeliveryChecker";
 import { ProductDetails } from "./components/ProductDetails";

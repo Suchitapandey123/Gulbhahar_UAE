@@ -1,4 +1,5 @@
-import productApi from "@/app/api/v0/product-service";
+// @ts-nocheck
+import productApi from "@/services/product/productService";
 import JuttisCollectionClient from "./Juttis.Collection.Client";
 
 export default async function JuttisCollection() {

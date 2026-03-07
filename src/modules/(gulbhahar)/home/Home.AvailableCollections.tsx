@@ -2,7 +2,7 @@ import HorizontalCarousel from "@/shared-components/Scrollbar/HorizontalCarousel
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import CollectionCard from "./components/CollectionCard";
-import { AvailableCollectionItem } from "@/app/api/home/type";
+import { AvailableCollectionItem } from "@/types/home.types";
 
 const CATEGORIES = [
   {

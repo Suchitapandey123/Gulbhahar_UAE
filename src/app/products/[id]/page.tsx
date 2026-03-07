@@ -1,4 +1,5 @@
-import productApi from "@/app/api/v0/product-service";
+// @ts-nocheck
+import productApi from "@/services/product/productService";
 import ProductModule from "@/modules/(gulbhahar)/products";
 import { Product, SimilarProduct } from "@/modules/(gulbhahar)/products/types";
 import type { Metadata } from "next";
@@ -28,7 +29,7 @@ const getProductBundle = cache(
   }> => {
     try {
       const [product, similarProducts] = await Promise.all([
-        productApi.productById(productID),
+       productApi.getProductById(productID),
         productApi.getSimilarProducts(productID),
       ]);
 

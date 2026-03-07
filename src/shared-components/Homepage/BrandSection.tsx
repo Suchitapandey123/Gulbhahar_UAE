@@ -1,75 +1,280 @@
+// 'use client';
+
+// import { motion } from 'framer-motion';
+// import Link from 'next/link';
+// import { ArrowUpRight } from 'lucide-react';
+
+// const BrandSection = () => {
+//   // Container animation for orchestrating child animations
+//   const containerVariants = {
+//     hidden: { opacity: 0 },
+//     visible: {
+//       opacity: 1,
+//       transition: {
+//         staggerChildren: 0.2,
+//         delayChildren: 0.3
+//       }
+//     }
+//   };
+
+//   // Learn More button animation - slides in from top right
+//   const learnMoreVariants = {
+//     hidden: { 
+//       opacity: 0, 
+//       x: 30,
+//       y: -20
+//     },
+//     visible: { 
+//       opacity: 1, 
+//       x: 0,
+//       y: 0,
+//       transition: {
+//         duration: 0.8,
+//         ease: [0.25, 0.1, 0.25, 1]
+//       }
+//     }
+//   };
+
+//   // Main brand name animation - scales up with elegant easing
+//   const brandNameVariants = {
+//     hidden: { 
+//       opacity: 0, 
+//       scale: 0.8,
+//       y: 30
+//     },
+//     visible: { 
+//       opacity: 1, 
+//       scale: 1,
+//       y: 0,
+//       transition: {
+//         duration: 1,
+//         ease: [0.25, 0.1, 0.25, 1]
+//       }
+//     }
+//   };
+
+//   // Individual tagline animations - slide up with stagger
+//   const taglineVariants = {
+//     hidden: { 
+//       opacity: 0, 
+//       y: 40,
+//     },
+//     visible: { 
+//       opacity: 1, 
+//       y: 0,
+//       transition: {
+//         duration: 0.8,
+//         ease: [0.25, 0.1, 0.25, 1]
+//       }
+//     }
+//   };
+
+//   // Hover effect for Learn More button
+//   const buttonHoverVariants = {
+//     hover: {
+//       scale: 1.05,
+//       transition: {
+//         duration: 0.2,
+//         ease: "easeOut"
+//       }
+//     },
+//     tap: {
+//       scale: 0.95
+//     }
+//   };
+
+//   // Letter animation for brand name (optional enhancement)
+//   const letterVariants = {
+//     hidden: { opacity: 0, y: 50 },
+//     visible: (i) => ({
+//       opacity: 1,
+//       y: 0,
+//       transition: {
+//         delay: i * 0.05,
+//         duration: 0.6,
+//         ease: [0.25, 0.1, 0.25, 1]
+//       }
+//     })
+//   };
+
+//   const brandName = "GULBHAHAR";
+
+//   return (
+//     <>
+//       {/* Font Import */}
+//       <style jsx global>{`
+//         @import url('https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&display=swap');
+//       `}</style>
+      
+//       <motion.section 
+//         className="py-16 md:py-24 px-4 max-w-[1600px] mx-auto"
+//         variants={containerVariants}
+//         initial="hidden"
+//         whileInView="visible"
+//         viewport={{ once: true, amount: 0.3 }}
+//       >
+//         <div className="relative">
+//           {/* Main Brand Name with letter-by-letter animation */}
+//           <motion.div 
+//             className="text-center"
+//             variants={brandNameVariants}
+//           >
+//             <h2 className="text-[30px]  xs:text-4xl sm:text-7xl md:text-[112px] lg:text-[150px] xl:text-[11rem] text-nowrap tracking-wider text-[#8B0000] font-light leading-tight">
+//               <span  className='' style={{ fontFamily: "'Old Standard TT', serif" }}>
+//                 {brandName.split('').map((letter, index) => (
+//                   <motion.span
+//                     key={index}
+//                     variants={letterVariants}
+//                     custom={index}
+//                     className="inline-block tracking-tighter px-2"
+//                   >
+//                     {letter}
+//                   </motion.span>
+//                 ))}
+//               </span>
+//             </h2>
+//           </motion.div>
+
+//           {/* Three Taglines with enhanced responsive layout */}
+//           <motion.div 
+//             className="w-full   flex justify-between items-center text-[#8B0000]"
+//             variants={containerVariants}
+//           >
+//             {/* Tagline 1 */}
+//             <motion.div 
+//               className="text-center md:text-left"
+//               variants={taglineVariants}
+//             >
+//               <h3 
+//                 className="text-[14px] sm:text-lg md:text-xl lg:text-2xl font-light tracking-wide"
+//                 style={{ fontFamily: "'Old Standard TT', serif" }}
+//               >
+//                 Handcrafted
+//               </h3>
+//             </motion.div>
+
+//             {/* Tagline 2 */}
+//             <motion.div 
+//               className="text-center"
+//               variants={taglineVariants}
+//             >
+//               <h3 
+//                 className="text-[14px] sm:text-lg md:text-xl lg:text-2xl font-light tracking-wide"
+//                 style={{ fontFamily: "'Old Standard TT', serif" }}
+//               >
+//                 Tailored with Love
+//               </h3>
+//             </motion.div>
+
+//             {/* Tagline 3 */}
+//             <motion.div 
+//               className="text-center md:text-right"
+//               variants={taglineVariants}
+//             >
+//               <h3 
+//                 className="text-[14px] sm:text-lg md:text-xl lg:text-2xl font-light tracking-wide"
+//                 style={{ fontFamily: "'Old Standard TT', serif" }}
+//               >
+//                 Piece by Piece
+//               </h3>
+//             </motion.div>
+//           </motion.div>
+
+//           {/* Optional: Decorative elements */}
+//           <motion.div
+//             className="absolute inset-0 pointer-events-none"
+//             initial={{ opacity: 0 }}
+//             whileInView={{ opacity: 1 }}
+//             transition={{ duration: 2, delay: 1 }}
+//             viewport={{ once: true }}
+//           >
+//             {/* Subtle background pattern or glow effect */}
+//             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-radial from-[#8B0000]/5 via-transparent to-transparent opacity-30" />
+//           </motion.div>
+//         </div>
+//       </motion.section>
+//     </>
+//   );
+// };
+
+// export default BrandSection;
+
+
+
 'use client';
 
-import { memo, useMemo } from 'react';
+import Link from 'next/link';
+import { ArrowUpRight } from 'lucide-react';
 
-// Brand name constant - could be moved to config if needed elsewhere
-const BRAND_NAME = 'GULBHAHAR';
-
-// Taglines as a constant array for easy updates
-const TAGLINES = ['Handcrafted', 'Tailored with Love', 'Piece by Piece'] as const;
-
-// Font family style object - reused across elements
-const serifFont = { fontFamily: "'Old Standard TT', serif" } as const;
-
-const BrandSection = memo(() => {
-  // Memoize the brand letters to prevent re-computation on each render
-  const brandLetters = useMemo(
-    () =>
-      BRAND_NAME.split('').map((letter, index) => (
-        <span key={index} className="inline-block tracking-tighter px-1 sm:px-2">
-          {letter}
-        </span>
-      )),
-    []
-  );
+const BrandSection = () => {
+  const brandName = "GULBHAHAR";
 
   return (
-    <section
-      className="py-12 sm:py-16 md:py-24 px-4 max-w-[1600px] mx-auto"
-      aria-label="Brand introduction"
-    >
-      <div className="relative">
-        {/* Main Brand Name */}
-        <div className="text-center">
-          <h2
-            className="text-3xl xs:text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl tracking-wider text-[#8B0000] font-light leading-tight"
-            style={serifFont}
-          >
-            {brandLetters}
-          </h2>
-        </div>
+    <>
+      {/* Font Import */}
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&display=swap');
+      `}</style>
 
-        {/* Taglines - responsive flexbox */}
-        <div className="w-full flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4 mt-4 sm:mt-6 text-[#8B0000]">
-          {TAGLINES.map((tagline, index) => (
-            <h3
-              key={tagline}
-              className={`text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-light tracking-wide ${
-                index === 0
-                  ? 'text-center sm:text-left'
-                  : index === 2
-                    ? 'text-center sm:text-right'
-                    : 'text-center'
-              }`}
-              style={serifFont}
-            >
-              {tagline}
-            </h3>
-          ))}
-        </div>
+      <section className="py-16 md:py-24 px-4 max-w-[1600px] mx-auto">
+        <div className="relative">
+          {/* Main Brand Name */}
+          <div className="text-center">
+            <h2 className="text-[30px] xs:text-4xl sm:text-7xl md:text-[112px] lg:text-[150px] xl:text-[11rem] text-nowrap tracking-wider text-[#8B0000] font-light leading-tight">
+              <span style={{ fontFamily: "'Old Standard TT', serif" }}>
+                {brandName.split('').map((letter, index) => (
+                  <span
+                    key={index}
+                    className="inline-block tracking-tighter px-2"
+                  >
+                    {letter}
+                  </span>
+                ))}
+              </span>
+            </h2>
+          </div>
 
-        {/* Subtle decorative background */}
-        <div
-          className="absolute inset-0 pointer-events-none -z-10"
-          aria-hidden="true"
-        >
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-radial from-[#8B0000]/5 via-transparent to-transparent opacity-30" />
+          {/* Three Taglines */}
+          <div className="w-full flex justify-between items-center text-[#8B0000]">
+            {/* Tagline 1 */}
+            <div className="text-center md:text-left">
+              <h3
+                className="text-[14px] sm:text-lg md:text-xl lg:text-2xl font-light tracking-wide"
+                style={{ fontFamily: "'Old Standard TT', serif" }}
+              >
+                Handcrafted
+              </h3>
+            </div>
+
+            {/* Tagline 2 */}
+            <div className="text-center">
+              <h3
+                className="text-[14px] sm:text-lg md:text-xl lg:text-2xl font-light tracking-wide"
+                style={{ fontFamily: "'Old Standard TT', serif" }}
+              >
+                Tailored with Love
+              </h3>
+            </div>
+
+            {/* Tagline 3 */}
+            <div className="text-center md:text-right">
+              <h3
+                className="text-[14px] sm:text-lg md:text-xl lg:text-2xl font-light tracking-wide"
+                style={{ fontFamily: "'Old Standard TT', serif" }}
+              >
+                Piece by Piece
+              </h3>
+            </div>
+          </div>
+
+          {/* Decorative Background */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-radial from-[#8B0000]/5 via-transparent to-transparent opacity-30" />
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
-});
-
-BrandSection.displayName = 'BrandSection';
+};
 
 export default BrandSection;

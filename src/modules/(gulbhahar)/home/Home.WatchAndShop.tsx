@@ -4,7 +4,7 @@ import { useState } from "react";
 import HorizontalCarousel from "@/shared-components/Scrollbar/HorizontalCarousel";
 import FullscreenReelViewer from "../common/FullscreenReelViewer";
 import ReelCard from "./components/ReelCard";
-import { WatchAndShopItem } from "@/app/api/home/type";
+import { WatchAndShopItem } from "@/types/home.types";
 
 // Sample Reel Data
 const Reels = [

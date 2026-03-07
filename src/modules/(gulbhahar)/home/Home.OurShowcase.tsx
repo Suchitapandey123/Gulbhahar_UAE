@@ -4,7 +4,7 @@ import { useState } from "react";
 import HorizontalCarousel from "@/shared-components/Scrollbar/HorizontalCarousel";
 import FullscreenReelViewer from "../common/FullscreenReelViewer";
 import ShowcaseReelItem from "./components/ShowcaseReelItem";
-import { StoryInMotionItem } from "@/app/api/home/type";
+import { StoryInMotionItem } from "@/types/home.types";
 
 interface ReelData {
   id: number;

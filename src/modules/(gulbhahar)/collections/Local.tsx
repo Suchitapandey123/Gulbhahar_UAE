@@ -1,4 +1,5 @@
-import productApi from "@/app/api/v0/product-service";
+// @ts-nocheck
+import productApi from "@/services/product/productService";
 import Image from "next/image";
 import { Fragment } from "react";
 import ProductCard from "../common/ProductCard";

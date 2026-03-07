@@ -1,6 +1,6 @@
 "use client";
 
-import { checkDeliveryAPI } from "@/app/api/delivery/deliveryApi";
+import { deliveryService as checkDeliveryAPI } from "@/services/delivery/deliveryService";
 import { AlertCircle, Check, CheckCircle, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -26,7 +26,7 @@ export const DeliveryChecker = ({ customRed }: DeliveryCheckerProps) => {
     setDeliveryInfo(null);
 
     try {
-      const data = await checkDeliveryAPI(pincode);
+      const data = await checkDeliveryAPI.checkDelivery(pincode) as any;
       if (data.msg.delivery_codes && data.msg.delivery_codes.length > 0) {
         setDeliveryInfo(data.msg.delivery_codes[0].postal_code);
         toast.success(

@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { PageData } from "../../../api/page-service/pageService";
+import { PageData } from "@/types/page.types";
 
 interface ParsedDetail {
   description: string;

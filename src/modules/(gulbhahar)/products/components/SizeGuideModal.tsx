@@ -1,4 +1,4 @@
-import { SizeChartData } from "@/app/api/v0/type";
+import { SizeChartData } from "@/services/sizeChart/sizeChartTypes";
 import { AnimatePresence, motion } from "framer-motion";
 import { Info, Ruler, X } from "lucide-react";
 import { useEffect, useState } from "react";

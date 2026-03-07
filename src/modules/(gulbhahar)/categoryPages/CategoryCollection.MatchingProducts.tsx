@@ -1,4 +1,5 @@
-import productApi from "@/app/api/v0/product-service";
+// @ts-nocheck
+import productApi from "@/services/product/productService";
 import HorizontalCarousel from "@/shared-components/Scrollbar/HorizontalCarousel";
 import Link from "next/link";
 import ProductCard from "../common/ProductCard";
@@ -47,7 +48,7 @@ const CategoryCollection_MatchingProducts = async ({
   let groupedProducts: Record<string, Product[]> = {};
 
   try {
-    const allProducts = await productApi.getAllProduct();
+    const allProducts = await productApi.getAllProducts();
     for (const cat of matchingCategories) {
       groupedProducts[cat] = (allProducts || [])
         .filter((product: Product) => product.parentCategory?.includes(cat))

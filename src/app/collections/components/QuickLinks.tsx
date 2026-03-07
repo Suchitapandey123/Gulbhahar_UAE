@@ -15,7 +15,7 @@ async function getQuickLinks(
   parentCategory: string,
   currentSlug: string,
 ): Promise<QuickLinksData> {
-  const { pageService } = await import("../../api/page-service/pageService");
+  const { pageService } = await import("@/services/page/pageService");
   const response = await pageService.getQuickLinks(parentCategory, currentSlug);
 
   if (response.success && response.data) {

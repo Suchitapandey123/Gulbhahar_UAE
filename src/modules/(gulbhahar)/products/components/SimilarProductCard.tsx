@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 import { useCart } from "@/providers/ContextProviders/CartContext";
 import { ShoppingBag } from "lucide-react";

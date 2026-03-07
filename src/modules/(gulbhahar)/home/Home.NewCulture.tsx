@@ -1,4 +1,4 @@
-import { CultureItem } from "@/app/api/home/type";
+import { CultureItem } from "@/types/home.types";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";

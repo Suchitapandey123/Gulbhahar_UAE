@@ -1,4 +1,4 @@
-import { parentCategoryPageService } from "@/app/api/page-service/parentCategoryPageService";
+import { parentCategoryPageService } from "@/services/parentCategoryPage/parentCategoryPageService";
 import { Suspense } from "react";
 import ParentCategoryContentSection from "./content/ParentCategoryContentSection";
 import ParentCategoryCollection from "./ParentCategoryCollection";

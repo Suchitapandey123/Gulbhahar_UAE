@@ -1,4 +1,4 @@
-import { parentCategoryPageService } from "@/app/api/page-service/parentCategoryPageService";
+import { parentCategoryPageService } from "@/services/parentCategoryPage/parentCategoryPageService";
 import ParentCategoryPageModule from "@/modules/(gulbhahar)/parentCategories/ParentCategoryPageModule";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";

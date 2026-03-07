@@ -1,5 +1,5 @@
 "use client";
-import { PreOrderProductData } from "@/app/api/pre-order/type";
+import { PreOrderProductData } from "@/services/preOrder/preOrderTypes";
 import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

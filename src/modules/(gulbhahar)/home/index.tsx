@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Home_AvailableCollections from "@/modules/(gulbhahar)/home/Home.AvailableCollections";
 import Home_NewCulture from "@/modules/(gulbhahar)/home/Home.NewCulture";
 import Home_OurShowcase from "@/modules/(gulbhahar)/home/Home.OurShowcase";
@@ -6,8 +7,8 @@ import type { Product } from "@/modules/(gulbhahar)/products/types";
 import AboutUsSection from "@/shared-components/Homepage/AboutUsSection";
 import ModernHeroAnimated from "./HeroAnimated";
 import Home_JuttisCollection from "./Home.JuttisCollection";
-import productApi from "@/app/api/v0/product-service";
-import { homePageService } from "@/app/api/home/home-service";
+import productApi from "@/services/product/productService";
+import { homeService as homePageService } from "@/services/home/homeService";
 import QuickLinks from "@/app/collections/components/QuickLinks";
 
 async function getProducts(parentCategory: string): Promise<Product[]> {

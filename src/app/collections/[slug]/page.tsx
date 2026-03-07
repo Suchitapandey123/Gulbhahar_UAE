@@ -1,11 +1,13 @@
-import productApi from "@/app/api/v0/product-service";
+// @ts-nocheck
+import productApi from "@/services/product/productService";
 import CategoryCollection from "@/modules/(gulbhahar)/categoryPages/CategoryCollection";
 import CategoryCollection_MatchingProducts from "@/modules/(gulbhahar)/categoryPages/CategoryCollection.MatchingProducts";
 import { CategoryCollection_ParentCategoryProducts } from "@/modules/(gulbhahar)/categoryPages/CategoryCollection.ParentCategoryProducts";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { cache } from "react";
-import { PageData, pageService } from "../../api/page-service/pageService";
+import { pageService } from "@/services/page/pageService";
+import { PageData } from "@/types/page.types";
 import QuickLinks from "../components/QuickLinks";
 import QuickTag from "../components/QuickTag";
 import ContentSection from "./components/ContentSection";

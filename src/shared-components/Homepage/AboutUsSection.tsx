@@ -1,4 +1,4 @@
-import { SoulOfGulbhaharItem } from "@/app/api/home/type";
+import { SoulOfGulbhaharItem } from "@/types/home.types";
 import { ArrowRight, MoveUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

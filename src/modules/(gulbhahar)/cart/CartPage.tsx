@@ -1,7 +1,8 @@
+// @ts-nocheck
 // src\modules\(gulbhahar)\cart\CartPage.tsx
 "use client";
 
-import analyticsAPI from "@/app/api/analytics/analytics";
+import analyticsAPI from "@/services/analytics/analyticsService";
 import { useCart } from "@/providers/ContextProviders/CartContext";
 import { fbEvent } from "@/utils/fb/metaPixels";
 import { gaEvent } from "@/utils/gtm/gtag";

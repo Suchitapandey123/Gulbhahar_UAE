@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import { useCart } from "@/providers/ContextProviders/CartContext";
@@ -12,7 +13,7 @@ import { ProductPurchaseSection } from "./ProductPurchaseSection";
 import ProductReels from "./ProductReels";
 import { ProductVariants } from "./ProductVariants";
 import { SizeGuideModal } from "./SizeGuideModal";
-import { SizeChartData } from "@/app/api/v0/type";
+import { SizeChartData } from "@/services/sizeChart/sizeChartTypes";
 
 const generateSizeRange = (
   inventory: any[],

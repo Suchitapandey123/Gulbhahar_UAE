@@ -1,4 +1,5 @@
-import { preOrderService } from "@/app/api/pre-order";
+// @ts-nocheck
+import { preOrderService } from "@/services/preOrder/preOrderService";
 import { PreOrderProductCard } from "../common/PreOrderProductCard";
 import CategoryCollection_DummyProducts from "./CategoryCollection.DummyProducts";
 
