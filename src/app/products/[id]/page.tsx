@@ -2,6 +2,7 @@
 import productApi from "@/services/product/productService";
 import ProductModule from "@/modules/(gulbhahar)/products";
 import { Product, SimilarProduct } from "@/modules/(gulbhahar)/products/types";
+import ProductSchema from "@/shared-components/seo/ProductSchema";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { cache } from "react";
@@ -102,5 +103,24 @@ export default async function CollectionPage(props: PageParams) {
     redirect("/not-found");
   }
 
-  return <ProductModule product={product} similarProducts={similarProducts} />;
+  return (
+    <>
+      <ProductSchema
+        product={{
+          id: product.productId ?? product._id ?? params.id,
+          title: product.title ?? product.name ?? "",
+          description: product.description ?? "",
+          price: product.price,
+          currency: "INR",
+          image: product.images?.[0]?.[0] ?? "",
+          brand: "Gulbhahar",
+          sku: product.productId ?? params.id,
+          availability: "InStock",
+          rating: 0,
+          reviewCount: 0,
+        }}
+      />
+      <ProductModule product={product} similarProducts={similarProducts} />
+    </>
+  );
 }
