@@ -15,7 +15,7 @@ Review
       └─ Replies List (renders below form)
 ```
 
-## Key Features
+## Key Features 
 
 ✅ Reply form appears directly below the clicked review
 ✅ Replies render below the reply form
