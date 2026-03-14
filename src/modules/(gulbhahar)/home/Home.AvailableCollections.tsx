@@ -48,6 +48,14 @@ interface AvailableCollectionsProps {
 }
 
 const Home_AvailableCollections = ({AvailableCollections} : AvailableCollectionsProps) => {
+  const sortedCollections = [...AvailableCollections].sort((a, b) => {
+    const order = (slug: string) =>
+      slug?.toLowerCase().includes("jewellery") ? 2 :
+      slug?.toLowerCase().includes("saree") ? 3 :
+      slug?.toLowerCase().includes("lehenga") ? 4 : 0;
+    return order(a.slug) - order(b.slug);
+  });
+
   return (
     <section className="py-8 bg-white overflow-hidden">
       <div className="flex flex-col space-y-4 justify-center mb-6">
@@ -71,7 +79,7 @@ const Home_AvailableCollections = ({AvailableCollections} : AvailableCollections
       </div>
 
       <HorizontalCarousel className="flex overflow-x-auto snap-x snap-mandatory cursor-grab active:cursor-grabbing pb-8">
-        {AvailableCollections.map((category, index) => (
+        {sortedCollections.map((category, index) => (
           <CollectionCard
             key={category.slug}
             category={category}
