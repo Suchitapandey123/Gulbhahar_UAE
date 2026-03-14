@@ -114,7 +114,7 @@ export default function PreOrderForm({ product }: PreOrderFormProps) {
             name="name"
             value={form.name}
             onChange={handleChange}
-            placeholder="Priya Sharma"
+            
             className={inputClass}
             required
           />
@@ -128,7 +128,7 @@ export default function PreOrderForm({ product }: PreOrderFormProps) {
             name="phone"
             value={form.phone}
             onChange={handleChange}
-            placeholder="9876543210"
+            
             className={inputClass}
             required
           />
@@ -145,7 +145,7 @@ export default function PreOrderForm({ product }: PreOrderFormProps) {
           name="email"
           value={form.email}
           onChange={handleChange}
-          placeholder="priya@example.com"
+          
           className={inputClass}
           required
         />
@@ -161,7 +161,7 @@ export default function PreOrderForm({ product }: PreOrderFormProps) {
           value={form.message}
           onChange={handleChange}
           rows={4}
-          placeholder="I'm interested in this piece. Please share details on customisation options, delivery timeline, and sizing…"
+          
           className={`${inputClass} resize-none`}
           required
         />
