@@ -2,9 +2,7 @@
 import { PreOrderProductData } from "@/services/preOrder/preOrderTypes";
 import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { ImageSlider } from "../products/components/ImageSlider";
 
 interface PreOrderProductCardProps {
@@ -34,8 +32,9 @@ export const PreOrderProductCard = ({
   const handlePreOrder = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    toast.info("Redirecting to contact page...");
-    router.push("/contact");
+    // Save product data so pre-order page can use it without a separate API call
+    sessionStorage.setItem(`preorder_${item.productId}`, JSON.stringify(item));
+    router.push(`/pre-order/${item.productId}`);
   };
 
   return (
@@ -144,7 +143,7 @@ export const PreOrderProductCard = ({
                     className="flex items-center gap-1.5"
                     aria-label="Available colors"
                   >
-                    {colors.slice(0, 5).map((color: any, index: number) => (
+                    {colors.slice(0, 5).map((color: any) => (
                       <span
                         key={typeof color === "string" ? color : color.name}
                         title={typeof color === "string" ? color : color.name}
