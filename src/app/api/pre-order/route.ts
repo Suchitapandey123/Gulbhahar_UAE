@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "@/utils/envHere";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -6,7 +7,7 @@ export async function POST(req: NextRequest) {
     console.log("[PreOrder] request body:", JSON.stringify(body));
 
     const res = await fetch(
-      `http://194.238.23.44:9080/api/products/pre-order-response/create`,
+      `${API_BASE_URL}/api/products/pre-order-response/create`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
