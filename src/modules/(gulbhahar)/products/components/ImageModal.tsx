@@ -143,7 +143,7 @@ export const ImageModal = ({
             fill
             className={`object-contain transition-opacity duration-200 ${isLoading ? "opacity-0" : "opacity-100"}`}
             sizes="100vw"
-            quality={95}
+            unoptimized
             priority
             onLoad={() => setIsLoading(false)}
           />

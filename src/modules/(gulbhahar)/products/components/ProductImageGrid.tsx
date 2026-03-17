@@ -214,7 +214,8 @@ export const ProductImageGrid = ({
                 sizes="(max-width: 1024px) 40vw, 30vw"
                 priority={idx < 4}
                 loading="eager"
-                quality={60}
+                unoptimized
+                quality={100}
               />
               {/* Zoom Indicator */}
               <div className="absolute top-4 right-4 bg-white bg-opacity-80 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
