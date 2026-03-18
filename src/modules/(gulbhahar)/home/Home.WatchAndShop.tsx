@@ -94,7 +94,16 @@ interface WatchAndShopDataProps {
 const Home_WatchAndShop = ({WatchAndShopData} : WatchAndShopDataProps) => {
   const [fullscreenIndex, setFullscreenIndex] = useState<number | null>(null);
 
-  const fullscreenReels = WatchAndShopData.map((r) => ({
+  const sortedReels = [...WatchAndShopData].sort((a, b) => {
+    const order = (slug: string) =>
+      slug?.toLowerCase().includes("suit") ? 0 :
+      slug?.toLowerCase().includes("jewellery") ? 2 :
+      slug?.toLowerCase().includes("lehenga") ? 3 :
+      slug?.toLowerCase().includes("saree") ? 4 : 1;
+    return order(a.slug) - order(b.slug);
+  });
+
+  const fullscreenReels = sortedReels.map((r) => ({
     videoUrl: r.videoUrl,
     title: r.title,
   }));
@@ -122,7 +131,7 @@ const Home_WatchAndShop = ({WatchAndShopData} : WatchAndShopDataProps) => {
 
       {/* Reels carousel */}
       <HorizontalCarousel className="flex overflow-x-auto gap-4 snap-x snap-proximity md:snap-mandatory cursor-grab active:cursor-grabbing pb-8">
-        {WatchAndShopData.map((reel, idx) => (
+        {sortedReels.map((reel, idx) => (
           <div key={reel.id} className="snap-center" onClick={() => setFullscreenIndex(idx)}>
             <ReelCard reel={reel} />
           </div>
