@@ -17,7 +17,6 @@ export async function GET() {
 
     // 2️⃣ Fetch total number of dynamic sitemaps from API
     const totalRes = await fetch(TOTAL_SITEMAPS_API, {
-      next: { revalidate: 3600 * 24 * 1 }, // revalidate every 1 day
     });
     if (!totalRes.ok) throw new Error("Failed to fetch total sitemap count");
     const { total } = await totalRes.json();
