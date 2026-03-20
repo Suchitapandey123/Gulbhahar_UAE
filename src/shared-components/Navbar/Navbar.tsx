@@ -246,7 +246,7 @@ const Navbar = () => {
 
   // View All Collections handler
   const handleViewAllCollections = (e) => {
-    // // console.log("handleViewAllCollections called");
+   
     if (e) {
       e.preventDefault();
       e.stopPropagation();

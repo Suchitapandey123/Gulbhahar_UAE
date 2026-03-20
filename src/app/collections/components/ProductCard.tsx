@@ -17,7 +17,7 @@ export default function ProductCard({
 }) {
   const slideIntervalRef = useRef(null);
 
-  // console.log(item)
+  
 
   const handleMouseEnter = (productId) => {
     clearInterval(slideIntervalRef.current);
@@ -50,7 +50,7 @@ export default function ProductCard({
   const currentImageIndex =
     currentImageIndices[item.id || item.productId || index] || 0;
 
-  // console.log(`${imagesToShow[0]}${imagesToShow[0].includes("?") ? "&" : "?"}v=${Date.now()}`)
+ 
 
   const cardContent = (
     <div

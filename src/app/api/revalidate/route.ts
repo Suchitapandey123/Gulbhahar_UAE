@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
     // Validate secret
     // if (!REVALIDATE_SECRET) {
-    //   console.error('REVALIDATE_SECRET is not configured');
+   
     //   return NextResponse.json(
     //     { success: false, message: 'Server configuration error' },
     //     { status: 500 }
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
 
       for (const t of tags) {
         revalidateTag(t);
-        console.log(`Revalidated tag: ${t}`);
+       
       }
 
       return NextResponse.json({
@@ -55,7 +55,7 @@ export async function POST(request: Request) {
 
       for (const p of paths) {
         revalidatePath(p);
-        console.log(`Revalidated path: ${p}`);
+       
       }
 
       return NextResponse.json({
@@ -103,7 +103,7 @@ export async function POST(request: Request) {
     );
 
   } catch (error) {
-    console.error('Revalidation error:', error);
+   
     return NextResponse.json(
       { success: false, message: 'Internal server error', error: (error as Error).message },
       { status: 500 }
@@ -161,7 +161,7 @@ export async function GET(request: Request) {
     );
 
   } catch (error) {
-    console.error('Revalidation error:', error);
+  
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
       { status: 500 }

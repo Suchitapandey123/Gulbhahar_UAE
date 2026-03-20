@@ -23,7 +23,7 @@ export default function Sidebar() {
   const pathname = usePathname();
   
   // DEBUG: Add this to see what's happening
-  // // console.log("🔍 Current pathname:", pathname);
+  
 
   return (
     <nav className="flex flex-col space-y-2 p-4 bg-white rounded-lg shadow-sm border border-gray-100">
@@ -37,7 +37,7 @@ export default function Sidebar() {
         const IconComponent = item.icon;
         
         // DEBUG: Log each comparison
-        // // console.log(`📍 ${item.label}: "${pathname}" === "${item.path}" = ${isActive}`);
+       
 
         return (
           <a key={item.path} href={item.path} className="w-full">

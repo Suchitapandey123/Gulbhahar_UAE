@@ -13,7 +13,7 @@ const ProfileImageDisplay = ({
   const [imageError, setImageError] = useState(false);
 
   const handleImageError = () => {
-    console.error("Image failed to load:", imageUrl);
+   
     setImageError(true);
   };
 
@@ -22,7 +22,7 @@ const ProfileImageDisplay = ({
 }, [imageUrl]);
 
   const handleImageLoad = () => {
-    // // console.log("Image loaded successfully:", imageUrl);
+    
     setImageError(false);
   };
 

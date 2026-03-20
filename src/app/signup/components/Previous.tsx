@@ -188,7 +188,7 @@ const SignupPage = () => {
     setError('');
 
     try {
-      // // console.log('Attempting auto-login for:', formData.email);
+    
       
       const response = await fetch('https://api.gulbhahar.com/api/users/login', {
         method: 'POST',
@@ -204,13 +204,13 @@ const SignupPage = () => {
       const data = await response.json();
       
       if (response.ok) {
-        // // console.log('Auto-login successful:', data);
+        
         
         // Store authentication token
         if (data.token || data.accessToken || data.authToken) {
           const token = data.token || data.accessToken || data.authToken;
           setAuthToken(token);
-          // // console.log('Token stored successfully');
+          
         }
         
         // Store user data
@@ -304,7 +304,7 @@ const SignupPage = () => {
 
       if (response.ok) {
         const data = await response.json();
-        // // console.log('Email verified successfully:', data);
+        
         setSuccess('Email verified successfully!');
         // Move to phone verification step after a short delay
         setTimeout(() => {
@@ -403,7 +403,7 @@ const SignupPage = () => {
 
       if (response.ok) {
         const data = await response.json();
-        // // console.log('Verification code resent:', data);
+       
         setSuccess('Verification code sent successfully!');
         // Clear the input fields
         setFormData(prevState => ({
@@ -448,7 +448,7 @@ const SignupPage = () => {
 
       if (response.ok) {
         const data = await response.json();
-        // // console.log('User created successfully:', data);
+       
         
         // Store the image upload URL for profile picture upload
         if (data.imgUploadUrl) {

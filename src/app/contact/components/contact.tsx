@@ -39,7 +39,7 @@ export default function ContactPage() {
   const contactSupportMutation = useMutation({
     mutationFn: contactAPI.createContactSupport,
     onSuccess: (data) => {
-      // console.log('Contact form submitted successfully:', data);
+     
       toast.success(data.message || 'Contact form submitted successfully!');
       // Reset form
       setFormData({

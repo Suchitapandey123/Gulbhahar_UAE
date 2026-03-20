@@ -57,7 +57,7 @@
 //     );
   
 //     const handleSettingClick = (settingName) => {
-//       // console.log(`${settingName} clicked`);
+//       
 //       // Add navigation logic here
 //     };
   
@@ -349,7 +349,7 @@ const Setting = () => {
       alert("Passwords don't match!");
       return;
     }
-    // console.log("Password changed successfully");
+   
     setPasswordData({ newPassword: "", confirmPassword: "" });
   };
 

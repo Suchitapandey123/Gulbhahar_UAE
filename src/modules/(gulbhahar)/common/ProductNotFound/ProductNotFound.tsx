@@ -104,7 +104,7 @@ const ProductNotFound = ({
   onGoBack = () => window.history.back(),
   onGoHome = () => window.location.href = '/',
   products = sampleProducts,
-  // onProductClick = (id) => console.log('Product clicked:', id),
+ 
   customMessage = null
 }) => {
   return (
@@ -175,17 +175,17 @@ const ProductNotFound = ({
 // Usage examples:
 export default function ProductNotAvailable() {
   const handleProductClick = (productId) => {
-    console.log('Navigate to product:', productId);
+    
     // In your app: router.push(`/product/${productId}`)
   };
 
   const handleGoHome = () => {
-    console.log('Navigate to home');
+    
     // In your app: router.push('/')
   };
 
   const handleGoBack = () => {
-    console.log('Go back');
+   
     // In your app: router.back()
   };
 

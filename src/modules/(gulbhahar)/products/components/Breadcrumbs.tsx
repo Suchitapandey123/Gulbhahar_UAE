@@ -12,7 +12,7 @@ export const Breadcrumbs = ({
   productName,
   customRed,
 }: BreadcrumbsProps) => {
-  console.log(parentCategoryName)
+ 
   return (
     <div className="mb-4 lg:mb-6">
       <nav className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm text-gray-600 overflow-x-auto pb-1">

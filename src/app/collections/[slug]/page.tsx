@@ -121,7 +121,7 @@ export async function generateMetadata({
 export default async function Page({ params: rawParams }: Props) {
   const params = await rawParams;
   const slug = params?.slug;
-  // console.log(slug)
+  
   if (!slug) redirect("/not-found");
 
   const pattern = /^P\d{11}$/;

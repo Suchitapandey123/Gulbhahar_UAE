@@ -134,7 +134,7 @@ const SearchPopup = ({ isOpen, onClose }) => {
 
   // Handle clicking on a suggestion
   const handleSuggestionClick = (suggestion) => {
-    // console.log('Suggestion clicked:', suggestion);
+   
     setSearchTerm(suggestion.title);
     saveRecentSearch(suggestion.title);
     

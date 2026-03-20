@@ -23,8 +23,7 @@ async function run() {
 
   try {
     await client.connect();
-    console.log("✅ Connected to MongoDB");
-
+   
     const db = client.db(DB_NAME);
     const collection = db.collection(COLLECTION_NAME);
 
@@ -55,12 +54,12 @@ async function run() {
       }
     }
 
-    console.log(`🎉 Done. Updated ${updatedCount} documents.`);
+   
   } catch (err) {
     console.error("❌ Error:", err);
   } finally {
     await client.close();
-    console.log("🔌 MongoDB connection closed");
+    
   }
 }
 

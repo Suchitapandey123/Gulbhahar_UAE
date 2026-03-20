@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    console.log("[PreOrder] request body:", JSON.stringify(body));
+   
 
     const res = await fetch(
       `${API_BASE_URL}/api/products/pre-order-response/create`,
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
 
     // Safely parse response — backend might return HTML on error
     const rawText = await res.text();
-    console.log("[PreOrder] backend status:", res.status, "raw:", rawText.slice(0, 300));
+   
 
     let data: Record<string, unknown> = {};
     try {
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true, message: "Enquiry submitted successfully.", data });
 
   } catch (err) {
-    console.error("[PreOrder] fetch error:", err);
+   
     return NextResponse.json(
       { success: false, message: `Could not reach server: ${err instanceof Error ? err.message : String(err)}` },
       { status: 500 }

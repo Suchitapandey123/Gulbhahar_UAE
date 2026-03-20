@@ -113,7 +113,7 @@ export default function AvailableProducts() {
 
 
 const handleAddToCart = async (e, item) => {
-  // // console.log('🛒 Collections - Adding item to cart:', item);
+ 
   e.preventDefault();
   e.stopPropagation();
 
@@ -122,7 +122,7 @@ const handleAddToCart = async (e, item) => {
     const selectedColor = item.colors && item.colors.length > 0 ? item.colors[0] : 'default';
     const selectedSize = item.sizes && item.sizes.length > 0 ? item.sizes[0] : 'default';
     
-    // // console.log('🎨 Auto-selected variants:', { selectedColor, selectedSize });
+   
 
     // 🔥 STANDARDIZED cart item structure
     const cartItemWithVariants = {
@@ -137,7 +137,7 @@ const handleAddToCart = async (e, item) => {
       addedAt: new Date().toISOString()
     };
 
-    // // console.log('🛒 Standardized cart item:', cartItemWithVariants);
+   
 
     const result = await addToCart(cartItemWithVariants);
     
@@ -146,13 +146,13 @@ const handleAddToCart = async (e, item) => {
         `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`, 
         'success'
       )
-      // // console.log('✅ Item added successfully');
+     
       // showToast(
       //   `${item.name} (${selectedSize}, ${selectedColor}) added to cart!`, 
       //   'success'
       // );
     } else {
-      // // console.log('❌ Failed to add item');
+     
       // showToast("Failed to add item to cart. Please try again.", "error");
       toast.error("Failed to add item to cart. Please try again.");
     }

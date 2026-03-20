@@ -54,7 +54,7 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
       const data = await orderHistoryAPI.getOrderHistory();
       setOrders(transformOrderData(data.orders || []));
     } catch (err) {
-      console.error('Error fetching order history:', err);
+    
       setError(err.message || 'Failed to load orders. Please try again.');
     } finally {
       setLoading(false);

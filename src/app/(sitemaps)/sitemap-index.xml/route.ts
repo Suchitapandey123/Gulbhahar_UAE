@@ -45,7 +45,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error("Error generating sitemap index:", error);
+   
 
     // Fallback sitemap index with at least the static sitemap
     const fallbackIndex = `<?xml version="1.0" encoding="UTF-8"?>

@@ -96,7 +96,7 @@ export default function Collection({ parentCategory = null, slug = null }) {
       return productCategories?.toLowerCase?.() === category.toLowerCase();
     });
 
-    // console.log(`Filtered ${filtered.length} products for category: ${category}`);
+   
     return filtered;
   }, [allProducts, category]);
 
@@ -151,7 +151,7 @@ export default function Collection({ parentCategory = null, slug = null }) {
       updatedAt: product.updatedAt,
     }));
   };
-  // console.log("CATEGORY FROM URL:", category);
+  
 
   //  REPLACE OLD handleAddToCart WITH THIS NEW ONE:
   const handleAddToCart = async (e, item) => {

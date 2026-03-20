@@ -60,7 +60,7 @@
 //         });
 //       }
 //     } catch (error) {
-//       console.error('🚨 Error fetching user profile:', error);
+//      
 //     } finally {
 //       setLoading(false);
 //     }
@@ -129,7 +129,7 @@
 //       toast.success("User Details and Profile Updated Successfully")
 //     }
 //   } catch (error) {
-//     console.error("Error:", error.message);
+//    
 //     // toast.error("Supported formats: PNG, JPEG, JPG, WebP");
 //     toast.error(error.message)
 //   } finally {
@@ -293,7 +293,7 @@ const Profile = () => {
         });
       }
     } catch (error) {
-      console.error('🚨 Error fetching user profile:', error);
+     
     } finally {
       setLoading(false);
     }
@@ -433,7 +433,7 @@ const Profile = () => {
         changeView(ProfileView.MAIN);
       }
     } catch (error) {
-      console.error("Error:", error.message);
+     
       toast.error(error.message);
     } finally {
       setSaving(false);

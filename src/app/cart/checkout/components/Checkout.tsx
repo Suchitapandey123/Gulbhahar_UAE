@@ -770,7 +770,7 @@ export default function CheckoutComponent() {
       try {
         const res = await analyticsAPI.trackContinueToPayment(userData);
       } catch (error) {
-        console.error(error);
+      
       }
 
       gaEvent({

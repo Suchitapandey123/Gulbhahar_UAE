@@ -22,7 +22,7 @@ const OAuthCallbackPage = () => {
       
       // Only process when we have an authenticated session with backend token
       if (status === 'authenticated' && session?.backendToken) {
-        // console.log('🔄 Processing OAuth callback...', { 
+      
         //   provider: session.user?.email ? 'social' : 'unknown',
         //   hasBackendToken: !!session.backendToken 
         // });
@@ -36,7 +36,7 @@ const OAuthCallbackPage = () => {
           let userData = session.userData;
           
           if (!userData) {
-            // console.log('📡 Fetching user data from backend...');
+          
             // const response = await axios.post(
             //   `https://api.gulbhahar.com/api/users/user-by-token`, 
             //   {},
@@ -66,7 +66,7 @@ const OAuthCallbackPage = () => {
             throw new Error('Failed to complete login process');
           }
         } catch (error) {
-          console.error('❌ OAuth callback error:', error);
+         
           setError('Failed to complete social login. Please try again.');
           
           // Redirect to login page after error

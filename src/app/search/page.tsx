@@ -18,7 +18,7 @@ export default function SearchPage() {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // console.log('Searching for:', searchQuery);
+     
     }
   };
 

@@ -24,7 +24,7 @@ export function middleware(request: NextRequest) {
 //   const latitude = request.headers.get("x-vercel-ip-latitude");
 //   const longitude = request.headers.get("x-vercel-ip-longitude");
 
-//   console.log({
+
 //     city,
 //     latitude,
 //     longitude,

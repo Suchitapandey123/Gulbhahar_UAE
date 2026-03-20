@@ -41,7 +41,7 @@ export async function GET(
       headers: { "Content-Type": "application/xml" },
     });
   } catch (error) {
-    console.error("Error generating sitemap:", error);
+   
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

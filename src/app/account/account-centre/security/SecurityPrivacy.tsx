@@ -69,7 +69,7 @@ const SecurityPrivacy = () => {
       alert("Passwords don't match!");
       return;
     }
-    // console.log("Password changed successfully");
+    
     setPasswordData({ newPassword: "", confirmPassword: "" });
   };
 
@@ -90,7 +90,7 @@ const SecurityPrivacy = () => {
   // Disable 2FA
   const handleDisable2FA = () => {
     setAuthMethods({ emailOTP: false, textMessage: false });
-    // console.log("Two-factor authentication disabled");
+   
   };
 
   // Mock data for login history
@@ -730,7 +730,7 @@ const SecurityPrivacy = () => {
                 {/* Save Settings Button */}
                 <div className="mt-8 pt-6 border-t border-gray-200">
                   <button
-                    // onClick={() => console.log('Privacy settings saved:', privacySettings)}
+                   
                     className="bg-red-900 text-white px-6 py-3 rounded-lg hover:bg-red-800 transition-colors font-medium"
                   >
                     Save Privacy Settings
