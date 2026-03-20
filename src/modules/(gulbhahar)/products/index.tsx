@@ -3,7 +3,6 @@ import { sizeChartService } from "@/services/sizeChart/sizeChartService";
 import { Breadcrumbs } from "./components/Breadcrumbs";
 import { DeliveryChecker } from "./components/DeliveryChecker";
 import { ProductDetails } from "./components/ProductDetails";
-import ProductReels from "./components/ProductReels";
 import { ProductView } from "./components/ProductView";
 import Reviews from "./components/Reviews";
 import { SimilarProductsSection } from "./components/SimilarProductsSection";
@@ -47,10 +46,6 @@ export default async function ProductModule({ product, similarProducts }: Produc
           />
 
           <ProductView sizeChart ={sizeChart.data!} product={product} customRed={CUSTOM_RED} />
-          <div className="md:block hidden">
-
-            <ProductReels videos={product.videos || []} />
-          </div>
           <div className="block md:hidden">
             <DeliveryChecker customRed={CUSTOM_RED} />
           </div>

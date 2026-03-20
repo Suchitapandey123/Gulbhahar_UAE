@@ -295,7 +295,7 @@ function PaymentContent() {
   };
 
   const handleSubmitPayment = (partialAmount = null) => {
-    console.log("reached handle Submit pAyment");
+
     try {
       const saved = JSON.parse(localStorage.getItem("checkoutFormData") || "{}");
       saved.paymentMethod = partialAmount ? "PARTIAL_COD" : "ONLINE";

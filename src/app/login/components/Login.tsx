@@ -360,7 +360,7 @@ const LoginPage = () => {
 
   // ✅ SIMPLE FACEBOOK LOGIN - FIXED
   const handleFacebookLogin = () => {
-    console.log("Facebook login clicked");
+
     setSocialLoginLoading(true);
     
     // Direct signIn call - SIMPLEST VERSION

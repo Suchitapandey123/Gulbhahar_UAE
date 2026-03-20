@@ -25,6 +25,7 @@ const HomePage = async () => {
   const juttisProducts = await getProducts("juttis");
   const suitsProducts = await getProducts("suit");
   const bagsProducts = await getProducts("bags");
+  const sareeProducts = await getProducts("saree");
 
   const homeData = await homePageService.getHomeData()
   return (
@@ -34,6 +35,7 @@ const HomePage = async () => {
         <Home_WatchAndShop WatchAndShopData={homeData.data?.["watch-and-shop"] || []} />
         <Home_AvailableCollections AvailableCollections ={homeData.data?.["available-collections"] || []}  />
         <Home_JuttisCollection slug={"/suit"} name={'Suits Collection'} newCollection={suitsProducts} />
+        <Home_JuttisCollection slug={"/saree"} name={'Sarees Collection'} newCollection={sareeProducts} />
         <Home_JuttisCollection reverse = {true}  slug={"/bags"} name={'Bags Collection'} newCollection={bagsProducts} />
         <Home_JuttisCollection slug={"/juttis"} name={'Juttis Collection'} newCollection={juttisProducts} />
         <AboutUsSection SoulOfGulbhahar = {homeData.data?.["soul-of-gulbhahar"] || []}/>
