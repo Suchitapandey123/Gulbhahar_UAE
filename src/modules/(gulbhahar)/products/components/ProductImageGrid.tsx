@@ -147,7 +147,6 @@ export const ProductImageGrid = ({
 
           {currentImages[selectedIndex] && (
             <NextImage
-              key={selectedIndex}
               src={getImageSrc(currentImages[selectedIndex])}
               alt={`${product.name} - View ${selectedIndex + 1}`}
               fill
@@ -212,10 +211,10 @@ export const ProductImageGrid = ({
                 fill
                 className="object-cover hover:scale-105 transition-transform duration-300"
                 sizes="(max-width: 1024px) 40vw, 30vw"
-                priority={idx < 4}
-                loading="eager"
-                unoptimized
+                priority={idx === 0}
                 quality={100}
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
               />
               {/* Zoom Indicator */}
               <div className="absolute top-4 right-4 bg-white bg-opacity-80 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
