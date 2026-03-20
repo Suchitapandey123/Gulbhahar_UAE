@@ -1,17 +1,31 @@
 export interface Product {
   productId: string;
+  _id?: string;
   id?: string;
-  name: string;
+  name?: string;
+  title?: string;
   price: number;
-  image?: string;
-  images?: string[];
-  colors?: string[];
-  sizes?: string[];
-  category?: string;
-  parentCategory?: string;
-  slug?: string;
+  originalPrice: number;
   description?: string;
-  [key: string]: unknown;
+  category: string[];
+  parentCategory: string[];
+  details?: string[];
+  overview?: string[];
+  material?: string;
+  images?: string[][];
+  updatedAt?: string;
+  createdAt?: string;
+  inventory?: { keywords: string[]; color: string; quantity: string }[];
+  season?: string;
+  availableColors?: { name: string; hexcode: string }[];
+  availableCollections?: { name: string }[];
+  availableSizes?: { name: string }[];
+  availableSeasons?: { name: string }[];
+  availableFabrics?: { name: string }[];
+  seo?: { keywords: string[]; metaTitle: string; metaDescription: number };
+  videos?: { posterUrl: string; videoUrl: string; title: string }[];
+  totalSizes: string[];
+  slug?: string;
 }
 
 export interface ProductApiResponse {

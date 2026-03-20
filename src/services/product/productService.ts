@@ -157,6 +157,47 @@ export const productService = {
     }
   },
 
+  getProductsByParentCategoryPage: async (
+    parentCategory: string,
+    cursor?: string
+  ): Promise<{ products: Product[]; nextCursor: string | null }> => {
+    try {
+      const body: Record<string, string> = { parentCategory };
+      if (cursor) body.cursor = cursor;
+
+      const response = await fetch(
+        `${API_BASE_URL}/new-api/products/get-product-by-parentCategory`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(body),
+          next: {
+            revalidate: 3600,
+            tags: ["products", "collections", `parent-${parentCategory}`],
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data: ProductApiResponse = await response.json();
+      console.log(data)
+      const products = data?.products || (data?.data as Product[]) || [];
+      return {
+        products: Array.isArray(products) ? products : [],
+        nextCursor: (data as { nextCursor?: string })?.nextCursor ?? null,
+      };
+    } catch (error) {
+      console.error("Error fetching products by parent category:", error);
+      return { products: [], nextCursor: null };
+    }
+  },
+
   // V1 - cart operations
   addToCart: async (
     product: { productId: string; size?: string; color?: string },

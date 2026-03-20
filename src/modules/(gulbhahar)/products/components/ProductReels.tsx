@@ -13,7 +13,8 @@ export interface ReelData {
   description?: string;
 }
 interface ProductReelsProps {
-  videos: VideosOption[];
+  videos: VideosOption[][];
+  selectedColorIndex?: number;
 }
 
 // Reels data - can be fetched from API/CMS in production
@@ -52,9 +53,9 @@ const PRODUCT_REELS: ReelData[] = [
   },
 ];
 
-export default function ProductReels({ videos }: ProductReelsProps) {
-  const flatVideos = videos?.flat() ?? [];
-  const reels = flatVideos.length > 0 ? flatVideos : PRODUCT_REELS;
+export default function ProductReels({ videos, selectedColorIndex = 0 }: ProductReelsProps) {
+  const colorVideos = videos?.[selectedColorIndex] ?? [];
+  const reels = colorVideos.length > 0 ? colorVideos : PRODUCT_REELS;
   const [fullscreenIndex, setFullscreenIndex] = useState<number | null>(null);
 
   return (

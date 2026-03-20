@@ -360,7 +360,7 @@ const LoginPage = () => {
 
   // ✅ SIMPLE FACEBOOK LOGIN - FIXED
   const handleFacebookLogin = () => {
-   
+
     setSocialLoginLoading(true);
     
     // Direct signIn call - SIMPLEST VERSION

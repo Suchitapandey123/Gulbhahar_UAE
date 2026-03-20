@@ -193,7 +193,7 @@ export const ProductView = ({ sizeChart , product, customRed }: ProductViewProps
                 <DeliveryChecker customRed={customRed} />
               </div>
               <div className="block md:hidden">
-                <ProductReels videos={product.videos || []} />
+                <ProductReels videos={product.videos || []} selectedColorIndex={selectedColorIndex} />
               </div>
 
               {/* Elegant note */}
@@ -250,6 +250,11 @@ export const ProductView = ({ sizeChart , product, customRed }: ProductViewProps
           onClose={() => setShowSizeGuide(false)}
           sizeChart ={sizeChart}
         />
+      </div>
+
+      {/* Desktop reels — outside grid to preserve sticky layout */}
+      <div className="md:block hidden">
+        <ProductReels videos={product.videos || []} selectedColorIndex={selectedColorIndex} />
       </div>
     </>
   );
