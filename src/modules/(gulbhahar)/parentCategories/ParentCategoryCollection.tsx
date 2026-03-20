@@ -10,7 +10,7 @@ export default async function ParentCategoryCollection({
   initialParentCategory = "all"
 }: CategoryCollectionProps) {
   const { products, nextCursor } = await productApi.getProductsByParentCategoryPage(initialParentCategory);
-  console.log(products)
+  
 
   if (!products || products.length === 0) {
     return (

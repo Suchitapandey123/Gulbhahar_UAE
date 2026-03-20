@@ -186,7 +186,7 @@ export const productService = {
       }
 
       const data: ProductApiResponse = await response.json();
-      console.log(data)
+
       const products = data?.products || (data?.data as Product[]) || [];
       return {
         products: Array.isArray(products) ? products : [],
