@@ -315,7 +315,7 @@ export const ImageModal = ({
                 isLoading ? "opacity-0" : "opacity-100"
               }`}
               sizes="100vw"
-              quality={100}
+            unoptimized
               priority
               draggable={false}
               onLoad={() => setIsLoading(false)}
