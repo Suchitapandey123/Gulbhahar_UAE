@@ -1,10 +1,13 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { ZoomIn } from "lucide-react";
+import { ImageOff, ZoomIn } from "lucide-react";
 import NextImage from "next/image";
 import { cn } from "@/lib/utils";
 import { Product } from "../types";
+
+const BLUR_DATA_URL =
+  "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q==";
 
 interface ProductImageGridProps {
   product: Product;
@@ -13,6 +16,77 @@ interface ProductImageGridProps {
   onImageClick: (index: number) => void;
 }
 
+// ─── Reusable skeleton shimmer ────────────────────────────────────────────────
+const Skeleton = () => (
+  <div className="absolute inset-0 bg-gray-100 animate-pulse" />
+);
+
+// ─── Clean broken-image placeholder ──────────────────────────────────────────
+const BrokenImage = () => (
+  <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50 gap-2 select-none">
+    <ImageOff className="w-8 h-8 text-gray-300" />
+    <span className="text-xs text-gray-400">Image unavailable</span>
+  </div>
+);
+
+// ─── Per-image component that handles loading / error / fade-in ───────────────
+interface ProductImageProps {
+  src: string;
+  alt: string;
+  priority?: boolean;
+  sizes: string;
+  quality: number;
+  hoverScale?: boolean;
+}
+
+const ProductImage = ({
+  src,
+  alt,
+  priority = false,
+  sizes,
+  quality,
+  hoverScale = false,
+}: ProductImageProps) => {
+  const [status, setStatus] = useState<"loading" | "loaded" | "error">(
+    "loading"
+  );
+
+  // Re-reset when src changes (e.g. colour switch)
+  useEffect(() => {
+    setStatus("loading");
+  }, [src]);
+
+  if (!src) return <BrokenImage />;
+
+  return (
+    <>
+      {status === "loading" && <Skeleton />}
+      {status === "error" ? (
+        <BrokenImage />
+      ) : (
+        <NextImage
+          src={src}
+          alt={alt}
+          fill
+          className={cn(
+            "object-cover transition-opacity duration-300 ease-out",
+            status === "loaded" ? "opacity-100" : "opacity-0",
+            hoverScale && "group-hover:scale-105 transition-transform duration-300"
+          )}
+          sizes={sizes}
+          quality={quality}
+          priority={priority}
+          placeholder="blur"
+          blurDataURL={BLUR_DATA_URL}
+          onLoad={() => setStatus("loaded")}
+          onError={() => setStatus("error")}
+        />
+      )}
+    </>
+  );
+};
+
+// ─── Main component ───────────────────────────────────────────────────────────
 export const ProductImageGrid = ({
   product,
   currentImages,
@@ -20,24 +94,11 @@ export const ProductImageGrid = ({
   onImageClick,
 }: ProductImageGridProps) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [imageOpacity, setImageOpacity] = useState(1);
 
   const getImageSrc = (img: string) =>
-    img.startsWith("/") ? img : `${img}${cacheVersion}`;
+    img ? (img.startsWith("/") ? img : `${img}${cacheVersion}`) : "";
 
-  // Reset loading/opacity state when image loads or errors
-  const handleImageLoad = () => {
-    setIsLoading(false);
-    setImageOpacity(1);
-  };
-
-  const handleImageError = () => {
-    setIsLoading(false);
-    setImageOpacity(1);
-  };
-
-  // Auto-slide for mobile big image
+  // Auto-slide for mobile
   const autoSlideTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const selectedIndexRef = useRef(selectedIndex);
   selectedIndexRef.current = selectedIndex;
@@ -45,30 +106,14 @@ export const ProductImageGrid = ({
   const startAutoSlide = useCallback(() => {
     if (autoSlideTimer.current) clearInterval(autoSlideTimer.current);
     if (currentImages.length <= 1) return;
-
     autoSlideTimer.current = setInterval(() => {
-      const nextIndex = (selectedIndexRef.current + 1) % currentImages.length;
-      setImageOpacity(0);
-      setIsLoading(true);
-      setTimeout(() => {
-        setSelectedIndex(nextIndex);
-      }, 150);
+      setSelectedIndex((prev) => (prev + 1) % currentImages.length);
     }, 3000);
   }, [currentImages.length]);
 
   const handleImageChange = (index: number) => {
     if (index === selectedIndex) return;
-
-    // Start transition - fade out
-    setImageOpacity(0);
-    setIsLoading(true);
-
-    // Change image after fade out
-    setTimeout(() => {
-      setSelectedIndex(index);
-    }, 150);
-
-    // Reset auto-slide timer on manual interaction
+    setSelectedIndex(index);
     startAutoSlide();
   };
 
@@ -79,7 +124,7 @@ export const ProductImageGrid = ({
     };
   }, [startAutoSlide]);
 
-  // Touch swipe support for mobile
+  // Touch swipe
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
   const isSwiping = useRef(false);
@@ -92,35 +137,28 @@ export const ProductImageGrid = ({
 
   const handleTouchMove = (e: React.TouchEvent) => {
     touchEndX.current = e.touches[0].clientX;
-    const diff = Math.abs(touchStartX.current - touchEndX.current);
-    if (diff > 10) isSwiping.current = true;
+    if (Math.abs(touchStartX.current - touchEndX.current) > 10)
+      isSwiping.current = true;
   };
 
   const handleTouchEnd = () => {
     const diff = touchStartX.current - touchEndX.current;
-    const minSwipeDistance = 50;
-
-    if (Math.abs(diff) < minSwipeDistance) return;
-
-    if (diff > 0 && selectedIndex < currentImages.length - 1) {
-      // Swipe left → next image
+    if (Math.abs(diff) < 50) return;
+    if (diff > 0 && selectedIndex < currentImages.length - 1)
       handleImageChange(selectedIndex + 1);
-    } else if (diff < 0 && selectedIndex > 0) {
-      // Swipe right → previous image
+    else if (diff < 0 && selectedIndex > 0)
       handleImageChange(selectedIndex - 1);
-    }
   };
 
-  // Reset selectedIndex when images change (e.g., color change)
+  // Reset index on image set change (colour switch)
   useEffect(() => {
     setSelectedIndex(0);
   }, [currentImages]);
 
   return (
     <div className="w-full">
-      {/* Mobile Layout: Single image + thumbnails (below md) */}
+      {/* ── Mobile: single image + thumbnail strip ── */}
       <div className="flex flex-col gap-4 md:hidden">
-        {/* Main large image */}
         <div
           className="relative w-full overflow-hidden bg-gray-100 rounded-lg cursor-pointer"
           style={{ aspectRatio: "3 / 4" }}
@@ -131,41 +169,43 @@ export const ProductImageGrid = ({
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          {/* Shimmer loading effect */}
-          {isLoading && (
-            <div className="absolute inset-0 z-10 bg-gray-100">
-              <div
-                className="absolute inset-0 animate-shimmer"
-                style={{
-                  background:
-                    "linear-gradient(90deg, #f3f4f6 0%, #e5e7eb 50%, #f3f4f6 100%)",
-                  backgroundSize: "200% 100%",
-                }}
-              />
-            </div>
-          )}
+          <ProductImage
+            src={getImageSrc(currentImages[selectedIndex])}
+            alt={`${product.name} - View ${selectedIndex + 1}`}
+            priority
+            sizes="100vw"
+            quality={75}
+          />
 
-          {currentImages[selectedIndex] && (
-            <NextImage
-              src={getImageSrc(currentImages[selectedIndex])}
-              alt={`${product.name} - View ${selectedIndex + 1}`}
-              fill
-              className="object-cover transition-opacity duration-300 ease-out"
-              style={{ opacity: imageOpacity }}
-              sizes="(max-width: 768px) 100vw, 50vw"
-              priority
-              quality={75}
-              onLoad={handleImageLoad}
-              onError={handleImageError}
-            />
-          )}
-          {/* Zoom Indicator */}
-          <div className="absolute top-3 right-3 bg-white bg-opacity-80 backdrop-blur-sm rounded-full p-1.5 opacity-70">
+          {/* Zoom hint */}
+          <div className="absolute top-3 right-3 bg-white/80 backdrop-blur-sm rounded-full p-1.5 opacity-70 z-10">
             <ZoomIn className="w-4 h-4 text-gray-700" />
           </div>
+
+          {/* Dot indicators */}
+          {currentImages.length > 1 && (
+            <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-10">
+              {currentImages.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleImageChange(idx);
+                  }}
+                  className={cn(
+                    "w-1.5 h-1.5 rounded-full transition-all duration-200",
+                    selectedIndex === idx
+                      ? "bg-white w-3"
+                      : "bg-white/50"
+                  )}
+                  aria-label={`View image ${idx + 1}`}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Thumbnail gallery - horizontal scroll */}
+        {/* Thumbnail strip */}
         <div className="overflow-x-auto overflow-y-hidden py-2">
           <div className="flex gap-2 justify-start w-max px-1">
             {currentImages.map((img, index) => (
@@ -173,7 +213,7 @@ export const ProductImageGrid = ({
                 key={index}
                 onClick={() => handleImageChange(index)}
                 className={cn(
-                  "flex-shrink-0 w-14 h-[70px] rounded-md overflow-hidden transition-all duration-300 ease-out",
+                  "relative flex-shrink-0 w-14 h-[70px] rounded-md overflow-hidden bg-gray-100 transition-all duration-300 ease-out",
                   "hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-red-900 focus:ring-offset-1",
                   selectedIndex === index
                     ? "ring-2 ring-red-900 opacity-100"
@@ -181,12 +221,10 @@ export const ProductImageGrid = ({
                 )}
                 aria-label={`View image ${index + 1}`}
               >
-                <NextImage
+                <ProductImage
                   src={getImageSrc(img)}
                   alt={`${product.name} thumbnail ${index + 1}`}
-                  width={56}
-                  height={70}
-                  className="w-full h-full object-cover"
+                  sizes="56px"
                   quality={60}
                 />
               </button>
@@ -195,29 +233,27 @@ export const ProductImageGrid = ({
         </div>
       </div>
 
-      {/* Desktop Layout: 2x2 Grid (md and above) */}
+      {/* ── Desktop: 2×2 grid ── */}
       <div className="hidden md:block">
         <div className="grid grid-cols-2 gap-3 lg:gap-4">
           {currentImages.map((img, idx) => (
             <div
               key={idx}
-              className="relative w-full overflow-hidden bg-gray-100 rounded cursor-pointer group"
+              className="group relative w-full overflow-hidden bg-gray-100 rounded cursor-pointer"
               style={{ aspectRatio: "3 / 4" }}
               onClick={() => onImageClick(idx)}
             >
-              <NextImage
+              <ProductImage
                 src={getImageSrc(img)}
                 alt={`${product.name} - Image ${idx + 1}`}
-                fill
-                className="object-cover hover:scale-105 transition-transform duration-300"
-                sizes="(max-width: 1024px) 40vw, 30vw"
                 priority={idx === 0}
+                sizes="(max-width: 1024px) 40vw, 30vw"
                 quality={75}
-                placeholder="blur"
-                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                hoverScale
               />
-              {/* Zoom Indicator */}
-              <div className="absolute top-4 right-4 bg-white bg-opacity-80 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+
+              {/* Zoom hint on hover */}
+              <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
                 <ZoomIn className="w-5 h-5 text-gray-700" />
               </div>
             </div>

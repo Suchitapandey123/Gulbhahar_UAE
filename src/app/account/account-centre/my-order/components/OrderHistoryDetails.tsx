@@ -1,5 +1,6 @@
 // @ts-nocheck
 "use client";
+import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import {
   Package,
@@ -412,12 +413,15 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
                                 <div key={i}
                                   className="w-12 h-12 xl:w-[52px] xl:h-[52px] rounded-xl border-2 border-white overflow-hidden bg-stone-100"
                                   style={{ zIndex: 3-i, boxShadow: '0 2px 8px rgba(0,0,0,0.10)' }}>
-                                  <img src={img} alt={`Product ${i+1}`}
+                                  <Image
+                                    src={img}
+                                    alt={`Product ${i+1}`}
+                                    width={52}
+                                    height={52}
+                                    quality={60}
+                                    loading="lazy"
                                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                    onError={(e) => {
-                                      e.target.onerror=null; e.target.style.display='none';
-                                      e.target.parentElement.innerHTML=`<div class="w-full h-full flex items-center justify-center bg-rose-50"><span class="text-rose-900 font-bold text-xs">${i+1}</span></div>`;
-                                    }} />
+                                  />
                                 </div>
                               ))}
                               {order.productCount > 3 && (

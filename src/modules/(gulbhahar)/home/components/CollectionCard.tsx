@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
@@ -46,10 +47,17 @@ const CollectionCard = ({ category, index }: CollectionCardProps) => {
         className="block relative h-[500px] md:h-[600px] group overflow-hidden"
       >
         {/* Background Image */}
-        <img
+        <Image
           src={category.image}
           alt={category.name}
-          className={`absolute inset-0 w-full h-full object-cover transition-transform duration-700 ${
+          fill
+          sizes="(max-width: 640px) 80vw, 400px"
+          quality={60}
+          priority={index < 2}
+          loading={index < 2 ? undefined : "lazy"}
+          placeholder="blur"
+          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+          className={`object-cover transition-transform duration-700 ${
             isInView ? "scale-105" : "scale-100"
           } md:scale-100 md:group-hover:scale-105`}
         />

@@ -85,7 +85,7 @@ const Home_JuttisCollection: React.FC<HomeJuttisCollectionProps> = ({
                     <div className="space-y-3 cursor-pointer relative">
                       {/* Image Container */}
                       <div className="relative overflow-hidden w-full aspect-[3/4]">
-                        <div className="relative w-full h-full">
+                        <div className="relative w-full h-full bg-gray-100">
                           <Image
                             src={getSafeImageUrl(product)}
                             alt={`${product.name} - collection image`}
@@ -93,7 +93,9 @@ const Home_JuttisCollection: React.FC<HomeJuttisCollectionProps> = ({
                             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                             priority={index < 2}
                             loading={index < 2 ? undefined : "lazy"}
-                            quality={95}
+                            quality={60}
+                            placeholder="blur"
+                            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                             className="object-cover transition-transform duration-300 group-hover:scale-105"
                           />
 

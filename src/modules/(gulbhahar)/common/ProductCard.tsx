@@ -46,6 +46,7 @@ export default function ProductCard({
 }: ProductCardProps) {
   const slideIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [loadedImages, setLoadedImages] = useState(() => new Set());
   const { addToCart, addingToCart } = useCart();
 
   const rawImages = item.images || item.image;
@@ -175,7 +176,12 @@ export default function ProductCard({
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
           >
-            <div className="relative w-full h-full bg-white">
+            <div className="relative w-full h-full bg-gray-100">
+              {/* Skeleton pulse — shows until current image is loaded */}
+              {!loadedImages.has(currentImageIndex) && (
+                <div className="absolute inset-0 bg-gray-200 animate-pulse z-[1]" />
+              )}
+
               {imagesToShow.map((image, idx) => (
                 <Image
                   key={idx}
@@ -188,8 +194,17 @@ export default function ProductCard({
                   quality={95}
                   placeholder="blur"
                   blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                  className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out md:group-hover:scale-110 ${
-                    currentImageIndex === idx ? "opacity-100" : "opacity-0"
+                  onLoad={() =>
+                    setLoadedImages((prev) => {
+                      const next = new Set(prev);
+                      next.add(idx);
+                      return next;
+                    })
+                  }
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out md:group-hover:scale-110 transition-transform ${
+                    currentImageIndex === idx && loadedImages.has(idx)
+                      ? "opacity-100"
+                      : "opacity-0"
                   }`}
                 />
               ))}

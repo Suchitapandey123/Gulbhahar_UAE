@@ -1280,14 +1280,14 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
                         <div className="flex-shrink-0">
                           <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden border border-gray-300 bg-white">
                             {item.productImage && item.productImage.length > 0 ? (
-                              <img 
-                                src={item.productImage[0]} 
+                              <Image
+                                src={item.productImage[0]}
                                 alt={item.productName}
+                                width={80}
+                                height={80}
+                                quality={60}
+                                loading="lazy"
                                 className="w-full h-full object-cover"
-                                onError={(e) => {
-                                  e.target.onerror = null;
-                                  e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="%239ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>';
-                                }}
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center">

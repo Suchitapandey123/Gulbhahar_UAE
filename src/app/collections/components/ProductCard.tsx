@@ -3,7 +3,7 @@
 import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function ProductCard({
   item,
@@ -16,6 +16,7 @@ export default function ProductCard({
   addingToCart,
 }) {
   const slideIntervalRef = useRef(null);
+  const [loadedImages, setLoadedImages] = useState(() => new Set());
 
   
 
@@ -68,7 +69,12 @@ export default function ProductCard({
             : "w-32 h-32 sm:w-40 sm:h-40 flex-shrink-0 rounded-lg"
         }`}
       >
-        <div className="relative w-full h-full bg-white">
+        <div className="relative w-full h-full bg-gray-100">
+          {/* Skeleton pulse — shows until current image is loaded */}
+          {!loadedImages.has(currentImageIndex) && (
+            <div className="absolute inset-0 bg-gray-200 animate-pulse z-[1]" />
+          )}
+
           {imagesToShow.map((image, idx) => (
             <Image
               key={idx}
@@ -82,11 +88,20 @@ export default function ProductCard({
                   ? "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   : "(max-width: 640px) 128px, 160px"
               }
-              quality={50}
+              quality={60}
               placeholder="blur"
               blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${
-                currentImageIndex === idx ? "opacity-100" : "opacity-0"
+              onLoad={() =>
+                setLoadedImages((prev) => {
+                  const next = new Set(prev);
+                  next.add(idx);
+                  return next;
+                })
+              }
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out ${
+                currentImageIndex === idx && loadedImages.has(idx)
+                  ? "opacity-100"
+                  : "opacity-0"
               } ${viewMode === "list" ? "rounded-lg" : ""}`}
             />
           ))}
