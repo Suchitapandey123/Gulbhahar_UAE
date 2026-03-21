@@ -1,9 +1,13 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Minus, Plus, X } from "lucide-react";
 import NextImage from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Product } from "../types";
+
+const MIN_ZOOM = 1;
+const MAX_ZOOM = 5;
+const ZOOM_STEP = 0.5;
 
 interface ImageModalProps {
   isModalOpen: boolean;
@@ -24,6 +28,16 @@ export const ImageModal = ({
   product,
 }: ImageModalProps) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [zoom, setZoom] = useState(MIN_ZOOM);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [animatePan, setAnimatePan] = useState(true);
+
+  // Drag tracking refs — refs avoid re-renders during drag
+  const isDragging = useRef(false);
+  const hasMoved = useRef(false);
+  const dragStart = useRef({ x: 0, y: 0 });
+  const panAtDragStart = useRef({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const images = currentImages || [];
   const safeIndex = Math.min(modalImageIndex, Math.max(0, images.length - 1));
@@ -32,6 +46,41 @@ export const ImageModal = ({
 
   const getImageSrc = (img: string) =>
     img.startsWith("/") ? img : `${img}${cacheVersion}`;
+
+  // Clamp pan so the image never fully leaves the viewport
+  const clampPan = useCallback(
+    (x: number, y: number, currentZoom: number) => {
+      if (!containerRef.current) return { x, y };
+      const maxX = (containerRef.current.offsetWidth * (currentZoom - 1)) / 2;
+      const maxY = (containerRef.current.offsetHeight * (currentZoom - 1)) / 2;
+      return {
+        x: Math.max(-maxX, Math.min(maxX, x)),
+        y: Math.max(-maxY, Math.min(maxY, y)),
+      };
+    },
+    []
+  );
+
+  const resetView = useCallback(() => {
+    setZoom(MIN_ZOOM);
+    setPan({ x: 0, y: 0 });
+    setAnimatePan(true);
+  }, []);
+
+  const zoomIn = useCallback(() => {
+    setAnimatePan(true);
+    setZoom((prev) => Math.min(+(prev + ZOOM_STEP).toFixed(1), MAX_ZOOM));
+  }, []);
+
+  const zoomOut = useCallback(() => {
+    setAnimatePan(true);
+    setZoom((prev) => {
+      const next = Math.max(+(prev - ZOOM_STEP).toFixed(1), MIN_ZOOM);
+      if (next === MIN_ZOOM) setPan({ x: 0, y: 0 });
+      else setPan((p) => clampPan(p.x, p.y, next));
+      return next;
+    });
+  }, [clampPan]);
 
   const prevImage = useCallback(() => {
     if (images.length === 0) return;
@@ -43,36 +92,102 @@ export const ImageModal = ({
     setModalImageIndex(safeIndex < images.length - 1 ? safeIndex + 1 : 0);
   }, [safeIndex, images.length, setModalImageIndex]);
 
-  // Keyboard navigation
+  // ─── Mouse pan handlers ────────────────────────────────────────────────────
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (zoom <= MIN_ZOOM) return;
+    isDragging.current = true;
+    hasMoved.current = false;
+    dragStart.current = { x: e.clientX, y: e.clientY };
+    panAtDragStart.current = { ...pan };
+    setAnimatePan(false); // instant pan during drag
+    e.preventDefault();
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging.current) return;
+    const dx = e.clientX - dragStart.current.x;
+    const dy = e.clientY - dragStart.current.y;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) hasMoved.current = true;
+    setPan(clampPan(panAtDragStart.current.x + dx, panAtDragStart.current.y + dy, zoom));
+  };
+
+  const handleMouseUp = () => {
+    if (!isDragging.current) return;
+    isDragging.current = false;
+    setAnimatePan(true);
+    // If no movement → treat as click → reset zoom
+    if (!hasMoved.current && zoom > MIN_ZOOM) resetView();
+  };
+
+  // ─── Touch pan handlers ────────────────────────────────────────────────────
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (zoom <= MIN_ZOOM || e.touches.length !== 1) return;
+    isDragging.current = true;
+    hasMoved.current = false;
+    dragStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    panAtDragStart.current = { ...pan };
+    setAnimatePan(false);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging.current || e.touches.length !== 1) return;
+    const dx = e.touches[0].clientX - dragStart.current.x;
+    const dy = e.touches[0].clientY - dragStart.current.y;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) hasMoved.current = true;
+    setPan(clampPan(panAtDragStart.current.x + dx, panAtDragStart.current.y + dy, zoom));
+  };
+
+  const handleTouchEnd = () => {
+    isDragging.current = false;
+    setAnimatePan(true);
+  };
+
+  // Cancel drag if mouse leaves the container
+  const handleMouseLeave = () => {
+    if (isDragging.current) {
+      isDragging.current = false;
+      setAnimatePan(true);
+    }
+  };
+
+  // ─── Reset on image/modal change ──────────────────────────────────────────
+
+  useEffect(() => {
+    resetView();
+    setIsLoading(true);
+  }, [safeIndex, resetView]);
+
+  useEffect(() => {
+    if (!isModalOpen) resetView();
+  }, [isModalOpen, resetView]);
+
+  // ─── Keyboard shortcuts ───────────────────────────────────────────────────
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isModalOpen) return;
-      if (e.key === "ArrowLeft") prevImage();
-      if (e.key === "ArrowRight") nextImage();
-      if (e.key === "Escape") closeModal();
+      if (e.key === "ArrowLeft" && zoom === MIN_ZOOM) prevImage();
+      if (e.key === "ArrowRight" && zoom === MIN_ZOOM) nextImage();
+      if (e.key === "Escape") { zoom > MIN_ZOOM ? resetView() : closeModal(); }
+      if (e.key === "+" || e.key === "=") zoomIn();
+      if (e.key === "-") zoomOut();
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isModalOpen, prevImage, nextImage, closeModal]);
+  }, [isModalOpen, zoom, prevImage, nextImage, closeModal, zoomIn, zoomOut, resetView]);
 
-  // Prevent body scroll when modal is open
+  // ─── Body scroll lock ─────────────────────────────────────────────────────
+
   useEffect(() => {
-    if (isModalOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
+    document.body.style.overflow = isModalOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
   }, [isModalOpen]);
 
-  // Reset loading state when image changes
-  useEffect(() => {
-    setIsLoading(true);
-  }, [safeIndex]);
-
   if (!isModalOpen || images.length === 0) return null;
+
+  const isZoomed = zoom > MIN_ZOOM;
 
   return (
     <div className="fixed inset-0 z-[9999] bg-black flex flex-col">
@@ -81,6 +196,32 @@ export const ImageModal = ({
         <span className="text-white text-sm md:text-base font-medium">
           {safeIndex + 1} / {images.length}
         </span>
+
+        {/* Zoom controls */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={zoomOut}
+            disabled={zoom <= MIN_ZOOM}
+            className="w-9 h-9 bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed rounded-full flex items-center justify-center transition-colors"
+            aria-label="Zoom out"
+          >
+            <Minus className="w-4 h-4 text-white" />
+          </button>
+
+          <span className="text-white text-sm font-medium w-10 text-center tabular-nums">
+            {zoom.toFixed(1)}x
+          </span>
+
+          <button
+            onClick={zoomIn}
+            disabled={zoom >= MAX_ZOOM}
+            className="w-9 h-9 bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed rounded-full flex items-center justify-center transition-colors"
+            aria-label="Zoom in"
+          >
+            <Plus className="w-4 h-4 text-white" />
+          </button>
+        </div>
+
         <button
           onClick={closeModal}
           className="w-10 h-10 md:w-11 md:h-11 bg-white rounded-full flex items-center justify-center active:bg-gray-200"
@@ -92,8 +233,8 @@ export const ImageModal = ({
 
       {/* Main image area */}
       <div className="flex-1 relative flex items-center justify-center min-h-0">
-        {/* Navigation arrows - visible on all screens */}
-        {images.length > 1 && (
+        {/* Navigation arrows — hidden when zoomed */}
+        {images.length > 1 && !isZoomed && (
           <>
             <button
               onClick={prevImage}
@@ -112,8 +253,8 @@ export const ImageModal = ({
           </>
         )}
 
-        {/* Dot indicators */}
-        {images.length > 1 && (
+        {/* Dot indicators — hidden when zoomed */}
+        {images.length > 1 && !isZoomed && (
           <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20">
             {images.map((_, idx) => (
               <button
@@ -128,6 +269,13 @@ export const ImageModal = ({
           </div>
         )}
 
+        {/* Hint: tap to reset when zoomed */}
+        {isZoomed && (
+          <div className="absolute top-2 left-0 right-0 flex justify-center z-20 pointer-events-none">
+            <span className="text-white/50 text-xs">Tap image to reset</span>
+          </div>
+        )}
+
         {/* Loading spinner */}
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center z-10">
@@ -135,23 +283,49 @@ export const ImageModal = ({
           </div>
         )}
 
-        {/* Image */}
-        <div className="relative w-full h-full">
-          <NextImage
-            src={getImageSrc(currentImageUrl)}
-            alt={`${product?.name || "Product"} - Image ${safeIndex + 1}`}
-            fill
-            className={`object-contain transition-opacity duration-200 ${isLoading ? "opacity-0" : "opacity-100"}`}
-            sizes="100vw"
-            unoptimized
-            priority
-            onLoad={() => setIsLoading(false)}
-          />
+        {/* Image container — overflow clips the panned/zoomed image */}
+        <div
+          ref={containerRef}
+          className="relative w-full h-full overflow-hidden select-none"
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div
+            style={{
+              transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+              transition: animatePan ? "transform 0.25s ease" : "none",
+              transformOrigin: "center center",
+              width: "100%",
+              height: "100%",
+              position: "relative",
+              cursor: isZoomed ? "grab" : "zoom-in",
+              willChange: "transform",
+            }}
+          >
+            <NextImage
+              src={getImageSrc(currentImageUrl)}
+              alt={`${product?.name || "Product"} - Image ${safeIndex + 1}`}
+              fill
+              className={`object-contain transition-opacity duration-200 ${
+                isLoading ? "opacity-0" : "opacity-100"
+              }`}
+              sizes="100vw"
+              quality={100}
+              priority
+              draggable={false}
+              onLoad={() => setIsLoading(false)}
+            />
+          </div>
         </div>
       </div>
 
-      {/* Thumbnails - only on desktop */}
-      {images.length > 1 && (
+      {/* Thumbnails — desktop only, hidden when zoomed */}
+      {images.length > 1 && !isZoomed && (
         <div className="flex-shrink-0 hidden md:block py-4 px-4 bg-black/80">
           <div className="flex gap-2 justify-center overflow-x-auto max-w-2xl mx-auto">
             {images.map((img, idx) => (
