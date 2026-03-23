@@ -4,7 +4,6 @@ import ProductModule from "@/modules/(gulbhahar)/products";
 import { Product, SimilarProduct } from "@/modules/(gulbhahar)/products/types";
 import ProductSchema from "@/shared-components/seo/ProductSchema";
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 import { cache } from "react";
 
 /* ------------------------------------------------------------------ */
@@ -18,7 +17,7 @@ type PageParams = {
 };
 
 /* ------------------------------------------------------------------ */
-/* 🔥 SINGLE SHARED CACHED FETCH */
+/* SINGLE SHARED CACHED FETCH */
 /* ------------------------------------------------------------------ */
 
 const getProductBundle = cache(
@@ -30,7 +29,7 @@ const getProductBundle = cache(
   }> => {
     try {
       const [product, similarProducts] = await Promise.all([
-       productApi.getProductById(productID),
+        productApi.getProductById(productID),
         productApi.getSimilarProducts(productID),
       ]);
 
@@ -58,28 +57,18 @@ export async function generateMetadata(props: PageParams): Promise<Metadata> {
   const params = await props.params;
   const { product } = await getProductBundle(params.id);
 
+  if (!product) return {};
 
-  if (!product) {
-    return {
-      title: "Gulbhahar | Crafting Luxury – Handmade Juttis & Designer Bags",
-      description:
-        "Gulbhahar offers luxury handmade juttis and designer bags crafted by skilled artisans.",
-      alternates: {
-        canonical: "https://www.gulbhahar.com",
-      },
-    };
-  }
-
-  const title = product.seo?.metaTitle
-  const description = product.seo?.metaTitle
-  const keywords = product.seo?.keywords
+  const title = product.seo?.metaTitle;
+  const description = product.seo?.metaDescription;
+  const keywords = product.seo?.keywords;
   return {
     title,
     description,
     alternates: {
       canonical: `https://www.gulbhahar.com/products/${params.id}`,
     },
-    keywords ,
+    keywords,
     openGraph: {
       title,
       description,
@@ -99,9 +88,7 @@ export default async function CollectionPage(props: PageParams) {
   const params = await props.params;
   const { product, similarProducts } = await getProductBundle(params.id);
 
-  if (!product) {
-    redirect("/not-found");
-  }
+  if (!product) return null;
 
   return (
     <>

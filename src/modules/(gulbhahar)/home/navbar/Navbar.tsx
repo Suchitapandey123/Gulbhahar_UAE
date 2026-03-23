@@ -34,6 +34,7 @@ const Navbar = () => {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHoverMode, setIsHoverMode] = useState(true);
+  const [mounted, setMounted] = useState(false);
   const [profileImageLoading, setProfileImageLoading] = useState(false);
   const [profileImageError, setProfileImageError] = useState(false);
   const [openCategoryIndex, setOpenCategoryIndex] = useState<number | null>(
@@ -151,6 +152,10 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
     return () => {
       if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
       if (userHoverTimeoutRef.current)
@@ -186,8 +191,11 @@ const Navbar = () => {
     setProfileImageError(false);
   };
 
-  // Determine if navbar should show solid background
-  const isNavSolid = isScrolled || !transparentNavRoutes.includes(pathname);
+  // Before mount, both SSR and client first-render agree on transparent.
+  // After mount, real scroll + route logic takes over — no hydration mismatch.
+  const isNavSolid =
+    mounted &&
+    (isScrolled || !transparentNavRoutes.includes(pathname ?? "/"));
 
   // Shared props for child components
   const sharedProps = {

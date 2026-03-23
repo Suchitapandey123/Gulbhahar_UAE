@@ -25,7 +25,7 @@ export const productService = {
     return response.json();
   },
 
-  getProductById: async (productId: string): Promise<ProductApiResponse> => {
+  getProductById: async (productId: string): Promise<ProductApiResponse | null> => {
     const response = await fetch(
       `${API_BASE_URL}/new-api/products/get-product-by-id`,
       {
@@ -41,6 +41,10 @@ export const productService = {
         },
       }
     );
+
+    // 404 / 410 from the API → product doesn't exist or was deleted.
+    // Return null so the page can call gone() cleanly instead of crashing.
+    if (response.status === 404 || response.status === 410) return null;
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -65,9 +69,7 @@ export const productService = {
       }
     );
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    if (!response.ok) return { success: false, products: [], data: [] };
 
     return response.json();
   },

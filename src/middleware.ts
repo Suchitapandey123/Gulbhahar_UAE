@@ -1,4 +1,6 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
+
+// ─── Redirect rules ───────────────────────────────────────────────────────────
 
 type RedirectRule = {
   match: string[];
@@ -14,49 +16,86 @@ const REDIRECT_RULES: RedirectRule[] = [
   { match: ["collection"], redirectTo: "/collections" },
 ];
 
-const ALLOWED_BASE_ROUTES = REDIRECT_RULES.map(r => r.redirectTo);
+// ─── 410 cache ────────────────────────────────────────────────────────────────
 
-export function middleware(request: NextRequest) {
+type CacheEntry = { gone: boolean; expiresAt: number };
+const goneCache = new Map<string, CacheEntry>();
+const CACHE_TTL = 60 * 60 * 1000; // 1 hour
+
+const API_BASE = "https://api.gulbhahar.com";
+
+async function checkProductGone(productId: string): Promise<boolean> {
+  const cached = goneCache.get(productId);
+  if (cached && cached.expiresAt > Date.now()) return cached.gone;
+
+  try {
+    const res = await fetch(`${API_BASE}/new-api/products/get-product-by-id`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ productId }),
+      signal: AbortSignal.timeout(3000),
+    });
+
+    let gone = false;
+
+    if (res.status === 404 || res.status === 410) {
+      gone = true;
+    } else if (res.ok) {
+      try {
+        const data = await res.json();
+        const product = data?.data ?? data?.product ?? data;
+        gone = product?.isActive === false;
+      } catch {
+        gone = false;
+      }
+    }
+    // 5xx or other → fail-open
+
+    goneCache.set(productId, { gone, expiresAt: Date.now() + CACHE_TTL });
+    return gone;
+  } catch {
+    // Network error / timeout → fail-open
+    return false;
+  }
+}
+
+// ─── Middleware ───────────────────────────────────────────────────────────────
+
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const cleanPath = pathname.toLowerCase();
 
-  const city = request.headers.get("x-vercel-ip-city");
-//   const latitude = request.headers.get("x-vercel-ip-latitude");
-//   const longitude = request.headers.get("x-vercel-ip-longitude");
+  // ── 1. Product 410 check ─────────────────────────────────────────────────
+  const productMatch = pathname.match(/^\/products\/([^/]+)$/);
+  if (productMatch) {
+    const gone = await checkProductGone(productMatch[1]);
+    if (gone) {
+      const ua = request.headers.get("user-agent") ?? "";
+      const isBot = /bot|crawler|spider|googlebot|bingbot|slurp|duckduck|baidu|yandex/i.test(ua);
 
+      if (isBot) {
+        return new NextResponse(null, {
+          status: 410,
+          headers: {
+            "X-Robots-Tag": "noindex, nofollow",
+            "Cache-Control": "public, max-age=86400, immutable",
+          },
+        });
+      }
 
-//     city,
-//     latitude,
-//     longitude,
-//   });
-
-  //  Allow homepage
-  if (cleanPath === "/") {
-    return NextResponse.next();
+      return NextResponse.redirect(new URL("/410", request.url), 302);
+    }
   }
 
-  // Allow canonical base routes
-  if (ALLOWED_BASE_ROUTES.includes(cleanPath)) {
-    return NextResponse.next();
-  }
-
-  //  Redirect synonyms → canonical base routes (only exact single-level matches)
+  // ── 2. Redirect synonyms → canonical routes ───────────────────────────────
   for (const rule of REDIRECT_RULES) {
-    const isExactSingleMatch = rule.match.some(
-      (slug) => cleanPath === `/${slug}`
-    );
-
-    if (isExactSingleMatch) {
+    if (rule.match.some((slug) => cleanPath === `/${slug}`)) {
       const url = request.nextUrl.clone();
       url.pathname = rule.redirectTo;
       return NextResponse.redirect(url, 308);
     }
   }
 
-  // ❌ 404 ONLY for single-level unknown routes like "/xcvcx"
-  const segments = cleanPath.split("/").filter(Boolean);
-
-  // ✅ Allow deeper routes like "/xczfsd/csdf"
   return NextResponse.next();
 }
 

@@ -177,7 +177,7 @@ export const ProductView = ({ sizeChart , product, customRed }: ProductViewProps
                 customRed={customRed}
                 setShowSizeGuide={setShowSizeGuide}
                 sizeRange={sizeRange}
-                shouldShowSizeGuide={sizeChart.isActive!}
+               shouldShowSizeGuide={sizeChart?.isActive ?? false}
               />
 
               <ProductPurchaseSection
