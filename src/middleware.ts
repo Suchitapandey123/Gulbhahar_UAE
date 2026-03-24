@@ -20,9 +20,10 @@ const REDIRECT_RULES: RedirectRule[] = [
 
 type CacheEntry = { gone: boolean; expiresAt: number };
 const goneCache = new Map<string, CacheEntry>();
-const CACHE_TTL = 60 * 60 * 1000; // 1 hour
+const CACHE_TTL_ACTIVE = 5 * 60 * 1000;      // 5 min for active products
+const CACHE_TTL_DELETED = 60 * 60 * 1000;    // 1 hr for deleted products
 
-const API_BASE = "https://api.gulbhahar.com";
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "https://api.gulbhahar.com";
 
 async function checkProductGone(productId: string): Promise<boolean> {
   const cached = goneCache.get(productId);
@@ -51,7 +52,10 @@ async function checkProductGone(productId: string): Promise<boolean> {
     }
     // 5xx or other → fail-open
 
-    goneCache.set(productId, { gone, expiresAt: Date.now() + CACHE_TTL });
+    goneCache.set(productId, {
+      gone,
+      expiresAt: Date.now() + (gone ? CACHE_TTL_DELETED : CACHE_TTL_ACTIVE),
+    });
     return gone;
   } catch {
     // Network error / timeout → fail-open
@@ -78,13 +82,19 @@ export async function middleware(request: NextRequest) {
           status: 410,
           headers: {
             "X-Robots-Tag": "noindex, nofollow",
-            "Cache-Control": "public, max-age=86400, immutable",
+            "Cache-Control": "public, max-age=3600, immutable",
           },
         });
       }
 
-      return NextResponse.redirect(new URL("/410", request.url), 302);
+      // Rewrite to /410 page — URL stays unchanged, HTTP 410 returned
+      return NextResponse.rewrite(new URL("/410", request.url), { status: 410 });
     }
+
+    // Active product — short cache hint for CDN/edge
+    const res = NextResponse.next();
+    res.headers.set("Cache-Control", "public, s-maxage=300, stale-while-revalidate=60");
+    return res;
   }
 
   // ── 2. Redirect synonyms → canonical routes ───────────────────────────────

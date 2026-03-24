@@ -4,7 +4,7 @@ import CategoryCollection from "@/modules/(gulbhahar)/categoryPages/CategoryColl
 import CategoryCollection_MatchingProducts from "@/modules/(gulbhahar)/categoryPages/CategoryCollection.MatchingProducts";
 import { CategoryCollection_ParentCategoryProducts } from "@/modules/(gulbhahar)/categoryPages/CategoryCollection.ParentCategoryProducts";
 import { Metadata } from "next";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { cache } from "react";
 import { pageService } from "@/services/page/pageService";
 import { PageData } from "@/types/page.types";
@@ -122,7 +122,7 @@ export default async function Page({ params: rawParams }: Props) {
   const params = await rawParams;
   const slug = params?.slug;
   
-  if (!slug) redirect("/not-found");
+  if (!slug) notFound();
 
   const pattern = /^P\d{11}$/;
   if (pattern.test(slug)) {
@@ -131,10 +131,10 @@ export default async function Page({ params: rawParams }: Props) {
 
   // Use cached functions - same request won't be duplicated from generateMetadata
   const validateRes = await validateSlugCached(slug);
-  if (!validateRes?.success) redirect("/not-found");
+  if (!validateRes?.success) notFound();
 
   const page = await getPageDataCached(slug);
-  if (!page) redirect("/not-found");
+  if (!page) notFound();
   const parentCategory = page.parentCategory[0];
   const products = await productApi.getProductsByCategory(slug);
   return (

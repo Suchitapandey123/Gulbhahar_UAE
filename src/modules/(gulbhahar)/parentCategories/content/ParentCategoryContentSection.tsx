@@ -1,6 +1,6 @@
 
 import { ParentCategoryPageData } from "@/types/page.types";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 interface ParsedDetail {
   description: string;
@@ -94,7 +94,7 @@ const ParentCategoryContentSection = ({ page }: ContentSectionProps) => {
   if (!page) return null;
 
   if (page.isFeatured === false) {
-    redirect("/not-found");
+    notFound();
   }
 
   // Parse additional details to extract structured data on the server

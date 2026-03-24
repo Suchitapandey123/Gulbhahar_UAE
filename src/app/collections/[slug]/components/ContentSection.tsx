@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { PageData } from "@/types/page.types";
 
 interface ParsedDetail {
@@ -92,7 +92,7 @@ const ContentSection = ({ page }: ContentSectionProps) => {
   if (!page) return null;
 
   if (page.isFeatured === false) {
-    redirect("/not-found");
+    notFound();
   }
 
   // Parse additional details to extract structured data on the server
