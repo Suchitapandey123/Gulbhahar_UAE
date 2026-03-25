@@ -44,7 +44,7 @@ export default function CollectionsPage({ collections = [] }) {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.05,
+        staggerChildren: 0.03,
         duration: 0.3
       }
     }
@@ -62,7 +62,8 @@ export default function CollectionsPage({ collections = [] }) {
   // Helper function to get safe image URL (without cache busting for Next.js optimization)
   const getSafeImageUrl = (collection) => {
     try {
-      return collection?.images?.[0]?.[0] || '/assets/Image/fallback.jpg';
+      const img = collection?.images?.[0];
+      return (Array.isArray(img) ? img[0] : img) || '/assets/Image/fallback.jpg';
     } catch {
       return '/assets/Image/fallback.jpg';
     }
@@ -131,7 +132,7 @@ export default function CollectionsPage({ collections = [] }) {
       
 
       {/* Collections Grid */}
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="sync">
         <motion.div
           key={selectedCategory}
           initial="hidden"
@@ -154,7 +155,6 @@ export default function CollectionsPage({ collections = [] }) {
                       alt={`${collection.name} - collection image`}
                       fill
                       priority={index < 2}
-                      loading={index < 2 ? undefined : "lazy"}
                       sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                       quality={70}
                       placeholder="blur"

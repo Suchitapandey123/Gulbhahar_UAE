@@ -18,7 +18,7 @@ interface ReelData {
 const ReelCard = ({ reel }: { reel: ReelData }) => {
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const [viewCount, setViewCount] = useState<string | null>(null);
 
@@ -51,11 +51,6 @@ const ReelCard = ({ reel }: { reel: ReelData }) => {
     return () => observer.disconnect();
   }, []);
 
-  const toggleMute = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsMuted(!isMuted);
-  };
-
   return (
     <div className="relative flex-none w-[300px] sm:w-[380px] aspect-[9/16] overflow-hidden group bg-gradient-to-br from-neutral-900 to-black">
       <video
@@ -65,6 +60,7 @@ const ReelCard = ({ reel }: { reel: ReelData }) => {
         muted={isMuted}
         loop
         playsInline
+        preload="metadata"
       />
 
       {/* Overlay Gradients */}

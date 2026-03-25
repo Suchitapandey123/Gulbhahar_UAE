@@ -1,6 +1,6 @@
 "use client";
 
-import { Play, Volume2, VolumeX } from "lucide-react";
+import { Play } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 interface ReelData {
@@ -39,7 +39,7 @@ const CULTURAL_REELS: ReelData[] = [
 const ReelItem = ({ reel }: { reel: ReelData }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted] = useState(true);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -70,6 +70,7 @@ const ReelItem = ({ reel }: { reel: ReelData }) => {
         muted={isMuted}
         loop
         playsInline
+        preload="metadata"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 

@@ -138,6 +138,7 @@ export default function FullscreenReelViewer({
           loop
           playsInline
           autoPlay
+          preload="none"
           onClick={() => setIsMuted((m) => !m)}
         />
 

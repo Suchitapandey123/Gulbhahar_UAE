@@ -1,6 +1,5 @@
 "use client";
 
-import { Volume2, VolumeX } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { ReelData } from "./ProductReels";
@@ -14,7 +13,7 @@ interface ReelItemProps {
 const ReelItem = ({ reel, index, onClick }: ReelItemProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted] = useState(true);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
 
   useEffect(() => {
@@ -65,7 +64,7 @@ const ReelItem = ({ reel, index, onClick }: ReelItemProps) => {
         muted={isMuted}
         loop
         playsInline
-        preload="auto"
+        preload="metadata"
         onCanPlay={() => setIsVideoLoaded(true)}
       />
 
