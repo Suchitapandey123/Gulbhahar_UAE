@@ -2,10 +2,17 @@ import { parentCategoryPageService } from "@/services/parentCategoryPage/parentC
 import ParentCategoryPageModule from "@/modules/(gulbhahar)/parentCategories/ParentCategoryPageModule";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { cache } from "react";
+
+const getParentCategoryPageCached = cache(
+  async (slug: string) => parentCategoryPageService.getParentCategoryPageBySlug(slug)
+);
 
 interface PageProps {
   params: Promise<{ parentCategory: string }>;
 }
+
+export const revalidate = 3600;
 
 const ALLOWED_PARENT_CATEGORIES = ['suit', 'saree', 'lehenga', 'bags', 'jewellery', 'juttis'];
 
@@ -18,7 +25,7 @@ export async function generateMetadata({
     notFound();
   }
 
-  const response = await parentCategoryPageService.getParentCategoryPageBySlug(parentCategory)
+  const response = await getParentCategoryPageCached(parentCategory)
   const page = response.data
   
   return {

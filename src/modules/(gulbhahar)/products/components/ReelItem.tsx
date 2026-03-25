@@ -49,6 +49,7 @@ const ReelItem = ({ reel, index, onClick }: ReelItemProps) => {
         src={reel.posterUrl}
         alt={reel.title}
         fill
+        unoptimized
         className={`object-cover transition-opacity duration-300 ${
           isVideoLoaded ? "opacity-0" : "opacity-100"
         }`}

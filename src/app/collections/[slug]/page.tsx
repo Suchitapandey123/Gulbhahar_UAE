@@ -5,7 +5,7 @@ import CategoryCollection_MatchingProducts from "@/modules/(gulbhahar)/categoryP
 import { CategoryCollection_ParentCategoryProducts } from "@/modules/(gulbhahar)/categoryPages/CategoryCollection.ParentCategoryProducts";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { cache } from "react";
+import { cache, Suspense } from "react";
 import { pageService } from "@/services/page/pageService";
 import { PageData } from "@/types/page.types";
 import QuickLinks from "../components/QuickLinks";
@@ -72,16 +72,18 @@ export async function generateMetadata({
   }
 
   try {
-    // Use cached functions to avoid duplicate API calls
-    const validateRes = await validateSlugCached(slug);
+    // Run both in parallel — independent calls
+    const [validateRes, page] = await Promise.all([
+      validateSlugCached(slug),
+      getPageDataCached(slug),
+    ]);
+
     if (!validateRes?.success) {
       return {
         title: "Page Not Found",
         description: "The requested page does not exist.",
       };
     }
-
-    const page = await getPageDataCached(slug);
     if (!page) {
       return {
         title: "Page Not Found",
@@ -136,17 +138,19 @@ export default async function Page({ params: rawParams }: Props) {
   const page = await getPageDataCached(slug);
   if (!page) notFound();
   const parentCategory = page.parentCategory[0];
-  const products = await productApi.getProductsByCategory(slug);
+  const [products, parentCategoryProducts] = await Promise.all([
+    productApi.getProductsByCategory(slug),
+    productApi.getProductsByParentCategory(parentCategory),
+  ]);
   return (
     <div className="mt-24 px-2 max-w-7xl 2xl:max-w-[1600px] mx-auto">
       {products.length > 0 && <CategoryCollection products={products} />}
       {products.length === 0 && (
-        <>
-          <CategoryCollection_ParentCategoryProducts
-            parentCategory={parentCategory}
-            slug={slug}
-          />
-        </>
+        <CategoryCollection_ParentCategoryProducts
+          parentCategory={parentCategory}
+          slug={slug}
+          products={parentCategoryProducts}
+        />
       )}
       <CategoryCollection_MatchingProducts parentCategory={parentCategory} />
       <ContentSection page={page} />

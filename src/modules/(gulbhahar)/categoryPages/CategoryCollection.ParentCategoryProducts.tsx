@@ -1,5 +1,4 @@
 // @ts-nocheck
-import productApi from "@/services/product/productService";
 import Link from "next/link";
 import { Fragment } from "react";
 import ProductCard from "../common/ProductCard";
@@ -7,14 +6,13 @@ import CategoryCollectionPreOrderProducts from "./CategoryCollection.PreOrderPro
 
 interface ParentCategoryProps {
   parentCategory: string;
-  slug?: string ;
+  slug?: string;
+  products: any[];
 }
 
-export const CategoryCollection_ParentCategoryProducts = async ({
-  parentCategory,slug
+export const CategoryCollection_ParentCategoryProducts = ({
+  parentCategory, slug, products
 }: ParentCategoryProps) => {
-  // Use the dynamic parentCategory prop for the API call
-  const products = await productApi.getProductsByParentCategory(parentCategory);
 
   if (products.length === 0) {
     return <CategoryCollectionPreOrderProducts parentCategory={parentCategory} slug={slug} />;

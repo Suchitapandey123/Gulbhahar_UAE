@@ -6,9 +6,10 @@ import { useEffect, useRef, useState } from "react";
 interface ImageSliderProps {
   images: string[];
   alt: string;
+  priority?: boolean;
 }
 
-export const ImageSlider = ({ images, alt }: ImageSliderProps) => {
+export const ImageSlider = ({ images, alt, priority = false }: ImageSliderProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const slideIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const touchStartX = useRef(0);
@@ -69,7 +70,8 @@ export const ImageSlider = ({ images, alt }: ImageSliderProps) => {
         <Image
           key={idx}
           fill
-          loading="lazy"
+          priority={priority && idx === 0}
+          loading={priority && idx === 0 ? undefined : "lazy"}
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           quality={60}
           src={image}

@@ -14,11 +14,11 @@ export default function ReactQueryProvider({
       new QueryClient({
         defaultOptions: {
           queries: {
-            staleTime: 0,
-            gcTime: 5 * 60 * 1000,
-            refetchOnWindowFocus: true,
+            staleTime: 5 * 60 * 1000,    // 5 min — don't refetch if data is fresh
+            gcTime: 10 * 60 * 1000,       // 10 min — keep unused cache longer
+            refetchOnWindowFocus: false,   // don't refetch on tab switch
             refetchOnMount: true,
-            refetchOnReconnect: true,
+            refetchOnReconnect: false,
           },
         },
       })
