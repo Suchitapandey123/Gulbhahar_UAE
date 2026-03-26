@@ -75,10 +75,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
-        <link rel="preconnect" href="https://www.facebook.com" />
+        <link rel="preconnect" href="https://d21ojmskh8ksuv.cloudfront.net" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://gulbahar-backend.s3.ap-south-1.amazonaws.com" crossOrigin="anonymous" />
 
         {/* DNS Prefetch for third-party domains */}
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://www.facebook.com" />
         <link rel="dns-prefetch" href="https://analytic.thekapslog.com" />
         <link rel="dns-prefetch" href="https://www.clarity.ms" />
         <meta name="facebook-domain-verification" content="i8jg1img7zm6lm54vot1vlfhvys5nc" />
@@ -124,18 +126,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <Script
             src="https://analytic.thekapslog.com/script.js"
             data-website-id="20dfac58-c9ab-4176-86f4-6430b377abdb"
-            strategy="afterInteractive"
+            strategy="lazyOnload"
           />
 
           {/* Google Analytics   */}
           <Script
             src="https://www.googletagmanager.com/gtag/js?id=G-M4Q3C3DJQM"
-            strategy="afterInteractive"
+            strategy="lazyOnload"
           />
 
           <Script
             id="google-analytics"
-            strategy="afterInteractive"
+            strategy="lazyOnload"
             dangerouslySetInnerHTML={{
               __html: `
               window.dataLayer = window.dataLayer || [];
@@ -151,7 +153,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           {/* Microsoft Clarity */}
           <Script
             id="microsoft-clarity"
-            strategy="afterInteractive"
+            strategy="lazyOnload"
             dangerouslySetInnerHTML={{
               __html: `
                 (function(c,l,a,r,i,t,y){
@@ -167,7 +169,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
           <Script
             id="facebook-pixel"
-            strategy="afterInteractive"
+            strategy="lazyOnload"
             dangerouslySetInnerHTML={{
               __html: `
                 !function(f,b,e,v,n,t,s)

@@ -83,7 +83,7 @@ export async function middleware(request: NextRequest) {
           headers: {
             "X-Robots-Tag": "noindex, nofollow",
             "Cache-Control": "public, max-age=3600, immutable",
-          },
+          },  
         });
       }
 

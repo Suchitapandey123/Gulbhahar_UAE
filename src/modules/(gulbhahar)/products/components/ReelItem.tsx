@@ -33,10 +33,10 @@ const ReelItem = ({ reel, index, onClick }: ReelItemProps) => {
       },
       { threshold: 0.5 }
     );
-
+     
     observer.observe(container);
     return () => observer.disconnect();
-  }, []);
+  }, []);   
 
   return (
     <div

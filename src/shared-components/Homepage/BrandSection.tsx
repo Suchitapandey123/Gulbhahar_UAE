@@ -203,19 +203,11 @@
 
 'use client';
 
-import Link from 'next/link';
-import { ArrowUpRight } from 'lucide-react';
-
 const BrandSection = () => {
   const brandName = "GULBHAHAR";
 
   return (
     <>
-      {/* Font Import */}
-      <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&display=swap');
-      `}</style>
-
       <section className="py-16 md:py-24 px-4 max-w-[1600px] mx-auto">
         <div className="relative">
           {/* Main Brand Name */}

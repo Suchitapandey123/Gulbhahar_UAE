@@ -1,6 +1,8 @@
 import React from "react";
 import CookiePolicy from "@/app/cookies-policy/components/CookiePolicy";
 
+export const revalidate = 604800; // 7 days
+
 export async function generateMetadata() {
   return {
     title: "Cookie Policy - Gulbhahar Website Privacy",

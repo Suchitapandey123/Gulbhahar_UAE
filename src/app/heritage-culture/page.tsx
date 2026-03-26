@@ -1,6 +1,8 @@
 import React from 'react'
 import LuxuryCulturePage from './components/CulturePage'
 
+export const revalidate = 604800; // 7 days
+
 export async function generateMetadata() {
   return {
     title: "Heritage Culture - Celebrate Tradition with Gulbhahar Juttis",

@@ -1,6 +1,8 @@
 import React from 'react'
 import Cookies from './components/privacy-policy'
 
+export const revalidate = 604800; // 7 days
+
 
 export async function generateMetadata() {
   return {

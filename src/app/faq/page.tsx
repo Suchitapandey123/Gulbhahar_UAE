@@ -1,6 +1,8 @@
 import React from 'react'
 import FAQ from './components/Faq'
 
+export const revalidate = 604800; // 7 days
+
 export async function generateMetadata() {
   return {
     title:"FAQs - Gulbhahar Jutti Size Guide & Customer Help",

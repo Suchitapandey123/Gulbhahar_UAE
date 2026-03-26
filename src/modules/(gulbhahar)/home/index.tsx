@@ -22,12 +22,14 @@ async function getProducts(parentCategory: string): Promise<Product[]> {
 }
 
 const HomePage = async () => {
-  const juttisProducts = await getProducts("juttis");
-  const suitsProducts = await getProducts("suit");
-  const bagsProducts = await getProducts("bags");
-  const sareeProducts = await getProducts("saree");
-
-  const homeData = await homePageService.getHomeData()
+  const [juttisProducts, suitsProducts, bagsProducts, sareeProducts, homeData] =
+    await Promise.all([
+      getProducts("juttis"),
+      getProducts("suit"),
+      getProducts("bags"),
+      getProducts("saree"),
+      homePageService.getHomeData(),
+    ]);
   return (
     <>
       <ModernHeroAnimated heroSection={homeData.data?.["hero-section"]} />

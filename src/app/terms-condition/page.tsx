@@ -1,6 +1,8 @@
 import React from "react";
 import Terms from "@/app/terms-condition/components/Terms";
 
+export const revalidate = 604800; // 7 days
+
 export async function generateMetadata() {
   return {
     title: "Terms of Use - Gulbhahar Jutti Website Conditions",

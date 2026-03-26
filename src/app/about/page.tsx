@@ -1,6 +1,8 @@
 import React from 'react'
 import Component from "@/app/about/components/About"
 
+export const revalidate = 604800; // 7 days
+
 export async function generateMetadata() {
   return {
     title: 'About us | Gulbhahar : Crafting stories of Heritage',

@@ -1,6 +1,8 @@
 import React from 'react'
 import RefundPolicy from "@/app/refund-policy/components/RefundPolicy"
 
+export const revalidate = 604800; // 7 days
+
 export async function generateMetadata() {
   return {
     title:"Refund & Cancellation Policy - Gulbhahar Store",

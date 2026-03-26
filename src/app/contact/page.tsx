@@ -1,6 +1,8 @@
 import React from "react";
 import ContactPage from "./components/contact";
 
+export const revalidate = 604800; // 7 days
+
 export async function generateMetadata() {
   return {
     title: "Contact us | Gulbhahar (Official) - Customer Support",

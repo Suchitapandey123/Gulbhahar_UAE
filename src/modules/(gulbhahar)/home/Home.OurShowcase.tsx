@@ -1,16 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import HorizontalCarousel from "@/shared-components/Scrollbar/HorizontalCarousel";
-import FullscreenReelViewer from "../common/FullscreenReelViewer";
 import ShowcaseReelItem from "./components/ShowcaseReelItem";
-import { StoryInMotionItem } from "@/types/home.types";
 
-interface ReelData {
-  id: number;
-  videoUrl: string;
-  title: string;
-}
+const FullscreenReelViewer = dynamic(() => import("../common/FullscreenReelViewer"), { ssr: false });
+import { StoryInMotionItem } from "@/types/home.types";
 
 // const CULTURAL_REELS: ReelData[] = [
 //   {
