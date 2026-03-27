@@ -47,6 +47,10 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "cdn.gulbhahar.com",
+      },
+      {
+        protocol: "https",
         hostname: "gulbahar-backend.s3.ap-south-1.amazonaws.com",
       },
       {

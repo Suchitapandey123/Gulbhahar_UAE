@@ -30,6 +30,9 @@ const HomePage = async () => {
       getProducts("saree"),
       homePageService.getHomeData(),
     ]);
+
+    console.log(juttisProducts)
+    
   return (
     <>
       <ModernHeroAnimated heroSection={homeData.data?.["hero-section"]} />

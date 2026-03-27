@@ -1,4 +1,5 @@
 import HorizontalCarousel from "@/shared-components/Scrollbar/HorizontalCarousel";
+import { ProductImages } from "@/types";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,7 +9,7 @@ interface Product {
   productId: string;
   name?: string;
   price?: number;
-  images?: string[][];
+  images?: ProductImages[];
 }
 
 interface HomeJuttisCollectionProps {
@@ -26,9 +27,9 @@ const Home_JuttisCollection: React.FC<HomeJuttisCollectionProps> = ({
 }) => {
   const getSafeImageUrl = (product: Product): string => {
     try {
-      return product?.images?.[0]?.[0] || "/assets/Image/fallback.jpg";
+      return `https://cdn.gulbhahar.com/ProductImages/${product.productId}/cards/${product?.images?.[0].files[0].name}.webp?v=1774596181776` || "https://cdn.gulbhahar.com/ProductImages/P57288228896/cards/P57288228896-wer-2.webp?v=1774596181776";
     } catch {
-      return "/assets/Image/fallback.jpg";
+      return "https://cdn.gulbhahar.com/ProductImages/P57288228896/cards/P57288228896-wer-2.webp?v=1774596181776";
     }
   };
 
