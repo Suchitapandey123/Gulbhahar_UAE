@@ -5,14 +5,11 @@ import { ImageOff, ZoomIn } from "lucide-react";
 import NextImage from "next/image";
 import { cn } from "@/lib/utils";
 import { Product } from "../types";
-
-const BLUR_DATA_URL =
-  "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q==";
+import { ProductImageItem, FALLBACK_LQIP } from "@/utils/productImageUtils";
 
 interface ProductImageGridProps {
   product: Product;
-  currentImages: string[];
-  cacheVersion: string;
+  currentImages: ProductImageItem[];
   onImageClick: (index: number) => void;
 }
 
@@ -32,6 +29,7 @@ const BrokenImage = () => (
 // ─── Per-image component that handles loading / error / fade-in ───────────────
 interface ProductImageProps {
   src: string;
+  lqip?: string;
   alt: string;
   priority?: boolean;
   sizes: string;
@@ -41,6 +39,7 @@ interface ProductImageProps {
 
 const ProductImage = ({
   src,
+  lqip,
   alt,
   priority = false,
   sizes,
@@ -51,7 +50,6 @@ const ProductImage = ({
     "loading"
   );
 
-  // Re-reset when src changes (e.g. colour switch)
   useEffect(() => {
     setStatus("loading");
   }, [src]);
@@ -77,7 +75,7 @@ const ProductImage = ({
           quality={quality}
           priority={priority}
           placeholder="blur"
-          blurDataURL={BLUR_DATA_URL}
+          blurDataURL={lqip || FALLBACK_LQIP}
           onLoad={() => setStatus("loaded")}
           onError={() => setStatus("error")}
         />
@@ -90,13 +88,9 @@ const ProductImage = ({
 export const ProductImageGrid = ({
   product,
   currentImages,
-  cacheVersion,
   onImageClick,
 }: ProductImageGridProps) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-
-  const getImageSrc = (img: string) =>
-    img ? (img.startsWith("/") ? img : `${img}${cacheVersion}`) : "";
 
   // Auto-slide for mobile
   const autoSlideTimer = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -170,7 +164,8 @@ export const ProductImageGrid = ({
           onTouchEnd={handleTouchEnd}
         >
           <ProductImage
-            src={getImageSrc(currentImages[selectedIndex])}
+            src={currentImages[selectedIndex]?.url ?? ""}
+            lqip={currentImages[selectedIndex]?.lqip}
             alt={`${product.name} - View ${selectedIndex + 1}`}
             priority
             sizes="100vw"
@@ -222,7 +217,8 @@ export const ProductImageGrid = ({
                 aria-label={`View image ${index + 1}`}
               >
                 <ProductImage
-                  src={getImageSrc(img)}
+                  src={img.url}
+                  lqip={img.lqip}
                   alt={`${product.name} thumbnail ${index + 1}`}
                   sizes="56px"
                   quality={60}
@@ -244,7 +240,8 @@ export const ProductImageGrid = ({
               onClick={() => onImageClick(idx)}
             >
               <ProductImage
-                src={getImageSrc(img)}
+                src={img.url}
+                lqip={img.lqip}
                 alt={`${product.name} - Image ${idx + 1}`}
                 priority={idx === 0}
                 sizes="(max-width: 1024px) 40vw, 30vw"

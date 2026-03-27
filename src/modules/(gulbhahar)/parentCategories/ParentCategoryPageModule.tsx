@@ -29,30 +29,24 @@ function CollectionSkeleton() {
 export default async function ParentCategoryPageModule({
   parentCategory,
 }: CategoryPageModuleProps) {
-  const response = await parentCategoryPageService.getParentCategoryPageBySlug(parentCategory)
-  const page = response.data
-  if (!page) return null
+  let page = null;
+  try {
+    const response = await parentCategoryPageService.getParentCategoryPageBySlug(parentCategory);
+    page = response.data ?? null;
+  } catch {
+    // API unavailable or slug not found — still show products
+  }
+
   return (
     <>
-      {/* Hero Section */}
-      {/* <CategoryHero
-        title={content.title}
-        subtitle={content.subtitle}
-        heroImage={heroImage}
-      /> */}
       <div className="max-w-7xl  mt-16 pt-2 lg:mt-102xl:max-w-[1600px] mx-auto  font-raleway">
-        {/* Product Collection Section */}
         <section className="pb-24">
-          {/* <CategoryCollectionHeader parentCategory={parentCategory} /> */}
           <Suspense fallback={<CollectionSkeleton />}>
             <ParentCategoryCollection initialParentCategory={parentCategory} />
           </Suspense>
         </section>
 
-        {/* Content Sections (Story, Features, Testimonials, FAQ, CTA) */}
-        <ParentCategoryContentSection
-          page={page}
-        />
+        {page && <ParentCategoryContentSection page={page} />}
       </div>
     </>
   );

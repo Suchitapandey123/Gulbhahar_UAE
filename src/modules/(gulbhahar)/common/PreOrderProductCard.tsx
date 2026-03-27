@@ -1,5 +1,6 @@
 "use client";
 import { PreOrderProductData } from "@/services/preOrder/preOrderTypes";
+import { ProductImageItem } from "@/utils/productImageUtils";
 import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -26,7 +27,7 @@ export const PreOrderProductCard = ({
   const sizes: string[] =
     (item as any).sizes || item.availableSizes?.map((s: any) => s.name) || [];
   const colors: any[] = (item as any).colors || item.availableColors || [];
-  const imagesToShow: string[] = item.images || [];
+  const imagesToShow: ProductImageItem[] = ((item.images as string[]) || []).map((url) => ({ url, lqip: "" }));
   const productName = item.name || "Product";
 
   const handlePreOrder = (e: React.MouseEvent) => {
@@ -58,7 +59,7 @@ export const PreOrderProductCard = ({
                 loading="lazy"
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 quality={60}
-                src={imagesToShow[0][0]}
+                src={imagesToShow[0]?.url || ""}
                 alt={productName}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out"
               />

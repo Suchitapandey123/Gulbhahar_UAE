@@ -1,6 +1,8 @@
 // @ts-nocheck
 "use client";
 import { useCart } from "@/providers/ContextProviders/CartContext";
+import { ProductImages } from "@/types";
+import { getProductImages } from "@/utils/productImageUtils";
 import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -24,7 +26,7 @@ interface Product {
   price: number;
   originalPrice?: number;
   image?: string | string[] | string[][];
-  images?: string | string[] | string[][];
+  images?: ProductImages[];
   availableSizes?: AvailableSize[];
   availableColors?: AvailableColor[];
   colors?: string[];
@@ -49,11 +51,7 @@ export default function ProductCard({
   const [loadedImages, setLoadedImages] = useState(() => new Set());
   const { addToCart, addingToCart } = useCart();
 
-  const rawImages = item.images || item.image;
-  const imagesArr = Array.isArray(rawImages) ? rawImages : [rawImages];
-  const imagesToShow: string[] = Array.isArray(imagesArr[0])
-    ? (imagesArr[0] as string[])
-    : (imagesArr as string[]);
+  const imagesToShow = getProductImages(item.productId, item.images as ProductImages[]);
 
   // Support both old format (sizes: string[]) and new format (availableSizes: {name: string}[])
   const sizes: string[] =
@@ -185,7 +183,7 @@ export default function ProductCard({
               {imagesToShow.map((image, idx) => (
                 <Image
                   key={idx}
-                  src={image || "/about/lal-ishq-1.jpg"}
+                  src={image.url}
                   alt={`${item.name || item.title || "Product"} - ${idx + 1}`}
                   fill
                   priority={priority && idx === 0}
@@ -193,7 +191,7 @@ export default function ProductCard({
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   quality={75}
                   placeholder="blur"
-                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                  blurDataURL={image.lqip}
                   onLoad={() =>
                     setLoadedImages((prev) => {
                       const next = new Set(prev);

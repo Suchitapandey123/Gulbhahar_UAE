@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { sizeChartService } from "@/services/sizeChart/sizeChartService";
+import { getProductImagesForColor } from "@/utils/productImageUtils";
 import { Breadcrumbs } from "./components/Breadcrumbs";
 import { DeliveryChecker } from "./components/DeliveryChecker";
 import { ProductDetails } from "./components/ProductDetails";
@@ -21,18 +22,21 @@ export default async function ProductModule({ product, similarProducts }: Produc
   const sizeChart = await sizeChartService.getSizeChartByParentCategory(product.parentCategory[0])
 
   const parentCategoryName = Array.isArray(product.parentCategory) ? product.parentCategory[0] : product.parentCategory;
-  const cacheVersion = product.updatedAt ? `?v=${product.updatedAt}` : "";
-  const firstColorImages = product.images?.[0] || [];
-  const imagesToPreload = firstColorImages.slice(0, 3).map((img) => (img.includes("?") ? img : `${img}${cacheVersion}`));
+  const imagesToPreload = getProductImagesForColor(
+    product.productId,
+    product.images,
+    0,
+    "product"
+  ).slice(0, 3);
   return (
     <>
       {/* Preload ONLY LCP-critical images */}
       {imagesToPreload.map((img, idx) => (
         <link
-          key={img}
+          key={img.url}
           rel="preload"
           as="image"
-          href={img}
+          href={img.url}
           fetchPriority={idx === 0 ? "high" : "low"}
         />
       ))}

@@ -4,6 +4,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { getFirstProductImage } from "@/utils/productImageUtils";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
@@ -59,15 +60,6 @@ export default function CollectionsPage({ collections = [] }) {
     }
   };
 
-  // Helper function to get safe image URL (without cache busting for Next.js optimization)
-  const getSafeImageUrl = (collection) => {
-    try {
-      const img = collection?.images?.[0];
-      return (Array.isArray(img) ? img[0] : img) || '/assets/Image/fallback.jpg';
-    } catch {
-      return '/assets/Image/fallback.jpg';
-    }
-  };
 
   // Get count for each category - Check both parentCategory AND category field
   const getCategoryCount = (categoryId) => {
@@ -150,17 +142,22 @@ export default function CollectionsPage({ collections = [] }) {
                 <div className="space-y-3 cursor-pointer">
                   {/* Image Container */}
                   <div className="relative overflow-hidden w-full aspect-[3/4] rounded-lg bg-gray-100">
-                    <Image
-                      src={getSafeImageUrl(collection)}
-                      alt={`${collection.name} - collection image`}
-                      fill
-                      priority={index < 2}
-                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                      quality={70}
-                      placeholder="blur"
-                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
+                    {(() => {
+                      const img = getFirstProductImage(collection.productId, collection.images);
+                      return (
+                        <Image
+                          src={img.url}
+                          alt={`${collection.name} - collection image`}
+                          fill
+                          priority={index < 2}
+                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                          quality={70}
+                          placeholder="blur"
+                          blurDataURL={img.lqip}
+                          className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                      );
+                    })()}
                     
                     {/* Hover Overlay */}
                     <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300" />

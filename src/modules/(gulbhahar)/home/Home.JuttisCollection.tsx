@@ -1,5 +1,6 @@
 import HorizontalCarousel from "@/shared-components/Scrollbar/HorizontalCarousel";
 import { ProductImages } from "@/types";
+import { getFirstProductImage } from "@/utils/productImageUtils";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,13 +26,7 @@ const Home_JuttisCollection: React.FC<HomeJuttisCollectionProps> = ({
   slug,
   reverse
 }) => {
-  const getSafeImageUrl = (product: Product): string => {
-    try {
-      return `https://cdn.gulbhahar.com/ProductImages/${product.productId}/cards/${product?.images?.[0].files[0].name}.webp?v=1774596181776` || "https://cdn.gulbhahar.com/ProductImages/P57288228896/cards/P57288228896-wer-2.webp?v=1774596181776";
-    } catch {
-      return "https://cdn.gulbhahar.com/ProductImages/P57288228896/cards/P57288228896-wer-2.webp?v=1774596181776";
-    }
-  };
+  
 
   // Handle reverse sorting
   const displayCollection = reverse
@@ -87,18 +82,23 @@ const Home_JuttisCollection: React.FC<HomeJuttisCollectionProps> = ({
                       {/* Image Container */}
                       <div className="relative overflow-hidden w-full aspect-[3/4]">
                         <div className="relative w-full h-full bg-gray-100">
-                          <Image
-                            src={getSafeImageUrl(product)}
-                            alt={`${product.name} - collection image`}
-                            fill
-                            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                            priority={index < 2}
-                            loading={index < 2 ? undefined : "lazy"}
-                            quality={60}
-                            placeholder="blur"
-                            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                            className="object-cover transition-transform duration-300 group-hover:scale-105"
-                          />
+                          {(() => {
+                            const img = getFirstProductImage(product.productId, product.images as ProductImages[]);
+                            return (
+                              <Image
+                                src={img.url}
+                                alt={`${product.name} - collection image`}
+                                fill
+                                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                                priority={index < 2}
+                                loading={index < 2 ? undefined : "lazy"}
+                                quality={60}
+                                placeholder="blur"
+                                blurDataURL={img.lqip}
+                                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                              />
+                            );
+                          })()}
 
                           {/* New Arrival Badge */}
                           {index === 0 && (

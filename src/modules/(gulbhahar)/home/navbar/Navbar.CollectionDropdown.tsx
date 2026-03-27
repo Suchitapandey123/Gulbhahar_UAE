@@ -78,6 +78,7 @@ const CollectionsDropdown: React.FC<CollectionsDropdownProps> = ({
     { name: "Suits", slug: "/suits" },
     { name: "Bags", slug: "/bags" },
     { name: "Sarees", slug: "/sarees" },
+     { name: "Lehenga", slug: "/lehenga" },
   ];
 
   const collectionCategories: Category[] = [
