@@ -1,6 +1,6 @@
 "use client";
 
-import { ProductImageItem } from "@/utils/productImageUtils";
+import { ProductImageItem, FALLBACK_LQIP } from "@/utils/productImageUtils";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
@@ -78,7 +78,7 @@ export const ImageSlider = ({ images, alt, priority = false }: ImageSliderProps)
           src={image.url}
           alt={`${alt} - ${idx + 1}`}
           placeholder="blur"
-          blurDataURL={image.lqip}
+          blurDataURL={image.lqip || FALLBACK_LQIP}
           className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out group-hover:scale-110 ${
             currentIndex === idx ? "opacity-100" : "opacity-0"
           }`}

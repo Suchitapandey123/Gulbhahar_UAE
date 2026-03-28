@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight, Minus, Plus, X } from "lucide-react";
 import NextImage from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Product } from "../types";
-import { ProductImageItem } from "@/utils/productImageUtils";
+import { ProductImageItem, FALLBACK_LQIP } from "@/utils/productImageUtils";
 
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 5;
@@ -311,8 +311,10 @@ export const ImageModal = ({
                 isLoading ? "opacity-0" : "opacity-100"
               }`}
               sizes="100vw"
-            unoptimized
+              unoptimized
               priority
+              placeholder="blur"
+              blurDataURL={images[safeIndex]?.lqip || FALLBACK_LQIP}
               draggable={false}
               onLoad={() => setIsLoading(false)}
             />
@@ -341,6 +343,8 @@ export const ImageModal = ({
                   className="object-cover"
                   sizes="64px"
                   quality={60}
+                  placeholder="blur"
+                  blurDataURL={img.lqip || FALLBACK_LQIP}
                 />
               </button>
             ))}

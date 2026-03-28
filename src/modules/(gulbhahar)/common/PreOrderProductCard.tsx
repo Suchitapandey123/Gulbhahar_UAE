@@ -4,6 +4,7 @@ import { ProductImageItem } from "@/utils/productImageUtils";
 import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { FALLBACK_LQIP } from "@/utils/productImageUtils";
 import { ImageSlider } from "../products/components/ImageSlider";
 
 interface PreOrderProductCardProps {
@@ -61,6 +62,8 @@ export const PreOrderProductCard = ({
                 quality={60}
                 src={imagesToShow[0]?.url || ""}
                 alt={productName}
+                placeholder="blur"
+                blurDataURL={imagesToShow[0]?.lqip || FALLBACK_LQIP}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out"
               />
             )}

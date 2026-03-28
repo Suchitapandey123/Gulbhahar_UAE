@@ -13,11 +13,6 @@ interface ProductImageGridProps {
   onImageClick: (index: number) => void;
 }
 
-// ─── Reusable skeleton shimmer ────────────────────────────────────────────────
-const Skeleton = () => (
-  <div className="absolute inset-0 bg-gray-100 animate-pulse" />
-);
-
 // ─── Clean broken-image placeholder ──────────────────────────────────────────
 const BrokenImage = () => (
   <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50 gap-2 select-none">
@@ -46,41 +41,30 @@ const ProductImage = ({
   quality,
   hoverScale = false,
 }: ProductImageProps) => {
-  const [status, setStatus] = useState<"loading" | "loaded" | "error">(
-    "loading"
-  );
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
-    setStatus("loading");
+    setIsError(false);
   }, [src]);
 
-  if (!src) return <BrokenImage />;
+  if (!src || isError) return <BrokenImage />;
 
   return (
-    <>
-      {status === "loading" && <Skeleton />}
-      {status === "error" ? (
-        <BrokenImage />
-      ) : (
-        <NextImage
-          src={src}
-          alt={alt}
-          fill
-          className={cn(
-            "object-cover transition-opacity duration-300 ease-out",
-            status === "loaded" ? "opacity-100" : "opacity-0",
-            hoverScale && "group-hover:scale-105 transition-transform duration-300"
-          )}
-          sizes={sizes}
-          quality={quality}
-          priority={priority}
-          placeholder="blur"
-          blurDataURL={lqip || FALLBACK_LQIP}
-          onLoad={() => setStatus("loaded")}
-          onError={() => setStatus("error")}
-        />
+    <NextImage
+      src={src}
+      alt={alt}
+      fill
+      className={cn(
+        "object-cover",
+        hoverScale && "group-hover:scale-105 transition-transform duration-300"
       )}
-    </>
+      sizes={sizes}
+      quality={quality}
+      priority={priority}
+      placeholder="blur"
+      blurDataURL={lqip || FALLBACK_LQIP}
+      onError={() => setIsError(true)}
+    />
   );
 };
 

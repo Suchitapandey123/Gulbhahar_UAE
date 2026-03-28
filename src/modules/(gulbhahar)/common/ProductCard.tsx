@@ -48,7 +48,6 @@ export default function ProductCard({
 }: ProductCardProps) {
   const slideIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [loadedImages, setLoadedImages] = useState(() => new Set());
   const { addToCart, addingToCart } = useCart();
 
   const imagesToShow = getProductImages(item.productId, item.images as ProductImages[]);
@@ -175,11 +174,6 @@ export default function ProductCard({
             onTouchEnd={handleTouchEnd}
           >
             <div className="relative w-full h-full bg-gray-100">
-              {/* Skeleton pulse — shows until current image is loaded */}
-              {!loadedImages.has(currentImageIndex) && (
-                <div className="absolute inset-0 bg-gray-200 animate-pulse z-[1]" />
-              )}
-
               {imagesToShow.map((image, idx) => (
                 <Image
                   key={idx}
@@ -192,17 +186,8 @@ export default function ProductCard({
                   quality={75}
                   placeholder="blur"
                   blurDataURL={image.lqip}
-                  onLoad={() =>
-                    setLoadedImages((prev) => {
-                      const next = new Set(prev);
-                      next.add(idx);
-                      return next;
-                    })
-                  }
                   className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out md:group-hover:scale-110 transition-transform ${
-                    currentImageIndex === idx && loadedImages.has(idx)
-                      ? "opacity-100"
-                      : "opacity-0"
+                    currentImageIndex === idx ? "opacity-100" : "opacity-0"
                   }`}
                 />
               ))}
