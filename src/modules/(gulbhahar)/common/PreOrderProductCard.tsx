@@ -198,7 +198,7 @@ export const PreOrderProductCard = ({
 
           {/* Hidden image URL for schema */}
           {imagesToShow[0] && (
-            <meta itemProp="image" content={imagesToShow[0]} />
+            <meta itemProp="image" content={imagesToShow[0].url} />
           )}
         </div>
       </div>

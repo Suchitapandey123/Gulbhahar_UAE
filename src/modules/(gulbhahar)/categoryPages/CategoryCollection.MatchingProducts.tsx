@@ -48,11 +48,16 @@ const CategoryCollection_MatchingProducts = async ({
   let groupedProducts: Record<string, Product[]> = {};
 
   try {
-    const allProducts = await productApi.getAllProducts();
-    for (const cat of matchingCategories) {
-      groupedProducts[cat] = (allProducts || [])
-        .filter((product: Product) => product.parentCategory?.includes(cat))
-        .slice(0, 8);
+    const results = await Promise.all(
+      matchingCategories.map((cat) =>
+        productApi.getProductsByParentCategory(cat).then((products) => ({
+          cat,
+          products: products.slice(0, 8),
+        }))
+      )
+    );
+    for (const { cat, products } of results) {
+      groupedProducts[cat] = products;
     }
   } catch (error) {
     console.error("Error fetching matching products:", error);

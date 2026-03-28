@@ -88,7 +88,7 @@ export default async function CollectionPage(props: PageParams) {
   const params = await props.params;
   const { product, similarProducts } = await getProductBundle(params.id);
 
-  console.log("PRODUCT DATA:", product);
+  // console.log("PRODUCT DATA:", product);
 
   if (!product) return null;
 

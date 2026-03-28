@@ -31,7 +31,7 @@ const HomePage = async () => {
       homePageService.getHomeData(),
     ]);
 
-    console.log(juttisProducts)
+    // console.log(juttisProducts)
     
   return (
     <>

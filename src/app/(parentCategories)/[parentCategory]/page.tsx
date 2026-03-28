@@ -46,7 +46,7 @@ export async function generateMetadata({
       description: page.metaDescription || fallback.description,
       openGraph: {
         title: page.metaTitle || fallback.title as string,
-        description: page.metaDescription || fallback.description,
+        description: page.metaDescription || fallback.description || undefined,
       },
       alternates: fallback.alternates,
     };
