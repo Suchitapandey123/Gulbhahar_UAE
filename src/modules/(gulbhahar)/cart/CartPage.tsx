@@ -11,6 +11,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState,useEffect } from "react";
 import { ColorOption, SizeOption } from "../products/types";
+import { getProductImagesForColor } from "@/utils/productImageUtils";
 
 
 interface CartItem {
@@ -164,6 +165,7 @@ const CartPage = () => {
 
   const getCurrentImage = (item: CartItem): string | null => {
     let imageUrl: string | null = null;
+    // console.log(item)
 
     if (item.images && Array.isArray(item.images)) {
       if (item.images.length > 0 && Array.isArray(item.images[0])) {
@@ -276,9 +278,9 @@ const CartPage = () => {
                           className="w-16 h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0 hover:opacity-80 transition-opacity cursor-pointer"
                         >
                           <Image
-                            src={getCurrentImage(item) || "/about/lal-ishq-1.jpg"}
+                            src={getProductImagesForColor(item.productId ,item.images ,0, "cards")[0].url || "/about/lal-ishq-1.jpg"}
                             alt={item.name}
-                            width={64}
+                            width={64} 
                             height={64}
                             quality={60}
                             sizes="64px"

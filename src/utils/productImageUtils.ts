@@ -1,4 +1,5 @@
 import { ProductImages } from "@/types";
+import { cp } from "node:fs";
 
 export type ImageType = "cards" | "display" | "original";
 
@@ -22,7 +23,9 @@ function buildUrl(
   version: number | null
 ): string {
   const base = `https://cdn.gulbhahar.com/ProductImages/${productId}/${type}/${fileName}.webp`;
-  return version != null ? `${base}?v=${version}` : base;
+  // console.log(productId , fileName , type , version)
+  // console.log("-----" , base)
+  return version != null || undefined ? `${base}?v=${version}` : base;
 }
 
 /** All images across all colors (flatMap) — for product card hover sliders */
@@ -52,10 +55,12 @@ export function getProductImagesForColor(
   colorIndex = 0,
   type: ImageType = "cards"
 ): ProductImageItem[] {
+
   try {
     if (!productId || !images?.length) return [FALLBACK_IMAGE];
     const colorImages = images[colorIndex] ?? images[0];
     if (!colorImages?.files?.length) return [FALLBACK_IMAGE];
+    // console.log(colorImages)
     return colorImages.files.map((file) => ({
       url: buildUrl(productId, file.name, type, file.version),
       lqip: file.lqip || FALLBACK_LQIP,
@@ -77,7 +82,7 @@ export function getFirstProductImage(
     if (!firstFile?.name) return FALLBACK_IMAGE;
     return {
       url: buildUrl(productId, firstFile.name, type, firstFile.version),
-      lqip: firstFile.lqip || FALLBACK_LQIP,
+      lqip: firstFile.lqip || FALLBACK_LQIP ,
     };
   } catch {
     return FALLBACK_IMAGE;
