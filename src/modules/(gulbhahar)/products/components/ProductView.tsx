@@ -96,13 +96,13 @@ export const ProductView = ({ sizeChart , product, customRed }: ProductViewProps
     product.productId,
     product.images,
     selectedColorIndex,
-    "cards"
+    "display"
   );
   const zoomImages = getProductImagesForColor(
     product.productId,
     product.images,
     selectedColorIndex,
-    "cards"
+    "original"
   );
 
   const handleAddToCart = async () => {

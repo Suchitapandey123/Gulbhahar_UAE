@@ -1,6 +1,6 @@
 import { ProductImages } from "@/types";
 
-export type ImageType = "cards" | "product" | "zoom";
+export type ImageType = "cards" | "display" | "original";
 
 export interface ProductImageItem {
   url: string;
