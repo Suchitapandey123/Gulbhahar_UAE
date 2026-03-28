@@ -307,9 +307,7 @@ export const ImageModal = ({
               src={images[safeIndex]?.url ?? ""}
               alt={`${product?.name || "Product"} - Image ${safeIndex + 1}`}
               fill
-              className={`object-contain transition-opacity duration-200 ${
-                isLoading ? "opacity-0" : "opacity-100"
-              }`}
+              className="object-contain"
               sizes="100vw"
               unoptimized
               priority
