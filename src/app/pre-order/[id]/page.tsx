@@ -60,6 +60,8 @@ export default function PreOrderPage() {
       : (product.images[0] as unknown as string[])?.[0] ?? ""
     : "";
 
+    console.log("data :", product.images[0]);
+
   const discount =
     product.originalPrice && product.originalPrice > product.price
       ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
