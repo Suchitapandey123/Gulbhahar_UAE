@@ -17,6 +17,7 @@ export default function PreOrderForm({ product }: PreOrderFormProps) {
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
 
   const imageUrl = Array.isArray(product.images)
     ? typeof product.images[0] === "string"
@@ -24,14 +25,38 @@ export default function PreOrderForm({ product }: PreOrderFormProps) {
       : (product.images[0] as unknown as string[])?.[0] ?? ""
     : "";
 
+  const validatePhone = (phone: string) => {
+    const cleanPhone = phone.replace(/\D/g, "");
+    if (cleanPhone.length === 0) return null;
+    if (cleanPhone.length < 10) return "Phone number must be 10 digits";
+    if (cleanPhone.length > 10) return "Phone number must be exactly 10 digits";
+    if (!/^[6-9]\d{9}$/.test(cleanPhone)) return "Phone number must start with 6, 7, 8, or 9";
+    return null;
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    
+    if (name === "phone") {
+      const cleanValue = value.replace(/\D/g, "").slice(0, 10);
+      setForm((prev) => ({ ...prev, [name]: cleanValue }));
+      setPhoneError(validatePhone(cleanValue));
+    } else {
+      setForm((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.phone || !form.message) {
       toast.error("Please fill in all fields.");
+      return;
+    }
+
+    const phoneValidationError = validatePhone(form.phone);
+    if (phoneValidationError) {
+      toast.error(phoneValidationError);
+      setPhoneError(phoneValidationError);
       return;
     }
 
@@ -54,7 +79,7 @@ export default function PreOrderForm({ product }: PreOrderFormProps) {
       });
 
       const data = await res.json();
-
+       
       if (data.success) {
         setSubmitted(true);
       } else {
@@ -123,15 +148,31 @@ export default function PreOrderForm({ product }: PreOrderFormProps) {
           <label className={labelClass}>
             Phone <span className="text-[#7f1d1e]">*</span>
           </label>
-          <input
-            type="tel"
-            name="phone"
-            value={form.phone}
-            onChange={handleChange}
-            
-            className={inputClass}
-            required
-          />
+          <div className="relative">
+            <div className="absolute left-3.5 top-1/2 transform -translate-y-1/2 flex items-center gap-1.5">
+              <span className="text-gray-500 text-sm font-medium border-r border-gray-200 pr-2">
+                +91
+              </span>
+            </div>
+            <input
+              type="tel"
+              name="phone"
+              value={form.phone}
+              onChange={handleChange}
+              placeholder="9876543210"
+              maxLength={10}
+              pattern="[6-9][0-9]{9}"
+              inputMode="numeric"
+              className={`${inputClass} pl-16 ${phoneError ? 'border-red-400 focus:border-red-400 focus:ring-red-400/20' : ''}`}
+              required
+            />
+          </div>
+          {phoneError && (
+            <p className="mt-1.5 text-xs text-red-500">{phoneError}</p>
+          )}
+          {!phoneError && form.phone && form.phone.length === 10 && (
+            <p className="mt-1.5 text-xs text-emerald-600">✓ Valid phone number</p>
+          )}
         </div>
       </div>
 
