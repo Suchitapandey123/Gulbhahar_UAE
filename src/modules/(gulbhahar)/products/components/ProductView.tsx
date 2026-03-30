@@ -104,6 +104,12 @@ export const ProductView = ({ sizeChart , product, customRed }: ProductViewProps
     selectedColorIndex,
     "original"
   );
+  
+  console.log('Zoom Images LQIP Check:', zoomImages.map(img => ({
+    url: img.url,
+    hasLQIP: !!img.lqip,
+    lqipLength: img.lqip?.length || 0
+  })));
 
   const handleAddToCart = async () => {
     if (!product.productId && !product.id) {
