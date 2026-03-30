@@ -291,6 +291,17 @@ export const ImageModal = ({
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
+          {/* LQIP Background - only visible during loading */}
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <img
+                src={images[safeIndex]?.lqip || FALLBACK_LQIP}
+                alt="Loading preview"
+                className="w-full h-full object-contain"
+              />
+            </div>
+          )}
+          
           <div
             style={{
               transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
@@ -311,8 +322,6 @@ export const ImageModal = ({
               sizes="100vw"
               unoptimized
               priority
-              placeholder="blur"
-              blurDataURL={images[safeIndex]?.lqip || FALLBACK_LQIP}
               draggable={false}
               onLoad={() => setIsLoading(false)}
             />
