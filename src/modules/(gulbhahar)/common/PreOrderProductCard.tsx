@@ -28,7 +28,14 @@ export const PreOrderProductCard = ({
   const sizes: string[] =
     (item as any).sizes || item.availableSizes?.map((s: any) => s.name) || [];
   const colors: any[] = (item as any).colors || item.availableColors || [];
-  const imagesToShow: ProductImageItem[] = ((item.images as string[]) || []).map((url) => ({ url, lqip: "" }));
+  
+  // Handle nested array structure from API: [["url1"], ["url2"]] or ["url1", "url2"]
+  const imagesToShow: ProductImageItem[] = (() => {
+    if (!item.images || !Array.isArray(item.images)) return [];
+    const flatImages = item.images.flat().filter(Boolean);
+    return flatImages.map((url) => ({ url: url as string, lqip: FALLBACK_LQIP }));
+  })();
+  
   const productName = item.name || "Product";
 
   const handlePreOrder = (e: React.MouseEvent) => {

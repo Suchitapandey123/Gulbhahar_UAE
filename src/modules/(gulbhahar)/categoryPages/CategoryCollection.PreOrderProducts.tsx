@@ -18,9 +18,12 @@ const CategoryCollectionPreOrderProducts = async ({
     parentCategory,
     slug,
   );
+ 
+  
   if (!preOrderProducts?.products?.length) {
     preOrderProducts =
       await preOrderService.getPreOrderProducts(parentCategory);
+   
   } else {
     return (
       <CategoryCollection_DummyProducts
@@ -29,6 +32,9 @@ const CategoryCollectionPreOrderProducts = async ({
       />
     );
   }
+  
+ 
+  
   const customRed = "#800000";
   return (
     <div className="w-full">
