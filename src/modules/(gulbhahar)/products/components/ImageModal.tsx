@@ -7,7 +7,7 @@ import { Product } from "../types";
 import { ProductImageItem, FALLBACK_LQIP } from "@/utils/productImageUtils";
 
 const MIN_ZOOM = 1;
-const MAX_ZOOM = 5;
+const MAX_ZOOM = 3;
 const ZOOM_STEP = 0.5;
 
 interface ImageModalProps {
