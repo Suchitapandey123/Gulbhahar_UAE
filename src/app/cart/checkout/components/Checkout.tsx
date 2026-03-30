@@ -26,6 +26,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { getProductImagesForColor } from "@/utils/productImageUtils";
 import { cartService as checkoutApi } from "@/services/cart/cartService";
 
 const Breadcrumb = () => (
@@ -804,15 +805,17 @@ export default function CheckoutComponent() {
 
   // Get the current image for display with proper error handling
   const getCurrentImage = (item) => {
-    if (item.images && Array.isArray(item.images)) {
-      if (item.images.length > 0 && Array.isArray(item.images[0])) {
-        return item.images[0][0];
-      }
+    try {
+      const images = getProductImagesForColor(
+        item.productId,
+        item.images,
+        0,
+        "cards"
+      );
+      return images[0]?.url || "/about/lal-ishq-1.jpg";
+    } catch {
+      return "/about/lal-ishq-1.jpg";
     }
-    if (item.image && Array.isArray(item.image)) {
-      return item.image[0][0];
-    }
-    return null;
   };
 
   const shippingOptions = {
@@ -1349,7 +1352,7 @@ export default function CheckoutComponent() {
                         <div className="flex items-center gap-3">
                           <div className="w-14 h-14 bg-white rounded-lg overflow-hidden flex-shrink-0 border border-gray-100">
                             <Image
-                              src={getCurrentImage(item) || "/placeholder.jpg"}
+                              src={getCurrentImage(item)}
                               alt={item.name || "Product"}
                               width={200}
                               height={200}

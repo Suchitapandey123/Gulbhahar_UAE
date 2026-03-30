@@ -1,6 +1,7 @@
 // @ts-nocheck
 "use client";
 import { useCart } from "@/providers/ContextProviders/CartContext";
+import { getProductImages } from "@/utils/productImageUtils";
 import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -30,11 +31,7 @@ export const SimilarProductCard = ({
     (item as any).sizes || item.availableSizes?.map((s: any) => s.name) || [];
   const colors: any[] = (item as any).colors || item.availableColors || [];
 
-  const imagesToShow: string[] = Array.isArray(item.images?.[0])
-    ? (item.images![0] as string[])
-    : item.images?.[0]
-      ? [item.images![0] as unknown as string]
-      : [];
+  const imagesToShow = getProductImages(item.productId, item.images);
 
   const productName = item.name || "Product";
 
@@ -94,10 +91,10 @@ export const SimilarProductCard = ({
                 loading="lazy"
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 quality={60}
-                src={imagesToShow[0] || "/about/lal-ishq-1.jpg"}
+                src={imagesToShow[0].url}
                 alt={productName}
                 placeholder="blur"
-                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                blurDataURL={imagesToShow[0].lqip}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
               />
             )}
@@ -235,7 +232,7 @@ export const SimilarProductCard = ({
 
           {/* Hidden image URL for schema */}
           {imagesToShow[0] && (
-            <meta itemProp="image" content={imagesToShow[0]} />
+            <meta itemProp="image" content={imagesToShow[0].url} />
           )}
         </div>
       </Link>

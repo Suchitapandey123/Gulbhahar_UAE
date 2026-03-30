@@ -1,3 +1,5 @@
+import { ProductImages } from "@/types";
+
 export type Product = {
   productId: string;
   _id?: string;
@@ -12,7 +14,7 @@ export type Product = {
   details?: string[];
   overview?: string[];
   material?: string;
-  images?: string[][];
+  images?: ProductImages[];
   updatedAt?: string;
   createdAt?: string;
   inventory?: InventoryItem[];

@@ -1,3 +1,5 @@
+import { number } from "framer-motion";
+
 export interface Product {
   productId: string;
   _id?: string;
@@ -12,7 +14,7 @@ export interface Product {
   details?: string[];
   overview?: string[];
   material?: string;
-  images?: string[][];
+  images?: ProductImages[];
   updatedAt?: string;
   createdAt?: string;
   inventory?: { keywords: string[]; color: string; quantity: string }[];
@@ -26,6 +28,15 @@ export interface Product {
   videos?: { posterUrl: string; videoUrl: string; title: string }[];
   totalSizes: string[];
   slug?: string;
+}
+
+export interface ProductImages {
+  colorName: string;
+  files: [{
+    name: string;
+    lqip: string;
+    version: number | null;
+  }];
 }
 
 export interface ProductApiResponse {

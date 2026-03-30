@@ -1,10 +1,11 @@
 "use client";
 
+import { ProductImageItem, FALLBACK_LQIP } from "@/utils/productImageUtils";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 interface ImageSliderProps {
-  images: string[];
+  images: ProductImageItem[];
   alt: string;
   priority?: boolean;
 }
@@ -74,10 +75,10 @@ export const ImageSlider = ({ images, alt, priority = false }: ImageSliderProps)
           loading={priority && idx === 0 ? undefined : "lazy"}
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           quality={60}
-          src={image}
+          src={image.url}
           alt={`${alt} - ${idx + 1}`}
           placeholder="blur"
-          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+          blurDataURL={image.lqip || FALLBACK_LQIP}
           className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out group-hover:scale-110 ${
             currentIndex === idx ? "opacity-100" : "opacity-0"
           }`}

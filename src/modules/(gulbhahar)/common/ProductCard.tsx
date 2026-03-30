@@ -1,6 +1,8 @@
 // @ts-nocheck
 "use client";
 import { useCart } from "@/providers/ContextProviders/CartContext";
+import { ProductImages } from "@/types";
+import { getProductImages } from "@/utils/productImageUtils";
 import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -24,7 +26,7 @@ interface Product {
   price: number;
   originalPrice?: number;
   image?: string | string[] | string[][];
-  images?: string | string[] | string[][];
+  images?: ProductImages[];
   availableSizes?: AvailableSize[];
   availableColors?: AvailableColor[];
   colors?: string[];
@@ -46,14 +48,9 @@ export default function ProductCard({
 }: ProductCardProps) {
   const slideIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [loadedImages, setLoadedImages] = useState(() => new Set());
   const { addToCart, addingToCart } = useCart();
 
-  const rawImages = item.images || item.image;
-  const imagesArr = Array.isArray(rawImages) ? rawImages : [rawImages];
-  const imagesToShow: string[] = Array.isArray(imagesArr[0])
-    ? (imagesArr[0] as string[])
-    : (imagesArr as string[]);
+  const imagesToShow = getProductImages(item.productId, item.images as ProductImages[]);
 
   // Support both old format (sizes: string[]) and new format (availableSizes: {name: string}[])
   const sizes: string[] =
@@ -177,15 +174,10 @@ export default function ProductCard({
             onTouchEnd={handleTouchEnd}
           >
             <div className="relative w-full h-full bg-gray-100">
-              {/* Skeleton pulse — shows until current image is loaded */}
-              {!loadedImages.has(currentImageIndex) && (
-                <div className="absolute inset-0 bg-gray-200 animate-pulse z-[1]" />
-              )}
-
               {imagesToShow.map((image, idx) => (
                 <Image
                   key={idx}
-                  src={image || "/about/lal-ishq-1.jpg"}
+                  src={image.url}
                   alt={`${item.name || item.title || "Product"} - ${idx + 1}`}
                   fill
                   priority={priority && idx === 0}
@@ -193,18 +185,9 @@ export default function ProductCard({
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   quality={75}
                   placeholder="blur"
-                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                  onLoad={() =>
-                    setLoadedImages((prev) => {
-                      const next = new Set(prev);
-                      next.add(idx);
-                      return next;
-                    })
-                  }
+                  blurDataURL={image.lqip}
                   className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out md:group-hover:scale-110 transition-transform ${
-                    currentImageIndex === idx && loadedImages.has(idx)
-                      ? "opacity-100"
-                      : "opacity-0"
+                    currentImageIndex === idx ? "opacity-100" : "opacity-0"
                   }`}
                 />
               ))}

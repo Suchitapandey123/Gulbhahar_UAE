@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, Minus, Plus, X } from "lucide-react";
 import NextImage from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Product } from "../types";
+import { ProductImageItem, FALLBACK_LQIP } from "@/utils/productImageUtils";
 
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 5;
@@ -12,7 +13,7 @@ const ZOOM_STEP = 0.5;
 interface ImageModalProps {
   isModalOpen: boolean;
   closeModal: () => void;
-  currentImages: string[];
+  currentImages: ProductImageItem[];
   modalImageIndex: number;
   setModalImageIndex: (index: number) => void;
   product: Product;
@@ -41,11 +42,6 @@ export const ImageModal = ({
 
   const images = currentImages || [];
   const safeIndex = Math.min(modalImageIndex, Math.max(0, images.length - 1));
-  const currentImageUrl = images[safeIndex] || "";
-  const cacheVersion = product?.updatedAt ? `?v=${product.updatedAt}` : "";
-
-  const getImageSrc = (img: string) =>
-    img.startsWith("/") ? img : `${img}${cacheVersion}`;
 
   // Clamp pan so the image never fully leaves the viewport
   const clampPan = useCallback(
@@ -308,15 +304,15 @@ export const ImageModal = ({
             }}
           >
             <NextImage
-              src={getImageSrc(currentImageUrl)}
+              src={images[safeIndex]?.url ?? ""}
               alt={`${product?.name || "Product"} - Image ${safeIndex + 1}`}
               fill
-              className={`object-contain transition-opacity duration-200 ${
-                isLoading ? "opacity-0" : "opacity-100"
-              }`}
+              className="object-contain"
               sizes="100vw"
-            unoptimized
+              unoptimized
               priority
+              placeholder="blur"
+              blurDataURL={images[safeIndex]?.lqip || FALLBACK_LQIP}
               draggable={false}
               onLoad={() => setIsLoading(false)}
             />
@@ -339,12 +335,14 @@ export const ImageModal = ({
                 }`}
               >
                 <NextImage
-                  src={getImageSrc(img)}
+                  src={img.url}
                   alt={`Thumbnail ${idx + 1}`}
                   fill
                   className="object-cover"
                   sizes="64px"
                   quality={60}
+                  placeholder="blur"
+                  blurDataURL={img.lqip || FALLBACK_LQIP}
                 />
               </button>
             ))}

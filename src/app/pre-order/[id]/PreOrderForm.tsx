@@ -79,10 +79,13 @@ export default function PreOrderForm({ product }: PreOrderFormProps) {
       });
 
       const data = await res.json();
+    
        
       if (data.success) {
+       
         setSubmitted(true);
       } else {
+        console.error('Pre-order submission failed:', data.message);
         toast.error(data.message || "Submission failed. Please try again.");
       }
     } catch (err) {

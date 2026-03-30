@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+   
   
 
     const res = await fetch(
@@ -17,12 +18,16 @@ export async function POST(req: NextRequest) {
 
     // Safely parse response — backend might return HTML on error
     const rawText = await res.text();
+   
+    // console.log('Backend Raw Response:', rawText);
 
     let data: Record<string, unknown> = {};
     try {
       data = JSON.parse(rawText);
+     
     } catch {
-      // Backend returned non-JSON (HTML error page, proxy error, etc.)
+      // console.error('Failed to parse backend response as JSON');
+     
       return NextResponse.json(
         { success: false, message: `Backend error (${res.status}): ${rawText.slice(0, 120)}` },
         { status: 502 }
@@ -31,6 +36,7 @@ export async function POST(req: NextRequest) {
 
     if (!res.ok) {
       const errorStr = (data?.error as string) || "";
+      console.error('Backend returned error:', errorStr);
       if (errorStr.includes("duplicate key") || errorStr.includes("E11000")) {
         return NextResponse.json(
           { success: false, message: "You've already submitted an enquiry for this product. Our team will contact you soon." },
@@ -43,10 +49,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
+   
     return NextResponse.json({ success: true, message: "Enquiry submitted successfully.", data });
 
   } catch (err) {
-   
+    console.error('Pre-order API Error:', err);
     return NextResponse.json(
       { success: false, message: `Could not reach server: ${err instanceof Error ? err.message : String(err)}` },
       { status: 500 }

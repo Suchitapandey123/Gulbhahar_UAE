@@ -16,8 +16,6 @@ export const parentCategoryPageService = {
       }
     );
     if (!res.ok) {
-      const text = await res.text();
-      console.error("Error response:", text);
       throw new Error("Failed to fetch parent page");
     }
     return res.json();

@@ -1,3 +1,4 @@
+import { getFirstProductImage } from "@/utils/productImageUtils";
 import { Product, SimilarProduct } from "../types";
 import { SimilarProductCard } from "./SimilarProductCard";
 
@@ -13,9 +14,7 @@ function buildJsonLd(products: Product[]) {
     name: "Similar Products",
     numberOfItems: products.length,
     itemListElement: products.map((item, index) => {
-      const image = Array.isArray(item.images?.[0])
-        ? (item.images[0] as string[])[0]
-        : item.images?.[0];
+      const image = getFirstProductImage(item.productId, item.images).url;
 
       return {
         "@type": "ListItem",

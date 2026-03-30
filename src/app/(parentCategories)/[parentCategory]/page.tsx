@@ -25,20 +25,34 @@ export async function generateMetadata({
     notFound();
   }
 
-  const response = await getParentCategoryPageCached(parentCategory)
-  const page = response.data
-  
-  return {
-    title: page.metaTitle ||  `${parentCategory} | Gulbhahar Luxury Ethnic Wear`,
-    description: page.metaDescription || `Explore our exquisite collection of ${parentCategory}. Handcrafted luxury for every occasion.`,
+  const fallback: Metadata = {
+    title: `${parentCategory} | Gulbhahar Luxury Ethnic Wear`,
+    description: `Explore our exquisite collection of ${parentCategory}. Handcrafted luxury for every occasion.`,
     openGraph: {
-       title: page.metaTitle ||  `${parentCategory} | Gulbhahar Luxury Ethnic Wear`,
-    description: page.metaDescription || `Explore our exquisite collection of ${parentCategory}. Handcrafted luxury for every occasion.`,
+      title: `${parentCategory} | Gulbhahar Luxury Ethnic Wear`,
+      description: `Explore our exquisite collection of ${parentCategory}. Handcrafted luxury for every occasion.`,
     },
-    alternates :{
-      canonical : `https://www.gulbhahar.com/${parentCategory}`
-    }
+    alternates: {
+      canonical: `https://www.gulbhahar.com/${parentCategory}`,
+    },
   };
+
+  try {
+    const response = await getParentCategoryPageCached(parentCategory);
+    const page = response.data;
+    if (!page) return fallback;
+    return {
+      title: page.metaTitle || fallback.title,
+      description: page.metaDescription || fallback.description,
+      openGraph: {
+        title: page.metaTitle || fallback.title as string,
+        description: page.metaDescription || fallback.description || undefined,
+      },
+      alternates: fallback.alternates,
+    };
+  } catch {
+    return fallback;
+  }
 }
 
 const page = async ({ params }: PageProps) => {

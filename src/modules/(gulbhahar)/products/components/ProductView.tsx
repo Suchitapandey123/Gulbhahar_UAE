@@ -2,6 +2,7 @@
 "use client";
 
 import { useCart } from "@/providers/ContextProviders/CartContext";
+import { getProductImagesForColor } from "@/utils/productImageUtils";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Product } from "../types";
@@ -91,9 +92,18 @@ export const ProductView = ({ sizeChart , product, customRed }: ProductViewProps
     return "";
   }, [product.availableColors, selectedColorIndex]);
 
-  const currentImages =
-    product.images?.[selectedColorIndex] || product.images?.[0] || [];
-  const cacheVersion = product.updatedAt ? `?v=${product.updatedAt}` : "";
+  const currentImages = getProductImagesForColor(
+    product.productId,
+    product.images,
+    selectedColorIndex,
+    "display"
+  );
+  const zoomImages = getProductImagesForColor(
+    product.productId,
+    product.images,
+    selectedColorIndex,
+    "original"
+  );
 
   const handleAddToCart = async () => {
     if (!product.productId && !product.id) {
@@ -148,7 +158,6 @@ export const ProductView = ({ sizeChart , product, customRed }: ProductViewProps
           <ProductImageGrid
             product={product}
             currentImages={currentImages}
-            cacheVersion={cacheVersion}
             onImageClick={(idx) => {
               setModalImageIndex(idx);
               setIsModalOpen(true);
@@ -238,7 +247,7 @@ export const ProductView = ({ sizeChart , product, customRed }: ProductViewProps
         <ImageModal
           isModalOpen={isModalOpen}
           closeModal={() => setIsModalOpen(false)}
-          currentImages={currentImages}
+          currentImages={zoomImages}
           modalImageIndex={modalImageIndex}
           setModalImageIndex={setModalImageIndex}
           product={product}

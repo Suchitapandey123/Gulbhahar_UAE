@@ -1,8 +1,10 @@
 "use client";
 import { PreOrderProductData } from "@/services/preOrder/preOrderTypes";
+import { ProductImageItem } from "@/utils/productImageUtils";
 import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { FALLBACK_LQIP } from "@/utils/productImageUtils";
 import { ImageSlider } from "../products/components/ImageSlider";
 
 interface PreOrderProductCardProps {
@@ -26,7 +28,14 @@ export const PreOrderProductCard = ({
   const sizes: string[] =
     (item as any).sizes || item.availableSizes?.map((s: any) => s.name) || [];
   const colors: any[] = (item as any).colors || item.availableColors || [];
-  const imagesToShow: string[] = item.images || [];
+  
+  // Handle nested array structure from API: [["url1"], ["url2"]] or ["url1", "url2"]
+  const imagesToShow: ProductImageItem[] = (() => {
+    if (!item.images || !Array.isArray(item.images)) return [];
+    const flatImages = item.images.flat().filter(Boolean);
+    return flatImages.map((url) => ({ url: url as string, lqip: FALLBACK_LQIP }));
+  })();
+  
   const productName = item.name || "Product";
 
   const handlePreOrder = (e: React.MouseEvent) => {
@@ -58,8 +67,10 @@ export const PreOrderProductCard = ({
                 loading="lazy"
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 quality={60}
-                src={imagesToShow[0][0]}
+                src={imagesToShow[0]?.url || ""}
                 alt={productName}
+                placeholder="blur"
+                blurDataURL={imagesToShow[0]?.lqip || FALLBACK_LQIP}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out"
               />
             )}
@@ -197,7 +208,7 @@ export const PreOrderProductCard = ({
 
           {/* Hidden image URL for schema */}
           {imagesToShow[0] && (
-            <meta itemProp="image" content={imagesToShow[0]} />
+            <meta itemProp="image" content={imagesToShow[0].url} />
           )}
         </div>
       </div>

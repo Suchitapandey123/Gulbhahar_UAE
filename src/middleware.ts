@@ -9,7 +9,7 @@ type RedirectRule = {
 
 const REDIRECT_RULES: RedirectRule[] = [
   { match: ["jutti", "jutis"], redirectTo: "/juttis" },
-  { match: ["lehenga", "lehngas"], redirectTo: "/lehenga" },
+  { match: ["lehngas"], redirectTo: "/lehenga" },
   { match: ["suits"], redirectTo: "/suit" },
   { match: ["sarees"], redirectTo: "/saree" },
   { match: ["bag"], redirectTo: "/bags" },

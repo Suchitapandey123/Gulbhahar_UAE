@@ -40,7 +40,7 @@ interface ProductInput {
   title?: string;
   price?: number;
   image?: string;
-  images?: string[];
+  images?: unknown;
   [key: string]: unknown;
 }
 
@@ -84,10 +84,16 @@ export const cartUtils = {
         color,
         size,
         price: (product.price as number) || 0,
-        image:
-          (product.image as string) ||
-          (product.images as string[])?.[0] ||
-          "/default-product.jpg",
+        image: (() => {
+          if (product.image) return product.image as string;
+          const imgs = product.images as any;
+          if (!imgs?.[0]) return "/default-product.jpg";
+          // New format: ProductImages[]
+          if (imgs[0]?.files?.[0]?.name && product.productId)
+            return `https://cdn.gulbhahar.com/ProductImages/${product.productId}/cards/${imgs[0].files[0].name}.webp`;
+          // Old format: string[]
+          return typeof imgs[0] === "string" ? imgs[0] : "/default-product.jpg";
+        })(),
         quantity,
         selected: false,
         addedAt: new Date().toISOString(),
@@ -200,10 +206,14 @@ export const wishlistUtils = {
         productId: product.productId,
         name: (product.name || product.title || "Product") as string,
         price: (product.price as number) || 0,
-        image:
-          (product.image as string) ||
-          (product.images as string[])?.[0] ||
-          "/default-product.jpg",
+        image: (() => {
+          if (product.image) return product.image as string;
+          const imgs = product.images as any;
+          if (!imgs?.[0]) return "/default-product.jpg";
+          if (imgs[0]?.files?.[0]?.name && product.productId)
+            return `https://cdn.gulbhahar.com/ProductImages/${product.productId}/cards/${imgs[0].files[0].name}.webp`;
+          return typeof imgs[0] === "string" ? imgs[0] : "/default-product.jpg";
+        })(),
         addedAt: new Date().toISOString(),
       });
       wishlistUtils.saveWishlistItems(items);

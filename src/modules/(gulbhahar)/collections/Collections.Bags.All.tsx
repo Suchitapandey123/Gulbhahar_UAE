@@ -14,7 +14,7 @@ export const Collections_Bags_All = async () => {
       </div>
     );
   }
-
+    
   return (
     <div className=" mt-16 pt-2 lg:mt-20">
       <div className="max-w-[1600px] mx-auto px-2 lg:px-4">

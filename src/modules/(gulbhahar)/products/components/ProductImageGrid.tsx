@@ -5,21 +5,13 @@ import { ImageOff, ZoomIn } from "lucide-react";
 import NextImage from "next/image";
 import { cn } from "@/lib/utils";
 import { Product } from "../types";
-
-const BLUR_DATA_URL =
-  "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q==";
+import { ProductImageItem, FALLBACK_LQIP } from "@/utils/productImageUtils";
 
 interface ProductImageGridProps {
   product: Product;
-  currentImages: string[];
-  cacheVersion: string;
+  currentImages: ProductImageItem[];
   onImageClick: (index: number) => void;
 }
-
-// ─── Reusable skeleton shimmer ────────────────────────────────────────────────
-const Skeleton = () => (
-  <div className="absolute inset-0 bg-gray-100 animate-pulse" />
-);
 
 // ─── Clean broken-image placeholder ──────────────────────────────────────────
 const BrokenImage = () => (
@@ -32,6 +24,7 @@ const BrokenImage = () => (
 // ─── Per-image component that handles loading / error / fade-in ───────────────
 interface ProductImageProps {
   src: string;
+  lqip?: string;
   alt: string;
   priority?: boolean;
   sizes: string;
@@ -41,48 +34,37 @@ interface ProductImageProps {
 
 const ProductImage = ({
   src,
+  lqip,
   alt,
   priority = false,
   sizes,
   quality,
   hoverScale = false,
 }: ProductImageProps) => {
-  const [status, setStatus] = useState<"loading" | "loaded" | "error">(
-    "loading"
-  );
+  const [isError, setIsError] = useState(false);
 
-  // Re-reset when src changes (e.g. colour switch)
   useEffect(() => {
-    setStatus("loading");
+    setIsError(false);
   }, [src]);
 
-  if (!src) return <BrokenImage />;
+  if (!src || isError) return <BrokenImage />;
 
   return (
-    <>
-      {status === "loading" && <Skeleton />}
-      {status === "error" ? (
-        <BrokenImage />
-      ) : (
-        <NextImage
-          src={src}
-          alt={alt}
-          fill
-          className={cn(
-            "object-cover transition-opacity duration-300 ease-out",
-            status === "loaded" ? "opacity-100" : "opacity-0",
-            hoverScale && "group-hover:scale-105 transition-transform duration-300"
-          )}
-          sizes={sizes}
-          quality={quality}
-          priority={priority}
-          placeholder="blur"
-          blurDataURL={BLUR_DATA_URL}
-          onLoad={() => setStatus("loaded")}
-          onError={() => setStatus("error")}
-        />
+    <NextImage
+      src={src}
+      alt={alt}
+      fill
+      className={cn(
+        "object-cover",
+        hoverScale && "group-hover:scale-105 transition-transform duration-300"
       )}
-    </>
+      sizes={sizes}
+      quality={quality}
+      priority={priority}
+      placeholder="blur"
+      blurDataURL={lqip || FALLBACK_LQIP}
+      onError={() => setIsError(true)}
+    />
   );
 };
 
@@ -90,13 +72,9 @@ const ProductImage = ({
 export const ProductImageGrid = ({
   product,
   currentImages,
-  cacheVersion,
   onImageClick,
 }: ProductImageGridProps) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-
-  const getImageSrc = (img: string) =>
-    img ? (img.startsWith("/") ? img : `${img}${cacheVersion}`) : "";
 
   // Auto-slide for mobile
   const autoSlideTimer = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -170,7 +148,8 @@ export const ProductImageGrid = ({
           onTouchEnd={handleTouchEnd}
         >
           <ProductImage
-            src={getImageSrc(currentImages[selectedIndex])}
+            src={currentImages[selectedIndex]?.url ?? ""}
+            lqip={currentImages[selectedIndex]?.lqip}
             alt={`${product.name} - View ${selectedIndex + 1}`}
             priority
             sizes="100vw"
@@ -222,7 +201,8 @@ export const ProductImageGrid = ({
                 aria-label={`View image ${index + 1}`}
               >
                 <ProductImage
-                  src={getImageSrc(img)}
+                  src={img.url}
+                  lqip={img.lqip}
                   alt={`${product.name} thumbnail ${index + 1}`}
                   sizes="56px"
                   quality={60}
@@ -244,7 +224,8 @@ export const ProductImageGrid = ({
               onClick={() => onImageClick(idx)}
             >
               <ProductImage
-                src={getImageSrc(img)}
+                src={img.url}
+                lqip={img.lqip}
                 alt={`${product.name} - Image ${idx + 1}`}
                 priority={idx === 0}
                 sizes="(max-width: 1024px) 40vw, 30vw"

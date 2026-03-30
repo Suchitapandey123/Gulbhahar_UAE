@@ -88,7 +88,10 @@ export default async function CollectionPage(props: PageParams) {
   const params = await props.params;
   const { product, similarProducts } = await getProductBundle(params.id);
 
+  // console.log("PRODUCT DATA:", product);
+
   if (!product) return null;
+
 
   return (
     <>
@@ -99,7 +102,16 @@ export default async function CollectionPage(props: PageParams) {
           description: product.description ?? "",
           price: product.price,
           currency: "INR",
-          image: product.images?.[0]?.[0] ?? "",
+          image: (() => {
+            try {
+              const img = product.images?.[0] as any;
+              if (img?.files?.[0]?.name)
+                return `https://cdn.gulbhahar.com/ProductImages/${product.productId ?? params.id}/cards/${img.files[0].name}.webp`;
+              return img?.[0] ?? "";
+            } catch {
+              return "";
+            }
+          })(),
           brand: "Gulbhahar",
           sku: product.productId ?? params.id,
           availability: "InStock",
