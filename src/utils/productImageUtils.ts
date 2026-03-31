@@ -23,9 +23,7 @@ function buildUrl(
   version: number | null
 ): string {
   const base = `https://cdn.gulbhahar.com/ProductImages/${productId}/${type}/${fileName}.webp`;
-  // console.log(productId , fileName , type , version)
-  // console.log("-----" , base)
-  return version != null || undefined ? `${base}?v=${version}` : base;
+  return version != null && version !== undefined ? `${base}?v=${version}` : base;
 }
 
 /** All images across all colors (flatMap) — for product card hover sliders */

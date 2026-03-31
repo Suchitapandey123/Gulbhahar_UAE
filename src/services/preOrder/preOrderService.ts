@@ -5,13 +5,8 @@ export const preOrderService = {
   async getPreOrderProducts(parentCategory: string, category?: string): Promise<GetPreOrderProductsResponse> {
     const res = await fetch(
       `${API_BASE_URL}/api/products/pre-order/by-category`,
-      //  `http://194.238.23.44:9080/api/products/pre-order/by-category`,
-      
       {
-        next: {
-          revalidate: 604800,
-          tags: ["collections", `pre-order-${parentCategory}`],
-        },
+        cache: 'no-store',
         method: "POST",
         headers: {
           "Content-Type": "application/json",

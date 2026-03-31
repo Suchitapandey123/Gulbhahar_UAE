@@ -33,7 +33,10 @@ export const PreOrderProductCard = ({
   const imagesToShow: ProductImageItem[] = (() => {
     if (!item.images || !Array.isArray(item.images)) return [];
     const flatImages = item.images.flat().filter(Boolean);
-    return flatImages.map((url) => ({ url: url as string, lqip: FALLBACK_LQIP }));
+    return flatImages.map((url) => ({
+      url: url as string,
+      lqip: FALLBACK_LQIP
+    }));
   })();
   
   const productName = item.name || "Product";
@@ -60,20 +63,15 @@ export const PreOrderProductCard = ({
           {/* Image Container */}
           <div className="relative overflow-hidden w-full aspect-[3/4] bg-gray-50">
             {imagesToShow.length > 1 ? (
-              <ImageSlider images={imagesToShow} alt={productName} />
-            ) : (
-              <Image
-                fill
+              <ImageSlider images={imagesToShow} alt={productName} useNativeImg={true} />
+            ) : imagesToShow[0]?.url ? (
+              <img
                 loading="lazy"
-                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                quality={60}
-                src={imagesToShow[0]?.url || ""}
+                src={imagesToShow[0].url}
                 alt={productName}
-                placeholder="blur"
-                blurDataURL={imagesToShow[0]?.lqip || FALLBACK_LQIP}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out"
               />
-            )}
+            ) : null}
 
             {/* Hover Overlay (static images only) */}
             {imagesToShow.length <= 1 && (

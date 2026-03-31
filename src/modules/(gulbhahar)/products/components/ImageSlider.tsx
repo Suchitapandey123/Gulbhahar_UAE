@@ -1,16 +1,16 @@
 "use client";
 
 import { ProductImageItem, FALLBACK_LQIP } from "@/utils/productImageUtils";
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 interface ImageSliderProps {
   images: ProductImageItem[];
   alt: string;
   priority?: boolean;
+  useNativeImg?: boolean;
 }
 
-export const ImageSlider = ({ images, alt, priority = false }: ImageSliderProps) => {
+export const ImageSlider = ({ images, alt, priority = false, useNativeImg = false }: ImageSliderProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const slideIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const touchStartX = useRef(0);
@@ -67,23 +67,40 @@ export const ImageSlider = ({ images, alt, priority = false }: ImageSliderProps)
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      {images.map((image, idx) => (
-        <Image
-          key={idx}
-          fill
-          priority={priority && idx === 0}
-          loading={priority && idx === 0 ? undefined : "lazy"}
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          quality={60}
-          src={image.url}
-          alt={`${alt} - ${idx + 1}`}
-          placeholder="blur"
-          blurDataURL={image.lqip || FALLBACK_LQIP}
-          className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out group-hover:scale-110 ${
-            currentIndex === idx ? "opacity-100" : "opacity-0"
-          }`}
-        />
-      ))}
+      {useNativeImg ? (
+        images.map((image, idx) => (
+          <img
+            key={idx}
+            loading={priority && idx === 0 ? "eager" : "lazy"}
+            src={image.url}
+            alt={`${alt} - ${idx + 1}`}
+            className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out group-hover:scale-110 ${
+              currentIndex === idx ? "opacity-100" : "opacity-0"
+            }`}
+          />
+        ))
+      ) : (
+        images.map((image, idx) => {
+          const Image = require("next/image").default;
+          return (
+            <Image
+              key={idx}
+              fill
+              priority={priority && idx === 0}
+              loading={priority && idx === 0 ? undefined : "lazy"}
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              quality={60}
+              src={image.url}
+              alt={`${alt} - ${idx + 1}`}
+              placeholder="blur"
+              blurDataURL={image.lqip || FALLBACK_LQIP}
+              className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out group-hover:scale-110 ${
+                currentIndex === idx ? "opacity-100" : "opacity-0"
+              }`}
+            />
+          );
+        })
+      )}
 
       {/* Hover Overlay */}
       <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none" />
