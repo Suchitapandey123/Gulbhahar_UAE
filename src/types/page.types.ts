@@ -44,6 +44,7 @@ export interface PageData {
   [key: string]: unknown;
 }
 
+
 export interface ValidateSlugResponse {
   success: boolean;
 }
