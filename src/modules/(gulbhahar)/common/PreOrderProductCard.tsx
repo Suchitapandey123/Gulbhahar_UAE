@@ -1,11 +1,7 @@
-"use client";
+// Server Component
 import { PreOrderProductData } from "@/services/preOrder/preOrderTypes";
-import { ProductImageItem } from "@/utils/productImageUtils";
-import { ShoppingBag } from "lucide-react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { FALLBACK_LQIP } from "@/utils/productImageUtils";
-import { ImageSlider } from "../products/components/ImageSlider";
+import { ProductImageItem, FALLBACK_LQIP } from "@/utils/productImageUtils";
+import PreOrderProductCardInteractive from "./PreOrderProductCardInteractive";
 
 interface PreOrderProductCardProps {
   item: PreOrderProductData;
@@ -16,8 +12,6 @@ export const PreOrderProductCard = ({
   item,
   customRed,
 }: PreOrderProductCardProps) => {
-  const router = useRouter();
-
   const discount =
     item.originalPrice && item.originalPrice > item.price
       ? Math.round(
@@ -27,9 +21,14 @@ export const PreOrderProductCard = ({
 
   const sizes: string[] =
     (item as any).sizes || item.availableSizes?.map((s: any) => s.name) || [];
-  const colors: any[] = (item as any).colors || item.availableColors || [];
   
-  // Handle nested array structure from API: [["url1"], ["url2"]] or ["url1", "url2"]
+  // Convert colors - keep as-is for PreOrderProductCard (needs full object for hexcode)
+  const colors: any[] = (() => {
+    const rawColors = (item as any).colors || item.availableColors || [];
+    return rawColors;
+  })();
+  
+  // Handle nested array structure from API: [[\"url1\"], [\"url2\"]] or [\"url1\", \"url2\"]
   const imagesToShow: ProductImageItem[] = (() => {
     if (!item.images || !Array.isArray(item.images)) return [];
     const flatImages = item.images.flat().filter(Boolean);
@@ -40,14 +39,6 @@ export const PreOrderProductCard = ({
   })();
   
   const productName = item.name || "Product";
-
-  const handlePreOrder = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    // Save product data so pre-order page can use it without a separate API call
-    sessionStorage.setItem(`preorder_${item.productId}`, JSON.stringify(item));
-    router.push(`/pre-order/${item.productId}`);
-  };
 
   return (
     <article
@@ -60,54 +51,22 @@ export const PreOrderProductCard = ({
         title={productName}
       >
         <div className="cursor-pointer relative">
-          {/* Image Container */}
-          <div className="relative overflow-hidden w-full aspect-[3/4] bg-gray-50">
-            {imagesToShow.length > 1 ? (
-              <ImageSlider images={imagesToShow} alt={productName} useNativeImg={true} />
-            ) : imagesToShow[0]?.url ? (
-              <img
-                loading="lazy"
-                src={imagesToShow[0].url}
-                alt={productName}
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out"
-              />
-            ) : null}
+          {/* Client Component - Interactive Image Section */}
+          <PreOrderProductCardInteractive
+            productId={item.productId}
+            productName={productName}
+            images={imagesToShow}
+            item={item}
+          />
 
-            {/* Hover Overlay (static images only) */}
-            {imagesToShow.length <= 1 && (
-              <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
-            )}
+          {/* Server-Rendered Discount Badge */}
+          {discount > 0 && (
+            <span className="absolute top-2 left-2 bg-green-600 text-white text-[10px] sm:text-xs font-semibold px-2 py-0.5 sm:py-1 rounded z-10">
+              {discount}% OFF
+            </span>
+          )}
 
-            {/* Discount Badge */}
-            {discount > 0 && (
-              <span className="absolute top-2 left-2 bg-green-600 text-white text-[10px] sm:text-xs font-semibold px-2 py-0.5 sm:py-1 rounded z-10">
-                {discount}% OFF
-              </span>
-            )}
-
-            {/* Pre Order Button - Desktop Hover Only */}
-            <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-red-900 text-white text-center py-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-full group-hover:translate-y-0 z-10">
-              <button
-                onClick={handlePreOrder}
-                className="w-full text-sm font-semibold flex items-center justify-center gap-2 "
-              >
-                <ShoppingBag size={16} />
-                <span>Pre Order</span>
-              </button>
-            </div>
-            {/* Pre Order Button - Mobile Always Visible (bottom of image) */}
-            <div className="md:hidden absolute bottom-0 left-0 right-0 bg-red-900/90 text-white text-center py-1.5 z-10">
-              <button
-                onClick={handlePreOrder}
-                className="w-full text-[10px] font-bold flex items-center justify-center gap-1"
-              >
-                <ShoppingBag size={12} />
-                <span>PRE ORDER</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Product Info — server-rendered for SEO */}
+          {/* Server-Rendered Product Info */}
           <div className="pt-3 pb-1 px-1 space-y-2">
             {/* Name & Price */}
             <div className="flex items-start justify-between gap-2">

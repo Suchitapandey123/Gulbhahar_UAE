@@ -1,13 +1,9 @@
 // @ts-nocheck
-"use client";
-import { useCart } from "@/providers/ContextProviders/CartContext";
+// Server Component
 import { getProductImages } from "@/utils/productImageUtils";
-import { ShoppingBag } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
-import { toast } from "sonner";
 import { Product } from "../types";
-import { ImageSlider } from "./ImageSlider";
+import SimilarProductCardInteractive from "./SimilarProductCardInteractive";
 
 interface SimilarProductCardProps {
   item: Product;
@@ -18,8 +14,6 @@ export const SimilarProductCard = ({
   item,
   customRed,
 }: SimilarProductCardProps) => {
-  const { addToCart, addingToCart } = useCart();
-
   const discount =
     item.originalPrice && item.originalPrice > item.price
       ? Math.round(
@@ -29,45 +23,17 @@ export const SimilarProductCard = ({
 
   const sizes: string[] =
     (item as any).sizes || item.availableSizes?.map((s: any) => s.name) || [];
-  const colors: any[] = (item as any).colors || item.availableColors || [];
+  
+  // Convert colors to string array - handle both string[] and object[] formats
+  const colors: any[] = (() => {
+    const rawColors = (item as any).colors || item.availableColors || [];
+    return rawColors; // Keep as-is for SimilarProductCard (needs full object for hexcode)
+  })();
 
   const imagesToShow = getProductImages(item.productId, item.images);
 
   const productName = item.name || "Product";
-
-  const handleAddToCart = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    try {
-      const selectedColor = colors.length > 0 ? colors[0] : "default";
-      const selectedSize = sizes.length > 0 ? sizes[0] : "default";
-
-      const cartItemWithVariants = {
-        ...item,
-        id: item.productId || (item as any).id,
-        productId: item.productId || (item as any).id,
-        selectedColor,
-        selectedSize,
-        colors,
-        sizes,
-      };
-
-      const result = await addToCart(cartItemWithVariants);
-
-      if (result.success) {
-        toast.success(
-          `${productName} (${selectedSize}, ${selectedColor}) added to cart!`,
-        );
-      } else {
-        toast.error("Failed to add item to cart. Please try again.");
-      }
-    } catch (error) {
-      toast.error("Failed to add item to cart.");
-    }
-  };
-
-  const isAddingThis = addingToCart === (item.productId || (item as any).id);
+  const productId = item.productId || (item as any).id;
 
   return (
     <article
@@ -76,64 +42,29 @@ export const SimilarProductCard = ({
       itemType="https://schema.org/Product"
     >
       <Link
-        href={`/products/${item.productId}`}
+        href={`/products/${productId}`}
         className="block"
         title={productName}
       >
         <div className="cursor-pointer relative">
-          {/* Image Container */}
-          <div className="relative overflow-hidden w-full aspect-[3/4] bg-gray-50">
-            {imagesToShow.length > 1 ? (
-              <ImageSlider images={imagesToShow} alt={productName} />
-            ) : (
-              <Image
-                fill
-                loading="lazy"
-                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                quality={60}
-                src={imagesToShow[0].url}
-                alt={productName}
-                placeholder="blur"
-                blurDataURL={imagesToShow[0].lqip}
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
-              />
-            )}
+          {/* Client Component - Interactive Image Section */}
+          <SimilarProductCardInteractive
+            productId={productId}
+            productName={productName}
+            images={imagesToShow}
+            colors={colors}
+            sizes={sizes}
+            item={item}
+          />
 
-            {/* Hover Overlay (static images only) */}
-            {imagesToShow.length <= 1 && (
-              <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
-            )}
+          {/* Server-Rendered Discount Badge */}
+          {discount > 0 && (
+            <span className="absolute top-2 left-2 bg-green-600 text-white text-[10px] sm:text-xs font-semibold px-2 py-0.5 sm:py-1 rounded z-10">
+              {discount}% OFF
+            </span>
+          )}
 
-            {/* Discount Badge */}
-            {discount > 0 && (
-              <span className="absolute top-2 left-2 bg-green-600 text-white text-[10px] sm:text-xs font-semibold px-2 py-0.5 sm:py-1 rounded z-10">
-                {discount}% OFF
-              </span>
-            )}
-
-            {/* Add to Cart Button - Desktop Hover Only */}
-            <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-red-900 text-white text-center py-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-full group-hover:translate-y-0 z-10">
-              <button
-                onClick={handleAddToCart}
-                disabled={isAddingThis}
-                className="w-full text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-75"
-              >
-                {isAddingThis ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    <span>Adding...</span>
-                  </>
-                ) : (
-                  <>
-                    <ShoppingBag size={16} />
-                    <span>Add to Cart</span>
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-
-          {/* Product Info — server-rendered for SEO */}
+          {/* Server-Rendered Product Info */}
           <div className="pt-3 pb-1 px-1 space-y-2">
             {/* Name & Price */}
             <div className="flex items-start justify-between gap-2">
