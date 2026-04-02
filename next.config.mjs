@@ -40,6 +40,20 @@ const nextConfig = {
           { key: 'Cache-Control', value: 'no-store' },
         ],
       },
+      {
+        // Category/parent-category pages
+        source: '/:category(juttis|suit|saree|bags|lehenga|jewellery)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' },
+        ],
+      },
+      {
+        // Collection detail pages
+        source: '/collections/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' },
+        ],
+      },
     ];
   },
 
@@ -79,14 +93,20 @@ const nextConfig = {
         pathname: '/**',
       }
     ],
-    qualities: [60, 65, 70, 75, 95, 100],
+    // Keep all quality values that are explicitly used across components (60, 75, 100)
+    // Removed 65 and 95 which were never explicitly referenced anywhere
+    qualities: [60, 70, 75, 85, 100],
     formats: ['image/avif', 'image/webp'],
-    deviceSizes: [640, 750, 828, 1080, 1200],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    // Fewer breakpoints = fewer unique image variants Vercel has to generate and cache
+    deviceSizes: [640, 828, 1080, 1200],
+    imageSizes: [48, 96, 256, 384],
     minimumCacheTTL: 31536000,
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    // Keep Vercel image optimization ON for product images (cdn.gulbhahar.com, S3)
+    // but CloudFront-hosted static assets are already optimized — mark those unoptimized
+    // via the `unoptimized` prop directly on <Image> components for those assets.
     unoptimized: false,
     loader: 'default',
   },

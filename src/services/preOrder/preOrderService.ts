@@ -6,7 +6,10 @@ export const preOrderService = {
     const res = await fetch(
       `${API_BASE_URL}/api/products/pre-order/by-category`,
       {
-        cache: 'no-store',
+        next: {
+          revalidate: 3600,
+          tags: ["pre-order", `pre-order-${parentCategory}`],
+        },
         method: "POST",
         headers: {
           "Content-Type": "application/json",

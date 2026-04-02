@@ -2,6 +2,7 @@
 
 import { ProductImageItem, FALLBACK_LQIP } from "@/utils/productImageUtils";
 import { useEffect, useRef, useState } from "react";
+import NextImage from "next/image";
 
 interface ImageSliderProps {
   images: ProductImageItem[];
@@ -80,26 +81,23 @@ export const ImageSlider = ({ images, alt, priority = false, useNativeImg = fals
           />
         ))
       ) : (
-        images.map((image, idx) => {
-          const Image = require("next/image").default;
-          return (
-            <Image
-              key={idx}
-              fill
-              priority={priority && idx === 0}
-              loading={priority && idx === 0 ? undefined : "lazy"}
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              quality={60}
-              src={image.url}
-              alt={`${alt} - ${idx + 1}`}
-              placeholder="blur"
-              blurDataURL={image.lqip || FALLBACK_LQIP}
-              className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out group-hover:scale-110 ${
-                currentIndex === idx ? "opacity-100" : "opacity-0"
-              }`}
-            />
-          );
-        })
+        images.map((image, idx) => (
+          <NextImage
+            key={idx}
+            fill
+            priority={priority && idx === 0}
+            loading={priority && idx === 0 ? undefined : "lazy"}
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            quality={60}
+            src={image.url}
+            alt={`${alt} - ${idx + 1}`}
+            placeholder="blur"
+            blurDataURL={image.lqip || FALLBACK_LQIP}
+            className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out group-hover:scale-110 ${
+              currentIndex === idx ? "opacity-100" : "opacity-0"
+            }`}
+          />
+        ))
       )}
 
       {/* Hover Overlay */}

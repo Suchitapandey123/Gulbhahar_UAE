@@ -127,9 +127,13 @@ export const productService = {
   },
 
   getProductsByParentCategory: async (
-    parentCategory: string
+    parentCategory: string,
+    limit?: number
   ): Promise<Product[]> => {
     try {
+      const body: Record<string, unknown> = { parentCategory };
+      if (limit) body.limit = limit;
+
       const response = await fetch(
         `${API_BASE_URL}/new-api/products/get-product-by-parentCategory`,
         {
@@ -138,7 +142,7 @@ export const productService = {
             "Content-Type": "application/json",
             Accept: "application/json",
           },
-          body: JSON.stringify({ parentCategory }),
+          body: JSON.stringify(body),
           next: {
             revalidate: 3600,
             tags: ["products", "collections", "collection-juttis"],

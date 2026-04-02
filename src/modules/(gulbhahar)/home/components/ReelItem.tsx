@@ -1,6 +1,6 @@
 "use client";
 
-import { Play, Volume2, VolumeX } from "lucide-react";
+import { Play } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
@@ -19,7 +19,7 @@ interface ReelItemProps {
 const ReelItem = ({ reel }: ReelItemProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
 
@@ -31,6 +31,11 @@ const ReelItem = ({ reel }: ReelItemProps) => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
+            // Set src only when first visible — zero network cost until scrolled here
+            if (!video.src) {
+              video.src = reel.videoUrl;
+              video.load();
+            }
             video.play().catch(() => setHasError(true));
             setIsPlaying(true);
           } else {
@@ -44,7 +49,7 @@ const ReelItem = ({ reel }: ReelItemProps) => {
 
     observer.observe(video);
     return () => observer.disconnect();
-  }, []);
+  }, [reel.videoUrl]);
 
   const handlePlayPause = () => {
     const video = videoRef.current;
@@ -78,7 +83,6 @@ const ReelItem = ({ reel }: ReelItemProps) => {
       {/* Video */}
       <video
         ref={videoRef}
-        src={reel.videoUrl}
         poster={reel.posterUrl}
         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
           isLoaded && !hasError ? "opacity-100" : "opacity-0"
@@ -86,7 +90,7 @@ const ReelItem = ({ reel }: ReelItemProps) => {
         muted={isMuted}
         loop
         playsInline
-        preload="metadata"
+        preload="none"
         onLoadedData={() => setIsLoaded(true)}
         onError={() => setHasError(true)}
       />

@@ -97,12 +97,11 @@ export default function ModernHeroAnimated({ heroSection }) {
       },
     },
   ];
-
+  
   const slides = heroSection?.length ? heroSection : heroData;
 
 const currentSlide = slides[currentIndex];
 const nextIndex = (currentIndex + 1) % slides.length;
-
 
   // Auto-advance carousel with 6-second timing
   useEffect(() => {
@@ -308,13 +307,11 @@ const nextIndex = (currentIndex + 1) % slides.length;
                         src={slide.image}
                         alt={slide.title}
                         fill
+                        unoptimized
                         sizes="100vw"
                         className="object-cover hero-image"
                         priority={shouldUsePriority}
-                        quality={95}
                         loading={shouldUsePriority ? undefined : "lazy"}
-                        placeholder="blur"
-                        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                       />
                     </div>
 
@@ -324,13 +321,11 @@ const nextIndex = (currentIndex + 1) % slides.length;
                         src={slide.mobileImage}
                         alt={slide.title}
                         fill
+                        unoptimized
                         sizes="100vw"
                         className="object-cover hero-image"
                         priority={shouldUsePriority}
-                        quality={95}
                         loading={shouldUsePriority ? undefined : "lazy"}
-                        placeholder="blur"
-                        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                       />
                     </div>
 

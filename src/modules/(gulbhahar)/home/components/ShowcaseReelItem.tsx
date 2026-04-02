@@ -15,14 +15,22 @@ const ShowcaseReelItem = ({ reel, onClick }: { reel: ReelData; onClick?: () => v
   const [isMuted] = useState(true);
 
   useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            videoRef.current?.play().catch(() => {});
+            // Set src only when first visible — zero network cost until then
+            if (!video.src) {
+              video.src = reel.videoUrl;
+              video.load();
+            }
+            video.play().catch(() => {});
             setIsPlaying(true);
           } else {
-            videoRef.current?.pause();
+            video.pause();
             setIsPlaying(false);
           }
         });
@@ -30,20 +38,19 @@ const ShowcaseReelItem = ({ reel, onClick }: { reel: ReelData; onClick?: () => v
       { threshold: 0.5 }
     );
 
-    if (videoRef.current) observer.observe(videoRef.current);
+    observer.observe(video);
     return () => observer.disconnect();
-  }, []);
+  }, [reel.videoUrl]);
 
   return (
     <div className="relative flex-none w-[300px] md:w-[380px] aspect-[9/16] bg-neutral-100 rounded-2xl overflow-hidden snap-center group cursor-pointer" onClick={onClick}>
       <video
         ref={videoRef}
-        src={reel.videoUrl}
         className="absolute inset-0 w-full h-full object-cover"
         muted={isMuted}
         loop
         playsInline
-        preload="metadata"
+        preload="none"
       />
       <div className="absolute inset-0 opacity-0 transition-opacity duration-300" />
 
@@ -54,8 +61,6 @@ const ShowcaseReelItem = ({ reel, onClick }: { reel: ReelData; onClick?: () => v
           </div>
         </div>
       )}
-
-     
     </div>
   );
 };

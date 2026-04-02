@@ -60,45 +60,26 @@ export default function Collection({ parentCategory = null, slug = null }) {
   // let category = "juttis"
   let category = parentCategory || slug || "all";
 
-  // Data Fetching - Fetch ALL products and filter on frontend
+  // Data Fetching - fetch only products for this category (backend-filtered)
   const {
     data: allProducts,
     isLoading,
     error,
   } = useQuery({
     queryKey: ["getProductsByCategory", category],
-    queryFn: () => productApi.getAllProduct(),
+    queryFn: () =>
+      category && category !== "all"
+        ? productApi.getProductsByParentCategory(category)
+        : productApi.getAllProduct(),
     enabled: true,
   });
 
-  // Filter products by parentCategory on frontend
+  // Products already filtered by backend — just normalise the shape
   const apiData = React.useMemo(() => {
-    // Handle different API response structures
     const products = allProducts?.products || allProducts?.data || allProducts;
-
-    if (!products || !Array.isArray(products)) {
-     
-      return [];
-    }
-
-   
-
-    if (!category || category === "all") return products;
-
-    // Filter products where parentCategory array includes the category
-    const filtered = products.filter((product) => {
-      const productCategories = product.parentCategory || [];
-      if (Array.isArray(productCategories)) {
-        return productCategories.some(
-          (cat) => cat?.toLowerCase?.() === category.toLowerCase(),
-        );
-      }
-      return productCategories?.toLowerCase?.() === category.toLowerCase();
-    });
-
-   
-    return filtered;
-  }, [allProducts, category]);
+    if (!products || !Array.isArray(products)) return [];
+    return products;
+  }, [allProducts]);
 
   // Fallback: Fetch juttis when suit/saree has no products (after primary query completes)
   const isSuitOrSaree = parentCategory && parentCategory !== "juttis";
@@ -490,6 +471,9 @@ export default function Collection({ parentCategory = null, slug = null }) {
                               height={500}
                               width={1000}
                               alt="Collection Banner"
+                              loading="lazy"
+                              quality={75}
+                              sizes="(max-width: 640px) 100vw, 1000px"
                               className="w-full h-auto sm:h-[220px] md:h-[420px] object-cover rounded-lg shadow-lg"
                             />
                           </div>

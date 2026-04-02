@@ -12,8 +12,8 @@ import QuickLinks from "../components/QuickLinks";
 import QuickTag from "../components/QuickTag";
 import ContentSection from "./components/ContentSection";
 
-// ISR Configuration: Revalidate every 7 days (604800 seconds)
-export const revalidate = 604800;
+// ISR Configuration: Revalidate every 1 hour (3600 seconds)
+export const revalidate = 3600;
 export const dynamicParams = true;
 
 type Props = {

@@ -27,16 +27,21 @@ const ReelCard = ({ reel }: { reel: ReelData }) => {
   }, []);
 
   useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            videoRef.current
-              ?.play()
-              .then(() => setIsPlaying(true))
-              .catch(() => {});
+            // Set src only when first visible — zero network cost until then
+            if (!video.src) {
+              video.src = reel.videoUrl;
+              video.load();
+            }
+            video.play().then(() => setIsPlaying(true)).catch(() => {});
           } else {
-            videoRef.current?.pause();
+            video.pause();
             setIsPlaying(false);
           }
         });
@@ -44,29 +49,25 @@ const ReelCard = ({ reel }: { reel: ReelData }) => {
       { threshold: 0.6 },
     );
 
-    if (videoRef.current) {
-      observer.observe(videoRef.current);
-    }
-
+    observer.observe(video);
     return () => observer.disconnect();
-  }, []);
+  }, [reel.videoUrl]);
 
   return (
     <div className="relative flex-none w-[300px] sm:w-[380px] aspect-[9/16] overflow-hidden group bg-gradient-to-br from-neutral-900 to-black">
       <video
         ref={videoRef}
-        src={reel.videoUrl}
         className="absolute inset-0 w-full h-full object-cover"
         muted={isMuted}
         loop
         playsInline
-        preload="metadata"
+        preload="none"
       />
 
       {/* Overlay Gradients */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
 
-      {/* Play Indicator */}
+      {/* Play Indicator — visible until user taps */}
       {!isPlaying && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="p-5 rounded-full bg-white/20 backdrop-blur-md animate-pulse">
@@ -74,7 +75,6 @@ const ReelCard = ({ reel }: { reel: ReelData }) => {
           </div>
         </div>
       )}
-
       {/* Header Info */}
       <div className="absolute top-4 left-4 right-4 flex justify-between items-start z-10">
         <div className="bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/20">

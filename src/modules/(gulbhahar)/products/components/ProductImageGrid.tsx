@@ -227,7 +227,7 @@ export const ProductImageGrid = ({
                 src={img.url}
                 lqip={img.lqip}
                 alt={`${product.name} - Image ${idx + 1}`}
-                priority={idx === 0}
+                priority={idx < 2}
                 sizes="(max-width: 1024px) 40vw, 30vw"
                 quality={75}
                 hoverScale

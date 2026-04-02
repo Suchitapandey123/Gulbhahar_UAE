@@ -13,7 +13,8 @@ import QuickLinks from "@/app/collections/components/QuickLinks";
 
 async function getProducts(parentCategory: string): Promise<Product[]> {
   try {
-    const data1 = await productApi.getProductsByParentCategory(parentCategory);
+    // limit=8 — homepage carousels only show 8 products, no need to fetch more
+    const data1 = await productApi.getProductsByParentCategory(parentCategory, 8);
     return data1 || [];
   } catch (error) {
     console.error("Error fetching products:", error);

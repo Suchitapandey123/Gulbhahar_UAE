@@ -75,8 +75,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
+        {/* CloudFront CDN for videos/images — preconnect for first paint */}
         <link rel="preconnect" href="https://d21ojmskh8ksuv.cloudfront.net" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://gulbahar-backend.s3.ap-south-1.amazonaws.com" crossOrigin="anonymous" />
+        {/* S3 only used for product images loaded lazily — dns-prefetch is enough */}
+        <link rel="dns-prefetch" href="https://gulbahar-backend.s3.ap-south-1.amazonaws.com" />
+        <link rel="dns-prefetch" href="https://cdn.gulbhahar.com" />
 
         {/* DNS Prefetch for third-party domains */}
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
@@ -86,11 +89,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <meta name="facebook-domain-verification" content="i8jg1img7zm6lm54vot1vlfhvys5nc" />
         <meta name="facebook-domain-verification" content="vsnutk0lf5e8h8j3qr40cba416cap0" />
 
-        {/* Google Fonts */}
-        <link
-          href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&display=swap"
-          rel="stylesheet"
-        />
+        {/* Old Standard TT is loaded via next/font in QuickLinks — no duplicate link needed */}
 
         {/* Google Tag Manager */}
         {/* <Script
@@ -112,16 +111,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <body
           className={`${poppins.variable} ${jetbrainsMono.variable} antialiased`}
         >
-          {/* GTM noscript */}
-          <noscript>
-            <iframe
-              src="https://www.googletagmanager.com/ns.html?id=GTM-T5S7S772"
-              height="0"
-              width="0"
-              style={{ display: 'none', visibility: 'hidden' }}
-            />
-          </noscript>
-
           {/* Analytics Scripts */}
           <Script
             src="https://analytic.thekapslog.com/script.js"
@@ -129,7 +118,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             strategy="lazyOnload"
           />
 
-          {/* Google Analytics   */}
+          {/* Google Analytics — loaded via GTM (GTM-T5S7S772) when GTM is re-enabled.
+              Direct GA4 script kept here as standalone fallback only; remove when GTM is active. */}
           <Script
             src="https://www.googletagmanager.com/gtag/js?id=G-M4Q3C3DJQM"
             strategy="lazyOnload"
@@ -144,7 +134,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
               gtag('config', 'G-M4Q3C3DJQM', {
-                page_path: window.location.pathname
+                page_path: window.location.pathname,
+                send_page_view: true,
+                transport_type: 'beacon'
               });
             `,
             }}

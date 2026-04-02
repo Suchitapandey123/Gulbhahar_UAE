@@ -51,6 +51,7 @@ const CollectionCard = ({ category, index }: CollectionCardProps) => {
           src={category.image}
           alt={category.name}
           fill
+          unoptimized={category.image.includes('d21ojmskh8ksuv.cloudfront.net')}
           sizes="(max-width: 640px) 80vw, 400px"
           quality={60}
           priority={index < 2}

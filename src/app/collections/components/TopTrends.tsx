@@ -26,10 +26,11 @@ const TopTrends = () => {
               >
                 <div className="relative w-full h-[510px] xs:h-[470px] overflow-hidden">
                   <Image
-                  priority
+                    priority={i === 0}
+                    loading={i === 0 ? undefined : "lazy"}
                     width={500}
                     height={500}
-                    quality={100}
+                    quality={75}
                     src={slide}
                     alt={`Trend item ${i + 1}`}
                     className="w-full h-full object-cover transition-transform duration-500 scale-150 group-hover:scale-150"
