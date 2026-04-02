@@ -126,7 +126,7 @@ const nextIndex = (currentIndex + 1) % slides.length;
           return next;
         });
         setIsTransitioning(false);
-      }, 1000);
+      }, 1200);
     }, 6000);
 
     return () => {
@@ -181,7 +181,7 @@ const nextIndex = (currentIndex + 1) % slides.length;
     setTimeout(() => {
       setCurrentIndex(index);
       setIsTransitioning(false);
-    }, 1000);
+    }, 1200);
   };
 
   const togglePlay = () => {
@@ -256,57 +256,28 @@ const nextIndex = (currentIndex + 1) % slides.length;
               const isPrevious = index === (currentIndex - 1 + slides.length) % slides.length;
               const isFirstImage = index === 0;
               
-              // Preload current, next, and first image
-              const shouldUsePriority = isFirstImage || isCurrent || isNext;
-              
-              // Only render current, next, and previous for smooth crossfade
-              const shouldRender = isCurrent || isNext || isPrevious;
-              
-              if (!shouldRender) return null;
+              // Always render all images but keep them in DOM for instant display
+              const shouldUsePriority = isFirstImage || index <= 1;
 
               return (
-                <motion.div
+                <div
                   key={`image-${slide.id}`}
                   className="absolute inset-0 w-full h-full image-container"
-                  initial={{ opacity: isFirstImage && index === 0 ? 1 : 0 }}
-                  animate={{
+                  style={{
                     opacity: isCurrent ? 1 : 0,
                     zIndex: isCurrent ? 20 : 15,
-                  }}
-                  transition={{
-                    duration: 1.0,
-                    ease: [0.4, 0, 0.2, 1],
-                  }}
-                  style={{
+                    transition: 'opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
                     pointerEvents: isCurrent ? "auto" : "none",
                   }}
                 >
                   {/* REVERSE ZOOM CONTAINER */}
-                  <motion.div
+                  <div
                     className="reverse-zoom-container"
-                    initial={{
-                      scale: slide.zoomConfig.startScale,
-                      y: slide.zoomConfig.startY,
-                      x: slide.zoomConfig.startX,
-                    }}
-                    animate={{
-                      scale:
-                        isCurrent && isPlaying
-                          ? slide.zoomConfig.endScale
-                          : slide.zoomConfig.startScale,
-                      y:
-                        isCurrent && isPlaying
-                          ? slide.zoomConfig.endY
-                          : slide.zoomConfig.startY,
-                      x:
-                        isCurrent && isPlaying
-                          ? slide.zoomConfig.endX
-                          : slide.zoomConfig.startX,
-                    }}
-                    transition={{
-                      duration: slide.zoomConfig.duration,
-                      ease: "linear",
-                      delay: isCurrent && isFirstLoad ? 0.3 : 0,
+                    style={{
+                      transform: isCurrent && isPlaying
+                        ? `scale(${slide.zoomConfig.endScale}) translateY(${slide.zoomConfig.endY}) translateX(${slide.zoomConfig.endX})`
+                        : `scale(${slide.zoomConfig.startScale}) translateY(${slide.zoomConfig.startY}) translateX(${slide.zoomConfig.startX})`,
+                      transition: isCurrent && isPlaying ? `transform ${slide.zoomConfig.duration}s linear` : 'none',
                     }}
                   >
                     {/* Desktop Image */}
@@ -340,8 +311,8 @@ const nextIndex = (currentIndex + 1) % slides.length;
                     {/* Gradient overlays */}
                     <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-black/60 via-black/40 to-transparent" />
                     <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                  </motion.div>
-                </motion.div>
+                  </div>
+                </div>
               );
             })}
           </motion.div>
