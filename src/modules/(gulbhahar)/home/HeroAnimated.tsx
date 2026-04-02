@@ -126,7 +126,7 @@ const nextIndex = (currentIndex + 1) % slides.length;
           return next;
         });
         setIsTransitioning(false);
-      }, 600);
+      }, 1000);
     }, 6000);
 
     return () => {
@@ -181,7 +181,7 @@ const nextIndex = (currentIndex + 1) % slides.length;
     setTimeout(() => {
       setCurrentIndex(index);
       setIsTransitioning(false);
-    }, 600);
+    }, 1000);
   };
 
   const togglePlay = () => {
@@ -253,21 +253,29 @@ const nextIndex = (currentIndex + 1) % slides.length;
 
               const isCurrent = index === currentIndex;
               const isNext = index === nextIndex;
+              const isPrevious = index === (currentIndex - 1 + slides.length) % slides.length;
               const isFirstImage = index === 0;
-              const shouldUsePriority = isFirstImage;
+              
+              // Preload current, next, and first image
+              const shouldUsePriority = isFirstImage || isCurrent || isNext;
+              
+              // Only render current, next, and previous for smooth crossfade
+              const shouldRender = isCurrent || isNext || isPrevious;
+              
+              if (!shouldRender) return null;
 
               return (
                 <motion.div
                   key={`image-${slide.id}`}
                   className="absolute inset-0 w-full h-full image-container"
-                  initial={false}
+                  initial={{ opacity: isFirstImage && index === 0 ? 1 : 0 }}
                   animate={{
                     opacity: isCurrent ? 1 : 0,
-                    zIndex: isCurrent ? 20 : isNext ? 15 : 10,
+                    zIndex: isCurrent ? 20 : 15,
                   }}
                   transition={{
-                    duration: 0.6,
-                    ease: [0.22, 1, 0.36, 1],
+                    duration: 1.0,
+                    ease: [0.4, 0, 0.2, 1],
                   }}
                   style={{
                     pointerEvents: isCurrent ? "auto" : "none",
