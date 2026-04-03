@@ -26,9 +26,7 @@ export async function GET(
       return new NextResponse("Not Found", { status: 404 });
     }
 
-    const page = sitemapId;
-    const limit = 4000; // adjust if needed
-    const apiRes = await fetch(`${SITEMAPS_API}?page=${page}&limit=${limit}`, {
+    const apiRes = await fetch(`${SITEMAPS_API}?sitemapNumber=${sitemapId}`, {
       next: { revalidate: 2 * 60 * 5 }, // revalidate every 5 minutes
     });
 
