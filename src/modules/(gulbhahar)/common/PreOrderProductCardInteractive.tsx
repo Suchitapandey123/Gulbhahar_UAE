@@ -44,7 +44,7 @@ export default function PreOrderProductCardInteractive({
       {images.length <= 1 && (
         <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
       )}
-
+       
       {/* Pre Order Button - Desktop Hover Only */}
       <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-red-900 text-white text-center py-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-full group-hover:translate-y-0 z-10">
         <button
@@ -55,6 +55,7 @@ export default function PreOrderProductCardInteractive({
           <span>Pre Order</span>
         </button>
       </div>
+
       {/* Pre Order Button - Mobile Always Visible (bottom of image) */}
       <div className="md:hidden absolute bottom-0 left-0 right-0 bg-red-900/90 text-white text-center py-1.5 z-10">
         <button
@@ -65,6 +66,8 @@ export default function PreOrderProductCardInteractive({
           <span>PRE ORDER</span>
         </button>
       </div>
+
+      
     </div>
   );
 }

@@ -64,16 +64,16 @@ const featuredLinks = [
 
 const importantLinks = [
   { name: "All Collections", href: "/collections", icon: ShoppingBag },
-  { name: "About Us",        href: "/about-us",    icon: Info },
+  { name: "About Us",        href: "/about",       icon: Info },
   { name: "Contact Us",      href: "/contact",     icon: Phone },
 ];
 
 const policies = [
   { name: "Refund",   href: "/refund-policy" },
-  { name: "Delivery", href: "/delivery-policy" },
+  { name: "Delivery", href: "/delivery-shipping-policy" },
   { name: "Privacy",  href: "/privacy-policy" },
-  { name: "Terms",    href: "/terms-of-use" },
-  { name: "Cookies",  href: "/cookie-policy" },
+  { name: "Terms",    href: "/terms-condition" },
+  { name: "Cookies",  href: "/cookies-policy" },
 ];
 
 const accountNavItems = [
