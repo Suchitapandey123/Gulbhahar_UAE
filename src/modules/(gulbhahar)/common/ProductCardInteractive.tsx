@@ -14,7 +14,8 @@ interface ProductCardInteractiveProps {
   colors: string[];
   sizes: string[];
   priority?: boolean;
-  item: any;
+  price?: number;
+  originalPrice?: number;
 }
 
 export default function ProductCardInteractive({
@@ -24,7 +25,8 @@ export default function ProductCardInteractive({
   colors,
   sizes,
   priority = false,
-  item,
+  price,
+  originalPrice,
 }: ProductCardInteractiveProps) {
   const slideIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -97,9 +99,12 @@ export default function ProductCardInteractive({
       const sizeStrings = sizes.map(s => typeof s === 'string' ? s : s.name || s);
 
       const cartItemWithVariants = {
-        ...item,
         id: productId,
-        productId: productId,
+        productId,
+        name: productName,
+        price,
+        originalPrice,
+        image: images?.[0]?.url,
         selectedColor,
         selectedSize,
         colors: colorStrings,
@@ -134,23 +139,29 @@ export default function ProductCardInteractive({
         onTouchEnd={handleTouchEnd}
       >
         <div className="relative w-full h-full bg-gray-100">
-          {images.map((image, idx) => (
-            <Image
-              key={idx}
-              src={image.url}
-              alt={`${productName} - ${idx + 1}`}
-              fill
-              priority={priority && idx === 0}
-              loading={priority && idx === 0 ? undefined : "lazy"}
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              quality={75}
-              placeholder="blur"
-              blurDataURL={image.lqip}
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out md:group-hover:scale-110 transition-transform ${
-                currentImageIndex === idx ? "opacity-100" : "opacity-0"
-              }`}
-            />
-          ))}
+          {images.map((image, idx) => {
+            const isVisible = idx === currentImageIndex;
+            const isNext = idx === (currentImageIndex + 1) % images.length;
+            // Only render current + next image to reduce DOM/network requests
+            if (!isVisible && !isNext && idx !== 0) return null;
+            return (
+              <Image
+                key={idx}
+                src={image.url}
+                alt={`${productName} - ${idx + 1}`}
+                fill
+                priority={priority && idx === 0}
+                loading={priority && idx === 0 ? undefined : "lazy"}
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                quality={75}
+                placeholder="blur"
+                blurDataURL={image.lqip}
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out md:group-hover:scale-110 transition-transform ${
+                  isVisible ? "opacity-100" : "opacity-0"
+                }`}
+              />
+            );
+          })}
 
           {/* Hover overlay */}
           <div className="absolute inset-0 bg-black opacity-0 md:group-hover:opacity-10 transition-opacity duration-300" />

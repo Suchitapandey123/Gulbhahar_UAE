@@ -42,7 +42,7 @@ export default function ProductCard({
   index = 0,
   priority = false,
 }: ProductCardProps) {
-  const imagesToShow = getProductImages(item.productId, item.images as ProductImages[]);
+  const imagesToShow = getProductImages(item.productId, item.images as ProductImages[]).slice(0, 2);
 
   // Support both old format (sizes: string[]) and new format (availableSizes: {name: string}[])
   const sizes: string[] =
@@ -76,7 +76,8 @@ export default function ProductCard({
             colors={colors}
             sizes={sizes}
             priority={priority}
-            item={item}
+            price={item.price}
+            originalPrice={item.originalPrice}
           />
 
           {/* Server-Rendered Badges */}

@@ -45,15 +45,43 @@ interface ProductInput {
 }
 
 export const cartUtils = {
-  getCartItems: (): CartUtilItem[] => {
-    if (typeof window === "undefined") return [];
-    try {
-      const cartData = localStorage.getItem(CART_STORAGE_KEY);
-      return cartData ? JSON.parse(cartData) : [];
-    } catch {
-      return [];
-    }
-  },
+ getCartItems: (): CartUtilItem[] => {
+  if (typeof window === "undefined") return [];
+  try {
+    const cartData = localStorage.getItem(CART_STORAGE_KEY);
+    if (!cartData) return [];
+
+    const items = JSON.parse(cartData);
+
+    return items.map((item: any) => {
+      // ✅ Fix color (main field)
+      const fixedColor =
+        typeof item.color === "object" && item.color !== null
+          ? item.color.name || ""
+          : item.color;
+
+      // ✅ Fix selectedColor (if कहीं use ho raha ho)
+      const fixedSelectedColor =
+        typeof item.selectedColor === "object" && item.selectedColor !== null
+          ? item.selectedColor.name || ""
+          : item.selectedColor;
+
+      // ✅ Fix availableColors (IMPORTANT 🔥)
+      const fixedAvailableColors = item.availableColors?.map((c: any) =>
+        typeof c === "string" ? c : c.name
+      );
+
+      return {
+        ...item,
+        color: fixedColor,
+        selectedColor: fixedSelectedColor,
+        availableColors: fixedAvailableColors,
+      };
+    });
+  } catch {
+    return [];
+  }
+},
 
   saveCartItems: (items: CartUtilItem[]): void => {
     if (typeof window === "undefined") return;

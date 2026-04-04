@@ -278,7 +278,7 @@ const CartPage = () => {
                           className="w-16 h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0 hover:opacity-80 transition-opacity cursor-pointer"
                         >
                           <Image
-                            src={getProductImagesForColor(item.productId ,item.images ,0, "cards")[0].url || "/about/lal-ishq-1.jpg"}
+                            src={item.image || getProductImagesForColor(item.productId, item.images, 0, "cards")[0]?.url || "/about/lal-ishq-1.jpg"}
                             alt={item.name}
                             width={64} 
                             height={64}

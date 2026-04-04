@@ -110,5 +110,16 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)"],
+  // Only run middleware on product pages (410 check) and known redirect synonyms
+  // Exclude collections/*, category pages, static pages — they must stay cacheable
+  matcher: [
+    "/products/:path*",
+    "/jutti",
+    "/jutis",
+    "/lehngas",
+    "/suits",
+    "/sarees",
+    "/bag",
+    "/collection",
+  ],
 };

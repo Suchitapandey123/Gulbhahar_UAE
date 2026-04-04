@@ -9,8 +9,6 @@ import Script from "next/script";
 import { AuthProvider } from "@/providers/ContextProviders/AuthContext";
 import { CartProvider } from "@/providers/ContextProviders/CartContext";
 import SessionWrapper from "@/providers/GoogleSessionProvider/SessionWrapper";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/services/auth/[...nextauth]/nextauthConfig";
 import { Toaster } from "sonner";
 
 
@@ -64,7 +62,6 @@ export async function generateMetadata() {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const session = await getServerSession(authOptions);
   return (
     <html lang="en">
       <head>
@@ -107,7 +104,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         /> */}
       </head>
 
-      <SessionWrapper session={session}>
+      <SessionWrapper>
         <body
           className={`${poppins.variable} ${jetbrainsMono.variable} antialiased`}
         >

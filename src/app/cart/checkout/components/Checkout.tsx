@@ -805,6 +805,7 @@ export default function CheckoutComponent() {
 
   // Get the current image for display with proper error handling
   const getCurrentImage = (item) => {
+    if (item.image) return item.image;
     try {
       const images = getProductImagesForColor(
         item.productId,

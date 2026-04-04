@@ -142,6 +142,7 @@ export default async function Page({ params: rawParams }: Props) {
     productApi.getProductsByCategory(slug),
     productApi.getProductsByParentCategory(parentCategory),
   ]);
+
   return (
     <div className="mt-24 px-2 max-w-7xl 2xl:max-w-[1600px] mx-auto">
       {products.length > 0 && <CategoryCollection products={products} />}

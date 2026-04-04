@@ -13,13 +13,13 @@ import { Product } from "../products/types";
 interface CategoryCollectionClientProps {
   products: Product[];
   initialParentCategory?: string;
-  show ?: boolean
+  show?: boolean;
 }
 
 export default function CategoryCollectionClient({
   products,
   initialParentCategory = "all",
-  show
+  show,
 }: CategoryCollectionClientProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -254,9 +254,7 @@ export default function CategoryCollectionClient({
               </div>
 
               <button
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                }
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                 disabled={safePage === totalPages}
                 className="px-6 py-2 rounded-lg border-2 border-red-300 bg-white text-red-900 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed font-semibold transition-all"
               >
