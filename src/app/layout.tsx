@@ -44,6 +44,28 @@ export async function generateMetadata() {
     alternates: {
       canonical: "https://www.gulbhahar.com",
     },
+    openGraph: {
+      title: "Gulbhahar | Ethnic Suits, Sarees & Handmade Juttis for Women",
+      description: "Shop ethnic suits, sarees, handmade juttis, jewellery and bags at Gulbhahar : where Indian tradition meets timeless elegance.",
+      url: "https://www.gulbhahar.com",
+      siteName: "Gulbhahar",
+      locale: "en_US",
+      type: "website",
+      images: [
+        {
+          url: "https://www.gulbhahar.com/gulbhaharlogoo.jpeg",
+          width: 1200,
+          height: 630,
+          alt: "Gulbhahar - Ethnic Suits, Sarees & Handmade Juttis",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Gulbhahar | Ethnic Suits, Sarees & Handmade Juttis for Women",
+      description: "Shop ethnic suits, sarees, handmade juttis, jewellery and bags at Gulbhahar.",
+      images: ["https://www.gulbhahar.com/gulbhaharlogoo.jpeg"],
+    },
     robots: {
       index: true,
       follow: true,
