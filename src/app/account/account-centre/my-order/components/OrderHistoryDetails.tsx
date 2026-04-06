@@ -418,7 +418,7 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
                                     alt={`Product ${i+1}`}
                                     width={52}
                                     height={52}
-                                    quality={60}
+                                    unoptimized
                                     loading="lazy"
                                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                   />

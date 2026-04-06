@@ -153,7 +153,7 @@ export default function ProductCardInteractive({
                 priority={priority && idx === 0}
                 loading={priority && idx === 0 ? undefined : "lazy"}
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                quality={75}
+                unoptimized
                 placeholder="blur"
                 blurDataURL={image.lqip}
                 className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out md:group-hover:scale-110 transition-transform ${

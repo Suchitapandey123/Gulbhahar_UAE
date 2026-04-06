@@ -1285,7 +1285,7 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
                                 alt={item.productName}
                                 width={80}
                                 height={80}
-                                quality={60}
+                                unoptimized
                                 loading="lazy"
                                 className="w-full h-full object-cover"
                               />

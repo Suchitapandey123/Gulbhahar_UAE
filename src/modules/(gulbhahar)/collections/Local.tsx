@@ -50,7 +50,7 @@ export default async function LocalCollection() {
                       width={1000}
                       alt="Gulbhahar Collection Banner"
                       loading="lazy"
-                      quality={75}
+                      unoptimized
                       className="w-full   rounded-lg"
                     />
                   </div>

@@ -5,7 +5,7 @@
 
 const CDN_DOMAINS = [
   'd21ojmskh8ksuv.cloudfront.net', // CloudFront CDN
-  // Add more CDN domains here if needed
+  'cdn.gulbhahar.com',              // Gulbhahar product CDN — already WebP, no need for Vercel re-optimization
 ];
 
 export function shouldSkipOptimization(imageUrl: string): boolean {

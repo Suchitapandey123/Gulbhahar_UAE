@@ -1,6 +1,6 @@
 // @ts-nocheck
 // Server Component
-import { getProductImages } from "@/utils/productImageUtils";
+import { getProductImages, FALLBACK_LQIP } from "@/utils/productImageUtils";
 import Link from "next/link";
 import { Product } from "../types";
 import SimilarProductCardInteractive from "./SimilarProductCardInteractive";
@@ -30,7 +30,9 @@ export const SimilarProductCard = ({
     return rawColors; // Keep as-is for SimilarProductCard (needs full object for hexcode)
   })();
 
-  const imagesToShow = getProductImages(item.productId, item.images);
+  const imagesToShow = getProductImages(item.productId, item.images)
+    .slice(0, 2)
+    .map((img) => ({ url: img.url, lqip: FALLBACK_LQIP }));
 
   const productName = item.name || "Product";
   const productId = item.productId || (item as any).id;

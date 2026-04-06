@@ -28,7 +28,6 @@ interface ProductImageProps {
   alt: string;
   priority?: boolean;
   sizes: string;
-  quality: number;
   hoverScale?: boolean;
 }
 
@@ -38,7 +37,6 @@ const ProductImage = ({
   alt,
   priority = false,
   sizes,
-  quality,
   hoverScale = false,
 }: ProductImageProps) => {
   const [isError, setIsError] = useState(false);
@@ -59,7 +57,7 @@ const ProductImage = ({
         hoverScale && "group-hover:scale-105 transition-transform duration-300"
       )}
       sizes={sizes}
-      quality={quality}
+      unoptimized
       priority={priority}
       placeholder="blur"
       blurDataURL={lqip || FALLBACK_LQIP}
@@ -153,7 +151,6 @@ export const ProductImageGrid = ({
             alt={`${product.name} - View ${selectedIndex + 1}`}
             priority
             sizes="100vw"
-            quality={75}
           />
 
           {/* Zoom hint */}
@@ -205,7 +202,6 @@ export const ProductImageGrid = ({
                   lqip={img.lqip}
                   alt={`${product.name} thumbnail ${index + 1}`}
                   sizes="56px"
-                  quality={60}
                 />
               </button>
             ))}
@@ -229,7 +225,6 @@ export const ProductImageGrid = ({
                 alt={`${product.name} - Image ${idx + 1}`}
                 priority={idx < 2}
                 sizes="(max-width: 1024px) 40vw, 30vw"
-                quality={75}
                 hoverScale
               />
 

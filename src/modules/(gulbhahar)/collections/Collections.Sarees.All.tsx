@@ -49,7 +49,7 @@ export default async function Collections_Sarees_All() {
                       width={1000}
                       alt="Gulbhahar Collection Banner"
                       loading="lazy"
-                      quality={75}
+                      unoptimized
                       className="w-full   rounded-lg"
                     />
                   </div>

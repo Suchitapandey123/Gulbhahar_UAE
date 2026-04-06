@@ -46,7 +46,7 @@ const getProductBundle = cache(
 
 /* ------------------------------------------------------------------ */
 
-export const revalidate = 3600;
+export const revalidate = 21600; // 6 hours
 export const dynamicParams = true;
 
 /* ------------------------------------------------------------------ */

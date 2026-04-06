@@ -1,7 +1,7 @@
 // @ts-nocheck
 // Server Component - No "use client" directive
 import { ProductImages } from "@/types";
-import { getProductImages } from "@/utils/productImageUtils";
+import { getProductImages, FALLBACK_LQIP } from "@/utils/productImageUtils";
 import Link from "next/link";
 import ProductCardInteractive from "./ProductCardInteractive";
 
@@ -42,7 +42,10 @@ export default function ProductCard({
   index = 0,
   priority = false,
 }: ProductCardProps) {
-  const imagesToShow = getProductImages(item.productId, item.images as ProductImages[]).slice(0, 2);
+  // Strip lqip to reduce RSC payload — all card images use shared FALLBACK_LQIP
+  const imagesToShow = getProductImages(item.productId, item.images as ProductImages[])
+    .slice(0, 2)
+    .map((img) => ({ url: img.url, lqip: FALLBACK_LQIP }));
 
   // Support both old format (sizes: string[]) and new format (availableSizes: {name: string}[])
   const sizes: string[] =

@@ -93,9 +93,8 @@ const nextConfig = {
         pathname: '/**',
       }
     ],
-    // Keep all quality values that are explicitly used across components (60, 75, 100)
-    // Removed 65 and 95 which were never explicitly referenced anywhere
-    qualities: [60, 70, 75, 85, 100],
+    // Single quality bucket — Vercel generates one variant per image instead of 5
+    qualities: [75],
     formats: ['image/avif', 'image/webp'],
     // Fewer breakpoints = fewer unique image variants Vercel has to generate and cache
     deviceSizes: [640, 828, 1080, 1200],

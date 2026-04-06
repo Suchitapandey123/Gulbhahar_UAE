@@ -92,7 +92,7 @@ const Home_JuttisCollection: React.FC<HomeJuttisCollectionProps> = ({
                                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                                 priority={index < 2}
                                 loading={index < 2 ? undefined : "lazy"}
-                                quality={60}
+                                unoptimized
                                 placeholder="blur"
                                 blurDataURL={img.lqip}
                                 className="object-cover transition-transform duration-300 group-hover:scale-105"

@@ -75,7 +75,7 @@ export default function SimilarProductCardInteractive({
           fill
           loading="lazy"
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          quality={60}
+          unoptimized
           src={images[0].url}
           alt={productName}
           placeholder="blur"

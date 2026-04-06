@@ -12,7 +12,7 @@ interface PageProps {
   params: Promise<{ parentCategory: string }>;
 }
 
-export const revalidate = 3600;
+export const revalidate = 86400; // 24 hours
 
 const ALLOWED_PARENT_CATEGORIES = ['suit', 'saree', 'lehenga', 'bags', 'jewellery', 'juttis'];
 

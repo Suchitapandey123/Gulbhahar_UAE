@@ -6,7 +6,7 @@ import ContentJuttisForWomen from "./components/ContentJuttisForWomen";
 
 // ISR: Revalidate every hour (fallback), or on-demand via /api/revalidate
 // Uses 'collections' and 'collection-juttis-for-women' tags for targeted revalidation
-export const revalidate = 3600;
+export const revalidate = 86400; // 24 hours
 
 export async function generateMetadata() {
   return {

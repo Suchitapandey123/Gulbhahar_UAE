@@ -88,7 +88,7 @@ export const ImageSlider = ({ images, alt, priority = false, useNativeImg = fals
             priority={priority && idx === 0}
             loading={priority && idx === 0 ? undefined : "lazy"}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            quality={60}
+            unoptimized
             src={image.url}
             alt={`${alt} - ${idx + 1}`}
             placeholder="blur"

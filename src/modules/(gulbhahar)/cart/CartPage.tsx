@@ -282,10 +282,9 @@ const CartPage = () => {
                             alt={item.name}
                             width={64} 
                             height={64}
-                            quality={60}
                             sizes="64px"
                             loading="lazy"
-                            unoptimized={false}
+                            unoptimized
                             className="w-full h-full object-cover"
                           />
                         </div>

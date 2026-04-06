@@ -51,9 +51,8 @@ const CollectionCard = ({ category, index }: CollectionCardProps) => {
           src={category.image}
           alt={category.name}
           fill
-          unoptimized={category.image.includes('d21ojmskh8ksuv.cloudfront.net')}
+          unoptimized={category.image.includes('d21ojmskh8ksuv.cloudfront.net') || category.image.includes('cdn.gulbhahar.com')}
           sizes="(max-width: 640px) 80vw, 400px"
-          quality={60}
           priority={index < 2}
           loading={index < 2 ? undefined : "lazy"}
           placeholder="blur"

@@ -349,7 +349,7 @@ export const ImageModal = ({
                   fill
                   className="object-cover"
                   sizes="64px"
-                  quality={60}
+                  unoptimized
                   placeholder="blur"
                   blurDataURL={img.lqip || FALLBACK_LQIP}
                 />

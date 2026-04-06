@@ -4,7 +4,7 @@ import JuttisCollection from "../punjabi-juttis/components/Juttis.Collection";
 import ContentJuttis from "./components/ContentJuttis";
 // ISR: Revalidate every hour (fallback), or on-demand via /api/revalidate
 // Uses 'collections' and 'collection-bridal-juttis' tags for targeted revalidation
-export const revalidate = 3600;
+export const revalidate = 86400; // 24 hours
 
 export async function generateMetadata() {
   return {
