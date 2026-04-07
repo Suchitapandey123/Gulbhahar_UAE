@@ -62,6 +62,13 @@ export async function generateMetadata(props: PageParams): Promise<Metadata> {
   const title = product.seo?.metaTitle;
   const description = product.seo?.metaDescription;
   const keywords = product.seo?.keywords;
+
+  // Build OG image URL from first product image
+  const firstImg = (product.images?.[0] as any)?.files?.[0];
+  const ogImageUrl = firstImg?.name
+    ? `https://cdn.gulbhahar.com/ProductImages/${params.id}/display/${firstImg.name}.webp`
+    : "https://www.gulbhahar.com/gulbhaharlogoo.jpeg";
+
   return {
     title,
     description,
@@ -76,6 +83,13 @@ export async function generateMetadata(props: PageParams): Promise<Metadata> {
       locale: "en_US",
       siteName: "Gulbhahar",
       url: `https://www.gulbhahar.com/products/${params.id}`,
+      images: [{ url: ogImageUrl, width: 800, height: 600, alt: title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImageUrl],
     },
   };
 }

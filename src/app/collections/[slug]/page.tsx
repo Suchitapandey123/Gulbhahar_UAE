@@ -110,6 +110,13 @@ export async function generateMetadata({
         url: `https://www.gulbhahar.com/collections/${slug}`,
         siteName: "Gulbhahar",
         locale: "en_US",
+        images: [{ url: "https://www.gulbhahar.com/gulbhaharlogoo.jpeg", width: 1200, height: 630, alt: "Gulbhahar" }],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        images: ["https://www.gulbhahar.com/gulbhaharlogoo.jpeg"],
       },
     };
   } catch (err) {
