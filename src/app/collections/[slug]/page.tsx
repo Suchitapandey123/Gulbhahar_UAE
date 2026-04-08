@@ -143,11 +143,13 @@ export default async function Page({ params: rawParams }: Props) {
   if (!validateRes?.success) notFound();
 
   const page = await getPageDataCached(slug);
-  if (!page) notFound();
-  const parentCategory = page.parentCategory[0];
+  if (!page || page.isFeatured === false) notFound();
+  
+  const parentCategory = page.parentCategory?.[0] || page.category || slug;
+  
   const [products, parentCategoryProducts] = await Promise.all([
     productApi.getProductsByCategory(slug),
-    productApi.getProductsByParentCategory(parentCategory),
+    parentCategory ? productApi.getProductsByParentCategory(parentCategory) : Promise.resolve([]),
   ]);
 
   return (

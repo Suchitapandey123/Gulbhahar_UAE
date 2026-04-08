@@ -56,16 +56,22 @@ const parseDetailsContent = (detail: any): ParsedDetail => {
     }
 
     // Extract key-values
-    const kvMatch = description.match(/^Details:\n((?:.+:.+\n)+)\n/);
+    const kvMatch = description.match(/Details:\s*\n([\s\S]*?)(?:\n\s*---|\.\n\n---)/);
     if (kvMatch) {
-      keyValues = kvMatch[1]
-        .split("\n")
-        .filter((line: string) => line.includes(":"))
-        .map((line: string) => {
-          const [k, v] = line.split(":");
-          return { key: k.trim(), value: v.trim() };
+      const detailsText = kvMatch[1].trim();
+      const lines = detailsText.split("\n").filter((line: string) => line.trim() && line.includes(":"));
+      
+      if (lines.length > 0) {
+        keyValues = lines.map((line: string) => {
+          const colonIndex = line.indexOf(":");
+          const k = line.substring(0, colonIndex).trim();
+          const v = line.substring(colonIndex + 1).trim();
+          return { key: k, value: v };
         });
-      description = description.replace(kvMatch[0], "").trim();
+      }
+      
+      // Remove the Details section and separator from description
+      description = description.replace(/Details:[\s\S]*?---\s*\n/, "").trim();
     }
 
     // Remove separator
@@ -145,7 +151,7 @@ const ContentSection = ({ page }: ContentSectionProps) => {
           </section>
         )}
 
-        {/* Section 2 - With Highlight in Red Box */}
+        {/* Section 2 - With Key-Values in Boxes */}
         {p.parsedAdditionalDetails?.[1] && (
           <section>
             <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
@@ -158,18 +164,45 @@ const ContentSection = ({ page }: ContentSectionProps) => {
                 </span>
               </div>
             </div>
-            <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
-              {p.parsedAdditionalDetails[1].description}
-            </p>
 
-            {/* Highlight in Red Box */}
-            {p.parsedAdditionalDetails[1].highlight && (
-              <div className="bg-gradient-to-r from-red-900 to-red-700 text-white p-4 sm:p-6 rounded-lg sm:rounded-xl">
-                <p className="font-semibold text-base sm:text-lg italic leading-relaxed">
-                  {p.parsedAdditionalDetails[1].highlight}
-                </p>
-              </div>
+            {/* Description */}
+            {p.parsedAdditionalDetails[1].description && (
+              <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
+                {p.parsedAdditionalDetails[1].description}
+              </p>
             )}
+
+            {/* Key-Values as Boxes */}
+            {p.parsedAdditionalDetails[1].keyValues &&
+              p.parsedAdditionalDetails[1].keyValues.length > 0 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                  {p.parsedAdditionalDetails[1].keyValues.map((kv, index) => (
+                    <div
+                      key={index}
+                      className="bg-white border border-red-200 rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow duration-300 
+     flex flex-col items-center justify-center text-center"
+                    >
+                      <p className="font-bold text-red-900 text-base sm:text-lg mb-2 sm:mb-3">
+                        {kv.key}
+                      </p>
+                      <p className="text-gray-600 text-sm sm:text-base">
+                        {kv.value}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+            {/* Highlight in Red Box (if no key-values) */}
+            {(!p.parsedAdditionalDetails[1].keyValues ||
+              p.parsedAdditionalDetails[1].keyValues.length === 0) &&
+              p.parsedAdditionalDetails[1].highlight && (
+                <div className="bg-gradient-to-r from-red-900 to-red-700 text-white p-4 sm:p-6 rounded-lg sm:rounded-xl">
+                  <p className="font-semibold text-base sm:text-lg italic leading-relaxed">
+                    {p.parsedAdditionalDetails[1].highlight}
+                  </p>
+                </div>
+              )}
           </section>
         )}
 

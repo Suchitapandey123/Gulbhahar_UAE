@@ -25,6 +25,38 @@ const CACHE_TTL_DELETED = 60 * 60 * 1000;    // 1 hr for deleted products
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "https://api.gulbhahar.com";
 
+async function checkCollectionGone(slug: string): Promise<boolean> {
+  const cacheKey = `collection:${slug}`;
+  const cached = goneCache.get(cacheKey);
+  if (cached && cached.expiresAt > Date.now()) return cached.gone;
+
+  try {
+    const res = await fetch(`${API_BASE}/api/pages/validateSlug?slug=${slug}`, {
+      signal: AbortSignal.timeout(3000),
+    });
+
+    let gone = false;
+    if (res.status === 404 || res.status === 410) {
+      gone = true;
+    } else if (res.ok) {
+      try {
+        const data = await res.json();
+        gone = data?.success === false;
+      } catch {
+        gone = false;
+      }
+    }
+
+    goneCache.set(cacheKey, {
+      gone,
+      expiresAt: Date.now() + (gone ? CACHE_TTL_DELETED : CACHE_TTL_ACTIVE),
+    });
+    return gone;
+  } catch {
+    return false;
+  }
+}
+
 async function checkProductGone(productId: string): Promise<boolean> {
   const cached = goneCache.get(productId);
   if (cached && cached.expiresAt > Date.now()) return cached.gone;
@@ -97,7 +129,33 @@ export async function middleware(request: NextRequest) {
     return res;
   }
 
-  // ── 2. Redirect synonyms → canonical routes ───────────────────────────────
+  // ── 2. Collection 410 check ──────────────────────────────────────────────
+  const collectionMatch = pathname.match(/^\/collections\/([^/]+)$/);
+  if (collectionMatch) {
+    const slug = collectionMatch[1];
+    // Skip product ID slugs — those redirect to /products/
+    if (!/^P\d{11}$/.test(slug)) {
+      const gone = await checkCollectionGone(slug);
+      if (gone) {
+        const ua = request.headers.get("user-agent") ?? "";
+        const isBot = /bot|crawler|spider|googlebot|bingbot|slurp|duckduck|baidu|yandex/i.test(ua);
+
+        if (isBot) {
+          return new NextResponse(null, {
+            status: 410,
+            headers: {
+              "X-Robots-Tag": "noindex, nofollow",
+              "Cache-Control": "public, max-age=3600, immutable",
+            },
+          });
+        }
+
+        return NextResponse.rewrite(new URL("/410", request.url), { status: 410 });
+      }
+    }
+  }
+
+  // ── 3. Redirect synonyms → canonical routes ───────────────────────────────
   for (const rule of REDIRECT_RULES) {
     if (rule.match.some((slug) => cleanPath === `/${slug}`)) {
       const url = request.nextUrl.clone();
@@ -114,6 +172,7 @@ export const config = {
   // Exclude collections/*, category pages, static pages — they must stay cacheable
   matcher: [
     "/products/:path*",
+    "/collections/:path*",
     "/jutti",
     "/jutis",
     "/lehngas",
