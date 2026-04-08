@@ -226,6 +226,28 @@ const nextIndex = (currentIndex + 1) % slides.length;
         .no-scrollbar::-webkit-scrollbar {
           display: none;
         }
+
+        /* Shimmer loading effect */
+        @keyframes shimmer {
+          0% {
+            background-position: -1000px 0;
+          }
+          100% {
+            background-position: 1000px 0;
+          }
+        }
+
+        .hero-shimmer {
+          background: linear-gradient(
+            90deg,
+            #111111 0%,
+            #1a1a1a 20%,
+            #111111 40%,
+            #111111 100%
+          );
+          background-size: 1000px 100%;
+          animation: shimmer 2s linear infinite;
+        }
       `}</style>
 
       <div
@@ -256,8 +278,10 @@ const nextIndex = (currentIndex + 1) % slides.length;
               const isPrevious = index === (currentIndex - 1 + slides.length) % slides.length;
               const isFirstImage = index === 0;
               
-              // Always render all images but keep them in DOM for instant display
-              const shouldUsePriority = isFirstImage || index <= 1;
+              // First image gets priority, all others eager load for instant transitions
+              const shouldUsePriority = isFirstImage;
+              // Preload first 2 images for instant display
+              const shouldPreload = index <= 1;
 
               return (
                 <div
@@ -265,9 +289,10 @@ const nextIndex = (currentIndex + 1) % slides.length;
                   className="absolute inset-0 w-full h-full image-container"
                   style={{
                     opacity: isCurrent ? 1 : 0,
-                    zIndex: isCurrent ? 20 : 15,
+                    zIndex: isCurrent ? 20 : isNext ? 19 : 15,
                     transition: 'opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
                     pointerEvents: isCurrent ? "auto" : "none",
+                    backgroundColor: '#111111', // Fallback dark background
                   }}
                 >
                   {/* REVERSE ZOOM CONTAINER */}
@@ -281,30 +306,38 @@ const nextIndex = (currentIndex + 1) % slides.length;
                     }}
                   >
                     {/* Desktop Image */}
-                    <div className="hidden md:block absolute inset-0 w-full h-full bg-gray-900">
+                    <div className="hidden md:block absolute inset-0 w-full h-full" style={{ backgroundColor: '#111111' }}>
                       <Image
                         src={slide.image}
                         alt={slide.title}
                         fill
-                        unoptimized
                         sizes="100vw"
                         className="object-cover hero-image"
                         priority={shouldUsePriority}
-                        loading={shouldUsePriority ? undefined : "lazy"}
+                        fetchPriority={shouldUsePriority ? "high" : "auto"}
+                        loading="eager"
+                        quality={75}
+                        placeholder="blur"
+                        blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMxMTExMTEiLz48L3N2Zz4="
+                        style={{ objectFit: 'cover' }}
                       />
                     </div>
 
                     {/* Mobile Image */}
-                    <div className="md:hidden absolute inset-0 w-full h-full bg-gray-900">
+                    <div className="md:hidden absolute inset-0 w-full h-full" style={{ backgroundColor: '#111111' }}>
                       <Image
                         src={slide.mobileImage}
                         alt={slide.title}
                         fill
-                        unoptimized
                         sizes="100vw"
                         className="object-cover hero-image"
                         priority={shouldUsePriority}
-                        loading={shouldUsePriority ? undefined : "lazy"}
+                        fetchPriority={shouldUsePriority ? "high" : "auto"}
+                        loading="eager"
+                        quality={75}
+                        placeholder="blur"
+                        blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMxMTExMTEiLz48L3N2Zz4="
+                        style={{ objectFit: 'cover' }}
                       />
                     </div>
 

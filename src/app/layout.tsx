@@ -87,6 +87,34 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en">
       <head>
+        {/* Preload critical hero images with fetchpriority */}
+        <link
+          rel="preload"
+          as="image"
+          href="https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/1.webp"
+          media="(min-width: 768px)"
+          fetchPriority="high"
+        />
+        <link
+          rel="preload"
+          as="image"
+          href="https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/1-mobile.webp"
+          media="(max-width: 767px)"
+          fetchPriority="high"
+        />
+        <link
+          rel="preload"
+          as="image"
+          href="https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/2.webp"
+          media="(min-width: 768px)"
+        />
+        <link
+          rel="preload"
+          as="image"
+          href="https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/2-mobile.webp"
+          media="(max-width: 767px)"
+        />
+        
         {/* Preconnect for performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -96,6 +124,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
         {/* CloudFront CDN for videos/images — preconnect for first paint */}
         <link rel="preconnect" href="https://d21ojmskh8ksuv.cloudfront.net" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://d21ojmskh8ksuv.cloudfront.net" />
         {/* S3 only used for product images loaded lazily — dns-prefetch is enough */}
         <link rel="dns-prefetch" href="https://gulbahar-backend.s3.ap-south-1.amazonaws.com" />
         <link rel="dns-prefetch" href="https://cdn.gulbhahar.com" />
