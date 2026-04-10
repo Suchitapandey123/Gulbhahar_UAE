@@ -105,7 +105,7 @@ const nextIndex = (currentIndex + 1) % slides.length;
 
   // Auto-advance carousel with 6-second timing
   useEffect(() => {
-    if (!isPlaying || isTransitioning) {
+    if (!isPlaying) {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
@@ -118,15 +118,8 @@ const nextIndex = (currentIndex + 1) % slides.length;
 
     timerRef.current = setTimeout(() => {
       setIsTransitioning(true);
-
-      setTimeout(() => {
-        setCurrentIndex((prev) => {
-          const next = (prev + 1) % slides.length;
-
-          return next;
-        });
-        setIsTransitioning(false);
-      }, 1200);
+      setCurrentIndex((prev) => (prev + 1) % slides.length);
+      setTimeout(() => setIsTransitioning(false), 1200);
     }, 6000);
 
     return () => {
@@ -134,7 +127,7 @@ const nextIndex = (currentIndex + 1) % slides.length;
         clearTimeout(timerRef.current);
       }
     };
-  }, [currentIndex, isPlaying, slides.length, isTransitioning]);
+  }, [currentIndex, isPlaying, slides.length]);
 
 
   // Text animation variants - removed blur
@@ -178,10 +171,8 @@ const nextIndex = (currentIndex + 1) % slides.length;
       clearTimeout(timerRef.current);
     }
 
-    setTimeout(() => {
-      setCurrentIndex(index);
-      setIsTransitioning(false);
-    }, 1200);
+    setCurrentIndex(index);
+    setTimeout(() => setIsTransitioning(false), 1200);
   };
 
   const togglePlay = () => {
@@ -248,6 +239,13 @@ const nextIndex = (currentIndex + 1) % slides.length;
           background-size: 1000px 100%;
           animation: shimmer 2s linear infinite;
         }
+
+        ${slides.map((slide, i) => `
+          @keyframes kenBurns${i} {
+            from { transform: scale(${slide.zoomConfig.startScale}) translateY(${slide.zoomConfig.startY}) translateX(${slide.zoomConfig.startX}); }
+            to   { transform: scale(${slide.zoomConfig.endScale})   translateY(${slide.zoomConfig.endY})   translateX(${slide.zoomConfig.endX}); }
+          }
+        `).join('')}
       `}</style>
 
       <div
@@ -298,11 +296,15 @@ const nextIndex = (currentIndex + 1) % slides.length;
                   {/* REVERSE ZOOM CONTAINER */}
                   <div
                     className="reverse-zoom-container"
-                    style={{
-                      transform: isCurrent && isPlaying
-                        ? `scale(${slide.zoomConfig.endScale}) translateY(${slide.zoomConfig.endY}) translateX(${slide.zoomConfig.endX})`
-                        : `scale(${slide.zoomConfig.startScale}) translateY(${slide.zoomConfig.startY}) translateX(${slide.zoomConfig.startX})`,
-                      transition: isCurrent && isPlaying ? `transform ${slide.zoomConfig.duration}s linear` : 'none',
+                    style={isCurrent ? {
+                      animationName: `kenBurns${index}`,
+                      animationDuration: `${slide.zoomConfig.duration}s`,
+                      animationTimingFunction: 'linear',
+                      animationFillMode: 'forwards',
+                      animationPlayState: isPlaying ? 'running' : 'paused',
+                    } : {
+                      transform: `scale(${slide.zoomConfig.startScale}) translateY(${slide.zoomConfig.startY}) translateX(${slide.zoomConfig.startX})`,
+                      animation: 'none',
                     }}
                   >
                     {/* Desktop Image */}
@@ -360,7 +362,10 @@ const nextIndex = (currentIndex + 1) % slides.length;
                   <div className="lg:col-span-7 space-y-4 sm:space-y-6 md:space-y-8 text-center lg:text-left">
                     {/* Main title */}
                     <motion.div
-                      variants={textVariants}
+                      key={`title-${currentIndex}`}
+                      initial={{ opacity: 0, y: 24 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.2, ease: [0.23, 1, 0.32, 1] }}
                       className="space-y-2 sm:space-y-3 md:space-y-4"
                     >
                       <h2
@@ -376,7 +381,10 @@ const nextIndex = (currentIndex + 1) % slides.length;
 
                     {/* Description */}
                     <motion.p
-                      variants={textVariants}
+                      key={`desc-${currentIndex}`}
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.35, ease: [0.23, 1, 0.32, 1] }}
                       className="text-sm sm:text-base md:text-lg lg:text-xl text-white/70 font-light leading-relaxed max-w-lg mx-auto lg:mx-0"
                     >
                       {currentSlide.description}
@@ -384,7 +392,10 @@ const nextIndex = (currentIndex + 1) % slides.length;
 
                     {/* CTA Button */}
                     <motion.div
-                      variants={textVariants}
+                      key={`cta-${currentIndex}`}
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.5, ease: [0.23, 1, 0.32, 1] }}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       className="inline-flex items-center gap-2 sm:gap-3 md:gap-4 px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 rounded-full bg-white text-black hover:bg-white/90 transition-all duration-300 cursor-pointer group"

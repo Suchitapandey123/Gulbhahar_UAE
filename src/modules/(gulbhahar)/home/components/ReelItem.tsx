@@ -65,7 +65,12 @@ const ReelItem = ({ reel }: ReelItemProps) => {
   };
 
   return (
-    <div className="relative flex-none w-[280px] sm:w-[300px] md:w-[340px] aspect-[9/16] bg-neutral-900 rounded-2xl overflow-hidden snap-center group shadow-lg">
+    <div
+      className="relative flex-none w-[280px] sm:w-[300px] md:w-[340px] aspect-[9/16] rounded-2xl overflow-hidden snap-center group shadow-lg"
+      style={{
+        background: `url(${reel.posterUrl}) center/cover no-repeat, linear-gradient(135deg, #7a4a2a 0%, #5c3018 100%)`,
+      }}
+    >
       {/* Poster fallback */}
       <Image
         src={reel.posterUrl}
@@ -83,7 +88,7 @@ const ReelItem = ({ reel }: ReelItemProps) => {
       {/* Video */}
       <video
         ref={videoRef}
-        poster={reel.posterUrl}
+        poster={`${reel.videoUrl}#t=0.1`}
         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
           isLoaded && !hasError ? "opacity-100" : "opacity-0"
         }`}

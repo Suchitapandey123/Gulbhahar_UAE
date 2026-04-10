@@ -54,9 +54,15 @@ const ReelCard = ({ reel }: { reel: ReelData }) => {
   }, [reel.videoUrl]);
 
   return (
-    <div className="relative flex-none w-[300px] sm:w-[380px] aspect-[9/16] overflow-hidden group bg-gradient-to-br from-neutral-900 to-black">
+    <div
+      className="relative flex-none w-[300px] sm:w-[380px] aspect-[9/16] overflow-hidden group"
+      style={{
+        background: `url(${reel.product.image}) center/cover no-repeat, linear-gradient(135deg, #7a4a2a 0%, #5c3018 100%)`,
+      }}
+    >
       <video
         ref={videoRef}
+        poster={reel.product.image}
         className="absolute inset-0 w-full h-full object-cover"
         muted={isMuted}
         loop
