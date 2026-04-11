@@ -117,7 +117,7 @@ const ContentSection = ({ page }: ContentSectionProps) => {
       {/* Main Heading */}
       <div className="text-center sm:text-start mb-8 sm:mb-12">
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight px-2">
-          {p.metaTitle}{" "}
+          {p.onPageTitle || p.metaTitle}{" "}
         </h1>
       </div>
 
@@ -140,9 +140,9 @@ const ContentSection = ({ page }: ContentSectionProps) => {
                 <span className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   1
                 </span>
-                <span className="leading-tight">
+                <h2 className="leading-tight">
                   {p.parsedAdditionalDetails[0].subTitle1}
-                </span>
+                </h2>
               </div>
             </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
@@ -159,9 +159,9 @@ const ContentSection = ({ page }: ContentSectionProps) => {
                 <span className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   2
                 </span>
-                <span className="leading-tight">
+                <h2 className="leading-tight">
                   {p.parsedAdditionalDetails[1].subTitle1}
-                </span>
+                </h2>
               </div>
             </div>
 
@@ -214,9 +214,9 @@ const ContentSection = ({ page }: ContentSectionProps) => {
                 <span className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   3
                 </span>
-                <span className="leading-tight">
+                <h2 className="leading-tight">
                   {p.parsedAdditionalDetails[2].subTitle1}
-                </span>
+                </h2>
               </div>
             </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
@@ -233,9 +233,9 @@ const ContentSection = ({ page }: ContentSectionProps) => {
                 <span className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   4
                 </span>
-                <span className="leading-tight">
+                <h2 className="leading-tight">
                   {p.parsedAdditionalDetails[3].subTitle1}
-                </span>
+                </h2>
               </div>
             </div>
 
@@ -309,9 +309,9 @@ const ContentSection = ({ page }: ContentSectionProps) => {
                 <span className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   5
                 </span>
-                <span className="leading-tight">
+                <h2 className="leading-tight">
                   {p.parsedAdditionalDetails[4].subTitle1}
-                </span>
+                </h2>
               </div>
             </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
@@ -328,9 +328,9 @@ const ContentSection = ({ page }: ContentSectionProps) => {
                 <span className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   6
                 </span>
-                <span className="leading-tight">
+                <h2 className="leading-tight">
                   {p.parsedAdditionalDetails[5].subTitle1}
-                </span>
+                </h2>
               </div>
             </div>
 
@@ -391,9 +391,9 @@ const ContentSection = ({ page }: ContentSectionProps) => {
                 <span className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   7
                 </span>
-                <span className="leading-tight">
+                <h2 className="leading-tight">
                   {p.parsedAdditionalDetails[6].subTitle1}
-                </span>
+                </h2>
               </div>
             </div>
             <p className="text-gray-300 leading-relaxed text-sm sm:text-base lg:text-lg">
@@ -410,9 +410,9 @@ const ContentSection = ({ page }: ContentSectionProps) => {
                 <span className="w-8 h-8 bg-blue-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                   8
                 </span>
-                <span className="leading-tight">
+                <h2 className="leading-tight">
                   {p.parsedAdditionalDetails[7].subTitle1}
-                </span>
+                </h2>
               </div>
             </div>
             <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
@@ -443,7 +443,7 @@ const ContentSection = ({ page }: ContentSectionProps) => {
                   <span className="w-8 h-8 bg-green-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
                     {index + 9}
                   </span>
-                  <span className="leading-tight">{detail.subTitle1}</span>
+                  <h2 className="leading-tight">{detail.subTitle1}</h2>
                 </div>
               </div>
               <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">

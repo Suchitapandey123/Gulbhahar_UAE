@@ -35,6 +35,7 @@ export interface PageData {
   metaDescription?: string;
   keywords?: string[];
   parentCategory: string[];
+  onPageTitle?: string;
   onPageDescription?: string;
   isFeatured?: boolean;
   additionalDetails?: AdditionalDetail[];
