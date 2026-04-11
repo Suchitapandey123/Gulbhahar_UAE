@@ -69,13 +69,31 @@ export interface SoulOfGulbhaharItem {
   highlight: string;
 }
 
+export interface MoreAboutContent {
+  content?: string;
+  h1: string;
+  children?: ChildrenH2Content[]
+}
+
+export interface ChildrenH2Content {
+  h2: string;
+  content?: string;
+  children?: ChildrenH3Content[]
+}
+export interface ChildrenH3Content {
+  h3 : string;
+  content ?: string;
+}
+
 export interface HomePageData {
   "hero-section": HeroSectionItem[];
   "available-collections": AvailableCollectionItem[];
-  culture: CultureItem[];
+  "culture": CultureItem[];
   "stories-in-motion": StoryInMotionItem[];
   "watch-and-shop": WatchAndShopItem[];
   "soul-of-gulbhahar": SoulOfGulbhaharItem[];
+  "more-about": MoreAboutContent[];
+
 }
 
 export interface HomePageResponse {

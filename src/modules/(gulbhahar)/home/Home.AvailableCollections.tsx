@@ -4,45 +4,6 @@ import Link from "next/link";
 import CollectionCard from "./components/CollectionCard";
 import { AvailableCollectionItem } from "@/types/home.types";
 
-const CATEGORIES = [
-  {
-    name: "Lehengas",
-    image:
-      "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/lehenga.webp",
-    slug: "lehenga",
-  },
-  {
-    name: "Bags",
-    image:
-      "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/bags.webp",
-    slug: "bags",
-  },
-  {
-    name: "Sarees",
-    image:
-      "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/saree.webp",
-    slug: "saree",
-  },
-  {
-    name: "Jewellery",
-    image:
-      "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/jewellery.webp",
-    slug: "jewellery",
-  },
-  {
-    name: "Suits",
-    image:
-      "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/suits.webp",
-    slug: "suit",
-  },
-  {
-    name: "Juttis",
-    image:
-      "https://d21ojmskh8ksuv.cloudfront.net/static/home/available-collections/juttis.webp",
-    slug: "juttis",
-  },
-];
-
 interface AvailableCollectionsProps {
   AvailableCollections : AvailableCollectionItem[]
 }
@@ -60,11 +21,11 @@ const Home_AvailableCollections = ({AvailableCollections} : AvailableCollections
           </span>
         </div>
 
-        <h1 className="text-5xl md:text-7xl text-center font-serif text-[#1a1a1a] leading-[1.1]">
+        <span className="text-5xl md:text-7xl text-center font-serif text-[#1a1a1a] leading-[1.1]">
           Our{" "}
           <span className="italic text-[#800000] serif-italics">Available</span>{" "}
           Collections
-        </h1>
+        </span>
 
         <p className="text-gray-500 text-center text-base md:text-lg leading-relaxed font-light">
           Experience our latest silhouettes in motion. Every thread tells a

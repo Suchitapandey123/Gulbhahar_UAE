@@ -8,32 +8,6 @@ import ShowcaseReelItem from "./components/ShowcaseReelItem";
 const FullscreenReelViewer = dynamic(() => import("../common/FullscreenReelViewer"), { ssr: false });
 import { StoryInMotionItem } from "@/types/home.types";
 
-// const CULTURAL_REELS: ReelData[] = [
-//   {
-//     id: 1,
-//     videoUrl:
-//       "https://d21ojmskh8ksuv.cloudfront.net/static/home/stories-in-motion/11.mp4",
-//     title: "The Art of Zardozi",
-//   },
-//   {
-//     id: 2,
-//     videoUrl:
-//       "https://d21ojmskh8ksuv.cloudfront.net/static/home/stories-in-motion/14.mp4",
-//     title: "Handloom Heritage",
-//   },
-//   {
-//     id: 3,
-//     videoUrl:
-//       "https://d21ojmskh8ksuv.cloudfront.net/static/home/stories-in-motion/13.mp4",
-//     title: "Mastering Silk",
-//   },
-//   {
-//     id: 4,
-//     videoUrl:
-//       "https://d21ojmskh8ksuv.cloudfront.net/static/home/stories-in-motion/12.mp4",
-//     title: "The Craftsmanship Story",
-//   },
-// ];
 
 interface OurShowcaseProps {
   StoriesInMotion : StoryInMotionItem[]
