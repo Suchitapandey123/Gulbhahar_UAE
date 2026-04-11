@@ -6,12 +6,12 @@ import { useEffect, useRef, useState } from "react";
 interface ReelData {
   id: number;
   videoUrl: string;
+  thumbnailUrl: string;
   title: string;
   slug: string;
   product: {
     name: string;
     price: string;
-    image: string;
   };
 }
 
@@ -34,7 +34,6 @@ const ReelCard = ({ reel }: { reel: ReelData }) => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            // Set src only when first visible — zero network cost until then
             if (!video.src) {
               video.src = reel.videoUrl;
               video.load();
@@ -57,12 +56,15 @@ const ReelCard = ({ reel }: { reel: ReelData }) => {
     <div
       className="relative flex-none w-[300px] sm:w-[380px] aspect-[9/16] overflow-hidden group"
       style={{
-        background: `url(${reel.product.image}) center/cover no-repeat, linear-gradient(135deg, #7a4a2a 0%, #5c3018 100%)`,
+        backgroundImage: `url(${reel.thumbnailUrl})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
+      {/* Video — loads only when section is visible */}
       <video
         ref={videoRef}
-        poster={reel.product.image}
+        poster={reel.thumbnailUrl}
         className="absolute inset-0 w-full h-full object-cover"
         muted={isMuted}
         loop
@@ -73,14 +75,15 @@ const ReelCard = ({ reel }: { reel: ReelData }) => {
       {/* Overlay Gradients */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
 
-      {/* Play Indicator — visible until user taps */}
+      {/* Play Indicator — shown when not yet playing */}
       {!isPlaying && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="p-5 rounded-full bg-white/20 backdrop-blur-md animate-pulse">
+          <div className="p-5 rounded-full bg-white/20 backdrop-blur-md">
             <Play className="text-white fill-white" size={32} />
           </div>
         </div>
       )}
+
       {/* Header Info */}
       <div className="absolute top-4 left-4 right-4 flex justify-between items-start z-10">
         <div className="bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/20">

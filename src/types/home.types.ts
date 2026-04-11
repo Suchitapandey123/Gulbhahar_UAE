@@ -42,18 +42,19 @@ export interface CultureItem {
 export interface StoryInMotionItem {
   id: number;
   videoUrl: string;
+  thumbnailUrl: string;
   title: string;
 }
 
 export interface WatchAndShopProduct {
   name: string;
   price: string;
-  image: string;
 }
 
 export interface WatchAndShopItem {
   id: number;
   videoUrl: string;
+  thumbnailUrl: string;
   title: string;
   product: WatchAndShopProduct;
   slug: string;

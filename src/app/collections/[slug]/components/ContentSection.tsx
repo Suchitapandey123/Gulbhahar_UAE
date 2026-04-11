@@ -1,5 +1,18 @@
 import { notFound } from "next/navigation";
 import { PageData } from "@/types/page.types";
+import ReactMarkdown from "react-markdown";
+
+const mdComponents = {
+  a: ({ node, ...props }: any) => (
+    <a {...props} target="_blank" rel="noopener noreferrer" className="text-red-800 underline hover:text-red-600" />
+  ),
+};
+
+const Md = ({ children, className }: { children: string; className?: string }) => (
+  <div className={className}>
+    <ReactMarkdown components={mdComponents}>{children}</ReactMarkdown>
+  </div>
+);
 
 interface ParsedDetail {
   description: string;
@@ -60,7 +73,7 @@ const parseDetailsContent = (detail: any): ParsedDetail => {
     if (kvMatch) {
       const detailsText = kvMatch[1].trim();
       const lines = detailsText.split("\n").filter((line: string) => line.trim() && line.includes(":"));
-      
+
       if (lines.length > 0) {
         keyValues = lines.map((line: string) => {
           const colonIndex = line.indexOf(":");
@@ -69,7 +82,7 @@ const parseDetailsContent = (detail: any): ParsedDetail => {
           return { key: k, value: v };
         });
       }
-      
+
       // Remove the Details section and separator from description
       description = description.replace(/Details:[\s\S]*?---\s*\n/, "").trim();
     }
@@ -124,9 +137,9 @@ const ContentSection = ({ page }: ContentSectionProps) => {
       {/* Introduction */}
       {p.onPageDescription && (
         <div className="prose prose-base sm:prose-lg max-w-none mb-8 sm:mb-12">
-          <p className="text-gray-700 leading-relaxed text-base sm:text-lg px-2">
+          <Md className="text-gray-700 leading-relaxed text-base sm:text-lg px-2">
             {p.onPageDescription}
-          </p>
+          </Md>
         </div>
       )}
 
@@ -145,9 +158,9 @@ const ContentSection = ({ page }: ContentSectionProps) => {
                 </h2>
               </div>
             </div>
-            <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
+            <Md className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
               {p.parsedAdditionalDetails[0].description}
-            </p>
+            </Md>
           </section>
         )}
 
@@ -167,9 +180,9 @@ const ContentSection = ({ page }: ContentSectionProps) => {
 
             {/* Description */}
             {p.parsedAdditionalDetails[1].description && (
-              <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
+              <Md className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
                 {p.parsedAdditionalDetails[1].description}
-              </p>
+              </Md>
             )}
 
             {/* Key-Values as Boxes */}
@@ -179,7 +192,7 @@ const ContentSection = ({ page }: ContentSectionProps) => {
                   {p.parsedAdditionalDetails[1].keyValues.map((kv, index) => (
                     <div
                       key={index}
-                      className="bg-white border border-red-200 rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow duration-300 
+                      className="bg-white border border-red-200 rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow duration-300
      flex flex-col items-center justify-center text-center"
                     >
                       <p className="font-bold text-red-900 text-base sm:text-lg mb-2 sm:mb-3">
@@ -219,9 +232,9 @@ const ContentSection = ({ page }: ContentSectionProps) => {
                 </h2>
               </div>
             </div>
-            <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
+            <Md className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
               {p.parsedAdditionalDetails[2].description}
-            </p>
+            </Md>
           </section>
         )}
 
@@ -239,7 +252,7 @@ const ContentSection = ({ page }: ContentSectionProps) => {
               </div>
             </div>
 
-            {/* First 2 sentences from description */}
+            {/* Description with points */}
             {p.parsedAdditionalDetails[3].description && (
               <div className="mb-4 sm:mb-6">
                 {(() => {
@@ -256,10 +269,9 @@ const ContentSection = ({ page }: ContentSectionProps) => {
 
                   return (
                     <>
-                      {/* FIRST 2 SENTENCES */}
-                      <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4">
+                      <Md className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4">
                         {firstTwo}
-                      </p>
+                      </Md>
 
                       {/* Pink Boxes */}
                       {p.parsedAdditionalDetails[3].points?.length > 0 && (
@@ -277,11 +289,10 @@ const ContentSection = ({ page }: ContentSectionProps) => {
                         </div>
                       )}
 
-                      {/* REMAINING SENTENCES AFTER POINTS */}
                       {finalRemaining && (
-                        <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
+                        <Md className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
                           {finalRemaining}
-                        </p>
+                        </Md>
                       )}
                     </>
                   );
@@ -292,11 +303,11 @@ const ContentSection = ({ page }: ContentSectionProps) => {
             {/* Additional description after points */}
             {p.parsedAdditionalDetails[3].keyValues &&
               p.parsedAdditionalDetails[3].keyValues.length > 0 && (
-                <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
+                <Md className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
                   {p.parsedAdditionalDetails[3].keyValues
                     .map((kv) => kv.value)
                     .join(" ")}
-                </p>
+                </Md>
               )}
           </section>
         )}
@@ -314,9 +325,9 @@ const ContentSection = ({ page }: ContentSectionProps) => {
                 </h2>
               </div>
             </div>
-            <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
+            <Md className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
               {p.parsedAdditionalDetails[4].description}
-            </p>
+            </Md>
           </section>
         )}
 
@@ -336,9 +347,9 @@ const ContentSection = ({ page }: ContentSectionProps) => {
 
             {/* Main Description */}
             {p.parsedAdditionalDetails[5].description && (
-              <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
+              <Md className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
                 {p.parsedAdditionalDetails[5].description}
-              </p>
+              </Md>
             )}
 
             {/* Key-Values as Cards */}
@@ -348,7 +359,7 @@ const ContentSection = ({ page }: ContentSectionProps) => {
                   {p.parsedAdditionalDetails[5].keyValues.map((kv, index) => (
                     <div
                       key={index}
-                      className="bg-white border border-red-200 rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow duration-300 
+                      className="bg-white border border-red-200 rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow duration-300
      flex flex-col items-center justify-center text-center"
                     >
                       <p className="font-bold text-red-900 text-base sm:text-lg mb-2 sm:mb-3">
@@ -396,9 +407,9 @@ const ContentSection = ({ page }: ContentSectionProps) => {
                 </h2>
               </div>
             </div>
-            <p className="text-gray-300 leading-relaxed text-sm sm:text-base lg:text-lg">
+            <Md className="text-gray-300 leading-relaxed text-sm sm:text-base lg:text-lg">
               {p.parsedAdditionalDetails[6].description}
-            </p>
+            </Md>
           </section>
         )}
 
@@ -415,9 +426,9 @@ const ContentSection = ({ page }: ContentSectionProps) => {
                 </h2>
               </div>
             </div>
-            <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
+            <Md className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
               {p.parsedAdditionalDetails[7].description}
-            </p>
+            </Md>
 
             {/* Show highlight if exists */}
             {p.parsedAdditionalDetails[7].highlight && (
@@ -446,9 +457,9 @@ const ContentSection = ({ page }: ContentSectionProps) => {
                   <h2 className="leading-tight">{detail.subTitle1}</h2>
                 </div>
               </div>
-              <p className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
+              <Md className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
                 {detail.description}
-              </p>
+              </Md>
 
               {/* Show highlight if exists */}
               {detail.highlight && (
@@ -467,9 +478,9 @@ const ContentSection = ({ page }: ContentSectionProps) => {
             <span className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
               Conclusion
             </span>
-            <p className="text-sm sm:text-base lg:text-lg leading-relaxed max-w-3xl mx-auto">
-              {p.shortDescription}
-            </p>
+            <Md className="text-sm sm:text-base lg:text-lg leading-relaxed max-w-3xl mx-auto">
+              {p.shortDescription as string}
+            </Md>
           </div>
         )}
 
@@ -499,9 +510,9 @@ const ContentSection = ({ page }: ContentSectionProps) => {
                             A
                           </span>
                         </div>
-                        <p className="text-gray-700 text-sm sm:text-base leading-relaxed">
+                        <Md className="text-gray-700 text-sm sm:text-base leading-relaxed">
                           {item.answer}
-                        </p>
+                        </Md>
                       </div>
                     </div>
                   </div>
@@ -518,9 +529,9 @@ const ContentSection = ({ page }: ContentSectionProps) => {
           <span className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
             {p.bottomSection.title}
           </span>
-          <p className="text-sm sm:text-base lg:text-lg leading-relaxed max-w-3xl mx-auto">
+          <Md className="text-sm sm:text-base lg:text-lg leading-relaxed max-w-3xl mx-auto">
             {p.bottomSection.description}
-          </p>
+          </Md>
         </div>
       )}
     </div>
