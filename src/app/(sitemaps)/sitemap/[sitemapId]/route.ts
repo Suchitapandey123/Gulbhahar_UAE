@@ -2,8 +2,10 @@ import { NextResponse } from "next/server";
 
 const TOTAL_SITEMAPS_API =
   "https://api.gulbhahar.com/api/total-sitmaps";   // Endpoint to get total number of sitemaps
+  "http://localhost:9080/api/total-sitmaps";   // Endpoint to get total number of sitemaps
  const SITEMAPS_API =
   "https://api.gulbhahar.com/api/get-sitemap";               // Endpoint to get sitemap data
+  // "http://localhost:9080/api/get-sitemap";               // Endpoint to get sitemap data
 
 export async function GET(
   _request: Request,
@@ -27,19 +29,19 @@ export async function GET(
     }
 
     const apiRes = await fetch(`${SITEMAPS_API}?sitemapNumber=${sitemapId}`, {
-      next: { revalidate: 2 * 60 * 5 }, // revalidate every 5 minutes
+      cache: "no-store",
     });
 
     if (!apiRes.ok) throw new Error("Failed to fetch sitemap data");
 
-    const xml = await apiRes.text(); // API already returns XML
+    const xml = await apiRes.text();
 
     // 4️⃣ Return XML directly
     return new NextResponse(xml, {
       headers: { "Content-Type": "application/xml" },
     });
   } catch (error) {
-   
+    console.error("Sitemap error:", error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

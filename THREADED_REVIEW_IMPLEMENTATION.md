@@ -10,7 +10,7 @@ Review
   ├─  Review  Header (User info, date, edit/delete buttons)
   ├─ Review Content (Rating, comment)
   ├─ Actions (Reply  button, likes/dislikes)
-  └─ Reply Section (only when active)
+  └─ Reply Section  (only when active)
       ├─ Reply Form (appears first)
       └─ Replies List (renders below form)
 ```
