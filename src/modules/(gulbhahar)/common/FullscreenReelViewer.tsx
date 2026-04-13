@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface FullscreenReel {
   videoUrl: string;
+  thumbnailUrl?: string;
   title: string;
   description?: string;
 }
@@ -133,6 +134,7 @@ export default function FullscreenReelViewer({
         <video
           ref={videoRef}
           src={currentReel.videoUrl}
+          poster={currentReel.thumbnailUrl}
           className="absolute inset-0 w-full h-full object-cover"
           muted={isMuted}
           loop

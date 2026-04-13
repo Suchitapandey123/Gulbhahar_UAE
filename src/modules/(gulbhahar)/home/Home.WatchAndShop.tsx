@@ -18,6 +18,7 @@ const Home_WatchAndShop = ({WatchAndShopData} : WatchAndShopDataProps) => {
 
   const fullscreenReels = WatchAndShopData.map((r) => ({
     videoUrl: r.videoUrl,
+    thumbnailUrl: r.thumbnailUrl,
     title: r.title,
   }));
   return (

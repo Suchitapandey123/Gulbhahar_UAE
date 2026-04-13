@@ -61,11 +61,20 @@ const ReelCard = ({ reel }: { reel: ReelData }) => {
         backgroundPosition: "center",
       }}
     >
-      {/* Video — loads only when section is visible */}
+      {/* Thumbnail — visible until video plays */}
+      {reel.thumbnailUrl && (
+        <img
+          src={reel.thumbnailUrl}
+          alt={reel.title}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      )}
+
+      {/* Video — opacity-0 until playing so thumbnail shows through */}
       <video
         ref={videoRef}
         poster={reel.thumbnailUrl}
-        className="absolute inset-0 w-full h-full object-cover"
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${isPlaying ? "opacity-100" : "opacity-0"}`}
         muted={isMuted}
         loop
         playsInline

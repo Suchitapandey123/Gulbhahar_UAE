@@ -1,5 +1,18 @@
 import { MoreAboutContent } from '@/types'
 import React from 'react'
+import ReactMarkdown from 'react-markdown'
+
+const mdComponents = {
+  a: ({ node, ...props }: any) => (
+    <a {...props} target="_blank" rel="noopener noreferrer" className="text-amber-800 underline hover:text-amber-600" />
+  ),
+}
+
+const Md = ({ children, className }: { children: string; className?: string }) => (
+  <div className={className}>
+    <ReactMarkdown components={mdComponents}>{children}</ReactMarkdown>
+  </div>
+)
 
 interface MoreAboutContentProps {
   MoreAboutContent: MoreAboutContent[]
@@ -18,9 +31,9 @@ const Home_MoreAbout = ({ MoreAboutContent }: MoreAboutContentProps) => {
             </h1>
 
             {item.content && (
-              <p className="text-stone-600 text-base sm:text-lg leading-relaxed mb-10">
+              <Md className="text-stone-600 text-base sm:text-lg leading-relaxed mb-10">
                 {item.content}
-              </p>
+              </Md>
             )}
 
             {item.children?.map((h2Item, i) => (
@@ -30,9 +43,9 @@ const Home_MoreAbout = ({ MoreAboutContent }: MoreAboutContentProps) => {
                 </h2>
 
                 {h2Item.content && (
-                  <p className="text-stone-600 text-sm sm:text-base leading-relaxed mb-6 pl-4">
+                  <Md className="text-stone-600 text-sm sm:text-base leading-relaxed mb-6 pl-4">
                     {h2Item.content}
-                  </p>
+                  </Md>
                 )}
 
                 {h2Item.children?.map((h3Item, j) => (
@@ -41,9 +54,9 @@ const Home_MoreAbout = ({ MoreAboutContent }: MoreAboutContentProps) => {
                       {h3Item.h3}
                     </h3>
                     {h3Item.content && (
-                      <p className="text-stone-500 text-sm leading-relaxed">
+                      <Md className="text-stone-500 text-sm leading-relaxed">
                         {h3Item.content}
-                      </p>
+                      </Md>
                     )}
                   </div>
                 ))}
@@ -55,5 +68,8 @@ const Home_MoreAbout = ({ MoreAboutContent }: MoreAboutContentProps) => {
     </section>
   )
 }
+
+
+
 
 export default Home_MoreAbout
