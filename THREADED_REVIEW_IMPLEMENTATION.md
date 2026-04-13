@@ -20,7 +20,7 @@ Review
 ✅ Reply form appears  directly below the clicked review
 ✅ Replies render below the reply form
 ✅ Only one reply form open at a time (controlled by parent)
-✅  Uses  `reviewId` instead of `index` for identification
+✅  Uses  `reviewId`  instead of `index` for identification
 ✅ Clean, static Tailwind classes (no dynamic template strings)
 ✅ Proper React state management
 ✅ Mobile and desktop responsive variants
