@@ -31,7 +31,7 @@ const Home_MoreAbout = ({ MoreAboutContent }: MoreAboutContentProps) => {
             </h1>
 
             {item.content && (
-              <Md className="text-stone-600 text-base sm:text-lg leading-relaxed mb-10">
+              <Md className="text-stone-500 text-base leading-relaxed mb-10">
                 {item.content}
               </Md>
             )}
@@ -43,7 +43,7 @@ const Home_MoreAbout = ({ MoreAboutContent }: MoreAboutContentProps) => {
                 </h2>
 
                 {h2Item.content && (
-                  <Md className="text-stone-600 text-sm sm:text-base leading-relaxed mb-6 pl-4">
+                  <Md className="text-stone-500 text-base leading-relaxed mb-6 pl-4">
                     {h2Item.content}
                   </Md>
                 )}
@@ -54,7 +54,7 @@ const Home_MoreAbout = ({ MoreAboutContent }: MoreAboutContentProps) => {
                       {h3Item.h3}
                     </h3>
                     {h3Item.content && (
-                      <Md className="text-stone-500 text-sm leading-relaxed">
+                      <Md className="text-stone-500 text-base leading-relaxed">
                         {h3Item.content}
                       </Md>
                     )}
