@@ -238,79 +238,59 @@ const ContentSection = ({ page }: ContentSectionProps) => {
           </section>
         )}
 
-        {/* Section 4 - Points in Pink Boxes */}
-        {p.parsedAdditionalDetails?.[3] && (
-          <section>
-            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
-              <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
-                <span className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
-                  4
-                </span>
-                <h2 className="leading-tight">
-                  {p.parsedAdditionalDetails[3].subTitle1}
-                </h2>
-              </div>
+       {/* Section 4 - Points in Pink Boxes */}
+{p.parsedAdditionalDetails?.[3] && (
+  <section>
+    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
+      <div className="flex items-start sm:items-center flex-col sm:flex-row gap-3 sm:gap-0">
+        <span className="w-8 h-8 bg-red-900 rounded-full flex items-center justify-center text-white text-sm font-bold sm:mr-4 flex-shrink-0">
+          4
+        </span>
+        <h2 className="leading-tight">
+          {p.parsedAdditionalDetails[3].subTitle1}
+        </h2>
+      </div>
+    </div>
+
+    {/* Description */}
+    {p.parsedAdditionalDetails[3].description && (
+      <Md className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4">
+        {p.parsedAdditionalDetails[3].description}
+      </Md>
+    )}
+
+    {/* 🔥 Priority 1: Show Tags (points) */}
+    {p.parsedAdditionalDetails[3].points?.length > 0 && (
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3 sm:gap-4 mb-4">
+        {p.parsedAdditionalDetails[3].points.map((point, index) => (
+          <div
+            key={index}
+            className="bg-red-100 text-red-900 px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-center font-semibold text-sm sm:text-base"
+          >
+            {point}
+          </div>
+        ))}
+      </div>
+    )}
+
+    {/* 🔥 Priority 2: If no Tags → Show KeyValues as cards */}
+    {(!p.parsedAdditionalDetails[3].points ||
+      p.parsedAdditionalDetails[3].points.length === 0) &&
+      p.parsedAdditionalDetails[3].keyValues?.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {p.parsedAdditionalDetails[3].keyValues.map((kv, index) => (
+            <div
+              key={index}
+              className=" border border-red-200 rounded-lg p-4 text-center"
+            >
+              <p className="font-bold text-red-900">{kv.key}</p>
+              <p className="text-gray-600">{kv.value}</p>
             </div>
-
-            {/* Description with points */}
-            {p.parsedAdditionalDetails[3].description && (
-              <div className="mb-4 sm:mb-6">
-                {(() => {
-                  const sentences = p.parsedAdditionalDetails[3].description
-                    .split(".")
-                    .map((s) => s.trim())
-                    .filter((s) => s !== "");
-
-                  const firstTwo =
-                    sentences.slice(0, 2).join(". ") +
-                    (sentences.length >= 2 ? "." : "");
-                  const remaining = sentences.slice(2).join(". ");
-                  const finalRemaining = remaining ? remaining + "." : "";
-
-                  return (
-                    <>
-                      <Md className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg mb-4">
-                        {firstTwo}
-                      </Md>
-
-                      {/* Pink Boxes */}
-                      {p.parsedAdditionalDetails[3].points?.length > 0 && (
-                        <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] justify-center gap-3 sm:gap-4 mb-4">
-                          {p.parsedAdditionalDetails[3].points.map(
-                            (point, index) => (
-                              <div
-                                key={index}
-                                className="bg-red-100 text-red-900 px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-center font-semibold text-sm sm:text-base"
-                              >
-                                {point}
-                              </div>
-                            ),
-                          )}
-                        </div>
-                      )}
-
-                      {finalRemaining && (
-                        <Md className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
-                          {finalRemaining}
-                        </Md>
-                      )}
-                    </>
-                  );
-                })()}
-              </div>
-            )}
-
-            {/* Additional description after points */}
-            {p.parsedAdditionalDetails[3].keyValues &&
-              p.parsedAdditionalDetails[3].keyValues.length > 0 && (
-                <Md className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
-                  {p.parsedAdditionalDetails[3].keyValues
-                    .map((kv) => kv.value)
-                    .join(" ")}
-                </Md>
-              )}
-          </section>
-        )}
+          ))}
+        </div>
+      )}
+  </section>
+)}
 
         {/* Section 5 - Gradient Red Background */}
         {p.parsedAdditionalDetails?.[4] && (
