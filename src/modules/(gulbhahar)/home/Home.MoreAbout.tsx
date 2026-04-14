@@ -4,7 +4,12 @@ import ReactMarkdown from 'react-markdown'
 
 const mdComponents = {
   a: ({ node, ...props }: any) => (
-    <a {...props} target="_blank" rel="noopener noreferrer" className="text-amber-800 underline hover:text-amber-600" />
+    <a
+      {...props}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-amber-800 underline hover:text-amber-600"
+    />
   ),
 }
 
@@ -22,22 +27,25 @@ const Home_MoreAbout = ({ MoreAboutContent }: MoreAboutContentProps) => {
   if (!MoreAboutContent?.length) return null
 
   return (
-    <section className="w-full bg-stone-50 py-16 px-4">
-      <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto">
+    <section className="w-full bg-stone-50 py-16 px-6 md:px-12 lg:px-20">
+      {/* Thoda narrow container for better spacing */}
+      <div className="max-w-6xl mx-auto">
         {MoreAboutContent.map((item, index) => (
           <div key={index} className="mb-14">
+            
             <h1 className="text-3xl sm:text-4xl font-light text-amber-900 mb-6 tracking-wide">
               {item.h1}
             </h1>
 
             {item.content && (
-              <Md className="text-stone-500 text-base leading-relaxed mb-10">
+              <Md className="text-stone-500 text-base leading-relaxed mb-10 text-justify">
                 {item.content}
               </Md>
             )}
 
             {item.children?.map((h2Item, i) => (
               <div key={i} className="mb-10">
+                
                 <h2 className="text-xl sm:text-2xl font-light text-amber-800 border-l-4 border-amber-400 pl-4 mb-4">
                   {h2Item.h2}
                 </h2>
@@ -50,14 +58,17 @@ const Home_MoreAbout = ({ MoreAboutContent }: MoreAboutContentProps) => {
 
                 {h2Item.children?.map((h3Item, j) => (
                   <div key={j} className="mb-6 pl-4">
+                    
                     <h3 className="text-base sm:text-lg font-medium text-stone-700 mb-2">
                       {h3Item.h3}
                     </h3>
+
                     {h3Item.content && (
                       <Md className="text-stone-500 text-base leading-relaxed">
                         {h3Item.content}
                       </Md>
                     )}
+
                   </div>
                 ))}
               </div>
@@ -68,8 +79,5 @@ const Home_MoreAbout = ({ MoreAboutContent }: MoreAboutContentProps) => {
     </section>
   )
 }
-
-
-
 
 export default Home_MoreAbout

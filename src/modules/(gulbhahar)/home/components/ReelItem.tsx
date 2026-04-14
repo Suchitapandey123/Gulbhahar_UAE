@@ -1,6 +1,5 @@
 "use client";
 
-import { Play } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
@@ -31,7 +30,6 @@ const ReelItem = ({ reel }: ReelItemProps) => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            // Set src only when first visible — zero network cost until scrolled here
             if (!video.src) {
               video.src = reel.videoUrl;
               video.load();
@@ -50,19 +48,6 @@ const ReelItem = ({ reel }: ReelItemProps) => {
     observer.observe(video);
     return () => observer.disconnect();
   }, [reel.videoUrl]);
-
-  const handlePlayPause = () => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (isPlaying) {
-      video.pause();
-      setIsPlaying(false);
-    } else {
-      video.play().catch(() => setHasError(true));
-      setIsPlaying(true);
-    }
-  };
 
   return (
     <div
@@ -88,7 +73,6 @@ const ReelItem = ({ reel }: ReelItemProps) => {
       {/* Video */}
       <video
         ref={videoRef}
-        poster={`${reel.videoUrl}#t=0.1`}
         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
           isLoaded && !hasError ? "opacity-100" : "opacity-0"
         }`}
@@ -98,23 +82,11 @@ const ReelItem = ({ reel }: ReelItemProps) => {
         preload="none"
         onLoadedData={() => setIsLoaded(true)}
         onError={() => setHasError(true)}
+        style={{ pointerEvents: 'none' }}
       />
 
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20 pointer-events-none" />
-
-      {/* Play button overlay (when paused or error) */}
-      {(!isPlaying || hasError) && (
-        <button
-          onClick={handlePlayPause}
-          className="absolute inset-0 flex items-center justify-center z-10"
-          aria-label="Play video"
-        >
-          <div className="p-4 rounded-full bg-white/20 backdrop-blur-md border border-white/20 transition-transform hover:scale-110">
-            <Play className="text-white fill-white" size={28} />
-          </div>
-        </button>
-      )}
 
       {/* Title overlay at bottom */}
       <div className="absolute bottom-0 left-0 right-0 p-4 z-10">

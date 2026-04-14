@@ -1,6 +1,5 @@
 "use client";
 
-import { Play } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 interface ReelData {
@@ -62,13 +61,7 @@ const ShowcaseReelItem = ({ reel, onClick }: { reel: ReelData; onClick?: () => v
         preload="none"
       />
 
-      {!isPlaying && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="p-4 rounded-full bg-white/20 backdrop-blur-md">
-            <Play className="text-white fill-white" size={24} />
-          </div>
-        </div>
-      )}
+
     </div>
   );
 };
