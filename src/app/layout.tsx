@@ -31,9 +31,9 @@ const jetbrainsMono = JetBrains_Mono({
 
 export async function generateMetadata() {
   return {
-    title: "Gulbhahar | Ethnic Suits, Sarees & Handmade Juttis for Women",
+    title: "Gulbhahar | Punjabi Juttis, Sarees, Suits & Handbags Online India",
     description:
-      "Shop ethnic suits, sarees, handmade juttis, jewellery and bags at Gulbhahar : where Indian tradition meets timeless elegance.",
+      "Buy Punjabi juttis, sarees & suits online from Gulbhahar. Discover trendy ethnic wear for women at best prices with quality you can trust.",
 
     keywords: ["gulbhahar", "gulbhahar.com", "gulbahar", "gulbahar.com", "ethnic wear", "ethnicwear", "gulbhahar official site"],
 
@@ -45,8 +45,8 @@ export async function generateMetadata() {
       canonical: "https://www.gulbhahar.com",
     },
     openGraph: {
-      title: "Gulbhahar | Ethnic Suits, Sarees & Handmade Juttis for Women",
-      description: "Shop ethnic suits, sarees, handmade juttis, jewellery and bags at Gulbhahar : where Indian tradition meets timeless elegance.",
+      title: "Gulbhahar | Punjabi Juttis, Sarees, Suits & Handbags Online India",
+      description: "Buy Punjabi juttis, sarees & suits online from Gulbhahar. Discover trendy ethnic wear for women at best prices with quality you can trust.",
       url: "https://www.gulbhahar.com",
       siteName: "Gulbhahar",
       locale: "en_US",
@@ -62,8 +62,8 @@ export async function generateMetadata() {
     },
     twitter: {
       card: "summary_large_image",
-      title: "Gulbhahar | Ethnic Suits, Sarees & Handmade Juttis for Women",
-      description: "Shop ethnic suits, sarees, handmade juttis, jewellery and bags at Gulbhahar.",
+      title: "Gulbhahar | Punjabi Juttis, Sarees, Suits & Handbags Online India",
+      description: "Buy Punjabi juttis, sarees & suits online from Gulbhahar. Discover trendy ethnic wear for women at best prices with quality you can trust.",
       images: ["https://www.gulbhahar.com/gulbhaharlogoo.jpeg"],
     },
     robots: {
