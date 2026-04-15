@@ -1,6 +1,7 @@
 // @ts-nocheck
 import productApi from "@/services/product/productService";
 import ProductModule from "@/modules/(gulbhahar)/products";
+import { sizeChartService } from "@/services/sizeChart/sizeChartService";
 import { Product, SimilarProduct } from "@/modules/(gulbhahar)/products/types";
 import ProductSchema from "@/shared-components/seo/ProductSchema";
 import type { Metadata } from "next";
@@ -21,32 +22,39 @@ type PageParams = {
 /* ------------------------------------------------------------------ */
 
 const getProductBundle = cache(
-  async (
-    productID: string,
-  ): Promise<{
+  async (productID: string): Promise<{
     product: Product | null;
     similarProducts: SimilarProduct;
+    sizeChart: any;
   }> => {
     try {
-      const [product, similarProducts] = await Promise.all([
-        productApi.getProductById(productID),
-        productApi.getSimilarProducts(productID),
+      const product = await productApi.getProductById(productID);
+      
+      if (!product) {
+        return { 
+          product: null, 
+          similarProducts: { success: false, count: 0, products: [] },
+          sizeChart: null 
+        };
+      }
+
+      const [similarProducts, sizeChart] = await Promise.all([
+        productApi.getSimilarProducts(productID).catch(() => ({ success: false, count: 0, products: [] })),
+        sizeChartService.getSizeChartByParentCategory(product.parentCategory[0]).catch(() => null)
       ]);
 
-      return {
-        product,
-        similarProducts: similarProducts ?? { success: false, count: 0, products: [] },
-      };
+      return { product, similarProducts, sizeChart };
     } catch (error) {
       console.error("Product bundle fetch failed:", error);
-      return { product: null, similarProducts: { success: false, count: 0, products: [] } };
+      return { product: null, similarProducts: { success: false, count: 0, products: [] }, sizeChart: null };
     }
   },
 );
 
 /* ------------------------------------------------------------------ */
 
-export const revalidate = 21600; // 6 hours
+export const revalidate = 3600; // 1 hour
+export const fetchCache = 'force-cache';
 export const dynamicParams = true;
 
 /* ------------------------------------------------------------------ */
@@ -100,9 +108,8 @@ export async function generateMetadata(props: PageParams): Promise<Metadata> {
 
 export default async function CollectionPage(props: PageParams) {
   const params = await props.params;
-  const { product, similarProducts } = await getProductBundle(params.id);
-
-  // console.log("PRODUCT DATA:", product);
+  const { product, similarProducts, sizeChart } = await getProductBundle(params.id);
+  console.log("PRODUCT DATA:", product);
 
   if (!product) return null;
 
@@ -133,7 +140,7 @@ export default async function CollectionPage(props: PageParams) {
           reviewCount: 0,
         }}
       />
-      <ProductModule product={product} similarProducts={similarProducts} />
+      <ProductModule product={product} similarProducts={similarProducts} sizeChart={sizeChart} />
     </>
   );
 }

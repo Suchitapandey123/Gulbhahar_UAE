@@ -38,8 +38,8 @@ const Home_WatchAndShop = ({WatchAndShopData} : WatchAndShopDataProps) => {
         </h2>
 
         <p className="text-gray-500 text-center text-base md:text-lg leading-relaxed font-light">
-          Experience our latest silhouettes in motion. Every thread tells a
-          story of heritage, now just a tap away.
+         From our hands to your heart, watch & shop our beautiful ethnic wear collection and buy suits, sarees, handmade juttis and bags that make you smile!
+
         </p>
       </div>
 

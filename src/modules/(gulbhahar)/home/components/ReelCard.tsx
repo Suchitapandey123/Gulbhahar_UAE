@@ -1,5 +1,5 @@
 "use client";
-import { Eye, Play, Store } from "lucide-react";
+import { Eye, Store } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -18,7 +18,6 @@ interface ReelData {
 const ReelCard = ({ reel }: { reel: ReelData }) => {
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isMuted] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const [viewCount, setViewCount] = useState<string | null>(null);
 
@@ -45,7 +44,7 @@ const ReelCard = ({ reel }: { reel: ReelData }) => {
           }
         });
       },
-      { threshold: 0.6 },
+      { threshold: 0.6 }
     );
 
     observer.observe(video);
@@ -61,21 +60,11 @@ const ReelCard = ({ reel }: { reel: ReelData }) => {
         backgroundPosition: "center",
       }}
     >
-      {/* Thumbnail — visible until video plays */}
-      {reel.thumbnailUrl && (
-        <img
-          src={reel.thumbnailUrl}
-          alt={reel.title}
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-      )}
-
-      {/* Video — opacity-0 until playing so thumbnail shows through */}
+      {/* Video - NO poster, NO opacity-0 */}
       <video
         ref={videoRef}
-        poster={reel.thumbnailUrl}
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${isPlaying ? "opacity-100" : "opacity-0"}`}
-        muted={isMuted}
+        className="absolute inset-0 w-full h-full object-cover"
+        muted
         loop
         playsInline
         preload="none"
@@ -83,15 +72,6 @@ const ReelCard = ({ reel }: { reel: ReelData }) => {
 
       {/* Overlay Gradients */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
-
-      {/* Play Indicator — shown when not yet playing */}
-      {!isPlaying && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="p-5 rounded-full bg-white/20 backdrop-blur-md">
-            <Play className="text-white fill-white" size={32} />
-          </div>
-        </div>
-      )}
 
       {/* Header Info */}
       <div className="absolute top-4 left-4 right-4 flex justify-between items-start z-10">

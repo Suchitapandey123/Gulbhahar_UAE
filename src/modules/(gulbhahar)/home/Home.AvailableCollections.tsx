@@ -28,8 +28,8 @@ const Home_AvailableCollections = ({AvailableCollections} : AvailableCollections
         </span>
 
         <p className="text-gray-500 text-center text-base md:text-lg leading-relaxed font-light">
-          Experience our latest silhouettes in motion. Every thread tells a
-          story of heritage, now just a tap away.
+          Find the perfect product for yourself from our collection. Something for every occasion, every mood & every woman!
+
         </p>
       </div>
 

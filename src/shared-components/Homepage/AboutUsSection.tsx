@@ -150,8 +150,8 @@ const AboutUsSection: React.FC<AboutUsSectionProps> = ({SoulOfGulbhahar}) => {
               </span>
             </h3>
             <p className="text-gray-400 text-lg md:text-xl font-light mb-12 max-w-xl mx-auto">
-              Every pair is a masterpiece waiting for its next chapter. Find
-              your signature story in our latest collections.
+              In every thread lies a tale, in every pair there lies a soul. Experience our latest handcrafted collection and discover the pair that is made just for you.
+
             </p>
             <Link href="/collections">
               <button className="bg-white text-nowrap text-black px-12 py-5 rounded-full font-bold tracking-[0.2em] uppercase text-sm flex items-center gap-4 mx-auto hover:bg-[#D4AF37] hover:text-white transition-all duration-500 shadow-2xl active:scale-95">
