@@ -41,8 +41,7 @@ export default function Home_OurShowcase({StoriesInMotion} :  OurShowcaseProps) 
           </h2>
         </div>
         <p className="text-center text-gray-500 max-w-2xl mx-auto font-light text-base md:text-lg">
-          Experience our artisanal journey in motion. From the first stitch to
-          the final embellishment, witness the soul of Gulbhahar.
+         Experience our handcrafted ethnic wear looks on every occasion get inspired by real looks &, real style!
         </p>
       </div>
 

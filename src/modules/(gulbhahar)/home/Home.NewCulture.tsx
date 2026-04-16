@@ -116,9 +116,8 @@ const Home_NewCulture: React.FC<CultureProps> = ({Culture}) => {
 
           <div className="max-w-4xl mx-auto">
             <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-amber-900 leading-relaxed font-light mb-6 md:mb-8">
-              Celebrating centuries of masterful craftsmanship where each
-              creation tells a story of tradition, luxury, and timeless artistry
-              passed down through generations.
+             India’s culture is still alive in every product we make. At Gulbhahar, we bring everything you need for your wardrobe. From bridal wear to festive wear, everything is made with love & care!
+
             </p>
 
             {/* Heritage stats */}
@@ -283,7 +282,7 @@ const Home_NewCulture: React.FC<CultureProps> = ({Culture}) => {
                           {cultureList[2].subtitle}
                         </p>
                         <p className="text-white/80 my-1 text-sm leading-relaxed line-clamp-3">
-                          {cultureList[1].description}
+                          {cultureList[2].description}
                         </p>
                         <p className="text-white/70 text-xs mt-2">
                           {cultureList[2].region}

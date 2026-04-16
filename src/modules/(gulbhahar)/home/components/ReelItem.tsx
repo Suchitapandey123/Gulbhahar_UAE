@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 export interface ReelData {
@@ -18,9 +17,6 @@ interface ReelItemProps {
 const ReelItem = ({ reel }: ReelItemProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted] = useState(true);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -34,7 +30,7 @@ const ReelItem = ({ reel }: ReelItemProps) => {
               video.src = reel.videoUrl;
               video.load();
             }
-            video.play().catch(() => setHasError(true));
+            video.play().catch(() => {});
             setIsPlaying(true);
           } else {
             video.pause();
@@ -53,37 +49,20 @@ const ReelItem = ({ reel }: ReelItemProps) => {
     <div
       className="relative flex-none w-[280px] sm:w-[300px] md:w-[340px] aspect-[9/16] rounded-2xl overflow-hidden snap-center group shadow-lg"
       style={{
-        background: `url(${reel.posterUrl}) center/cover no-repeat, linear-gradient(135deg, #7a4a2a 0%, #5c3018 100%)`,
+        backgroundImage: `url(${reel.posterUrl})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
-      {/* Poster fallback */}
-      <Image
-        src={reel.posterUrl}
-        alt={reel.title}
-        fill
-        unoptimized
-        className={`object-cover transition-opacity duration-500 ${
-          isLoaded && !hasError ? "opacity-0" : "opacity-100"
-        }`}
-        sizes="(max-width: 640px) 280px, (max-width: 768px) 300px, 340px"
-        priority={reel.id <= 2}
-        loading={reel.id <= 2 ? undefined : "lazy"}
-      />
-
-      {/* Video */}
       <video
-        ref={videoRef}
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-          isLoaded && !hasError ? "opacity-100" : "opacity-0"
-        }`}
-        muted={isMuted}
-        loop
-        playsInline
-        preload="none"
-        onLoadedData={() => setIsLoaded(true)}
-        onError={() => setHasError(true)}
-        style={{ pointerEvents: 'none' }}
-      />
+  ref={videoRef}
+  poster={reel.posterUrl}
+  className="absolute inset-0 w-full h-full object-cover"  // opacity-0 removed
+  muted
+  loop
+  playsInline
+  preload="none"
+/>
 
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20 pointer-events-none" />

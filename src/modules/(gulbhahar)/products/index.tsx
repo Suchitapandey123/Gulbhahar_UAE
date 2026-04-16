@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { sizeChartService } from "@/services/sizeChart/sizeChartService";
+
 import { getProductImagesForColor } from "@/utils/productImageUtils";
 import { Breadcrumbs } from "./components/Breadcrumbs";
 import { DeliveryChecker } from "./components/DeliveryChecker";
@@ -12,14 +12,15 @@ import { Product, SimilarProduct } from "./types";
 interface ProductModuleProps {
   product: Product;
   similarProducts: SimilarProduct;
+  sizeChart: any;
 }
 
 const CUSTOM_RED = "hsl(359.39deg 63.87% 30.39%)";
 
-export default async function ProductModule({ product, similarProducts }: ProductModuleProps) {
+export default async function ProductModule({ product, similarProducts, sizeChart }: ProductModuleProps) {
 
 
-  const sizeChart = await sizeChartService.getSizeChartByParentCategory(product.parentCategory[0])
+  
 
   const parentCategoryName = Array.isArray(product.parentCategory) ? product.parentCategory[0] : product.parentCategory;
   const imagesToPreload = getProductImagesForColor(
@@ -49,7 +50,7 @@ export default async function ProductModule({ product, similarProducts }: Produc
             customRed={CUSTOM_RED}
           />
 
-          <ProductView sizeChart ={sizeChart.data!} product={product} customRed={CUSTOM_RED} />
+         <ProductView sizeChart={sizeChart?.data || null} product={product} customRed={CUSTOM_RED} />
           <div className="block md:hidden">
             <DeliveryChecker customRed={CUSTOM_RED} />
           </div>

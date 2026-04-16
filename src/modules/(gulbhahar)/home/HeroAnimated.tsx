@@ -12,6 +12,8 @@ export default function ModernHeroAnimated({ heroSection }) {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const containerRef = useRef(null);
   const timerRef = useRef(null);
+  const SLIDE_DURATION = 6000;
+const TRANSITION_TIME = 800;
 
   // Add effect to prevent horizontal scroll on mount
   useEffect(() => {
@@ -104,31 +106,31 @@ const currentSlide = slides[currentIndex];
 const nextIndex = (currentIndex + 1) % slides.length;
 
   // Auto-advance carousel with 6-second timing
-  useEffect(() => {
-    if (!isPlaying) {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
-      return;
-    }
+ useEffect(() => {
+  if (!isPlaying) {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    return;
+  }
 
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
+  if (timerRef.current) clearTimeout(timerRef.current);
 
-    timerRef.current = setTimeout(() => {
-      setIsTransitioning(true);
+  timerRef.current = setTimeout(() => {
+    setIsTransitioning(true); // start fade
+
+    setTimeout(() => {
       setCurrentIndex((prev) => (prev + 1) % slides.length);
-      setTimeout(() => setIsTransitioning(false), 1200);
-    }, 6000);
+    }, TRANSITION_TIME / 2); // change in middle of transition
 
-    return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
-    };
-  }, [currentIndex, isPlaying, slides.length]);
+    setTimeout(() => {
+      setIsTransitioning(false); // end fade
+    }, TRANSITION_TIME);
 
+  }, SLIDE_DURATION);
+
+  return () => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+  };
+}, [currentIndex, isPlaying, slides.length]);
 
   // Text animation variants - removed blur
   const textContainerVariants = {
@@ -194,6 +196,7 @@ const nextIndex = (currentIndex + 1) % slides.length;
 
         .image-container {
           transform: translateZ(0);
+          will-change: opacity, transform;
           backface-visibility: hidden;
           perspective: 1000;
         }
@@ -286,9 +289,9 @@ const nextIndex = (currentIndex + 1) % slides.length;
                   key={`image-${slide.id}`}
                   className="absolute inset-0 w-full h-full image-container"
                   style={{
-                    opacity: isCurrent ? 1 : 0,
+                    opacity: isCurrent ? 1 : isTransitioning && isNext ? 1 : 0,
                     zIndex: isCurrent ? 20 : isNext ? 19 : 15,
-                    transition: 'opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                    transition: 'opacity 0.8s ease-in-out',
                     pointerEvents: isCurrent ? "auto" : "none",
                     backgroundColor: '#111111', // Fallback dark background
                   }}
@@ -319,7 +322,7 @@ const nextIndex = (currentIndex + 1) % slides.length;
                         fetchPriority={shouldUsePriority ? "high" : "auto"}
                         loading="eager"
                         quality={75}
-                        placeholder="blur"
+                        
                         blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMxMTExMTEiLz48L3N2Zz4="
                         style={{ objectFit: 'cover' }}
                       />
@@ -337,15 +340,15 @@ const nextIndex = (currentIndex + 1) % slides.length;
                         fetchPriority={shouldUsePriority ? "high" : "auto"}
                         loading="eager"
                         quality={75}
-                        placeholder="blur"
+                       
                         blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMxMTExMTEiLz48L3N2Zz4="
                         style={{ objectFit: 'cover' }}
                       />
                     </div>
 
                     {/* Gradient overlays */}
-                    <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-black/60 via-black/40 to-transparent" />
-                    <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                    {/* <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-black/60 via-black/40 to-transparent" />
+                    <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-black/40 via-transparent to-transparent" /> */}
                   </div>
                 </div>
               );
@@ -362,7 +365,7 @@ const nextIndex = (currentIndex + 1) % slides.length;
                   <div className="lg:col-span-7 space-y-4 sm:space-y-6 md:space-y-8 text-center lg:text-left">
                     {/* Main title */}
                     <motion.div
-                      key={`title-${currentIndex}`}
+                     
                       initial={{ opacity: 0, y: 24 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: 0.2, ease: [0.23, 1, 0.32, 1] }}
@@ -381,7 +384,7 @@ const nextIndex = (currentIndex + 1) % slides.length;
 
                     {/* Description */}
                     <motion.p
-                      key={`desc-${currentIndex}`}
+                     
                       initial={{ opacity: 0, y: 16 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: 0.35, ease: [0.23, 1, 0.32, 1] }}
@@ -392,7 +395,7 @@ const nextIndex = (currentIndex + 1) % slides.length;
 
                     {/* CTA Button */}
                     <motion.div
-                      key={`cta-${currentIndex}`}
+                    
                       initial={{ opacity: 0, y: 16 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: 0.5, ease: [0.23, 1, 0.32, 1] }}
@@ -434,11 +437,9 @@ const nextIndex = (currentIndex + 1) % slides.length;
                             key={item.id}
                             onClick={() => handleSlideChange(index)}
                             disabled={isTransitioning}
-                            className={`w-full text-left p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl border transition-all duration-300 ${
-                              index === currentIndex
-                                ? "bg-white/20 border-white/30 text-white"
-                                : "bg-white/10 border-white/20 text-white/70 hover:bg-white/15 hover:border-white/30 hover:text-white/90"
-                            } ${isTransitioning ? "opacity-70 cursor-not-allowed" : ""}`}
+                            className={`w-full text-left p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl border transition-all duration-300 
+bg-black/20 shadow-lg border-white/30 text-white
+${isTransitioning ? "opacity-70 cursor-not-allowed" : ""}`}
                             whileHover={{
                               scale:
                                 index === currentIndex || isTransitioning
@@ -455,12 +456,12 @@ const nextIndex = (currentIndex + 1) % slides.length;
                             <div className="flex items-center justify-between">
                               <div>
                                 <div
-                                  className="font-medium tracking-wider text-sm sm:text-base uppercase"
+                                 className="tracking-wider uppercase text-base sm:text-lg font-semibold text-white drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]"
                                   style={{ fontFamily: "oldstandard" }}
                                 >
                                   {item.title}
                                 </div>
-                                <div className="text-xs sm:text-sm mt-1 opacity-70">
+                                <div className="mt-1 text-sm sm:text-base text-white/95 font-medium drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
                                   {item.subtitle}
                                 </div>
                               </div>
@@ -488,21 +489,16 @@ const nextIndex = (currentIndex + 1) % slides.length;
                       </div>
                       <div className="h-1 sm:h-1.5 bg-white/20 rounded-full overflow-hidden">
                         <motion.div
-                          className="h-full rounded-full"
-                          style={{ backgroundColor: currentSlide.color }}
-                          initial={{ width: "0%" }}
-                          animate={{
-                            width:
-                              isPlaying && !isTransitioning ? "100%" : "0%",
-                          }}
-                          transition={{
-                            duration: 6,
-                            ease: "linear",
-                            repeat:
-                              isPlaying && !isTransitioning ? Infinity : 0,
-                          }}
-                          key={`progress-${currentIndex}-${isPlaying}`}
-                        />
+  key={currentIndex} // IMPORTANT: reset every slide
+  className="h-full rounded-full"
+  style={{ backgroundColor: currentSlide.color }}
+  initial={{ width: "0%" }}
+  animate={{ width: "100%" }}
+  transition={{
+  duration: SLIDE_DURATION / 1000, // FULL 6 sec
+  ease: "linear",
+}}
+/>
                       </div>
                     </motion.div>
                   </div>
