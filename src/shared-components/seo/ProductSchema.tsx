@@ -1,5 +1,3 @@
-import Script from "next/script";
-
 export type ProductSchemaProps = {
   id: string;
   title: string;
@@ -15,6 +13,8 @@ export type ProductSchemaProps = {
 };
 
 export default function ProductSchema({ product }: { product: ProductSchemaProps }) {
+  const productUrl = `https://www.gulbhahar.com/products/${product.id}`;
+
   const jsonLd = {
     "@context": "https://schema.org/",
     "@type": "Product",
@@ -28,23 +28,59 @@ export default function ProductSchema({ product }: { product: ProductSchemaProps
     },
     offers: {
       "@type": "Offer",
+      url: productUrl,
       price: product.price,
       priceCurrency: product.currency,
       availability: `https://schema.org/${product.availability}`,
+      shippingDetails: {
+        "@type": "OfferShippingDetails",
+        shippingRate: {
+          "@type": "MonetaryAmount",
+          value: "0",
+          currency: "INR",
+        },
+        shippingDestination: {
+          "@type": "DefinedRegion",
+          addressCountry: "IN",
+        },
+        deliveryTime: {
+          "@type": "ShippingDeliveryTime",
+          handlingTime: {
+            "@type": "QuantitativeValue",
+            minValue: 1,
+            maxValue: 2,
+            unitCode: "DAY",
+          },
+          transitTime: {
+            "@type": "QuantitativeValue",
+            minValue: 3,
+            maxValue: 7,
+            unitCode: "DAY",
+          },
+        },
+      },
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: "IN",
+        returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+        merchantReturnDays: 7,
+        returnMethod: "https://schema.org/ReturnByMail",
+        returnFees: "https://schema.org/FreeReturn",
+      },
     },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: product.rating,
-      reviewCount: product.reviewCount,
-    },
+    ...(product.rating > 0 && product.reviewCount > 0 && {
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: product.rating,
+        reviewCount: product.reviewCount,
+      },
+    }),
   };
 
   return (
-    <Script
-      id={`product-schema-${product.id}`}
+    <script
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      strategy="beforeInteractive"
     />
   );
 }

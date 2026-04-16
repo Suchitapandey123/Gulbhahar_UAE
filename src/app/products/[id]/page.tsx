@@ -4,6 +4,7 @@ import ProductModule from "@/modules/(gulbhahar)/products";
 import { sizeChartService } from "@/services/sizeChart/sizeChartService";
 import { Product, SimilarProduct } from "@/modules/(gulbhahar)/products/types";
 import ProductSchema from "@/shared-components/seo/ProductSchema";
+import BreadcrumbSchema from "@/shared-components/seo/BreadcrumbSchema";
 import type { Metadata } from "next";
 import { cache } from "react";
 
@@ -114,12 +115,27 @@ export default async function CollectionPage(props: PageParams) {
   if (!product) return null;
 
 
+  const productId = product.productId ?? product._id ?? params.id;
+  const parentCategory = product.parentCategory?.[0] ?? "products";
+
+  const breadcrumbItems = [
+    { name: "Home", url: "https://www.gulbhahar.com" },
+    {
+      name: parentCategory.charAt(0).toUpperCase() + parentCategory.slice(1),
+      url: `https://www.gulbhahar.com/collections/${parentCategory.toLowerCase()}`,
+    },
+    {
+      name: product.name ?? "",
+      url: `https://www.gulbhahar.com/products/${productId}`,
+    },
+  ];
+
   return (
     <>
       <ProductSchema
         product={{
-          id: product.productId ?? product._id ?? params.id,
-          title: product.title ?? product.name ?? "",
+          id: productId,
+          title: product.name ?? "",
           description: product.description ?? "",
           price: product.price,
           currency: "INR",
@@ -140,6 +156,7 @@ export default async function CollectionPage(props: PageParams) {
           reviewCount: 0,
         }}
       />
+      <BreadcrumbSchema items={breadcrumbItems} />
       <ProductModule product={product} similarProducts={similarProducts} sizeChart={sizeChart} />
     </>
   );

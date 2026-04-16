@@ -11,6 +11,7 @@ import { PageData } from "@/types/page.types";
 import QuickLinks from "../components/QuickLinks";
 import QuickTag from "../components/QuickTag";
 import ContentSection from "./components/ContentSection";
+import FAQSchema from "@/shared-components/seo/FAQSchema";
 
 // ISR Configuration: Revalidate every 1 hour (3600 seconds)
 export const revalidate = 86400; // 24 hours
@@ -154,6 +155,7 @@ export default async function Page({ params: rawParams }: Props) {
 
   return (
     <div className="mt-24 px-2 max-w-7xl 2xl:max-w-[1600px] mx-auto">
+      {page.faq && page.faq.length > 0 && <FAQSchema faqs={page.faq} />}
       {products.length > 0 && <CategoryCollection products={products} />}
       {products.length === 0 && (
         <CategoryCollection_ParentCategoryProducts

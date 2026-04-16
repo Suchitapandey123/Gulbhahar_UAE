@@ -6,6 +6,8 @@ import Footer from "@/shared-components/Footer/Footer";
 import Navbar from "@/modules/(gulbhahar)/home/navbar/Navbar";
 import ReactQueryProvider from "@/providers/ReactQueryProvider/ReactQueryProvider";
 import Script from "next/script";
+import OrganizationSchema from "@/shared-components/seo/OrganizationSchema";
+import WebSiteSchema from "@/shared-components/seo/WebSiteSchema";
 import { AuthProvider } from "@/providers/ContextProviders/AuthContext";
 import { CartProvider } from "@/providers/ContextProviders/CartContext";
 import SessionWrapper from "@/providers/GoogleSessionProvider/SessionWrapper";
@@ -252,6 +254,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               `,
             }}
           /> */}
+
+          <OrganizationSchema />
+          <WebSiteSchema />
 
           {/* Facebook Pixel Noscript */}
           <noscript>
