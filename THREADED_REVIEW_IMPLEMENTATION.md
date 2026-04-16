@@ -18,7 +18,7 @@ Review
 ## Key Features 
 
 ✅ Reply form appears  directly below the clicked review
-✅ Replies render below the reply form
+✅ Replies render below  the reply form
 ✅ Only one reply form open at a time (controlled by parent)
 ✅  Uses  `reviewId`  instead of `index` for identification
 ✅ Clean, static Tailwind classes (no dynamic template strings)
