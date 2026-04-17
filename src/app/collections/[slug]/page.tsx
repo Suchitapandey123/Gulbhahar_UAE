@@ -13,9 +13,19 @@ import QuickTag from "../components/QuickTag";
 import ContentSection from "./components/ContentSection";
 import FAQSchema from "@/shared-components/seo/FAQSchema";
 
-// ISR Configuration: Revalidate every 1 hour (3600 seconds)
 export const revalidate = 86400; // 24 hours
+export const fetchCache = "force-cache";
 export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  try {
+    const res = await pageService.getAllPages(1, 500) as { data?: { slug: string }[]; pages?: { slug: string }[] };
+    const pages = res?.data || res?.pages || [];
+    return pages.filter((p) => p.slug).map((p) => ({ slug: p.slug }));
+  } catch {
+    return [];
+  }
+}
 
 type Props = {
   params: Promise<{ slug: string }>;
