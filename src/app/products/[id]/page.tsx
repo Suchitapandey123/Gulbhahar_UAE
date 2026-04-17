@@ -58,6 +58,18 @@ export const revalidate = 3600; // 1 hour
 export const fetchCache = 'force-cache';
 export const dynamicParams = true;
 
+export async function generateStaticParams() {
+  try {
+    const data = await productApi.getAllProducts();
+    const products = data?.products ?? [];
+    return products
+      .filter((p) => p.productId)
+      .map((p) => ({ id: p.productId }));
+  } catch {
+    return [];
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /* Metadata */
 /* ------------------------------------------------------------------ */
@@ -110,8 +122,6 @@ export async function generateMetadata(props: PageParams): Promise<Metadata> {
 export default async function CollectionPage(props: PageParams) {
   const params = await props.params;
   const { product, similarProducts, sizeChart } = await getProductBundle(params.id);
-  console.log("PRODUCT DATA:", product);
-
   if (!product) return null;
 
 
@@ -144,9 +154,9 @@ export default async function CollectionPage(props: PageParams) {
               const img = product.images?.[0] as any;
               if (img?.files?.[0]?.name)
                 return `https://cdn.gulbhahar.com/ProductImages/${product.productId ?? params.id}/cards/${img.files[0].name}.webp`;
-              return img?.[0] ?? "";
+              return img?.[0] || "https://www.gulbhahar.com/gulbhaharlogoo.jpeg";
             } catch {
-              return "";
+              return "https://www.gulbhahar.com/gulbhaharlogoo.jpeg";
             }
           })(),
           brand: "Gulbhahar",

@@ -16,7 +16,7 @@ export default function ProductSchema({ product }: { product: ProductSchemaProps
   const productUrl = `https://www.gulbhahar.com/products/${product.id}`;
 
   const jsonLd = {
-    "@context": "https://schema.org/",
+    "@context": "https://schema.org",
     "@type": "Product",
     name: product.title,
     description: product.description,
