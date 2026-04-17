@@ -3,7 +3,6 @@
 ## Overview
 This implementation provides a clean, production-ready threaded review-reply structure with proper state management and  Tailwind CSS  classes.
 
-
 ## Structure
 
 ```
@@ -16,8 +15,8 @@ Review
       └─ Replies List (renders below form)
 ```
 
-## Key Features 
-
+## Key Features   
+ 
 ✅ Reply form appears  directly below the clicked review
 ✅ Replies render below  the reply form
 ✅ Only one reply form open at a time (controlled by parent)
