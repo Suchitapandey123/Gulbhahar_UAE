@@ -1,8 +1,8 @@
 // src\modules\(gulbhahar)\products\components\reviews\ReviewItem.tsx
 "use client";
-import { Edit, Star, ThumbsDown, ThumbsUp, Trash2, User } from "lucide-react";
+import { Edit, Star, /* ThumbsDown, ThumbsUp, */ Trash2, User } from "lucide-react";
 import { useState } from "react";
-import { ReplySection } from "./ReplySection";
+// import { ReplySection } from "./ReplySection";
 import { ReviewEditForm } from "./ReviewEditForm";
 
 interface ReviewItemProps {
@@ -12,6 +12,7 @@ interface ReviewItemProps {
     userName?: string;
     name?: string;
     createdAt: string;
+    date?: string;
     rating: number;
     comment: string;
     [key: string]: any;
@@ -36,14 +37,14 @@ export function ReviewItem({
   formatDate,
   variant = "desktop",
   deleting = false,
-  activeReplyId,
-  onReplyToggle,
+  // activeReplyId,
+  // onReplyToggle,
 }: ReviewItemProps) {
   const [editing, setEditing] = useState(false);
 
   const isMobile = variant === "mobile";
   const reviewId = review.reviewId || review._id || "";
-  const showReply = activeReplyId === reviewId;
+  // const showReply = activeReplyId === reviewId;
 
   const handleEditStart = () => {
     setEditing(true);
@@ -92,7 +93,7 @@ export function ReviewItem({
           <span
             className={`text-${isMobile ? "xs" : "sm"} text-gray-500 ${!isMobile && "bg-gray-100 px-2 py-1 rounded"}`}
           >
-            {formatDate(review.createdAt)}
+            {formatDate(review.date || review.createdAt)}
           </span>
 
           {canModify && (
@@ -165,7 +166,8 @@ export function ReviewItem({
             "{review.comment}"
           </p>
 
-          <div
+          {/* Reply & Like buttons — temporarily disabled */}
+          {/* <div
             className={`flex items-center gap-${isMobile ? "3" : "4"} text-${isMobile ? "xs" : "sm"}`}
           >
             <button
@@ -194,13 +196,14 @@ export function ReviewItem({
                 0
               </span>
             </div>
-          </div>
+          </div> */}
         </>
       )}
 
-      {showReply && !editing && (
+      {/* Reply section — temporarily disabled */}
+      {/* {showReply && !editing && (
         <ReplySection reviewId={reviewId} variant={variant} />
-      )}
+      )} */}
     </div>
   );
 }

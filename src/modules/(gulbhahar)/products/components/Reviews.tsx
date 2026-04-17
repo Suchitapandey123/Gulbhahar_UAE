@@ -22,11 +22,12 @@ async function getReviews(productId: string): Promise<Review[]> {
     );
 
     if (!response.ok) {
-      console.error("Failed to fetch reviews:", response.status);
+      // console.error("Failed to fetch reviews:", response.status);
       return [];
     }
 
     const data = await response.json();
+    // console.log("Reviews API response:", JSON.stringify(data, null, 2));
     return data.reviews || [];
   } catch (error) {
     console.error("Error fetching reviews:", error);
