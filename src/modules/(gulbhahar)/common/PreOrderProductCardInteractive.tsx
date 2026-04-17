@@ -28,7 +28,10 @@ export default function PreOrderProductCardInteractive({
   };
 
   return (
-    <div className="relative overflow-hidden w-full aspect-[3/4] bg-gray-50">
+    <div
+      className="relative overflow-hidden w-full aspect-[3/4] bg-gray-50 cursor-pointer"
+      onClick={handlePreOrder}
+    >
       {images.length > 1 ? (
         <ImageSlider images={images} alt={productName} useNativeImg={true} />
       ) : images[0]?.url ? (
