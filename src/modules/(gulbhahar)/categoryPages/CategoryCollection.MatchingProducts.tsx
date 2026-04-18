@@ -59,6 +59,12 @@ const CategoryCollection_MatchingProducts = async ({
     for (const { cat, products } of results) {
       groupedProducts[cat] = products;
     }
+    const juttiProducts = groupedProducts["juttis"];
+    if (juttiProducts) {
+      // console.log(`=== Complete Your Look With Juttis (${juttiProducts.length} items) ===`);
+      // console.log(JSON.stringify(juttiProducts, null, 2));
+      // console.log("============================");
+    }
   } catch (error) {
     console.error("Error fetching matching products:", error);
   }

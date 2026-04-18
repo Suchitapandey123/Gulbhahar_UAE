@@ -163,6 +163,14 @@ export default async function Page({ params: rawParams }: Props) {
     parentCategory ? productApi.getProductsByParentCategory(parentCategory) : Promise.resolve([]),
   ]);
 
+  // console.log("=== additionalDescription ===");
+  // console.log(JSON.stringify(page?.additionalDescription, null, 2));
+  // console.log("============================");
+
+  // console.log(`=== PRODUCTS for [${slug}] (${products.length} items) ===`);
+  // console.log(JSON.stringify(products, null, 2));
+  // console.log("============================");
+
   return (
     <div className="mt-24 px-2 max-w-7xl 2xl:max-w-[1600px] mx-auto">
       {page.faq && page.faq.length > 0 && <FAQSchema faqs={page.faq} />}

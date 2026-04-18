@@ -63,7 +63,7 @@ export default async function QuickLinks({
         return (
           <div key={category} className="mb-8">
             <span
-              className={`${oldStandardTT.variable} text-2xl lg:text-3xl font-semibold mb-6`}
+              className={`${oldStandardTT.variable} text-xl lg:text-2xl font-semibold mb-6`}
             >
               <span className="bg-gradient-to-r from-red-900 via-red-600 to-red-900 bg-clip-text text-transparent">
                 {headingText}

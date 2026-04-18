@@ -44,6 +44,19 @@ const getProductBundle = cache(
         sizeChartService.getSizeChartByParentCategory(product.parentCategory[0]).catch(() => null)
       ]);
 
+      const allSimilar = (similarProducts as any)?.products ?? [];
+      console.log(`=== SIMILAR PRODUCTS (${allSimilar.length}/8) for [${productID}] ===`);
+      allSimilar.forEach((p: any, i: number) => {
+        const hasImages = Array.isArray(p.images) && p.images.length > 0 && p.images[0]?.files?.length > 0;
+        const colors = p.availableColors || p.colors || [];
+        const hasColors = Array.isArray(colors) && colors.length > 0;
+        // console.log(`[${i + 1}] ${p.productId} | ${p.name}`);
+        // console.log(`     images: ${hasImages ? `✅ ${p.images.length} color(s), first has ${p.images[0].files.length} file(s)` : "❌ MISSING"}`);
+        // console.log(`     colors: ${hasColors ? `✅ ${colors.length} color(s) → ${JSON.stringify(colors.slice(0, 3))}` : "❌ MISSING"}`);
+        // console.log(`     RAW colors field: ${JSON.stringify(p.colors)} | RAW availableColors: ${JSON.stringify(p.availableColors)}`);
+      });
+      // console.log("============================");
+
       return { product, similarProducts, sizeChart };
     } catch (error) {
       console.error("Product bundle fetch failed:", error);
@@ -123,6 +136,7 @@ export default async function CollectionPage(props: PageParams) {
   const params = await props.params;
   const { product, similarProducts, sizeChart } = await getProductBundle(params.id);
   if (!product) return null;
+ 
 
 
   const productId = product.productId ?? product._id ?? params.id;

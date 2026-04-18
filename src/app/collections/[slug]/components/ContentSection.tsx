@@ -452,7 +452,51 @@ const ContentSection = ({ page }: ContentSectionProps) => {
             </section>
           ))}
 
-        {/* Conclusion Section - Using shortDescription */}
+       
+
+        {/* Additional Description Sections */}
+        {Array.isArray(page.additionalDescription) && page.additionalDescription.length > 0 &&
+          page.additionalDescription
+            .filter((item) => item.title && item.title !== "title" && item.content && item.content !== "content")
+            .map((item, index) => {
+              const normalizedContent = item.content!.replace(/\\n/g, "\n");
+              // Split content by ### headings into subsections
+              const parts = normalizedContent.split(/(?=^### )/m).filter(Boolean);
+              const subsections: { heading: string; body: string }[] = parts.map((part: string) => {
+                const headingMatch = part.match(/^### (.+)\n?([\s\S]*)/);
+                if (headingMatch) {
+                  return { heading: headingMatch[1].trim(), body: headingMatch[2].trim() };
+                }
+                return { heading: "", body: part.trim() };
+              });
+              return (
+                <section key={item._id || index} className="rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10 bg-red-50">
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">
+                    {item.title}
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                    {subsections.map((sub: { heading: string; body: string }, i: number) => (
+                      <div key={i} className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-red-100">
+                        {sub.heading && (
+                          <h3 className="text-base sm:text-lg font-bold text-red-900 mb-2 sm:mb-3 border-l-4 border-red-700 pl-3">
+                            {sub.heading}
+                          </h3>
+                        )}
+                        {sub.body && (
+                          <Md className="text-gray-600 text-sm sm:text-base leading-relaxed">
+                            {sub.body}
+                          </Md>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              );
+            })
+        }
+
+
+         {/* Conclusion Section - Using shortDescription */}
         {p.shortDescription && (
           <div className="text-center mt-8 sm:mt-12 lg:mt-16 bg-gradient-to-r from-red-900 to-red-700 text-white rounded-xl sm:rounded-2xl p-6 sm:p-8 lg:p-12">
             <span className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
@@ -467,9 +511,9 @@ const ContentSection = ({ page }: ContentSectionProps) => {
         {/* FAQ Section */}
         {Array.isArray(p.faq) && p.faq.length > 0 && (
           <section className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
-            <span className="text-xl sm:text-2xl md:text-3xl font-bold text-red-900 mb-4 sm:mb-6">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-red-900 mb-6 sm:mb-8">
               Frequently Asked Questions
-            </span>
+            </h2>
             <div className="space-y-4 sm:space-y-6">
               {p.faq.map((item: any, idx: number) => (
                 <div

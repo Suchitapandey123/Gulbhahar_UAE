@@ -74,7 +74,7 @@ export interface ParentCategoryPageData {
   keywords: string[];
   seoImage: string;
   faq: FAQ[];
-  additionalDescription: unknown[];
+  additionalDescription: { _id?: string; title?: string; content?: string }[];
   additionalDetails: AdditionalDetail[];
   isActive: boolean;
   isFeatured: boolean;

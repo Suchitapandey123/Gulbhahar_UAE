@@ -163,7 +163,7 @@ export function ReviewItem({
           <p
             className={`text-${isMobile ? "xs" : "sm"} text-gray-700 mb-${isMobile ? "3" : "4"} bg-gray-50 p-${isMobile ? "2" : "3"} rounded italic`}
           >
-            "{review.comment}"
+            {review.comment}
           </p>
 
           {/* Reply & Like buttons — temporarily disabled */}

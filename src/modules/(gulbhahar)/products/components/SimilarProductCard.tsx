@@ -1,6 +1,6 @@
 // @ts-nocheck
 // Server Component
-import { getProductImages, FALLBACK_LQIP } from "@/utils/productImageUtils";
+import { getFirstProductImage, getProductImagesForColor, FALLBACK_LQIP } from "@/utils/productImageUtils";
 import Link from "next/link";
 import { Product } from "../types";
 import SimilarProductCardInteractive from "./SimilarProductCardInteractive";
@@ -26,13 +26,21 @@ export const SimilarProductCard = ({
   
   // Convert colors to string array - handle both string[] and object[] formats
   const colors: any[] = (() => {
-    const rawColors = (item as any).colors || item.availableColors || [];
-    return rawColors; // Keep as-is for SimilarProductCard (needs full object for hexcode)
+    const ac = item.availableColors;
+    const c = (item as any).colors;
+    // availableColors has hexcodes needed for swatches; colors may be string-only names
+    if (Array.isArray(ac) && ac.length > 0) return ac;
+    if (Array.isArray(c) && c.length > 0) return c;
+    return [];
   })();
 
-  const imagesToShow = getProductImages(item.productId, item.images)
-    .slice(0, 2)
-    .map((img) => ({ url: img.url, lqip: FALLBACK_LQIP }));
+  const primaryImage = getFirstProductImage(item.productId, item.images);
+  const colorImages = getProductImagesForColor(item.productId, item.images, 0);
+  // Primary image always first, remaining images follow
+  const imagesToShow = [
+    { url: primaryImage.url, lqip: primaryImage.lqip || FALLBACK_LQIP },
+    ...colorImages.slice(1).map((img) => ({ url: img.url, lqip: img.lqip || FALLBACK_LQIP })),
+  ];
 
   const productName = item.name || "Product";
   const productId = item.productId || (item as any).id;
