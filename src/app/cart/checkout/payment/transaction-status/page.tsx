@@ -414,7 +414,7 @@ const TransactionStatusContent = () => {
         },
 
         metadata: {
-          source: "transaction_status_page",
+          source: checkoutData.source || "direct",
           userAgent:
             typeof window !== "undefined" ? window.navigator.userAgent : "",
           saveInfo: false,

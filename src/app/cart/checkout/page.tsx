@@ -1,6 +1,6 @@
 import React from "react";
 import CheckoutComponent from "./components/Checkout";
-
+import MetaCheckoutComponent from "./components/MetaCheckout";
 
 export async function generateMetadata() {
   return {
@@ -13,8 +13,8 @@ export async function generateMetadata() {
     },
     openGraph: {
       title: "Checkout - Complete Your Gulbhahar Purchase - Securely",
-    description:
-      "Complete your Gulbhahar purchase securely. Fast checkout process with multiple payment options available.",
+      description:
+        "Complete your Gulbhahar purchase securely. Fast checkout process with multiple payment options available.",
       type: "website",
       locale: "en_US",
       url: "https://www.gulbhahar.com/cart/checkout",
@@ -22,7 +22,20 @@ export async function generateMetadata() {
     },
   };
 }
-const page = () => {
+
+type PageProps = {
+  searchParams: Promise<{ products?: string; source?: string }>;
+};
+
+const page = async ({ searchParams }: PageProps) => {
+  const params = await searchParams;
+  const productsParam = params?.products;
+  const source = params?.source || "direct";
+
+  if (productsParam) {
+    return <MetaCheckoutComponent productsParam={productsParam} source={source} />;
+  }
+
   return <CheckoutComponent />;
 };
 

@@ -25,7 +25,7 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 
-const PARTIAL_COD_AMOUNT = 300;
+const PARTIAL_COD_AMOUNT = 1;
 
 /* ── Checkout Progress Bar ──────────────────────────────── */
 const steps = ["Cart", "Checkout", "Payment"];
@@ -257,6 +257,7 @@ function PaymentContent() {
 
   const orderId = searchParams.get("orderId");
   const amount = searchParams.get("amount");
+  const source = searchParams.get("source") || "direct";
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -288,8 +289,8 @@ function PaymentContent() {
 
   const handlePartialCODPayment = async () => {
     setIsProcessingPartialCOD(true);
-    gaEvent({ action: "Partial_COD_Initiated", params: { payment_method: "PARTIAL_COD", OrderID: checkoutData?.orderId, advance_amount: 300 } });
-    fbEvent({ action: "PARTIAL_COD_Initiated", params: { payment_method: "PARTIAL_COD", OrderID: checkoutData?.orderId, advance_amount: 300 } });
+    gaEvent({ action: "Partial_COD_Initiated", params: { payment_method: "PARTIAL_COD", OrderID: checkoutData?.orderId, advance_amount: 1 } });
+    fbEvent({ action: "PARTIAL_COD_Initiated", params: { payment_method: "PARTIAL_COD", OrderID: checkoutData?.orderId, advance_amount: 1 } });
     try { await analyticsAPI.trackPaymentMethod("PARTIAL_COD"); } catch (e) { console.error(e); }
     setTimeout(() => handleSubmitPayment(PARTIAL_COD_AMOUNT), 1000);
   };
@@ -324,7 +325,7 @@ function PaymentContent() {
       merchant_param1: partialAmount ? "PARTIAL_COD" : "FULL_PAYMENT",
       merchant_param2: partialAmount ? `Advance: ${partialAmount}` : `Full: ${checkoutData?.orderTotal || 0}`,
       merchant_param3: partialAmount ? `COD_Amount: ${(checkoutData?.orderTotal || 0) - partialAmount}` : "FULL_ONLINE",
-      merchant_param4: partialAmount ? `Total: ${checkoutData?.orderTotal || 0}` : "additional Info.",
+      merchant_param4: `Source: ${source} | ${partialAmount ? `Total: ${checkoutData?.orderTotal || 0}` : "additional Info."}`,
       merchant_param5: checkoutData?.orderId || "NO_ORDER_ID",
       promo_code: "", customer_identifier: checkoutData?.phone || "",
     };
