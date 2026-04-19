@@ -25,7 +25,7 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 
-const PARTIAL_COD_AMOUNT = 1;
+const PARTIAL_COD_AMOUNT = 300;
 
 /* ── Checkout Progress Bar ──────────────────────────────── */
 const steps = ["Cart", "Checkout", "Payment"];
