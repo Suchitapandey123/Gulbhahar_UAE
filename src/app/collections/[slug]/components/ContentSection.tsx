@@ -143,6 +143,48 @@ const ContentSection = ({ page }: ContentSectionProps) => {
         </div>
       )}
 
+       
+        {/* Additional Description Sections */}
+        {Array.isArray(page.additionalDescription) && page.additionalDescription.length > 0 &&
+          page.additionalDescription
+            .filter((item) => item.title && item.title !== "title" && item.content && item.content !== "content")
+            .map((item, index) => {
+              const normalizedContent = item.content!.replace(/\\n/g, "\n");
+              // Split content by ### headings into subsections
+              const parts = normalizedContent.split(/(?=^### )/m).filter(Boolean);
+              const subsections: { heading: string; body: string }[] = parts.map((part: string) => {
+                const headingMatch = part.match(/^### (.+)\n?([\s\S]*)/);
+                if (headingMatch) {
+                  return { heading: headingMatch[1].trim(), body: headingMatch[2].trim() };
+                }
+                return { heading: "", body: part.trim() };
+              });
+              return (
+                <section key={item._id || index} className="rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10 bg-red-50">
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">
+                    {item.title}
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                    {subsections.map((sub: { heading: string; body: string }, i: number) => (
+                      <div key={i} className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-red-100">
+                        {sub.heading && (
+                          <h3 className="text-base sm:text-lg font-bold text-red-900 mb-2 sm:mb-3 border-l-4 border-red-700 pl-3">
+                            {sub.heading}
+                          </h3>
+                        )}
+                        {sub.body && (
+                          <Md className="text-gray-600 text-sm sm:text-base leading-relaxed">
+                            {sub.body}
+                          </Md>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              );
+            })
+        }
+
       {/* Dynamic Sections - USING ADDITIONAL DETAILS */}
       <div className="space-y-8 sm:space-y-12 lg:space-y-16">
         {/* Section 1 - Red Background */}
@@ -451,49 +493,6 @@ const ContentSection = ({ page }: ContentSectionProps) => {
               )}
             </section>
           ))}
-
-       
-
-        {/* Additional Description Sections */}
-        {Array.isArray(page.additionalDescription) && page.additionalDescription.length > 0 &&
-          page.additionalDescription
-            .filter((item) => item.title && item.title !== "title" && item.content && item.content !== "content")
-            .map((item, index) => {
-              const normalizedContent = item.content!.replace(/\\n/g, "\n");
-              // Split content by ### headings into subsections
-              const parts = normalizedContent.split(/(?=^### )/m).filter(Boolean);
-              const subsections: { heading: string; body: string }[] = parts.map((part: string) => {
-                const headingMatch = part.match(/^### (.+)\n?([\s\S]*)/);
-                if (headingMatch) {
-                  return { heading: headingMatch[1].trim(), body: headingMatch[2].trim() };
-                }
-                return { heading: "", body: part.trim() };
-              });
-              return (
-                <section key={item._id || index} className="rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10 bg-red-50">
-                  <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">
-                    {item.title}
-                  </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                    {subsections.map((sub: { heading: string; body: string }, i: number) => (
-                      <div key={i} className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-red-100">
-                        {sub.heading && (
-                          <h3 className="text-base sm:text-lg font-bold text-red-900 mb-2 sm:mb-3 border-l-4 border-red-700 pl-3">
-                            {sub.heading}
-                          </h3>
-                        )}
-                        {sub.body && (
-                          <Md className="text-gray-600 text-sm sm:text-base leading-relaxed">
-                            {sub.body}
-                          </Md>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              );
-            })
-        }
 
 
          {/* Conclusion Section - Using shortDescription */}

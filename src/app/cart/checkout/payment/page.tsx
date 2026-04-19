@@ -257,7 +257,9 @@ function PaymentContent() {
 
   const orderId = searchParams.get("orderId");
   const amount = searchParams.get("amount");
-  const source = searchParams.get("source") || "direct";
+  const source = searchParams.get("source") ;
+
+  console.log(source)
 
   useEffect(() => {
     if (typeof window === "undefined") return;

@@ -78,7 +78,9 @@ const TransactionStatusContent = () => {
     const method = searchParams.get("payment_method");
 
     // 1. Pehle localStorage se data extract karo
-    const savedCheckoutData = localStorage.getItem("checkoutFormData");
+    const rawGeneric = localStorage.getItem("checkoutFormData");
+    const rawByOrderId = orderId ? localStorage.getItem(`checkoutData_${orderId}`) : null;
+    const savedCheckoutData = rawGeneric || rawByOrderId;
     let checkoutData = {};
     let extractedUserData = {
       email: null,
@@ -89,7 +91,13 @@ const TransactionStatusContent = () => {
 
     if (savedCheckoutData) {
       try {
-        checkoutData = JSON.parse(savedCheckoutData);
+        const parsed = JSON.parse(savedCheckoutData);
+        // prefer orderId-keyed entry if generic entry has no items
+        if (rawByOrderId && (!parsed.orderItems || parsed.orderItems.length === 0)) {
+          try { checkoutData = JSON.parse(rawByOrderId); } catch { checkoutData = parsed; }
+        } else {
+          checkoutData = parsed;
+        }
 
         // 🔥 User data extract karo Meta Pixel ke liye
         if (checkoutData.email) {
@@ -350,7 +358,7 @@ const TransactionStatusContent = () => {
         order: {
           orderId: transactionData.orderId,
           items: (checkoutData.orderItems || []).map((item) => ({
-            productId: item.id,
+            productId: item.productId || item.id,
             productName: item.name,
             quantity: item.quantity,
             unitPrice: item.price,

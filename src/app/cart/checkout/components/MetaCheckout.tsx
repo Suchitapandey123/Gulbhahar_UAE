@@ -665,12 +665,14 @@ export default function MetaCheckoutComponent({
           image: item.image,
         })),
         checkoutCompletedAt: new Date().toISOString(),
-        checkoutType: "ad-direct",
+        checkoutType: "meta-direct",
         userAgent: typeof window !== "undefined" ? window.navigator.userAgent : "",
       };
 
       try {
-        localStorage.setItem("checkoutFormData", JSON.stringify(checkoutData));
+        const serialized = JSON.stringify(checkoutData);
+        localStorage.setItem("checkoutFormData", serialized);
+        localStorage.setItem(`checkoutData_${orderId}`, serialized);
       } catch {
         toast.error("Error saving checkout data. Please try again.");
         setIsProcessing(false);

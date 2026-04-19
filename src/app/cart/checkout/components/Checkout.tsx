@@ -736,11 +736,9 @@ export default function CheckoutComponent() {
       };
 
       try {
-        localStorage.setItem("checkoutFormData", JSON.stringify(checkoutData));
-        const savedData = localStorage.getItem("checkoutFormData");
-        if (savedData) {
-          const parsedSavedData = JSON.parse(savedData);
-        }
+        const serialized = JSON.stringify(checkoutData);
+        localStorage.setItem("checkoutFormData", serialized);
+        localStorage.setItem(`checkoutData_${orderId}`, serialized);
       } catch (error) {
         toast.error(" Error saving checkout data. Please try again.");
         setIsProcessing(false);
