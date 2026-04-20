@@ -186,7 +186,7 @@ const ContentSection = ({ page }: ContentSectionProps) => {
         }
 
       {/* Dynamic Sections - USING ADDITIONAL DETAILS */}
-      <div className="space-y-8 sm:space-y-12 lg:space-y-16">
+      <div className="space-y-8 sm:space-y-12 lg:space-y-16 mt-8 sm:mt-12">
         {/* Section 1 - Red Background */}
         {p.parsedAdditionalDetails?.[0] && (
           <section className="bg-red-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-10">
