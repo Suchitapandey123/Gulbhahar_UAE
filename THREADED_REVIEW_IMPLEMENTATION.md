@@ -1,7 +1,7 @@
 # Threaded Review-Reply Implementation Guide
 
 ## Overview
-This implementation provides a clean, production-ready threaded review-reply structure with proper state management and  Tailwind CSS  classes.
+This  implementation provides a clean, production-ready threaded review-reply structure with proper state management and  Tailwind CSS  classes.
 
 ## Structure
 
