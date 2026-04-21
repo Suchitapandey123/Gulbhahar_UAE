@@ -1,4 +1,3 @@
-import { number } from "framer-motion";
 
 export interface Product {
   productId: string;
@@ -25,7 +24,7 @@ export interface Product {
   availableSeasons?: { name: string }[];
   availableFabrics?: { name: string }[];
   seo?: { keywords: string[]; metaTitle: string; metaDescription: number };
-  videos?: { posterUrl: string; videoUrl: string; title: string }[];
+  videos?: { posterUrl: string; videoUrl: string; title: string }[][];
   totalSizes: string[];
   slug?: string;
 }

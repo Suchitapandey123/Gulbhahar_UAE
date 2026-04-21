@@ -25,7 +25,7 @@ export type Product = {
   availableSeasons?: SizeOption[];
   availableFabrics?: SizeOption[];
   seo?: Seo;
-  videos?: VideosOption[]
+  videos?: VideosOption[][]
   totalSizes : string[]
 };
 

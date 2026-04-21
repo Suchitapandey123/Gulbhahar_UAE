@@ -81,6 +81,36 @@ export const ProductView = ({ sizeChart , product, customRed }: ProductViewProps
     }
   }, [sizeRange, selectedSize]);
 
+  // Transform product.videos → VideosOption[][] (one array per color index)
+  const videosByColor = useMemo(() => {
+    const raw = product.videos as any[];
+    if (!raw?.length) return [];
+
+    // Case 1: Already 2D array
+    if (Array.isArray(raw[0])) return raw;
+
+    // Case 2: Nested like images → [{ colorName, files:[{videoUrl,posterUrl,title}] }]
+    if (raw[0]?.files !== undefined) {
+      return (product.availableColors ?? []).map((c) => {
+        const name = typeof c === "string" ? c : c.name;
+        const group = raw.find((v) => v.colorName?.toLowerCase() === name.toLowerCase());
+        return group?.files ?? [];
+      });
+    }
+
+    // Case 3: Flat with colorName tag → [{videoUrl, posterUrl, title, colorName}]
+    if (raw[0]?.colorName !== undefined) {
+      return (product.availableColors ?? []).map((c) => {
+        const name = typeof c === "string" ? c : c.name;
+        return raw.filter((v) => v.colorName?.toLowerCase() === name.toLowerCase());
+      });
+    }
+
+    // Case 4: Flat no color info — same for all colors (cannot distinguish)
+    const colorCount = Math.max(product.availableColors?.length ?? 1, 1);
+    return Array.from({ length: colorCount }, () => raw);
+  }, [product.videos, product.availableColors]);
+
   const currentColor = useMemo((): string => {
     if (
       product.availableColors &&
@@ -203,7 +233,7 @@ export const ProductView = ({ sizeChart , product, customRed }: ProductViewProps
                 <DeliveryChecker customRed={customRed} />
               </div>
               <div className="block md:hidden">
-                <ProductReels videos={product.videos || []} selectedColorIndex={selectedColorIndex} />
+                <ProductReels videos={videosByColor} selectedColorIndex={selectedColorIndex} />
               </div>
 
               {/* Elegant note */}
@@ -264,7 +294,7 @@ export const ProductView = ({ sizeChart , product, customRed }: ProductViewProps
 
       {/* Desktop reels — outside grid to preserve sticky layout */}
       <div className="md:block hidden">
-        <ProductReels videos={product.videos || []} selectedColorIndex={selectedColorIndex} />
+        <ProductReels videos={videosByColor} selectedColorIndex={selectedColorIndex} />
       </div>
     </>
   );
