@@ -54,7 +54,7 @@ const PRODUCT_REELS: ReelData[] = [
 ];
 
 export default function ProductReels({ videos, selectedColorIndex = 0 }: ProductReelsProps) {
-  const colorVideos = videos?.[selectedColorIndex] ?? [];
+  const colorVideos = (videos?.[selectedColorIndex] ?? []).filter(Boolean);
   const reels = colorVideos.length > 0 ? colorVideos : PRODUCT_REELS;
   const [fullscreenIndex, setFullscreenIndex] = useState<number | null>(null);
 

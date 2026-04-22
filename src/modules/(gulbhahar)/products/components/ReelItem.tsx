@@ -65,7 +65,7 @@ const ReelItem = ({ reel, index, onClick }: ReelItemProps) => {
         muted
         loop
         playsInline
-        preload={isPriority ? "auto" : "metadata"}
+        preload="metadata"
         onCanPlay={() => setIsLoaded(true)}
       />
 
