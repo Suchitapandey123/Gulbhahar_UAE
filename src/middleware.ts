@@ -155,7 +155,14 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // ── 3. Redirect synonyms → canonical routes ───────────────────────────────
+  // ── 3. /order-on-whatsapp → WhatsApp (noindex) ───────────────────────────
+  if (pathname === "/order-on-whatsapp") {
+    const res = NextResponse.redirect("https://wa.me/919217194241", 302);
+    res.headers.set("X-Robots-Tag", "noindex, nofollow");
+    return res;
+  }
+
+  // ── 4. Redirect synonyms → canonical routes ───────────────────────────────
   for (const rule of REDIRECT_RULES) {
     if (rule.match.some((slug) => cleanPath === `/${slug}`)) {
       const url = request.nextUrl.clone();
@@ -173,6 +180,7 @@ export const config = {
   matcher: [
     "/products/:path*",
     "/collections/:path*",
+    "/order-on-whatsapp",
     "/jutti",
     "/jutis",
     "/lehngas",
