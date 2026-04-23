@@ -7,7 +7,7 @@ This  implementation provides a clean, production-ready threaded review-reply st
 
 ```
 Review
-  ├─  Review Header (User info, date, edit/delete buttons)
+  ├─  Review Header  (User info, date, edit/delete buttons)
   ├─ Review Content (Rating, comment)
   ├─ Actions (Reply  button, likes/dislikes) 
   └─ Reply Section  (only when active)
