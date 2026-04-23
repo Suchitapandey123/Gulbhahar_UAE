@@ -129,12 +129,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="dns-prefetch" href="https://d21ojmskh8ksuv.cloudfront.net" />
         {/* S3 only used for product images loaded lazily — dns-prefetch is enough */}
         <link rel="dns-prefetch" href="https://gulbahar-backend.s3.ap-south-1.amazonaws.com" />
+        <link rel="preconnect" href="https://cdn.gulbhahar.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://cdn.gulbhahar.com" />
 
         {/* DNS Prefetch for third-party domains */}
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.facebook.com" />
-        <link rel="dns-prefetch" href="https://analytic.thekapslog.com" />
         <link rel="dns-prefetch" href="https://www.clarity.ms" />
         <meta name="facebook-domain-verification" content="i8jg1img7zm6lm54vot1vlfhvys5nc" />
         <meta name="facebook-domain-verification" content="vsnutk0lf5e8h8j3qr40cba416cap0" />
@@ -161,12 +161,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <body
           className={`${poppins.variable} ${jetbrainsMono.variable} antialiased`}
         >
-          {/* Analytics Scripts */}
-          <Script
-            src="https://analytic.thekapslog.com/script.js"
-            data-website-id="20dfac58-c9ab-4176-86f4-6430b377abdb"
-            strategy="lazyOnload"
-          />
 
           {/* Google Analytics — loaded via GTM (GTM-T5S7S772) when GTM is re-enabled.
               Direct GA4 script kept here as standalone fallback only; remove when GTM is active. */}
