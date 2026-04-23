@@ -33,7 +33,18 @@ export default function WhatsAppCommunityClient() {
         Not everyone sees our best designs…
       </p>
 
-      {/* CTA — in place of heading */}
+      {/* Heading */}
+      <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 text-center mb-3 leading-tight max-w-sm tracking-tight">
+        Looking for Exclusive Ethnic Wear?{" "}
+        <span className="text-[#800000]">Join the Community</span>
+      </h1>
+
+      {/* Subheading */}
+      <p className="text-base sm:text-lg font-semibold text-gray-500 text-center mb-6 max-w-xs leading-snug italic">
+        For those who don&apos;t wear what everyone else is wearing.
+      </p>
+
+      {/* CTA */}
       <button
         onClick={handleJoin}
         className="w-full max-w-xs bg-[#25D366] hover:bg-[#1cb852] active:scale-[0.98] text-white font-bold text-base py-4 rounded-2xl shadow-lg shadow-[#25D366]/25 transition-all duration-200 mb-8"

@@ -5,29 +5,32 @@ import {
   QuickLinksResponse,
 } from "@/types";
 
+const fetchWithTimeout = (url: string, options: RequestInit & { next?: any }, ms = 5000) => {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ms);
+  return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(timer));
+};
+
 export const pageService = {
   async validateSlug(slug: string): Promise<ValidateSlugResponse> {
-    const res = await fetch(
-      `${API_BASE_URL}/api/pages/validateSlug?slug=${slug}`,
-      {
-        next: {
-          revalidate: 604800,
-          tags: ["collections", `collection-${slug}`],
-        },
-      }
-    );
-    if (!res.ok) return { success: false };
-    return res.json();
+    try {
+      const res = await fetchWithTimeout(
+        `${API_BASE_URL}/api/pages/validateSlug?slug=${slug}`,
+        { next: { revalidate: 604800, tags: ["collections", `collection-${slug}`] } }
+      );
+      if (!res.ok) return { success: false };
+      return res.json();
+    } catch {
+      return { success: false };
+    }
   },
 
   async getPageBySlug(slug: string): Promise<GetPageBySlugResponse> {
     if (!slug) throw new Error("Slug is required");
-    const res = await fetch(`${API_BASE_URL}/api/pages/slug/${slug}`, {
-      next: {
-        revalidate: 604800,
-        tags: ["collections", `collection-${slug}`],
-      },
-    });
+    const res = await fetchWithTimeout(
+      `${API_BASE_URL}/api/pages/slug/${slug}`,
+      { next: { revalidate: 604800, tags: ["collections", `collection-${slug}`] } }
+    );
     if (!res.ok) {
       const text = await res.text();
       console.error("Error response:", text);
@@ -37,14 +40,16 @@ export const pageService = {
   },
 
   async getAllPages(page = 1, limit = 10): Promise<unknown> {
-    const res = await fetch(
-      `${API_BASE_URL}api/pages/getAll?page=${page}&limit=${limit}`,
-      {
-        next: { revalidate: 604800, tags: ["collections"] },
-      }
-    );
-    if (!res.ok) throw new Error("Failed to fetch pages");
-    return res.json();
+    try {
+      const res = await fetchWithTimeout(
+        `${API_BASE_URL}api/pages/getAll?page=${page}&limit=${limit}`,
+        { next: { revalidate: 604800, tags: ["collections"] } }
+      );
+      if (!res.ok) throw new Error("Failed to fetch pages");
+      return res.json();
+    } catch {
+      return { data: [], pages: [] };
+    }
   },
 
   async getQuickLinks(
