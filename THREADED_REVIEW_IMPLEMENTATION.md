@@ -12,7 +12,7 @@ Review
   ├─ Actions (Reply  button, likes/dislikes) 
   └─ Reply Section  (only when active)
       ├─ Reply Form (appears first)
-      └─ Replies List (renders below form)
+      └─ Replies  List (renders below form)
 ```
 
 ## Key Features   
