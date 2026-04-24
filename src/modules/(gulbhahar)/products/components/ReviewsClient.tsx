@@ -247,9 +247,12 @@ export default function ReviewsClient({
   };
 
   const formatDate = (dateString: string) => {
+    if (!dateString) return "";
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "";
     const now = new Date();
     const diffInMs = now.getTime() - date.getTime();
+    if (diffInMs < 0) return ""; // future date guard
     const diffInHours = diffInMs / (1000 * 60 * 60);
     const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
 
