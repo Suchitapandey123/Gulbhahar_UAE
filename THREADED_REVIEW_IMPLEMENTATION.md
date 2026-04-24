@@ -17,7 +17,7 @@ Review
 
 ## Key Features   
  
-✅ Reply form appears  directly below the clicked review
+✅ Reply form  appears  directly below the clicked review
 ✅ Replies render below  the reply form
 ✅ Only one reply form open at a time (controlled by parent)
 ✅  Uses  `reviewId`  instead of `index` for identification
