@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, Loader2, ShoppingCart } from "lucide-react";
+import { Loader2, ShoppingCart } from "lucide-react";
 import { Product } from "../types";
 
 interface ProductPurchaseSectionProps {
@@ -48,9 +48,9 @@ export const ProductPurchaseSection = ({
       <div className="space-y-3 pt-2">
         <button
           onClick={onAddToCart}
-          disabled={addingToCart || !selectedSize }
+          disabled={addingToCart || !selectedSize}
           className={`w-full py-3.5 text-white rounded-lg font-medium text-lg transition-all flex items-center justify-center gap-3 active:scale-[0.98] ${
-            addingToCart || !selectedSize 
+            addingToCart || !selectedSize
               ? "opacity-50 cursor-not-allowed"
               : "hover:opacity-90"
           }`}
@@ -70,11 +70,20 @@ export const ProductPurchaseSection = ({
             </>
           )}
         </button>
+      </div>
 
-        {/* <button className="w-full py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 text-gray-700 font-medium">
-          <Heart className="w-5 h-5" />
-          Add to Wishlist
-        </button> */}
+      {/* Trust badges */}
+      <div className="grid grid-cols-3 gap-2 pt-1">
+        {[
+          { icon: "🔒", label: "Secure Checkout" },
+          { icon: "↩️", label: "7-Day Returns" },
+          { icon: "🤝", label: "Handcrafted" },
+        ].map((b) => (
+          <div key={b.label} className="flex flex-col items-center gap-1 py-2 px-1 bg-gray-50 rounded-lg border border-gray-100">
+            <span className="text-base">{b.icon}</span>
+            <span className="text-[9px] md:text-[10px] text-gray-500 font-medium text-center leading-tight">{b.label}</span>
+          </div>
+        ))}
       </div>
     </div>
   );

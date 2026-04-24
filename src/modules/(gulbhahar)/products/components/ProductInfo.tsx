@@ -80,6 +80,14 @@ export const ProductInfo = ({ product, customRed }: ProductInfoProps) => {
         </div>
       </div>
 
+      {/* Social proof badge */}
+      <div className="flex items-center gap-1.5">
+        <span className="text-sm">❤️</span>
+        <span className="text-[11px] md:text-xs text-gray-500 font-medium">
+          Loved by <span className="text-[#800000] font-semibold">500+ customers</span>
+        </span>
+      </div>
+
       {/* Decorative separator */}
       <div className="flex items-center gap-3 md:gap-4 py-1 md:py-2">
         <div className="h-px flex-1 bg-gradient-to-r from-transparent via-gray-200 to-transparent" />

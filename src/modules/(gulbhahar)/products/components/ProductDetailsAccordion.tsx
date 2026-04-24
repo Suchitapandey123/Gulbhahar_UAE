@@ -74,7 +74,7 @@ export const ProductDetailsAccordion = ({
           onClick={() => toggleAccordion("material")}
           className="w-full py-4 flex justify-between items-center text-left"
         >
-          <span className="font-medium text-gray-900">MATERIAL</span>
+          <span className="font-medium text-gray-900">MATERIAL & CARE</span>
           {openAccordion === "material" ? (
             <ChevronUp className="w-5 h-5 text-gray-500" />
           ) : (
@@ -82,8 +82,55 @@ export const ProductDetailsAccordion = ({
           )}
         </button>
         {openAccordion === "material" && (
-          <div className="pb-4 text-sm text-gray-600 animate-in fade-in slide-in-from-top-2">
-            {product.material || "Cotton Blend"}
+          <div className="pb-4 text-sm text-gray-600 animate-in fade-in slide-in-from-top-2 space-y-2">
+            <p>{product.material || "Premium quality fabric"}</p>
+            <p className="text-gray-500">• Dry clean recommended · Handle with care · Store in a cool dry place</p>
+          </div>
+        )}
+      </div>
+
+      {/* SHIPPING */}
+      <div className="border-b border-gray-200">
+        <button
+          onClick={() => toggleAccordion("shipping")}
+          className="w-full py-4 flex justify-between items-center text-left"
+        >
+          <span className="font-medium text-gray-900">SHIPPING INFORMATION</span>
+          {openAccordion === "shipping" ? (
+            <ChevronUp className="w-5 h-5 text-gray-500" />
+          ) : (
+            <ChevronDown className="w-5 h-5 text-gray-500" />
+          )}
+        </button>
+        {openAccordion === "shipping" && (
+          <div className="pb-4 text-sm text-gray-600 animate-in fade-in slide-in-from-top-2 space-y-1.5">
+            <p>• Orders dispatched within <span className="font-medium text-gray-800">1–2 business days</span></p>
+            <p>• Delivery across India in <span className="font-medium text-gray-800">5–7 business days</span></p>
+            <p>• Free shipping on all orders</p>
+            <p>• Tracking link sent via WhatsApp & SMS</p>
+          </div>
+        )}
+      </div>
+
+      {/* RETURNS */}
+      <div className="border-b border-gray-200">
+        <button
+          onClick={() => toggleAccordion("returns")}
+          className="w-full py-4 flex justify-between items-center text-left"
+        >
+          <span className="font-medium text-gray-900">RETURNS & EXCHANGE</span>
+          {openAccordion === "returns" ? (
+            <ChevronUp className="w-5 h-5 text-gray-500" />
+          ) : (
+            <ChevronDown className="w-5 h-5 text-gray-500" />
+          )}
+        </button>
+        {openAccordion === "returns" && (
+          <div className="pb-4 text-sm text-gray-600 animate-in fade-in slide-in-from-top-2 space-y-1.5">
+            <p>• <span className="font-medium text-gray-800">7-day easy returns</span> from date of delivery</p>
+            <p>• Item must be unused, unwashed & in original packaging</p>
+            <p>• Exchange available for size issues</p>
+            <p>• Contact us on WhatsApp to initiate return</p>
           </div>
         )}
       </div>

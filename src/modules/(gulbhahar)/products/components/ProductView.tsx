@@ -184,7 +184,7 @@ export const ProductView = ({ sizeChart , product, customRed }: ProductViewProps
   };
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-4 lg:gap-8 w-full max-w-[1600px] mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-4 lg:gap-8 w-full max-w-[1600px] mx-auto pb-20 md:pb-0">
         <div className="md:col-span-6 lg:col-span-6">
           <ProductImageGrid
             product={product}
@@ -207,6 +207,18 @@ export const ProductView = ({ sizeChart , product, customRed }: ProductViewProps
 
             <div className="space-y-4 md:space-y-6">
               <ProductInfo product={product} customRed={customRed} />
+
+              {/* Product Highlights Grid */}
+              {product.details && product.details.length > 0 && (
+                <div className="grid grid-cols-2 gap-2">
+                  {product.details.slice(0, 6).map((item, i) => (
+                    <div key={i} className="flex items-start gap-2 bg-stone-50 border border-gray-100 rounded-lg px-3 py-2.5">
+                      <span className="text-[#800000]/50 mt-0.5 text-xs flex-shrink-0">✦</span>
+                      <span className="text-[11px] md:text-xs text-gray-600 leading-snug">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               <ProductVariants
                 product={product}
@@ -232,6 +244,28 @@ export const ProductView = ({ sizeChart , product, customRed }: ProductViewProps
               <div className="md:block hidden">
                 <DeliveryChecker customRed={customRed} />
               </div>
+
+              {/* Delivery Timeline */}
+              <div className="py-3 px-3 bg-stone-50 rounded-lg border border-gray-100">
+                <p className="text-[10px] font-bold tracking-[0.15em] uppercase text-gray-400 mb-3">Delivery Timeline</p>
+                <div className="flex items-center gap-1">
+                  <div className="flex flex-col items-center gap-1">
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#800000]" />
+                    <span className="text-[10px] text-gray-600 font-medium text-center leading-tight">Order<br/>Placed</span>
+                  </div>
+                  <div className="flex-1 h-px bg-gradient-to-r from-[#800000]/40 to-gray-300 mx-1" />
+                  <div className="flex flex-col items-center gap-1">
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#800000]/50" />
+                    <span className="text-[10px] text-gray-500 text-center leading-tight">Ships in<br/>1–2 days</span>
+                  </div>
+                  <div className="flex-1 h-px bg-gray-200 mx-1" />
+                  <div className="flex flex-col items-center gap-1">
+                    <div className="w-2.5 h-2.5 rounded-full bg-gray-300" />
+                    <span className="text-[10px] text-gray-400 text-center leading-tight">Delivered<br/>5–7 days</span>
+                  </div>
+                </div>
+              </div>
+
               <div className="block md:hidden">
                 <ProductReels videos={videosByColor} selectedColorIndex={selectedColorIndex} />
               </div>
@@ -295,6 +329,29 @@ export const ProductView = ({ sizeChart , product, customRed }: ProductViewProps
       {/* Desktop reels — outside grid to preserve sticky layout */}
       <div className="md:block hidden">
         <ProductReels videos={videosByColor} selectedColorIndex={selectedColorIndex} />
+      </div>
+
+      {/* Sticky Mobile CTA */}
+      <div
+        className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white border-t border-gray-200 px-4 py-3 flex items-center gap-3 shadow-[0_-4px_12px_rgba(0,0,0,0.06)]"
+        style={{ paddingBottom: "calc(12px + env(safe-area-inset-bottom))" }}
+      >
+        <div className="flex-shrink-0">
+          <p className="text-[10px] text-gray-400 leading-none mb-0.5">Price</p>
+          <p className="text-base font-bold text-gray-900">₹{product.price?.toLocaleString("en-IN")}</p>
+        </div>
+        <button
+          onClick={handleAddToCart}
+          disabled={addingToCart === (product.productId || product.id) || !selectedSize}
+          className="flex-1 py-3 text-white font-semibold rounded-lg text-sm transition-all active:scale-[0.98] disabled:opacity-50"
+          style={{ backgroundColor: customRed }}
+        >
+          {addingToCart === (product.productId || product.id)
+            ? "Adding..."
+            : !selectedSize
+            ? "SELECT SIZE"
+            : "ADD TO CART"}
+        </button>
       </div>
     </>
   );
