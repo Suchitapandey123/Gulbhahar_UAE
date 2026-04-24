@@ -89,7 +89,7 @@ export default function FullscreenReelViewer({
 
   return (
     <div
-      className="fixed inset-0 z-[101] bg-black/60 backdrop-blur-md flex items-center justify-center"
+      className="fixed inset-0 z-[101] bg-black/90 flex items-center justify-center"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -140,21 +140,23 @@ export default function FullscreenReelViewer({
           loop
           playsInline
           autoPlay
-          preload="none"
+          preload="auto"
           onClick={() => setIsMuted((m) => !m)}
         />
 
-        {/* Bottom info */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent pointer-events-none">
-          <h3 className="text-white font-semibold text-base">
-            {currentReel.title}
-          </h3>
-          {currentReel.description && (
-            <p className="text-white/70 text-sm mt-1">
-              {currentReel.description}
-            </p>
-          )}
-        </div>
+        {/* Bottom info — hide generic "Video N" titles */}
+        {currentReel.title && !/^video[\s\-_]?\d+$/i.test(currentReel.title.trim()) && (
+          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent pointer-events-none">
+            <h3 className="text-white font-semibold text-base">
+              {currentReel.title}
+            </h3>
+            {currentReel.description && (
+              <p className="text-white/70 text-sm mt-1">
+                {currentReel.description}
+              </p>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Progress dots */}
