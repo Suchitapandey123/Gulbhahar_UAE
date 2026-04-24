@@ -14,7 +14,7 @@ const ReelItem = ({ reel, index, onClick }: ReelItemProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   // Preload first 4 videos immediately; rest lazy
-  const isPriority = index <= 3;
+  const isPriority = index <= 1;
 
   useEffect(() => {
     const video = videoRef.current;
@@ -23,6 +23,31 @@ const ReelItem = ({ reel, index, onClick }: ReelItemProps) => {
 
     setIsLoaded(false);
 
+    const mobile = typeof window !== "undefined" && window.innerWidth < 768;
+
+    // Mobile: IntersectionObserver for ALL videos — only visible one plays
+    if (mobile) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              if (video.src !== reel.videoUrl) {
+                video.src = reel.videoUrl;
+                video.load();
+              }
+              video.play().catch(() => {});
+            } else {
+              video.pause();
+            }
+          });
+        },
+        { threshold: 0.6 }
+      );
+      observer.observe(container);
+      return () => observer.disconnect();
+    }
+
+    // Desktop priority videos — load & play immediately
     if (isPriority) {
       video.src = reel.videoUrl;
       video.load();
@@ -30,7 +55,7 @@ const ReelItem = ({ reel, index, onClick }: ReelItemProps) => {
       return;
     }
 
-    // Non-priority: start loading src when nearby (rootMargin pre-fetches before visible)
+    // Desktop non-priority — lazy load
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -45,7 +70,7 @@ const ReelItem = ({ reel, index, onClick }: ReelItemProps) => {
           }
         });
       },
-      { threshold: 0.1, rootMargin: "0px 400px 0px 400px" }
+      { threshold: 0.3, rootMargin: "0px 100px 0px 100px" }
     );
 
     observer.observe(container);
