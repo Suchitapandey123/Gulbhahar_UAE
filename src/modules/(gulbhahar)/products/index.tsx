@@ -17,10 +17,26 @@ interface ProductModuleProps {
 
 const CUSTOM_RED = "hsl(359.39deg 63.87% 30.39%)";
 
+async function getReviewSummary(productId: string): Promise<{ avg: number; count: number }> {
+  try {
+    const res = await fetch(`https://api.gulbhahar.com/api/reviews/allReviews/${productId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) return { avg: 0, count: 0 };
+    const data = await res.json();
+    const reviews = data.reviews ?? [];
+    if (!reviews.length) return { avg: 0, count: 0 };
+    const avg = reviews.reduce((s: number, r: any) => s + (r.rating ?? 0), 0) / reviews.length;
+    return { avg: Math.round(avg * 10) / 10, count: reviews.length };
+  } catch {
+    return { avg: 0, count: 0 };
+  }
+}
+
 export default async function ProductModule({ product, similarProducts, sizeChart }: ProductModuleProps) {
-
-
-  
+  const reviewSummary = await getReviewSummary(product.productId || product.id || "");
 
   const parentCategoryName = Array.isArray(product.parentCategory) ? product.parentCategory[0] : product.parentCategory;
   const imagesToPreload = getProductImagesForColor(
@@ -29,6 +45,7 @@ export default async function ProductModule({ product, similarProducts, sizeChar
     0,
     "product"
   ).slice(0, 3);
+
   return (
     <>
       {/* Preload ONLY LCP-critical images */}
@@ -50,7 +67,13 @@ export default async function ProductModule({ product, similarProducts, sizeChar
             customRed={CUSTOM_RED}
           />
 
-         <ProductView sizeChart={sizeChart?.data || null} product={product} customRed={CUSTOM_RED} />
+          <ProductView
+            sizeChart={sizeChart?.data || null}
+            product={product}
+            customRed={CUSTOM_RED}
+            avgRating={reviewSummary.avg}
+            reviewCount={reviewSummary.count}
+          />
           <div className="block md:hidden">
             <DeliveryChecker customRed={CUSTOM_RED} />
           </div>

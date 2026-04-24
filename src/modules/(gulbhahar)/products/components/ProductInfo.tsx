@@ -3,9 +3,11 @@ import { Product } from "../types";
 interface ProductInfoProps {
   product: Product;
   customRed: string;
+  avgRating?: number;
+  reviewCount?: number;
 }
 
-export const ProductInfo = ({ product, customRed }: ProductInfoProps) => {
+export const ProductInfo = ({ product, customRed, avgRating = 0, reviewCount = 0 }: ProductInfoProps) => {
   const discountPercentage = Math.round(
     ((product.originalPrice - product.price) / product.originalPrice) * 100
   );
@@ -33,16 +35,25 @@ export const ProductInfo = ({ product, customRed }: ProductInfoProps) => {
             {product.name}
           </h1>
           <div className="mt-2 md:mt-3 flex items-center gap-1.5 md:gap-2">
-            <div className="flex items-center gap-0.5">
-              {[...Array(5)].map((_, i) => (
-                <span key={i} className="text-[#800000]/80 text-xs md:text-sm">
-                  ✦
-                </span>
-              ))}
-            </div>
-            <span className="text-[10px] md:text-xs text-gray-400 tracking-wide">
-              Handcrafted
-            </span>
+            {reviewCount > 0 ? (
+              <>
+                <div className="flex items-center gap-0.5">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <span
+                      key={star}
+                      className="text-xs md:text-sm"
+                      style={{ color: star <= Math.round(avgRating) ? "#f59e0b" : "#d1d5db" }}
+                    >
+                      ★
+                    </span>
+                  ))}
+                </div>
+                <span className="text-[11px] md:text-xs font-semibold text-gray-700">{avgRating}</span>
+                <span className="text-[10px] md:text-xs text-gray-400">({reviewCount} reviews)</span>
+              </>
+            ) : (
+              <span className="text-[10px] md:text-xs text-gray-400 tracking-wide">Handcrafted with care</span>
+            )}
           </div>
         </div>
 

@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { Product } from "../types";
 import { DeliveryChecker } from "./DeliveryChecker";
 import { ImageModal } from "./ImageModal";
+import { ProductDetailsAccordion } from "./ProductDetailsAccordion";
 import { ProductImageGrid } from "./ProductImageGrid";
 import { ProductInfo } from "./ProductInfo";
 import { ProductPurchaseSection } from "./ProductPurchaseSection";
@@ -51,10 +52,12 @@ const generateSizeRange = (
 interface ProductViewProps {
   product: Product;
   customRed: string;
-  sizeChart : SizeChartData
+  sizeChart: SizeChartData;
+  avgRating?: number;
+  reviewCount?: number;
 }
 
-export const ProductView = ({ sizeChart , product, customRed }: ProductViewProps) => {
+export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, reviewCount = 0 }: ProductViewProps) => {
   const { addToCart, addingToCart } = useCart();
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
@@ -206,7 +209,7 @@ export const ProductView = ({ sizeChart , product, customRed }: ProductViewProps
             <div className="hidden md:block absolute bottom-0 right-0 w-10 lg:w-12 h-10 lg:h-12 border-b-2 border-r-2 border-[#800000]/20" />
 
             <div className="space-y-4 md:space-y-6">
-              <ProductInfo product={product} customRed={customRed} />
+              <ProductInfo product={product} customRed={customRed} avgRating={avgRating} reviewCount={reviewCount} />
 
               {/* Product Highlights Grid */}
               {product.details && product.details.length > 0 && (
