@@ -66,7 +66,7 @@ const ReelItem = ({ reel, index, onClick }: ReelItemProps) => {
         loop
         playsInline
         preload="metadata"
-        onCanPlay={() => setIsLoaded(true)}
+        onPlaying={() => setIsLoaded(true)}
       />
 
       {/* Poster visible until video ready */}
