@@ -12,70 +12,85 @@ interface ReelItemProps {
 const ReelItem = ({ reel, index, onClick }: ReelItemProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const isPriority = index <= 1;
+  const [hasStarted, setHasStarted] = useState(false); // once true, never false — keeps last frame visible during buffer
+  const inViewRef = useRef(false);
+  const readyRef = useRef(false);
 
   useEffect(() => {
     const video = videoRef.current;
     const container = containerRef.current;
     if (!video || !container) return;
 
-    setIsPlaying(false);
+    const isMobile = window.innerWidth < 768;
 
-    const mobile = typeof window !== "undefined" && window.innerWidth < 768;
+    // Attempt play only when BOTH in-view AND enough data buffered
+    const tryPlay = () => {
+      if (inViewRef.current && readyRef.current) {
+        video.play().catch(() => {});
+      }
+    };
 
-    if (mobile) {
+    const onCanPlay = () => {
+      readyRef.current = true;
+      tryPlay();
+    };
+
+    video.addEventListener("canplay", onCanPlay);
+
+    if (isMobile) {
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
+            inViewRef.current = entry.isIntersecting;
             if (entry.isIntersecting) {
               if (video.src !== reel.videoUrl) {
                 video.src = reel.videoUrl;
                 video.load();
               }
-              video.play().catch(() => {});
+              tryPlay();
             } else {
               video.pause();
             }
           });
         },
-        { threshold: 0.4, rootMargin: "0px 200px 0px 200px" }
+        { threshold: 0.5, rootMargin: "0px 150px 0px 150px" }
       );
       observer.observe(container);
-      return () => observer.disconnect();
+      return () => {
+        observer.disconnect();
+        video.removeEventListener("canplay", onCanPlay);
+      };
     }
 
-    // Desktop priority — load and play immediately
-    if (isPriority) {
-      video.src = reel.videoUrl;
-      video.load();
-      video.play().catch(() => {});
-      return;
-    }
+    // Desktop: stagger the src load so all 5-6 videos don't hit network simultaneously
+    const loadTimer = setTimeout(() => {
+      if (video.src !== reel.videoUrl) {
+        video.src = reel.videoUrl;
+        video.load();
+      }
+    }, index * 500);
 
-    // Desktop non-priority — lazy via IntersectionObserver
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
+          inViewRef.current = entry.isIntersecting;
           if (entry.isIntersecting) {
-            if (video.src !== reel.videoUrl) {
-              video.src = reel.videoUrl;
-              video.load();
-            }
-            video.play().catch(() => {});
+            tryPlay();
           } else {
             video.pause();
           }
         });
       },
-      { threshold: 0.3, rootMargin: "0px 100px 0px 100px" }
+      { threshold: 0.3 }
     );
-
     observer.observe(container);
-    return () => observer.disconnect();
-  }, [reel.videoUrl, isPriority]);
 
-  const mobile = typeof window !== "undefined" && window.innerWidth < 768;
+    return () => {
+      clearTimeout(loadTimer);
+      observer.disconnect();
+      video.removeEventListener("canplay", onCanPlay);
+    };
+  }, [reel.videoUrl, index]);
 
   return (
     <div
@@ -83,26 +98,28 @@ const ReelItem = ({ reel, index, onClick }: ReelItemProps) => {
       className="relative flex-none w-[240px] sm:w-[260px] md:w-[300px] aspect-[9/16] rounded-xl md:rounded-2xl overflow-hidden snap-center group shadow-lg cursor-pointer bg-stone-200"
       onClick={onClick}
     >
-      {/* Poster — shows immediately; bg-stone-200 is the fallback while it loads */}
+      {/* Poster — hidden once video has started (video's last frame shows during buffering) */}
       {reel.posterUrl && (
         <img
           src={reel.posterUrl}
           alt=""
-          className="absolute inset-0 w-full h-full object-cover"
-          loading={isPriority ? "eager" : "lazy"}
-          onError={(e) => { e.currentTarget.style.display = "none"; }}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${hasStarted ? "opacity-0" : "opacity-100"}`}
+          loading={index === 0 ? "eager" : "lazy"}
+          onError={(e) => {
+            e.currentTarget.style.display = "none";
+          }}
         />
       )}
 
-      {/* Video fades in once playing, covering the poster */}
       <video
         ref={videoRef}
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${isPlaying ? "opacity-100" : "opacity-0"}`}
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${hasStarted ? "opacity-100" : "opacity-0"}`}
         muted
         loop
         playsInline
-        preload={!mobile && isPriority ? "auto" : "metadata"}
-        onPlaying={() => setIsPlaying(true)}
+        preload="auto"
+        onPlaying={() => setHasStarted(true)}
+        // Do NOT hide on pause — keeps last frame visible during buffer waits
       />
 
       {reel.title && !/^video[\s\-_]?\d+$/i.test(reel.title.trim()) && (
