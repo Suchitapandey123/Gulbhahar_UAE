@@ -8,17 +8,16 @@ import { ProductDetails } from "./components/ProductDetails";
 import { ProductView } from "./components/ProductView";
 import Reviews from "./components/Reviews";
 import { SimilarProductsSection } from "./components/SimilarProductsSection";
-import { Product, SimilarProduct } from "./types";
+import { Product } from "./types";
 
 interface ProductModuleProps {
   product: Product;
-  similarProducts: SimilarProduct;
   sizeChart: any;
 }
 
 const CUSTOM_RED = "hsl(359.39deg 63.87% 30.39%)";
 
-export default async function ProductModule({ product, similarProducts, sizeChart }: ProductModuleProps) {
+export default async function ProductModule({ product, sizeChart }: ProductModuleProps) {
 
 
   
@@ -77,7 +76,7 @@ export default async function ProductModule({ product, similarProducts, sizeChar
 
           <Suspense fallback={null}>
             <SimilarProductsSection
-              similarProducts={similarProducts}
+              productId={product.productId || product.id || ""}
               customRed={CUSTOM_RED}
             />
           </Suspense>

@@ -13,8 +13,7 @@ import QuickTag from "../components/QuickTag";
 import ContentSection from "./components/ContentSection";
 import FAQSchema from "@/shared-components/seo/FAQSchema";
 
-export const revalidate = 86400; // 24 hours
-export const fetchCache = "force-cache";
+export const revalidate = 3600; // 1 hour — matches fetch revalidate in productService
 export const dynamicParams = true;
 
 export async function generateStaticParams() {

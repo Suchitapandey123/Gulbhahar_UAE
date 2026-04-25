@@ -1,9 +1,10 @@
+import productApi from "@/services/product/productService";
 import { getFirstProductImage } from "@/utils/productImageUtils";
-import { Product, SimilarProduct } from "../types";
+import { Product } from "../types";
 import { SimilarProductCard } from "./SimilarProductCard";
 
 interface SimilarProductsSectionProps {
-  similarProducts: SimilarProduct;
+  productId: string;
   customRed: string;
 }
 
@@ -36,17 +37,24 @@ function buildJsonLd(products: Product[]) {
   };
 }
 
-export const SimilarProductsSection = ({
-  similarProducts,
+export async function SimilarProductsSection({
+  productId,
   customRed,
-}: SimilarProductsSectionProps) => {
-  if (!similarProducts || similarProducts.products.length === 0) return null;
+}: SimilarProductsSectionProps) {
+  let products: Product[];
+  try {
+    const res = await productApi.getSimilarProducts(productId);
+    products = res?.products ?? [];
+  } catch {
+    return null;
+  }
 
-  const jsonLd = buildJsonLd(similarProducts.products);
+  if (!products || products.length === 0) return null;
+
+  const jsonLd = buildJsonLd(products);
 
   return (
     <section className="mt-4 lg:mt-4" aria-label="Similar Products">
-      {/* JSON-LD for search engines */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -63,7 +71,7 @@ export const SimilarProductsSection = ({
         </div>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 lg:gap-6">
-        {similarProducts.products.map((item) => (
+        {products.map((item: Product) => (
           <SimilarProductCard
             key={item.productId}
             item={item}
@@ -73,4 +81,4 @@ export const SimilarProductsSection = ({
       </div>
     </section>
   );
-};
+}

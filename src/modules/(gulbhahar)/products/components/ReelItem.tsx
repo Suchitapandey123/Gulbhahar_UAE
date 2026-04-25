@@ -12,8 +12,7 @@ interface ReelItemProps {
 const ReelItem = ({ reel, index, onClick }: ReelItemProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [posterReady, setPosterReady] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const isPriority = index <= 1;
 
   useEffect(() => {
@@ -21,12 +20,11 @@ const ReelItem = ({ reel, index, onClick }: ReelItemProps) => {
     const container = containerRef.current;
     if (!video || !container) return;
 
-    setIsLoaded(false);
+    setIsPlaying(false);
 
     const mobile = typeof window !== "undefined" && window.innerWidth < 768;
 
     if (mobile) {
-      // Mobile: preload src early (rootMargin), play only when visible
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
@@ -47,7 +45,7 @@ const ReelItem = ({ reel, index, onClick }: ReelItemProps) => {
       return () => observer.disconnect();
     }
 
-    // Desktop priority
+    // Desktop priority — load and play immediately
     if (isPriority) {
       video.src = reel.videoUrl;
       video.load();
@@ -55,7 +53,7 @@ const ReelItem = ({ reel, index, onClick }: ReelItemProps) => {
       return;
     }
 
-    // Desktop non-priority
+    // Desktop non-priority — lazy via IntersectionObserver
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -77,42 +75,39 @@ const ReelItem = ({ reel, index, onClick }: ReelItemProps) => {
     return () => observer.disconnect();
   }, [reel.videoUrl, isPriority]);
 
+  const mobile = typeof window !== "undefined" && window.innerWidth < 768;
+
   return (
     <div
       ref={containerRef}
       className="relative flex-none w-[240px] sm:w-[260px] md:w-[300px] aspect-[9/16] rounded-xl md:rounded-2xl overflow-hidden snap-center group shadow-lg cursor-pointer bg-stone-200"
       onClick={onClick}
     >
-      {/* Poster image — loads instantly, shows before video */}
+      {/* Poster — shows immediately; bg-stone-200 is the fallback while it loads */}
       {reel.posterUrl && (
         <img
           src={reel.posterUrl}
           alt=""
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${posterReady ? "opacity-100" : "opacity-0"}`}
-          onLoad={() => setPosterReady(true)}
+          className="absolute inset-0 w-full h-full object-cover"
+          loading={isPriority ? "eager" : "lazy"}
+          onError={(e) => { e.currentTarget.style.display = "none"; }}
         />
       )}
 
+      {/* Video fades in once playing, covering the poster */}
       <video
         ref={videoRef}
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${isLoaded ? "opacity-100" : "opacity-0"}`}
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${isPlaying ? "opacity-100" : "opacity-0"}`}
         muted
         loop
         playsInline
-        preload="metadata"
-        onPlaying={() => setIsLoaded(true)}
+        preload={!mobile && isPriority ? "auto" : "metadata"}
+        onPlaying={() => setIsPlaying(true)}
       />
-
-      {/* Spinner only while poster also not ready */}
-      {!posterReady && !isLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-8 h-8 rounded-full border-2 border-white/40 border-t-white animate-spin" />
-        </div>
-      )}
 
       {reel.title && !/^video[\s\-_]?\d+$/i.test(reel.title.trim()) && (
         <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4 z-10">
-          <h3 className="text-white font-medium text-sm line-clamp-2">
+          <h3 className="text-white font-medium text-sm line-clamp-2 drop-shadow">
             {reel.title}
           </h3>
         </div>
