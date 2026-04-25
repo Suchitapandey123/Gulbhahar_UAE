@@ -1,5 +1,6 @@
 // @ts-nocheck
 
+import { Suspense } from "react";
 import { getProductImagesForColor } from "@/utils/productImageUtils";
 import { Breadcrumbs } from "./components/Breadcrumbs";
 import { DeliveryChecker } from "./components/DeliveryChecker";
@@ -7,17 +8,16 @@ import { ProductDetails } from "./components/ProductDetails";
 import { ProductView } from "./components/ProductView";
 import Reviews from "./components/Reviews";
 import { SimilarProductsSection } from "./components/SimilarProductsSection";
-import { Product, SimilarProduct } from "./types";
+import { Product } from "./types";
 
 interface ProductModuleProps {
   product: Product;
-  similarProducts: SimilarProduct;
   sizeChart: any;
 }
 
 const CUSTOM_RED = "hsl(359.39deg 63.87% 30.39%)";
 
-export default async function ProductModule({ product, similarProducts, sizeChart }: ProductModuleProps) {
+export default async function ProductModule({ product, sizeChart }: ProductModuleProps) {
 
 
   
@@ -60,22 +60,26 @@ export default async function ProductModule({ product, similarProducts, sizeChar
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
               <ProductDetails product={product} />
               <div className="lg:border-l lg:pl-4 border-gray-100">
-                <Reviews
-                  variant="mobile"
-                  productId={product.productId || product.id || ""}
-                />
-                <Reviews
-                  variant="desktop"
-                  productId={product.productId || product.id || ""}
-                />
+                <Suspense fallback={<div className="h-40 animate-pulse bg-gray-100 rounded-lg" />}>
+                  <Reviews
+                    variant="mobile"
+                    productId={product.productId || product.id || ""}
+                  />
+                  <Reviews
+                    variant="desktop"
+                    productId={product.productId || product.id || ""}
+                  />
+                </Suspense>
               </div>
             </div>
           </div>
 
-          <SimilarProductsSection
-            similarProducts={similarProducts}
-            customRed={CUSTOM_RED}
-          />
+          <Suspense fallback={null}>
+            <SimilarProductsSection
+              productId={product.productId || product.id || ""}
+              customRed={CUSTOM_RED}
+            />
+          </Suspense>
         </div>
       </div>
     </>
