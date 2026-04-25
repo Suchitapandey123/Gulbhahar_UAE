@@ -149,19 +149,23 @@ export default async function Page({ params: rawParams }: Props) {
     redirect(`/products/${slug}`);
   }
 
-  // Use cached functions - same request won't be duplicated from generateMetadata
-  const validateRes = await validateSlugCached(slug);
-  if (!validateRes?.success) notFound();
-
-  const page = await getPageDataCached(slug);
-  if (!page || page.isFeatured === false) notFound();
-  
-  const parentCategory = page.parentCategory?.[0] || page.category || slug;
-  
-  const [products, parentCategoryProducts] = await Promise.all([
+  // Run validate + pageData + products all in parallel — products only needs slug
+  const [validateRes, page, products] = await Promise.all([
+    validateSlugCached(slug),
+    getPageDataCached(slug),
     productApi.getProductsByCategory(slug),
-    parentCategory ? productApi.getProductsByParentCategory(parentCategory) : Promise.resolve([]),
   ]);
+
+  if (!validateRes?.success) notFound();
+  if (!page || page.isFeatured === false) notFound();
+
+  const parentCategory = page.parentCategory?.[0] || page.category || slug;
+
+  // Only fetch parent category products if the main slug returned nothing
+  const parentCategoryProducts =
+    products.length === 0
+      ? await productApi.getProductsByParentCategory(parentCategory)
+      : [];
 
   // console.log("=== additionalDescription ===");
   // console.log(JSON.stringify(page?.additionalDescription, null, 2));
