@@ -12,12 +12,12 @@ Review
   ├─ Actions (Reply  button, likes/dislikes) 
   └─ Reply Section  (only when active)
       ├─ Reply Form (appears first)
-      └─ Replies List (renders below form)
+      └─ Replies  List (renders below form)
 ```
 
 ## Key Features   
  
-✅ Reply form appears  directly below the clicked review
+✅ Reply form  appears  directly below the clicked review
 ✅ Replies render below  the reply form
 ✅ Only one reply form open at a time (controlled by parent)
 ✅  Uses  `reviewId`  instead of `index` for identification

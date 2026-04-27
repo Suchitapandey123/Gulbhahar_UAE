@@ -13,31 +13,17 @@ const nextConfig = {
       },
       
       {
-        // Product pages - allow ISR caching with stale-while-revalidate
+        // Product pages — s-maxage matches page revalidate=3600; stale-while-revalidate serves instant while regenerating
         source: '/products/:path*',
         headers: [
           { key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' },
         ],
       },
       {
-        // Collection pages - allow ISR caching with stale-while-revalidate
+        // Collection pages — same ISR alignment
         source: '/collections/:path*',
         headers: [
           { key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' },
-        ],
-      },
-      {
-        // Homepage - shorter cache for freshness
-        source: '/',
-        headers: [
-          { key: 'Cache-Control', value: 'public, s-maxage=1800, stale-while-revalidate=3600' },
-        ],
-      },
-      {
-        // API routes - no caching
-        source: '/api/:path*',
-        headers: [
-          { key: 'Cache-Control', value: 'no-store' },
         ],
       },
       {
@@ -48,10 +34,17 @@ const nextConfig = {
         ],
       },
       {
-        // Collection detail pages
-        source: '/collections/:path*',
+        // Homepage
+        source: '/',
         headers: [
-          { key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' },
+          { key: 'Cache-Control', value: 'public, s-maxage=1800, stale-while-revalidate=3600' },
+        ],
+      },
+      {
+        // API routes - no caching
+        source: '/api/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'no-store' },
         ],
       },
     ];
