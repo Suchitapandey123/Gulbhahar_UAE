@@ -211,17 +211,22 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
             <div className="space-y-4 md:space-y-6">
               <ProductInfo product={product} customRed={customRed} avgRating={avgRating} reviewCount={reviewCount} />
 
-              {/* Product Highlights Grid */}
-              {product.details && product.details.length > 0 && (
-                <div className="grid grid-cols-2 gap-2">
-                  {product.details.slice(0, 6).map((item, i) => (
-                    <div key={i} className="flex items-start gap-2 bg-stone-50 border border-gray-100 rounded-lg px-3 py-2.5">
-                      <span className="text-[#800000]/50 mt-0.5 text-xs flex-shrink-0">✦</span>
-                      <span className="text-[11px] md:text-xs text-gray-600 leading-snug">{item}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
+              {/* Product Highlights — skip color/size entries, already shown below */}
+              {product.details && product.details.length > 0 && (() => {
+                const filtered = product.details.filter(
+                  (d) => !/color|colour|size|rang/i.test(d)
+                ).slice(0, 4);
+                return filtered.length > 0 ? (
+                  <div className="grid grid-cols-2 gap-2">
+                    {filtered.map((item, i) => (
+                      <div key={i} className="flex items-start gap-2 bg-stone-50 border border-gray-100 rounded-lg px-3 py-2.5 min-h-[48px]">
+                        <span className="text-[#800000] mt-0.5 text-[10px] flex-shrink-0">✦</span>
+                        <span className="text-[11px] md:text-xs text-gray-700 leading-snug line-clamp-2">{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : null;
+              })()}
 
               <ProductVariants
                 product={product}
