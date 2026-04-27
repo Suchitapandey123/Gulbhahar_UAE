@@ -185,10 +185,14 @@ export default async function Page({ params: rawParams }: Props) {
           products={parentCategoryProducts}
         />
       )}
-      <CategoryCollection_MatchingProducts parentCategory={parentCategory} />
-      <ContentSection page={page} />
-      <QuickLinks parentCategory={parentCategory} currentSlug={slug} />
-      <QuickTag popularTags={page?.keywords || []} />
+      <Suspense fallback={null}>
+        <CategoryCollection_MatchingProducts parentCategory={parentCategory} />
+      </Suspense>
+      <Suspense fallback={null}>
+        <ContentSection page={page} />
+        <QuickLinks parentCategory={parentCategory} currentSlug={slug} />
+        <QuickTag popularTags={page?.keywords || []} />
+      </Suspense>
     </div>
   );
 }

@@ -160,7 +160,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
       <SessionWrapper>
         <body
-          className={`${poppins.variable} ${jetbrainsMono.variable} antialiased`}
+          className={`${poppins.variable} ${jetbrainsMono.variable} antialiased bg-white`}
         >
 
           {/* Analytics Scripts */}
