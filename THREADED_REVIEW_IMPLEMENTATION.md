@@ -27,7 +27,7 @@ Review
 
 ## Implementation Details
 
-### 1.   State Management (ReviewsClient.tsx)
+### 1. State Management (ReviewsClient.tsx)
 
 ```typescript
 // Add state for active reply
