@@ -1,4 +1,5 @@
 import { parentCategoryPageService } from "@/services/parentCategoryPage/parentCategoryPageService";
+import productApi from "@/services/product/productService";
 import ParentCategoryPageModule from "@/modules/(gulbhahar)/parentCategories/ParentCategoryPageModule";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -12,7 +13,7 @@ interface PageProps {
   params: Promise<{ parentCategory: string }>;
 }
 
-export const revalidate = 86400; // 24 hours
+export const revalidate = 3600;
 
 const ALLOWED_PARENT_CATEGORIES = ['suit', 'saree', 'lehenga', 'bags', 'jewellery', 'juttis'];
 
@@ -62,9 +63,20 @@ const page = async ({ params }: PageProps) => {
     notFound();
   }
 
+  // Fetch page data + products in parallel — no skeleton needed
+  const [pageResponse, { products, nextCursor }] = await Promise.all([
+    getParentCategoryPageCached(parentCategory).catch(() => ({ data: null })),
+    productApi.getProductsByParentCategoryPage(parentCategory).catch(() => ({ products: [], nextCursor: null })),
+  ]);
+
   return (
     <main className="px-2 md:px-0">
-      <ParentCategoryPageModule parentCategory={parentCategory} />
+      <ParentCategoryPageModule
+        parentCategory={parentCategory}
+        pageData={pageResponse?.data ?? null}
+        initialProducts={products}
+        initialCursor={nextCursor}
+      />
     </main>
   );
 };

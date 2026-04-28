@@ -4,7 +4,8 @@ User-agent: googlebot-mobile
 Disallow: 
 User-agent: Bingbot
 Disallow: 
-User-agent: * 
+User-agent: *
+Disallow: /_next/
 Disallow: /account/
 Disallow: /cart/checkout/
 Disallow: /cgi-bin/

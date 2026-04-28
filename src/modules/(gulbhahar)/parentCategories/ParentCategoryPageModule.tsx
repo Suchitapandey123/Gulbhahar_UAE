@@ -1,52 +1,40 @@
-import { parentCategoryPageService } from "@/services/parentCategoryPage/parentCategoryPageService";
-import { Suspense } from "react";
+import { ParentCategoryPageData } from "@/types/page.types";
+import { Product } from "../products/types";
 import ParentCategoryContentSection from "./content/ParentCategoryContentSection";
-import ParentCategoryCollection from "./ParentCategoryCollection";
+import ParentCategoryCollectionClient from "./ParentCategoryCollectionClient";
 
 interface CategoryPageModuleProps {
   parentCategory: string;
+  pageData: ParentCategoryPageData | null;
+  initialProducts: Product[];
+  initialCursor: string | null;
 }
 
-// Loading skeleton for the collection section
-function CollectionSkeleton() {
-  return (
-    <div className="mt-16 pt-2 lg:mt-10">
-      <div className="max-w-[1600px] mx-auto px-2">
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-5">
-          {[...Array(8)].map((_, i) => (
-            <div key={i} className="animate-pulse">
-              <div className="aspect-[3/4] bg-gray-200 rounded" />
-              <div className="mt-2 h-4 bg-gray-200 rounded w-3/4" />
-              <div className="mt-1 h-4 bg-gray-200 rounded w-1/2" />
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default async function ParentCategoryPageModule({
+export default function ParentCategoryPageModule({
   parentCategory,
+  pageData,
+  initialProducts,
+  initialCursor,
 }: CategoryPageModuleProps) {
-  let page = null;
-  try {
-    const response = await parentCategoryPageService.getParentCategoryPageBySlug(parentCategory);
-    page = response.data ?? null;
-  } catch {
-    // API unavailable or slug not found — still show products
-  }
-
   return (
     <>
-      <div className="max-w-7xl  mt-16 pt-2 lg:mt-102xl:max-w-[1600px] mx-auto  font-raleway">
+      <div className="max-w-7xl mt-16 pt-2 lg:mt-10 2xl:max-w-[1600px] mx-auto font-raleway">
         <section className="pb-24">
-          <Suspense fallback={<CollectionSkeleton />}>
-            <ParentCategoryCollection initialParentCategory={parentCategory} />
-          </Suspense>
+          {initialProducts.length === 0 ? (
+            <div className="mt-16 flex items-center justify-center">
+              <p className="text-gray-500 font-semibold">No products available at the moment.</p>
+            </div>
+          ) : (
+            <ParentCategoryCollectionClient
+              initialProducts={initialProducts}
+              initialCursor={initialCursor}
+              parentCategory={parentCategory}
+              show={false}
+            />
+          )}
         </section>
 
-        {page && <ParentCategoryContentSection page={page} />}
+        {pageData && <ParentCategoryContentSection page={pageData} />}
       </div>
     </>
   );
