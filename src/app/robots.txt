@@ -1,9 +1,9 @@
 User-agent: Googlebot
-Disallow: 
+Disallow: /_next/
 User-agent: googlebot-mobile
-Disallow: 
+Disallow: /_next/
 User-agent: Bingbot
-Disallow: 
+Disallow: /_next/
 User-agent: *
 Disallow: /_next/
 Disallow: /account/
