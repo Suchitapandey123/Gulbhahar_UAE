@@ -23,7 +23,7 @@ Review
 ✅  Uses  `reviewId`  instead of `index` for identification
 ✅ Clean, static Tailwind classes (no dynamic template strings)
 ✅ Proper React state management
-✅ Mobile and desktop responsive variants
+✅ Mobile and desktop responsive variants. 
 
 ## Implementation Details
 
