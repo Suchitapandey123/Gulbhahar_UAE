@@ -147,7 +147,7 @@ const LoginPage = () => {
   }, [isAuthenticated, authLoading]);
 
   // Show loading state during OAuth or if already authenticated
-  if (authLoading || (status === 'authenticated' && !isAuthenticated) || socialLoginLoading) {
+  if (authLoading || socialLoginLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-white to-red-50">
         <div className="text-center">
