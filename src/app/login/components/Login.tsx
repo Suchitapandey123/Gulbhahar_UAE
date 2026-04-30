@@ -348,9 +348,8 @@ const LoginPage = () => {
   const handleGoogleLogin = () => {
    
     setSocialLoginLoading(true);
-    
     // Direct signIn call - SIMPLEST VERSION
-    signIn("google", { callbackUrl: "/" })
+    signIn("google", { callbackUrl: "/auth/callback" })
       .catch(error => {
         console.error("Google login error:", error);
         setGeneralError("Google login failed. Please try again.");
@@ -364,7 +363,7 @@ const LoginPage = () => {
     setSocialLoginLoading(true);
     
     // Direct signIn call - SIMPLEST VERSION
-    signIn("facebook", { callbackUrl: "/" })
+    signIn("facebook", { callbackUrl: "/auth/callback" })
       .catch(error => {
         console.error("Facebook login error:", error);
         setGeneralError("Facebook login failed. Please try again.");
