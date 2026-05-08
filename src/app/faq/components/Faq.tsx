@@ -23,8 +23,8 @@ const TiltArrow = ({ className }) => <ChevronDown className={className} />;
 const allFaqs = [
   // General FAQs
   {
-    question: "How do I find the right jutti size for me?",
-    answer: "Traditional juttis typically run true to size, but we recommend measuring your foot length and referring to our detailed size chart. For the perfect fit, measure your feet in the evening when they are slightly expanded. Our size guide includes both Indian and international measurements to help you make the right choice.",
+    question: "How do I find the right size for me?",
+    answer: "All our products typically run true to size, but we recommend referring to our detailed size chart. Our size guide includes both Indian and international measurements to help you make the right choice.",
     category: "General"
   },
   {
@@ -33,8 +33,8 @@ const allFaqs = [
     category: "General"
   },
   {
-    question: "Are your juttis comfortable for everyday wear?",
-    answer: "Yes, our juttis are designed with soft leather lining and cushioned soles to ensure maximum comfort for all-day wear.",
+    question: "Are your suits comfortable for everyday wear?",
+    answer: "Yes, our suits are designed with soft fabric to ensure maximum comfort for all-day wear.",
     category: "General"
   },
 
@@ -46,7 +46,7 @@ const allFaqs = [
   },
   {
     question: "How much does shipping cost?",
-    answer: "Shipping costs vary based on your location. We offer free shipping on all domestic orders above ₹2,000. For international orders, shipping rates are calculated at checkout.",
+    answer: "Shipping costs vary based on your location. We offer free shipping on all domestic orders above ₹5,000. For international orders, shipping rates are calculated at checkout.",
     category: "Shipping"
   },
   {
@@ -58,7 +58,7 @@ const allFaqs = [
   // Return FAQs
   {
     question: "What is your return policy?",
-    answer: "We accept returns within 14 days of delivery. The juttis must be unworn and in their original packaging with all tags attached.",
+    answer: "We accept returns within 14 days of delivery. The products must be unworn and in their original packaging with all tags attached.",
     category: "Return"
   },
   {
@@ -96,13 +96,13 @@ const allFaqs = [
     category: "About"
   },
   {
-    question: "Are your juttis ethically made?",
-    answer: "Yes, all our juttis are ethically handcrafted by skilled artisans who receive fair wages. We take pride in preserving traditional craftsmanship while ensuring ethical working conditions.",
+    question: "Are your suits and sarees ethically made?",
+    answer: "Yes, all our products are ethically handcrafted by skilled artisans who receive fair wages. We take pride in preserving traditional craftsmanship while ensuring ethical working conditions.",
     category: "About"
   },
   {
-    question: "What materials are used in your juttis?",
-    answer: "We use premium quality genuine leather for the upper and lining, with cushioned insoles for comfort. The embroidery is done using high-quality threads and embellishments.",
+    question: "What materials are used in your bags?",
+    answer: "We use premium quality genuine fabric (or metal) for every bag. The inner lining of the bags are cushioned for comfort. The embroidery is done using high-quality threads and embellishments.",
     category: "About"
   }
 ];

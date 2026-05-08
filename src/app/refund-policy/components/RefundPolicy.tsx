@@ -242,7 +242,7 @@ terms: {
             <h4 className="font-bold text-yellow-900 mb-2 text-lg">RETURNS & EXCHANGES</h4>
             <div className="space-y-3">
               <p className="text-sm sm:text-base text-gray-700">
-                We use standard EURO sizes to help you pick the perfect size. However, if you want to RETURN, then you may return the pair to us at 
+                We use standard EURO sizes in all products to help you pick the perfect size. However, if you want to RETURN, then you may return the product to us at
               </p>
               <p className="text-sm sm:text-base text-gray-700 bg-red-100 p-3 rounded-lg border border-red-200">
                 <strong> S-12 Janta Market, Rajouri Garden Delhi , 110027,</strong> India within 7 Days in its original box packing and the invoice. Please mention your desired exchange piece along with the size on the invoice as well.
@@ -270,7 +270,7 @@ terms: {
             </p>
             <div className="bg-red-50 border-l-4 border-red-400 p-3 rounded-r">
               <p className="text-sm sm:text-base font-semibold text-yellow-800">
-                Pairs bought on SALE price will not be exchanged or returned.
+                Products bought on SALE price will not be exchanged or returned.
               </p>
               
             </div>

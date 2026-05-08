@@ -70,8 +70,7 @@ const HeroSection = () => {
               transition={{ delay: 1.3, duration: 0.8 }}
             >
               <p className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-gray-600 max-w-2xl leading-relaxed font-light">
-                Where centuries-old craftsmanship meets contemporary design, 
-                creating footwear that tells your unique story, one step at a time.
+               Where centuries-old craftsmanship meets contemporary design, creating clothing and lifestyle products that tells your unique story, every look at a time.
               </p>
               
               <motion.div 
@@ -291,8 +290,8 @@ const StorySection = () => {
                   transition={{ delay: 0.7 }}
                   viewport={{ once: true }}
                 >
-                  Our journey began with a vision to preserve and celebrate the timeless art of jutti-making. 
-                  Our master artisans, many of whom represent the third and fourth generations of their craft, 
+                  Our journey began with a vision to preserve and celebrate elegant juttis, clothing and lifestyle products. 
+                  Many of our artisans represent the third and fourth generations of their craft, 
                   bring decades of expertise to every piece they create.
                 </motion.p>
 
@@ -303,8 +302,8 @@ const StorySection = () => {
                   transition={{ delay: 0.9 }}
                   viewport={{ once: true }}
                 >
-                  "We bring centuries of Indian craftsmanship to your feet through our exquisitely 
-                  handcrafted juttis. Each pair tells a story of tradition, artistry, and cultural 
+                  "We bring centuries of Indian craftsmanship to you through our exquisitely 
+                  handcrafted products. Each piece of Gulbhahar tells a story of tradition, artistry, and cultural 
                   excellence that has been passed down through generations."
                 </motion.blockquote>
               </div>
@@ -402,7 +401,7 @@ const TraditionSection = () => {
           >
             <div className="relative h-[250px] xs:h-[300px] sm:h-[350px] md:h-[400px] lg:h-[500px] rounded-lg sm:rounded-xl lg:rounded-3xl overflow-hidden shadow-2xl border border-[#7f0001]/20">
               <Image
-                src="/about/adda-master-optimized.webp"
+                src="/about/imageabout1.webp"
                 alt="Traditional Craftsmanship"
                 fill
                 priority
@@ -418,7 +417,7 @@ const TraditionSection = () => {
                 viewport={{ once: true }}
               >
                 <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-1 sm:mb-2">Traditional Methods</h3>
-                <p className="text-sm sm:text-base lg:text-lg opacity-90">Our juttis celebrate India's rich handcrafted legacy, and our soulful design in juttis is woven with traditional expertise.</p>
+                <p className="text-sm sm:text-base lg:text-lg opacity-90">Our products celebrate India's rich handcrafted legacy, and our soulful design in all our apparel are woven with traditional expertise.</p>
               </motion.div>
             </div>
           </motion.div>
@@ -431,7 +430,7 @@ const TraditionSection = () => {
             viewport={{ once: true }}
           >
             <blockquote className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl italic text-gray-700 leading-relaxed">
-            Each jutti we craft carries the soul of Indian heritage. Gulbhahar juttis are woven by hands that have passed down their artistry for generations. We bring centuries of tradition right to you.
+            Each piece of Gulbhahar we craft carries the soul of Indian heritage. Gulbhahar products are woven by hands that have passed down their artistry for generations. We bring centuries of tradition right to you.
             </blockquote>
             
             <motion.div 
@@ -457,7 +456,7 @@ const TraditionSection = () => {
             viewport={{ once: true }}
           >
             <blockquote className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl italic text-gray-700 leading-relaxed">
-            Each pair of juttis shares a story; our juttis weave together the past and present. Gulbhahar gives you an unbroken thread of Indian craftsmanship passed down through time.
+            Each piece of Gulbhahar shares a story; our products weave together the past and present. Gulbhahar gives you an unbroken thread of Indian craftsmanship passed down through time.
             </blockquote>
             
             <motion.div 
@@ -482,7 +481,7 @@ const TraditionSection = () => {
           >
             <div className="relative h-[250px] xs:h-[300px] sm:h-[350px] md:h-[400px] lg:h-[500px] rounded-lg sm:rounded-xl lg:rounded-3xl overflow-hidden shadow-2xl border border-[#7f0001]/20">
               <Image
-                src="/about/modern-innovation-optimized.webp"
+                src="/about/imageabout2.webp"
                 alt="Contemporary Design"
                 fill
                 priority
@@ -498,7 +497,7 @@ const TraditionSection = () => {
                 viewport={{ once: true }}
               >
                 <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-1 sm:mb-2">Modern Innovation</h3>
-                <p className="text-sm sm:text-base lg:text-lg opacity-90">Innovation breathes new life into heritage; our juttis fuse artisanal craft with modern flair and function.                </p>
+                <p className="text-sm sm:text-base lg:text-lg opacity-90">Innovation breathes new life into heritage; our products fuse artisanal craft with modern flair and function.                </p>
               </motion.div>
             </div>
           </motion.div>
@@ -517,7 +516,7 @@ const TraditionSection = () => {
             whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
-            Each step you take in our juttis carries forward a legacy of Indian craftsmanship.
+            Each step you take in a piece of Gulbhahar carries forward a legacy of Indian craftsmanship.
           </motion.p>
         </motion.div>
       </div>
@@ -547,7 +546,7 @@ const ArtisanSection = () => {
       name: "Hastkalaakar",
       experience: "28 Years", 
       specialty: "Pattern Design",
-      quote: "The artistic process of composing elements in symmetry and harmony, to create a totality for each jutti.",
+      quote: "The artistic process of composing elements in symmetry and harmony, to create a totality for each look.",
       image: "/about/pattern-design-optimized.webp"
     },
     {
@@ -607,7 +606,7 @@ const ArtisanSection = () => {
             transition={{ delay: 0.6 }}
             viewport={{ once: true }}
           >
-            Meet the skilled craftspeople who bring our heritage footwear to life
+            Meet the skilled craftspeople who bring our heritage clothing and accessories to life
           </motion.p>
         </motion.div>
 
@@ -684,35 +683,35 @@ const ProcessSection = () => {
       title: "Design & Inspiration",
       description: "Our journey begins with traditional motifs and contemporary influences merging into unique designs",
       detail: "Sketching, pattern creation, and cultural research form the foundation of every collection",
-      img:"/about/craft-1-optimized.webp"
+      img:"/about/imageheritage5.webp"
     },
     {
       number: "02", 
       title: "Material Selection",
       description: "Only the finest leathers and fabrics are chosen, sourced from trusted suppliers across India",
       detail: "Quality control ensures every material meets our exacting standards for durability and beauty",
-      img:"/about/craft-2-optimized.webp"
+      img:"/about/imageheritage3.webp"
     },
     {
       number: "03",
       title: "Master Craftsmanship",
       description: "Skilled artisans hand-cut, stitch, and embellish each piece using time-honored techniques",
-      detail: "15-20 hours of dedicated work goes into creating each pair of premium juttis",
-      img:"/about/craft-3-optimized.webp"
+      detail: "15-20 hours of dedicated work goes into creating each premium product",
+      img:"/about/imageheritage2.webp"
     },
     {
       number: "04",
       title: "Quality Assurance",
       description: "Every finished piece undergoes rigorous inspection to ensure it meets our heritage standards",
       detail: "Multiple quality checkpoints guarantee that only perfect pieces reach our customers",
-      img:"/about/craft-4-optimized.webp"
+      img:"/about/imageheritage4.webp"
     },
     {
       number: "05",
       title: "Final Finishing",
       description: "The final touches bring each piece to life, ready to carry forward our legacy",
       detail: "Hand-polishing, packaging, and certification complete the artisanal journey",
-      img:"/about/craft-5-optimized.webp"
+      img:"/about/imageheritage1.webp"
     }
   ];
 
@@ -750,7 +749,7 @@ const ProcessSection = () => {
               transition={{ delay: 0.5 }}
               viewport={{ once: true }}
             >
-              behind every pair
+              behind every look
             </motion.span>
           </motion.h2>
         </motion.div>
@@ -1162,7 +1161,7 @@ const CtaSection = () => {
               transition={{ delay: 0.2 }}
               viewport={{ once: true }}
             >
-              EVERY STEP
+              EVERY LOOK
             </motion.span>
             <motion.span
               className="block text-gray-700"
@@ -1182,7 +1181,7 @@ const CtaSection = () => {
             transition={{ delay: 0.6 }}
             viewport={{ once: true }}
           >
-            Each step you take in our juttis carries forward a legacy of Indian craftsmanship, 
+            Each step you take in a piece of Gulbhahar carries forward a legacy of Indian craftsmanship, 
             connecting you to centuries of artisanal excellence and cultural heritage.
           </motion.p>
 
@@ -1335,7 +1334,7 @@ const BrandStorySection = () => {
                 >
                   <p>
                     It started with an inclination towards the art of <span className="text-[#7f0001] font-semibold">hand embroidery and its artisans</span>. 
-                    With a passion for promoting handicrafts intertwined with comfortable footwear, visionary couple 
+                    With a passion for promoting handicrafts intertwined with comfortable clothing, footwear and accessories, visionary couple 
                     <span className="font-bold text-gray-900"> Monica Bhardwaj Gulati</span> launched 
                     Gulbhahar in <span className="text-[#7f0001] font-bold">January 2025</span>.
                   </p>
@@ -1356,7 +1355,7 @@ const BrandStorySection = () => {
                   
                   <p>
                     They were drawn to innovative handiwork, hard work, and the art of the artisans. 
-                    <span className="font-semibold text-gray-900"> Each pair takes several hours to create with dedication.</span> 
+                    <span className="font-semibold text-gray-900"> Each piece of Gulbhahar takes several hours to create with dedication.</span> 
                     They are handmade, and the utmost importance is given to the craft itself. 
                   </p>
                 </motion.div>
@@ -1446,12 +1445,12 @@ const BrandStorySection = () => {
               
               <div className="space-y-4 sm:space-y-6 text-sm xs:text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed">
                 <p>
-                  <span className="font-semibold text-gray-900">Handcrafted by artisans honing the shoemaking trade for generations</span>, 
-                  each pair of juttis is unique. Gulbhahar ensures everything about each jutti is flawless.
+                  <span className="font-semibold text-gray-900">Handcrafted by artisans honing the trade for generations</span>, 
+                  each piece of Gulbhahar is unique. Gulbhahar ensures everything about each product is flawless
                 </p>
                 
                 <p>
-                  We make our juttis in beautiful fabrics, and they have <span className="text-[#7f0001] font-semibold">meticulous threadwork</span>. 
+                  We make our products in beautiful fabrics, and they have<span className="text-[#7f0001] font-semibold"> meticulous threadwork</span>. 
                   We take every detail seriously. Everything from Gulbhahar is carefully crafted.
                 </p>
                 
@@ -1463,8 +1462,8 @@ const BrandStorySection = () => {
                   viewport={{ once: true }}
                 >
                   <p className="font-medium text-gray-800 italic">
-                    The intention was to reevaluate the traditional jutti craft form but add more of a 
-                    <span className="text-[#7f0001] font-bold"> modern and stylish feel</span>.
+                    The intention was to reevaluate the traditional craft form but add more of a
+                    <span className="text-[#7f0001] font-bold"> modern and stylish feel.</span>
                   </p>
                 </motion.div>
               </div>
@@ -1484,17 +1483,18 @@ const BrandStorySection = () => {
                 transition={{ delay: 0.6 }}
                 viewport={{ once: true }}
               >
-                "Our handcrafted shoes are more than a pair of shoes. They are a representation of 
-                <span className="text-[#7f0001] font-bold"> comfort, style and integrity</span>."
+                "Our handcrafted products are more than a suit, saree, or pair of juttis. They are a representation of  
+                <span className="text-[#7f0001] font-bold"> comfort, style and integrity."</span>
               </motion.blockquote>
               
               <p>
-                Wearing our juttis connects you to a <span className="font-semibold text-gray-900">rich history of elegance, tradition, and custom</span>. 
-                Whether it's weddings, festive holiday parties, or just everyday glamour.
+                Wearing our products connects you to a <span className="font-semibold text-gray-900">rich history of elegance, tradition, and custom.</span>
+                Be it weddings, festive holiday parties, or just everyday glamour.
+
               </p>
               
               <p>
-                The handmade designer juttis and accessories for women celebrate rich diversity. 
+                The handmade designer clothing, juttis and accessories for women celebrate rich diversity. 
                 Each piece is made with <span className="text-[#7f0001] font-semibold">craftsmanship and creativity</span>. 
                 Gulbhahar wants to be a part of every special occasion that you celebrate.
               </p>
@@ -1534,7 +1534,7 @@ const BrandStorySection = () => {
             {[
               { title: "Preserving Heritage", icon: "🏛️", description: "Keeping traditional craftsmanship alive through modern innovation" },
               { title: "Responsible Fashion", icon: "🌱", description: "Creating sustainable, ethically-made products with care for our environment" },
-              { title: "Unparalleled Comfort", icon: "✨", description: "Ensuring every step is as comfortable as it is beautiful" }
+              { title: "Unparalleled Comfort", icon: "✨", description: "Ensuring every look is as comfortable as it is beautiful" }
             ].map((mission, index) => (
               <motion.div
                 key={mission.title}
