@@ -1022,7 +1022,7 @@ const CollectionsSection = () => {
 const TestimonialsSection = () => {
   const testimonials = [
     {
-      name: "Himanshi Arora",
+      name: "Himanshi Malhotra",
       location: "Delhi",
       review: "The craftsmanship is absolutely incredible. Each detail shows the love and skill that went into making these beautiful juttis.",
       rating: 5,
