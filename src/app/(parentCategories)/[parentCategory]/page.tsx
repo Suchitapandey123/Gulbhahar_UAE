@@ -72,7 +72,7 @@ const page = async ({ params }: PageProps) => {
   console.log(pageResponse.data)
 
   return (
-    <main className="px-2 md:px-0">
+    <main className="px-2 pt-4 md:px-0">
       <ParentCategoryPageModule
         parentCategory={parentCategory}
         pageData={pageResponse?.data ?? null}
