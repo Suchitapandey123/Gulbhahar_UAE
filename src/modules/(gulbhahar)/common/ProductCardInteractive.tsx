@@ -16,6 +16,7 @@ interface ProductCardInteractiveProps {
   priority?: boolean;
   price?: number;
   originalPrice?: number;
+  isOutOfStock?: boolean;
 }
 
 export default function ProductCardInteractive({
@@ -27,6 +28,7 @@ export default function ProductCardInteractive({
   priority = false,
   price,
   originalPrice,
+  isOutOfStock = false,
 }: ProductCardInteractiveProps) {
   const slideIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -89,6 +91,8 @@ export default function ProductCardInteractive({
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (isOutOfStock) return;
 
     try {
       const selectedColor = colors.length > 0 ? colors[0] : "default";
@@ -156,7 +160,7 @@ export default function ProductCardInteractive({
                 unoptimized
                 placeholder="blur"
                 blurDataURL={image.lqip}
-                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out md:group-hover:scale-110 transition-transform ${
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out ${
                   isVisible ? "opacity-100" : "opacity-0"
                 }`}
               />
@@ -184,25 +188,27 @@ export default function ProductCardInteractive({
         )}
 
         {/* Add to Cart Button - Desktop Hover Only */}
-        <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-red-900 text-white text-center py-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-full group-hover:translate-y-0 z-10">
-          <button
-            onClick={handleAddToCart}
-            disabled={isAddingThis}
-            className="w-full text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-75"
-          >
-            {isAddingThis ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                <span>Adding...</span>
-              </>
-            ) : (
-              <>
-                <ShoppingBag size={16} />
-                <span>Add to Cart</span>
-              </>
-            )}
-          </button>
-        </div>
+        {!isOutOfStock && (
+          <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-red-900 text-white text-center py-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-full group-hover:translate-y-0 z-10">
+            <button
+              onClick={handleAddToCart}
+              disabled={isAddingThis}
+              className="w-full text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-75"
+            >
+              {isAddingThis ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <span>Adding...</span>
+                </>
+              ) : (
+                <>
+                  <ShoppingBag size={16} />
+                  <span>Add to Cart</span>
+                </>
+              )}
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

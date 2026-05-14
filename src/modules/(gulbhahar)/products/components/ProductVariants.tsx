@@ -12,8 +12,9 @@ interface ProductVariantsProps {
   setSelectedSize: (size: string) => void;
   customRed: string;
   setShowSizeGuide: (show: boolean) => void;
-  shouldShowSizeGuide:boolean;
+  shouldShowSizeGuide: boolean;
   sizeRange: { size: string; available: boolean; quantity: number }[];
+  inventory: { color: string; size: string; quantity: number }[];
 }
 
 export const ProductVariants = ({
@@ -26,6 +27,7 @@ export const ProductVariants = ({
   sizeRange,
   setShowSizeGuide,
   shouldShowSizeGuide,
+  inventory,
 }: ProductVariantsProps) => {
   
   const availableColors = useMemo(() => {
@@ -71,14 +73,24 @@ export const ProductVariants = ({
               </button>
             ))}
           </div>
-          <div className="text-sm text-gray-700">
-            <span className="font-medium">Selected:</span>{" "}
-            <span
-              className="capitalize font-semibold"
-              style={{ color: customRed }}
-            >
-              {currentColor}
+          <div className="flex items-center gap-3 text-sm text-gray-700">
+            <span>
+              <span className="font-medium">Selected:</span>{" "}
+              <span className="capitalize font-semibold" style={{ color: customRed }}>
+                {currentColor}
+              </span>
             </span>
+            {/* {(() => {
+              const colorStock = inventory
+                .filter((inv) => inv.color?.toLowerCase() === currentColor?.toLowerCase())
+                .reduce((sum, inv) => sum + (inv.quantity ?? 0), 0);
+              return (
+                <span className={`flex items-center gap-1 text-xs font-medium ${colorStock === 0 ? "text-gray-400" : "text-green-600"}`}>
+                  <span className={`w-1.5 h-1.5 rounded-full ${colorStock === 0 ? "bg-gray-400" : "bg-green-500"}`} />
+                  {colorStock === 0 ? "Out of Stock" : "In Stock"}
+                </span>
+              );
+            })()} */}
           </div>
         </div>
       )}
@@ -86,9 +98,20 @@ export const ProductVariants = ({
       {/* Size Selection */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h3 className="text-base font-medium text-gray-900">
-            {"Available Sizes"}:
-          </h3>
+          <div className="flex items-center gap-3">
+            <h3 className="text-base font-medium text-gray-900">Available Sizes:</h3>
+            {selectedSize && (() => {
+              const selected = sizeRange.find((s) => s.size === selectedSize);
+              if (!selected) return null;
+              return (
+                <span className={`flex items-center gap-1 text-xs font-medium ${selected.available ? "text-green-600" : "text-gray-400"}`}>
+                  <span className={`w-1.5 h-1.5 rounded-full ${selected.available ? "bg-green-500" : "bg-gray-400"}`} />
+                  {/* {selected.available ? `In Stock (${selected.quantity})` : "Out of Stock"} */}
+                  {selected.available ? `In Stock` : "Out of Stock"}
+                </span>
+              );
+            })()}
+          </div>
           {shouldShowSizeGuide && (
           <button
             disabled={!shouldShowSizeGuide}

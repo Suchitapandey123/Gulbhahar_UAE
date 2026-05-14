@@ -25,6 +25,7 @@ export async function GET() {
     ];
 
     products.forEach((p: any) => {
+      
       const totalQty = p.inventory?.reduce((sum: number, i: any) => sum + (i.quantity || 0), 0);
       const availability = totalQty > 0 ? "in stock" : "out of stock";
 

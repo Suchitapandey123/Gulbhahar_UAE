@@ -67,10 +67,27 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
   const [quantity, setQuantity] = useState(1);
 
 
+  const currentColor = useMemo((): string => {
+    if (product.availableColors && product.availableColors[selectedColorIndex]) {
+      const color = product.availableColors[selectedColorIndex];
+      return typeof color === "string" ? color : color.name;
+    }
+    return "";
+  }, [product.availableColors, selectedColorIndex]);
+
   const sizeRange = useMemo(() => {
     const mappedSizes = product.availableSizes?.map((s) => s.name) || [];
-    return generateSizeRange(product.inventory || [], product.totalSizes, mappedSizes);
-  }, [product.totalSizes, , product.availableSizes]);
+    const colorInventory = product.inventory?.filter(
+      (inv) => inv.color?.toLowerCase() === currentColor?.toLowerCase()
+    ) ?? [];
+    return generateSizeRange(
+      colorInventory.length > 0 ? colorInventory : (product.inventory || []),
+      product.totalSizes,
+      mappedSizes,
+    );
+  }, [product.totalSizes, product.availableSizes, product.inventory, currentColor]);
+
+  const isOutOfStock = sizeRange.length > 0 && sizeRange.every((s) => !s.available);
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
@@ -114,16 +131,6 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
     return Array.from({ length: colorCount }, () => raw);
   }, [product.videos, product.availableColors]);
 
-  const currentColor = useMemo((): string => {
-    if (
-      product.availableColors &&
-      product.availableColors[selectedColorIndex]
-    ) {
-      const color = product.availableColors[selectedColorIndex];
-      return typeof color === "string" ? color : color.name;
-    }
-    return "";
-  }, [product.availableColors, selectedColorIndex]);
 
   const currentImages = getProductImagesForColor(
     product.productId,
@@ -140,6 +147,8 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
   
 
   const handleAddToCart = async () => {
+    if (isOutOfStock) return;
+
     if (!product.productId && !product.id) {
       toast.error("Product ID not found");
       return;
@@ -237,7 +246,8 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
                 customRed={customRed}
                 setShowSizeGuide={setShowSizeGuide}
                 sizeRange={sizeRange}
-               shouldShowSizeGuide={sizeChart?.isActive ?? false}
+                inventory={product.inventory ?? []}
+                shouldShowSizeGuide={sizeChart?.isActive ?? false}
               />
 
               <ProductPurchaseSection
@@ -248,6 +258,7 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
                 }
                 onAddToCart={handleAddToCart}
                 customRed={customRed}
+                isOutOfStock={isOutOfStock}
               />
               <div className="md:block hidden">
                 <DeliveryChecker customRed={customRed} />
@@ -350,11 +361,13 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
         </div>
         <button
           onClick={handleAddToCart}
-          disabled={addingToCart === (product.productId || product.id) || !selectedSize}
-          className="flex-1 py-3 text-white font-semibold rounded-lg text-sm transition-all active:scale-[0.98] disabled:opacity-50"
-          style={{ backgroundColor: customRed }}
+          disabled={addingToCart === (product.productId || product.id) || !selectedSize || isOutOfStock}
+          className="flex-1 py-3 text-white font-semibold rounded-lg text-sm transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+          style={{ backgroundColor: isOutOfStock ? "#9ca3af" : customRed }}
         >
-          {addingToCart === (product.productId || product.id)
+          {isOutOfStock
+            ? "OUT OF STOCK"
+            : addingToCart === (product.productId || product.id)
             ? "Adding..."
             : !selectedSize
             ? "SELECT SIZE"

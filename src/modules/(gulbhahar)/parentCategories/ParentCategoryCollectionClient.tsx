@@ -26,6 +26,7 @@ export default function ParentCategoryCollectionClient({
   const [isLoading, setIsLoading] = useState(false);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
+
   const [collectionFilters, setCollectionFilters] = useState({
     size: "all",
     color: "all",
