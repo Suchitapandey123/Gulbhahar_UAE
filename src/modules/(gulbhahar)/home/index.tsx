@@ -26,7 +26,7 @@ const HomePage = async () => {
         <Home_AvailableCollections AvailableCollections={homeData.data?.["available-collections"] || []} />
         <Home_JuttisCollection slug={"/suit"} name={"Suits Collection"} newCollection={cp.suit || []} />
         <Home_JuttisCollection slug={"/saree"} name={"Sarees Collection"} newCollection={cp.saree || []} />
-        <Home_JuttisCollection reverse={true} slug={"/bags"} name={"Bags Collection"} newCollection={cp.bags || []} />
+        <Home_JuttisCollection slug={"/bags"} name={"Bags Collection"} newCollection={cp.bags || []} />
         <Home_JuttisCollection slug={"/juttis"} name={"Juttis Collection"} newCollection={cp.juttis || []} />
         <AboutUsSection SoulOfGulbhahar={homeData.data?.["soul-of-gulbhahar"] || []} />
         <Home_NewCulture Culture={homeData.data?.culture || []} />
