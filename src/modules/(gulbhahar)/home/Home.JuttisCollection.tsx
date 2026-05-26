@@ -1,20 +1,11 @@
+import { SimilarProductCard } from "@/modules/(gulbhahar)/products/components/SimilarProductCard";
 import HorizontalCarousel from "@/shared-components/Scrollbar/HorizontalCarousel";
-import { ProductImages } from "@/types";
-import { getFirstProductImage } from "@/utils/productImageUtils";
 import { ArrowUpRight } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-interface Product {
-  productId: string;
-  name?: string;
-  price?: number;
-  images?: ProductImages[];
-}
-
 interface HomeJuttisCollectionProps {
-  newCollection: Product[];
+  newCollection: any[];
   name: string;
   slug: string;
   reverse ?: boolean;
@@ -22,7 +13,6 @@ interface HomeJuttisCollectionProps {
 
 const Home_JuttisCollection: React.FC<HomeJuttisCollectionProps> = ({
   newCollection,
-  name,
   slug,
   reverse
 }) => {
@@ -72,69 +62,12 @@ const Home_JuttisCollection: React.FC<HomeJuttisCollectionProps> = ({
         <div>
           {newCollection && newCollection.length > 0 ? (
             <HorizontalCarousel className="flex overflow-x-auto gap-4 sm:gap-6 lg:gap-8 pb-4 snap-x snap-mandatory">
-              {displayCollection.map((product, index) => (
+              {displayCollection.map((product) => (
                 <div
                   key={`${product.productId}-new-collection`}
                   className="flex-none w-[240px] sm:w-[340px] snap-center"
                 >
-                  <Link href={`/products/${product.productId}`}>
-                    <div className="space-y-3 cursor-pointer relative">
-                      {/* Image Container */}
-                      <div className="relative overflow-hidden w-full aspect-[3/4]">
-                        <div className="relative w-full h-full bg-gray-100">
-                          {(() => {
-                            const img = getFirstProductImage(product.productId, product.images as ProductImages[]);
-                            return (
-                              <Image
-                                src={img.url}
-                                alt={`${product.name} - collection image`}
-                                fill
-                                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                                priority={index < 2}
-                                loading={index < 2 ? undefined : "lazy"}
-                                unoptimized
-                                placeholder="blur"
-                                blurDataURL={img.lqip}
-                                className="object-cover transition-transform duration-300 group-hover:scale-105"
-                              />
-                            );
-                          })()}
-
-                          {/* New Arrival Badge */}
-                          {/* {index === 0 && (
-                            <div className="absolute top-0 right-0 z-10">
-                              <div className="relative">
-                                <div className="absolute inset-0 bg-gradient-to-r from-[#7b1e28] to-[#4a0f14] rounded-lg opacity-75"></div>
-                                <span className="relative flex items-center gap-1 bg-gradient-to-r from-[#7b1e28] via-[#8b2632] to-[#4a0f14] text-white text-[10px] sm:text-xs font-semibold px-2 py-1 rounded-g shadow-lg border border-white/20">
-                                  <span>✨</span>
-                                  <span className="tracking-wide">NEW</span>
-                                  <span>✨</span>
-                                </span>
-                              </div>
-                            </div>
-                          )} */}
-
-                          {/* Hover Overlay */}
-                          <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
-                        </div>
-
-                        {/* Hover Indicator Icon */}
-                        <div className="absolute top-2 right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <ArrowUpRight size={16} className="text-black" />
-                        </div>
-                      </div>
-
-                      {/* Product Info */}
-                      <div className="space-y-1 text-center px-1">
-                        <p className="text-sm sm:text-base lg:text-lg font-sans text-black line-clamp-2">
-                          {product.name?.toUpperCase() || "PRODUCT NAME"}
-                        </p>
-                        <p className="text-xs sm:text-sm text-gray-700 font-medium">
-                          ₹ {product.price?.toLocaleString() || "0"}
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
+                  <SimilarProductCard item={product} customRed="#7f0001" />
                 </div>
               ))}
               {/* Spacing to prevent cutoff on right */}
