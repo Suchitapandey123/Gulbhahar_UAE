@@ -1,90 +1,79 @@
 // @ts-nocheck
 "use client"
 export const dynamic = 'force-dynamic'
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useAuth } from '@/providers/ContextProviders/AuthContext';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
 import authApi from '@/services/auth/authService';
 
 const OAuthCallbackPage = () => {
   const { data: session, status } = useSession();
   const { login, isAuthenticated } = useAuth();
   const router = useRouter();
-  const [isProcessing, setIsProcessing] = useState(false);
+  const hasProcessed = useRef(false);
   const [error, setError] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
-    const handleOAuthCallback = async () => {
-      // Don't process if already authenticated or already processing
-      if (isAuthenticated || isProcessing) return;
-      
-      // Only process when we have an authenticated session with backend token
-      if (status === 'authenticated' && session?.backendToken) {
-      
-        //   provider: session.user?.email ? 'social' : 'unknown',
-        //   hasBackendToken: !!session.backendToken 
-        // });
-        
-        setIsProcessing(true);
-        
-        try {
-          const token = session.backendToken;
-          
-          // Get user data from session or fetch from backend
-          let userData = session.userData;
-          
-          if (!userData) {
-          
-            // const response = await axios.post(
-            //   `https://api.gulbhahar.com/api/users/user-by-token`, 
-            //   {},
-            //   {
-            //     headers: {
-            //       'Content-Type': 'application/json',
-            //       Authorization: `Bearer ${token}`
-            //     }
-            //   }
-            // );
-            
-            const result = await authApi.handleSocialLoginCallback(token);
-             if (!result.success) {
-              throw new Error(result.error);
-            }
-             userData = result.userData;
-         
-          }
-         
-          const loginSuccess = await login(token, userData);
-      
-          
-          if (loginSuccess) {
-          
-            window.location.href = '/';
-          } else {
-            throw new Error('Failed to complete login process');
-          }
-        } catch (error) {
-         
-          setError('Failed to complete social login. Please try again.');
-          
-          // Redirect to login page after error
-          setTimeout(() => {
-            router.push('/login');
-          }, 2000);
-        } finally {
-          setIsProcessing(false);
+    if (isAuthenticated) {
+      window.location.href = '/';
+      return;
+    }
+
+    if (status === 'loading') return;
+
+    if (status === 'unauthenticated') {
+      router.push('/login');
+      return;
+    }
+
+    // status === 'authenticated' from here
+    if (hasProcessed.current) return;
+    hasProcessed.current = true;
+
+    const run = async () => {
+      setIsProcessing(true);
+
+      try {
+        const token = session?.backendToken;
+
+        if (!token) {
+          console.error('[auth/callback] session.backendToken is missing. Session:', session);
+          throw new Error('No backend token received. The backend login may have failed.');
         }
-      } else if (status === 'unauthenticated') {
-        router.push('/login');
+
+        let userData = session?.userData;
+
+        if (!userData) {
+          console.warn('[auth/callback] session.userData missing, fetching from backend...');
+          const result = await authApi.handleSocialLoginCallback(token);
+          if (!result.success || !result.userData) {
+            throw new Error(result.error || 'Failed to fetch user data from backend.');
+          }
+          userData = result.userData;
+        }
+
+        console.log('[auth/callback] Calling login() with token and userData:', userData);
+        const loginSuccess = await login(token, userData);
+
+        if (loginSuccess) {
+          window.location.href = '/';
+        } else {
+          throw new Error('login() returned false — failed to save to localStorage.');
+        }
+      } catch (err) {
+        console.error('[auth/callback] Error:', err);
+        setError(err?.message || 'Failed to complete social login. Please try again.');
+        setTimeout(() => router.push('/login'), 3000);
+      } finally {
+        setIsProcessing(false);
       }
     };
 
-    handleOAuthCallback();
-  }, [session, status, isAuthenticated, isProcessing, login, router]);
+    run();
+  }, [session, status, isAuthenticated]);
 
-  // Show loading state
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white flex items-center justify-center">
       <div className="text-center max-w-md mx-auto p-8">
@@ -92,7 +81,7 @@ const OAuthCallbackPage = () => {
           <div className="w-20 h-20 border-4 border-red-900/20 rounded-full animate-spin mx-auto"></div>
           <div className="absolute inset-0 w-20 h-20 border-4 border-red-900 border-t-transparent rounded-full animate-spin mx-auto"></div>
         </div>
-        
+
         {error ? (
           <div className="text-center">
             <h2 className="text-2xl font-bold text-red-900 mb-4">Login Error</h2>
@@ -103,10 +92,7 @@ const OAuthCallbackPage = () => {
           <div className="text-center">
             <h2 className="text-2xl font-bold text-red-900 mb-4">Completing Login</h2>
             <p className="text-gray-600 mb-4">
-              {isProcessing 
-                ? 'Processing your social login...' 
-                : 'Preparing your account...'
-              }
+              {isProcessing ? 'Processing your social login...' : 'Preparing your account...'}
             </p>
             <div className="flex items-center justify-center space-x-1">
               <div className="w-2 h-2 bg-red-900 rounded-full animate-bounce"></div>

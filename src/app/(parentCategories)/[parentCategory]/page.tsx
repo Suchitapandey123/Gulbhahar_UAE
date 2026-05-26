@@ -69,8 +69,10 @@ const page = async ({ params }: PageProps) => {
     productApi.getProductsByParentCategoryPage(parentCategory).catch(() => ({ products: [], nextCursor: null })),
   ]);
 
+  console.log(pageResponse.data)
+
   return (
-    <main className="px-2 md:px-0">
+    <main className="px-2 pt-4 md:px-0">
       <ParentCategoryPageModule
         parentCategory={parentCategory}
         pageData={pageResponse?.data ?? null}

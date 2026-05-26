@@ -110,6 +110,21 @@ export const SimilarProductCard = ({
               </div>
             </div>
 
+            {/* Stock Status */}
+            {(() => {
+              const totalStock = Array.isArray(item.inventory)
+                ? item.inventory.reduce((sum: number, v: { quantity: number }) => sum + (v.quantity ?? 0), 0)
+                : 0;
+              return (
+                <div className="flex items-center gap-1 text-xs">
+                  <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${totalStock === 0 ? "bg-gray-400" : "bg-green-500"}`} />
+                  <span className={totalStock === 0 ? "text-gray-400 font-medium" : "text-green-600 font-medium"}>
+                    {totalStock === 0 ? "Out of Stock" : "In Stock"}
+                  </span>
+                </div>
+              );
+            })()}
+
             {/* Colors & Sizes */}
             {(colors.length > 0 || sizes.length > 0) && (
               <div className="flex items-center justify-between gap-2 pt-0.5">

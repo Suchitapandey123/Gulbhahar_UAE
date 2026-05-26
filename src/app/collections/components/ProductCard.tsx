@@ -18,7 +18,7 @@ export default function ProductCard({
   const slideIntervalRef = useRef(null);
   const [loadedImages, setLoadedImages] = useState(() => new Set());
 
-  
+  console.log(item)
 
   const handleMouseEnter = (productId) => {
     clearInterval(slideIntervalRef.current);
@@ -124,13 +124,13 @@ export default function ProductCard({
         )}
 
         {/* New Arrival Badge */}
-        {(index === 0 || index === 1) && (
+        {/* {(index === 0 || index === 1) && (
           <div className="absolute top-0 right-0 z-10">
             <span className="relative bg-gradient-to-r from-[#7b1e28] via-[#8b2632] to-[#4a0f14] text-white text-xs sm:text-sm font-semibold px-2 py-1 rounded">
               ✨ NEW ARRIVAL ✨
             </span>
           </div>
-        )}
+        )} */}
 
         {/* Discount Badge */}
         {item.originalPrice && item.originalPrice > item.price && (

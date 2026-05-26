@@ -16,7 +16,7 @@ export interface Product {
   images?: ProductImages[];
   updatedAt?: string;
   createdAt?: string;
-  inventory?: { keywords: string[]; color: string; quantity: string }[];
+  inventory?: { color: string; size: string; quantity: number; keywords?: string[] }[];
   season?: string;
   availableColors?: { name: string; hexcode: string }[];
   availableCollections?: { name: string }[];

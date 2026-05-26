@@ -74,7 +74,7 @@ const NewCollection = ({ newCollection }) => {
                         })()}
 
                         {/* New Arrival Badge */}
-                        {index === 0 && (
+                        {/* {index === 0 && (
                           <div className="absolute top-0 right-0 z-10">
                             <div className="relative">
                               <div className="absolute inset-0 bg-gradient-to-r from-[#7b1e28] to-[#4a0f14] rounded-lg opacity-75"></div>
@@ -87,7 +87,7 @@ const NewCollection = ({ newCollection }) => {
                               </span>
                             </div>
                           </div>
-                        )}
+                        )} */}
 
                         {/* Hover Overlay */}
                         <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300" />

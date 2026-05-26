@@ -9,6 +9,7 @@ interface ProductPurchaseSectionProps {
   addingToCart: boolean;
   onAddToCart: () => void;
   customRed: string;
+  isOutOfStock: boolean;
 }
 
 export const ProductPurchaseSection = ({
@@ -17,8 +18,9 @@ export const ProductPurchaseSection = ({
   addingToCart,
   onAddToCart,
   customRed,
+  isOutOfStock,
 }: ProductPurchaseSectionProps) => {
-  
+
   return (
     <div className="space-y-6">
       {/* Pricing */}
@@ -48,15 +50,17 @@ export const ProductPurchaseSection = ({
       <div className="space-y-3 pt-2">
         <button
           onClick={onAddToCart}
-          disabled={addingToCart || !selectedSize}
+          disabled={addingToCart || !selectedSize || isOutOfStock}
           className={`w-full py-3.5 text-white rounded-lg font-medium text-lg transition-all flex items-center justify-center gap-3 active:scale-[0.98] ${
-            addingToCart || !selectedSize
+            addingToCart || !selectedSize || isOutOfStock
               ? "opacity-50 cursor-not-allowed"
               : "hover:opacity-90"
           }`}
-          style={{ backgroundColor: customRed }}
+          style={{ backgroundColor: isOutOfStock ? "#9ca3af" : customRed }}
         >
-          {addingToCart ? (
+          {isOutOfStock ? (
+            "OUT OF STOCK"
+          ) : addingToCart ? (
             <>
               <Loader2 className="w-5 h-5 animate-spin" />
               Adding...

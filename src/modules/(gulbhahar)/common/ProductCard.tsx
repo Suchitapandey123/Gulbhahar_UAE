@@ -28,6 +28,7 @@ interface Product {
   colors?: string[];
   sizes?: string[];
   stock?: number;
+  inventory?: { color: string; size: string; quantity: number }[];
   category?: string[];
 }
 
@@ -42,6 +43,8 @@ export default function ProductCard({
   index = 0,
   priority = false,
 }: ProductCardProps) {
+
+  console.log(item.inventory)
   // Strip lqip to reduce RSC payload — all card images use shared FALLBACK_LQIP
   const imagesToShow = getProductImages(item.productId, item.images as ProductImages[])
     .slice(0, 2)
@@ -67,32 +70,50 @@ export default function ProductCard({
   const productId = item.productId || item.id || "";
   const productName = item.name?.toUpperCase() || "PRODUCT NAME";
 
+  const totalStock = Array.isArray(item.inventory)
+    ? item.inventory.reduce((sum: number, v: { quantity: number }) => sum + (v.quantity ?? 0), 0)
+    : (item.stock ?? 0);
+
   return (
     <div className="group w-full">
       <Link href={`/products/${productId}`}>
         <div className="cursor-pointer relative space-y-3">
           {/* Client Component - Interactive Image Section */}
-          <ProductCardInteractive
-            productId={productId}
-            productName={productName}
-            images={imagesToShow}
-            colors={colors}
-            sizes={sizes}
-            priority={priority}
-            price={item.price}
-            originalPrice={item.originalPrice}
-          />
+          <div className="relative w-full aspect-[3/4] overflow-hidden">
+            <ProductCardInteractive
+              productId={productId}
+              productName={productName}
+              images={imagesToShow}
+              colors={colors}
+              sizes={sizes}
+              priority={priority}
+              price={item.price}
+              originalPrice={item.originalPrice}
+              isOutOfStock={totalStock === 0}
+            />
+            {/* Out of Stock Overlay */}
+            {totalStock === 0 && (
+              <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none">
+                <div className="absolute inset-0 bg-white/30 backdrop-blur-[2px]" />
+                <img
+                  src="/out-of-stock.png"
+                  alt="Out of Stock"
+                  className="relative z-10 w-full max-w-[280px] object-contain opacity-90"
+                />
+              </div>
+            )}
+          </div>
 
           {/* Server-Rendered Badges */}
           <div className="absolute top-0 left-0 right-0 z-20 pointer-events-none">
             {/* New Arrival Badge */}
-            {index < 2 && (
+            {/* {index < 2 && (
               <div className="absolute top-0 right-0">
                 <span className="relative bg-gradient-to-r from-[#7b1e28] via-[#8b2632] to-[#4a0f14] text-white text-xs sm:text-sm font-semibold px-2 py-1 rounded">
                   NEW ARRIVAL
                 </span>
               </div>
-            )}
+            )} */}
 
             {/* Discount Badge */}
             {item.originalPrice && item.originalPrice > item.price && (
@@ -130,13 +151,10 @@ export default function ProductCard({
           {/* Server-Rendered Stock Status */}
           <div className="flex items-center justify-start text-xs">
             <div className="flex-1">
-              {item.stock && item.stock <= 5 && item.stock > 0 ? (
-                <span className="text-red-600 font-medium">
-                  {item.stock} left
-                </span>
-              ) : (
-                <span className="text-green-600 font-medium">In Stock</span>
-              )}
+              {totalStock === 0
+                ? <span className="text-gray-400 font-medium">Out of Stock</span>
+                : <span className="text-green-600 font-medium">In Stock</span>
+              }
             </div>
           </div>
 

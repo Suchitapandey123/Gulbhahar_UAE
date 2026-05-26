@@ -35,9 +35,10 @@ export type Seo = {
   metaDescription: number;
 };
 export type InventoryItem = {
-  keywords: string[];
   color: string;
-  quantity: string;
+  size: string;
+  quantity: number;
+  keywords?: string[];
 };
 
 export type ColorOption = {

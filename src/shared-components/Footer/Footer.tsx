@@ -307,19 +307,22 @@ const { showToast } = useToast();
                   priority
                   className="h-16 object-cover sm:h-16  lg:mx-0"
                 />
-
-                <p className="text-[16px] mt-[-10px] ml-1 text-gray-600  ">
-                  Premium Fashion & Style 
-                </p>
-              </Link>
-
-              <p className="text-sm sm:text-base text-gray-600 max-w-sm mx-auto lg:mx-0">
-                Discover timeless elegance with our curated collection of
-                premium footwear and accessories. 
                 <span className="text-red-900 font-semibold">
                   {" "} 
                   Crafted with love, designed for you. 
                 </span>
+
+                {/* <p className="text-[16px] mt-[-10px] ml-1 text-gray-600  ">
+                  Premium Fashion & Style 
+                </p> */}
+              </Link>
+
+              <p className="text-sm sm:text-base text-gray-600 max-w-sm mx-auto lg:mx-0">
+               Discover timeless elegance with our curated collection of premium clothing, footwear and accessories.
+                {/* <span className="text-red-900 font-semibold">
+                  {" "} 
+                  Crafted with love, designed for you. 
+                </span> */}
               </p>
 
               {/* Social Media */}

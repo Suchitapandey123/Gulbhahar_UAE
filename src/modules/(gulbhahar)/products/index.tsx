@@ -46,6 +46,8 @@ export default async function ProductModule({ product, similarProducts, sizeChar
     "product"
   ).slice(0, 3);
 
+  console.log('ddsfdcrgfdcvfdcx' , product)
+
   return (
     <>
       {/* Preload ONLY LCP-critical images */}
