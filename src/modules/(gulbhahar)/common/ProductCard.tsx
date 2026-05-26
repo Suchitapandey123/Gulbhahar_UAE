@@ -44,7 +44,6 @@ export default function ProductCard({
   priority = false,
 }: ProductCardProps) {
 
-  console.log(item.inventory)
   // Strip lqip to reduce RSC payload — all card images use shared FALLBACK_LQIP
   const imagesToShow = getProductImages(item.productId, item.images as ProductImages[])
     .slice(0, 2)
@@ -60,9 +59,17 @@ export default function ProductCard({
       return item.colors;
     }
     if (item.availableColors && Array.isArray(item.availableColors)) {
-      return item.availableColors.map((c) => 
+      return item.availableColors.map((c) =>
         typeof c === 'string' ? c : c.name
       );
+    }
+    return [];
+  })();
+
+  // Keep full color objects (with hexcode) for rendering swatches
+  const colorSwatches: AvailableColor[] = (() => {
+    if (item.availableColors && Array.isArray(item.availableColors)) {
+      return item.availableColors.filter((c) => typeof c === 'object' && c.hexcode);
     }
     return [];
   })();
@@ -149,32 +156,59 @@ export default function ProductCard({
           </div>
 
           {/* Server-Rendered Stock Status */}
-          <div className="flex items-center justify-start text-xs">
-            <div className="flex-1">
-              {totalStock === 0
-                ? <span className="text-gray-400 font-medium">Out of Stock</span>
-                : <span className="text-green-600 font-medium">In Stock</span>
-              }
-            </div>
+          <div className="flex items-center gap-1 text-xs">
+            <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${totalStock === 0 ? "bg-gray-400" : "bg-green-500"}`} />
+            <span className={totalStock === 0 ? "text-gray-400 font-medium" : "text-green-600 font-medium"}>
+              {totalStock === 0 ? "Out of Stock" : "In Stock"}
+            </span>
           </div>
 
-          {/* Server-Rendered Sizes */}
-          {sizes.length > 0 && (
-            <div className="flex items-center gap-1 text-xs text-gray-600">
-              <span className="text-gray-500">Size:</span>
-              <div className="flex gap-1">
-                {sizes.slice(0, 2).map((size, idx) => (
-                  <span
-                    key={idx}
-                    className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded text-xs font-medium"
-                  >
-                    {size}
+          {/* Server-Rendered Colors & Sizes */}
+          {(colorSwatches.length > 0 || sizes.length > 0) && (
+            <div className="flex items-center justify-between gap-2 pt-0.5">
+              {/* Colors - Left */}
+              {colorSwatches.length > 0 ? (
+                <div className="flex items-center gap-1" aria-label="Available colors">
+                  {colorSwatches.slice(0, 5).map((color) => (
+                    <span
+                      key={color.name}
+                      title={color.name}
+                      aria-label={color.name}
+                      className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full ring-1 ring-gray-200 ring-offset-1 flex-shrink-0"
+                      style={{ backgroundColor: color.hexcode }}
+                    />
+                  ))}
+                  {colorSwatches.length > 5 && (
+                    <span className="text-[10px] text-gray-400 font-medium ml-0.5">
+                      +{colorSwatches.length - 5}
+                    </span>
+                  )}
+                </div>
+              ) : (
+                <div />
+              )}
+
+              {/* Sizes - Right */}
+              {sizes.length > 0 && (
+                <div className="flex items-center gap-1 flex-wrap justify-end" aria-label="Available sizes">
+                  <span className="text-gray-600 text-[10px] sm:text-xs font-medium px-1.5 py-0.5 rounded">
+                    Size :
                   </span>
-                ))}
-                {sizes.length > 2 && (
-                  <span className="text-gray-500">+{sizes.length - 2}</span>
-                )}
-              </div>
+                  {sizes.slice(0, 2).map((size, idx) => (
+                    <span
+                      key={idx}
+                      className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded text-[10px] sm:text-xs font-medium"
+                    >
+                      {size}
+                    </span>
+                  ))}
+                  {sizes.length > 2 && (
+                    <span className="text-[10px] sm:text-xs text-gray-400 font-medium">
+                      +{sizes.length - 2}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>
