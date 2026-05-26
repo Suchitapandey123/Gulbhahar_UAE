@@ -141,7 +141,7 @@ export const SimilarProductCard = ({
                         aria-label={
                           typeof color === "string" ? color : color.name
                         }
-                        className="w-4 h-4 sm:w-[18px] sm:h-[18px] rounded-full ring-1 ring-gray-200 ring-offset-1"
+                        className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full ring-1 ring-gray-200 ring-offset-1"
                         style={{
                           backgroundColor:
                             typeof color === "string" ? color : color.hexcode,
