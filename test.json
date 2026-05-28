@@ -1,0 +1,108 @@
+ Server  [collections/page] slug: haldi-outfits-for-women
+page.tsx:160  Server  [collections/page] page exists: true
+page.tsx:161  Server  [collections/page] page.isFeatured: false | type: boolean
+page.tsx:162  Server  [collections/page] full page data: {
+  "_id": "69b3c1dfae163cb90660a9b6",
+  "slug": "haldi-outfits-for-women",
+  "slugId": "haldi-outfits-for-women",
+  "parentCategory": [
+    "suit",
+    "saree",
+    "lehenga",
+    "juttis",
+    "gowns",
+    "jewellery",
+    "bags",
+    "ghagra",
+    "dupatta"
+  ],
+  "category": "haldi outfits for women",
+  "onPageTitle": "Haldi Outfits For Women - Buy Haldi Outfits For Women by Gulbhahar",
+  "onPageDescription": "Dedicated to bringing joy and tradition alive, our haldi outfits for women characteristic a palette that complements the golden essence of the ceremony itself. The soft silks and rich brocades used in these ensembles secure both comfort and style. \n\nEach piece in our collection is crafted with detailed attention to old motifs and modern design sensibilities, making them truly different among haldi outfits for women. Whether you opt for an classy lehenga or a lovely suit set, the gentle embroidery will leave lasting impressions on every attendee's mind.\n\nOur handworkers employ age-old techniques such as zari work and mirror details to create each outfit, ensuring that they are more than just clothing—they're heirlooms to be treasured. The quality of material used ensures durability without compromising on the lightweight feel necessary for all-day celebrations.\n\nStyling suggestions vary commonly with our haldi outfits for women; from understated elegance through light hues and minimal accents to bold, eye-catching ensembles that show bright colors and detailed designs. This convenient means you can choose an outfit that aligns perfectly with your personal taste or the thematic essence of the event.\n\nFinally, when choosing a haldi outfit for women from Gulbhahar's collection, you're not just selecting traditional wear but experiencing a part of rich cultural roots brought alive in lovely detail.",
+  "shortDescription": "Celebrate the lively hues and profound meaning of the haldi celebration with our specially curated collection. Each haldi outfit for women at Gulbhahar is a blend of rich fabrics and fine art, ensuring you stand out with enduring elegance. These outfits are not just about appearance; they are about feeling cherished and honored on one of life's most special days.",
+  "metaDescription": "Lift your haldi ceremony with Gulbhahar's intricately crafted outfits designed to capture the essence of customary grace and elegance.",
+  "metaTitle": "Haldi Outfits For Women - Buy Haldi Outfits For Women by Gulbhahar",
+  "keywords": [
+    "haldi outfits for women"
+  ],
+  "seoImage": "",
+  "faq": [
+    {
+      "question": "How can I style a haldi outfit for my daughter's mehendi ceremony?",
+      "answer": "For a mehendi ceremony, pair your daughter's haldi outfit with traditional jhumkas and a maang tika. Drape the dupatta gracefully over her shoulders to accentuate the vibrant colors of the outfit. This will not only highlight her elegance but also honor the cultural significance of the occasion.",
+      "_id": "69b3c1dfae163cb90660a9b7"
+    },
+    {
+      "question": "When is it most appropriate to wear a haldi outfit for women during festivals?",
+      "answer": "Haldi outfits are perfect for auspicious occasions like Holi, Diwali, and Navratri. The vibrant colors symbolize joy and prosperity, making them ideal for family gatherings and cultural celebrations. Pair the outfit with traditional bangles and a bindi to complete the festive look.",
+      "_id": "69b3c1dfae163cb90660a9b8"
+    },
+    {
+      "question": "What are some unique design elements in your haldi outfits that reflect artisan craftsmanship?",
+      "answer": "Our haldi outfits feature intricate gota patti work, zari embroidery, and delicate threadwork. These traditional design elements are handcrafted by skilled artisans, ensuring each piece embodies feminine grace and modesty while celebrating our rich cultural heritage.",
+      "_id": "69b3c1dfae163cb90660a9b9"
+    }
+  ],
+  "additionalDescription": [
+    {
+      "subTitle1": "",
+      "subDescription1": "",
+      "_id": "69b3c1dfae163cb90660a9ba"
+    }
+  ],
+  "additionalDetails": [
+    {
+      "subTitle1": "Honoring Generations of Handwork",
+      "subDescription1": "Each Gulbhahar 'haldi outfit' is a reflection to the generations of creators who have mastered their craft. The detailed embroidery, the light fabric weave, and the precise draping techniques are all echoes of our rich cultural tradition, passed down through centuries. Every stitch tells a story of tradition and patience.",
+      "highlight": "Craftsmanship that spans generations"
+    },
+    {
+      "subTitle2": "Celebrating Festive Occasions",
+      "subDescription2": "The bright hues and detailed patterns of Gulbhahar's 'haldi outfits' are designed to bring joy and festivity to occasions like weddings, Diwali, or family gatherings. They embody the spirit of celebration, inviting you to participate in life's most cherished moments with grace and radiance."
+    },
+    {
+      "subTitle3": "Elegance Defined by Modesty",
+      "subDescription3": "Gulbhahar's 'haldi outfits' embody old feminine elegance through their modest designs. The long kurtas, flowing dupattas, and graceful drapes celebrate the beauty of modesty, honoring Indian cultural values that have stood the test of time."
+    },
+    {
+      "subTitle4": "Motifs That Tell a Story",
+      "subDescription4": "The 'haldi outfits' are  with motifs like the light 'phool' patterns, symbolizing prosperity and abundance; or the light 'chameli' flowers, representing love and affection. Each motif is a story etched in fabric, reflecting the rich fabric of Indian culture.",
+      "tags": [
+        "Phul",
+        "Chameli",
+        "Bharani"
+      ]
+    },
+    {
+      "subTitle5": "Lasting Appeal, Enduring Tradition",
+      "subDescription5": "Gulbhahar's 'haldi outfits' are designed to rise above seasons and trends. Their classic cuts and customary designs make sure they remain related through generations. Investing in a Gulbhahar 'haldi outfit' is investing in the enduring beauty of Indian traditions."
+    },
+    {
+      "subTitle6": "Cultural Authenticity in Every Stitch",
+      "subDescription6": "Each Gulbhahar 'haldi outfit' is a celebration of regional cultural influences. From the fancy 'zardozi' work suggestive of Persia to the lively 'bandhini' tie-dye of Gujarat, every stitch tells a story of India's wide-ranging cultural tradition.",
+      "keyValues": [
+        {
+          "key": "Zardozi",
+          "value": "Persian influence"
+        },
+        {
+          "key": "Bandhini",
+          "value": "Gujarati tradition"
+        }
+      ]
+    },
+    {
+      "subTitle7": "Draping Traditions That Bind Us",
+      "subDescription7": "The art of draping a 'dupatta' is an ancient tradition passed down through generations. Gulbhahar's 'haldi outfits' honor this tradition, offering graceful draping styles that evoke a sense of belonging to our rich cultural tradition."
+    },
+    {
+      "subTitle8": "Honoring Indian Gift in Modern Setting",
+      "subDescription8": "Gulbhahar's 'haldi outfits' blend ancestral aesthetics with modern sensibilities. They honor the past while catering to today's woman, ensuring she can participate in cultural celebrations without compromising on style or comfort."
+    }
+  ],
+  "isActive": true,
+  "isFeatured": false,
+  "createdAt": "2026-03-13T07:50:55.809Z",
+  "updatedAt": "2026-03-13T07:50:55.809Z",
+  "__v": 0
+}

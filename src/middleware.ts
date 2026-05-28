@@ -14,6 +14,7 @@ const REDIRECT_RULES: RedirectRule[] = [
   { match: ["sarees"], redirectTo: "/saree" },
   { match: ["bag"], redirectTo: "/bags" },
   { match: ["collection"], redirectTo: "/collections" },
+  { match: ["collections/bridal-jutti", "collections/bridal-jutti-design", "collections/bridal-jutti-designs", "collections/bridal-jutti-heels"], redirectTo: "/collections/bridal-juttis" },
 ];
 
 // ─── 410 cache ────────────────────────────────────────────────────────────────
@@ -101,25 +102,20 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const cleanPath = pathname.toLowerCase();
 
-  // ── 1. Product 410 check ─────────────────────────────────────────────────
+  // ── 1. Redirect synonyms → canonical routes ───────────────────────────────
+  for (const rule of REDIRECT_RULES) {
+    if (rule.match.some((slug) => cleanPath === `/${slug}`)) {
+      const url = request.nextUrl.clone();
+      url.pathname = rule.redirectTo;
+      return NextResponse.redirect(url, 308);
+    }
+  }
+
+  // ── 2. Product 410 check ─────────────────────────────────────────────────
   const productMatch = pathname.match(/^\/products\/([^/]+)$/);
   if (productMatch) {
     const gone = await checkProductGone(productMatch[1]);
     if (gone) {
-      const ua = request.headers.get("user-agent") ?? "";
-      const isBot = /bot|crawler|spider|googlebot|bingbot|slurp|duckduck|baidu|yandex/i.test(ua);
-
-      if (isBot) {
-        return new NextResponse(null, {
-          status: 410,
-          headers: {
-            "X-Robots-Tag": "noindex, nofollow",
-            "Cache-Control": "public, max-age=3600, immutable",
-          },  
-        });
-      }
-
-      // Rewrite to /410 page — URL stays unchanged, HTTP 410 returned
       return NextResponse.rewrite(new URL("/410", request.url), { status: 410 });
     }
 
@@ -137,19 +133,6 @@ export async function middleware(request: NextRequest) {
     if (!/^P\d{11}$/.test(slug)) {
       const gone = await checkCollectionGone(slug);
       if (gone) {
-        const ua = request.headers.get("user-agent") ?? "";
-        const isBot = /bot|crawler|spider|googlebot|bingbot|slurp|duckduck|baidu|yandex/i.test(ua);
-
-        if (isBot) {
-          return new NextResponse(null, {
-            status: 410,
-            headers: {
-              "X-Robots-Tag": "noindex, nofollow",
-              "Cache-Control": "public, max-age=3600, immutable",
-            },
-          });
-        }
-
         return NextResponse.rewrite(new URL("/410", request.url), { status: 410 });
       }
     }
@@ -160,15 +143,6 @@ export async function middleware(request: NextRequest) {
     const res = NextResponse.redirect("https://wa.me/919217194241", 302);
     res.headers.set("X-Robots-Tag", "noindex, nofollow");
     return res;
-  }
-
-  // ── 4. Redirect synonyms → canonical routes ───────────────────────────────
-  for (const rule of REDIRECT_RULES) {
-    if (rule.match.some((slug) => cleanPath === `/${slug}`)) {
-      const url = request.nextUrl.clone();
-      url.pathname = rule.redirectTo;
-      return NextResponse.redirect(url, 308);
-    }
   }
 
   return NextResponse.next();
