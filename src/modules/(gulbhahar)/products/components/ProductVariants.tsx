@@ -104,8 +104,8 @@ export const ProductVariants = ({
               const selected = sizeRange.find((s) => s.size === selectedSize);
               if (!selected) return null;
               return (
-                <span className={`flex items-center gap-1 text-xs font-medium ${selected.available ? "text-green-600" : "text-gray-400"}`}>
-                  <span className={`w-1.5 h-1.5 rounded-full ${selected.available ? "bg-green-500" : "bg-gray-400"}`} />
+                <span className={`flex items-center gap-1 text-xs font-medium ${selected.available ? "text-green-600" : "text-[#7f0001]"}`}>
+                  <span className={`w-1.5 h-1.5 rounded-full ${selected.available ? "bg-green-500" : "bg-[#7f0001]"}`} />
                   {/* {selected.available ? `In Stock (${selected.quantity})` : "Out of Stock"} */}
                   {selected.available ? `In Stock` : "Out of Stock"}
                 </span>

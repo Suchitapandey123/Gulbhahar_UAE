@@ -56,7 +56,7 @@ export const ProductPurchaseSection = ({
               ? "opacity-50 cursor-not-allowed"
               : "hover:opacity-90"
           }`}
-          style={{ backgroundColor: isOutOfStock ? "#9ca3af" : customRed }}
+          style={{ backgroundColor: customRed }}
         >
           {isOutOfStock ? (
             "OUT OF STOCK"

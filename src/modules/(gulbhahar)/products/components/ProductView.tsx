@@ -363,7 +363,7 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
           onClick={handleAddToCart}
           disabled={addingToCart === (product.productId || product.id) || !selectedSize || isOutOfStock}
           className="flex-1 py-3 text-white font-semibold rounded-lg text-sm transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-          style={{ backgroundColor: isOutOfStock ? "#9ca3af" : customRed }}
+          style={{ backgroundColor: customRed }}
         >
           {isOutOfStock
             ? "OUT OF STOCK"
