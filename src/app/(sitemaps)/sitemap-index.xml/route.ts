@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 const BASE_URL = "https://www.gulbhahar.com";
 
-// API that tells total dynamic sitemaps count
+// API that tells total  dynamic sitemaps count
 const TOTAL_SITEMAPS_API =
   "https://api.gulbhahar.com/api/total-sitmaps";
 
