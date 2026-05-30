@@ -117,8 +117,8 @@ export const SimilarProductCard = ({
                 : 0;
               return (
                 <div className="flex items-center gap-1 text-xs">
-                  <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${totalStock === 0 ? "bg-gray-400" : "bg-green-500"}`} />
-                  <span className={totalStock === 0 ? "text-gray-400 font-medium" : "text-green-600 font-medium"}>
+                  <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${totalStock === 0 ? "bg-red-500" : "bg-green-500"}`} />
+                  <span className={totalStock === 0 ? "text-red-500 font-medium" : "text-green-600 font-medium"}>
                     {totalStock === 0 ? "Out of Stock" : "In Stock"}
                   </span>
                 </div>

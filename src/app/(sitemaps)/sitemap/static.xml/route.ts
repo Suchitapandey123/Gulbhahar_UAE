@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
-import productApi from "@/services/product/productService";
-
 
 const BASE_URL = "https://www.gulbhahar.com";
 
-export async function GET() {
+export function GET() {
   try {
     const staticPages = [
       // Home page - highest priority
@@ -140,36 +138,9 @@ export async function GET() {
       },
     ];
 
-    // Fetch products from API
-    const productsData = await productApi.getAllProducts();
-    const products = productsData?.products || (productsData?.data as import("@/types").Product[]) || [];
-
-    const productPages =
-      products?.map((product) => ({
-        url: `${BASE_URL}/products/${product.productId}`,
-        lastModified: new Date(
-          (product.updatedAt as string) || (product.createdAt as string) || new Date()
-        ),
-        changeFrequency: "weekly",
-        priority: 0.7,
-      })) || [];
-
-    // Fetch category pages (from sitemapData)
-    // const categoryPages =
-    //   sitemapData?.map((category) => ({
-    //     url: `${BASE_URL}/collections/${category.slug}`,
-    //     lastModified: new Date(),
-    //     changeFrequency: "weekly",
-    //     priority: 0.6,
-    //   })) || [];
-
-    // Combine all pages
-    const allPages = [...staticPages, ...productPages ];
-
-    // Generate XML sitemap
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${allPages
+${staticPages
   .map(
     (page) => `  <url>
     <loc>${page.url}</loc>

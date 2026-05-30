@@ -101,12 +101,12 @@ export default function ProductCard({
             {/* Out of Stock Overlay */}
             {totalStock === 0 && (
               <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none">
-                <div className="absolute inset-0 bg-white/30 backdrop-blur-[2px]" />
-                <img
+                {/* <div className="absolute inset-0 bg-white/30 backdrop-blur-[2px]" /> */}
+                {/* <img
                   src="/out-of-stock.png"
                   alt="Out of Stock"
                   className="relative z-10 w-full max-w-[280px] object-contain opacity-90"
-                />
+                /> */}
               </div>
             )}
           </div>
@@ -157,8 +157,8 @@ export default function ProductCard({
 
           {/* Server-Rendered Stock Status */}
           <div className="flex items-center gap-1 text-xs">
-            <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${totalStock === 0 ? "bg-gray-400" : "bg-green-500"}`} />
-            <span className={totalStock === 0 ? "text-gray-400 font-medium" : "text-green-600 font-medium"}>
+            <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${totalStock === 0 ? "bg-red-500" : "bg-green-500"}`} />
+            <span className={totalStock === 0 ? "text-red-500 font-medium" : "text-green-600 font-medium"}>
               {totalStock === 0 ? "Out of Stock" : "In Stock"}
             </span>
           </div>

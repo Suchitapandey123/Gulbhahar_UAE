@@ -66,6 +66,11 @@ export default function SimilarProductCardInteractive({
 
   const isAddingThis = addingToCart === productId;
 
+  const totalStock = Array.isArray(item.inventory)
+    ? item.inventory.reduce((sum: number, v: { quantity: number }) => sum + (v.quantity ?? 0), 0)
+    : 0;
+  const isOutOfStock = totalStock === 0;
+
   return (
     <div className="relative overflow-hidden w-full aspect-[3/4] bg-gray-50">
       {images.length > 1 ? (
@@ -90,13 +95,17 @@ export default function SimilarProductCardInteractive({
       )}
 
       {/* Add to Cart Button - Desktop Hover Only */}
-      <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-red-900 text-white text-center py-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-full group-hover:translate-y-0 z-10">
+      <div
+        className={`hidden md:block absolute bottom-0 left-0 right-0 text-white text-center py-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-full group-hover:translate-y-0 z-10 ${isOutOfStock ? "bg-gray-500" : "bg-red-900"}`}
+      >
         <button
-          onClick={handleAddToCart}
-          disabled={isAddingThis}
-          className="w-full text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-75"
+          onClick={isOutOfStock ? undefined : handleAddToCart}
+          disabled={isAddingThis || isOutOfStock}
+          className="w-full text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed"
         >
-          {isAddingThis ? (
+          {isOutOfStock ? (
+            <span>Out of Stock</span>
+          ) : isAddingThis ? (
             <>
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               <span>Adding...</span>

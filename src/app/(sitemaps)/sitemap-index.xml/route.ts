@@ -13,6 +13,10 @@ export async function GET() {
         <sitemap>
           <loc>${BASE_URL}/sitemap/static.xml</loc>
           <lastmod>${new Date().toISOString().split("T")[0]}</lastmod>
+        </sitemap>
+        <sitemap>
+          <loc>${BASE_URL}/sitemap/products.xml</loc>
+          <lastmod>${new Date().toISOString().split("T")[0]}</lastmod>
         </sitemap>`;
 
     // 2️⃣ Fetch total number of dynamic sitemaps from API
@@ -52,6 +56,10 @@ export async function GET() {
       <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
         <sitemap>
           <loc>${BASE_URL}/sitemap/static.xml</loc>
+          <lastmod>${new Date().toISOString().split("T")[0]}</lastmod>
+        </sitemap>
+        <sitemap>
+          <loc>${BASE_URL}/sitemap/products.xml</loc>
           <lastmod>${new Date().toISOString().split("T")[0]}</lastmod>
         </sitemap>
       </sitemapindex>`;
