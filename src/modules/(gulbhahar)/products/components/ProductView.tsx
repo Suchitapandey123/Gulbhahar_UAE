@@ -196,8 +196,9 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
   };
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-4 lg:gap-8 w-full max-w-[1600px] mx-auto pb-20 md:pb-0">
-        <div className="md:col-span-6 lg:col-span-6">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-4 lg:gap-x-16 w-full max-w-[1440px] mx-auto pb-20 md:pb-0">
+        {/* Image column — NOT sticky on lg so image stack scrolls with page */}
+        <div className="md:col-span-6 lg:col-span-7">
           <ProductImageGrid
             product={product}
             currentImages={currentImages}
@@ -208,7 +209,8 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
           />
         </div>
 
-        <div className="md:col-span-6 lg:col-span-6 md:sticky md:top-40 md:self-start w-full">
+        {/* Details column — sticky on lg, scrollable if content overflows */}
+        <div className="md:col-span-6 lg:col-span-5 md:sticky lg:sticky md:top-40 lg:top-16 md:self-start lg:self-start w-full lg:max-h-[calc(100vh-80px)] lg:overflow-y-auto lg:pb-8">
           {/* Classic card wrapper for right side content */}
           <div className="relative w-full bg-white md:bg-gradient-to-br md:from-white md:via-stone-50/30 md:to-gray-50/50 md:p-4 md:border md:border-gray-100">
             {/* Corner accents - only on md+ */}

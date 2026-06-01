@@ -61,8 +61,8 @@ export default async function ProductModule({ product, similarProducts, sizeChar
         />
       ))}
 
-      <div className="bg-white py-4 mt-10 sm:mt-0 px-2 sm:py-3 sm:px-3 lg:py-4 lg:px-4 font-raleway">
-        <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto mt-6 sm:mt-10 md:mt-24">
+      <div className="bg-white py-4 mt-10 sm:mt-0 px-3 sm:py-3 sm:px-4 lg:py-6 lg:px-[80px] font-raleway">
+        <div className="max-w-[1440px] mx-auto mt-6 sm:mt-10 md:mt-24">
           <Breadcrumbs
             parentCategoryName={parentCategoryName}
             productName={product.name || ""}
