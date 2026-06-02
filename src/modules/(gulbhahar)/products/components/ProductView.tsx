@@ -209,8 +209,8 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
           />
         </div>
 
-        {/* Details column — sticky on lg, scrollable if content overflows */}
-        <div className="md:col-span-6 lg:col-span-5 md:sticky lg:sticky md:top-40 lg:top-16 md:self-start lg:self-start w-full lg:max-h-[calc(100vh-80px)] lg:overflow-y-auto lg:pb-8">
+        {/* Details column — sticky, no internal scroll */}
+        <div className="md:col-span-6 lg:col-span-5 md:sticky lg:sticky md:top-40 lg:top-16 md:self-start lg:self-start w-full">
           {/* Classic card wrapper for right side content */}
           <div className="relative w-full bg-white md:bg-gradient-to-br md:from-white md:via-stone-50/30 md:to-gray-50/50 md:p-4 md:border md:border-gray-100">
             {/* Corner accents - only on md+ */}
