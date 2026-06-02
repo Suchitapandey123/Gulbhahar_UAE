@@ -106,29 +106,38 @@ export const ProductImageGrid = ({
   useEffect(() => {
     setSelectedIndex(0);
     setActiveIndex(0);
-    imageStackRefs.current = [];
+    // NOTE: do NOT clear imageStackRefs here — ref callbacks handle that
   }, [currentImages]);
 
-  // ── Desktop: IntersectionObserver — track which image is in viewport ─────────
+  // ── Desktop: scroll-based active image tracking ───────────────────────────────
+  // Attaches once (empty deps). Uses imageStackRefs.current at scroll time
+  // so it always sees the latest refs without needing a dependency.
   useEffect(() => {
-    const cleanups: (() => void)[] = [];
+    const handleScroll = () => {
+      const refs = imageStackRefs.current;
+      if (!refs.length) return;
 
-    imageStackRefs.current.forEach((el, idx) => {
-      if (!el) return;
-      // Detection zone: top 60% of viewport. When the image's top edge crosses
-      // this line, it becomes the active thumbnail.
-      const obs = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) setActiveIndex(idx);
-        },
-        { rootMargin: "0px 0px -40% 0px", threshold: 0 }
-      );
-      obs.observe(el);
-      cleanups.push(() => obs.disconnect());
-    });
+      let activeIdx = 0;
+      for (let i = 0; i < refs.length; i++) {
+        const el = refs[i];
+        if (!el) continue;
+        const rect = el.getBoundingClientRect();
+        // Any image whose top has passed the 45% viewport mark becomes active
+        if (rect.top <= window.innerHeight * 0.45) {
+          activeIdx = i;
+        } else {
+          break;
+        }
+      }
+      setActiveIndex(activeIdx);
+    };
 
-    return () => cleanups.forEach((fn) => fn());
-  }, [currentImages]);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    // Run once immediately so the first thumbnail is highlighted on load
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []); // empty — attaches once, reads refs dynamically
 
   // ── Desktop: auto-scroll thumbnail strip to keep active thumb visible ────────
   useEffect(() => {
@@ -243,13 +252,13 @@ export const ProductImageGrid = ({
           │  scroll    │   │                              │
           └────────────┘   └──────────────────────────────┘
       ══════════════════════════════════════════════════════════════════════ */}
-      <div className="hidden lg:flex items-start" style={{ gap: "80px" }}>
+      <div className="hidden lg:flex items-start" style={{ gap: "24px" }}>
 
         {/* ── Sticky thumbnail rail ── */}
         <div className="sticky top-20 self-start flex-shrink-0" style={{ width: "88px" }}>
           <div
             ref={thumbnailListRef}
-            className="flex flex-col gap-2.5 overflow-y-auto"
+            className="flex flex-col gap-2 overflow-y-auto"
             style={{ maxHeight: "calc(100vh - 100px)" }}
           >
             {currentImages.map((img, idx) => (
@@ -257,11 +266,11 @@ export const ProductImageGrid = ({
                 key={idx}
                 onClick={() => scrollToImage(idx)}
                 className={cn(
-                  "relative flex-shrink-0 w-full overflow-hidden bg-gray-50",
-                  "transition-all duration-200 cursor-pointer focus:outline-none",
+                  "relative flex-shrink-0 w-full overflow-hidden bg-gray-50 focus:outline-none",
+                  "transition-all duration-300 cursor-pointer",
                   activeIndex === idx
-                    ? "ring-1 ring-gray-900 opacity-100"
-                    : "opacity-40 hover:opacity-70"
+                    ? "opacity-100 ring-[1.5px] ring-gray-800 scale-100"
+                    : "opacity-30 blur-[0.6px] hover:opacity-60 hover:blur-none"
                 )}
                 style={{ aspectRatio: "3 / 4" }}
                 aria-label={`Jump to image ${idx + 1}`}

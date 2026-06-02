@@ -198,7 +198,7 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
     <>
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-4 lg:gap-x-16 w-full max-w-[1440px] mx-auto pb-20 md:pb-0">
         {/* Image column — NOT sticky on lg so image stack scrolls with page */}
-        <div className="md:col-span-6 lg:col-span-7">
+        <div className="md:col-span-6 lg:col-span-6">
           <ProductImageGrid
             product={product}
             currentImages={currentImages}
@@ -210,7 +210,7 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
         </div>
 
         {/* Details column — sticky, no internal scroll */}
-        <div className="md:col-span-6 lg:col-span-5 md:sticky lg:sticky md:top-40 lg:top-16 md:self-start lg:self-start w-full">
+        <div className="md:col-span-6 lg:col-span-6 md:sticky lg:sticky md:top-40 lg:top-16 md:self-start lg:self-start w-full">
           {/* Classic card wrapper for right side content */}
           <div className="relative w-full bg-white md:bg-gradient-to-br md:from-white md:via-stone-50/30 md:to-gray-50/50 md:p-4 md:border md:border-gray-100">
             {/* Corner accents - only on md+ */}
@@ -228,7 +228,7 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
                   (d) => !/color|colour|size|rang/i.test(d)
                 ).slice(0, 4);
                 return filtered.length > 0 ? (
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {filtered.map((item, i) => (
                       <div key={i} className="flex items-start gap-2 bg-stone-50 border border-gray-100 rounded-lg px-3 py-2.5 min-h-[48px]">
                         <span className="text-[#800000] mt-0.5 text-[10px] flex-shrink-0">✦</span>
