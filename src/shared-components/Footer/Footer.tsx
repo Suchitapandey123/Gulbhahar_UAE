@@ -332,19 +332,22 @@ const { showToast } = useToast();
                 </p>
                 <div className="flex space-x-4 justify-center lg:justify-start">
                   <Link
-                    href="#" 
+                    href="https://x.com/gulbhahar_india" 
+                    target="_blank"
                     className="w-10 h-10 bg-red-100 hover:bg-red-900 text-red-900 hover:text-white rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110"
                   > 
                     <FooterTwitterX className="h-5 w-5" /> 
                   </Link> 
                   <Link
+                  target="_blank"
                     href="https://www.instagram.com/gulbhahar_official?igsh=MzRlODBiNWFlZA=="
                     className="w-10 h-10 bg-red-100 hover:bg-red-900 text-red-900 hover:text-white rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110"
                   >
                     <FooterInstagram className="h-5 w-5" />
                   </Link>
                   <Link 
-                    href="https://www.facebook.com/share/1GN5HZC6dS/"
+                  target="_blank"
+                    href="https://www.facebook.com/profile.php?id=61577994867913"
                     className="w-10 h-10 bg-red-100 hover:bg-red-900 text-red-900 hover:text-white rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110"
                   >
                     <Facebook className="h-5 w-5" />

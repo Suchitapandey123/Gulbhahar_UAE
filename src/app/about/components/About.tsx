@@ -188,7 +188,7 @@ const StorySection = () => {
   const socialLinks = [
     {
       name: 'Facebook',
-      url: 'https://www.facebook.com/share/1GN5HZC6dS/',
+      url: 'https://www.facebook.com/profile.php?id=61577994867913',
       // followers: '12K'
     },
     {
@@ -198,7 +198,7 @@ const StorySection = () => {
     },
     {
       name: 'Twitter',
-      url: 'https://twitter.com/yourhandle',
+      url: 'https://x.com/gulbhahar_india',
       // followers: '8K'
     },
   ];
