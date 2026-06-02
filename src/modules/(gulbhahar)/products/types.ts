@@ -44,6 +44,8 @@ export type InventoryItem = {
 export type ColorOption = {
   name: string;
   hexcode: string;
+  productName?: string;
+  _id?: string;
 };
 
 export type VideosOption = {

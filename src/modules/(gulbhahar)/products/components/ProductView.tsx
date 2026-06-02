@@ -75,6 +75,14 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
     return "";
   }, [product.availableColors, selectedColorIndex]);
 
+  const displayName = useMemo((): string => {
+    if (product.availableColors && product.availableColors[selectedColorIndex]) {
+      const color = product.availableColors[selectedColorIndex];
+      if (typeof color !== "string" && color.productName) return color.productName;
+    }
+    return product.name;
+  }, [product.availableColors, product.name, selectedColorIndex]);
+
   const sizeRange = useMemo(() => {
     const mappedSizes = product.availableSizes?.map((s) => s.name) || [];
     const colorInventory = product.inventory?.filter(
@@ -220,7 +228,7 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
             <div className="hidden md:block absolute bottom-0 right-0 w-10 lg:w-12 h-10 lg:h-12 border-b-2 border-r-2 border-[#800000]/20" />
 
             <div className="space-y-4 md:space-y-6">
-              <ProductInfo product={product} customRed={customRed} avgRating={avgRating} reviewCount={reviewCount} />
+              <ProductInfo product={product} displayName={displayName} customRed={customRed} avgRating={avgRating} reviewCount={reviewCount} />
 
               {/* Product Highlights — skip color/size entries, already shown below */}
               {product.details && product.details.length > 0 && (() => {
@@ -353,29 +361,7 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
       </div>
 
       {/* Sticky Mobile CTA */}
-      <div
-        className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white border-t border-gray-200 px-4 py-3 flex items-center gap-3 shadow-[0_-4px_12px_rgba(0,0,0,0.06)]"
-        style={{ paddingBottom: "calc(12px + env(safe-area-inset-bottom))" }}
-      >
-        <div className="flex-shrink-0">
-          <p className="text-[10px] text-gray-400 leading-none mb-0.5">Price</p>
-          <p className="text-base font-bold text-gray-900">₹{product.price?.toLocaleString("en-IN")}</p>
-        </div>
-        <button
-          onClick={handleAddToCart}
-          disabled={addingToCart === (product.productId || product.id) || !selectedSize || isOutOfStock}
-          className="flex-1 py-3 text-white font-semibold rounded-lg text-sm transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-          style={{ backgroundColor: customRed }}
-        >
-          {isOutOfStock
-            ? "OUT OF STOCK"
-            : addingToCart === (product.productId || product.id)
-            ? "Adding..."
-            : !selectedSize
-            ? "SELECT SIZE"
-            : "ADD TO CART"}
-        </button>
-      </div>
+    
     </>
   );
 };

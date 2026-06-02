@@ -2,12 +2,13 @@ import { Product } from "../types";
 
 interface ProductInfoProps {
   product: Product;
+  displayName?: string;
   customRed: string;
   avgRating?: number;
   reviewCount?: number;
 }
 
-export const ProductInfo = ({ product, customRed, avgRating = 0, reviewCount = 0 }: ProductInfoProps) => {
+export const ProductInfo = ({ product, displayName, customRed, avgRating = 0, reviewCount = 0 }: ProductInfoProps) => {
   const discountPercentage = Math.round(
     ((product.originalPrice - product.price) / product.originalPrice) * 100
   );
@@ -32,7 +33,7 @@ export const ProductInfo = ({ product, customRed, avgRating = 0, reviewCount = 0
         {/* Left: Product name with classic typography */}
         <div className="flex-1 min-w-0">
           <h1 className="text-xl sm:text-2xl md:text-2xl lg:text-3xl font-serif text-gray-900 leading-tight">
-            {product.name}
+            {displayName ?? product.name}
           </h1>
           <div className="mt-2 md:mt-3 flex items-center gap-1.5 md:gap-2">
             {reviewCount > 0 ? (
