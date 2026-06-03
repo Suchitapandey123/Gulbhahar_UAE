@@ -109,42 +109,44 @@ export const ProductImageGrid = ({
     // NOTE: do NOT clear imageStackRefs here — ref callbacks handle that
   }, [currentImages]);
 
-  // ── Desktop: scroll-based active image tracking ───────────────────────────────
-  // Attaches once (empty deps). Uses imageStackRefs.current at scroll time
-  // so it always sees the latest refs without needing a dependency.
+  // ── Desktop: scroll-based active image tracking (rAF throttled) ─────────────
   useEffect(() => {
-    const handleScroll = () => {
-      const refs = imageStackRefs.current;
-      if (!refs.length) return;
+    let ticking = false;
 
-      let activeIdx = 0;
-      for (let i = 0; i < refs.length; i++) {
-        const el = refs[i];
-        if (!el) continue;
-        const rect = el.getBoundingClientRect();
-        // Any image whose top has passed the 45% viewport mark becomes active
-        if (rect.top <= window.innerHeight * 0.45) {
-          activeIdx = i;
-        } else {
-          break;
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+
+      requestAnimationFrame(() => {
+        const refs = imageStackRefs.current;
+        if (refs.length) {
+          let activeIdx = 0;
+          for (let i = 0; i < refs.length; i++) {
+            const el = refs[i];
+            if (!el) continue;
+            if (el.getBoundingClientRect().top <= window.innerHeight * 0.45) {
+              activeIdx = i;
+            } else {
+              break;
+            }
+          }
+          setActiveIndex(prev => (prev === activeIdx ? prev : activeIdx));
         }
-      }
-      setActiveIndex(activeIdx);
+        ticking = false;
+      });
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    // Run once immediately so the first thumbnail is highlighted on load
     handleScroll();
-
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []); // empty — attaches once, reads refs dynamically
+  }, []);
 
-  // ── Desktop: auto-scroll thumbnail strip to keep active thumb visible ────────
+  // ── Desktop: keep active thumbnail visible in strip (instant, no smooth) ─────
   useEffect(() => {
     const container = thumbnailListRef.current;
     if (!container) return;
     const activeThumbnail = container.children[activeIndex] as HTMLElement | undefined;
-    activeThumbnail?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    activeThumbnail?.scrollIntoView({ behavior: "instant", block: "nearest" });
   }, [activeIndex]);
 
   // ── Desktop: thumbnail click → highlight immediately + smooth scroll ─────────
@@ -259,7 +261,11 @@ export const ProductImageGrid = ({
           <div
             ref={thumbnailListRef}
             className="flex flex-col gap-2 overflow-y-auto"
-            style={{ maxHeight: "calc(100vh - 100px)" }}
+            style={{
+              maxHeight: "calc(100vh - 100px)",
+              scrollbarWidth: "none",       // Firefox
+              msOverflowStyle: "none",      // IE/Edge
+            }}
           >
             {currentImages.map((img, idx) => (
               <button

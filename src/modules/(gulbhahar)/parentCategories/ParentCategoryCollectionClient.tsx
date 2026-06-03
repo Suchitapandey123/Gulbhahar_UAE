@@ -25,6 +25,8 @@ export default function ParentCategoryCollectionClient({
   const [nextCursor, setNextCursor] = useState<string | null>(initialCursor);
   const [isLoading, setIsLoading] = useState(false);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const isLoadingRef = useRef(false);
+  const nextCursorRef = useRef<string | null>(initialCursor);
 
 
   const [collectionFilters, setCollectionFilters] = useState({
@@ -149,38 +151,36 @@ export default function ParentCategoryCollectionClient({
   }, [allProducts, collectionFilters]);
 
   const loadMore = useCallback(async () => {
-    if (!nextCursor || isLoading) return;
+    if (!nextCursorRef.current || isLoadingRef.current) return;
+    isLoadingRef.current = true;
     setIsLoading(true);
     try {
       const result = await productApi.getProductsByParentCategoryPage(
         parentCategory,
-        nextCursor
+        nextCursorRef.current
       );
       setAllProducts((prev) => [...prev, ...result.products]);
+      nextCursorRef.current = result.nextCursor;
       setNextCursor(result.nextCursor);
     } catch (err) {
       console.error("Failed to load more products:", err);
     } finally {
+      isLoadingRef.current = false;
       setIsLoading(false);
     }
-  }, [nextCursor, isLoading, parentCategory]);
+  }, [parentCategory]); // stable — no isLoading/nextCursor in deps
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
-          loadMore();
-        }
+        if (entries[0].isIntersecting) loadMore();
       },
       { threshold: 0.1 }
     );
-
     const el = sentinelRef.current;
     if (el) observer.observe(el);
-    return () => {
-      if (el) observer.unobserve(el);
-    };
-  }, [loadMore]);
+    return () => { if (el) observer.unobserve(el); };
+  }, [loadMore]); // loadMore is now stable → observer attaches only once
 
   return (
     <div className="pt-2">
