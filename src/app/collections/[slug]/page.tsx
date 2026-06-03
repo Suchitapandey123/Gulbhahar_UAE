@@ -4,7 +4,7 @@ import CategoryCollection from "@/modules/(gulbhahar)/categoryPages/CategoryColl
 import CategoryCollection_MatchingProducts from "@/modules/(gulbhahar)/categoryPages/CategoryCollection.MatchingProducts";
 import { CategoryCollection_ParentCategoryProducts } from "@/modules/(gulbhahar)/categoryPages/CategoryCollection.ParentCategoryProducts";
 import { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";
+import { notFound, permanentRedirect, redirect } from "next/navigation";
 import { cache, Suspense } from "react";
 import { pageService } from "@/services/page/pageService";
 import { PageData } from "@/types/page.types";
@@ -16,15 +16,7 @@ import FAQSchema from "@/shared-components/seo/FAQSchema";
 export const revalidate = 3600; // 1 hour — matches fetch revalidate in productService
 export const dynamicParams = true;
 
-export async function generateStaticParams() {
-  try {
-    const res = await pageService.getAllPages(1, 500) as { data?: { slug: string }[]; pages?: { slug: string }[] };
-    const pages = res?.data || res?.pages || [];
-    return pages.filter((p) => p.slug).map((p) => ({ slug: p.slug }));
-  } catch {
-    return [];
-  }
-}
+
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -89,16 +81,19 @@ export async function generateMetadata({
     ]);
 
     if (!validateRes?.success) {
+      return { title: "Page Not Found", description: "The requested page does not exist." };
+    }
+
+    // If this page redirects, point canonical to the target
+    if (validateRes.redirectTo) {
       return {
-        title: "Page Not Found",
-        description: "The requested page does not exist.",
+        alternates: { canonical: `https://www.gulbhahar.com/collections/${validateRes.redirectTo}` },
+        robots: { index: false },
       };
     }
+
     if (!page) {
-      return {
-        title: "Page Not Found",
-        description: "Content not available.",
-      };
+      return { title: "Page Not Found", description: "Content not available." };
     }
 
     const title = page.metaTitle || `${slug} | Gulbhahar`;
@@ -148,14 +143,22 @@ export default async function Page({ params: rawParams }: Props) {
     redirect(`/products/${slug}`);
   }
 
-  // Run validate + pageData + products all in parallel — products only needs slug
-  const [validateRes, page, products] = await Promise.all([
-    validateSlugCached(slug),
+  // Validate first — cheap cached call, avoids unnecessary DB/product fetches for redirects
+  const validateRes = await validateSlugCached(slug);
+
+  if (!validateRes?.success) notFound();
+
+  // 308 permanent redirect — tells Google to index the target, not this slug
+  if (validateRes.redirectTo) {
+    permanentRedirect(`/collections/${validateRes.redirectTo}`);
+  }
+
+  // Only fetch page content + products once we know this slug is canonical
+  const [page, products] = await Promise.all([
     getPageDataCached(slug),
     productApi.getProductsByCategory(slug),
   ]);
 
-  if (!validateRes?.success) notFound();
   if (!page || page.isFeatured === false) notFound();
 
   const parentCategory = page.parentCategory?.[0] || page.category || slug;

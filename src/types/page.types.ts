@@ -47,6 +47,7 @@ export interface PageData {
 
 export interface ValidateSlugResponse {
   success: boolean;
+  redirectTo?: string | null;
 }
 
 export interface GetPageBySlugResponse {

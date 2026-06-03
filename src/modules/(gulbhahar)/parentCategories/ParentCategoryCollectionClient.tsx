@@ -175,12 +175,15 @@ export default function ParentCategoryCollectionClient({
       (entries) => {
         if (entries[0].isIntersecting) loadMore();
       },
-      { threshold: 0.1 }
+      {
+        threshold: 0,
+        rootMargin: "0px 0px 600px 0px", // trigger 600px before sentinel is visible
+      }
     );
     const el = sentinelRef.current;
     if (el) observer.observe(el);
     return () => { if (el) observer.unobserve(el); };
-  }, [loadMore]); // loadMore is now stable → observer attaches only once
+  }, [loadMore]);
 
   return (
     <div className="pt-2">
@@ -227,14 +230,23 @@ export default function ParentCategoryCollectionClient({
             )}
           </div>
 
+          {/* Skeleton cards shown while loading more */}
+          {isLoading && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-5 mt-2">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="bg-gray-200 rounded-lg aspect-[3/4] w-full" />
+                  <div className="mt-2 space-y-1.5">
+                    <div className="bg-gray-200 rounded h-3 w-3/4" />
+                    <div className="bg-gray-200 rounded h-3 w-1/2" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
           {/* Infinite scroll sentinel */}
-          <div ref={sentinelRef} className="w-full py-8 flex items-center justify-center">
-            {isLoading && (
-              <div className="flex items-center gap-2 text-red-900">
-                <div className="w-5 h-5 border-2 border-red-300 border-t-red-900 rounded-full animate-spin" />
-                <span className="text-sm font-medium">Loading more...</span>
-              </div>
-            )}
+          <div ref={sentinelRef} className="w-full py-4 flex items-center justify-center">
             {!nextCursor && allProducts.length > 0 && !isLoading && (
               <p className="text-gray-400 text-sm">You&apos;ve reached the end</p>
             )}
