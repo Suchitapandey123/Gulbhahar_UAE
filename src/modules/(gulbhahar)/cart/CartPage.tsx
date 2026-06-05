@@ -568,6 +568,7 @@ const CartPage = () => {
                 >
                   Proceed to Checkout
                 </button>
+               
                 <button
                   onClick={toggleCart}
                   className="w-full bg-gray-100 hover:bg-gray-200 text-gray-900 py-3 rounded-lg font-semibold transition-colors"

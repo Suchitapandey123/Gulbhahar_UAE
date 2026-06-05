@@ -176,6 +176,11 @@ const TransactionStatusContent = () => {
       setPaymentStatus(status.toLowerCase());
       setPaymentData(transactionData);
 
+      // Pre-set processing flag so the UI never flashes "Order Creation Pending"
+      if (status.toLowerCase() === "success") {
+        setBackendProcessing(true);
+      }
+
       // 🎯 Mark this transaction as processed
       processedTransactionId.current = trackingId;
 
@@ -328,11 +333,12 @@ const TransactionStatusContent = () => {
           transactionData.paymentMethod === "partial_cod" ||
           checkoutData.paymentMethod === "PARTIAL_COD"
         ) {
+          // Razorpay advance paid — rest collected on delivery
           return {
             ...basePayment,
             method: "PARTIAL_COD",
-            bankRefNo: transactionData.bankRefNo,
-            gateway: "CCAvenue",
+            razorpayPaymentId: transactionData.trackingId,
+            gateway: "Razorpay",
             partialAmountPaid: transactionData.amount
               ? parseFloat(transactionData.amount)
               : 0,
@@ -342,11 +348,12 @@ const TransactionStatusContent = () => {
               (transactionData.amount ? parseFloat(transactionData.amount) : 0),
           };
         } else {
+          // Razorpay full payment — trackingId holds razorpay_payment_id
           return {
             ...basePayment,
-            method: "CCAvenue",
-            bankRefNo: transactionData.bankRefNo,
-            gateway: "CCAvenue",
+            method: "Razorpay",
+            razorpayPaymentId: transactionData.trackingId,
+            gateway: "Razorpay",
           };
         }
       };
@@ -433,7 +440,7 @@ const TransactionStatusContent = () => {
               ? "COD Order - OTP Verified"
               : transactionData.paymentMethod === "partial_cod" ||
                   checkoutData.paymentMethod === "PARTIAL_COD"
-                ? `Partial COD - Paid ₹${transactionData.amount || 0} online, ₹${(checkoutData.orderTotal || 0) - parseFloat(transactionData.amount || 0)} COD`
+                ? `Partial COD - Paid ₹${transactionData.amount || 0} via Razorpay, ₹${(checkoutData.orderTotal || 0) - parseFloat(transactionData.amount || 0)} COD`
                 : null,
           paymentCompletedAt: new Date().toISOString(),
         },
@@ -897,14 +904,16 @@ const TransactionStatusContent = () => {
           </div>
         )}
 
-        {/* Enhanced Action Buttons */}
+        {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 mb-8">
-          <button
-            onClick={() => router.push("/cart/checkout")}
-            className="w-full bg-gradient-to-r from-[#7f0001] to-gray-800 text-white py-4 px-6 rounded-2xl font-bold hover:shadow-lg transform hover:scale-105 transition-all duration-300 shadow-md flex items-center justify-center gap-3 text-base"
-          >
-            <span>Try Again</span>
-          </button>
+          {paymentStatus !== "success" && (
+            <button
+              onClick={() => router.push("/cart/checkout")}
+              className="w-full bg-gradient-to-r from-[#7f0001] to-gray-800 text-white py-4 px-6 rounded-2xl font-bold hover:shadow-lg transform hover:scale-105 transition-all duration-300 shadow-md flex items-center justify-center gap-3 text-base"
+            >
+              <span>Try Again</span>
+            </button>
+          )}
           <button
             onClick={() => router.push("/")}
             className="w-full bg-white border-2 border-gray-300 text-gray-700 py-4 px-6 rounded-2xl font-bold hover:border-[#7f0001] hover:text-[#7f0001] transition-all duration-300 shadow-sm hover:shadow-md flex items-center justify-center gap-3 text-base group"
