@@ -15,21 +15,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { secret, tag, path, type = 'tag' } = body;
 
-    // Validate secret
-    // if (!REVALIDATE_SECRET) {
-   
-    //   return NextResponse.json(
-    //     { success: false, message: 'Server configuration error' },
-    //     { status: 500 }
-    //   );
-    // }
-
-    // if (secret !== REVALIDATE_SECRET) {
-    //   return NextResponse.json(
-    //     { success: false, message: 'Invalid secret' },
-    //     { status: 401 }
-    //   );
-    // }
+    // Secret validation disabled for now
 
     // Handle revalidation based on type
     if (type === 'tag' && tag) {
@@ -119,19 +105,7 @@ export async function GET(request: Request) {
     const tag = searchParams.get('tag');
     const path = searchParams.get('path');
 
-    // if (!REVALIDATE_SECRET) {
-    //   return NextResponse.json(
-    //     { success: false, message: 'Server configuration error' },
-    //     { status: 500 }
-    //   );
-    // }
-
-    // if (secret !== REVALIDATE_SECRET) {
-    //   return NextResponse.json(
-    //     { success: false, message: 'Invalid secret' },
-    //     { status: 401 }
-    //   );
-    // }
+    // Secret validation disabled for now
 
     if (tag) {
       revalidateTag(tag);
