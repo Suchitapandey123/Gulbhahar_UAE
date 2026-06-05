@@ -6,11 +6,24 @@ const mdComponents = {
   a: ({ node, ...props }: any) => (
     <a {...props} target="_blank" rel="noopener noreferrer" className="text-red-800 underline hover:text-red-600" />
   ),
+  // Render blank lines as visible empty space
+  br: () => <br />,
+};
+
+// Preserves blank lines typed in the admin panel.
+// ReactMarkdown collapses \n\n\n+ into a single paragraph break,
+// so we convert each extra blank line into a <br/> before rendering.
+const preserveBlankLines = (text: string): string => {
+  if (!text) return text;
+  return text.replace(/\n{3,}/g, (match) => {
+    const extraBlanks = match.length - 2;
+    return "\n\n" + "&nbsp;  \n".repeat(extraBlanks) + "\n";
+  });
 };
 
 const Md = ({ children, className }: { children: string; className?: string }) => (
   <div className={className}>
-    <ReactMarkdown components={mdComponents}>{children}</ReactMarkdown>
+    <ReactMarkdown components={mdComponents}>{preserveBlankLines(children)}</ReactMarkdown>
   </div>
 );
 
