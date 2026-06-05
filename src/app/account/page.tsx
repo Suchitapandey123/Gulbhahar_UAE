@@ -1,10 +1,6 @@
 
-import { redirect } from "next/navigation";
-
-
+import { permanentRedirect } from "next/navigation";
 
 export default function AccountPage() {
-
-  redirect("/account/account-centre");
-
+  permanentRedirect("/account/account-centre");
 }

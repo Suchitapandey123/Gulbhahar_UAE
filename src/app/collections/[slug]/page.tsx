@@ -4,7 +4,7 @@ import CategoryCollection from "@/modules/(gulbhahar)/categoryPages/CategoryColl
 import CategoryCollection_MatchingProducts from "@/modules/(gulbhahar)/categoryPages/CategoryCollection.MatchingProducts";
 import { CategoryCollection_ParentCategoryProducts } from "@/modules/(gulbhahar)/categoryPages/CategoryCollection.ParentCategoryProducts";
 import { Metadata } from "next";
-import { notFound, permanentRedirect, redirect } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { cache, Suspense } from "react";
 import { pageService } from "@/services/page/pageService";
 import { PageData } from "@/types/page.types";
@@ -140,7 +140,7 @@ export default async function Page({ params: rawParams }: Props) {
 
   const pattern = /^P\d{11}$/;
   if (pattern.test(slug)) {
-    redirect(`/products/${slug}`);
+    permanentRedirect(`/products/${slug}`);
   }
 
   // Validate first — cheap cached call, avoids unnecessary DB/product fetches for redirects
