@@ -402,6 +402,39 @@ export default function CheckoutComponent() {
         }
         break;
 
+      case "address":
+        if (!value || value.trim().length === 0) {
+          isValid = false;
+          error = "Street address is required";
+        } else {
+          isValid = true;
+          error = null;
+        }
+        break;
+
+      case "city":
+        if (!value || value.trim().length === 0) {
+          isValid = false;
+          error = "City is required";
+        } else {
+          isValid = true;
+          error = null;
+        }
+        break;
+
+      case "postalCode":
+        if (!value || value.trim().length === 0) {
+          isValid = false;
+          error = "Postal code is required";
+        } else if (!/^\d{6}$/.test(value.trim())) {
+          isValid = false;
+          error = "Enter a valid 6-digit postal code";
+        } else {
+          isValid = true;
+          error = null;
+        }
+        break;
+
       default:
         return;
     }
@@ -608,37 +641,48 @@ export default function CheckoutComponent() {
 
       const { subtotal, shipping, total } = calculateTotals();
 
-      const requiredFields = ["fullName", "email", "phone", "region"];
-      const validationErrors = [];
+      const requiredFields = ["fullName", "email", "phone", "region", "address", "city", "postalCode"];
 
-      const missingFields = requiredFields.filter((field) => !formData[field]);
-      if (missingFields.length > 0) {
-        validationErrors.push(`Please fill : ${missingFields.join(", ")}`);
-      }
-
-      requiredFields.forEach((field) => {
-        if (formData[field]) {
-          validateField(field, formData[field]);
+      // Validate synchronously — don't rely on React state (stale closure)
+      const syncValidate = (name, value) => {
+        if (!value || value.trim().length === 0) return `${name} is required`;
+        switch (name) {
+          case "fullName":
+            if (value.trim().length < 2) return "Name must be at least 2 characters";
+            if (!/^[a-zA-Z\s]+$/.test(value.trim())) return "Name can only contain letters and spaces";
+            return null;
+          case "email":
+            if (!validateEmail(value)) return "Please enter a valid email address";
+            return null;
+          case "phone": {
+            const clean = value.replace(/\D/g, "");
+            if (clean.length !== 10) return "Phone number must be exactly 10 digits";
+            if (!/^[6-9]\d{9}$/.test(clean)) return "Phone number must start with 6, 7, 8, or 9";
+            return null;
+          }
+          case "postalCode":
+            if (!/^\d{6}$/.test(value.trim())) return "Enter a valid 6-digit postal code";
+            return null;
+          default:
+            return null;
         }
-      });
+      };
 
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      const validationErrors = [];
+      const newFieldValidation = { ...fieldValidation };
 
-      const hasValidationErrors = requiredFields.some(
-        (field) => fieldValidation[field]?.isValid === false,
-      );
-
-      if (hasValidationErrors) {
-        const errorMessages = requiredFields
-          .filter((field) => fieldValidation[field]?.isValid === false)
-          .map((field) => fieldValidation[field]?.error)
-          .filter(Boolean);
-
-        validationErrors.push(...errorMessages);
+      for (const field of requiredFields) {
+        const value = formData[field];
+        const error = syncValidate(field, value);
+        if (error) {
+          validationErrors.push(error);
+          newFieldValidation[field] = { isValid: false, error };
+        }
       }
 
       if (validationErrors.length > 0) {
-        toast.error(validationErrors[0], "error");
+        setFieldValidation(newFieldValidation);
+        toast.error(validationErrors[0]);
         setIsProcessing(false);
         return;
       }
@@ -707,9 +751,12 @@ export default function CheckoutComponent() {
 
       const formattedPhone = formatPhoneNumber(formData.phone);
 
+      const regionLabel = indianStates.find((s) => s.value === formData.region)?.label || formData.region;
+
       const checkoutData = {
         ...formData,
         phone: formattedPhone,
+        regionLabel,
         orderId: orderId,
         transactionId: transactionId,
         sessionId: sessionId,
@@ -1066,17 +1113,26 @@ export default function CheckoutComponent() {
                     htmlFor="address"
                     className="block text-sm font-medium text-gray-700 mb-1.5"
                   >
-                    Street Address
+                    Street Address <span className="text-red-500">*</span>
                   </label>
+                  <div className="relative">
                   <input
                     id="address"
                     name="address"
                     type="text"
                     value={formData.address}
                     onChange={handleInputChange}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 focus:border-[#800000] focus:outline-none focus:ring-4 focus:ring-[#800000]/5 transition-all duration-200 bg-gray-50/50 hover:bg-white hover:border-gray-300 placeholder:text-gray-400"
+                    className={`w-full border rounded-xl px-4 py-3.5 text-gray-900 focus:outline-none focus:ring-4 focus:ring-[#800000]/5 transition-all duration-200 bg-gray-50/50 hover:bg-white placeholder:text-gray-400 ${getInputBorderClass("address")}`}
                     placeholder="House number and street name"
+                    required
                   />
+                  </div>
+                  {fieldValidation.address?.error && (
+                    <p className="mt-1.5 text-xs text-red-500 flex items-center gap-1">
+                      <AlertCircle className="h-3 w-3" />
+                      {fieldValidation.address.error}
+                    </p>
+                  )}
                 </div>
 
                 {/* City */}
@@ -1085,17 +1141,26 @@ export default function CheckoutComponent() {
                     htmlFor="city"
                     className="block text-sm font-medium text-gray-700 mb-1.5"
                   >
-                    City
+                    City <span className="text-red-500">*</span>
                   </label>
+                  <div className="relative">
                   <input
                     id="city"
                     name="city"
                     type="text"
                     value={formData.city}
                     onChange={handleInputChange}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 focus:border-[#800000] focus:outline-none focus:ring-4 focus:ring-[#800000]/5 transition-all duration-200 bg-gray-50/50 hover:bg-white hover:border-gray-300 placeholder:text-gray-400"
+                    className={`w-full border rounded-xl px-4 py-3.5 text-gray-900 focus:outline-none focus:ring-4 focus:ring-[#800000]/5 transition-all duration-200 bg-gray-50/50 hover:bg-white placeholder:text-gray-400 ${getInputBorderClass("city")}`}
                     placeholder="City"
+                    required
                   />
+                  </div>
+                  {fieldValidation.city?.error && (
+                    <p className="mt-1.5 text-xs text-red-500 flex items-center gap-1">
+                      <AlertCircle className="h-3 w-3" />
+                      {fieldValidation.city.error}
+                    </p>
+                  )}
                 </div>
 
                 {/* State */}
@@ -1123,7 +1188,7 @@ export default function CheckoutComponent() {
                     htmlFor="postalCode"
                     className="block text-sm font-medium text-gray-700 mb-1.5"
                   >
-                    Postal Code
+                    Postal Code <span className="text-red-500">*</span>
                     <span className="text-xs text-gray-400 ml-1.5">
                       {ENABLE_PINCODE_API
                         ? "(Auto-validated)"

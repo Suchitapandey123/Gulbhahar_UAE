@@ -402,7 +402,7 @@ const TransactionStatusContent = () => {
           phone: formatPhoneNumber(checkoutData.phone || ""),
           addressLine1: checkoutData.address || "",
           city: checkoutData.city || "",
-          state: checkoutData.region || "",
+          state: checkoutData.regionLabel || checkoutData.region || "",
           postalCode: checkoutData.postalCode || "",
           country: checkoutData.country || "India",
           isDefault: false,
@@ -413,7 +413,7 @@ const TransactionStatusContent = () => {
           phone: formatPhoneNumber(checkoutData.phone || ""),
           addressLine1: checkoutData.address || "",
           city: checkoutData.city || "",
-          state: checkoutData.region || "",
+          state: checkoutData.regionLabel || checkoutData.region || "",
           postalCode: checkoutData.postalCode || "",
           country: checkoutData.country || "India",
           sameAsShipping: true,
@@ -622,13 +622,6 @@ const TransactionStatusContent = () => {
         color: "text-red-900",
         bgColor: "bg-red-50",
         borderColor: "border-red-200",
-      };
-    } else if (paymentMethod === "cod") {
-      return {
-        text: "Cash on Delivery",
-        color: "text-[#7f0001]",
-        bgColor: "bg-gradient-to-r from-[#7f0001]/10 to-gray-100",
-        borderColor: "border-gray-300",
       };
     } else {
       return {
