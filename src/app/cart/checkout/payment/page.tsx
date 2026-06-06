@@ -245,7 +245,12 @@ function PaymentContent() {
             setIsProcessingOnline(false);
           }
         },
-        onDismiss: () => setIsProcessingOnline(false),
+        onDismiss: () => {
+          setIsProcessingOnline(false);
+          router.push(
+            `/cart/checkout/payment/transaction-status?status=cancelled&orderId=${encodeURIComponent(checkoutData?.orderId || "")}&transactionId=cancelled&amount=${encodeURIComponent(checkoutData?.orderTotal || 0)}&payment_method=online`
+          );
+        },
       });
     } catch (err) {
       console.error("Razorpay create-order error:", err);
@@ -309,7 +314,12 @@ function PaymentContent() {
             setIsProcessingPartialCOD(false);
           }
         },
-        onDismiss: () => setIsProcessingPartialCOD(false),
+        onDismiss: () => {
+          setIsProcessingPartialCOD(false);
+          router.push(
+            `/cart/checkout/payment/transaction-status?status=cancelled&orderId=${encodeURIComponent(checkoutData?.orderId || "")}&transactionId=cancelled&amount=${encodeURIComponent(partialCodAmount)}&payment_method=partial_cod`
+          );
+        },
       });
     } catch (err) {
       console.error("Razorpay partial COD create-order error:", err);
