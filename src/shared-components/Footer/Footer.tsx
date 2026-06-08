@@ -449,7 +449,17 @@ const { showToast } = useToast();
                   href="tel:+919220927241"
                   className="text-xs text-gray-600 hover:underline"
                 >
-                  +91 92209 27241
+                  +91 9220927241
+                </a>
+              </div>
+
+              <div className="flex items-center gap-2 justify-center lg:justify-start">
+                <Phone className="h-4 w-4 text-red-600" />
+                <a
+                  href="tel:+919217194241"
+                  className="text-xs text-gray-600 hover:underline"
+                >
+                  +91 9217194241
                 </a>
               </div>
             </div>

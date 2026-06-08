@@ -376,12 +376,19 @@ export default function ContactPage() {
                 Mon - Sat, 9:00 AM - 9:00 PM (UTC/GMT + 05:30)
               </p>
               <div className="space-y-2">
-                <a 
-                  href="tel:+919220927241" 
+                <a
+                  href="tel:+919220927241"
                   className="inline-flex items-center gap-2 text-sm font-semibold text-red-900 hover:text-red-700 transition-colors bg-red-50 px-3 py-2 rounded-lg hover:bg-red-100  w-full"
                 >
                   <Phone className="h-4 w-4" />
                   +91 9220927241
+                </a>
+                <a
+                  href="tel:+919217194241"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-red-900 hover:text-red-700 transition-colors bg-red-50 px-3 py-2 rounded-lg hover:bg-red-100  w-full"
+                >
+                  <Phone className="h-4 w-4" />
+                  +91 9217194241
                 </a>
               </div>
             </div>
