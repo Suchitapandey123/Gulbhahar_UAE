@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 
 import { orderService as orderHistoryAPI } from '@/services/order/orderService';
+import { getProductImagesForColor, getFirstProductImage } from '@/utils/productImageUtils';
 
 /* ── Status accent map ──────────────────────────────────────
    Complete class strings so Tailwind JIT can detect them.   */
@@ -62,6 +63,35 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
     }
   };
 
+  const extractFirstImageUrl = (item: any): string | null => {
+    const productId = item.productId || item.id;
+
+    // ── Case 1: item.images exists (new CDN structure) ──
+    if (productId && Array.isArray(item.images) && item.images.length > 0) {
+      const colorIndex = item.selectedColorIndex ?? 0;
+      const imgs = getProductImagesForColor(productId, item.images, colorIndex, 'cards');
+      if (imgs[0]?.url?.startsWith('http')) return imgs[0].url;
+      const first = getFirstProductImage(productId, item.images, 'cards');
+      if (first?.url?.startsWith('http')) return first.url;
+    }
+
+    if (Array.isArray(item.productImage) && item.productImage.length > 0) {
+      // ── Case 2: productImage contains plain string URLs (old S3 / CloudFront) ──
+      for (const v of item.productImage) {
+        if (typeof v === 'string' && v.startsWith('http')) return v;
+      }
+
+      // ── Case 3: productImage contains ProductImages objects (new structure saved wrongly by backend) ──
+      // e.g. [{ colorName: "red", files: [{ name: "...", lqip: "...", version: 1 }] }]
+      if (productId && item.productImage[0]?.files) {
+        const imgs = getProductImagesForColor(productId, item.productImage, 0, 'cards');
+        if (imgs[0]?.url?.startsWith('http')) return imgs[0].url;
+      }
+    }
+
+    return null;
+  };
+
   const transformOrderData = (apiOrders) => {
     if (!apiOrders || !Array.isArray(apiOrders)) return [];
     return apiOrders.map((order, index) => {
@@ -74,8 +104,9 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
       let productCount    = 0;
       if (order.items && Array.isArray(order.items)) {
         productCount = order.items.reduce((t, i) => t + (i.quantity || 1), 0);
-        order.items.forEach(item => {
-          if (item.productImage?.length > 0) productImages.push(item.productImage[0]);
+        order.items.forEach((item) => {
+          const url = extractFirstImageUrl(item);
+          if (url) productImages.push(url);
         });
         productImages = productImages.slice(0, 4);
       }
@@ -304,9 +335,9 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
                       <div className="flex items-center gap-3">
                         {/* Product Images - MODERN OVERLAPPING DESIGN */}
                         <div className="flex-shrink-0 relative h-16 w-16">
-                          {order.productImages.length > 0 ? (
+                          {order.productImages.filter(img => typeof img === 'string' && img.startsWith('http')).length > 0 ? (
                             <div className="relative w-full h-full">
-                              {order.productImages.slice(0, 3).map((img, i) => (
+                              {order.productImages.filter(img => typeof img === 'string' && img.startsWith('http')).slice(0, 3).map((img, i) => (
                                 <div
                                   key={i}
                                   className={`absolute w-14 h-14 rounded-xl overflow-hidden border-2 border-white shadow-md transition-all duration-200 hover:scale-105`}
@@ -409,7 +440,7 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
                         <div className="col-span-4 flex items-center gap-3.5">
                           {order.productImages.length > 0 ? (
                             <div className="flex -space-x-3 flex-shrink-0">
-                              {order.productImages.slice(0, 3).map((img, i) => (
+                              {order.productImages.slice(0, 3).filter(img => typeof img === 'string' && img.startsWith('http')).map((img, i) => (
                                 <div key={i}
                                   className="w-12 h-12 xl:w-[52px] xl:h-[52px] rounded-xl border-2 border-white overflow-hidden bg-stone-100"
                                   style={{ zIndex: 3-i, boxShadow: '0 2px 8px rgba(0,0,0,0.10)' }}>

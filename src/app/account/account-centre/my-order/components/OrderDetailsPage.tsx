@@ -27,6 +27,7 @@ import {
 import { orderService as orderHistoryAPI } from '@/services/order/orderService';
 import { profileService as profileAPI } from '@/services/profile/profileService';
 import Image from "next/image";
+import { getProductImagesForColor, getFirstProductImage } from '@/utils/productImageUtils';
 
 export function OrderDetailsPage({ selectedOrder, onBack = () => {} }) {
   const [activeTab, setActiveTab] = useState("history");
@@ -767,9 +768,22 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
       
       items.forEach((item) => {
         const productName = item?.productName || `Product ${item?.productId || ''}`;
-        const productImage = item?.productImage && item.productImage.length > 0 
-          ? item.productImage[0] 
-          : null;
+        let productImage = null;
+        const pid = item?.productId || item?.id;
+        if (pid && Array.isArray(item?.images) && item.images.length > 0) {
+          const colorIndex = item.selectedColorIndex ?? 0;
+          const imgs = getProductImagesForColor(pid, item.images, colorIndex, 'cards');
+          productImage = imgs[0]?.url?.startsWith('http') ? imgs[0].url
+            : getFirstProductImage(pid, item.images, 'cards')?.url || null;
+        } else if (Array.isArray(item?.productImage) && item.productImage.length > 0) {
+          // plain string URLs
+          productImage = item.productImage.find(v => typeof v === 'string' && v.startsWith('http')) || null;
+          // ProductImages objects saved wrongly by backend
+          if (!productImage && pid && item.productImage[0]?.files) {
+            const imgs = getProductImagesForColor(pid, item.productImage, 0, 'cards');
+            productImage = imgs[0]?.url?.startsWith('http') ? imgs[0].url : null;
+          }
+        }
         
         // Check if product already exists in uniqueProducts
         const existingProduct = uniqueProducts.find(p => p.name === productName);
@@ -1279,21 +1293,37 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
                         {/* Item Image */}
                         <div className="flex-shrink-0">
                           <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden border border-gray-300 bg-white">
-                            {item.productImage && item.productImage.length > 0 ? (
-                              <Image
-                                src={item.productImage[0]}
-                                alt={item.productName}
-                                width={80}
-                                height={80}
-                                unoptimized
-                                loading="lazy"
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center">
-                                <ImageIcon className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
-                              </div>
-                            )}
+                            {(() => {
+                              const pid = item.productId || item.id;
+                              let src = null;
+                              if (pid && Array.isArray(item.images) && item.images.length > 0) {
+                                const colorIdx = item.selectedColorIndex ?? 0;
+                                const imgs = getProductImagesForColor(pid, item.images, colorIdx, 'cards');
+                                src = imgs[0]?.url?.startsWith('http') ? imgs[0].url
+                                  : getFirstProductImage(pid, item.images, 'cards')?.url || null;
+                              } else if (Array.isArray(item.productImage) && item.productImage.length > 0) {
+                                src = item.productImage.find(v => typeof v === 'string' && v.startsWith('http')) || null;
+                                if (!src && pid && item.productImage[0]?.files) {
+                                  const imgs = getProductImagesForColor(pid, item.productImage, 0, 'cards');
+                                  src = imgs[0]?.url?.startsWith('http') ? imgs[0].url : null;
+                                }
+                              }
+                              return src ? (
+                                <Image
+                                  src={src}
+                                  alt={item.productName}
+                                  width={80}
+                                  height={80}
+                                  unoptimized
+                                  loading="lazy"
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center">
+                                  <ImageIcon className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
+                                </div>
+                              );
+                            })()}
                           </div>
                         </div>
 
