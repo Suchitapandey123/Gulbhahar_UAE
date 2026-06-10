@@ -141,12 +141,19 @@ export const ProductImageGrid = ({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // ── Desktop: keep active thumbnail visible in strip (instant, no smooth) ─────
+  // ── Desktop: keep active thumbnail visible in strip (container only, never window) ─────
   useEffect(() => {
     const container = thumbnailListRef.current;
     if (!container) return;
     const activeThumbnail = container.children[activeIndex] as HTMLElement | undefined;
-    activeThumbnail?.scrollIntoView({ behavior: "instant", block: "nearest" });
+    if (!activeThumbnail) return;
+    const top = activeThumbnail.offsetTop;
+    const bottom = top + (activeThumbnail as HTMLElement).offsetHeight;
+    if (top < container.scrollTop) {
+      container.scrollTop = top;
+    } else if (bottom > container.scrollTop + container.clientHeight) {
+      container.scrollTop = bottom - container.clientHeight;
+    }
   }, [activeIndex]);
 
   // ── Desktop: thumbnail click → highlight immediately + smooth scroll ─────────

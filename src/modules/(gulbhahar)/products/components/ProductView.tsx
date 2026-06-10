@@ -4,6 +4,7 @@
 import { useCart } from "@/providers/ContextProviders/CartContext";
 import { getProductImagesForColor } from "@/utils/productImageUtils";
 import { useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { Product } from "../types";
 import { DeliveryChecker } from "./DeliveryChecker";
@@ -59,12 +60,36 @@ interface ProductViewProps {
 
 export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, reviewCount = 0 }: ProductViewProps) => {
   const { addToCart, addingToCart } = useCart();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // ── Initialise color from ?color= param ──────────────────────────────────
+  const getInitialColorIndex = () => {
+    const hex = searchParams.get("color");
+    if (!hex || !product.availableColors?.length) return 0;
+    const idx = product.availableColors.findIndex(
+      (c) => (typeof c === "string" ? "" : c.hexcode ?? "").replace("#", "").toLowerCase() === hex.toLowerCase()
+    );
+    return idx >= 0 ? idx : 0;
+  };
+
   const [selectedSize, setSelectedSize] = useState("");
-  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
+  const [selectedColorIndex, setSelectedColorIndex] = useState(getInitialColorIndex);
   const [showSizeGuide, setShowSizeGuide] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImageIndex, setModalImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
+
+  // ── Sync URL when color changes ───────────────────────────────────────────
+  const handleColorChange = (idx: number) => {
+    setSelectedColorIndex(idx);
+    const color = product.availableColors?.[idx];
+    const hex = typeof color === "string" ? "" : (color?.hexcode ?? "").replace("#", "");
+    const params = new URLSearchParams(window.location.search);
+    if (hex) params.set("color", hex);
+    else params.delete("color");
+    router.replace(`${window.location.pathname}?${params.toString()}`, { scroll: false });
+  };
 
 
   const currentColor = useMemo((): string => {
@@ -250,7 +275,7 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
               <ProductVariants
                 product={product}
                 selectedColorIndex={selectedColorIndex}
-                setSelectedColorIndex={setSelectedColorIndex}
+                setSelectedColorIndex={handleColorChange}
                 selectedSize={selectedSize}
                 setSelectedSize={setSelectedSize}
                 customRed={customRed}

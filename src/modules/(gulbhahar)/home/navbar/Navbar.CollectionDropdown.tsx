@@ -86,7 +86,7 @@ const CollectionsDropdown: React.FC<CollectionsDropdownProps> = ({
       title: "Designed By Monica",
       subtitle: "Exclusive Collection",
       items: [
-        { name: "Punjabi Juttis", slug: "/collections/punjabi-juttis" },
+        { name: "Jodhpuri Jutti Ladies", slug: "/collections/jodhpuri-jutti-ladies" },
         { name: "Bridal Saree ", slug: "/collections/bridal-saree-collection" },
         { name: "Red Suit ", slug: "/collections/red-suit" },
         { name: "Bridal Juttis", slug: "/collections/bridal-juttis" },
@@ -97,9 +97,9 @@ const CollectionsDropdown: React.FC<CollectionsDropdownProps> = ({
       title: "Casual Juttis",
       subtitle: "Everyday Comfort",
       items: [
-        { name: "Juttis", slug: "/collections/juttis" },
-        { name: "Punjabi Juttis", slug: "/collections/punjabi-juttis" },
-        { name: "Bridal Juttis", slug: "/collections/bridal-juttis" },
+        { name: "Party Wear Jutti", slug: "/collections/party-wear-jutti" },
+        { name: "Jutti For Bride", slug: "/collections/jutti-for-bride" },
+        { name: "Jutti Heels", slug: "/collections/jutti-heels" },
         {
           name: "Punjabi Juttis For Ladies",
           slug: "/collections/punjabi-juttis-for-ladies",

@@ -68,13 +68,15 @@ export default async function ProductModule({ product, similarProducts, sizeChar
             customRed={CUSTOM_RED}
           />
 
-          <ProductView
-            sizeChart={sizeChart?.data || null}
-            product={product}
-            customRed={CUSTOM_RED}
-            avgRating={reviewSummary.avg}
-            reviewCount={reviewSummary.count}
-          />
+          <Suspense fallback={null}>
+            <ProductView
+              sizeChart={sizeChart?.data || null}
+              product={product}
+              customRed={CUSTOM_RED}
+              avgRating={reviewSummary.avg}
+              reviewCount={reviewSummary.count}
+            />
+          </Suspense>
           <div className="block md:hidden">
             <DeliveryChecker customRed={CUSTOM_RED} />
           </div>

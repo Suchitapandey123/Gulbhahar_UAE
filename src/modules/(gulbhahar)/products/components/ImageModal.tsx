@@ -33,6 +33,9 @@ export const ImageModal = ({
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [animatePan, setAnimatePan] = useState(true);
 
+  // Saved scroll position for scroll lock restore
+  const savedScrollY = useRef<number | null>(null);
+
   // Drag tracking refs — refs avoid re-renders during drag
   const isDragging = useRef(false);
   const hasMoved = useRef(false);
@@ -174,11 +177,31 @@ export const ImageModal = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isModalOpen, zoom, prevImage, nextImage, closeModal, zoomIn, zoomOut, resetView]);
 
-  // ─── Body scroll lock ─────────────────────────────────────────────────────
+  // ─── Body scroll lock (iOS-safe: position:fixed + saved scroll position) ─────
 
   useEffect(() => {
-    document.body.style.overflow = isModalOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    if (isModalOpen) {
+      savedScrollY.current = window.scrollY;
+      document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${savedScrollY.current}px`;
+      document.body.style.width = "100%";
+    } else {
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+      if (savedScrollY.current !== null) {
+        window.scrollTo({ top: savedScrollY.current, behavior: "instant" });
+        savedScrollY.current = null;
+      }
+    }
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+    };
   }, [isModalOpen]);
 
   if (!isModalOpen || images.length === 0) return null;

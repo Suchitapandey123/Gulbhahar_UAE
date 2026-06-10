@@ -207,7 +207,7 @@ const { showToast } = useToast();
   //     return null;
   //   }
 
-  const currentYear = 2025;
+  const currentYear = 2026;
 
   const shopLinks = [
     { href: "/collections", label: "All Collections" },
@@ -223,7 +223,7 @@ const { showToast } = useToast();
     { href: "/about", label: "About Us" },
     { href: "/contact", label: "Contact" },
     ...(isAuthenticated ? [{ href: "/account", label: "My Account" }] : []),
-    { href: "/", label: "Careers" },
+    // { href: "/", label: "Careers" },
     { href: "/heritage-culture", label: "Craft Heritage" },
   ];
 

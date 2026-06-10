@@ -16,12 +16,9 @@ import {
   MessageCircle
 } from 'lucide-react';
 
-// Mock TiltArrow component
 const TiltArrow = ({ className }) => <ChevronDown className={className} />;
 
-// Expanded FAQs with categories
 const allFaqs = [
-  // General FAQs
   {
     question: "How do I find the right size for me?",
     answer: "All our products typically run true to size, but we recommend referring to our detailed size chart. Our size guide includes both Indian and international measurements to help you make the right choice.",
@@ -37,8 +34,6 @@ const allFaqs = [
     answer: "Yes, our suits are designed with soft fabric to ensure maximum comfort for all-day wear.",
     category: "General"
   },
-
-  // Shipping FAQs
   {
     question: "Do you ship internationally?",
     answer: "Yes, we ship to most countries worldwide. International shipping typically takes 7-14 business days depending on the destination.",
@@ -54,8 +49,6 @@ const allFaqs = [
     answer: "Once your order is shipped, you'll receive a tracking number via email. You can use this to track your package's journey on our website's order tracking page.",
     category: "Shipping"
   },
-
-  // Return FAQs
   {
     question: "What is your return policy?",
     answer: "We accept returns within 14 days of delivery. The products must be unworn and in their original packaging with all tags attached.",
@@ -71,8 +64,6 @@ const allFaqs = [
     answer: "Yes, we offer exchanges for different sizes or styles within 14 days of delivery, subject to availability of the requested item.",
     category: "Return"
   },
-
-  // Customization FAQs
   {
     question: "Do you offer customization options?",
     answer: "Yes! We offer custom embroidery and personalized juttis based on your preferences. Contact us for more details.",
@@ -88,8 +79,6 @@ const allFaqs = [
     answer: "Absolutely! We welcome specific color requests and custom design ideas. Our artisans will work with you to bring your vision to life.",
     category: "Customization"
   },
-
-  // About FAQs
   {
     question: "How should I care for my juttis?",
     answer: "To maintain your juttis, avoid water exposure, and clean them with a soft cloth. Store them in a dry place to ensure longevity.",
@@ -107,35 +96,35 @@ const allFaqs = [
   }
 ];
 
-const FAQItem = ({ question, answer, isOpen, onClick }) => {
+const FAQItem = ({ question, answer, isOpen, onClick, index }) => {
   return (
-    <div className="bg-white border-2 border-red-100 rounded-xl mb-4 hover:shadow-md transition-all duration-300 hover:border-red-200">
+    <div className={`border-b border-red-50 last:border-0 transition-all duration-200 ${isOpen ? 'bg-red-50/50' : 'hover:bg-gray-50/60'}`}>
       <button
-        className="w-full p-4 sm:p-6 text-left flex justify-between items-center focus:outline-none group"
+        className="w-full px-5 py-4 text-left flex justify-between items-center gap-3 focus:outline-none group"
         onClick={onClick}
       >
-        <span className="text-base sm:text-lg font-bold text-gray-900 pr-4 group-hover:text-red-900 transition-colors">
-          {question}
-        </span>
-        <div className={`w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-200 ${isOpen ? 'bg-red-900 rotate-180' : 'group-hover:bg-red-200'
+        <div className="flex items-center gap-3 min-w-0">
+          <span className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold transition-all duration-200 ${
+            isOpen ? 'bg-red-900 text-white' : 'bg-red-100 text-red-700 group-hover:bg-red-200'
           }`}>
-          <TiltArrow
-            className={`w-4 h-4 transition-colors duration-200 ${isOpen ? 'text-white' : 'text-red-600'
-              }`}
-          />
+            {String(index + 1).padStart(2, '0')}
+          </span>
+          <span className={`text-sm sm:text-base font-semibold transition-colors duration-150 ${
+            isOpen ? 'text-red-900' : 'text-gray-800 group-hover:text-gray-900'
+          }`}>
+            {question}
+          </span>
+        </div>
+        <div className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 ${
+          isOpen ? 'bg-red-900 rotate-180' : 'bg-red-100 group-hover:bg-red-200'
+        }`}>
+          <TiltArrow className={`w-3.5 h-3.5 transition-colors duration-150 ${isOpen ? 'text-white' : 'text-red-600'}`} />
         </div>
       </button>
-      <div
-        className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-96 pb-4 sm:pb-6' : 'max-h-0'
-          }`}
-      >
-        <div className="px-4 sm:px-6">
-          <div className="border-t border-red-100 pt-4">
-            <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
-              {answer}
-            </p>
-          </div>
-        </div>
+      <div className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-96' : 'max-h-0'}`}>
+        <p className="px-5 pb-4 pl-14 text-sm text-gray-600 leading-relaxed">
+          {answer}
+        </p>
       </div>
     </div>
   );
@@ -145,19 +134,16 @@ const FAQ = () => {
   const [openIndex, setOpenIndex] = useState(null);
   const [activeCategory, setActiveCategory] = useState("General");
   const [searchTerm, setSearchTerm] = useState("");
-  const [showpopup, setshowpopup] = useState(false)
+  const [showpopup, setshowpopup] = useState(false);
 
-
-  // Category configuration with icons
   const categories = [
-    { name: "General", icon: HelpCircle, color: "text-blue-600", bgColor: "bg-blue-50" },
-    { name: "Shipping", icon: Package, color: "text-green-600", bgColor: "bg-green-50" },
-    { name: "Return", icon: RefreshCw, color: "text-yellow-600", bgColor: "bg-yellow-50" },
-    { name: "Customization", icon: Palette, color: "text-purple-600", bgColor: "bg-purple-50" },
-    { name: "About", icon: Info, color: "text-gray-600", bgColor: "bg-gray-50" }
+    { name: "General",       icon: HelpCircle, color: "text-blue-600",   bgColor: "bg-blue-50"   },
+    { name: "Shipping",      icon: Package,    color: "text-green-600",  bgColor: "bg-green-50"  },
+    { name: "Return",        icon: RefreshCw,  color: "text-yellow-600", bgColor: "bg-yellow-50" },
+    { name: "Customization", icon: Palette,    color: "text-purple-600", bgColor: "bg-purple-50" },
+    { name: "About",         icon: Info,       color: "text-gray-600",   bgColor: "bg-gray-50"   }
   ];
 
-  // Filter FAQs based on active category and search term
   const filteredFaqs = allFaqs.filter(faq => {
     const matchesCategory = faq.category === activeCategory;
     const matchesSearch = searchTerm === "" ||
@@ -182,59 +168,68 @@ const FAQ = () => {
 
         {/* Header Section */}
         <div className="text-center mb-8 sm:mb-12">
-          <div className="inline-flex items-center gap-2 bg-red-50 px-4 py-2 rounded-full mb-4">
-            <HelpCircle className="h-5 w-5 text-red-600" />
-            <span className="text-sm font-semibold text-red-900">Help Center</span>
+          <div className="inline-flex items-center gap-2 bg-red-50 border border-red-100 px-4 py-2 rounded-full mb-4">
+            <HelpCircle className="h-4 w-4 text-red-700" />
+            <span className="text-xs font-bold text-red-900 uppercase tracking-wider">Help Center</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            Frequently Asked Questions
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-3">
+            Frequently Asked <span className="text-red-900">Questions</span>
           </h1>
 
-          <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto mb-6">
+          <p className="text-sm sm:text-base text-gray-500 max-w-xl mx-auto mb-8">
             Find answers to the most commonly asked questions about Gulbhahar products and services
           </p>
 
           {/* Search Bar */}
-          <div className="w-full max-w-sm sm:max-w-md mx-auto relative">
-            <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-              <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
-            </div>
+          <div className="w-full max-w-md mx-auto relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <input
               type="text"
               placeholder="Search FAQs..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-3 sm:py-3 text-sm sm:text-base border-2 border-red-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-900 transition-all duration-200 bg-white"
+              className="w-full pl-11 pr-4 py-3 text-sm border-2 border-red-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-red-900 transition-all duration-200 bg-white shadow-sm"
             />
           </div>
         </div>
 
         {/* Category Navigation */}
-        <div className="mb-8 sm:mb-12">
-          <h3 className="text-lg font-bold text-gray-900 mb-4 text-center sm:text-left">Browse by Category</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+        <div className="mb-8 sm:mb-10">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
             {categories.map((category) => {
               const IconComponent = category.icon;
               const isActive = activeCategory === category.name;
-              const categoryFaqCount = allFaqs.filter(faq => faq.category === category.name).length;
+              const count = allFaqs.filter(faq => faq.category === category.name).length;
 
               return (
                 <button
                   key={category.name}
-                  className={`p-4 sm:p-6 rounded-xl border-2 transition-all duration-200 text-center ${isActive
-                    ? "bg-red-50 border-red-900 text-red-900 shadow-md transform scale-105"
-                    : "bg-white border-red-200 text-gray-700 hover:border-red-300 hover:bg-red-50/50 hover:scale-102"
-                    }`}
                   onClick={() => handleCategoryClick(category.name)}
+                  className={`relative p-4 rounded-2xl border-2 transition-all duration-200 text-center group overflow-hidden ${
+                    isActive
+                      ? "bg-red-900 border-red-900 text-white shadow-lg shadow-red-900/20 scale-[1.02]"
+                      : "bg-white border-gray-100 text-gray-700 hover:border-red-200 hover:shadow-md"
+                  }`}
                 >
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 ${isActive ? 'bg-red-900' : category.bgColor
-                    }`}>
-                    <IconComponent className={`h-6 w-6 ${isActive ? 'text-white' : category.color
-                      }`} />
+                  {/* subtle bg pattern on active */}
+                  {isActive && (
+                    <div className="absolute inset-0 opacity-10">
+                      <div className="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-white" />
+                      <div className="absolute -bottom-4 -left-4 w-12 h-12 rounded-full bg-white" />
+                    </div>
+                  )}
+                  <div className={`relative w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-2.5 transition-all duration-200 ${
+                    isActive ? 'bg-white/20' : `${category.bgColor} group-hover:scale-110`
+                  }`}>
+                    <IconComponent className={`h-5 w-5 ${isActive ? 'text-white' : category.color}`} />
                   </div>
-                  <div className="text-sm sm:text-base font-bold mb-1">{category.name}</div>
-                  <div className="text-xs text-gray-500">{categoryFaqCount} questions</div>
+                  <div className={`relative text-sm font-bold mb-0.5 ${isActive ? 'text-white' : 'text-gray-800'}`}>
+                    {category.name}
+                  </div>
+                  <div className={`relative text-[11px] font-medium ${isActive ? 'text-white/70' : 'text-gray-400'}`}>
+                    {count} questions
+                  </div>
                 </button>
               );
             })}
@@ -242,51 +237,45 @@ const FAQ = () => {
         </div>
 
         {/* FAQ Items */}
-        <div className="bg-white rounded-2xl shadow-xl border-2 border-red-100 p-4 sm:p-6 lg:p-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-red-900 rounded-full flex items-center justify-center">
-              {categories.find(cat => cat.name === activeCategory)?.icon && (
-                React.createElement(categories.find(cat => cat.name === activeCategory).icon, {
-                  className: "h-5 w-5 text-white"
-                })
+        <div className="bg-white rounded-2xl border border-red-100 overflow-hidden shadow-sm">
+          {/* Section header */}
+          <div className="flex items-center gap-3 px-5 py-4 border-b border-red-50 bg-red-50/30">
+            <div className="w-8 h-8 bg-red-900 rounded-xl flex items-center justify-center">
+              {categories.find(cat => cat.name === activeCategory) && React.createElement(
+                categories.find(cat => cat.name === activeCategory).icon,
+                { className: "h-4 w-4 text-white" }
               )}
             </div>
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">{activeCategory} Questions</h2>
-              <p className="text-sm text-gray-600">{filteredFaqs.length} questions found</p>
+              <h2 className="text-sm font-bold text-gray-900">{activeCategory} Questions</h2>
+              <p className="text-[11px] text-gray-400">{filteredFaqs.length} questions found</p>
             </div>
           </div>
 
-          <div className="space-y-0">
-            {filteredFaqs.map((faq, index) => (
+          {filteredFaqs.length > 0 ? (
+            filteredFaqs.map((faq, index) => (
               <FAQItem
                 key={index}
+                index={index}
                 question={faq.question}
                 answer={faq.answer}
                 isOpen={openIndex === index}
                 onClick={() => handleClick(index)}
               />
-            ))}
-          </div>
-
-          {/* No results message */}
-          {filteredFaqs.length === 0 && (
-            <div className="text-center py-12">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Search className="h-8 w-8 text-gray-400" />
+            ))
+          ) : (
+            <div className="text-center py-14">
+              <div className="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <Search className="h-6 w-6 text-gray-300" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">No questions found</h3>
-              <p className="text-gray-600 mb-4">
+              <h3 className="text-sm font-bold text-gray-800 mb-1">No questions found</h3>
+              <p className="text-xs text-gray-400 mb-4">
                 {searchTerm
-                  ? `No questions match "${searchTerm}" in ${activeCategory} category.`
-                  : `No questions available in ${activeCategory} category yet.`
-                }
+                  ? `No match for "${searchTerm}" in ${activeCategory}`
+                  : `No questions in ${activeCategory} yet`}
               </p>
               {searchTerm && (
-                <button
-                  onClick={() => setSearchTerm("")}
-                  className="text-red-600 hover:text-red-800 font-medium underline"
-                >
+                <button onClick={() => setSearchTerm("")} className="text-sm text-red-700 font-semibold hover:underline">
                   Clear search
                 </button>
               )}
@@ -295,46 +284,61 @@ const FAQ = () => {
         </div>
 
         {/* Contact CTA */}
-        <div className="mt-8 sm:mt-12 bg-gradient-to-r from-red-50 to-red-100 rounded-2xl p-6 sm:p-8 border-2 border-red-200 text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <MessageCircle className="h-6 w-6 text-red-600" />
-            <h3 className="text-xl font-bold text-gray-900">Still have questions?</h3>
-          </div>
-          <p className="text-gray-600 mb-6 max-w-md mx-auto">
-            Can't find what you're looking for? Our support team is here to help you with any questions or concerns.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-gradient-to-r from-red-900 to-red-800 text-white px-6 py-3 rounded-xl font-bold hover:from-red-800 hover:to-red-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
+        <div className="mt-8 sm:mt-12 bg-gradient-to-r from-red-900 to-red-800 rounded-2xl p-6 sm:p-8 relative overflow-hidden">
+          {/* decorative */}
+          <div className="absolute -top-6 -right-6 w-32 h-32 rounded-full bg-white/5" />
+          <div className="absolute -bottom-4 -left-4 w-20 h-20 rounded-full bg-white/5" />
 
-              📞 Call us at{" "}
-              <a href="tel:+919220927241" className="">
-                +91 9220927241
-              </a>
-
-            </button>
-            <button onClick={() => setshowpopup(true)} className="bg-white border-2 border-red-900 text-red-900 px-6 py-3 rounded-xl font-bold hover:bg-red-50 transition-all duration-200 shadow-lg hover:shadow-xl">
-              Live Chat
-            </button>
-            {showpopup && (
-              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                <div className="bg-white rounded-2xl p-6 w-80 text-center shadow-xl">
-                  <h2 className="text-lg font-bold mb-3">🚧 Under Development</h2>
-                  <p className="text-gray-600 mb-4">
-                    Live chat is currently under development.
-                    You can contact us through the call option.
-                  </p>
-                  <button
-                    onClick={() => setshowpopup(false)}
-                    className="bg-red-900 text-white px-4 py-2 rounded-lg"
-                  >
-                    Close
-                  </button>
-                </div>
+          <div className="relative flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="text-center sm:text-left">
+              <div className="flex items-center gap-2 justify-center sm:justify-start mb-2">
+                <MessageCircle className="h-5 w-5 text-red-200" />
+                <h3 className="text-lg font-bold text-white">Still have questions?</h3>
               </div>
-            )}
+              <p className="text-sm text-red-200 max-w-sm">
+                Can't find what you're looking for? Our support team is here to help.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0">
+              <a
+                href="tel:+919220927241"
+                className="flex items-center gap-2 bg-white text-red-900 px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-red-50 transition-all duration-200 shadow-lg justify-center"
+              >
+                📞 +91 9220927241
+              </a>
+              <button
+                onClick={() => setshowpopup(true)}
+                className="flex items-center gap-2 bg-white/10 border border-white/20 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-white/20 transition-all duration-200 justify-center"
+              >
+                💬 Live Chat
+              </button>
+            </div>
           </div>
         </div>
+
       </div>
+
+      {/* Popup */}
+      {showpopup && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-xs text-center shadow-2xl">
+            <div className="w-12 h-12 bg-yellow-50 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <MessageCircle className="w-6 h-6 text-yellow-500" />
+            </div>
+            <h2 className="text-base font-bold text-gray-900 mb-2">🚧 Under Development</h2>
+            <p className="text-sm text-gray-500 mb-5 leading-relaxed">
+              Live chat is currently under development. You can contact us through the call option.
+            </p>
+            <button
+              onClick={() => setshowpopup(false)}
+              className="w-full bg-red-900 text-white py-2.5 rounded-xl text-sm font-bold hover:bg-red-800 transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
