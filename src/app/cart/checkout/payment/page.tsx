@@ -2,6 +2,7 @@
 "use client";
 
 import analyticsAPI from "@/services/analytics/analyticsService";
+import { trackVisitorEvent } from "@/services/analytics/journeyService";
 import { fbEvent } from "@/utils/fb/metaPixels";
 import { gaEvent } from "@/utils/gtm/gtag";
 import { API_BASE_URL } from "@/utils/envHere";
@@ -130,7 +131,12 @@ function PaymentContent() {
     const saved = localStorage.getItem("checkoutFormData");
     if (!saved) { router.push("/cart/checkout"); return; }
     try {
-      setCheckoutData(JSON.parse(saved));
+      const parsed = JSON.parse(saved);
+      setCheckoutData(parsed);
+      trackVisitorEvent("CONTINUE_TO_PAYMENT", {
+        orderId: parsed?.orderId || orderId,
+        amount: parsed?.orderTotal || amount,
+      });
     } catch {
       setCheckoutData({
         fullName: "Test User", email: "test@example.com", phone: "+919876543210",
@@ -198,6 +204,7 @@ function PaymentContent() {
     gaEvent({ action: "ONLINE_Initiated", params: { payment_method: "RAZORPAY", OrderID: checkoutData?.orderId } });
     fbEvent({ action: "ONLINE_Initiated", params: { payment_method: "RAZORPAY", OrderID: checkoutData?.orderId } });
     try { await analyticsAPI.trackPaymentMethod("ONLINE"); } catch (e) { console.error(e); }
+    trackVisitorEvent("PAYMENT_METHOD_SELECTED", { method: "ONLINE", orderId: checkoutData?.orderId });
 
     setIsProcessingOnline(true);
 
@@ -271,6 +278,7 @@ function PaymentContent() {
     gaEvent({ action: "Partial_COD_Initiated", params: { payment_method: "PARTIAL_COD", OrderID: checkoutData?.orderId, advance_amount: partialCodAmount } });
     fbEvent({ action: "PARTIAL_COD_Initiated", params: { payment_method: "PARTIAL_COD", OrderID: checkoutData?.orderId, advance_amount: partialCodAmount } });
     try { await analyticsAPI.trackPaymentMethod("PARTIAL_COD"); } catch (e) { console.error(e); }
+    trackVisitorEvent("PAYMENT_METHOD_SELECTED", { method: "PARTIAL_COD", orderId: checkoutData?.orderId });
 
     setIsProcessingPartialCOD(true);
 

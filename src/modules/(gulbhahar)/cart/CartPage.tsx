@@ -3,6 +3,7 @@
 "use client";
 
 import analyticsAPI from "@/services/analytics/analyticsService";
+import { trackVisitorEvent } from "@/services/analytics/journeyService";
 import { useCart } from "@/providers/ContextProviders/CartContext";
 import { fbEvent } from "@/utils/fb/metaPixels";
 import { gaEvent } from "@/utils/gtm/gtag";
@@ -561,6 +562,12 @@ const CartPage = () => {
                     } catch (error) {
                       console.error(error);
                     }
+
+                    trackVisitorEvent("PROCEED_TO_CHECKOUT", {
+                      itemCount: cart.length,
+                      productIds: cart.map((item: CartItem) => item.productId),
+                      total,
+                    });
 
                     window.location.href = "/cart/checkout";
                   }}

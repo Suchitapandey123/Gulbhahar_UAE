@@ -2,6 +2,7 @@
 // Enhanced Checkout Component with Email and Phone Validation
 "use client";
 import analyticsAPI from "@/services/analytics/analyticsService";
+import { trackVisitorEvent } from "@/services/analytics/journeyService";
 import { useToast } from "@/hooks/useToast";
 import { useCart } from "@/providers/ContextProviders/CartContext";
 import { fbEvent } from "@/utils/fb/metaPixels";
@@ -816,8 +817,10 @@ export default function CheckoutComponent() {
       try {
         const res = await analyticsAPI.trackContinueToPayment(userData);
       } catch (error) {
-      
+
       }
+
+      trackVisitorEvent("CHECKOUT_FORM_FILLED", userData);
 
       gaEvent({
         action: "Continued To Payment",

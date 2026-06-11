@@ -1,6 +1,7 @@
 // @ts-nocheck
 "use client";
 import analyticsAPI from "@/services/analytics/analyticsService";
+import { trackVisitorEvent } from "@/services/analytics/journeyService";
 import { useToast } from "@/hooks/useToast";
 import { fbEvent } from "@/utils/fb/metaPixels";
 import { gaEvent } from "@/utils/gtm/gtag";
@@ -703,6 +704,8 @@ export default function MetaCheckoutComponent({
       try {
         await analyticsAPI.trackContinueToPayment(userData);
       } catch {}
+
+      trackVisitorEvent("CHECKOUT_FORM_FILLED", userData);
 
       gaEvent({ action: "Continued To Payment", params: { Customer_Name: formData.fullName, Customer_Number: formData.phone, Source: source } });
       fbEvent({ action: "ContinuedToPayment", params: { Customer_Name: formData.fullName, Customer_Number: formData.phone, Customer_Email: formData.email, Source: source } });

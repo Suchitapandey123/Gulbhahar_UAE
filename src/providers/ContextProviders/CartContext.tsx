@@ -1,6 +1,7 @@
 "use client";
 
 import analyticsService from "@/services/analytics/analyticsService";
+import { trackVisitorEvent } from "@/services/analytics/journeyService";
 import { fbEvent } from "@/utils/fb/metaPixels";
 import { gaEvent } from "@/utils/gtm/gtag";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -110,6 +111,14 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         // Analytics errors should not affect cart functionality
       }
 
+      trackVisitorEvent("ADD_TO_CART", {
+        productId: product.productId || product.id,
+        productName: product.name,
+        color: product.selectedColor || product.colors?.[0],
+        size: product.selectedSize || product.sizes?.[0],
+        quantity: 1,
+      });
+
       return {
         success: true,
         message: `${product.name}${product.selectedSize ? ` (${product.selectedSize})` : ""}${product.selectedColor ? ` (${product.selectedColor})` : ""} added to cart!`,
@@ -128,9 +137,19 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     selectedSize?: string
   ) => {
     const targetCartId = `${productId}-${selectedColor || "default"}-${selectedSize || "default"}`;
-    setCart((prevCart) =>
-      prevCart.filter((item) => getCartId(item) !== targetCartId)
-    );
+    setCart((prevCart) => {
+      const removedItem = prevCart.find((item) => getCartId(item) === targetCartId);
+      if (removedItem) {
+        trackVisitorEvent("REMOVE_FROM_CART", {
+          productId: removedItem.productId || removedItem.id,
+          productName: removedItem.name,
+          color: removedItem.selectedColor,
+          size: removedItem.selectedSize,
+          quantity: removedItem.quantity,
+        });
+      }
+      return prevCart.filter((item) => getCartId(item) !== targetCartId);
+    });
   };
 
   const updateQuantity = (

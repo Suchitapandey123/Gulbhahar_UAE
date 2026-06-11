@@ -29,6 +29,7 @@ import { API_BASE_URL } from "@/utils/envHere";
 import { gaEvent } from "@/utils/gtm/gtag";
 import { fbEvent } from "@/utils/fb/metaPixels";
 import analyticsAPI from "@/services/analytics/analyticsService";
+import { trackVisitorEvent } from "@/services/analytics/journeyService";
 
 const TransactionStatusContent = () => {
   const router = useRouter();
@@ -482,6 +483,13 @@ const TransactionStatusContent = () => {
           console.error(error);
         }
 
+        trackVisitorEvent("PAYMENT_FAILED", {
+          orderId: transactionData.orderId,
+          transactionId: transactionData.trackingId,
+          amount: transactionData.amount,
+          paymentMethod: transactionData.paymentMethod,
+        });
+
         const errorData = await response
           .json()
           .catch(() => ({ message: "Unknown error" }));
@@ -510,6 +518,13 @@ const TransactionStatusContent = () => {
       } catch (error) {
         console.error(error);
       }
+
+      trackVisitorEvent("PAYMENT_SUCCESS", {
+        orderId: transactionData.orderId,
+        transactionId: transactionData.trackingId,
+        amount: transactionData.amount,
+        paymentMethod: transactionData.paymentMethod,
+      });
 
       // 🎯 Mark as successfully completed
       apiCallCompleted.current = true;
