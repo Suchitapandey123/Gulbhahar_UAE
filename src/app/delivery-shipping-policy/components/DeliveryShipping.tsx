@@ -4,5 +4,5 @@
 import LegalPages from "@/shared-components/LegalPages/LegalPages";
 
 export default function DeliveryShipping() {
-  return <LegalPages defaultTab="delivery" />;
+  return <LegalPages defaultTab="delivery" standalone />;
 }

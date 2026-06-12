@@ -4,5 +4,5 @@
 import LegalPages from "@/shared-components/LegalPages/LegalPages";
 
 export default function PrivacyPolicy() {
-  return <LegalPages defaultTab="privacy" />;
+  return <LegalPages defaultTab="privacy" standalone />;
 }
