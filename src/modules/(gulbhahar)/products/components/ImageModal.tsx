@@ -9,6 +9,7 @@ import { ProductImageItem, FALLBACK_LQIP } from "@/utils/productImageUtils";
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 3;
 const ZOOM_STEP = 0.5;
+const INITIAL_ZOOM = 2;
 
 interface ImageModalProps {
   isModalOpen: boolean;
@@ -29,7 +30,7 @@ export const ImageModal = ({
   product,
 }: ImageModalProps) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [zoom, setZoom] = useState(MIN_ZOOM);
+  const [zoom, setZoom] = useState(INITIAL_ZOOM);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [animatePan, setAnimatePan] = useState(true);
 
@@ -151,12 +152,20 @@ export const ImageModal = ({
   // ─── Reset on image/modal change ──────────────────────────────────────────
 
   useEffect(() => {
-    resetView();
+    setZoom(INITIAL_ZOOM);
+    setPan({ x: 0, y: 0 });
+    setAnimatePan(true);
     setIsLoading(true);
-  }, [safeIndex, resetView]);
+  }, [safeIndex]);
 
   useEffect(() => {
-    if (!isModalOpen) resetView();
+    if (isModalOpen) {
+      setZoom(INITIAL_ZOOM);
+      setPan({ x: 0, y: 0 });
+      setAnimatePan(true);
+    } else {
+      resetView();
+    }
   }, [isModalOpen, resetView]);
 
   // ─── Restore scroll position on modal close (no body lock needed) ─────────
