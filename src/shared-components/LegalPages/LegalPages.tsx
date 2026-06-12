@@ -409,7 +409,7 @@ const TRUST = [
 ];
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
-export default function LegalPages({ defaultTab = "terms" }: { defaultTab?: string }) {
+export default function LegalPages({ defaultTab = "terms", standalone = false }: { defaultTab?: string; standalone?: boolean }) {
   const [activeTab, setActiveTab]       = useState(defaultTab);
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
 
@@ -426,12 +426,12 @@ export default function LegalPages({ defaultTab = "terms" }: { defaultTab?: stri
     setOpenSections(prev => ({ ...prev, [id]: !prev[id] }));
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white font-raleway pt-16 sm:pt-[72px]">
+    <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white font-raleway">
 
       {/* ════════════════════════════════════════════════════════════
           HERO
       ════════════════════════════════════════════════════════════ */}
-      <div className="relative overflow-hidden border-b border-red-100"
+      <div className="relative overflow-hidden border-b border-red-100 pt-16 sm:pt-[72px]"
         style={{ background: "linear-gradient(135deg, #FFF5F5 0%, #FAF0F0 55%, #F5E8E8 100%)" }}>
 
         {/* Dot texture */}
@@ -488,81 +488,85 @@ export default function LegalPages({ defaultTab = "terms" }: { defaultTab?: stri
       ════════════════════════════════════════════════════════════ */}
       <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-14 py-8 sm:py-10">
 
-        {/* Mobile tab strip */}
-        <div className="flex lg:hidden gap-2 overflow-x-auto pb-3 -mx-6 px-6 scrollbar-none mb-7">
-          {TABS.map(({ id, title, icon: Icon }) => {
-            const active = activeTab === id;
-            return (
-              <button key={id} onClick={() => setActiveTab(id)}
-                className={`flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 border whitespace-nowrap ${
-                  active
-                    ? "bg-red-900 text-white border-red-900 shadow-sm"
-                    : "bg-white border-red-100 text-gray-600 hover:border-red-300 hover:bg-red-50/40"
-                }`}>
-                <Icon className="h-3.5 w-3.5 flex-shrink-0" />
-                {title}
-              </button>
-            );
-          })}
-        </div>
+        {/* Mobile tab strip — hidden in standalone mode */}
+        {!standalone && (
+          <div className="flex lg:hidden gap-2 overflow-x-auto pb-3 -mx-6 px-6 scrollbar-none mb-7">
+            {TABS.map(({ id, title, icon: Icon }) => {
+              const active = activeTab === id;
+              return (
+                <button key={id} onClick={() => setActiveTab(id)}
+                  className={`flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 border whitespace-nowrap ${
+                    active
+                      ? "bg-red-900 text-white border-red-900 shadow-sm"
+                      : "bg-white border-red-100 text-gray-600 hover:border-red-300 hover:bg-red-50/40"
+                  }`}>
+                  <Icon className="h-3.5 w-3.5 flex-shrink-0" />
+                  {title}
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
 
-          {/* ── Sticky Sidebar ───────────────────────────────────── */}
-          <aside className="hidden lg:block flex-shrink-0 sticky top-8" style={{ width: "272px" }}>
-            <div className="bg-white rounded-2xl border-2 border-red-100 shadow-xl overflow-hidden">
+          {/* ── Sticky Sidebar — not rendered in standalone mode ── */}
+          {!standalone && (
+            <aside className="hidden lg:block flex-shrink-0 sticky top-8" style={{ width: "272px" }}>
+              <div className="bg-white rounded-2xl border-2 border-red-100 shadow-xl overflow-hidden">
 
-              {/* Sidebar header */}
-              <div className="px-5 py-4 border-b-2 border-red-50 bg-red-50/50">
-                <p className="text-[11px] font-bold uppercase tracking-widest text-red-800">Legal Documents</p>
+                {/* Sidebar header */}
+                <div className="px-5 py-4 border-b-2 border-red-50 bg-red-50/50">
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-red-800">Legal Documents</p>
+                </div>
+
+                {/* Nav */}
+                <div className="p-2">
+                  {TABS.map(({ id, title, icon: Icon, desc }) => {
+                    const active = activeTab === id;
+                    return (
+                      <button key={id} onClick={() => setActiveTab(id)}
+                        className={`w-full flex items-center gap-3 px-3 py-3.5 rounded-xl text-left transition-all duration-200 group mb-0.5 ${
+                          active ? "bg-red-50 shadow-sm" : "hover:bg-red-50/50"
+                        }`}
+                        style={active ? { boxShadow: "inset 3px 0 0 #991b1b" } : {}}>
+
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-200 ${
+                          active ? "bg-red-900 text-white" : "bg-gray-100 text-gray-400 group-hover:bg-red-100 group-hover:text-red-700"
+                        }`}>
+                          <Icon className="h-4 w-4" />
+                        </div>
+
+                        <div className="min-w-0 flex-1">
+                          <p className={`text-sm font-semibold leading-tight ${
+                            active ? "text-red-900" : "text-gray-700 group-hover:text-gray-900"
+                          }`}>{title}</p>
+                          <p className="text-xs text-gray-400 mt-0.5 truncate">{desc}</p>
+                        </div>
+
+                        {active && <ChevronRight className="h-4 w-4 text-red-800 flex-shrink-0" />}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Footer */}
+                <div className="px-5 py-4 border-t-2 border-red-50 bg-red-50/30">
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-red-800 mb-3">Get in Touch</p>
+                  <a href="mailto:support@gulbhahar.com"
+                    className="flex items-center gap-2 text-xs text-gray-600 hover:text-red-900 transition-colors mb-2">
+                    <Mail className="h-3.5 w-3.5 flex-shrink-0 text-red-400" />
+                    support@gulbhahar.com
+                  </a>
+                  <a href="tel:+919220927241"
+                    className="flex items-center gap-2 text-xs text-gray-600 hover:text-red-900 transition-colors">
+                    <Phone className="h-3.5 w-3.5 flex-shrink-0 text-red-400" />
+                    +91 9220927241
+                  </a>
+                </div>
               </div>
-
-              {/* Nav */}
-              <div className="p-2">
-                {TABS.map(({ id, title, icon: Icon, desc }) => {
-                  const active = activeTab === id;
-                  return (
-                    <button key={id} onClick={() => setActiveTab(id)}
-                      className={`w-full flex items-center gap-3 px-3 py-3.5 rounded-xl text-left transition-all duration-200 group mb-0.5 ${
-                        active ? "bg-red-50 shadow-sm" : "hover:bg-red-50/50"
-                      }`}
-                      style={active ? { boxShadow: "inset 3px 0 0 #991b1b" } : {}}>
-
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-200 ${
-                        active ? "bg-red-900 text-white" : "bg-gray-100 text-gray-400 group-hover:bg-red-100 group-hover:text-red-700"
-                      }`}>
-                        <Icon className="h-4 w-4" />
-                      </div>
-
-                      <div className="min-w-0 flex-1">
-                        <p className={`text-sm font-semibold leading-tight ${
-                          active ? "text-red-900" : "text-gray-700 group-hover:text-gray-900"
-                        }`}>{title}</p>
-                        <p className="text-xs text-gray-400 mt-0.5 truncate">{desc}</p>
-                      </div>
-
-                      {active && <ChevronRight className="h-4 w-4 text-red-800 flex-shrink-0" />}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Footer */}
-              <div className="px-5 py-4 border-t-2 border-red-50 bg-red-50/30">
-                <p className="text-[11px] font-bold uppercase tracking-widest text-red-800 mb-3">Get in Touch</p>
-                <a href="mailto:support@gulbhahar.com"
-                  className="flex items-center gap-2 text-xs text-gray-600 hover:text-red-900 transition-colors mb-2">
-                  <Mail className="h-3.5 w-3.5 flex-shrink-0 text-red-400" />
-                  support@gulbhahar.com
-                </a>
-                <a href="tel:+919220927241"
-                  className="flex items-center gap-2 text-xs text-gray-600 hover:text-red-900 transition-colors">
-                  <Phone className="h-3.5 w-3.5 flex-shrink-0 text-red-400" />
-                  +91 9220927241
-                </a>
-              </div>
-            </div>
-          </aside>
+            </aside>
+          )}
 
           {/* ── Content ─────────────────────────────────────────── */}
           <div className="flex-1 min-w-0 space-y-3">
