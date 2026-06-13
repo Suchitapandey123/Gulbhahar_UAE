@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, Minus, Plus, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus, X } from "lucide-react";
 import NextImage from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Product } from "../types";
@@ -59,7 +59,7 @@ export const ImageModal = ({
   );
 
   const resetView = useCallback(() => {
-    setZoom(MIN_ZOOM);
+    setZoom(INITIAL_ZOOM);
     setPan({ x: 0, y: 0 });
     setAnimatePan(true);
   }, []);
@@ -199,7 +199,7 @@ export const ImageModal = ({
 
   if (!isModalOpen || images.length === 0) return null;
 
-  const isZoomed = zoom > MIN_ZOOM;
+  const isZoomed = zoom > INITIAL_ZOOM;
 
   return (
     <div className="fixed inset-0 z-[9999] bg-black flex flex-col">
@@ -211,15 +211,6 @@ export const ImageModal = ({
 
         {/* Zoom controls */}
         <div className="flex items-center gap-2">
-          <button
-            onClick={zoomOut}
-            disabled={zoom <= MIN_ZOOM}
-            className="w-9 h-9 bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed rounded-full flex items-center justify-center transition-colors"
-            aria-label="Zoom out"
-          >
-            <Minus className="w-4 h-4 text-white" />
-          </button>
-
           <span className="text-white text-sm font-medium w-10 text-center tabular-nums">
             {zoom.toFixed(1)}x
           </span>
