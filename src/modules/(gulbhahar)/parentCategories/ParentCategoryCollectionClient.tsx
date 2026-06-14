@@ -199,7 +199,7 @@ export default function ParentCategoryCollectionClient({
           </div>
 
           {/* Product Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-5">
             {filteredProducts.length > 0 ? (
               filteredProducts.map((item: Product, index: number) => (
                 <React.Fragment key={item.productId || item._id || index}>
@@ -232,7 +232,7 @@ export default function ParentCategoryCollectionClient({
 
           {/* Skeleton cards shown while loading more */}
           {isLoading && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-5 mt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-5 mt-2">
               {Array.from({ length: 8 }).map((_, i) => (
                 <div key={i} className="animate-pulse">
                   <div className="bg-gray-200 rounded-lg aspect-[3/4] w-full" />

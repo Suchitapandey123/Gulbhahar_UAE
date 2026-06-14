@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2, Ruler, ShoppingCart, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface FullscreenReel {
@@ -10,19 +10,54 @@ export interface FullscreenReel {
   description?: string;
 }
 
+interface ColorOption {
+  name: string;
+  hexcode: string;
+}
+
+interface SizeRangeItem {
+  size: string;
+  available: boolean;
+  quantity: number;
+}
+
 interface FullscreenReelViewerProps {
   reels: FullscreenReel[];
   initialIndex: number;
   onClose: () => void;
+  // Shopping props — only provided when these reels belong to a product
+  showCart?: boolean;
+  availableColors?: ColorOption[];
+  selectedColorIndex?: number;
+  setSelectedColorIndex?: (index: number) => void;
+  sizeRange?: SizeRangeItem[];
+  selectedSize?: string;
+  setSelectedSize?: (size: string) => void;
+  customRed?: string;
+  onAddToCart?: () => void;
+  addingToCart?: boolean;
+  isOutOfStock?: boolean;
 }
 
 export default function FullscreenReelViewer({
   reels,
   initialIndex,
   onClose,
+  showCart,
+  availableColors = [],
+  selectedColorIndex = 0,
+  setSelectedColorIndex,
+  sizeRange = [],
+  selectedSize,
+  setSelectedSize,
+  customRed = "#800000",
+  onAddToCart,
+  addingToCart,
+  isOutOfStock,
 }: FullscreenReelViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isMuted, setIsMuted] = useState(true);
+  const [showVariantPicker, setShowVariantPicker] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
@@ -157,6 +192,21 @@ export default function FullscreenReelViewer({
             )}
           </div>
         )}
+
+        {/* Quick add to cart — pinned to the video's own corner */}
+        {showCart && onAddToCart && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowVariantPicker(true);
+            }}
+            className="absolute bottom-4 right-4 z-30 flex items-center gap-2 px-4 py-2.5 rounded-full text-white text-sm font-medium shadow-lg transition-all active:scale-95"
+            style={{ backgroundColor: customRed }}
+          >
+            <ShoppingCart className="w-4 h-4" />
+            Add to Cart
+          </button>
+        )}
       </div>
 
       {/* Progress dots */}
@@ -170,6 +220,113 @@ export default function FullscreenReelViewer({
               }`}
             />
           ))}
+        </div>
+      )}
+
+      {/* Variant picker sheet */}
+      {showVariantPicker && (
+        <div
+          className="absolute inset-0 z-[110] flex items-end justify-center"
+          onClick={() => setShowVariantPicker(false)}
+        >
+          <div className="absolute inset-0 bg-black/50 animate-in fade-in" />
+          <div
+            className="relative w-full max-w-md bg-white rounded-t-2xl p-4 pb-6 space-y-5 animate-in slide-in-from-bottom duration-300"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-semibold text-gray-900">Select Options</h3>
+              <button
+                onClick={() => setShowVariantPicker(false)}
+                className="p-1 rounded-full hover:bg-gray-100"
+              >
+                <X className="w-5 h-5 text-gray-500" />
+              </button>
+            </div>
+
+            {/* Color selection */}
+            {availableColors.length > 0 && (
+              <div className="space-y-2">
+                <h4 className="text-sm font-medium text-gray-900">Color:</h4>
+                <div className="flex flex-wrap gap-2">
+                  {availableColors.map((color, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setSelectedColorIndex?.(idx)}
+                      className={`flex items-center gap-2 px-3 py-1.5 text-sm rounded-md transition-all capitalize border ${
+                        selectedColorIndex === idx
+                          ? "text-white font-semibold shadow-md border-transparent"
+                          : "bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300"
+                      }`}
+                      style={selectedColorIndex === idx ? { backgroundColor: customRed } : {}}
+                    >
+                      <div
+                        className="w-4 h-4 rounded-full border border-gray-300"
+                        style={{ backgroundColor: color.hexcode }}
+                      />
+                      <span>{color.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Size selection */}
+            {sizeRange.length > 0 && (
+              <div className="space-y-2">
+                <h4 className="text-sm font-medium text-gray-900 flex items-center gap-1">
+                  <Ruler className="w-4 h-4" /> Size:
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {sizeRange.map(({ size, available }) => (
+                    <button
+                      key={size}
+                      onClick={() => available && setSelectedSize?.(size)}
+                      disabled={!available}
+                      className={`px-3.5 py-2 text-sm border rounded transition-all font-medium ${
+                        selectedSize === size && available
+                          ? "text-white border-transparent"
+                          : available
+                            ? "border-gray-300 hover:border-gray-400 bg-white text-gray-900 hover:bg-gray-50"
+                            : "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed line-through"
+                      }`}
+                      style={selectedSize === size && available ? { backgroundColor: customRed, borderColor: customRed } : {}}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <button
+              onClick={() => {
+                onAddToCart?.();
+                setShowVariantPicker(false);
+              }}
+              disabled={addingToCart || !selectedSize || isOutOfStock}
+              className={`w-full py-3 text-white rounded-lg font-medium text-base transition-all flex items-center justify-center gap-2 active:scale-[0.98] ${
+                addingToCart || !selectedSize || isOutOfStock ? "opacity-50 cursor-not-allowed" : "hover:opacity-90"
+              }`}
+              style={{ backgroundColor: customRed }}
+            >
+              {isOutOfStock ? (
+                "OUT OF STOCK"
+              ) : addingToCart ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Adding...
+                </>
+              ) : !selectedSize ? (
+                "SELECT SIZE"
+              ) : (
+                <>
+                  <ShoppingCart className="w-5 h-5" />
+                  ADD TO CART
+                </>
+              )}
+            </button>
+          </div>
         </div>
       )}
     </div>

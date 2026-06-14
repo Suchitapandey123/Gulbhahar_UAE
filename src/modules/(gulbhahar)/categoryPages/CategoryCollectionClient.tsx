@@ -174,7 +174,7 @@ export default function CategoryCollectionClient({
           </div>
 
           {/* Product Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-5">
             {paginatedProducts.length > 0 ? (
               paginatedProducts.map((item: Product, index: number) => (
                 <React.Fragment key={item.productId || item._id || index}>

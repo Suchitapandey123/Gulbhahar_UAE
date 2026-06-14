@@ -48,6 +48,7 @@ export default function ProductCard({
 
   const imagesArr = Array.isArray(item.image) ? item.image : [item.image];
   const imagesToShow = Array.isArray(imagesArr[0]) ? imagesArr[0] : imagesArr;
+
   const currentImageIndex =
     currentImageIndices[item.id || item.productId || index] || 0;
 

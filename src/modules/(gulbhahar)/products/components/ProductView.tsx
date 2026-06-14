@@ -92,6 +92,14 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
   };
 
 
+  const availableColorsMapped = useMemo(() => {
+    if (!product.availableColors || product.availableColors.length === 0) return [];
+    return product.availableColors.map((color) => ({
+      name: typeof color === "string" ? color : color.name,
+      hexcode: typeof color === "string" ? "#e5ab0b" : color.hexcode || "#e5ab0b",
+    }));
+  }, [product.availableColors]);
+
   const currentColor = useMemo((): string => {
     if (product.availableColors && product.availableColors[selectedColorIndex]) {
       const color = product.availableColors[selectedColorIndex];
@@ -252,8 +260,10 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
             <div className="hidden md:block absolute bottom-0 left-0 w-10 lg:w-12 h-10 lg:h-12 border-b-2 border-l-2 border-[#800000]/20" />
             <div className="hidden md:block absolute bottom-0 right-0 w-10 lg:w-12 h-10 lg:h-12 border-b-2 border-r-2 border-[#800000]/20" />
 
-            <div className="space-y-4 md:space-y-6">
-              <ProductInfo product={product} displayName={displayName} customRed={customRed} avgRating={avgRating} reviewCount={reviewCount} />
+            <div className="flex flex-col gap-4 md:gap-6">
+              <div className="order-4 md:order-1">
+                <ProductInfo product={product} displayName={displayName} customRed={customRed} avgRating={avgRating} reviewCount={reviewCount} />
+              </div>
 
               {/* Product Highlights — skip color/size entries, already shown below */}
               {product.details && product.details.length > 0 && (() => {
@@ -261,7 +271,7 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
                   (d) => !/color|colour|size|rang/i.test(d)
                 ).slice(0, 4);
                 return filtered.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="order-5 md:order-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {filtered.map((item, i) => (
                       <div key={i} className="flex items-start gap-2 bg-stone-50 border border-gray-100 rounded-lg px-3 py-2.5 min-h-[48px]">
                         <span className="text-[#800000] mt-0.5 text-[10px] flex-shrink-0">✦</span>
@@ -272,35 +282,39 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
                 ) : null;
               })()}
 
-              <ProductVariants
-                product={product}
-                selectedColorIndex={selectedColorIndex}
-                setSelectedColorIndex={handleColorChange}
-                selectedSize={selectedSize}
-                setSelectedSize={setSelectedSize}
-                customRed={customRed}
-                setShowSizeGuide={setShowSizeGuide}
-                sizeRange={sizeRange}
-                inventory={product.inventory ?? []}
-                shouldShowSizeGuide={sizeChart?.isActive ?? false}
-              />
+              <div className="order-1 md:order-3">
+                <ProductVariants
+                  product={product}
+                  selectedColorIndex={selectedColorIndex}
+                  setSelectedColorIndex={handleColorChange}
+                  selectedSize={selectedSize}
+                  setSelectedSize={setSelectedSize}
+                  customRed={customRed}
+                  setShowSizeGuide={setShowSizeGuide}
+                  sizeRange={sizeRange}
+                  inventory={product.inventory ?? []}
+                  shouldShowSizeGuide={sizeChart?.isActive ?? false}
+                />
+              </div>
 
-              <ProductPurchaseSection
-                product={product}
-                selectedSize={selectedSize}
-                addingToCart={
-                  addingToCart === (product.productId || product.id)
-                }
-                onAddToCart={handleAddToCart}
-                customRed={customRed}
-                isOutOfStock={isOutOfStock}
-              />
-              <div className="md:block hidden">
+              <div className="order-2 md:order-4">
+                <ProductPurchaseSection
+                  product={product}
+                  selectedSize={selectedSize}
+                  addingToCart={
+                    addingToCart === (product.productId || product.id)
+                  }
+                  onAddToCart={handleAddToCart}
+                  customRed={customRed}
+                  isOutOfStock={isOutOfStock}
+                />
+              </div>
+              <div className="order-9 md:order-5 md:block hidden">
                 <DeliveryChecker customRed={customRed} />
               </div>
 
               {/* Delivery Timeline */}
-              <div className="py-3 px-3 bg-stone-50 rounded-lg border border-gray-100">
+              <div className="order-6 md:order-6 py-3 px-3 bg-stone-50 rounded-lg border border-gray-100">
                 <p className="text-[10px] font-bold tracking-[0.15em] uppercase text-gray-400 mb-3">Delivery Timeline</p>
                 <div className="flex items-center gap-1">
                   <div className="flex flex-col items-center gap-1">
@@ -320,12 +334,24 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
                 </div>
               </div>
 
-              <div className="block md:hidden">
-                <ProductReels videos={videosByColor} selectedColorIndex={selectedColorIndex} />
+              <div className="order-3 md:order-7 block md:hidden">
+                <ProductReels
+                  videos={videosByColor}
+                  selectedColorIndex={selectedColorIndex}
+                  onAddToCart={handleAddToCart}
+                  addingToCart={addingToCart === (product.productId || product.id)}
+                  isOutOfStock={isOutOfStock}
+                  selectedSize={selectedSize}
+                  setSelectedSize={setSelectedSize}
+                  customRed={customRed}
+                  availableColors={availableColorsMapped}
+                  setSelectedColorIndex={handleColorChange}
+                  sizeRange={sizeRange}
+                />
               </div>
 
               {/* Elegant note */}
-              <div className="relative mt-4 md:mt-6 pt-4 md:pt-6 border-t border-dashed border-gray-200">
+              <div className="order-7 md:order-8 relative mt-4 md:mt-6 pt-4 md:pt-6 border-t border-dashed border-gray-200">
                 <div className="flex items-start gap-2 md:gap-3">
                   <span className="text-[#800000]/60 text-xs md:text-sm mt-0.5 flex-shrink-0">
                     ✦
@@ -339,7 +365,7 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
               </div>
 
               {/* Trust badges - responsive */}
-              <div className="flex items-center justify-center gap-4 sm:gap-6 pt-3 pb-3 md:pt-4">
+              <div className="order-8 md:order-9 flex items-center justify-center gap-4 sm:gap-6 pt-3 pb-3 md:pt-4">
                 <div className="flex flex-col items-center gap-0.5 md:gap-1">
                   <span className="text-[8px] md:text-[10px] tracking-[0.1em] md:tracking-[0.15em] uppercase text-gray-400">
                     Authentic
@@ -382,7 +408,19 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
 
       {/* Desktop reels — outside grid to preserve sticky layout */}
       <div className="md:block hidden">
-        <ProductReels videos={videosByColor} selectedColorIndex={selectedColorIndex} />
+        <ProductReels
+          videos={videosByColor}
+          selectedColorIndex={selectedColorIndex}
+          onAddToCart={handleAddToCart}
+          addingToCart={addingToCart === (product.productId || product.id)}
+          isOutOfStock={isOutOfStock}
+          selectedSize={selectedSize}
+          setSelectedSize={setSelectedSize}
+          customRed={customRed}
+          availableColors={availableColorsMapped}
+          setSelectedColorIndex={handleColorChange}
+          sizeRange={sizeRange}
+        />
       </div>
 
       {/* Sticky Mobile CTA */}

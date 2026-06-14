@@ -30,7 +30,7 @@ function buildUrl(
 export function getProductImages(
   productId: string | undefined,
   images: ProductImages[] | undefined,
-  type: ImageType = "cards"
+  type: ImageType = "display"
 ): ProductImageItem[] {
   try {
     if (!productId || !images?.length) return [FALLBACK_IMAGE];
@@ -51,7 +51,7 @@ export function getProductImagesForColor(
   productId: string | undefined,
   images: ProductImages[] | undefined,
   colorIndex = 0,
-  type: ImageType = "cards"
+  type: ImageType = "original"
 ): ProductImageItem[] {
 
   try {

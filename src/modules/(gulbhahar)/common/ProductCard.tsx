@@ -46,7 +46,7 @@ export default function ProductCard({
 
   // Strip lqip to reduce RSC payload — all card images use shared FALLBACK_LQIP
   const imagesToShow = getProductImages(item.productId, item.images as ProductImages[])
-    .slice(0, 2)
+    .slice(0, 4)
     .map((img) => ({ url: img.url, lqip: FALLBACK_LQIP }));
 
   // Support both old format (sizes: string[]) and new format (availableSizes: {name: string}[])
@@ -80,6 +80,7 @@ export default function ProductCard({
   const totalStock = Array.isArray(item.inventory)
     ? item.inventory.reduce((sum: number, v: { quantity: number }) => sum + (v.quantity ?? 0), 0)
     : (item.stock ?? 0);
+   
 
   return (
     <div className="group w-full">

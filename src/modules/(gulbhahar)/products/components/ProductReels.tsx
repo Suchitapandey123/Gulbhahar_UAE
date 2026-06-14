@@ -15,6 +15,15 @@ export interface ReelData {
 interface ProductReelsProps {
   videos: VideosOption[][];
   selectedColorIndex?: number;
+  onAddToCart?: () => void;
+  addingToCart?: boolean;
+  isOutOfStock?: boolean;
+  selectedSize?: string;
+  customRed?: string;
+  availableColors?: { name: string; hexcode: string }[];
+  setSelectedColorIndex?: (index: number) => void;
+  sizeRange?: { size: string; available: boolean; quantity: number }[];
+  setSelectedSize?: (size: string) => void;
 }
 
 // Reels data - can be fetched from API/CMS in production
@@ -53,9 +62,22 @@ const PRODUCT_REELS: ReelData[] = [
   },
 ];
 
-export default function ProductReels({ videos, selectedColorIndex = 0 }: ProductReelsProps) {
+export default function ProductReels({
+  videos,
+  selectedColorIndex = 0,
+  onAddToCart,
+  addingToCart,
+  isOutOfStock,
+  selectedSize,
+  customRed,
+  availableColors,
+  setSelectedColorIndex,
+  sizeRange,
+  setSelectedSize,
+}: ProductReelsProps) {
   const colorVideos = (videos?.[selectedColorIndex] ?? []).filter(Boolean);
   const reels = colorVideos.length > 0 ? colorVideos : PRODUCT_REELS;
+  const isProductReels = colorVideos.length > 0;
   const [fullscreenIndex, setFullscreenIndex] = useState<number | null>(null);
 
   return (
@@ -82,6 +104,11 @@ export default function ProductReels({ videos, selectedColorIndex = 0 }: Product
               reel={reel}
               index={idx}
               onClick={() => setFullscreenIndex(idx)}
+              onAddToCart={isProductReels ? onAddToCart : undefined}
+              addingToCart={addingToCart}
+              isOutOfStock={isOutOfStock}
+              selectedSize={selectedSize}
+              customRed={customRed}
             />
           ))}
           {/* End spacing */}
@@ -95,6 +122,17 @@ export default function ProductReels({ videos, selectedColorIndex = 0 }: Product
           reels={reels}
           initialIndex={fullscreenIndex}
           onClose={() => setFullscreenIndex(null)}
+          showCart={isProductReels}
+          onAddToCart={onAddToCart}
+          addingToCart={addingToCart}
+          isOutOfStock={isOutOfStock}
+          selectedSize={selectedSize}
+          setSelectedSize={setSelectedSize}
+          customRed={customRed}
+          availableColors={availableColors}
+          selectedColorIndex={selectedColorIndex}
+          setSelectedColorIndex={setSelectedColorIndex}
+          sizeRange={sizeRange}
         />
       )}
     </section>
