@@ -3,9 +3,7 @@ import { PageData } from "@/types/page.types";
 import ReactMarkdown from "react-markdown";
 
 const mdComponents = {
-  a: ({ node, ...props }: any) => (
-    <a {...props} target="_blank" rel="noopener noreferrer" className="text-red-800 underline hover:text-red-600" />
-  ),
+  a: ({ node, children, ...props }: any) => <span>{children}</span>,
   // Render blank lines as visible empty space
   br: () => <br />,
 };

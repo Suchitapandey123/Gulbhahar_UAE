@@ -1,6 +1,7 @@
 import React from 'react'
 import DeliveryShipping from "@/app/delivery-shipping-policy/components/DeliveryShipping"
 
+export const revalidate = 604800; // 7 days
 
 export async function generateMetadata() {
   return {

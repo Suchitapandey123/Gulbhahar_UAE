@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, Minus, Plus, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus, X } from "lucide-react";
 import NextImage from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Product } from "../types";
@@ -9,6 +9,7 @@ import { ProductImageItem, FALLBACK_LQIP } from "@/utils/productImageUtils";
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 3;
 const ZOOM_STEP = 0.5;
+const INITIAL_ZOOM = 2;
 
 interface ImageModalProps {
   isModalOpen: boolean;
@@ -29,7 +30,7 @@ export const ImageModal = ({
   product,
 }: ImageModalProps) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [zoom, setZoom] = useState(MIN_ZOOM);
+  const [zoom, setZoom] = useState(INITIAL_ZOOM);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [animatePan, setAnimatePan] = useState(true);
 
@@ -58,7 +59,7 @@ export const ImageModal = ({
   );
 
   const resetView = useCallback(() => {
-    setZoom(MIN_ZOOM);
+    setZoom(INITIAL_ZOOM);
     setPan({ x: 0, y: 0 });
     setAnimatePan(true);
   }, []);
@@ -151,12 +152,20 @@ export const ImageModal = ({
   // ─── Reset on image/modal change ──────────────────────────────────────────
 
   useEffect(() => {
-    resetView();
+    setZoom(INITIAL_ZOOM);
+    setPan({ x: 0, y: 0 });
+    setAnimatePan(true);
     setIsLoading(true);
-  }, [safeIndex, resetView]);
+  }, [safeIndex]);
 
   useEffect(() => {
-    if (!isModalOpen) resetView();
+    if (isModalOpen) {
+      setZoom(INITIAL_ZOOM);
+      setPan({ x: 0, y: 0 });
+      setAnimatePan(true);
+    } else {
+      resetView();
+    }
   }, [isModalOpen, resetView]);
 
   // ─── Restore scroll position on modal close (no body lock needed) ─────────
@@ -190,7 +199,7 @@ export const ImageModal = ({
 
   if (!isModalOpen || images.length === 0) return null;
 
-  const isZoomed = zoom > MIN_ZOOM;
+  const isZoomed = zoom > INITIAL_ZOOM;
 
   return (
     <div className="fixed inset-0 z-[9999] bg-black flex flex-col">
@@ -202,15 +211,6 @@ export const ImageModal = ({
 
         {/* Zoom controls */}
         <div className="flex items-center gap-2">
-          <button
-            onClick={zoomOut}
-            disabled={zoom <= MIN_ZOOM}
-            className="w-9 h-9 bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed rounded-full flex items-center justify-center transition-colors"
-            aria-label="Zoom out"
-          >
-            <Minus className="w-4 h-4 text-white" />
-          </button>
-
           <span className="text-white text-sm font-medium w-10 text-center tabular-nums">
             {zoom.toFixed(1)}x
           </span>

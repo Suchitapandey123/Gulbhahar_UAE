@@ -1,5 +1,4 @@
 // @ts-nocheck
-"use client";
 
 import {
   AlertCircle, BarChart3, CheckCircle, ChevronDown, ChevronRight,
@@ -7,7 +6,6 @@ import {
   Package, Phone, RefreshCw, Settings, Shield, ShieldCheck,
   Target, Truck, XCircle,
 } from "lucide-react";
-import { useEffect, useState } from "react";
 
 // ─── Botanical SVG watermark ──────────────────────────────────────────────────
 const FloralMark = ({ size = 340 }: { size?: number }) => (
@@ -63,50 +61,21 @@ const InfoBanner = ({ icon: Icon = Info, warn = false, children }) => (
 );
 
 // ─── Accordion ────────────────────────────────────────────────────────────────
-const AccordionSection = ({ index, icon: Icon, title, isOpen, onToggle, children }) => (
-  <div className={`rounded-2xl overflow-hidden border transition-all duration-300 ${
-    isOpen
-      ? "border-red-200 shadow-[0_4px_20px_rgba(153,27,27,0.09)]"
-      : "border-gray-200 bg-white hover:border-red-200 hover:shadow-sm"
-  }`}>
-    <button
-      onClick={onToggle}
-      className={`w-full flex items-center gap-4 px-5 py-4 text-left transition-all duration-200 ${
-        isOpen ? "bg-red-50/60" : "bg-white hover:bg-red-50/30"
-      }`}
-    >
-      <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-200 ${
-        isOpen ? "bg-red-100 text-red-900" : "bg-gray-100 text-gray-400"
-      }`}>
+const AccordionSection = ({ index, icon: Icon, title, children }) => (
+  <div className="rounded-2xl overflow-hidden border border-red-200 shadow-[0_4px_20px_rgba(153,27,27,0.09)]">
+    <div className="w-full flex items-center gap-4 px-5 py-4 bg-red-50/60">
+      <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 bg-red-100 text-red-900">
         <Icon className="h-4 w-4" />
       </div>
-
       <div className="flex-1 min-w-0">
-        <p className={`text-[11px] font-semibold uppercase tracking-widest mb-0.5 ${
-          isOpen ? "text-red-400" : "text-gray-400"
-        }`}>
+        <p className="text-[11px] font-semibold uppercase tracking-widest mb-0.5 text-red-400">
           {String(index).padStart(2, "0")}
         </p>
-        <p className={`text-base font-semibold leading-snug ${
-          isOpen ? "text-red-900" : "text-gray-800"
-        }`}>{title}</p>
+        <p className="text-base font-semibold leading-snug text-red-900">{title}</p>
       </div>
-
-      <div className={`w-7 h-7 rounded-full border flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
-        isOpen ? "border-red-200 bg-red-100 rotate-180" : "border-gray-200 bg-white"
-      }`}>
-        <ChevronDown className={`h-4 w-4 ${isOpen ? "text-red-800" : "text-gray-400"}`} />
-      </div>
-    </button>
-
-    <div className={`grid transition-all duration-500 ease-in-out ${
-      isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-    }`}>
-      <div className="overflow-hidden">
-        <div className="px-5 pb-6 pt-4 bg-white border-t border-red-50">
-          {children}
-        </div>
-      </div>
+    </div>
+    <div className="px-5 pb-6 pt-4 bg-white border-t border-red-50">
+      {children}
     </div>
   </div>
 );
@@ -410,20 +379,8 @@ const TRUST = [
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 export default function LegalPages({ defaultTab = "terms", standalone = false }: { defaultTab?: string; standalone?: boolean }) {
-  const [activeTab, setActiveTab]       = useState(defaultTab);
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
-
-  const data        = TAB_DATA[activeTab];
+  const data        = TAB_DATA[defaultTab];
   const CurrentIcon = data.icon;
-
-  useEffect(() => {
-    if (data.sections.length > 0) {
-      setOpenSections({ [data.sections[0].id]: true });
-    }
-  }, [activeTab]);
-
-  const toggle = (id: string) =>
-    setOpenSections(prev => ({ ...prev, [id]: !prev[id] }));
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50/30 to-white font-raleway">
@@ -488,159 +445,36 @@ export default function LegalPages({ defaultTab = "terms", standalone = false }:
       ════════════════════════════════════════════════════════════ */}
       <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-14 py-8 sm:py-10">
 
-        {/* Mobile tab strip — hidden in standalone mode */}
-        {!standalone && (
-          <div className="flex lg:hidden gap-2 overflow-x-auto pb-3 -mx-6 px-6 scrollbar-none mb-7">
-            {TABS.map(({ id, title, icon: Icon }) => {
-              const active = activeTab === id;
-              return (
-                <button key={id} onClick={() => setActiveTab(id)}
-                  className={`flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 border whitespace-nowrap ${
-                    active
-                      ? "bg-red-900 text-white border-red-900 shadow-sm"
-                      : "bg-white border-red-100 text-gray-600 hover:border-red-300 hover:bg-red-50/40"
-                  }`}>
-                  <Icon className="h-3.5 w-3.5 flex-shrink-0" />
-                  {title}
-                </button>
-              );
-            })}
-          </div>
-        )}
 
-        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
-
-          {/* ── Sticky Sidebar — not rendered in standalone mode ── */}
-          {!standalone && (
-            <aside className="hidden lg:block flex-shrink-0 sticky top-8" style={{ width: "272px" }}>
-              <div className="bg-white rounded-2xl border-2 border-red-100 shadow-xl overflow-hidden">
-
-                {/* Sidebar header */}
-                <div className="px-5 py-4 border-b-2 border-red-50 bg-red-50/50">
-                  <p className="text-[11px] font-bold uppercase tracking-widest text-red-800">Legal Documents</p>
-                </div>
-
-                {/* Nav */}
-                <div className="p-2">
-                  {TABS.map(({ id, title, icon: Icon, desc }) => {
-                    const active = activeTab === id;
-                    return (
-                      <button key={id} onClick={() => setActiveTab(id)}
-                        className={`w-full flex items-center gap-3 px-3 py-3.5 rounded-xl text-left transition-all duration-200 group mb-0.5 ${
-                          active ? "bg-red-50 shadow-sm" : "hover:bg-red-50/50"
-                        }`}
-                        style={active ? { boxShadow: "inset 3px 0 0 #991b1b" } : {}}>
-
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-200 ${
-                          active ? "bg-red-900 text-white" : "bg-gray-100 text-gray-400 group-hover:bg-red-100 group-hover:text-red-700"
-                        }`}>
-                          <Icon className="h-4 w-4" />
-                        </div>
-
-                        <div className="min-w-0 flex-1">
-                          <p className={`text-sm font-semibold leading-tight ${
-                            active ? "text-red-900" : "text-gray-700 group-hover:text-gray-900"
-                          }`}>{title}</p>
-                          <p className="text-xs text-gray-400 mt-0.5 truncate">{desc}</p>
-                        </div>
-
-                        {active && <ChevronRight className="h-4 w-4 text-red-800 flex-shrink-0" />}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Footer */}
-                <div className="px-5 py-4 border-t-2 border-red-50 bg-red-50/30">
-                  <p className="text-[11px] font-bold uppercase tracking-widest text-red-800 mb-3">Get in Touch</p>
-                  <a href="mailto:support@gulbhahar.com"
-                    className="flex items-center gap-2 text-xs text-gray-600 hover:text-red-900 transition-colors mb-2">
-                    <Mail className="h-3.5 w-3.5 flex-shrink-0 text-red-400" />
-                    support@gulbhahar.com
-                  </a>
-                  <a href="tel:+919220927241"
-                    className="flex items-center gap-2 text-xs text-gray-600 hover:text-red-900 transition-colors">
-                    <Phone className="h-3.5 w-3.5 flex-shrink-0 text-red-400" />
-                    +91 9220927241
-                  </a>
-                </div>
-              </div>
-            </aside>
-          )}
-
-          {/* ── Content ─────────────────────────────────────────── */}
-          <div className="flex-1 min-w-0 space-y-3">
-
-            {/* Accordions */}
-            {data.sections.map((s, i) => (
-              <AccordionSection
-                key={s.id} index={i + 1} icon={s.icon} title={s.title}
-                isOpen={!!openSections[s.id]} onToggle={() => toggle(s.id)}>
-                {s.body}
-              </AccordionSection>
-            ))}
-          </div>
+        <div className="space-y-3">
+          {data.sections.map((s, i) => (
+            <AccordionSection
+              key={s.id} index={i + 1} icon={s.icon} title={s.title}>
+              {s.body}
+            </AccordionSection>
+          ))}
         </div>
 
-        {/* ════════════════════════════════════════════════════════════
-            TRUST SECTION
-        ════════════════════════════════════════════════════════════ */}
-        <div className="mt-16">
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-3 mb-4">
-              <div className="h-px w-10 bg-gradient-to-r from-transparent to-red-300" />
-              <span className="text-xs font-bold uppercase tracking-widest text-red-800">Our Promise</span>
-              <div className="h-px w-10 bg-gradient-to-l from-transparent to-red-300" />
-            </div>
-            <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">Why You Can Trust Us</h3>
-            <p className="text-sm text-gray-500 mt-2 max-w-md mx-auto leading-relaxed">
-              We believe in complete transparency, security, and respect for your privacy.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            {TRUST.map(({ icon: Icon, title, desc }, i) => (
-              <div key={i}
-                className="group bg-white border-2 border-red-100 rounded-2xl p-6 text-center hover:border-red-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <div className="w-12 h-12 rounded-2xl bg-red-900 mx-auto mb-4 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 shadow-lg">
-                  <Icon className="h-6 w-6 text-white" />
-                </div>
-                <h4 className="text-base font-bold text-gray-900 mb-2">{title}</h4>
-                <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ════════════════════════════════════════════════════════════
-            CTA SECTION
-        ════════════════════════════════════════════════════════════ */}
+        {/* Support CTA */}
         <div className="mt-10 relative overflow-hidden rounded-3xl px-8 sm:px-14 py-12 text-center border-2 border-red-100"
           style={{ background: "linear-gradient(135deg, #FFF5F5 0%, #FAF0F0 60%, #F5E8E8 100%)" }}>
-
-          {/* Watermark */}
           <div className="absolute right-0 bottom-0 pointer-events-none select-none opacity-[0.04] translate-x-1/3 translate-y-1/3">
             <FloralMark size={280} />
           </div>
-
-          {/* Top accent */}
           <div className="absolute top-0 left-1/4 right-1/4 h-[2px] bg-gradient-to-r from-transparent via-red-800 to-transparent opacity-30" />
-
           <div className="relative">
             <div className="inline-flex items-center gap-3 mb-4">
               <div className="h-px w-8 bg-gradient-to-r from-transparent to-red-300" />
               <span className="text-xs font-bold uppercase tracking-widest text-red-800">Support</span>
               <div className="h-px w-8 bg-gradient-to-l from-transparent to-red-300" />
             </div>
-
             <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">Still Have Questions?</h3>
             <p className="text-base text-gray-500 mb-8 max-w-sm mx-auto leading-relaxed">
               Our team is always here to help you with any queries or concerns.
             </p>
-
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <a href="tel:+919220927241"
-                className="flex items-center justify-center gap-2.5 bg-red-900 text-white px-8 py-3.5 rounded-full text-sm font-bold transition-all duration-200 hover:bg-red-800 hover:-translate-y-0.5 shadow-[0_4px_14px_rgba(153,27,27,0.3)]">
+                className="flex items-center justify-center gap-2.5 bg-red-900 text-white px-8 py-3.5 rounded-full text-sm font-bold hover:bg-red-800 hover:-translate-y-0.5 transition-all duration-200 shadow-[0_4px_14px_rgba(153,27,27,0.3)]">
                 <Phone className="h-4 w-4" /> +91 9220927241
               </a>
               <a href="mailto:support@gulbhahar.com"
