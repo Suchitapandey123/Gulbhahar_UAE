@@ -35,7 +35,7 @@ export const SimilarProductCard = ({
   })();
 
   const primaryImage = getFirstProductImage(item.productId, item.images);
-  const colorImages = getProductImagesForColor(item.productId, item.images, 0);
+  const colorImages = getProductImagesForColor(item.productId, item.images, 0, "cards");
   // Primary image always first, remaining images follow
   const imagesToShow = [
     { url: primaryImage.url, lqip: primaryImage.lqip || FALLBACK_LQIP },

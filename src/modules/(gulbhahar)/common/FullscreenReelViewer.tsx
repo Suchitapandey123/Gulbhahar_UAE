@@ -82,11 +82,13 @@ export default function FullscreenReelViewer({
     }
   }, [currentIndex]);
 
-  // Lock body scroll
+  // Restore scroll position on close — avoid body overflow lock, which toggles
+  // the scrollbar and shifts viewport width across md/lg breakpoints, breaking
+  // the page grid layout when the viewer closes.
   useEffect(() => {
-    document.body.style.overflow = "hidden";
+    const savedScrollY = window.scrollY;
     return () => {
-      document.body.style.overflow = "";
+      window.scrollTo({ top: savedScrollY, behavior: "instant" });
     };
   }, []);
 

@@ -31,6 +31,12 @@ const ShowcaseReelItem = ({ reel, onClick }: { reel: ReelData; onClick?: () => v
           } else {
             video.pause();
             setIsPlaying(false);
+            // Release decoded video memory once it's off-screen — iOS Safari
+            // crashes the tab if too many <video> elements stay loaded.
+            if (video.src) {
+              video.removeAttribute("src");
+              video.load();
+            }
           }
         });
       },
