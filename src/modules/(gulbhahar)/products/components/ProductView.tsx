@@ -261,7 +261,7 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
             <div className="hidden md:block absolute bottom-0 right-0 w-10 lg:w-12 h-10 lg:h-12 border-b-2 border-r-2 border-[#800000]/20" />
 
             <div className="flex flex-col gap-4 md:gap-6">
-              <div className="order-4 md:order-1">
+              <div className="order-1 md:order-1">
                 <ProductInfo product={product} displayName={displayName} customRed={customRed} avgRating={avgRating} reviewCount={reviewCount} />
               </div>
 
@@ -282,7 +282,7 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
                 ) : null;
               })()}
 
-              <div className="order-1 md:order-3">
+              <div className="order-2 md:order-3">
                 <ProductVariants
                   product={product}
                   selectedColorIndex={selectedColorIndex}
@@ -297,7 +297,7 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
                 />
               </div>
 
-              <div className="order-2 md:order-4">
+              <div className="order-3 md:order-4">
                 <ProductPurchaseSection
                   product={product}
                   selectedSize={selectedSize}
@@ -334,7 +334,7 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
                 </div>
               </div>
 
-              <div className="order-3 md:order-7 block md:hidden">
+              <div className="order-4 md:order-7 block md:hidden">
                 <ProductReels
                   videos={videosByColor}
                   selectedColorIndex={selectedColorIndex}

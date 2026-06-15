@@ -165,11 +165,13 @@ export const productService = {
 
   getProductsByParentCategoryPage: async (
     parentCategory: string,
-    cursor?: string
+    cursor?: string,
+    limit?: number
   ): Promise<{ products: Product[]; nextCursor: string | null }> => {
     try {
-      const body: Record<string, string> = { parentCategory };
+      const body: Record<string, string | number> = { parentCategory };
       if (cursor) body.cursor = cursor;
+      if (limit) body.limit = limit;
 
       const response = await fetch(
         `${API_BASE_URL}/new-api/products/get-product-by-parentCategory`,

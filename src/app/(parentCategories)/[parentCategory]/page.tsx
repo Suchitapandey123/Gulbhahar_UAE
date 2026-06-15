@@ -66,7 +66,7 @@ const page = async ({ params }: PageProps) => {
   // Fetch page data + products in parallel — no skeleton needed
   const [pageResponse, { products, nextCursor }] = await Promise.all([
     getParentCategoryPageCached(parentCategory).catch(() => ({ data: null })),
-    productApi.getProductsByParentCategoryPage(parentCategory).catch(() => ({ products: [], nextCursor: null })),
+    productApi.getProductsByParentCategoryPage(parentCategory, undefined, 8).catch(() => ({ products: [], nextCursor: null })),
   ]);
 
 
