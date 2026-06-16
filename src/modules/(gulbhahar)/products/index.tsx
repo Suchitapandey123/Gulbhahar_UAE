@@ -10,10 +10,12 @@ import Reviews from "./components/Reviews";
 import { SimilarProductsSection } from "./components/SimilarProductsSection";
 import { Product } from "./types";
 
+
 interface ProductModuleProps {
   product: Product;
   sizeChart: any;
 }
+
 
 const CUSTOM_RED = "hsl(359.39deg 63.87% 30.39%)";
 

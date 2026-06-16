@@ -76,6 +76,22 @@ export const ProductPurchaseSection = ({
         </button>
       </div>
 
+      {/* Delhi NCR Express banner */}
+      <div className="bg-stone-900 rounded-xl px-4 py-3 flex items-center gap-3">
+        <div className="w-8 h-8 bg-yellow-400/20 rounded-lg flex items-center justify-center flex-shrink-0 text-base">
+          ⚡
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="font-bold text-white text-xs leading-tight">Delhi NCR? Get your order in 2–3 hours!</p>
+          <p className="text-stone-400 text-[10px] mt-0.5 leading-tight">
+            Order between <span className="text-yellow-400 font-semibold">10 AM – 7 PM</span> for same-day express delivery.
+          </p>
+        </div>
+        <span className="text-[10px] font-bold text-yellow-400 border border-yellow-400/40 bg-yellow-400/10 px-2 py-1 rounded-full flex-shrink-0 whitespace-nowrap">
+          Same Day
+        </span>
+      </div>
+
       {/* Trust badges */}
       <div className="grid grid-cols-3 gap-2 pt-1">
         {[

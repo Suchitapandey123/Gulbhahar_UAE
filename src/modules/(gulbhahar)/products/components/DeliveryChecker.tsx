@@ -9,11 +9,13 @@ interface DeliveryCheckerProps {
   customRed: string;
 }
 
+
 export const DeliveryChecker = ({ customRed }: DeliveryCheckerProps) => {
   const [pincode, setPincode] = useState("");
   const [isCheckingDelivery, setIsCheckingDelivery] = useState(false);
   const [deliveryInfo, setDeliveryInfo] = useState<any>(null);
   const [deliveryError, setDeliveryError] = useState("");
+
 
   const checkDelivery = async () => {
     if (!pincode || pincode.length !== 6) {
@@ -80,7 +82,6 @@ export const DeliveryChecker = ({ customRed }: DeliveryCheckerProps) => {
         </button>
       </div>
 
-      {/* Add a note :Note: The color of the product may vary slightly, as screen resolution differs on devices used to view our website.  */}
       {/* Delivery Details */}
       <div className="mt-3 space-y-2 text-sm text-gray-700">
         <div className="flex items-center gap-2">
@@ -94,8 +95,16 @@ export const DeliveryChecker = ({ customRed }: DeliveryCheckerProps) => {
         <div className="flex items-center gap-2">
           <Check className="w-4 h-4 text-green-600" />
           <span>
-            Estimated delivery within{" "}
-            <span className="font-semibold">7 days</span>
+            Estimated delivery within <span className="font-semibold">7 days</span>
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <span className="text-base leading-none">⚡</span>
+          <span>
+            Estimated delivery in <span className="font-semibold">Delhi NCR</span> within{" "}
+            <span className="font-semibold">2–3 hrs</span>{" "}
+            <span className="text-gray-400 text-xs">(same day · 10 AM – 7 PM)</span>
           </span>
         </div>
 
@@ -107,15 +116,68 @@ export const DeliveryChecker = ({ customRed }: DeliveryCheckerProps) => {
         </div>
       </div>
 
+      {/* Delivery Timeline */}
+      <div className="pt-1">
+        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Delivery Timeline</p>
+
+        {/* Standard timeline */}
+        <div className="flex items-start gap-0 mb-3">
+          <div className="flex flex-col items-center gap-1 flex-shrink-0 w-16">
+            <div className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-white text-xs font-bold">1</div>
+            <span className="text-[10px] text-gray-500 font-medium text-center leading-tight">Order<br/>Placed</span>
+          </div>
+          <div className="flex-1 flex flex-col items-center pt-3.5 px-1">
+            <div className="w-full h-px bg-gray-300" />
+            <span className="text-[10px] text-gray-400 mt-1.5 text-center leading-tight">Ships in<br/><span className="font-semibold text-gray-600">1–2 days</span></span>
+          </div>
+          <div className="flex flex-col items-center gap-1 flex-shrink-0 w-16">
+            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs font-bold">2</div>
+            <span className="text-[10px] text-gray-400 font-medium text-center leading-tight">Out for<br/>Delivery</span>
+          </div>
+          <div className="flex-1 flex flex-col items-center pt-3.5 px-1">
+            <div className="w-full h-px bg-gray-300" />
+            <span className="text-[10px] text-gray-400 mt-1.5 text-center leading-tight">Delivered<br/><span className="font-semibold text-gray-600">5–7 days</span></span>
+          </div>
+          <div className="flex flex-col items-center gap-1 flex-shrink-0 w-16">
+            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs font-bold">✓</div>
+            <span className="text-[10px] text-gray-400 font-medium text-center leading-tight">Delivered</span>
+          </div>
+        </div>
+
+        {/* Delhi NCR Express timeline */}
+        <div className="flex items-center gap-3 my-3">
+          <div className="flex-1 h-px bg-gray-200" />
+          <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">or</span>
+          <div className="flex-1 h-px bg-gray-200" />
+        </div>
+        <p className="text-[10px] font-bold text-yellow-600 uppercase tracking-widest mb-3">⚡ Delhi NCR Express</p>
+
+        <div className="flex items-start gap-0">
+          <div className="flex flex-col items-center gap-1 flex-shrink-0 w-16">
+            <div className="w-8 h-8 rounded-full bg-stone-900 flex items-center justify-center text-yellow-400 text-xs font-bold">1</div>
+            <span className="text-[10px] text-gray-500 font-medium text-center leading-tight">Order<br/>Placed</span>
+          </div>
+          <div className="flex-1 flex flex-col items-center pt-3.5 px-1">
+            <div className="w-full h-px bg-yellow-300" />
+            <span className="text-[10px] text-yellow-700 mt-1.5 text-center leading-tight font-semibold">2–3 hours</span>
+          </div>
+          <div className="flex flex-col items-center gap-1 flex-shrink-0 w-16">
+            <div className="w-8 h-8 rounded-full bg-yellow-400 flex items-center justify-center text-stone-900 text-xs font-bold">✓</div>
+            <span className="text-[10px] text-gray-500 font-medium text-center leading-tight">Delivered</span>
+          </div>
+        </div>
+        <p className="text-[9px] text-gray-400 mt-2">⚡ Express available 10 AM – 7 PM for Delhi, Noida, Gurgaon, Faridabad & Ghaziabad</p>
+      </div>
+
       {deliveryError && (
-        <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded text-sm text-red-800 flex items-center gap-2">
+        <div className="p-3 bg-red-50 border border-red-200 rounded text-sm text-red-800 flex items-center gap-2">
           <AlertCircle className="w-4 h-4" />
           <span>{deliveryError}</span>
         </div>
       )}
 
       {deliveryInfo && (
-        <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded text-sm text-green-800 flex items-center gap-2">
+        <div className="p-3 bg-green-50 border border-green-200 rounded text-sm text-green-800 flex items-center gap-2">
           <CheckCircle className="w-4 h-4" />
           <span>
             Delivery available to {deliveryInfo.city}, {deliveryInfo.district}

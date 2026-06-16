@@ -1,6 +1,30 @@
 // @ts-nocheck
 // Enhanced Checkout Component with Email and Phone Validation
 "use client";
+
+const DELHI_NCR_PREPAYMENT = 250;
+
+const DELHI_NCR_PINCODES_PREFIXES = ["110", "121", "122", "201"];
+const DELHI_NCR_CITIES = ["noida", "gurgaon", "gurugram", "faridabad", "ghaziabad", "greater noida", "delhi", "new delhi"];
+
+function isDelhiNCR(region: string, postalCode: string, city: string): boolean {
+  if (region === "delhi") return true;
+  if (postalCode && postalCode.length >= 3) {
+    const prefix = postalCode.slice(0, 3);
+    if (DELHI_NCR_PINCODES_PREFIXES.includes(prefix)) return true;
+  }
+  if (city) {
+    const normalizedCity = city.toLowerCase().trim();
+    if (DELHI_NCR_CITIES.some((c) => normalizedCity.includes(c))) return true;
+  }
+  return false;
+}
+
+function isWithinDeliveryWindow(): boolean {
+  const now = new Date();
+  const hours = now.getHours();
+  return hours >= 10 && hours < 19; // 10 AM to 7 PM
+}
 import analyticsAPI from "@/services/analytics/analyticsService";
 import { trackVisitorEvent } from "@/services/analytics/journeyService";
 import { useToast } from "@/hooks/useToast";
@@ -313,16 +337,20 @@ export default function CheckoutComponent() {
     deliveryInfo: null,
   });
 
-  const [formData, setFormData] = useState({
-    country: "India",
-    fullName: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
-    region: "",
-    postalCode: "",
+  const [formData, setFormData] = useState(() => {
+    try {
+      const saved = typeof window !== "undefined" && localStorage.getItem("checkoutDraft");
+      if (saved) return { country: "India", fullName: "", email: "", phone: "", address: "", city: "", region: "", postalCode: "", ...JSON.parse(saved) };
+    } catch {}
+    return { country: "India", fullName: "", email: "", phone: "", address: "", city: "", region: "", postalCode: "" };
   });
+
+  // Persist form draft on every change
+  useEffect(() => {
+    try {
+      localStorage.setItem("checkoutDraft", JSON.stringify(formData));
+    } catch {}
+  }, [formData]);
 
   // Handle initial loading and cart state
   useEffect(() => {
@@ -635,7 +663,11 @@ export default function CheckoutComponent() {
         const odaSurcharge = postalCodeValidation.deliveryInfo?.isODA ? 50 : 0;
         shipping += odaSurcharge;
 
-        const total = subtotal + shipping;
+        const delhiPrepayment = isDelhiNCR(formData.region, formData.postalCode, formData.city)
+          ? DELHI_NCR_PREPAYMENT
+          : 0;
+
+        const total = subtotal + shipping + delhiPrepayment;
 
         return { subtotal, shipping, total };
       };
@@ -762,11 +794,12 @@ export default function CheckoutComponent() {
         transactionId: transactionId,
         sessionId: sessionId,
         fingerprint: fingerprint,
-        deliveryInfo: postalCodeValidation.deliveryInfo,
+        deliveryInfo: { ...postalCodeValidation.deliveryInfo, cod: codAvailable },
         shippingMethod,
         orderTotal: total,
         orderSubtotal: subtotal,
         orderShipping: shipping,
+        delhiNCRPrepayment: shippingMethod === "delhi-express" ? DELHI_NCR_PREPAYMENT : 0,
         orderItems: cart,
         checkoutCompletedAt: new Date().toISOString(),
         userAgent:
@@ -839,6 +872,7 @@ export default function CheckoutComponent() {
       });
 
       toast.success("Information validated! Redirecting to payment...");
+      try { localStorage.removeItem("checkoutDraft"); } catch {}
       setTimeout(() => {
         router.push(
           `/cart/checkout/payment?orderId=${orderId}&amount=${total}`,
@@ -892,21 +926,35 @@ export default function CheckoutComponent() {
       : 0;
 
   const isFreeShippingEligible = subtotal >= 5000;
+  const isDelhiNCROrder = isDelhiNCR(formData.region, formData.postalCode, formData.city);
+  const isDeliveryWindowActive = isWithinDeliveryWindow();
+
   useEffect(() => {
     if (shippingMethod === "free" && !isFreeShippingEligible) {
       setShippingMethod("standard");
     }
-  }, [isFreeShippingEligible, shippingMethod]);
+    if (shippingMethod === "delhi-express" && !isDelhiNCROrder) {
+      setShippingMethod("standard");
+    }
+    if (isDelhiNCROrder && shippingMethod !== "delhi-express") {
+      setShippingMethod("delhi-express");
+    }
+  }, [isFreeShippingEligible, shippingMethod, isDelhiNCROrder]);
 
-  let shipping = shippingOptions[shippingMethod]?.price || 0;
+  let shipping = shippingMethod === "delhi-express"
+    ? DELHI_NCR_PREPAYMENT
+    : shippingOptions[shippingMethod]?.price || 0;
   if (isFreeShippingEligible && shippingMethod === "free") {
     shipping = 0;
   }
 
   const odaSurcharge = postalCodeValidation.deliveryInfo?.isODA ? 50 : 0;
-  shipping += odaSurcharge;
+  if (shippingMethod !== "delhi-express") shipping += odaSurcharge;
 
   const total = subtotal + shipping;
+
+  // COD is unavailable for express delivery (full online payment required)
+  const codAvailable = (postalCodeValidation.deliveryInfo?.cod ?? false) && shippingMethod !== "delhi-express";
 
   // Helper for input border classes
   const getInputBorderClass = (fieldName) => {
@@ -961,11 +1009,21 @@ export default function CheckoutComponent() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         <Breadcrumb />
 
-        {/* Page Header */}
-        {/* <div className="mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-[#800000]">Checkout</h1>
-          <p className="text-gray-500 mt-1">Complete your order details below</p>
-        </div> */}
+        {/* Delhi NCR Express Delivery Banner — always visible */}
+        <div className="mb-6 bg-gradient-to-r from-stone-800 to-stone-900 rounded-2xl p-4 sm:p-5 flex gap-4 items-center">
+          <div className="w-10 h-10 bg-amber-400/20 rounded-xl flex items-center justify-center flex-shrink-0 text-xl">
+            ⚡
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-bold text-white text-sm">Delhi NCR? Get your order in 2–3 hours!</p>
+            <p className="text-stone-300 text-xs mt-0.5">
+              Order between <span className="text-amber-400 font-semibold">10 AM – 7 PM</span> for same-day express delivery in Delhi, Noida, Greater Noida, Gurgaon, Faridabad & Ghaziabad.
+            </p>
+          </div>
+          <span className="hidden sm:inline-flex items-center gap-1 bg-amber-400/20 text-amber-400 text-[11px] font-bold px-3 py-1.5 rounded-full flex-shrink-0 border border-amber-400/30">
+            Same Day
+          </span>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Left Column - Forms */}
@@ -1243,11 +1301,15 @@ export default function CheckoutComponent() {
                         </span>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {postalCodeValidation.deliveryInfo.cod && (
+                        {codAvailable ? (
                           <span className="bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-lg text-xs font-medium">
                             COD Available
                           </span>
-                        )}
+                        ) : postalCodeValidation.deliveryInfo.cod && shippingMethod === "delhi-express" ? (
+                          <span className="bg-gray-100 text-gray-400 px-2.5 py-1 rounded-lg text-xs font-medium">
+                            COD unavailable for Express
+                          </span>
+                        ) : null}
                         {postalCodeValidation.deliveryInfo.isODA && (
                           <span className="bg-amber-100 text-amber-700 px-2.5 py-1 rounded-lg text-xs font-medium">
                             Remote Area (+₹50)
@@ -1379,8 +1441,51 @@ export default function CheckoutComponent() {
                     );
                   },
                 )}
+
+                {/* Delhi NCR Express option */}
+                <label className={`flex items-center p-4 border rounded-xl transition-all duration-200 ${
+                  !isDelhiNCROrder
+                    ? "border-gray-100 bg-gray-50/40 opacity-50 cursor-not-allowed"
+                    : shippingMethod === "delhi-express"
+                      ? "border-amber-400 bg-amber-50 ring-2 ring-amber-400/20 cursor-pointer"
+                      : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/30 cursor-pointer"
+                }`}>
+                  <input
+                    type="radio"
+                    name="shipping"
+                    value="delhi-express"
+                    checked={shippingMethod === "delhi-express"}
+                    onChange={() => isDelhiNCROrder && setShippingMethod("delhi-express")}
+                    disabled={!isDelhiNCROrder}
+                    className="w-4 h-4 text-amber-500 focus:ring-amber-400 cursor-pointer disabled:cursor-not-allowed"
+                  />
+                  <div className="ml-4 flex-1">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <span className="text-xl">⚡</span>
+                        <div>
+                          <p className="font-semibold text-sm text-gray-900 flex items-center gap-2">
+                            Delhi NCR Express
+                            {isDelhiNCROrder ? (
+                              <span className="text-[10px] bg-amber-500 text-white px-2 py-0.5 rounded-full font-bold">Available</span>
+                            ) : (
+                              <span className="text-[10px] bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full font-medium">Delhi NCR only</span>
+                            )}
+                          </p>
+                          <p className="text-xs mt-0.5 text-gray-500">
+                            {isDelhiNCROrder && isDeliveryWindowActive
+                              ? "Delivery in 2–3 hours · Window active now!"
+                              : "2–3 hr same-day delivery · Order between 10 AM – 7 PM"}
+                          </p>
+                        </div>
+                      </div>
+                      <span className="font-bold text-amber-600">₹{DELHI_NCR_PREPAYMENT}</span>
+                    </div>
+                  </div>
+                </label>
               </div>
             </div>
+
           </div>
 
           {/* Right Column - Order Summary */}
@@ -1468,11 +1573,15 @@ export default function CheckoutComponent() {
                       </span>
                     </div>
                     <div className="flex gap-2 flex-wrap">
-                      {postalCodeValidation.deliveryInfo.cod && (
+                      {codAvailable ? (
                         <span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-md text-xs font-medium">
                           COD Available
                         </span>
-                      )}
+                      ) : postalCodeValidation.deliveryInfo.cod && shippingMethod === "delhi-express" ? (
+                        <span className="bg-gray-100 text-gray-400 px-2 py-0.5 rounded-md text-xs font-medium">
+                          No COD for Express
+                        </span>
+                      ) : null}
                       {postalCodeValidation.deliveryInfo.isODA && (
                         <span className="bg-amber-50 text-amber-700 px-2 py-0.5 rounded-md text-xs font-medium">
                           Remote Area
@@ -1491,9 +1600,11 @@ export default function CheckoutComponent() {
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Shipping</span>
+                    <span className="text-gray-500">
+                      {shippingMethod === "delhi-express" ? "⚡ Express Delivery" : "Shipping"}
+                    </span>
                     <div className="text-right">
-                      <span className={`font-semibold ${shipping === 0 ? "text-emerald-600" : "text-gray-900"}`}>
+                      <span className={`font-semibold ${shippingMethod === "delhi-express" ? "text-amber-600" : shipping === 0 ? "text-emerald-600" : "text-gray-900"}`}>
                         {shipping === 0
                           ? "FREE"
                           : `₹${shipping.toLocaleString()}`}
@@ -1566,7 +1677,7 @@ export default function CheckoutComponent() {
                     <Shield className="h-3.5 w-3.5" />
                     <span className="text-xs font-medium">Encrypted</span>
                   </div>
-                  {postalCodeValidation.deliveryInfo?.cod && (
+                  {codAvailable && (
                     <>
                       <div className="w-px h-3 bg-gray-200"></div>
                       <span className="text-xs font-medium text-emerald-500">COD Available</span>

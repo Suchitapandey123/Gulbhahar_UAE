@@ -32,6 +32,7 @@ declare global {
 }
 
 
+
 /* ── Checkout Progress Bar ──────────────────────────────── */
 const steps = ["Cart", "Checkout", "Payment"];
 const CheckoutProgress = () => (
@@ -68,22 +69,26 @@ const CheckoutProgress = () => (
   </div>
 );
 
+
 /* ── Segmented Payment Toggle ───────────────────────────── */
-const PaymentToggle = ({ paymentMethod, setPaymentMethod, codAvailable }) => (
+const PaymentToggle = ({ paymentMethod, setPaymentMethod, codAvailable, partialCodDisabled }) => (
   <div className="bg-[#F3F4F6] rounded-[14px] p-1.5 flex flex-col sm:flex-row gap-2 sm:gap-1.5">
     <button
-      onClick={() => codAvailable && setPaymentMethod("partial-cod")}
-      disabled={!codAvailable}
+      onClick={() => !partialCodDisabled && codAvailable && setPaymentMethod("partial-cod")}
+      disabled={!codAvailable || partialCodDisabled}
       className={`flex-1 flex items-center justify-center gap-2.5 min-h-[48px] py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-200 ${
         paymentMethod === "partial-cod"
           ? "bg-white text-[#1a1a1a] shadow-md shadow-black/[0.07]"
-          : !codAvailable
+          : !codAvailable || partialCodDisabled
             ? "text-stone-300 cursor-not-allowed"
             : "text-[#757575] hover:text-[#1a1a1a] hover:bg-white/50"
       }`}
     >
       <Banknote className={`h-4 w-4 flex-shrink-0 ${paymentMethod === "partial-cod" ? "text-red-800" : "text-stone-400"}`} />
       <span>Partial COD</span>
+      {partialCodDisabled && (
+        <span className="text-[9px] font-bold bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full">Express only</span>
+      )}
     </button>
     <button
       onClick={() => setPaymentMethod("online")}
@@ -116,14 +121,11 @@ function PaymentContent() {
   const amount = searchParams.get("amount");
   const source = searchParams.get("source");
 
-  // Fetch partial COD amount from backend so it can be tuned without a frontend deploy
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/razorpay/config`)
       .then((r) => r.json())
-      .then((data) => {
-        if (data.partialCodAmount) setPartialCodAmount(data.partialCodAmount);
-      })
-      .catch((e) => console.error("Failed to fetch payment config:", e));
+      .then((data) => { if (data.partialCodAmount) setPartialCodAmount(data.partialCodAmount); })
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -266,27 +268,21 @@ function PaymentContent() {
     }
   };
 
-  /* ── Partial COD: pay ₹300 advance via Razorpay, rest on delivery ── */
+  /* ── Partial COD: pay ₹300 advance, rest on delivery ── */
   const handlePartialCODPayment = async () => {
     setOnlinePaymentError("");
-
     if (!window.Razorpay) {
       setOnlinePaymentError("Payment gateway is still loading. Please wait a moment and try again.");
       return;
     }
-
     gaEvent({ action: "Partial_COD_Initiated", params: { payment_method: "PARTIAL_COD", OrderID: checkoutData?.orderId, advance_amount: partialCodAmount } });
     fbEvent({ action: "PARTIAL_COD_Initiated", params: { payment_method: "PARTIAL_COD", OrderID: checkoutData?.orderId, advance_amount: partialCodAmount } });
     try { await analyticsAPI.trackPaymentMethod("PARTIAL_COD"); } catch (e) { console.error(e); }
     trackVisitorEvent("PAYMENT_METHOD_SELECTED", { method: "PARTIAL_COD", orderId: checkoutData?.orderId });
-
     setIsProcessingPartialCOD(true);
-
-    const amountInPaise = partialCodAmount * 100; // ₹300 → 30000 paise
-
     try {
       await openRazorpay({
-        amountInPaise,
+        amountInPaise: partialCodAmount * 100,
         isPartialCOD: true,
         onSuccess: async (response) => {
           setIsProcessingPartialCOD(true);
@@ -301,7 +297,6 @@ function PaymentContent() {
               }),
             });
             if (!verifyRes.ok) throw new Error("Signature verification failed");
-
             try {
               const saved = JSON.parse(localStorage.getItem("checkoutFormData") || "{}");
               saved.paymentMethod = "PARTIAL_COD";
@@ -309,28 +304,17 @@ function PaymentContent() {
               saved.razorpayPaymentId = response.razorpay_payment_id;
               localStorage.setItem("checkoutFormData", JSON.stringify(saved));
             } catch (e) { console.error(e); }
-
-            router.push(
-              `/cart/checkout/payment/transaction-status?status=success&orderId=${encodeURIComponent(checkoutData?.orderId || "")}&transactionId=${encodeURIComponent(response.razorpay_payment_id)}&amount=${encodeURIComponent(partialCodAmount)}&payment_method=partial_cod`
-            );
+            router.push(`/cart/checkout/payment/transaction-status?status=success&orderId=${encodeURIComponent(checkoutData?.orderId || "")}&transactionId=${encodeURIComponent(response.razorpay_payment_id)}&amount=${encodeURIComponent(partialCodAmount)}&payment_method=partial_cod`);
           } catch (err) {
-            console.error("Razorpay verify error (partial COD):", err);
-            router.push(
-              `/cart/checkout/payment/transaction-status?status=failed&orderId=${encodeURIComponent(checkoutData?.orderId || "")}&transactionId=${encodeURIComponent(response.razorpay_payment_id)}&amount=${encodeURIComponent(partialCodAmount)}&payment_method=partial_cod`
-            );
-          } finally {
-            setIsProcessingPartialCOD(false);
-          }
+            router.push(`/cart/checkout/payment/transaction-status?status=failed&orderId=${encodeURIComponent(checkoutData?.orderId || "")}&transactionId=${encodeURIComponent(response.razorpay_payment_id)}&amount=${encodeURIComponent(partialCodAmount)}&payment_method=partial_cod`);
+          } finally { setIsProcessingPartialCOD(false); }
         },
         onDismiss: () => {
           setIsProcessingPartialCOD(false);
-          router.push(
-            `/cart/checkout/payment/transaction-status?status=cancelled&orderId=${encodeURIComponent(checkoutData?.orderId || "")}&transactionId=cancelled&amount=${encodeURIComponent(partialCodAmount)}&payment_method=partial_cod`
-          );
+          router.push(`/cart/checkout/payment/transaction-status?status=cancelled&orderId=${encodeURIComponent(checkoutData?.orderId || "")}&transactionId=cancelled&amount=${encodeURIComponent(partialCodAmount)}&payment_method=partial_cod`);
         },
       });
     } catch (err) {
-      console.error("Razorpay partial COD create-order error:", err);
       setOnlinePaymentError(err.message || "Could not initiate payment. Please try again.");
       setIsProcessingPartialCOD(false);
     }
@@ -349,6 +333,9 @@ function PaymentContent() {
   );
 
   const isPaying = isProcessingOnline || isProcessingPartialCOD;
+  const isExpressOrder = checkoutData?.shippingMethod === "delhi-express";
+  // Auto-switch to online if partial COD is not available for this order
+  if (isExpressOrder && paymentMethod === "partial-cod") setPaymentMethod("online");
 
   return (
     <>
@@ -384,7 +371,13 @@ function PaymentContent() {
                     paymentMethod={paymentMethod}
                     setPaymentMethod={setPaymentMethod}
                     codAvailable={!!checkoutData?.deliveryInfo?.cod}
+                    partialCodDisabled={isExpressOrder}
                   />
+                  {isExpressOrder && (
+                    <p className="text-[10px] text-amber-700 mt-2 flex items-center gap-1">
+                      ⚡ Partial COD is not available for Delhi NCR Express delivery
+                    </p>
+                  )}
                 </div>
 
                 <div className="border-t border-[#F3F4F6]" />
@@ -426,14 +419,10 @@ function PaymentContent() {
                             <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-100">
                               ₹{partialCodAmount} advance
                             </span>
-                            {checkoutData?.deliveryInfo?.cod
-                              ? <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">✓ Available</span>
-                              : <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-red-50 text-red-700 border border-red-100">Unavailable</span>
-                            }
+                            <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">✓ Available</span>
                           </div>
                         </div>
                       </div>
-                      {/* Split mini cards */}
                       <div className="grid grid-cols-2 gap-2">
                         <div className="bg-white rounded-xl px-4 py-3 border border-[#E5E7EB] text-center">
                           <p className="text-[10px] font-semibold text-[#757575] uppercase tracking-wide mb-1">Pay Now (Razorpay)</p>
@@ -441,9 +430,7 @@ function PaymentContent() {
                         </div>
                         <div className="bg-white rounded-xl px-4 py-3 border border-[#E5E7EB] text-center">
                           <p className="text-[10px] font-semibold text-[#757575] uppercase tracking-wide mb-1">On Delivery</p>
-                          <p className="text-lg font-bold text-[#1a1a1a]">
-                            ₹{((checkoutData?.orderTotal || 1200) - partialCodAmount).toLocaleString()}
-                          </p>
+                          <p className="text-lg font-bold text-[#1a1a1a]">₹{((checkoutData?.orderTotal || 1200) - partialCodAmount).toLocaleString()}</p>
                         </div>
                       </div>
                     </div>
@@ -464,7 +451,7 @@ function PaymentContent() {
                   <button
                     onClick={paymentMethod === "online" ? handleOnlinePayment : handlePartialCODPayment}
                     disabled={isPaying}
-                    className="w-full min-h-[52px] bg-red-800 text-white px-6 py-3.5 rounded-xl font-bold text-sm tracking-wide hover:bg-red-900 active:bg-red-950 transition-all duration-150 shadow-md shadow-red-800/20 hover:shadow-lg hover:shadow-red-800/25 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                    className="w-full min-h-[52px] text-white px-6 py-3.5 rounded-xl font-bold text-sm tracking-wide transition-all duration-150 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none bg-red-800 hover:bg-red-900 active:bg-red-950 shadow-red-800/20 hover:shadow-red-800/25"
                   >
                     {isPaying
                       ? <><Loader2 className="h-4 w-4 animate-spin" />Processing your order...</>
@@ -551,6 +538,12 @@ function PaymentContent() {
                       {checkoutData?.orderShipping === 0 ? "Free" : `₹${(checkoutData?.orderShipping || 100).toLocaleString()}`}
                     </span>
                   </div>
+                  {checkoutData?.delhiNCRPrepayment > 0 && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-amber-700 flex items-center gap-1">⚡ Delhi NCR Express (2–3 hrs)</span>
+                      <span className="text-sm font-medium text-amber-700">₹{checkoutData.delhiNCRPrepayment}</span>
+                    </div>
+                  )}
                   <div className="pt-2 border-t border-[#F3F4F6] flex justify-between items-center">
                     <span className="text-sm font-semibold text-[#757575]">Total</span>
                     <span className="text-xl font-bold text-[#1a1a1a]">₹{(checkoutData?.orderTotal || 1200).toLocaleString()}</span>

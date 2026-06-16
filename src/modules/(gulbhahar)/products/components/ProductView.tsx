@@ -314,7 +314,7 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
               </div>
 
               {/* Delivery Timeline */}
-              <div className="order-6 md:order-6 py-3 px-3 bg-stone-50 rounded-lg border border-gray-100">
+              {/* <div className="order-6 md:order-6 py-3 px-3 bg-stone-50 rounded-lg border border-gray-100">
                 <p className="text-[10px] font-bold tracking-[0.15em] uppercase text-gray-400 mb-3">Delivery Timeline</p>
                 <div className="flex items-center gap-1">
                   <div className="flex flex-col items-center gap-1">
@@ -332,7 +332,7 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
                     <span className="text-[10px] text-gray-400 text-center leading-tight">Delivered<br/>5–7 days</span>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               <div className="order-4 md:order-7 block md:hidden">
                 <ProductReels

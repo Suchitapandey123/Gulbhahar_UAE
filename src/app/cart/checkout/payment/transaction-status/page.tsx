@@ -439,8 +439,7 @@ const TransactionStatusContent = () => {
           notes:
             transactionData.paymentMethod === "cod"
               ? "COD Order - OTP Verified"
-              : transactionData.paymentMethod === "partial_cod" ||
-                  checkoutData.paymentMethod === "PARTIAL_COD"
+              : transactionData.paymentMethod === "partial_cod" || checkoutData.paymentMethod === "PARTIAL_COD"
                 ? `Partial COD - Paid ₹${transactionData.amount || 0} via Razorpay, ₹${(checkoutData.orderTotal || 0) - parseFloat(transactionData.amount || 0)} COD`
                 : null,
           paymentCompletedAt: new Date().toISOString(),
