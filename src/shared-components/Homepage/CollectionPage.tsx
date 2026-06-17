@@ -1,12 +1,12 @@
 // @ts-nocheck
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import Link from "next/link";
-import Image from "next/image";
 import { getFirstProductImage } from "@/utils/productImageUtils";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRef, useState } from "react";
 
 // Category tabs for filtering products - Match these IDs with parentCategory values
 const categories = [
@@ -130,7 +130,7 @@ export default function CollectionsPage({ collections = [] }) {
           initial="hidden"
           animate="visible"
           variants={containerVariants}
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8"
+          className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8"
         >
           {filteredCollections.slice(0, 8).map((collection , index) => (
             <motion.div

@@ -14,7 +14,7 @@ const CategoryCollection_DummyProducts = ({
   return (
     <div className="w-full">
       <div
-        className={`${viewMode === "grid" ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8" : "flex flex-col gap-4"}`}
+        className={`${viewMode === "grid" ? "grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8" : "flex flex-col gap-4"}`}
       >
         {[1, 2, 3, 4].map((_, index) => (
           <DummyProductCard

@@ -43,7 +43,7 @@ const NewCollection = ({ newCollection }) => {
         </div>
 
         {/* Collections Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {newCollection && newCollection.length > 0 ? (
             newCollection.slice(0, 8).map((product, index) => (
               <div

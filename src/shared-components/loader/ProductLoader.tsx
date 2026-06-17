@@ -269,7 +269,7 @@ export function ProductLoader() {
             <div className="h-8 bg-gray-200 rounded w-48 mx-4"></div>
             <div className="flex-grow h-px bg-gray-200"></div>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
               <div key={i} className="space-y-3">
                 {/* Product Image */}

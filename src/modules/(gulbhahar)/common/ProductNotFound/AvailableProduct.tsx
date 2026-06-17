@@ -1,19 +1,19 @@
 // @ts-nocheck
 "use client";
-import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import {
-  ChevronDown,
-  ChevronUp,
-  ShoppingBag,
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+    ChevronDown,
+    ChevronUp,
+    ShoppingBag,
+} from "lucide-react";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
-import Image from "next/image";
 import { useToast } from "@/hooks/useToast";
 import { useCart } from "@/providers/ContextProviders/CartContext";
 import productApi from "@/services/product/productService";
+import Image from "next/image";
 import { toast } from "sonner";
 
 
@@ -756,7 +756,7 @@ const handleAddToCart = async (e, item) => {
           <div
             className={`px-1 ${
               viewMode === "grid"
-                ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8"
+                ? "grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8"
                 : "flex flex-col gap-4"
             }`}
           >

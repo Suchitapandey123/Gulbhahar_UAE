@@ -40,7 +40,7 @@ export const Collections_Suits_All = async () => {
           </p> */}
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {products.slice(0, 8).map((product: any, index: number) => {
             const key = product.productId || product._id || `product-${index}`;
             return (

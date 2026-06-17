@@ -1,15 +1,14 @@
 // @ts-nocheck
 "use client";
 import { staticProductsimage } from "@/app/data/random";
-import { useToast } from "@/hooks/useToast";
 import { useCart } from "@/providers/ContextProviders/CartContext";
+import productApi from "@/services/product/productService";
 import { GulbharLoader } from "@/shared-components/loader/GulbharLoader";
 import { fbEvent } from "@/utils/fb/metaPixels";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
-import productApi from "@/services/product/productService";
 import DummyProductCard from "./DummyProductCard";
 import ProductCard from "./ProductCard";
 
@@ -326,7 +325,7 @@ export default function CollectionForCategory({
           <div
             className={`px-1 ${
               viewMode === "grid"
-                ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8"
+                ? "grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8"
                 : "flex flex-col gap-4"
             }`}
           >
