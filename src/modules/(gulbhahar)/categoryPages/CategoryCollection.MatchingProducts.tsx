@@ -26,7 +26,46 @@ const categoryLabels: Record<string, string> = {
   sarees: "Sarees",
 };
 
-// Desktop and mobile images for each category
+const pairingText: Record<string, Record<string, { heading: string; sub: string }>> = {
+  juttis: {
+    suit:   { heading: "Pair these Juttis with stunning Gulbhahar Suits", sub: "Handpicked suits that go perfectly with your juttis" },
+    bags:   { heading: "Pair these Juttis with stunning Gulbhahar Bags", sub: "Find the perfect bag to match your juttis" },
+  },
+  jutti: {
+    suit:   { heading: "Pair these Juttis with stunning Gulbhahar Suits", sub: "Handpicked suits that go perfectly with your juttis" },
+    bags:   { heading: "Pair these Juttis with stunning Gulbhahar Bags", sub: "Find the perfect bag to match your juttis" },
+  },
+  bags: {
+    suit:   { heading: "Pair these Bags with stunning Gulbhahar Suits", sub: "Curated suits that pair effortlessly with our bags" },
+    juttis: { heading: "Pair these Bags with stunning Gulbhahar Juttis", sub: "The perfect jutti to complete your bag look" },
+    sarees: { heading: "Pair these Bags with stunning Gulbhahar Sarees", sub: "Timeless sarees that complement our bags beautifully" },
+  },
+  bag: {
+    suit:   { heading: "Pair these Bags with stunning Gulbhahar Suits", sub: "Curated suits that pair effortlessly with our bags" },
+    juttis: { heading: "Pair these Bags with stunning Gulbhahar Juttis", sub: "The perfect jutti to complete your bag look" },
+    sarees: { heading: "Pair these Bags with stunning Gulbhahar Sarees", sub: "Timeless sarees that complement our bags beautifully" },
+  },
+  suit: {
+    bags:   { heading: "Pair these Suits with stunning Gulbhahar Bags", sub: "Handpicked bags that go perfectly with your suits" },
+    juttis: { heading: "Pair these Suits with stunning Gulbhahar Juttis", sub: "Find the perfect jutti to match your suit" },
+  },
+  suits: {
+    bags:   { heading: "Pair these Suits with stunning Gulbhahar Bags", sub: "Handpicked bags that go perfectly with your suits" },
+    juttis: { heading: "Pair these Suits with stunning Gulbhahar Juttis", sub: "Find the perfect jutti to match your suit" },
+  },
+  sarees: {
+    bags:   { heading: "Pair these Sarees with stunning Gulbhahar Bags", sub: "Elegant bags curated to complement your sarees" },
+  },
+  saree: {
+    bags:   { heading: "Pair these Sarees with stunning Gulbhahar Bags", sub: "Elegant bags curated to complement your sarees" },
+  },
+};
+
+const fallbackText = (cat: string) => ({
+  heading: `Complete Your Look With ${categoryLabels[cat] ?? cat}`,
+  sub: "Perfect picks to pair with your dream outfit",
+});
+
 const categoryImages: Record<string, { desktop: string; mobile: string; href: string }> = {
   suit:   { desktop: "/images/collection-suits-desktop.webp",  mobile: "/images/collection-suit-mobile.webp",  href: "/suit" },
   bags:   { desktop: "/images/collection-bag-desktop.webp",    mobile: "/images/collection-bag-mobile.webp",    href: "/bags" },
@@ -48,17 +87,22 @@ const CategoryCollection_MatchingProducts = ({ parentCategory }: CategoryCollect
         return (
           <div key={cat} className="col-span-full">
             {/* Heading */}
-            <div className="w-full mb-8 text-center space-y-2">
-              <p className="text-xs uppercase tracking-[0.3em] text-gray-400">Style It Up</p>
-              <h2 className="text-2xl sm:text-3xl font-bold text-red-900">
-                Complete Your Look With {categoryLabels[cat]}
-              </h2>
-              <div className="flex items-center justify-center gap-3 mt-2">
-                <div className="h-px w-12 bg-red-900/20" />
-                <p className="text-sm text-gray-500">Perfect picks to pair with your dream outfit</p>
-                <div className="h-px w-12 bg-red-900/20" />
-              </div>
-            </div>
+            {(() => {
+              const text = pairingText[parentCategory]?.[cat] ?? fallbackText(cat);
+              return (
+                <div className="w-full mb-8 text-center space-y-2">
+                  {/* <p className="text-xs uppercase tracking-[0.3em] text-gray-400">Style It Up</p> */}
+                  <h2 className="text-2xl sm:text-3xl font-bold text-red-900">
+                    {text.heading}
+                  </h2>
+                  <div className="flex items-center justify-center gap-3 mt-2">
+                    {/* <div className="h-px w-12 bg-red-900/20" /> */}
+                    {/* <p className="text-sm text-gray-500">{text.sub}</p> */}
+                    {/* <div className="h-px w-12 bg-red-900/20" /> */}
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* Clickable Image */}
             <Link href={img.href} className="block w-full overflow-hidden rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-500">
@@ -67,6 +111,8 @@ const CategoryCollection_MatchingProducts = ({ parentCategory }: CategoryCollect
                 alt={`Shop ${categoryLabels[cat]}`}
                 width={1400}
                 height={500}
+                quality={100}
+                unoptimized
                 className="hidden sm:block w-full h-auto object-cover hover:scale-[1.02] transition-transform duration-500"
                 priority={false}
               />
@@ -75,6 +121,8 @@ const CategoryCollection_MatchingProducts = ({ parentCategory }: CategoryCollect
                 alt={`Shop ${categoryLabels[cat]}`}
                 width={600}
                 height={700}
+                quality={100}
+                unoptimized
                 className="block sm:hidden w-full h-auto object-cover hover:scale-[1.02] transition-transform duration-500"
                 priority={false}
               />
