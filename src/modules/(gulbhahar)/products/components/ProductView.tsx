@@ -17,6 +17,7 @@ import ProductReels from "./ProductReels";
 import { ProductVariants } from "./ProductVariants";
 import { SizeGuideModal } from "./SizeGuideModal";
 import { SizeChartData } from "@/services/sizeChart/sizeChartTypes";
+import FloatingProductVideo from "./FloatingProductVideo";
 
 const generateSizeRange = (
   inventory: any[],
@@ -402,8 +403,21 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
         <SizeGuideModal
           isOpen={showSizeGuide}
           onClose={() => setShowSizeGuide(false)}
-          sizeChart ={sizeChart}
+          sizeChart={sizeChart}
         />
+
+        {/* Floating video widget — only if product has a video */}
+        {(() => {
+          const firstVideo = videosByColor?.flat?.()?.find?.((v: any) => v?.videoUrl);
+          if (!firstVideo?.videoUrl) return null;
+          return (
+            <FloatingProductVideo
+              videoUrl={firstVideo.videoUrl}
+              posterUrl={firstVideo.posterUrl}
+              productId={product.productId || product.id || ""}
+            />
+          );
+        })()}
       </div>
 
       {/* Desktop reels — outside grid to preserve sticky layout */}
