@@ -9,7 +9,6 @@ import { ProductImageItem, FALLBACK_LQIP } from "@/utils/productImageUtils";
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 3;
 const ZOOM_STEP = 0.5;
-const INITIAL_ZOOM = 2;
 
 interface ImageModalProps {
   isModalOpen: boolean;
@@ -30,9 +29,9 @@ export const ImageModal = ({
   product,
 }: ImageModalProps) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [zoom, setZoom] = useState(INITIAL_ZOOM);
+  const [zoom, setZoom] = useState(MIN_ZOOM);
   const [pan, setPan] = useState({ x: 0, y: 0 });
-  const [animatePan, setAnimatePan] = useState(false);
+  const [animatePan, setAnimatePan] = useState(true);
 
   // Drag tracking refs — refs avoid re-renders during drag
   const isDragging = useRef(false);
@@ -59,7 +58,7 @@ export const ImageModal = ({
   );
 
   const resetView = useCallback(() => {
-    setZoom(INITIAL_ZOOM);
+    setZoom(MIN_ZOOM);
     setPan({ x: 0, y: 0 });
     setAnimatePan(true);
   }, []);
@@ -153,19 +152,13 @@ export const ImageModal = ({
 
   useEffect(() => {
     setAnimatePan(false);
-    setZoom(INITIAL_ZOOM);
+    setZoom(MIN_ZOOM);
     setPan({ x: 0, y: 0 });
     setIsLoading(true);
-  }, [safeIndex]);
+  }, [safeIndex, resetView]);
 
   useEffect(() => {
-    if (isModalOpen) {
-      setAnimatePan(false);
-      setZoom(INITIAL_ZOOM);
-      setPan({ x: 0, y: 0 });
-    } else {
-      resetView();
-    }
+    if (!isModalOpen) resetView();
   }, [isModalOpen, resetView]);
 
   // ─── Restore scroll position on modal close (no body lock needed) ─────────
@@ -199,7 +192,7 @@ export const ImageModal = ({
 
   if (!isModalOpen || images.length === 0) return null;
 
-  const isZoomed = zoom > INITIAL_ZOOM;
+  const isZoomed = zoom > MIN_ZOOM;
 
   return (
     <div className="fixed inset-0 z-[9999] bg-black flex flex-col">
@@ -213,7 +206,7 @@ export const ImageModal = ({
         <div className="flex items-center gap-2">
           <button
             onClick={zoomOut}
-            disabled={zoom <= INITIAL_ZOOM}
+            disabled={zoom <= MIN_ZOOM}
             className="w-9 h-9 bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed rounded-full flex items-center justify-center transition-colors"
             aria-label="Zoom out"
           >
@@ -221,7 +214,7 @@ export const ImageModal = ({
           </button>
 
           <span className="text-white text-sm font-medium w-10 text-center tabular-nums">
-            {(zoom - 1).toFixed(1)}x
+            {zoom.toFixed(1)}x
           </span>
 
           <button
