@@ -872,7 +872,6 @@ export default function CheckoutComponent() {
       });
 
       toast.success("Information validated! Redirecting to payment...");
-      try { localStorage.removeItem("checkoutDraft"); } catch {}
       setTimeout(() => {
         router.push(
           `/cart/checkout/payment?orderId=${orderId}&amount=${total}`,
