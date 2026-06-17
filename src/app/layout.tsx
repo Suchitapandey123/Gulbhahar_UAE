@@ -162,6 +162,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 send_page_view: true,
                 transport_type: 'beacon'
               });
+              gtag('config', 'AW-17420325245');
             `,
             }}
           />

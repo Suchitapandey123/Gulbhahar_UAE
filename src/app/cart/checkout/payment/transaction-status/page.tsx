@@ -504,6 +504,16 @@ const TransactionStatusContent = () => {
         },
       });
 
+      // Google Ads conversion tracking
+      if (typeof window !== "undefined" && typeof (window as any).gtag === "function") {
+        (window as any).gtag("event", "conversion", {
+          send_to: "AW-17420325245/FVwuCLqK88AcEP2i1PJA",
+          value: transactionData.amount ? parseFloat(transactionData.amount) : 0,
+          currency: "INR",
+          transaction_id: transactionData.trackingId || "",
+        });
+      }
+
       fbEvent({
         action: "Purchase",
         params: {
