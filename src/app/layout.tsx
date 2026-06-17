@@ -144,6 +144,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
           {/* Google tag (gtag.js) — GA4 + Google Ads */}
           <Script
+            id="google-gtag-loader"
             src="https://www.googletagmanager.com/gtag/js?id=AW-17420325245"
             strategy="afterInteractive"
           />
