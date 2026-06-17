@@ -142,27 +142,26 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             strategy="lazyOnload"
           />
 
-          {/* Google Analytics — loaded via GTM (GTM-T5S7S772) when GTM is re-enabled.
-              Direct GA4 script kept here as standalone fallback only; remove when GTM is active. */}
+          {/* Google tag (gtag.js) — GA4 + Google Ads */}
           <Script
-            src="https://www.googletagmanager.com/gtag/js?id=G-M4Q3C3DJQM"
-            strategy="lazyOnload"
+            src="https://www.googletagmanager.com/gtag/js?id=AW-17420325245"
+            strategy="afterInteractive"
           />
 
           <Script
             id="google-analytics"
-            strategy="lazyOnload"
+            strategy="afterInteractive"
             dangerouslySetInnerHTML={{
               __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
+              gtag('config', 'AW-17420325245');
               gtag('config', 'G-M4Q3C3DJQM', {
                 page_path: window.location.pathname,
                 send_page_view: true,
                 transport_type: 'beacon'
               });
-              gtag('config', 'AW-17420325245');
             `,
             }}
           />
