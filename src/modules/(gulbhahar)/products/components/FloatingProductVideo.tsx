@@ -50,14 +50,14 @@ export default function FloatingProductVideo({
 
   return (
     <>
-      {/* Floating Widget */}
+      {/* Floating Widget - desktop only, center right */}
       <div
         className={`
-          fixed bottom-36 right-3
-          sm:bottom-20 sm:right-5
+          hidden sm:block
+          fixed top-1/2 -translate-y-1/2 right-5
           z-40
           transition-all duration-500 ease-out
-          ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}
+          ${visible ? "opacity-100 translate-x-0" : "opacity-100 translate-x-4"}
         `}
       >
         <div
