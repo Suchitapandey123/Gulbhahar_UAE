@@ -1,131 +1,101 @@
 // @ts-nocheck
-import productApi from "@/services/product/productService";
-import HorizontalCarousel from "@/shared-components/Scrollbar/HorizontalCarousel";
+import Image from "next/image";
 import Link from "next/link";
-import ProductCard from "../common/ProductCard";
-
-interface AvailableSize {
-  name: string;
-}
-
-interface AvailableColor {
-  name: string;
-  hexcode: string;
-}
-
-interface Product {
-  id?: string;
-  productId?: string;
-  name?: string;
-  title?: string;
-  price: number;
-  originalPrice?: number;
-  images?: string[][];
-  availableSizes?: AvailableSize[];
-  availableColors?: AvailableColor[];
-  category?: string[];
-  parentCategory?: string[];
-  isActive?: boolean;
-}
 
 interface CategoryCollection_MatchingProductsProps {
   parentCategory: string;
 }
 
-const categoryLabels: Record<string, string> = {
-  suit: "Suits",
-  bags: "Bags",
-  juttis: "Juttis",
+// Which categories to show for each collection
+// handles both parentCategory values and slug values
+const matchingMap: Record<string, string[]> = {
+  juttis:  ["suit", "bags"],
+  jutti:   ["suit", "bags"],
+  bags:    ["suit", "juttis", "sarees"],
+  bag:     ["suit", "juttis", "sarees"],
+  suit:    ["bags", "juttis"],
+  suits:   ["bags", "juttis"],
+  sarees:  ["bags"],
+  saree:   ["bags"],
 };
 
-const CategoryCollection_MatchingProducts = async ({
-  parentCategory,
-}: CategoryCollection_MatchingProductsProps) => {
-  const matchingCategories = ["suit", "bags", "juttis"].filter(
-    (cat) => cat !== parentCategory,
-  );
+const categoryLabels: Record<string, string> = {
+  suit:   "Suits",
+  bags:   "Bags",
+  juttis: "Juttis",
+  sarees: "Sarees",
+};
 
-  let groupedProducts: Record<string, Product[]> = {};
+// Desktop and mobile images for each category
+const categoryImages: Record<string, { desktop: string; mobile: string; href: string }> = {
+  suit:   { desktop: "/images/collection-suits-desktop.webp",  mobile: "/images/collection-suit-mobile.webp",  href: "/suit" },
+  bags:   { desktop: "/images/collection-bag-desktop.webp",    mobile: "/images/collection-bag-mobile.webp",    href: "/bags" },
+  juttis: { desktop: "/images/collection-jutti-desktop.webp",  mobile: "/images/collection-jutti-mobile.webp",  href: "/juttis" },
+  sarees: { desktop: "/images/collection-saree-desktop.webp",  mobile: "/images/collection-saree-mobile.webp",  href: "/saree" },
+};
 
-  try {
-    const results = await Promise.all(
-      matchingCategories.map((cat) =>
-        productApi.getProductsByParentCategory(cat).then((products) => ({
-          cat,
-          products: products.slice(0, 8),
-        }))
-      )
-    );
-    for (const { cat, products } of results) {
-      groupedProducts[cat] = products;
-    }
-    const juttiProducts = groupedProducts["juttis"];
-    if (juttiProducts) {
-      // console.log(`=== Complete Your Look With Juttis (${juttiProducts.length} items) ===`);
-      // console.log(JSON.stringify(juttiProducts, null, 2));
-      // console.log("============================");
-    }
-  } catch (error) {
-    console.error("Error fetching matching products:", error);
-  }
+const CategoryCollection_MatchingProducts = ({ parentCategory }: CategoryCollection_MatchingProductsProps) => {
+  const catsToShow = matchingMap[parentCategory] ?? [];
 
-  const nonEmptyCategories = matchingCategories.filter(
-    (cat) => groupedProducts[cat]?.length > 0,
-  );
-
-  if (nonEmptyCategories.length === 0) {
-    return null;
-  }
+  if (catsToShow.length === 0) return null;
 
   return (
-    <>
-      {nonEmptyCategories.map((cat) => (
-        <div key={cat} className="col-span-full">
-          {/* Heading */}
-          <div className="w-full my-6 text-center space-y-2">
-            <h2 className="text-2xl sm:text-3xl font-bold text-red-900">
-              Complete Your Look With {categoryLabels[cat]}
-            </h2>
-            <p className="text-sm text-gray-600">
-              Perfect picks to pair with your dream outfit
-            </p>
-          </div>
+    <div className="space-y-16 my-16">
+      {catsToShow.map((cat) => {
+        const img = categoryImages[cat];
+        if (!img) return null;
 
-          {/* Products Grid */}
-          <HorizontalCarousel
-            className="flex gap-4 sm:gap-6 overflow-x-auto pb-4 scroll-smooth"
-            wrapperClassName="w-full"
-          >
-            {groupedProducts[cat].map((product, index) => (
-              <div
-                key={product.productId || product.id || index}
-                className="w-[240px] sm:w-[340px] flex-shrink-0"
-              >
-                <ProductCard
-                  item={product}
-                  index={index}
-                  priority={index < 2}
-                />
+        return (
+          <div key={cat} className="col-span-full">
+            {/* Heading */}
+            <div className="w-full mb-8 text-center space-y-2">
+              <p className="text-xs uppercase tracking-[0.3em] text-gray-400">Style It Up</p>
+              <h2 className="text-2xl sm:text-3xl font-bold text-red-900">
+                Complete Your Look With {categoryLabels[cat]}
+              </h2>
+              <div className="flex items-center justify-center gap-3 mt-2">
+                <div className="h-px w-12 bg-red-900/20" />
+                <p className="text-sm text-gray-500">Perfect picks to pair with your dream outfit</p>
+                <div className="h-px w-12 bg-red-900/20" />
               </div>
-            ))}
-          </HorizontalCarousel>
+            </div>
 
-          {/* Discover All Button */}
-
-          <div className="flex justify-center ">
-            <Link
-              href={`/${cat}`}
-              className="group relative px-4 py-4 bg-transparent overflow-hidden border border-[#800000]/20 text-[#800000] transition-all duration-500 hover:border-[#800000]"
-            >
-              <div className="absolute inset-0 w-0 bg-[#800000] transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:w-full" />
-              <span className="relative text-xs font-bold tracking-[0.25em] uppercase group-hover:text-white transition-colors duration-500">
-                Discover All {categoryLabels[cat]}
-              </span>
+            {/* Clickable Image */}
+            <Link href={img.href} className="block w-full overflow-hidden rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-500">
+              <Image
+                src={img.desktop}
+                alt={`Shop ${categoryLabels[cat]}`}
+                width={1400}
+                height={500}
+                className="hidden sm:block w-full h-auto object-cover hover:scale-[1.02] transition-transform duration-500"
+                priority={false}
+              />
+              <Image
+                src={img.mobile}
+                alt={`Shop ${categoryLabels[cat]}`}
+                width={600}
+                height={700}
+                className="block sm:hidden w-full h-auto object-cover hover:scale-[1.02] transition-transform duration-500"
+                priority={false}
+              />
             </Link>
+
+            {/* Discover All Button */}
+            <div className="flex justify-center mt-8">
+              <Link
+                href={img.href}
+                className="group relative px-8 py-4 bg-transparent overflow-hidden border border-[#800000]/30 text-[#800000] transition-all duration-500 hover:border-[#800000] rounded-sm"
+              >
+                <div className="absolute inset-0 w-0 bg-[#800000] transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:w-full" />
+                <span className="relative text-xs font-bold tracking-[0.25em] uppercase group-hover:text-white transition-colors duration-500">
+                  Discover All {categoryLabels[cat]}
+                </span>
+              </Link>
+            </div>
           </div>
-        </div>
-      ))}
-    </>
+        );
+      })}
+    </div>
   );
 };
 

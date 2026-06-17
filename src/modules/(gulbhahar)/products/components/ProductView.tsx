@@ -271,7 +271,7 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
                   (d) => !/color|colour|size|rang/i.test(d)
                 ).slice(0, 4);
                 return filtered.length > 0 ? (
-                  <div className="order-5 md:order-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="order-6 md:order-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {filtered.map((item, i) => (
                       <div key={i} className="flex items-start gap-2 bg-stone-50 border border-gray-100 rounded-lg px-3 py-2.5 min-h-[48px]">
                         <span className="text-[#800000] mt-0.5 text-[10px] flex-shrink-0">✦</span>
@@ -309,7 +309,7 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
                   isOutOfStock={isOutOfStock}
                 />
               </div>
-              <div className="order-9 md:order-5 md:block hidden">
+              <div className="order-4 md:order-5 block">
                 <DeliveryChecker customRed={customRed} />
               </div>
 
@@ -334,7 +334,7 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
                 </div>
               </div> */}
 
-              <div className="order-4 md:order-7 block md:hidden">
+              <div className="order-5 md:order-7 block md:hidden">
                 <ProductReels
                   videos={videosByColor}
                   selectedColorIndex={selectedColorIndex}

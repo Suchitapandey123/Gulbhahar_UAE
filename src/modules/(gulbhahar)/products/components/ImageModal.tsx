@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, Plus, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Minus, Plus, X } from "lucide-react";
 import NextImage from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Product } from "../types";
@@ -32,7 +32,7 @@ export const ImageModal = ({
   const [isLoading, setIsLoading] = useState(true);
   const [zoom, setZoom] = useState(INITIAL_ZOOM);
   const [pan, setPan] = useState({ x: 0, y: 0 });
-  const [animatePan, setAnimatePan] = useState(true);
+  const [animatePan, setAnimatePan] = useState(false);
 
   // Drag tracking refs — refs avoid re-renders during drag
   const isDragging = useRef(false);
@@ -152,17 +152,17 @@ export const ImageModal = ({
   // ─── Reset on image/modal change ──────────────────────────────────────────
 
   useEffect(() => {
+    setAnimatePan(false);
     setZoom(INITIAL_ZOOM);
     setPan({ x: 0, y: 0 });
-    setAnimatePan(true);
     setIsLoading(true);
   }, [safeIndex]);
 
   useEffect(() => {
     if (isModalOpen) {
+      setAnimatePan(false);
       setZoom(INITIAL_ZOOM);
       setPan({ x: 0, y: 0 });
-      setAnimatePan(true);
     } else {
       resetView();
     }
@@ -211,8 +211,17 @@ export const ImageModal = ({
 
         {/* Zoom controls */}
         <div className="flex items-center gap-2">
+          <button
+            onClick={zoomOut}
+            disabled={zoom <= INITIAL_ZOOM}
+            className="w-9 h-9 bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed rounded-full flex items-center justify-center transition-colors"
+            aria-label="Zoom out"
+          >
+            <Minus className="w-4 h-4 text-white" />
+          </button>
+
           <span className="text-white text-sm font-medium w-10 text-center tabular-nums">
-            {zoom.toFixed(1)}x
+            {(zoom - 1).toFixed(1)}x
           </span>
 
           <button
@@ -298,17 +307,6 @@ export const ImageModal = ({
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          {/* LQIP Background - only visible during loading */}
-          {isLoading && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <img
-                src={images[safeIndex]?.lqip || FALLBACK_LQIP}
-                alt="Loading preview"
-                className="w-full h-full object-contain"
-              />
-            </div>
-          )}
-          
           <div
             style={{
               transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
@@ -332,6 +330,14 @@ export const ImageModal = ({
               draggable={false}
               onLoad={() => setIsLoading(false)}
             />
+            {/* LQIP inside transform — same zoom as main image, no size jump */}
+            {isLoading && (
+              <img
+                src={images[safeIndex]?.lqip || FALLBACK_LQIP}
+                alt=""
+                className="absolute inset-0 w-full h-full object-contain"
+              />
+            )}
           </div>
         </div>
       </div>

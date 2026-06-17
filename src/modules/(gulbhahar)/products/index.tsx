@@ -3,7 +3,6 @@
 import { Suspense } from "react";
 import { getProductImagesForColor } from "@/utils/productImageUtils";
 import { Breadcrumbs } from "./components/Breadcrumbs";
-import { DeliveryChecker } from "./components/DeliveryChecker";
 import { ProductDetails } from "./components/ProductDetails";
 import { ProductView } from "./components/ProductView";
 import Reviews from "./components/Reviews";
@@ -79,12 +78,8 @@ export default async function ProductModule({ product, similarProducts, sizeChar
               reviewCount={reviewSummary.count}
             />
           </Suspense>
-          <div className="block md:hidden">
-            <DeliveryChecker customRed={CUSTOM_RED} />
-          </div>
-
           {/* Server-rendered product details section */}
-          <div className="pt-16 border-gray-100">
+          <div className="pt-4 md:pt-16 border-gray-100">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
               <ProductDetails product={product} />
               <div className="lg:border-l lg:pl-4 border-gray-100">
