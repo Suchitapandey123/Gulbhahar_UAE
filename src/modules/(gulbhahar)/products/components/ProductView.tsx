@@ -410,11 +410,20 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
         {(() => {
           const firstVideo = videosByColor?.flat?.()?.find?.((v: any) => v?.videoUrl);
           if (!firstVideo?.videoUrl) return null;
+          const firstImg = (product.images?.[0] as any);
+          const productImage = firstImg?.files?.[0]?.name
+            ? `https://cdn.gulbhahar.com/ProductImages/${product.productId}/cards/${firstImg.files[0].name}.webp`
+            : "";
           return (
             <FloatingProductVideo
               videoUrl={firstVideo.videoUrl}
               posterUrl={firstVideo.posterUrl}
               productId={product.productId || product.id || ""}
+              productName={product.name || ""}
+              productPrice={product.price ?? 0}
+              productImage={productImage}
+              availableColors={availableColorsMapped}
+              selectedColorIndex={selectedColorIndex}
             />
           );
         })()}
