@@ -663,7 +663,7 @@ export default function CheckoutComponent() {
         const odaSurcharge = postalCodeValidation.deliveryInfo?.isODA ? 50 : 0;
         shipping += odaSurcharge;
 
-        const delhiPrepayment = isDelhiNCR(formData.region, formData.postalCode, formData.city)
+        const delhiPrepayment = shippingMethod === "delhi-express"
           ? DELHI_NCR_PREPAYMENT
           : 0;
 

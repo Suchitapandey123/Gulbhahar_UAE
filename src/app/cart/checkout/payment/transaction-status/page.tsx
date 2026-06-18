@@ -285,18 +285,15 @@ const TransactionStatusContent = () => {
           if (item.images && Array.isArray(item.images)) {
             if (item.images.length > 0 && Array.isArray(item.images[0])) {
               const colorIndex = item.selectedColorIndex || 0;
-              const colorImages = item.images[colorIndex];
-              if (colorImages && Array.isArray(colorImages)) {
-                return colorImages;
-              }
-              return item.images[0] || [];
+              const colorImages = item.images[colorIndex] || item.images[0] || [];
+              return colorImages.length > 0 ? [colorImages[0]] : [];
             } else {
-              return item.images;
+              return item.images.length > 0 ? [item.images[0]] : [];
             }
           }
 
           if (item.image) {
-            return Array.isArray(item.image) ? item.image : [item.image];
+            return Array.isArray(item.image) ? [item.image[0]] : [item.image];
           }
 
           if (item.currentMainImage) {
