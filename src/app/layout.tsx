@@ -158,7 +158,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
               gtag('config', 'AW-17420325245');
-              gtag('config', 'G-NR9HQHE5F4', {
+              gtag('config', 'G-M4Q3C3DJQM', {
                 page_path: window.location.pathname,
                 send_page_view: true,
                 transport_type: 'beacon'

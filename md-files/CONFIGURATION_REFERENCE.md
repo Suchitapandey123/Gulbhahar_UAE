@@ -277,7 +277,7 @@ const jetbrainsMono = JetBrains_Mono({
 ### Google Analytics
 ```javascript
 <Script
-  src="https://www.googletagmanager.com/gtag/js?id=G-NR9HQHE5F4"
+  src="https://www.googletagmanager.com/gtag/js?id=G-M4Q3C3DJQM"
   strategy="afterInteractive"
 />
 <Script
@@ -288,7 +288,7 @@ const jetbrainsMono = JetBrains_Mono({
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-NR9HQHE5F4', {
+      gtag('config', 'G-M4Q3C3DJQM', {
         page_path: window.location.pathname
       });
     `,

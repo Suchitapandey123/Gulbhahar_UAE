@@ -140,7 +140,7 @@ CartContext → Local storage + API sync
 ### Analytics & Tracking
 ```javascript
 // Google Analytics
-gtag('config', 'G-NR9HQHE5F4')
+gtag('config', 'G-M4Q3C3DJQM')
 ├── Page views
 ├── E-commerce events
 ├── User interactions
