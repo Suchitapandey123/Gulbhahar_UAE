@@ -1,17 +1,17 @@
 // src\app\layout.js
 
-import { Poppins, JetBrains_Mono } from "next/font/google";
-import "./globals.css";
-import Footer from "@/shared-components/Footer/Footer";
 import Navbar from "@/modules/(gulbhahar)/home/navbar/Navbar";
-import ReactQueryProvider from "@/providers/ReactQueryProvider/ReactQueryProvider";
-import Script from "next/script";
-import OrganizationSchema from "@/shared-components/seo/OrganizationSchema";
-import WebSiteSchema from "@/shared-components/seo/WebSiteSchema";
 import { AuthProvider } from "@/providers/ContextProviders/AuthContext";
 import { CartProvider } from "@/providers/ContextProviders/CartContext";
 import SessionWrapper from "@/providers/GoogleSessionProvider/SessionWrapper";
+import ReactQueryProvider from "@/providers/ReactQueryProvider/ReactQueryProvider";
+import Footer from "@/shared-components/Footer/Footer";
+import OrganizationSchema from "@/shared-components/seo/OrganizationSchema";
+import WebSiteSchema from "@/shared-components/seo/WebSiteSchema";
+import { JetBrains_Mono, Poppins } from "next/font/google";
+import Script from "next/script";
 import { Toaster } from "sonner";
+import "./globals.css";
 
 
 
@@ -158,7 +158,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
               gtag('config', 'AW-17420325245');
-              gtag('config', 'G-M4Q3C3DJQM', {
+              gtag('config', 'G-NR9HQHE5F4', {
                 page_path: window.location.pathname,
                 send_page_view: true,
                 transport_type: 'beacon'

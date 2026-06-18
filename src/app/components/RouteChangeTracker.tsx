@@ -11,7 +11,7 @@ export default function RouteChangeTracker() {
     const pageTitle = document.title
 
     if (window.gtag) {
-      window.gtag('config', 'G-M4Q3C3DJQM', {
+      window.gtag('config', 'G-NR9HQHE5F4', {
         page_path: pathname,
         page_title: pageTitle,
       })

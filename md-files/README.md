@@ -135,7 +135,7 @@ src/
 
 ## Analytics & Tracking
 
-- **Google Analytics:** G-M4Q3C3DJQM
+- **Google Analytics:** G-NR9HQHE5F4
 - **Google Tag Manager:** GTM-T5S7S772
 - **Facebook Pixel:** 1557129638938241
 - **Microsoft Clarity:** s4y81yz4rh
