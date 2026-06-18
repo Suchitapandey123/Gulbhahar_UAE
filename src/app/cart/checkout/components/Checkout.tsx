@@ -928,14 +928,18 @@ export default function CheckoutComponent() {
   const isDelhiNCROrder = isDelhiNCR(formData.region, formData.postalCode, formData.city);
   const isDeliveryWindowActive = isWithinDeliveryWindow();
 
+  const hasAutoSelectedDelhiExpress = useRef(false);
+
   useEffect(() => {
     if (shippingMethod === "free" && !isFreeShippingEligible) {
       setShippingMethod("standard");
     }
     if (shippingMethod === "delhi-express" && !isDelhiNCROrder) {
+      hasAutoSelectedDelhiExpress.current = false;
       setShippingMethod("standard");
     }
-    if (isDelhiNCROrder && shippingMethod !== "delhi-express") {
+    if (isDelhiNCROrder && !hasAutoSelectedDelhiExpress.current) {
+      hasAutoSelectedDelhiExpress.current = true;
       setShippingMethod("delhi-express");
     }
   }, [isFreeShippingEligible, shippingMethod, isDelhiNCROrder]);

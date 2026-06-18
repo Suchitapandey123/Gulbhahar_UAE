@@ -25,20 +25,12 @@ export const Breadcrumbs = ({
           </Link>
           <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
           <Link
-            href={`/${parentCategoryName}`}
+            href={`/${parentCategoryName?.charAt(0).toLowerCase() + parentCategoryName?.slice(1)}`}
             className="hover:text-gray-900 transition-colors"
             style={{ color: customRed }}
           >
-            Products
-          </Link>
-          <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
-          <span
-            className="whitespace-nowrap max-w-[80px] sm:max-w-none truncate"
-            style={{ color: customRed }}
-            title={parentCategoryName}
-          >
             {parentCategoryName?.charAt(0).toUpperCase() + parentCategoryName?.slice(1)}
-          </span>
+          </Link>
           <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
           <span
             className="text-gray-900 font-medium whitespace-nowrap max-w-[100px] sm:max-w-[200px] lg:max-w-none truncate"
