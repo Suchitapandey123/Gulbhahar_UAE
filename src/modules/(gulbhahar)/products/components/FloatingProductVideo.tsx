@@ -106,9 +106,9 @@ export default function FloatingProductVideo({
   const reelW        = Math.round(reelH * 9 / 16);
   const visibleNextW = Math.round(reelW * 0.48);
   const stackW       = reelW + visibleNextW;
-  const nextH        = Math.round(reelH * 0.84);
+  const nextTop      = Math.round(reelH * 0.14);   // gap from top
+  const nextH        = reelH - 2 * nextTop;        // same gap at bottom (symmetric)
   const nextW        = Math.round(nextH * 9 / 16);
-  const nextTop      = Math.round(reelH * 0.14);
   const nextLeft     = reelW - 6;
 
   const nextReel = reels[activeIndex + 1];
