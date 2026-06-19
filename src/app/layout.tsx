@@ -161,7 +161,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               gtag('config', 'G-M4Q3C3DJQM', {
                 page_path: window.location.pathname,
                 send_page_view: true,
-                transport_type: 'beacon'
+                transport_type: 'beacon',
+                debug_mode: '${process.env.NEXT_PUBLIC_GA_DEBUG === "true"}'  === 'true'
               });
             `,
             }}
