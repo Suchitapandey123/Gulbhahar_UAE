@@ -334,8 +334,9 @@ function PaymentContent() {
 
   const isPaying = isProcessingOnline || isProcessingPartialCOD;
   const isExpressOrder = checkoutData?.shippingMethod === "delhi-express";
+  const orderTotalTooLow = (checkoutData?.orderTotal || 0) <= partialCodAmount;
   // Auto-switch to online if partial COD is not available for this order
-  if (isExpressOrder && paymentMethod === "partial-cod") setPaymentMethod("online");
+  if ((isExpressOrder || orderTotalTooLow) && paymentMethod === "partial-cod") setPaymentMethod("online");
 
   return (
     <>
@@ -371,11 +372,16 @@ function PaymentContent() {
                     paymentMethod={paymentMethod}
                     setPaymentMethod={setPaymentMethod}
                     codAvailable={!!checkoutData?.deliveryInfo?.cod}
-                    partialCodDisabled={isExpressOrder}
+                    partialCodDisabled={isExpressOrder || orderTotalTooLow}
                   />
                   {isExpressOrder && (
                     <p className="text-[10px] text-amber-700 mt-2 flex items-center gap-1">
                       ⚡ Partial COD is not available for Delhi NCR Express delivery
+                    </p>
+                  )}
+                  {!isExpressOrder && orderTotalTooLow && (
+                    <p className="text-[10px] text-amber-700 mt-2 flex items-center gap-1">
+                      Partial COD is not available for orders below ₹{partialCodAmount + 1}
                     </p>
                   )}
                 </div>

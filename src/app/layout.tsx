@@ -1,17 +1,17 @@
 // src\app\layout.js
 
-import { Poppins, JetBrains_Mono } from "next/font/google";
-import "./globals.css";
-import Footer from "@/shared-components/Footer/Footer";
 import Navbar from "@/modules/(gulbhahar)/home/navbar/Navbar";
-import ReactQueryProvider from "@/providers/ReactQueryProvider/ReactQueryProvider";
-import Script from "next/script";
-import OrganizationSchema from "@/shared-components/seo/OrganizationSchema";
-import WebSiteSchema from "@/shared-components/seo/WebSiteSchema";
 import { AuthProvider } from "@/providers/ContextProviders/AuthContext";
 import { CartProvider } from "@/providers/ContextProviders/CartContext";
 import SessionWrapper from "@/providers/GoogleSessionProvider/SessionWrapper";
+import ReactQueryProvider from "@/providers/ReactQueryProvider/ReactQueryProvider";
+import Footer from "@/shared-components/Footer/Footer";
+import OrganizationSchema from "@/shared-components/seo/OrganizationSchema";
+import WebSiteSchema from "@/shared-components/seo/WebSiteSchema";
+import { JetBrains_Mono, Poppins } from "next/font/google";
+import Script from "next/script";
 import { Toaster } from "sonner";
+import "./globals.css";
 
 
 
@@ -142,25 +142,27 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             strategy="lazyOnload"
           />
 
-          {/* Google Analytics — loaded via GTM (GTM-T5S7S772) when GTM is re-enabled.
-              Direct GA4 script kept here as standalone fallback only; remove when GTM is active. */}
+          {/* Google tag (gtag.js) — GA4 + Google Ads */}
           <Script
-            src="https://www.googletagmanager.com/gtag/js?id=G-M4Q3C3DJQM"
-            strategy="lazyOnload"
+            id="google-gtag-loader"
+            src="https://www.googletagmanager.com/gtag/js?id=AW-17420325245"
+            strategy="afterInteractive"
           />
 
           <Script
             id="google-analytics"
-            strategy="lazyOnload"
+            strategy="afterInteractive"
             dangerouslySetInnerHTML={{
               __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
+              gtag('config', 'AW-17420325245');
               gtag('config', 'G-M4Q3C3DJQM', {
                 page_path: window.location.pathname,
                 send_page_view: true,
-                transport_type: 'beacon'
+                transport_type: 'beacon',
+                debug_mode: '${process.env.NEXT_PUBLIC_GA_DEBUG === "true"}'  === 'true'
               });
             `,
             }}
