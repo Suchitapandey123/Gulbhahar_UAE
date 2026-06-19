@@ -408,16 +408,17 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
 
         {/* Floating video widget — only if product has a video */}
         {(() => {
-          const firstVideo = videosByColor?.flat?.()?.find?.((v: any) => v?.videoUrl);
-          if (!firstVideo?.videoUrl) return null;
+          const allVideos = (videosByColor?.flat?.() ?? []).filter((v: any) => v?.videoUrl);
+          if (!allVideos.length) return null;
           const firstImg = (product.images?.[0] as any);
           const productImage = firstImg?.files?.[0]?.name
             ? `https://cdn.gulbhahar.com/ProductImages/${product.productId}/cards/${firstImg.files[0].name}.webp`
             : "";
           return (
             <FloatingProductVideo
-              videoUrl={firstVideo.videoUrl}
-              posterUrl={firstVideo.posterUrl}
+              videos={allVideos}
+              videoUrl={allVideos[0].videoUrl}
+              posterUrl={allVideos[0].posterUrl}
               productId={product.productId || product.id || ""}
               productName={product.name || ""}
               productPrice={product.price ?? 0}
