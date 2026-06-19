@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "standalone",
   allowedDevOrigins: ['local-origin.dev', '*.local-origin.dev'],
 
   async headers() {
@@ -93,7 +92,7 @@ const nextConfig = {
     // Fewer breakpoints = fewer unique image variants Vercel has to generate and cache
     deviceSizes: [640, 828, 1080, 1200],
     imageSizes: [48, 96, 256, 384],
-    minimumCacheTTL: 604800,
+    minimumCacheTTL: 31536000,
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
