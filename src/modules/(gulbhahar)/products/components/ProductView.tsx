@@ -310,7 +310,7 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
                   isOutOfStock={isOutOfStock}
                 />
               </div>
-              <div className="order-4 md:order-5 block">
+              <div className="order-5 md:order-5 block">
                 <DeliveryChecker customRed={customRed} />
               </div>
 
@@ -335,7 +335,7 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
                 </div>
               </div> */}
 
-              <div className="order-5 md:order-7 block md:hidden">
+              <div className="order-4 md:order-7 block md:hidden">
                 <ProductReels
                   videos={videosByColor}
                   selectedColorIndex={selectedColorIndex}
