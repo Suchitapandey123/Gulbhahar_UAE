@@ -1,6 +1,5 @@
 "use client";
 
-import { Loader2, ShoppingCart } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { ReelData } from "./ProductReels";
 
@@ -8,22 +7,12 @@ interface ReelItemProps {
   reel: ReelData;
   index: number;
   onClick?: () => void;
-  onAddToCart?: () => void;
-  addingToCart?: boolean;
-  isOutOfStock?: boolean;
-  selectedSize?: string;
-  customRed?: string;
 }
 
 const ReelItem = ({
   reel,
   index,
   onClick,
-  onAddToCart,
-  addingToCart,
-  isOutOfStock,
-  selectedSize,
-  customRed,
 }: ReelItemProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -105,8 +94,6 @@ const ReelItem = ({
           </h3>
         </div>
       )}
-
-      
     </div>
   );
 };

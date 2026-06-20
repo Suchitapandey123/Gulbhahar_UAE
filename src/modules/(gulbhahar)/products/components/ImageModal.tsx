@@ -9,6 +9,7 @@ import { ProductImageItem, FALLBACK_LQIP } from "@/utils/productImageUtils";
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 3;
 const ZOOM_STEP = 0.5;
+const DESKTOP_INITIAL_ZOOM = 2; // desktop opens at 2x; mobile stays at 1x
 
 interface ImageModalProps {
   isModalOpen: boolean;
@@ -38,6 +39,8 @@ export const ImageModal = ({
   const hasMoved = useRef(false);
   const dragStart = useRef({ x: 0, y: 0 });
   const panAtDragStart = useRef({ x: 0, y: 0 });
+  // desktop opens at 2x; mobile stays at 1x — set on modal open, read everywhere
+  const baseZoomRef = useRef(MIN_ZOOM);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const images = currentImages || [];
@@ -58,7 +61,7 @@ export const ImageModal = ({
   );
 
   const resetView = useCallback(() => {
-    setZoom(MIN_ZOOM);
+    setZoom(baseZoomRef.current);
     setPan({ x: 0, y: 0 });
     setAnimatePan(true);
   }, []);
@@ -71,8 +74,9 @@ export const ImageModal = ({
   const zoomOut = useCallback(() => {
     setAnimatePan(true);
     setZoom((prev) => {
-      const next = Math.max(+(prev - ZOOM_STEP).toFixed(1), MIN_ZOOM);
-      if (next === MIN_ZOOM) setPan({ x: 0, y: 0 });
+      const floor = baseZoomRef.current;
+      const next = Math.max(+(prev - ZOOM_STEP).toFixed(1), floor);
+      if (next <= floor) setPan({ x: 0, y: 0 });
       else setPan((p) => clampPan(p.x, p.y, next));
       return next;
     });
@@ -113,7 +117,7 @@ export const ImageModal = ({
     isDragging.current = false;
     setAnimatePan(true);
     // If no movement → treat as click → reset zoom
-    if (!hasMoved.current && zoom > MIN_ZOOM) resetView();
+    if (!hasMoved.current && zoom > baseZoomRef.current) resetView();
   };
 
   // ─── Touch pan handlers ────────────────────────────────────────────────────
@@ -152,13 +156,21 @@ export const ImageModal = ({
 
   useEffect(() => {
     setAnimatePan(false);
-    setZoom(MIN_ZOOM);
+    setZoom(baseZoomRef.current);
     setPan({ x: 0, y: 0 });
     setIsLoading(true);
-  }, [safeIndex, resetView]);
+  }, [safeIndex]);
 
   useEffect(() => {
-    if (!isModalOpen) resetView();
+    if (isModalOpen) {
+      // set base zoom for this session (desktop=2x, mobile=1x)
+      baseZoomRef.current = window.innerWidth >= 1024 ? DESKTOP_INITIAL_ZOOM : MIN_ZOOM;
+      setZoom(baseZoomRef.current);
+      setPan({ x: 0, y: 0 });
+    } else {
+      baseZoomRef.current = MIN_ZOOM;
+      resetView();
+    }
   }, [isModalOpen, resetView]);
 
   // ─── Restore scroll position on modal close (no body lock needed) ─────────
@@ -179,9 +191,9 @@ export const ImageModal = ({
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isModalOpen) return;
-      if (e.key === "ArrowLeft" && zoom === MIN_ZOOM) prevImage();
-      if (e.key === "ArrowRight" && zoom === MIN_ZOOM) nextImage();
-      if (e.key === "Escape") { zoom > MIN_ZOOM ? resetView() : closeModal(); }
+      if (e.key === "ArrowLeft" && zoom <= baseZoomRef.current) prevImage();
+      if (e.key === "ArrowRight" && zoom <= baseZoomRef.current) nextImage();
+      if (e.key === "Escape") { zoom > baseZoomRef.current ? resetView() : closeModal(); }
       if (e.key === "+" || e.key === "=") zoomIn();
       if (e.key === "-") zoomOut();
     };
@@ -192,7 +204,7 @@ export const ImageModal = ({
 
   if (!isModalOpen || images.length === 0) return null;
 
-  const isZoomed = zoom > MIN_ZOOM;
+  const isZoomed = zoom > baseZoomRef.current;
 
   return (
     <div className="fixed inset-0 z-[9999] bg-black flex flex-col">
@@ -206,7 +218,7 @@ export const ImageModal = ({
         <div className="flex items-center gap-2">
           <button
             onClick={zoomOut}
-            disabled={zoom <= MIN_ZOOM}
+            disabled={zoom <= baseZoomRef.current}
             className="w-9 h-9 bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed rounded-full flex items-center justify-center transition-colors"
             aria-label="Zoom out"
           >
@@ -214,7 +226,12 @@ export const ImageModal = ({
           </button>
 
           <span className="text-white text-sm font-medium w-10 text-center tabular-nums">
-            {zoom.toFixed(1)}x
+            {(() => {
+              const d = baseZoomRef.current > MIN_ZOOM
+                ? (zoom - baseZoomRef.current) / ZOOM_STEP + 1
+                : zoom;
+              return (d % 1 === 0 ? d.toFixed(0) : d.toFixed(1)) + "x";
+            })()}
           </span>
 
           <button

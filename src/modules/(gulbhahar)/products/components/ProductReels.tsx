@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import HorizontalCarousel from "../../../../shared-components/Scrollbar/HorizontalCarousel";
-import FullscreenReelViewer from "../../common/FullscreenReelViewer";
 import { VideosOption } from "../types";
 import ReelItem from "./ReelItem";
+import StackedReelModal from "./StackedReelModal";
 
 export interface ReelData {
   videoUrl: string;
@@ -104,11 +104,6 @@ export default function ProductReels({
               reel={reel}
               index={idx}
               onClick={() => setFullscreenIndex(idx)}
-              onAddToCart={isProductReels ? onAddToCart : undefined}
-              addingToCart={addingToCart}
-              isOutOfStock={isOutOfStock}
-              selectedSize={selectedSize}
-              customRed={customRed}
             />
           ))}
           {/* End spacing */}
@@ -116,14 +111,13 @@ export default function ProductReels({
         </HorizontalCarousel>
       </div>
 
-      {/* Fullscreen viewer */}
+      {/* Stacked viewer */}
       {fullscreenIndex !== null && (
-        <FullscreenReelViewer
+        <StackedReelModal
           reels={reels}
           initialIndex={fullscreenIndex}
           onClose={() => setFullscreenIndex(null)}
-          showCart={isProductReels}
-          onAddToCart={onAddToCart}
+          onAddToCart={isProductReels ? onAddToCart : undefined}
           addingToCart={addingToCart}
           isOutOfStock={isOutOfStock}
           selectedSize={selectedSize}

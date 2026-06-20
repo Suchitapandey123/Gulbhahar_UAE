@@ -425,6 +425,14 @@ export const ProductView = ({ sizeChart, product, customRed, avgRating = 0, revi
               productImage={productImage}
               availableColors={availableColorsMapped}
               selectedColorIndex={selectedColorIndex}
+              setSelectedColorIndex={handleColorChange}
+              onAddToCart={handleAddToCart}
+              addingToCart={addingToCart === (product.productId || product.id)}
+              isOutOfStock={isOutOfStock}
+              selectedSize={selectedSize}
+              setSelectedSize={setSelectedSize}
+              sizeRange={sizeRange}
+              customRed={customRed}
             />
           );
         })()}
