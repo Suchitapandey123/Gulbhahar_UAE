@@ -26,7 +26,7 @@ export const CategoryCollection_ParentCategoryProducts = ({
   return (
     <div className="max-w-[1600px] mx-auto pt-10">
       {/* Header Section - Refined & Smoother */}
-      <div className="flex flex-col items-center text-center mb-12">
+      {/* <div className="flex flex-col items-center text-center mb-12">
         <div className="flex items-center gap-4 mb-3">
           <div className="h-px w-8 bg-[#800000]/30" />
           <span className="text-[10px] uppercase tracking-[0.4em] font-bold text-[#800000]/60">
@@ -47,7 +47,7 @@ export const CategoryCollection_ParentCategoryProducts = ({
           While this specific niche is being curated, you might find your
           perfect match in our broader {parentCategory} collection.
         </p>
-      </div>
+      </div> */}
 
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
         {products.slice(0, 8).map((product: any, index: number) => {

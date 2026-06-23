@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, Loader2, Ruler, ShoppingCart, Volume2, VolumeX, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2, Ruler, ShoppingCart, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface ReelItem {
@@ -53,11 +53,11 @@ export default function StackedReelModal({
   sizeRange = [],
   customRed = "#800000",
 }: StackedReelModalProps) {
-  const [muted,          setMuted]          = useState(true);
   const [activeIndex,    setActiveIndex]    = useState(initialIndex);
   const [outgoingIndex,  setOutgoingIndex]  = useState<number | null>(null);
   const [isAnimating,    setIsAnimating]    = useState(false);
   const [direction,      setDirection]      = useState<"next" | "prev">("next");
+  const [prevSlidePhase, setPrevSlidePhase] = useState<"snap" | "slide" | null>(null);
   const [frameReady,     setFrameReady]     = useState<Record<number, boolean>>({});
   const [viewportH,      setViewportH]      = useState(0);
   const [viewportW,      setViewportW]      = useState(0);
@@ -78,15 +78,10 @@ export default function StackedReelModal({
   useEffect(() => {
     videoRefs.current.forEach((v, i) => {
       if (!v) return;
-      if (i === activeIndex) { v.muted = muted; v.play().catch(() => {}); }
+      if (i === activeIndex) { v.muted = true; v.play().catch(() => {}); }
       else { v.pause(); v.currentTime = 0; }
     });
   }, [activeIndex]);
-
-  useEffect(() => {
-    const v = videoRefs.current[activeIndex];
-    if (v) v.muted = muted;
-  }, [muted, activeIndex]);
 
   useEffect(() => {
     const fn = (e: KeyboardEvent) => {
@@ -100,14 +95,26 @@ export default function StackedReelModal({
 
   const goTo = useCallback((newIndex: number) => {
     if (newIndex < 0 || newIndex >= reels.length || isAnimating) return;
-    setDirection(newIndex > activeIndex ? "next" : "prev");
+    const dir = newIndex > activeIndex ? "next" : "prev";
+    setDirection(dir);
     setOutgoingIndex(activeIndex);
     setActiveIndex(newIndex);
     setIsAnimating(true);
+
+    if (dir === "prev") {
+      setPrevSlidePhase("snap");
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setPrevSlidePhase("slide");
+        });
+      });
+    }
+
     if (animTimer.current) clearTimeout(animTimer.current);
     animTimer.current = setTimeout(() => {
       setOutgoingIndex(null);
       setIsAnimating(false);
+      setPrevSlidePhase(null);
     }, ANIM_MS + 40);
   }, [activeIndex, isAnimating, reels.length]);
 
@@ -136,31 +143,57 @@ export default function StackedReelModal({
   const ease = "cubic-bezier(0.25, 0.46, 0.45, 0.94)";
   const dur  = `${ANIM_MS}ms`;
 
-  const getCardStyle = (i: number): React.CSSProperties => {
+  // Adjusted prevLeft for top-right origin (same visual position, no jump)
+  const prevLeftTR = prevLeft - reelW * (1 - sc);
+
+  const getCardStyle = (i: number): React.CSSProperties & { transformOrigin?: string } => {
     const isActive   = i === activeIndex;
     const isOutgoing = i === outgoingIndex;
     const isNext     = i === activeIndex + 1;
     const isPrev     = i === activeIndex - 1;
 
-    if (isActive) return {
-      zIndex: 12,
-      transform: `translateX(${activeLeft}px) translateY(0px) scale(1)`,
-      opacity: 1,
-      boxShadow: "-6px 0 20px rgba(0,0,0,0.35), 10px 0 48px rgba(0,0,0,0.65)",
-      transition: `transform ${dur} ${ease}, opacity ${ANIM_MS * 0.8}ms ease-out`,
-    };
+    // ── NEXT: incoming from right, outgoing shrinks to left (unchanged) ──
+    // ── PREV: snap origin to top-right, then animate from peek→active ──
+
+    if (isActive) {
+      if (direction === "prev" && prevSlidePhase === "snap") return {
+        zIndex: 12,
+        transformOrigin: "top right",
+        transform: `translateX(${prevLeftTR}px) translateY(${peekTop}px) scale(${sc})`,
+        opacity: 1,
+        boxShadow: "none",
+        transition: "none",
+      };
+      if (direction === "prev" && prevSlidePhase === "slide") return {
+        zIndex: 12,
+        transformOrigin: "top right",
+        transform: `translateX(${activeLeft}px) translateY(0px) scale(1)`,
+        opacity: 1,
+        boxShadow: "-6px 0 20px rgba(0,0,0,0.35), 10px 0 48px rgba(0,0,0,0.65)",
+        transition: `transform ${dur} ${ease}, opacity ${ANIM_MS * 0.8}ms ease-out`,
+      };
+      return {
+        zIndex: 12,
+        transformOrigin: "top left",
+        transform: `translateX(${activeLeft}px) translateY(0px) scale(1)`,
+        opacity: 1,
+        boxShadow: "-6px 0 20px rgba(0,0,0,0.35), 10px 0 48px rgba(0,0,0,0.65)",
+        transition: `transform ${dur} ${ease}, opacity ${ANIM_MS * 0.8}ms ease-out`,
+      };
+    }
 
     if (isOutgoing) {
       if (direction === "next") return {
         zIndex: 5,
+        transformOrigin: "top left",
         transform: `translateX(${prevLeft}px) translateY(${peekTop}px) scale(${sc})`,
         opacity: 0.75,
         boxShadow: "none",
         transition: `transform ${dur} ${ease}, opacity ${ANIM_MS * 0.7}ms ease-out`,
       };
-      // PREV outgoing: slide to right peek (mirror of NEXT outgoing)
       return {
         zIndex: 5,
+        transformOrigin: "top left",
         transform: `translateX(${nextLeft}px) translateY(${peekTop}px) scale(${sc})`,
         opacity: 0.75,
         boxShadow: "none",
@@ -170,6 +203,7 @@ export default function StackedReelModal({
 
     if (isNext) return {
       zIndex: 9,
+      transformOrigin: "top left",
       transform: `translateX(${nextLeft}px) translateY(${peekTop}px) scale(${sc})`,
       opacity: 1,
       transition: `transform ${dur} ${ease}, opacity 280ms ease-in`,
@@ -177,6 +211,7 @@ export default function StackedReelModal({
 
     if (isPrev) return {
       zIndex: 9,
+      transformOrigin: "top left",
       transform: `translateX(${prevLeft}px) translateY(${peekTop}px) scale(${sc})`,
       opacity: 1,
       transition: `transform ${dur} ${ease}, opacity 280ms ease-in`,
@@ -184,12 +219,14 @@ export default function StackedReelModal({
 
     if (i < activeIndex - 1) return {
       zIndex: 1,
+      transformOrigin: "top left",
       transform: `translateX(${prevLeft - peekW - 30}px) translateY(${peekTop}px) scale(${sc})`,
       opacity: 0, transition: "none",
     };
 
     return {
       zIndex: 1,
+      transformOrigin: "top left",
       transform: `translateX(${stackW + 60}px) translateY(${peekTop}px) scale(${sc})`,
       opacity: 0, transition: "none",
     };
@@ -204,9 +241,7 @@ export default function StackedReelModal({
   const hasNext = activeIndex < reels.length - 1;
   const color   = availableColors[selectedColorIndex];
 
-  // Always expand clip to the left so the prev peek card is inside the visible area.
-  // This lets PREV animate from prevLeft → activeLeft without any snap/clip-path switching.
-  const containerClip = `inset(0px 0px 0px -${visiblePeekW + 10}px)`;
+  const containerClip = `inset(0px -${visiblePeekW + 10}px 0px -${visiblePeekW + 10}px)`;
 
   const showProductInfo = !!(productName || productPrice !== undefined);
   const hasCart         = !!onAddToCart;
@@ -314,12 +349,12 @@ export default function StackedReelModal({
                   ref={(el) => { videoRefs.current[i] = el; }}
                   src={reel.videoUrl}
                   className="absolute inset-0 w-full h-full object-cover"
-                  muted={muted} loop playsInline
+                  muted loop playsInline
                   preload={Math.abs(i - activeIndex) <= 1 ? "auto" : "metadata"}
                   onCanPlay={() => {
                     if (i === activeIndex) {
                       const v = videoRefs.current[i];
-                      if (v) { v.muted = muted; v.play().catch(() => {}); }
+                      if (v) { v.muted = true; v.play().catch(() => {}); }
                     }
                   }}
                   onLoadedData={() => setFrameReady((p) => ({ ...p, [i]: true }))}
@@ -330,10 +365,6 @@ export default function StackedReelModal({
 
           {/* Top controls */}
           <div className="absolute top-4 right-4 flex gap-2 z-20">
-            <button onClick={(e) => { e.stopPropagation(); setMuted(m => !m); }}
-              className="w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm border border-white/20 flex items-center justify-center">
-              {muted ? <VolumeX className="w-4 h-4 text-white" /> : <Volume2 className="w-4 h-4 text-white" />}
-            </button>
             <button onClick={onClose}
               className="w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm border border-white/20 flex items-center justify-center">
               <X className="w-4 h-4 text-white" />
@@ -408,7 +439,7 @@ export default function StackedReelModal({
           <div className="flex items-center gap-3" onClick={(e) => e.stopPropagation()}>
             {/* Left arrow */}
             <button onClick={() => goTo(activeIndex - 1)}
-              className="w-10 h-10 rounded-full backdrop-blur-sm flex items-center justify-center flex-shrink-0 active:scale-90 transition-all duration-200"
+              className="relative z-10 w-10 h-10 rounded-full backdrop-blur-sm flex items-center justify-center flex-shrink-0 active:scale-90 transition-all duration-200"
               style={{
                 background:    hasPrev ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.15)",
                 boxShadow:     "0 4px 20px rgba(0,0,0,0.45)",
@@ -434,7 +465,7 @@ export default function StackedReelModal({
                     className="absolute top-0 left-0 rounded-[20px] overflow-hidden bg-stone-950"
                     style={{
                       width: reelW, height: reelH,
-                      transformOrigin: "top left", willChange: "transform, opacity",
+                      willChange: "transform, opacity",
                       cursor: isPeek ? "pointer" : "default",
                       ...getCardStyle(i),
                     }}
@@ -450,12 +481,12 @@ export default function StackedReelModal({
                       ref={(el) => { videoRefs.current[i] = el; }}
                       src={reel.videoUrl}
                       className="absolute inset-0 w-full h-full object-cover"
-                      muted={muted} loop playsInline
+                      muted loop playsInline
                       preload={isAct || isNxt || isPrv ? "auto" : "metadata"}
                       onCanPlay={() => {
                         if (i === activeIndex) {
                           const v = videoRefs.current[i];
-                          if (v) { v.muted = muted; v.play().catch(() => {}); }
+                          if (v) { v.muted = true; v.play().catch(() => {}); }
                         }
                       }}
                       onLoadedData={() => setFrameReady((p) => ({ ...p, [i]: true }))}
@@ -515,10 +546,6 @@ export default function StackedReelModal({
 
                         {/* Top controls */}
                         <div className="absolute top-3 right-3 flex gap-1.5 z-20">
-                          <button onClick={(e) => { e.stopPropagation(); setMuted(m => !m); }}
-                            className="w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm border border-white/20 flex items-center justify-center">
-                            {muted ? <VolumeX className="w-4 h-4 text-white" /> : <Volume2 className="w-4 h-4 text-white" />}
-                          </button>
                           <button onClick={onClose}
                             className="w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm border border-white/20 flex items-center justify-center">
                             <X className="w-4 h-4 text-white" />
@@ -538,7 +565,7 @@ export default function StackedReelModal({
 
             {/* Right arrow */}
             <button onClick={() => goTo(activeIndex + 1)}
-              className="w-10 h-10 rounded-full backdrop-blur-sm flex items-center justify-center flex-shrink-0 active:scale-90 transition-all duration-200"
+              className="relative z-10 w-10 h-10 rounded-full backdrop-blur-sm flex items-center justify-center flex-shrink-0 active:scale-90 transition-all duration-200"
               style={{
                 background:    hasNext ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.15)",
                 boxShadow:     "0 4px 20px rgba(0,0,0,0.45)",

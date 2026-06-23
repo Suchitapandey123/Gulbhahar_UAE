@@ -188,7 +188,7 @@ export default function ParentCategoryCollectionClient({
   return (
     <div className="pt-2">
       <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row px-2">
-        <div className="w-full lg:px-2">
+        <div className="w-full">
           {/* Filters */}
           <div className="border-b border-gray-200 pb-3 mb-3">
             <CategoryCollection_Filters
