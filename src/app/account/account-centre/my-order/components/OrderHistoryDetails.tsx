@@ -127,7 +127,7 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
   };
 
   const formatCurrency = (amount) =>
-    typeof amount === 'number' ? amount.toLocaleString('en-IN') : '0';
+    typeof amount === 'number' ? amount.toLocaleString('en-US') : '0';
 
   const determineOrderStatus = (status) => {
     const map = {
@@ -399,7 +399,7 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
                         {/* Right Section: Price + Arrow */}
                         <div className="flex-shrink-0 flex items-center gap-1">
                           <div className="text-right">
-                            <span className="text-[10px] font-medium text-stone-400">₹</span>
+                            <span className="text-[10px] font-medium text-stone-400">AED</span>
                             <span className="text-[15px] font-bold text-stone-900 ml-0.5">{order.value}</span>
                           </div>
                           <ChevronRight className="w-4 h-4 text-stone-300" />
@@ -500,7 +500,7 @@ export const OrderHistoryDetails = ({ onOrderClick }) => {
                         </div>
                         <div className="col-span-2">
                           <div className="flex items-baseline gap-0.5">
-                            <span className="text-[11px] font-medium text-stone-400">₹</span>
+                            <span className="text-[11px] font-medium text-stone-400">AED</span>
                             <span className="text-[18px] font-bold text-stone-900 tracking-tight leading-none">
                               {order.value}
                             </span>

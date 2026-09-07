@@ -373,22 +373,22 @@ export default function ContactPage() {
                 </div>
               </div>
               <p className="text-sm text-gray-600 mb-3">
-                Mon - Sat, 9:00 AM - 9:00 PM (UTC/GMT + 05:30)
+                Mon - Sat, 9:00 AM - 9:00 PM (GMT + 4:00)
               </p>
               <div className="space-y-2">
                 <a
-                  href="tel:+919220927241"
+                  href="tel:+971505907461"
                   className="inline-flex items-center gap-2 text-sm font-semibold text-red-900 hover:text-red-700 transition-colors bg-red-50 px-3 py-2 rounded-lg hover:bg-red-100  w-full"
                 >
                   <Phone className="h-4 w-4" />
-                  +91 9220927241
+                  +971 50 590 7461
                 </a>
                 <a
-                  href="tel:+919217194241"
+                  href="tel:+971507672421"
                   className="inline-flex items-center gap-2 text-sm font-semibold text-red-900 hover:text-red-700 transition-colors bg-red-50 px-3 py-2 rounded-lg hover:bg-red-100  w-full"
                 >
                   <Phone className="h-4 w-4" />
-                  +91 9217194241
+                  +971 50 767 2421
                 </a>
               </div>
             </div>
@@ -409,6 +409,13 @@ export default function ContactPage() {
               </div>
               <p className="text-sm text-gray-600 mb-3">
                 S-12, Rajouri Garden, New Delhi-110027
+              </p>
+              {/* UAE flagship store */}
+              <p className="text-sm text-gray-600 mb-3 flex items-start gap-2">
+                <MapPin className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />
+                <span>
+                  Al Karama, Bur Dubai, Dubai, UAE
+                </span>
               </p>
             </div>
 

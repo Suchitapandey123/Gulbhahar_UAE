@@ -28,8 +28,7 @@ const Home_AvailableCollections = ({AvailableCollections} : AvailableCollections
         </span>
 
         <p className="text-gray-500 text-center text-base md:text-lg leading-relaxed font-light">
-          Find the perfect product for yourself from our collection. Something for every occasion, every mood & every woman!
-
+          Find the perfect product for yourself from our collection. Something for every occasion, every mood & every woman — handcrafted in India, delivered across the UAE.
         </p>
       </div>
 

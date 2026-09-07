@@ -1,7 +1,7 @@
 // @ts-nocheck
 "use client";
 import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, BadgeCheck, Leaf, Truck } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
@@ -40,8 +40,8 @@ const TRANSITION_TIME = 800;
         "https://d21ojmskh8ksuv.cloudfront.net/static/home/hero-section/1-mobile.webp",
         // mobileImage : "/1-mobile.webp",
       title: "GULBHAHAR",
-      subtitle: "Heritage Reimagined",
-      description: "Where traditional craftsmanship meets contemporary design",
+      subtitle: "Indian Craft, Delivered to the UAE",
+      description: "Handmade juttis, sarees & suits from India's master artisans — shipped to your door across the UAE.",
       accent: "Spring '25",
       color: "#8B4513",
       zoomConfig: {
@@ -63,7 +63,7 @@ const TRANSITION_TIME = 800;
       // mobileImage : "/2-mobile.webp",
       title: "ARTISAN",
       subtitle: "Handcrafted Excellence",
-      description: "Each piece tells a story of generations of artistry",
+      description: "Every piece is made by artisans who have perfected their craft over generations — now a click away in the UAE.",
       accent: "Limited Edition",
       color: "#DC143C",
       zoomConfig: {
@@ -85,7 +85,7 @@ const TRANSITION_TIME = 800;
       // mobileImage : "/3-mobile.webp",
       title: "LEGACY",
       subtitle: "Timeless Elegance",
-      description: "Preserving tradition while embracing innovation",
+      description: "Heritage Indian weaves & embroidery, delivered with care across Dubai, Abu Dhabi & all Emirates.",
       accent: "Signature Collection",
       color: "#DAA520",
       zoomConfig: {
@@ -357,7 +357,7 @@ const nextIndex = (currentIndex + 1) % slides.length;
 
           {/* MODERN CONTENT LAYOUT */}
           <div className="relative z-40 min-h-screen flex flex-col justify-center">
-            <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20 mt-16 sm:mt-20 md:mt-16">
+            <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20 mt-20 sm:mt-24 md:mt-20">
               <div className="max-w-[1500px] mx-auto w-full">
                 {/* Main content grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-16 items-center lg:items-end">
@@ -401,13 +401,34 @@ const nextIndex = (currentIndex + 1) % slides.length;
                       transition={{ duration: 0.6, delay: 0.5, ease: [0.23, 1, 0.32, 1] }}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="inline-flex items-center gap-2 sm:gap-3 md:gap-4 px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 rounded-full bg-white text-black hover:bg-white/90 transition-all duration-300 cursor-pointer group"
+                      className="inline-flex items-center gap-2 sm:gap-3 md:gap-4 px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 rounded-full bg-white text-black hover:bg-white/90 shadow-[0_16px_40px_rgba(0,0,0,0.35)] hover:shadow-[0_24px_60px_rgba(0,0,0,0.45)] transition-all duration-300 cursor-pointer group"
                       onClick={() => (window.location.href = "/collections")}
                     >
                       <span className="font-medium tracking-wider text-sm sm:text-base">
                         EXPLORE COLLECTION
                       </span>
                       <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
+                    </motion.div>
+
+                    {/* Premium UAE trust strip */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 14 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.65, ease: [0.23, 1, 0.32, 1] }}
+                      className="flex flex-wrap items-center justify-center lg:justify-start gap-2 sm:gap-2.5 pt-2.5"
+                    >
+                      <span className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border border-white/15 bg-white/10 px-3 sm:px-4 py-1.5 sm:py-2 backdrop-blur-md">
+                        <Leaf size={13} className="text-amber-300" aria-hidden="true" />
+                        <span className="text-white/90 text-[11px] sm:text-[13px] tracking-wide">Handcrafted in India</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border border-white/15 bg-white/10 px-3 sm:px-4 py-1.5 sm:py-2 backdrop-blur-md">
+                        <Truck size={13} className="text-amber-300" aria-hidden="true" />
+                        <span className="text-white/90 text-[11px] sm:text-[13px] tracking-wide">Fast UAE delivery</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border border-white/15 bg-white/10 px-3 sm:px-4 py-1.5 sm:py-2 backdrop-blur-md">
+                        <BadgeCheck size={13} className="text-amber-300" aria-hidden="true" />
+                        <span className="text-white/90 text-[11px] sm:text-[13px] tracking-wide">Prices in AED</span>
+                      </span>
                     </motion.div>
                   </div>
 

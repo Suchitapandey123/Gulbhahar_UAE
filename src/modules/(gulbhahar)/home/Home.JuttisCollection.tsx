@@ -14,6 +14,7 @@ interface HomeJuttisCollectionProps {
 const Home_JuttisCollection: React.FC<HomeJuttisCollectionProps> = ({
   newCollection,
   slug,
+  name,
   reverse
 }) => {
   
@@ -43,7 +44,7 @@ const Home_JuttisCollection: React.FC<HomeJuttisCollectionProps> = ({
         {/* Header Section */}
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl lg:text-5xl sm:text-4xl font-bold text-customRed font-raleway">
-            {""}
+            {name}
           </h2>
 
           <div className="pr-4 md:pr-0">

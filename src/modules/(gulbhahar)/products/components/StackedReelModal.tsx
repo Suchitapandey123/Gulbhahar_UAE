@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronLeft, ChevronRight, Loader2, Ruler, ShoppingCart, X } from "lucide-react";
+import { formatAED } from "@/utils/currency";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface ReelItem {
@@ -400,7 +401,7 @@ export default function StackedReelModal({
                 )}
                 <div className="flex-1 min-w-0">
                   {productName && <p className="text-white text-sm font-semibold line-clamp-1 drop-shadow-md">{productName}</p>}
-                  {productPrice !== undefined && <p className="text-white font-bold text-base drop-shadow-md">₹{productPrice.toLocaleString()}</p>}
+                  {productPrice !== undefined && <p className="text-white font-bold text-base drop-shadow-md">{formatAED(productPrice)}</p>}
                   {color && (
                     <span className="text-white/75 text-[11px] flex items-center gap-1">
                       <span className="inline-block w-2.5 h-2.5 rounded-full ring-1 ring-white/40"
@@ -508,7 +509,7 @@ export default function StackedReelModal({
                                     </div>
                                   )}
                                   {productName && <p className="text-white text-sm font-semibold line-clamp-1 drop-shadow-md">{productName}</p>}
-                                  {productPrice !== undefined && <p className="text-white font-bold text-base drop-shadow-md">₹{productPrice.toLocaleString()}</p>}
+                                  {productPrice !== undefined && <p className="text-white font-bold text-base drop-shadow-md">{formatAED(productPrice)}</p>}
                                   {color && (
                                     <span className="text-white/75 text-[11px] flex items-center gap-1">
                                       <span className="inline-block w-2.5 h-2.5 rounded-full ring-1 ring-white/40"

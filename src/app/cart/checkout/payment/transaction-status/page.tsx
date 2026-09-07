@@ -1,6 +1,7 @@
 // @ts-nocheck
 // src\app\cart\checkout\payment\transaction-status\page.js
 "use client";
+import { formatAED, formatAEDShort } from "@/utils/currency";
 
 import { useEffect, useState, Suspense, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -268,12 +269,15 @@ const TransactionStatusContent = () => {
         }
       };
 
-      // Helper function to format phone number
+      // Helper function to format phone number (UAE)
       const formatPhoneNumber = (phone) => {
         if (!phone) return "";
         let cleanPhone = phone.replace(/\D/g, "");
-        if (cleanPhone.startsWith("91") && cleanPhone.length === 12) {
-          cleanPhone = cleanPhone.substring(2);
+        // Strip +971 country code (or 971), leaving 9-digit local mobile
+        if (cleanPhone.startsWith("971") && cleanPhone.length >= 12) {
+          cleanPhone = cleanPhone.substring(3);
+        } else if (cleanPhone.startsWith("0") && cleanPhone.length === 10) {
+          cleanPhone = cleanPhone.substring(1);
         }
         return cleanPhone;
       };
@@ -402,7 +406,7 @@ const TransactionStatusContent = () => {
           city: checkoutData.city || "",
           state: checkoutData.regionLabel || checkoutData.region || "",
           postalCode: checkoutData.postalCode || "",
-          country: checkoutData.country || "India",
+          country: checkoutData.country || "UAE",
           isDefault: false,
         },
 
@@ -413,16 +417,16 @@ const TransactionStatusContent = () => {
           city: checkoutData.city || "",
           state: checkoutData.regionLabel || checkoutData.region || "",
           postalCode: checkoutData.postalCode || "",
-          country: checkoutData.country || "India",
+          country: checkoutData.country || "UAE",
           sameAsShipping: true,
         },
 
         payment: preparePaymentObject(),
 
         shipping: {
-          method: checkoutData.shippingMethod || "Standard Shipping",
+          method: checkoutData.shippingMethod === "uae-express" ? "UAE Express" : checkoutData.shippingMethod || "Standard Shipping",
           cost: checkoutData.orderShipping || 0,
-          estimatedDelivery: "3-5 business days",
+          estimatedDelivery: checkoutData.shippingMethod === "uae-express" ? "2-4 business days" : "3-5 business days",
           isFreeShippingApplied: (checkoutData.orderShipping || 0) === 0,
         },
 
@@ -437,7 +441,7 @@ const TransactionStatusContent = () => {
             transactionData.paymentMethod === "cod"
               ? "COD Order - OTP Verified"
               : transactionData.paymentMethod === "partial_cod" || checkoutData.paymentMethod === "PARTIAL_COD"
-                ? `Partial COD - Paid ₹${transactionData.amount || 0} via Razorpay, ₹${(checkoutData.orderTotal || 0) - parseFloat(transactionData.amount || 0)} COD`
+                ? `Partial COD - Paid AED ${transactionData.amount || 0} via Razorpay, AED ${(checkoutData.orderTotal || 0) - parseFloat(transactionData.amount || 0)} COD`
                 : null,
           paymentCompletedAt: new Date().toISOString(),
         },
@@ -842,7 +846,7 @@ const TransactionStatusContent = () => {
                     Total Amount:
                   </span>
                   <span className="font-bold text-xl text-[#7f0001] bg-white px-3 py-2 rounded-lg shadow-sm border border-gray-200">
-                    ₹{parseFloat(paymentData.amount).toLocaleString()}
+                    {formatAED(parseFloat(paymentData.amount))}
                   </span>
                 </div>
               )}

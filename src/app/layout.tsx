@@ -33,7 +33,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 export async function generateMetadata() {
   return {
-    title: "Gulbhahar | Punjabi Juttis, Sarees, Suits & Handbags Online India",
+    title: "Gulbhahar | Punjabi Juttis, Sarees, Suits & Handbags Online UAE",
     description:
       "Buy Punjabi juttis, sarees & suits online from Gulbhahar. Discover trendy ethnic wear for women at best prices with quality you can trust.",
 
@@ -47,7 +47,7 @@ export async function generateMetadata() {
       canonical: "https://www.gulbhahar.com",
     },
     openGraph: {
-      title: "Gulbhahar | Punjabi Juttis, Sarees, Suits & Handbags Online India",
+      title: "Gulbhahar | Punjabi Juttis, Sarees, Suits & Handbags Online UAE",
       description: "Buy Punjabi juttis, sarees & suits online from Gulbhahar. Discover trendy ethnic wear for women at best prices with quality you can trust.",
       url: "https://www.gulbhahar.com",
       siteName: "Gulbhahar",
@@ -64,7 +64,7 @@ export async function generateMetadata() {
     },
     twitter: {
       card: "summary_large_image",
-      title: "Gulbhahar | Punjabi Juttis, Sarees, Suits & Handbags Online India",
+      title: "Gulbhahar | Punjabi Juttis, Sarees, Suits & Handbags Online UAE",
       description: "Buy Punjabi juttis, sarees & suits online from Gulbhahar. Discover trendy ethnic wear for women at best prices with quality you can trust.",
       images: ["https://www.gulbhahar.com/gulbhaharlogoo.jpeg"],
     },
@@ -87,7 +87,7 @@ export async function generateMetadata() {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en-AE">
       <head>
         {/* Preconnect for performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />

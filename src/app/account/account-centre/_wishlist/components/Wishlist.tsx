@@ -1,4 +1,5 @@
 "use client";
+import { formatAED } from "@/utils/currency";
 
 import React, { useState } from "react";
 import { 
@@ -271,7 +272,7 @@ const Wishlist = () => {
                         {product.color} | {product.size}
                       </p>
                       <p className="font-semibold text-red-900 text-sm xs:text-base">
-                        ₹{product.price.toLocaleString()}
+                        {formatAED(product.price)}
                       </p>
                     </div>
                   </div>
@@ -318,7 +319,7 @@ const Wishlist = () => {
                           <div className="flex-1 min-w-0">
                             <h3 className="font-semibold text-gray-900 text-sm xs:text-base">{product.name}</h3>
                             <p className="text-gray-500 text-xs xs:text-sm">{product.color} | {product.size}</p>
-                            <p className="font-semibold text-red-900 text-sm xs:text-base">₹{product.price.toLocaleString()}</p>
+                            <p className="font-semibold text-red-900 text-sm xs:text-base">{formatAED(product.price)}</p>
                           </div>
                           
                           <button
@@ -355,7 +356,7 @@ const Wishlist = () => {
                         </div>
                         
                         <div className="col-span-3 text-center">
-                          <span className="font-semibold text-gray-900">₹{product.price.toLocaleString()}</span>
+                          <span className="font-semibold text-gray-900">{formatAED(product.price)}</span>
                         </div>
                         
                         <div className="col-span-3 text-right">

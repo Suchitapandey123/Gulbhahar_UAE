@@ -252,7 +252,7 @@ const { showToast } = useToast();
                 <p className="text-xs sm:text-sm font-bold text-gray-900">
                   Free Shipping
                 </p>
-                <p className="text-xs text-gray-600">On orders over ₹5000</p>
+                <p className="text-xs text-gray-600">On UAE orders over AED 219</p>
               </div>
             </div>
             <div className="flex flex-col items-center gap-2">
@@ -263,7 +263,7 @@ const { showToast } = useToast();
                 <p className="text-xs sm:text-sm font-bold text-gray-900">
                   Secure Payment
                 </p>
-                <p className="text-xs text-gray-600">100% protected</p>
+                <p className="text-xs text-gray-600">Cards, wallets &amp; AED</p>
               </div>
             </div>
             <div className="flex flex-col items-center gap-2">
@@ -430,7 +430,7 @@ const { showToast } = useToast();
             <div className="space-y-3 mb-6 ">
               <div className="flex items-center gap-2 justify-center lg:justify-start">
                 <MapPin className="h-4 w-4 text-red-600" />
-                <span className="text-xs text-gray-600">Delhi, India</span>
+                <span className="text-xs text-gray-600">Dubai, UAE</span>
               </div>
 
               <div className="flex items-center gap-2 justify-center w-full h-6 lg:justify-start">
@@ -446,20 +446,20 @@ const { showToast } = useToast();
               <div className="flex items-center gap-2 justify-center lg:justify-start">
                 <Phone className="h-4 w-4 text-red-600" />
                 <a
-                  href="tel:+919220927241"
+                  href="tel:+971505907461"
                   className="text-xs text-gray-600 hover:underline"
                 >
-                  +91 9220927241
+                  +971 50 590 7461
                 </a>
               </div>
 
               <div className="flex items-center gap-2 justify-center lg:justify-start">
                 <Phone className="h-4 w-4 text-red-600" />
                 <a
-                  href="tel:+919217194241"
+                  href="tel:+971507672421"
                   className="text-xs text-gray-600 hover:underline"
                 >
-                  +91 9217194241
+                  +971 50 767 2421
                 </a>
               </div>
             </div>
@@ -571,7 +571,7 @@ const { showToast } = useToast();
             <div className="flex items-center gap-2 text-sm">
               <span>Made with</span>
               <Heart className="h-4 w-4 text-red-300 fill-current" />
-              <span>in India</span>
+              <span>in UAE</span>
             </div>
           </div>
         </div>

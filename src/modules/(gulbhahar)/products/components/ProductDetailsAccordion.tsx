@@ -105,9 +105,9 @@ export const ProductDetailsAccordion = ({
         {openAccordion === "shipping" && (
           <div className="pb-4 text-sm text-gray-600 animate-in fade-in slide-in-from-top-2 space-y-1.5">
             <p>• Orders dispatched within <span className="font-medium text-gray-800">1–2 business days</span></p>
-            <p>• Delivery across India in <span className="font-medium text-gray-800">5–7 business days</span></p>
-            <p>• Free shipping on all orders</p>
-            <p>• Tracking link sent via WhatsApp & SMS</p>
+            <p>• Delivery across the UAE in <span className="font-medium text-gray-800">3–5 business days</span></p>
+            <p>• Free UAE shipping on all orders</p>
+            <p>• DHL / Aramex tracking link shared after dispatch</p>
           </div>
         )}
       </div>

@@ -91,9 +91,9 @@ const ProductCard = ({ product, onProductClick = () => {} }) => (
       </div>
       
       <div className="flex items-center gap-2">
-        <span className="text-lg font-bold text-maroon-700">₹{product.price.toLocaleString()}</span>
+        <span className="text-lg font-bold text-maroon-700">{formatAED(product.price)}</span>
         {product.originalPrice > product.price && (
-          <span className="text-sm text-gray-500 line-through">₹{product.originalPrice.toLocaleString()}</span>
+          <span className="text-sm text-gray-500 line-through">{formatAED(product.originalPrice)}</span>
         )}
       </div>
     </div>

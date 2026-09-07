@@ -1,6 +1,7 @@
 "use client";
 
 import { Loader2, ShoppingCart } from "lucide-react";
+import { formatAED } from "@/utils/currency";
 import { Product } from "../types";
 
 interface ProductPurchaseSectionProps {
@@ -27,12 +28,12 @@ export const ProductPurchaseSection = ({
       {/* <div className="space-y-2">
         <div className="flex items-center gap-3">
           <span className="text-2xl md:text-3xl font-bold text-gray-900">
-            ₹{product.price}
+            {formatAED(product.price)}
           </span>
           {product.originalPrice > product.price && (
             <>
               <span className="text-lg md:text-xl text-gray-500 line-through">
-                ₹{product.originalPrice}
+                {formatAED(product.originalPrice)}
               </span>
               <span
                 className="px-2 py-1 rounded text-sm font-semibold"
@@ -76,19 +77,19 @@ export const ProductPurchaseSection = ({
         </button>
       </div>
 
-      {/* Delhi NCR Express banner */}
+      {/* UAE Express banner */}
       <div className="bg-stone-900 rounded-xl px-4 py-3 flex items-center gap-3">
         <div className="w-8 h-8 bg-yellow-400/20 rounded-lg flex items-center justify-center flex-shrink-0 text-base">
           ⚡
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-bold text-white text-xs leading-tight">Delhi NCR? Get your order in 2–3 hours!</p>
+          <p className="font-bold text-white text-xs leading-tight">UAE Express Delivery — 2–4 business days!</p>
           <p className="text-stone-400 text-[10px] mt-0.5 leading-tight">
-            Order between <span className="text-yellow-400 font-semibold">10 AM – 7 PM</span> for same-day express delivery.
+            Fast, tracked delivery across Dubai, Abu Dhabi &amp; all Emirates.
           </p>
         </div>
         <span className="text-[10px] font-bold text-yellow-400 border border-yellow-400/40 bg-yellow-400/10 px-2 py-1 rounded-full flex-shrink-0 whitespace-nowrap">
-          Same Day
+          Express
         </span>
       </div>
 

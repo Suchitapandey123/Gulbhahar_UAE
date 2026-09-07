@@ -21,7 +21,7 @@ const HomePage = async () => {
   return (
     <>
       <ModernHeroAnimated heroSection={homeData.data?.["hero-section"]} />
-      <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto w-full px-2 space-y-5">
+      <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto w-full px-2 sm:px-4 2xl:px-6 space-y-10 sm:space-y-16 lg:space-y-20">
         <Home_WatchAndShop WatchAndShopData={homeData.data?.["watch-and-shop"] || []} />
         <Home_AvailableCollections AvailableCollections={homeData.data?.["available-collections"] || []} />
         <Home_JuttisCollection slug={"/suit"} name={"Suits Collection"} newCollection={cp.suit || []} />

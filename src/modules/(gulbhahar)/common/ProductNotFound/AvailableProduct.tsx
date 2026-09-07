@@ -1,6 +1,7 @@
 // @ts-nocheck
 "use client";
 import { useQuery } from "@tanstack/react-query";
+import { formatAED } from "@/utils/currency";
 import { AnimatePresence, motion } from "framer-motion";
 import {
     ChevronDown,
@@ -547,7 +548,7 @@ const handleAddToCart = async (e, item) => {
                         boxShadow: "0 1px 6px rgba(0,0,0,0.1)",
                       }}
                     >
-                      ₹{priceRange[0].toLocaleString()}
+                      {formatAED(priceRange[0])}
                     </motion.span>
                     <motion.span
                       className="bg-white px-3 py-1 rounded-full shadow"
@@ -556,7 +557,7 @@ const handleAddToCart = async (e, item) => {
                         boxShadow: "0 1px 6px rgba(0,0,0,0.1)",
                       }}
                     >
-                      ₹{priceRange[1].toLocaleString()}
+                      {formatAED(priceRange[1])}
                     </motion.span>
                   </motion.div>
 
@@ -905,12 +906,12 @@ const handleAddToCart = async (e, item) => {
                           <div className="flex-shrink-0 text-right">
                             <div className="flex flex-col items-end gap-0.5">
                               <span className="text-sm font-bold text-red-600">
-                                ₹{item.price.toLocaleString()}
+                                {formatAED(item.price)}
                               </span>
                               {item.originalPrice &&
                                 item.originalPrice > item.price && (
                                   <span className="text-xs text-gray-400 line-through">
-                                    ₹{item.originalPrice.toLocaleString()}
+                                    {formatAED(item.originalPrice)}
                                   </span>
                                 )}
                             </div>
@@ -993,12 +994,12 @@ const handleAddToCart = async (e, item) => {
                             </h3>
                             <div className="flex flex-col items-end gap-1">
                               <span className="text-lg font-bold text-red-600">
-                                ₹{item.price.toLocaleString()}
+                                {formatAED(item.price)}
                               </span>
                               {item.originalPrice &&
                                 item.originalPrice > item.price && (
                                   <span className="text-sm text-gray-400 line-through">
-                                    ₹{item.originalPrice.toLocaleString()}
+                                    {formatAED(item.originalPrice)}
                                   </span>
                                 )}
                             </div>

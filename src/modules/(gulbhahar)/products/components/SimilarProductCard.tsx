@@ -1,6 +1,7 @@
 // @ts-nocheck
 // Server Component
 import { getFirstProductImage, getProductImagesForColor, FALLBACK_LQIP } from "@/utils/productImageUtils";
+import { formatAED } from "@/utils/currency";
 import Link from "next/link";
 import { Product } from "../types";
 import SimilarProductCardInteractive from "./SimilarProductCardInteractive";
@@ -100,11 +101,11 @@ export const SimilarProductCard = ({
                   className="text-sm sm:text-base font-bold"
                   style={{ color: customRed }}
                 >
-                  ₹{item.price.toLocaleString()}
+                  {formatAED(item.price)}
                 </span>
                 {item.originalPrice && item.originalPrice > item.price && (
                   <span className="text-[10px] sm:text-xs text-gray-400 line-through">
-                    ₹{item.originalPrice.toLocaleString()}
+                    {formatAED(item.originalPrice)}
                   </span>
                 )}
               </div>

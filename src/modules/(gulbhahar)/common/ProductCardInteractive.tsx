@@ -135,7 +135,7 @@ export default function ProductCardInteractive({
     <>
       {/* Image Section with Interactions */}
       <div
-        className="relative overflow-hidden w-full aspect-[3/4]"
+        className="relative overflow-hidden w-full aspect-[3/4] rounded-2xl"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onTouchStart={handleTouchStart}

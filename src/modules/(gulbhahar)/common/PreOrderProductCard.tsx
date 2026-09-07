@@ -2,6 +2,7 @@
 import { PreOrderProductData } from "@/services/preOrder/preOrderTypes";
 import { ProductImageItem, FALLBACK_LQIP } from "@/utils/productImageUtils";
 import PreOrderProductCardInteractive from "./PreOrderProductCardInteractive";
+import { formatAED } from "@/utils/currency";
 
 interface PreOrderProductCardProps {
   item: PreOrderProductData;
@@ -92,11 +93,11 @@ export const PreOrderProductCard = ({
                   className="text-sm sm:text-base font-bold"
                   style={{ color: customRed }}
                 >
-                  ₹{item.price.toLocaleString()}
+                  {formatAED(item.price)}
                 </span>
                 {item.originalPrice && item.originalPrice > item.price && (
                   <span className="text-[10px] sm:text-xs text-gray-400 line-through">
-                    ₹{item.originalPrice.toLocaleString()}
+                    {formatAED(item.originalPrice)}
                   </span>
                 )}
               </div>

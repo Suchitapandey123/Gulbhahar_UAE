@@ -1,5 +1,6 @@
 // @ts-nocheck
 "use client";
+import { formatAED, formatAEDShort } from "@/utils/currency";
 import analyticsAPI from "@/services/analytics/analyticsService";
 import { trackVisitorEvent } from "@/services/analytics/journeyService";
 import { useToast } from "@/hooks/useToast";
@@ -57,53 +58,36 @@ interface AdCartItem {
 
 const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
+// UAE phone validation — accepts 05XXXXXXXX, 5XXXXXXXX, +9715XXXXXXXX or 9715XXXXXXXX
+const normalizeUAEDigits = (phone: string) => {
+  let digits = phone.replace(/\D/g, "");
+  if (digits.startsWith("00971")) digits = digits.slice(4);
+  else if (digits.startsWith("971")) digits = digits.slice(3);
+  if (digits.startsWith("0")) digits = digits.slice(1);
+  return digits;
+};
+
 const validatePhone = (phone: string) => {
-  const clean = phone.replace(/\D/g, "");
-  return clean.length === 10 && /^[6-9]\d{9}$/.test(clean);
+  // UAE mobile numbers are 9 digits starting with 5 (e.g. 5X XXX XXXX)
+  const digits = normalizeUAEDigits(phone);
+  return digits.length === 9 && /^5\d{8}$/.test(digits);
 };
 
 const formatPhoneNumber = (phone: string) => {
-  const clean = phone.replace(/\D/g, "");
-  return clean.length === 10 && /^[6-9]\d{9}$/.test(clean) ? clean : phone;
+  const digits = normalizeUAEDigits(phone);
+  // Store canonical international form: +9715XXXXXXXX
+  return digits.length === 9 && /^5\d{8}$/.test(digits) ? `+971${digits}` : phone;
 };
 
-const indianStates = [
-  { value: "andhra-pradesh", label: "Andhra Pradesh" },
-  { value: "arunachal-pradesh", label: "Arunachal Pradesh" },
-  { value: "assam", label: "Assam" },
-  { value: "bihar", label: "Bihar" },
-  { value: "chhattisgarh", label: "Chhattisgarh" },
-  { value: "goa", label: "Goa" },
-  { value: "gujarat", label: "Gujarat" },
-  { value: "haryana", label: "Haryana" },
-  { value: "himachal-pradesh", label: "Himachal Pradesh" },
-  { value: "jharkhand", label: "Jharkhand" },
-  { value: "karnataka", label: "Karnataka" },
-  { value: "kerala", label: "Kerala" },
-  { value: "madhya-pradesh", label: "Madhya Pradesh" },
-  { value: "maharashtra", label: "Maharashtra" },
-  { value: "manipur", label: "Manipur" },
-  { value: "meghalaya", label: "Meghalaya" },
-  { value: "mizoram", label: "Mizoram" },
-  { value: "nagaland", label: "Nagaland" },
-  { value: "odisha", label: "Odisha" },
-  { value: "punjab", label: "Punjab" },
-  { value: "rajasthan", label: "Rajasthan" },
-  { value: "sikkim", label: "Sikkim" },
-  { value: "tamil-nadu", label: "Tamil Nadu" },
-  { value: "telangana", label: "Telangana" },
-  { value: "tripura", label: "Tripura" },
-  { value: "uttar-pradesh", label: "Uttar Pradesh" },
-  { value: "uttarakhand", label: "Uttarakhand" },
-  { value: "west-bengal", label: "West Bengal" },
-  { value: "andaman-nicobar", label: "Andaman and Nicobar Islands" },
-  { value: "chandigarh", label: "Chandigarh" },
-  { value: "dadra-nagar-haveli-daman-diu", label: "Dadra and Nagar Haveli and Daman and Diu" },
-  { value: "delhi", label: "Delhi" },
-  { value: "jammu-kashmir", label: "Jammu and Kashmir" },
-  { value: "ladakh", label: "Ladakh" },
-  { value: "lakshadweep", label: "Lakshadweep" },
-  { value: "puducherry", label: "Puducherry" },
+// UAE Emirates
+const uaeEmirates = [
+  { value: "abu-dhabi", label: "Abu Dhabi" },
+  { value: "dubai", label: "Dubai" },
+  { value: "sharjah", label: "Sharjah" },
+  { value: "ajman", label: "Ajman" },
+  { value: "umm-al-quwain", label: "Umm Al Quwain" },
+  { value: "ras-al-khaimah", label: "Ras Al Khaimah" },
+  { value: "fujairah", label: "Fujairah" },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -111,7 +95,7 @@ const indianStates = [
 /* ------------------------------------------------------------------ */
 
 const Breadcrumb = () => (
-  <nav className="flex items-center gap-2 text-sm text-gray-400 mt-24 mb-8">
+  <nav className="flex items-center gap-2 text-sm text-gray-400 mt-28 sm:mt-32 lg:mt-36 mb-8">
     <span className="hover:text-gray-700 transition-colors cursor-pointer" onClick={() => (window.location.href = "/")}>
       Home
     </span>
@@ -120,21 +104,21 @@ const Breadcrumb = () => (
   </nav>
 );
 
-const CustomStateDropdown = ({ value, onChange, className = "", fieldValidation }) => {
+const CustomEmirateDropdown = ({ value, onChange, className = "", fieldValidation }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredStates, setFilteredStates] = useState(indianStates);
+  const [filteredStates, setFilteredStates] = useState(uaeEmirates);
   const dropdownRef = useRef(null);
   const searchInputRef = useRef(null);
 
-  const selectedState = indianStates.find((s) => s.value === value);
-  const displayLabel = selectedState ? selectedState.label : "Select State/UT";
+  const selectedState = uaeEmirates.find((s) => s.value === value);
+  const displayLabel = selectedState ? selectedState.label : "Select Emirate";
 
   useEffect(() => {
     setFilteredStates(
       searchTerm
-        ? indianStates.filter((s) => s.label.toLowerCase().includes(searchTerm.toLowerCase()))
-        : indianStates
+        ? uaeEmirates.filter((s) => s.label.toLowerCase().includes(searchTerm.toLowerCase()))
+        : uaeEmirates
     );
   }, [searchTerm]);
 
@@ -186,7 +170,7 @@ const CustomStateDropdown = ({ value, onChange, className = "", fieldValidation 
                 <input
                   ref={searchInputRef}
                   type="text"
-                  placeholder="Search states..."
+                  placeholder="Search Emirates..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyDown={(e) => e.key === "Escape" && setIsOpen(false)}
@@ -196,7 +180,7 @@ const CustomStateDropdown = ({ value, onChange, className = "", fieldValidation 
             </div>
             <div className="overflow-y-auto max-h-60 md:max-h-48">
               {filteredStates.length === 0 ? (
-                <div className="p-4 text-center text-gray-400 text-sm">No states found</div>
+                <div className="p-4 text-center text-gray-400 text-sm">No Emirates found</div>
               ) : (
                 <div className="py-1">
                   {filteredStates.map((state) => (
@@ -344,7 +328,7 @@ export default function MetaCheckoutComponent({
   const [shippingMethod, setShippingMethod] = useState("standard");
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const ENABLE_PINCODE_API = true;
+  const ENABLE_PINCODE_API = false;
 
   const [fieldValidation, setFieldValidation] = useState({
     email: { isValid: null, error: null },
@@ -361,7 +345,7 @@ export default function MetaCheckoutComponent({
   });
 
   const [formData, setFormData] = useState({
-    country: "India",
+    country: "UAE",
     fullName: "",
     email: "",
     phone: "",
@@ -494,15 +478,15 @@ export default function MetaCheckoutComponent({
         if (!value.trim()) { isValid = false; error = "Phone number is required"; }
         else {
           const clean = value.replace(/\D/g, "");
-          if (clean.length < 10) { isValid = false; error = "Phone number must be 10 digits"; }
-          else if (clean.length > 10) { isValid = false; error = "Phone number must be exactly 10 digits"; }
-          else if (!validatePhone(value)) { isValid = false; error = "Phone number must start with 6, 7, 8, or 9"; }
+          if (clean.length < 9) { isValid = false; error = "Phone number must be at least 9 digits"; }
+          else if (clean.length > 10) { isValid = false; error = "Phone number must be at most 10 digits"; }
+          else if (!validatePhone(value)) { isValid = false; error = "Enter a valid UAE mobile number (e.g. 05X XXX XXXX)"; }
           else { isValid = true; }
         }
         break;
       case "region":
         isValid = !!value?.trim();
-        error = isValid ? null : "Please select a state";
+        error = isValid ? null : "Please select an emirate";
         break;
       default:
         return;
@@ -528,7 +512,7 @@ export default function MetaCheckoutComponent({
 
   /* ---------- Postal code ---------- */
   const validatePostalCode = async (postalCode: string) => {
-    if (!postalCode || postalCode.length < 6) {
+    if (!postalCode || postalCode.length < 5) {
       setPostalCodeValidation({ isValidating: false, isValid: null, error: null, deliveryInfo: null });
       return;
     }
@@ -538,7 +522,7 @@ export default function MetaCheckoutComponent({
       setTimeout(() => {
         setPostalCodeValidation({
           isValidating: false, isValid: true, error: null,
-          deliveryInfo: { city: "Default City", district: "Default District", state: "Default State", cod: true, prepaid: true, pickup: true, isODA: false },
+          deliveryInfo: { city: "Default City", district: "Default District", state: "UAE", cod: true, prepaid: true, pickup: true, isODA: false },
         });
       }, 500);
       return;
@@ -786,7 +770,7 @@ export default function MetaCheckoutComponent({
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-gray-900">Shipping Address</h3>
-                  <p className="text-sm text-gray-400">🇮🇳 Delivering within India</p>
+                  <p className="text-sm text-gray-400">🇦🇪 Delivering across the UAE</p>
                 </div>
               </div>
 
@@ -846,13 +830,13 @@ export default function MetaCheckoutComponent({
                   </label>
                   <div className="relative">
                     <div className="absolute left-3.5 top-1/2 transform -translate-y-1/2 flex items-center gap-1.5">
-                      <span className="text-gray-500 text-sm font-medium border-r border-gray-200 pr-2">+91</span>
+                      <span className="text-gray-500 text-sm font-medium border-r border-gray-200 pr-2">+971</span>
                     </div>
                     <input
                       id="phone" name="phone" type="tel"
                       value={formData.phone} onChange={handleInputChange}
                       className={`w-full border rounded-xl pl-16 pr-11 py-3.5 text-gray-900 focus:outline-none focus:ring-4 focus:ring-[#800000]/5 transition-all duration-200 bg-gray-50/50 hover:bg-white placeholder:text-gray-400 ${getInputBorderClass("phone")}`}
-                      placeholder="9876543210" maxLength={10} inputMode="numeric" required
+                      placeholder="5X XXX XXX" maxLength={10} inputMode="numeric" required
                     />
                     <div className="absolute right-3.5 top-1/2 transform -translate-y-1/2">
                       {fieldValidation.phone?.isValid === true && <CheckCircle className="h-4 w-4 text-emerald-500" />}
@@ -890,8 +874,8 @@ export default function MetaCheckoutComponent({
 
                 {/* State */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">State / Union Territory</label>
-                  <CustomStateDropdown
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Emirate <span className="text-red-500">*</span></label>
+                  <CustomEmirateDropdown
                     value={formData.region} onChange={handleInputChange}
                     className="w-full" fieldValidation={fieldValidation}
                   />
@@ -906,7 +890,7 @@ export default function MetaCheckoutComponent({
                 <div className="md:col-span-2">
                   <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700 mb-1.5">
                     Postal Code
-                    <span className="text-xs text-gray-400 ml-1.5">(Auto-validated)</span>
+                    <span className="text-xs text-gray-400 ml-1.5">(5-digit code)</span>
                   </label>
                   <div className="relative mb-3">
                     <input
@@ -917,7 +901,7 @@ export default function MetaCheckoutComponent({
                           : postalCodeValidation.isValid === false ? "border-red-400 focus:border-[#800000]"
                           : "border-gray-200 hover:border-gray-300 focus:border-[#800000]"
                       }`}
-                      placeholder="110001" maxLength={6} inputMode="numeric"
+                      placeholder="12345" maxLength={5} inputMode="numeric"
                     />
                     <div className="absolute right-3.5 top-1/2 transform -translate-y-1/2">
                       {postalCodeValidation.isValidating && <Loader2 className="h-4 w-4 text-blue-500 animate-spin" />}
@@ -937,7 +921,7 @@ export default function MetaCheckoutComponent({
                           <span className="bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-lg text-xs font-medium">COD Available</span>
                         )}
                         {postalCodeValidation.deliveryInfo.isODA && (
-                          <span className="bg-amber-100 text-amber-700 px-2.5 py-1 rounded-lg text-xs font-medium">Remote Area (+₹50)</span>
+                          <span className="bg-amber-100 text-amber-700 px-2.5 py-1 rounded-lg text-xs font-medium">Remote Area (+AED 2)</span>
                         )}
                       </div>
                     </div>
@@ -988,12 +972,12 @@ export default function MetaCheckoutComponent({
                             <p className="font-semibold text-sm text-gray-900">{name}</p>
                             <p className="text-xs mt-0.5 text-gray-500">{days}</p>
                             {postalCodeValidation.deliveryInfo?.isODA && (
-                              <p className="text-xs text-amber-600 font-medium mt-1">+₹50 Remote area surcharge</p>
+                              <p className="text-xs text-amber-600 font-medium mt-1">+AED 2 Remote area surcharge</p>
                             )}
                           </div>
                         </div>
                         <span className="font-bold text-gray-900">
-                          {shipping === 0 && !postalCodeValidation.deliveryInfo?.isODA ? "FREE" : `₹${odaSurcharge}`}
+                          {shipping === 0 && !postalCodeValidation.deliveryInfo?.isODA ? "FREE" : `${formatAEDShort(odaSurcharge)}`}
                         </span>
                       </div>
                     </div>
@@ -1042,7 +1026,7 @@ export default function MetaCheckoutComponent({
                         </div>
                       </div>
                       <span className="font-bold text-gray-900 text-sm whitespace-nowrap">
-                        ₹{(item.price * item.quantity).toLocaleString()}
+                        {formatAED(item.price * item.quantity)}
                       </span>
                     </div>
 
@@ -1085,24 +1069,24 @@ export default function MetaCheckoutComponent({
                 <div className="space-y-3 pt-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500">Subtotal</span>
-                    <span className="font-semibold text-gray-900">₹{subtotal.toLocaleString()}</span>
+                    <span className="font-semibold text-gray-900">{formatAED(subtotal)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500">Shipping</span>
                     <span className={`font-semibold ${shipping === 0 ? "text-emerald-600" : "text-gray-900"}`}>
-                      {shipping === 0 ? "FREE" : `₹${shipping.toLocaleString()}`}
+                      {shipping === 0 ? "FREE" : `${formatAEDShort(shipping)}`}
                     </span>
                   </div>
                   {odaSurcharge > 0 && (
                     <div className="flex justify-between text-sm">
                       <span className="text-amber-600">Remote Surcharge</span>
-                      <span className="font-semibold text-amber-600">₹{odaSurcharge}</span>
+                      <span className="font-semibold text-amber-600">{formatAEDShort(odaSurcharge)}</span>
                     </div>
                   )}
                   <div className="border-t border-gray-100 pt-4">
                     <div className="flex justify-between items-center">
                       <span className="text-base font-bold text-gray-900">Total</span>
-                      <span className="text-2xl font-bold text-[#800000]">₹{total.toLocaleString()}</span>
+                      <span className="text-2xl font-bold text-[#800000]">{formatAED(total)}</span>
                     </div>
                   </div>
                 </div>

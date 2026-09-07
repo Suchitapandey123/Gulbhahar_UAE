@@ -1,5 +1,6 @@
 // @ts-nocheck
 "use client";
+import { formatAED, formatAEDShort } from "@/utils/currency";
 
 import { useCart } from "@/providers/ContextProviders/CartContext";
 import { API_BASE_URL } from "@/utils/envHere";
@@ -30,7 +31,7 @@ export default function CartPage() {
 
   const handleRazorpayPayment = async () => {
     if (amountInPaise < 100) {
-      setErrorMsg("Cart total must be at least ₹1 to proceed.");
+      setErrorMsg("Cart total must be at least AED 1 to proceed.");
       return;
     }
 
@@ -194,7 +195,7 @@ export default function CartPage() {
                         </div>
                         <div className="flex items-center gap-3">
                           <span className="text-sm font-bold text-red-900">
-                            ₹{(item.price * item.quantity).toLocaleString()}
+                            {formatAED(item.price * item.quantity)}
                           </span>
                           <button
                             onClick={() => removeFromCart(item.id, item.selectedColor, item.selectedSize)}
@@ -232,7 +233,7 @@ export default function CartPage() {
                   <div className="px-5 py-4 space-y-2.5 border-b border-[#F3F4F6]">
                     <div className="flex justify-between text-sm">
                       <span className="text-[#757575]">Subtotal ({itemsCount} items)</span>
-                      <span className="font-medium text-[#1a1a1a]">₹{total.toLocaleString()}</span>
+                      <span className="font-medium text-[#1a1a1a]">{formatAED(total)}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-[#757575]">Shipping</span>
@@ -240,7 +241,7 @@ export default function CartPage() {
                     </div>
                     <div className="pt-2 border-t border-[#F3F4F6] flex justify-between">
                       <span className="text-sm font-semibold text-[#757575]">Total</span>
-                      <span className="text-xl font-bold text-[#1a1a1a]">₹{total.toLocaleString()}</span>
+                      <span className="text-xl font-bold text-[#1a1a1a]">{formatAED(total)}</span>
                     </div>
                   </div>
 
@@ -263,7 +264,7 @@ export default function CartPage() {
                       ) : paymentState === "verifying" ? (
                         <><Loader2 className="h-4 w-4 animate-spin" />Verifying payment...</>
                       ) : (
-                        <><CreditCard className="h-4 w-4" />Pay ₹{total.toLocaleString()} with Razorpay</>
+                        <><CreditCard className="h-4 w-4" />Pay {formatAED(total)} with Razorpay</>
                       )}
                     </button>
 

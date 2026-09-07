@@ -1,30 +1,11 @@
 // @ts-nocheck
 // Enhanced Checkout Component with Email and Phone Validation
 "use client";
+import { formatAED, formatAEDShort } from "@/utils/currency";
 
-const DELHI_NCR_PREPAYMENT = 250;
+const UAE_EXPRESS_PREPAYMENT = 250;
 
-const DELHI_NCR_PINCODES_PREFIXES = ["110", "121", "122", "201"];
-const DELHI_NCR_CITIES = ["noida", "gurgaon", "gurugram", "faridabad", "ghaziabad", "greater noida", "delhi", "new delhi"];
 
-function isDelhiNCR(region: string, postalCode: string, city: string): boolean {
-  if (region === "delhi") return true;
-  if (postalCode && postalCode.length >= 3) {
-    const prefix = postalCode.slice(0, 3);
-    if (DELHI_NCR_PINCODES_PREFIXES.includes(prefix)) return true;
-  }
-  if (city) {
-    const normalizedCity = city.toLowerCase().trim();
-    if (DELHI_NCR_CITIES.some((c) => normalizedCity.includes(c))) return true;
-  }
-  return false;
-}
-
-function isWithinDeliveryWindow(): boolean {
-  const now = new Date();
-  const hours = now.getHours();
-  return hours >= 10 && hours < 19; // 10 AM to 7 PM
-}
 import analyticsAPI from "@/services/analytics/analyticsService";
 import { trackVisitorEvent } from "@/services/analytics/journeyService";
 import { useToast } from "@/hooks/useToast";
@@ -52,10 +33,9 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { getProductImagesForColor } from "@/utils/productImageUtils";
-import { cartService as checkoutApi } from "@/services/cart/cartService";
 
 const Breadcrumb = () => (
-  <nav className="flex items-center gap-2 text-sm text-gray-400 mt-24 mb-8">
+  <nav className="flex items-center gap-2 text-sm text-gray-400 mt-28 sm:mt-32 lg:mt-36 mb-8">
     <span
       className="hover:text-gray-700 transition-colors cursor-pointer"
       onClick={() => (window.location.href = "/")}
@@ -74,7 +54,7 @@ const Breadcrumb = () => (
   </nav>
 );
 
-const CustomStateDropdown = ({
+const CustomEmirateDropdown = ({
   value,
   onChange,
   className = "",
@@ -82,23 +62,23 @@ const CustomStateDropdown = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredStates, setFilteredStates] = useState(indianStates);
+  const [filteredStates, setFilteredStates] = useState(uaeEmirates);
   const dropdownRef = useRef(null);
   const searchInputRef = useRef(null);
 
   // Get the display label for the selected value
-  const selectedState = indianStates.find((state) => state.value === value);
-  const displayLabel = selectedState ? selectedState.label : "Select State/UT";
+  const selectedState = uaeEmirates.find((state) => state.value === value);
+  const displayLabel = selectedState ? selectedState.label : "Select Emirate";
 
   // Filter states based on search term
   useEffect(() => {
     if (searchTerm) {
-      const filtered = indianStates.filter((state) =>
+      const filtered = uaeEmirates.filter((state) =>
         state.label.toLowerCase().includes(searchTerm.toLowerCase()),
       );
       setFilteredStates(filtered);
     } else {
-      setFilteredStates(indianStates);
+      setFilteredStates(uaeEmirates);
     }
   }, [searchTerm]);
 
@@ -185,7 +165,7 @@ const CustomStateDropdown = ({
                 <input
                   ref={searchInputRef}
                   type="text"
-                  placeholder="Search states..."
+                  placeholder="Search Emirates..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyDown={handleKeyDown}
@@ -198,7 +178,7 @@ const CustomStateDropdown = ({
             <div className="overflow-y-auto max-h-60 md:max-h-48">
               {filteredStates.length === 0 ? (
                 <div className="p-4 text-center text-gray-400 text-sm">
-                  No states found matching &ldquo;{searchTerm}&rdquo;
+                  No Emirates found matching &ldquo;{searchTerm}&rdquo;
                 </div>
               ) : (
                 <div className="py-1">
@@ -249,67 +229,36 @@ const validateEmail = (email) => {
   return emailRegex.test(email);
 };
 
-const validatePhone = (phone) => {
-  // Remove all non-digits
-  const cleanPhone = phone.replace(/\D/g, "");
+// UAE phone validation — accepts 05XXXXXXXX, 5XXXXXXXX, +9715XXXXXXXX or 9715XXXXXXXX
+const normalizeUAEDigits = (phone) => {
+  let digits = phone.replace(/\D/g, "");
+  if (digits.startsWith("00971")) digits = digits.slice(4);
+  else if (digits.startsWith("971")) digits = digits.slice(3);
+  if (digits.startsWith("0")) digits = digits.slice(1);
+  return digits;
+};
 
-  // Check for valid Indian phone number - must be exactly 10 digits starting with 6, 7, 8, or 9
-  return cleanPhone.length === 10 && /^[6-9]\d{9}$/.test(cleanPhone);
+const validatePhone = (phone) => {
+  const digits = normalizeUAEDigits(phone);
+  // UAE mobile numbers are 9 digits starting with 5 (e.g. 5X XXX XXXX)
+  return digits.length === 9 && /^5\d{8}$/.test(digits);
 };
 
 const formatPhoneNumber = (phone) => {
-  // Remove all non-digits
-  const cleanPhone = phone.replace(/\D/g, "");
-
-  // Return only the 10-digit number for storage (no +91 prefix)
-  if (cleanPhone.length === 10 && /^[6-9]\d{9}$/.test(cleanPhone)) {
-    return cleanPhone; // Just return the 10 digits
-  }
-  return phone; // Return original if can't format
+  const digits = normalizeUAEDigits(phone);
+  // Store canonical international form: +9715XXXXXXXX
+  return digits.length === 9 && /^5\d{8}$/.test(digits) ? `+971${digits}` : phone;
 };
 
-// Indian States and Union Territories
-const indianStates = [
-  { value: "andhra-pradesh", label: "Andhra Pradesh" },
-  { value: "arunachal-pradesh", label: "Arunachal Pradesh" },
-  { value: "assam", label: "Assam" },
-  { value: "bihar", label: "Bihar" },
-  { value: "chhattisgarh", label: "Chhattisgarh" },
-  { value: "goa", label: "Goa" },
-  { value: "gujarat", label: "Gujarat" },
-  { value: "haryana", label: "Haryana" },
-  { value: "himachal-pradesh", label: "Himachal Pradesh" },
-  { value: "jharkhand", label: "Jharkhand" },
-  { value: "karnataka", label: "Karnataka" },
-  { value: "kerala", label: "Kerala" },
-  { value: "madhya-pradesh", label: "Madhya Pradesh" },
-  { value: "maharashtra", label: "Maharashtra" },
-  { value: "manipur", label: "Manipur" },
-  { value: "meghalaya", label: "Meghalaya" },
-  { value: "mizoram", label: "Mizoram" },
-  { value: "nagaland", label: "Nagaland" },
-  { value: "odisha", label: "Odisha" },
-  { value: "punjab", label: "Punjab" },
-  { value: "rajasthan", label: "Rajasthan" },
-  { value: "sikkim", label: "Sikkim" },
-  { value: "tamil-nadu", label: "Tamil Nadu" },
-  { value: "telangana", label: "Telangana" },
-  { value: "tripura", label: "Tripura" },
-  { value: "uttar-pradesh", label: "Uttar Pradesh" },
-  { value: "uttarakhand", label: "Uttarakhand" },
-  { value: "west-bengal", label: "West Bengal" },
-  // Union Territories
-  { value: "andaman-nicobar", label: "Andaman and Nicobar Islands" },
-  { value: "chandigarh", label: "Chandigarh" },
-  {
-    value: "dadra-nagar-haveli-daman-diu",
-    label: "Dadra and Nagar Haveli and Daman and Diu",
-  },
-  { value: "delhi", label: "Delhi" },
-  { value: "jammu-kashmir", label: "Jammu and Kashmir" },
-  { value: "ladakh", label: "Ladakh" },
-  { value: "lakshadweep", label: "Lakshadweep" },
-  { value: "puducherry", label: "Puducherry" },
+// UAE Emirates
+const uaeEmirates = [
+  { value: "abu-dhabi", label: "Abu Dhabi" },
+  { value: "dubai", label: "Dubai" },
+  { value: "sharjah", label: "Sharjah" },
+  { value: "ajman", label: "Ajman" },
+  { value: "umm-al-quwain", label: "Umm Al Quwain" },
+  { value: "ras-al-khaimah", label: "Ras Al Khaimah" },
+  { value: "fujairah", label: "Fujairah" },
 ];
 
 export default function CheckoutComponent() {
@@ -320,7 +269,7 @@ export default function CheckoutComponent() {
   const [shippingMethod, setShippingMethod] = useState("free");
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const ENABLE_PINCODE_API = true;
+  const ENABLE_PINCODE_API = false;
 
   // Field validation states
   const [fieldValidation, setFieldValidation] = useState({
@@ -340,9 +289,9 @@ export default function CheckoutComponent() {
   const [formData, setFormData] = useState(() => {
     try {
       const saved = typeof window !== "undefined" && localStorage.getItem("checkoutDraft");
-      if (saved) return { country: "India", fullName: "", email: "", phone: "", address: "", city: "", region: "", postalCode: "", ...JSON.parse(saved) };
+      if (saved) return { country: "UAE", fullName: "", email: "", phone: "", address: "", city: "", region: "", postalCode: "", ...JSON.parse(saved) };
     } catch {}
-    return { country: "India", fullName: "", email: "", phone: "", address: "", city: "", region: "", postalCode: "" };
+    return { country: "UAE", fullName: "", email: "", phone: "", address: "", city: "", region: "", postalCode: "" };
   });
 
   // Persist form draft on every change
@@ -405,15 +354,15 @@ export default function CheckoutComponent() {
           error = "Phone number is required";
         } else {
           const cleanPhone = value.replace(/\D/g, "");
-          if (cleanPhone.length < 10) {
+          if (cleanPhone.length < 9) {
             isValid = false;
-            error = "Phone number must be 10 digits";
+            error = "Phone number must be at least 9 digits";
           } else if (cleanPhone.length > 10) {
             isValid = false;
-            error = "Phone number must be exactly 10 digits";
+            error = "Phone number must be at most 10 digits";
           } else if (!validatePhone(value)) {
             isValid = false;
-            error = "Phone number must start with 6, 7, 8, or 9";
+            error = "Enter a valid UAE mobile number (e.g. 05X XXX XXXX)";
           } else {
             isValid = true;
             error = null;
@@ -424,7 +373,7 @@ export default function CheckoutComponent() {
       case "region":
         if (!value || value.trim().length === 0) {
           isValid = false;
-          error = "Please select a state";
+          error = "Please select an emirate";
         } else {
           isValid = true;
           error = null;
@@ -455,9 +404,9 @@ export default function CheckoutComponent() {
         if (!value || value.trim().length === 0) {
           isValid = false;
           error = "Postal code is required";
-        } else if (!/^\d{6}$/.test(value.trim())) {
+        } else if (!/^\d{5}$/.test(value.trim())) {
           isValid = false;
-          error = "Enter a valid 6-digit postal code";
+          error = "Enter a valid 5-digit postal code";
         } else {
           isValid = true;
           error = null;
@@ -503,7 +452,7 @@ export default function CheckoutComponent() {
   }, [formData.phone]);
 
   const validatePostalCode = async (postalCode) => {
-    if (!postalCode || postalCode.length < 6) {
+    if (!postalCode || postalCode.length < 5) {
       setPostalCodeValidation({
         isValidating: false,
         isValid: null,
@@ -529,7 +478,7 @@ export default function CheckoutComponent() {
           deliveryInfo: {
             city: "Default City",
             district: "Default District",
-            state: "Default State",
+            state: "UAE",
             cod: true,
             prepaid: true,
             pickup: true,
@@ -539,63 +488,11 @@ export default function CheckoutComponent() {
         });
 
         toast.success(
-          `Postal code ${postalCode} - Default validation (API disabled)`,
+          `Postal code ${postalCode} - delivery available across the UAE`,
         );
       }, 500);
 
       return;
-    }
-
-    const DELHIVERY_TOKEN = "8225de";
-    if (!DELHIVERY_TOKEN) {
-      console.warn("Delhivery API token not configured");
-      setPostalCodeValidation({
-        isValidating: false,
-        isValid: null,
-        error: "Postal code validation temporarily unavailable",
-        deliveryInfo: null,
-      });
-      return;
-    }
-
-    setPostalCodeValidation((prev) => ({
-      ...prev,
-      isValidating: true,
-      error: null,
-    }));
-
-    try {
-      const result = await checkoutApi.validatePostalCode(postalCode);
-      setPostalCodeValidation(result);
-      if (result.isValid) {
-        toast.success(
-          `Postal code valid for ${result.deliveryInfo.city}, ${result.deliveryInfo.district}`,
-        );
-      } else {
-        toast.error(`${result.error}`);
-      }
-    } catch (error) {
-      let errorMessage = "Unable to validate postal code";
-      if (error.code === "ECONNABORTED") {
-        errorMessage = "Validation timeout - please try again";
-      } else if (error.response?.status === 401) {
-        errorMessage = "Authentication failed - please contact support";
-      } else if (error.response?.status === 403) {
-        errorMessage = "Access denied - please contact support";
-      } else if (error.response?.status === 404) {
-        errorMessage = "Postal code not found";
-      } else if (error.response?.status === 429) {
-        errorMessage = "Too many requests - please wait and try again";
-      }
-
-      setPostalCodeValidation({
-        isValidating: false,
-        isValid: false,
-        error: errorMessage,
-        deliveryInfo: null,
-      });
-
-      toast.error(errorMessage);
     }
   };
 
@@ -663,11 +560,11 @@ export default function CheckoutComponent() {
         const odaSurcharge = postalCodeValidation.deliveryInfo?.isODA ? 50 : 0;
         shipping += odaSurcharge;
 
-        const delhiPrepayment = shippingMethod === "delhi-express"
-          ? DELHI_NCR_PREPAYMENT
+        const expressPrepayment = shippingMethod === "uae-express"
+          ? UAE_EXPRESS_PREPAYMENT
           : 0;
 
-        const total = subtotal + shipping + delhiPrepayment;
+        const total = subtotal + shipping + expressPrepayment;
 
         return { subtotal, shipping, total };
       };
@@ -689,12 +586,12 @@ export default function CheckoutComponent() {
             return null;
           case "phone": {
             const clean = value.replace(/\D/g, "");
-            if (clean.length !== 10) return "Phone number must be exactly 10 digits";
-            if (!/^[6-9]\d{9}$/.test(clean)) return "Phone number must start with 6, 7, 8, or 9";
+            if (clean.length < 9) return "Phone number must be at least 9 digits";
+            if (!validatePhone(value)) return "Enter a valid UAE mobile number (e.g. 05X XXX XXXX)";
             return null;
           }
           case "postalCode":
-            if (!/^\d{6}$/.test(value.trim())) return "Enter a valid 6-digit postal code";
+            if (!/^\d{5}$/.test(value.trim())) return "Enter a valid 5-digit postal code";
             return null;
           default:
             return null;
@@ -784,7 +681,7 @@ export default function CheckoutComponent() {
 
       const formattedPhone = formatPhoneNumber(formData.phone);
 
-      const regionLabel = indianStates.find((s) => s.value === formData.region)?.label || formData.region;
+      const regionLabel = uaeEmirates.find((s) => s.value === formData.region)?.label || formData.region;
 
       const checkoutData = {
         ...formData,
@@ -799,7 +696,7 @@ export default function CheckoutComponent() {
         orderTotal: total,
         orderSubtotal: subtotal,
         orderShipping: shipping,
-        delhiNCRPrepayment: shippingMethod === "delhi-express" ? DELHI_NCR_PREPAYMENT : 0,
+        uaeExpressPrepayment: shippingMethod === "uae-express" ? UAE_EXPRESS_PREPAYMENT : 0,
         orderItems: cart,
         checkoutCompletedAt: new Date().toISOString(),
         userAgent:
@@ -925,39 +822,27 @@ export default function CheckoutComponent() {
       : 0;
 
   const isFreeShippingEligible = subtotal >= 5000;
-  const isDelhiNCROrder = isDelhiNCR(formData.region, formData.postalCode, formData.city);
-  const isDeliveryWindowActive = isWithinDeliveryWindow();
-
-  const hasAutoSelectedDelhiExpress = useRef(false);
 
   useEffect(() => {
     if (shippingMethod === "free" && !isFreeShippingEligible) {
       setShippingMethod("standard");
     }
-    if (shippingMethod === "delhi-express" && !isDelhiNCROrder) {
-      hasAutoSelectedDelhiExpress.current = false;
-      setShippingMethod("standard");
-    }
-    if (isDelhiNCROrder && !hasAutoSelectedDelhiExpress.current) {
-      hasAutoSelectedDelhiExpress.current = true;
-      setShippingMethod("delhi-express");
-    }
-  }, [isFreeShippingEligible, shippingMethod, isDelhiNCROrder]);
+  }, [isFreeShippingEligible, shippingMethod]);
 
-  let shipping = shippingMethod === "delhi-express"
-    ? DELHI_NCR_PREPAYMENT
+  let shipping = shippingMethod === "uae-express"
+    ? UAE_EXPRESS_PREPAYMENT
     : shippingOptions[shippingMethod]?.price || 0;
   if (isFreeShippingEligible && shippingMethod === "free") {
     shipping = 0;
   }
 
   const odaSurcharge = postalCodeValidation.deliveryInfo?.isODA ? 50 : 0;
-  if (shippingMethod !== "delhi-express") shipping += odaSurcharge;
+  if (shippingMethod !== "uae-express") shipping += odaSurcharge;
 
   const total = subtotal + shipping;
 
   // COD is unavailable for express delivery (full online payment required)
-  const codAvailable = (postalCodeValidation.deliveryInfo?.cod ?? false) && shippingMethod !== "delhi-express";
+  const codAvailable = (postalCodeValidation.deliveryInfo?.cod ?? false) && shippingMethod !== "uae-express";
 
   // Helper for input border classes
   const getInputBorderClass = (fieldName) => {
@@ -1012,19 +897,18 @@ export default function CheckoutComponent() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         <Breadcrumb />
 
-        {/* Delhi NCR Express Delivery Banner — always visible */}
+        {/* UAE Express Delivery Banner — always visible */}
         <div className="mb-6 bg-gradient-to-r from-stone-800 to-stone-900 rounded-2xl p-4 sm:p-5 flex gap-4 items-center">
           <div className="w-10 h-10 bg-amber-400/20 rounded-xl flex items-center justify-center flex-shrink-0 text-xl">
             ⚡
           </div>
           <div className="flex-1 min-w-0">
-            <p className="font-bold text-white text-sm">Delhi NCR? Get your order in 2–3 hours!</p>
+            <p className="font-bold text-white text-sm">UAE Express Delivery — 2–4 business days!</p>
             <p className="text-stone-300 text-xs mt-0.5">
-              Order between <span className="text-amber-400 font-semibold">10 AM – 7 PM</span> for same-day express delivery in Delhi, Noida, Greater Noida, Gurgaon, Faridabad & Ghaziabad.
-            </p>
+              Fast, tracked delivery across Dubai, Abu Dhabi, Sharjah &amp; all Emirates.</p>
           </div>
           <span className="hidden sm:inline-flex items-center gap-1 bg-amber-400/20 text-amber-400 text-[11px] font-bold px-3 py-1.5 rounded-full flex-shrink-0 border border-amber-400/30">
-            Same Day
+            Express
           </span>
         </div>
 
@@ -1042,7 +926,7 @@ export default function CheckoutComponent() {
                     Shipping Address
                   </h3>
                   <p className="text-sm text-gray-400">
-                   🇮🇳 Delivering within India
+                   🇦🇪 Delivering across the UAE
                   </p>
                 </div>
               </div>
@@ -1131,7 +1015,7 @@ export default function CheckoutComponent() {
                   <div className="relative">
                     <div className="absolute left-3.5 top-1/2 transform -translate-y-1/2 flex items-center gap-1.5">
                       <span className="text-gray-500 text-sm font-medium border-r border-gray-200 pr-2">
-                        +91
+                        +971
                       </span>
                     </div>
                     <input
@@ -1141,9 +1025,9 @@ export default function CheckoutComponent() {
                       value={formData.phone}
                       onChange={handleInputChange}
                       className={`w-full border rounded-xl pl-16 pr-11 py-3.5 text-gray-900 focus:outline-none focus:ring-4 focus:ring-[#800000]/5 transition-all duration-200 bg-gray-50/50 hover:bg-white placeholder:text-gray-400 ${getInputBorderClass("phone")}`}
-                      placeholder="9876543210"
+                      placeholder="5X XXX XXX"
                       maxLength="10"
-                      pattern="[6-9][0-9]{9}"
+                      pattern="[0-9]*"
                       inputMode="numeric"
                       required
                     />
@@ -1166,7 +1050,7 @@ export default function CheckoutComponent() {
                     formData.phone &&
                     fieldValidation.phone?.isValid !== true && (
                       <p className="mt-1.5 text-xs text-gray-400">
-                        Enter 10-digit mobile number starting with 6, 7, 8, or 9
+                        Enter 9-digit UAE mobile number starting with 5 (e.g. 5X XXX XXXX)
                       </p>
                     )}
                 </div>
@@ -1230,9 +1114,9 @@ export default function CheckoutComponent() {
                 {/* State */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                    State / Union Territory
+                    Emirate <span className="text-red-500">*</span>
                   </label>
-                  <CustomStateDropdown
+                  <CustomEmirateDropdown
                     value={formData.region}
                     onChange={handleInputChange}
                     className="w-full"
@@ -1256,7 +1140,7 @@ export default function CheckoutComponent() {
                     <span className="text-xs text-gray-400 ml-1.5">
                       {ENABLE_PINCODE_API
                         ? "(Auto-validated)"
-                        : "(Default validation)"}
+                        : "(5-digit code)"}
                     </span>
                   </label>
 
@@ -1274,8 +1158,8 @@ export default function CheckoutComponent() {
                             ? "border-red-400 focus:border-[#800000]"
                             : "border-gray-200 hover:border-gray-300 focus:border-[#800000]"
                       }`}
-                      placeholder="110001"
-                      maxLength="6"
+                      placeholder="12345"
+                      maxLength="5"
                       pattern="[0-9]*"
                       inputMode="numeric"
                     />
@@ -1308,14 +1192,14 @@ export default function CheckoutComponent() {
                           <span className="bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-lg text-xs font-medium">
                             COD Available
                           </span>
-                        ) : postalCodeValidation.deliveryInfo.cod && shippingMethod === "delhi-express" ? (
+                        ) : postalCodeValidation.deliveryInfo.cod && shippingMethod === "uae-express" ? (
                           <span className="bg-gray-100 text-gray-400 px-2.5 py-1 rounded-lg text-xs font-medium">
                             COD unavailable for Express
                           </span>
                         ) : null}
                         {postalCodeValidation.deliveryInfo.isODA && (
                           <span className="bg-amber-100 text-amber-700 px-2.5 py-1 rounded-lg text-xs font-medium">
-                            Remote Area (+₹50)
+                            Remote Area (+AED 2)
                           </span>
                         )}
                       </div>
@@ -1401,7 +1285,7 @@ export default function CheckoutComponent() {
                                   {name}
                                   {isDisabled && (
                                     <span className="ml-2 text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">
-                                      Min. ₹5000
+                                      Min. AED 200
                                     </span>
                                   )}
                                 </p>
@@ -1411,13 +1295,13 @@ export default function CheckoutComponent() {
                                 {isFreeShippingEligible &&
                                   isFreeShippingOption && (
                                     <p className="text-xs text-emerald-600 font-medium mt-1">
-                                      Free upgrade on prepaid orders above ₹5000
+                                      Free upgrade on prepaid orders above AED 200
                                     </p>
                                   )}
                                 {postalCodeValidation.deliveryInfo?.isODA &&
                                   !isDisabled && (
                                     <p className="text-xs text-amber-600 font-medium mt-1">
-                                      +₹50 Remote area surcharge
+                                      +AED 2 Remote area surcharge
                                     </p>
                                   )}
                               </div>
@@ -1425,16 +1309,16 @@ export default function CheckoutComponent() {
                             <div className="text-right">
                               <span className={`font-bold ${isDisabled ? "text-gray-300" : "text-gray-900"}`}>
                                 {isDisabled
-                                  ? `₹${price}`
+                                  ? `${formatAEDShort(price)}`
                                   : finalPrice === 0
                                     ? "FREE"
-                                    : `₹${finalPrice}`}
+                                    : `${formatAEDShort(finalPrice)}`}
                               </span>
                               {isFreeShippingEligible &&
                                 isFreeShippingOption &&
                                 !postalCodeValidation.deliveryInfo?.isODA && (
                                   <p className="text-xs text-gray-400 line-through">
-                                    ₹{price}
+                                    {formatAEDShort(price)}
                                   </p>
                                 )}
                             </div>
@@ -1445,22 +1329,19 @@ export default function CheckoutComponent() {
                   },
                 )}
 
-                {/* Delhi NCR Express option */}
+                {/* UAE Express option */}
                 <label className={`flex items-center p-4 border rounded-xl transition-all duration-200 ${
-                  !isDelhiNCROrder
-                    ? "border-gray-100 bg-gray-50/40 opacity-50 cursor-not-allowed"
-                    : shippingMethod === "delhi-express"
-                      ? "border-amber-400 bg-amber-50 ring-2 ring-amber-400/20 cursor-pointer"
-                      : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/30 cursor-pointer"
+                  shippingMethod === "uae-express"
+                    ? "border-amber-400 bg-amber-50 ring-2 ring-amber-400/20 cursor-pointer"
+                    : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/30 cursor-pointer"
                 }`}>
                   <input
                     type="radio"
                     name="shipping"
-                    value="delhi-express"
-                    checked={shippingMethod === "delhi-express"}
-                    onChange={() => isDelhiNCROrder && setShippingMethod("delhi-express")}
-                    disabled={!isDelhiNCROrder}
-                    className="w-4 h-4 text-amber-500 focus:ring-amber-400 cursor-pointer disabled:cursor-not-allowed"
+                    value="uae-express"
+                    checked={shippingMethod === "uae-express"}
+                    onChange={() => setShippingMethod("uae-express")}
+                    className="w-4 h-4 text-amber-500 focus:ring-amber-400 cursor-pointer"
                   />
                   <div className="ml-4 flex-1">
                     <div className="flex items-center justify-between">
@@ -1468,21 +1349,15 @@ export default function CheckoutComponent() {
                         <span className="text-xl">⚡</span>
                         <div>
                           <p className="font-semibold text-sm text-gray-900 flex items-center gap-2">
-                            Delhi NCR Express
-                            {isDelhiNCROrder ? (
-                              <span className="text-[10px] bg-amber-500 text-white px-2 py-0.5 rounded-full font-bold">Available</span>
-                            ) : (
-                              <span className="text-[10px] bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full font-medium">Delhi NCR only</span>
-                            )}
+                            UAE Express
+                            <span className="text-[10px] bg-amber-500 text-white px-2 py-0.5 rounded-full font-bold">Available</span>
                           </p>
                           <p className="text-xs mt-0.5 text-gray-500">
-                            {isDelhiNCROrder && isDeliveryWindowActive
-                              ? "Delivery in 2–3 hours · Window active now!"
-                              : "2–3 hr same-day delivery · Order between 10 AM – 7 PM"}
+                            Delivery in 2\u20134 business days \u00b7 Available across all Emirates
                           </p>
                         </div>
                       </div>
-                      <span className="font-bold text-amber-600">₹{DELHI_NCR_PREPAYMENT}</span>
+                      <span className="font-bold text-amber-600">{formatAEDShort(UAE_EXPRESS_PREPAYMENT)}</span>
                     </div>
                   </div>
                 </label>
@@ -1556,7 +1431,7 @@ export default function CheckoutComponent() {
                             </div>
                           </div>
                           <span className="font-bold text-gray-900 text-sm whitespace-nowrap">
-                            ₹{((item.price || 0) * (item.quantity || 1)).toLocaleString()}
+                            {formatAED(item.price * item.quantity)}
                           </span>
                         </div>
                       </div>
@@ -1580,7 +1455,7 @@ export default function CheckoutComponent() {
                         <span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-md text-xs font-medium">
                           COD Available
                         </span>
-                      ) : postalCodeValidation.deliveryInfo.cod && shippingMethod === "delhi-express" ? (
+                      ) : postalCodeValidation.deliveryInfo.cod && shippingMethod === "uae-express" ? (
                         <span className="bg-gray-100 text-gray-400 px-2 py-0.5 rounded-md text-xs font-medium">
                           No COD for Express
                         </span>
@@ -1599,25 +1474,25 @@ export default function CheckoutComponent() {
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500">Subtotal</span>
                     <span className="font-semibold text-gray-900">
-                      ₹{subtotal.toLocaleString()}
+                      {formatAED(subtotal)}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500">
-                      {shippingMethod === "delhi-express" ? "⚡ Express Delivery" : "Shipping"}
+                      {shippingMethod === "uae-express" ? "⚡ Express Delivery" : "Shipping"}
                     </span>
                     <div className="text-right">
-                      <span className={`font-semibold ${shippingMethod === "delhi-express" ? "text-amber-600" : shipping === 0 ? "text-emerald-600" : "text-gray-900"}`}>
+                      <span className={`font-semibold ${shippingMethod === "uae-express" ? "text-amber-600" : shipping === 0 ? "text-emerald-600" : "text-gray-900"}`}>
                         {shipping === 0
                           ? "FREE"
-                          : `₹${shipping.toLocaleString()}`}
+                          : `${formatAEDShort(shipping)}`}
                       </span>
                       {isFreeShippingEligible &&
                         shippingMethod === "free" &&
                         shippingOptions[shippingMethod]?.price > 0 &&
                         !postalCodeValidation.deliveryInfo?.isODA && (
                           <p className="text-xs text-gray-400 line-through">
-                            ₹{shippingOptions[shippingMethod].price}
+                            {formatAEDShort(shippingOptions[shippingMethod].price)}
                           </p>
                         )}
                     </div>
@@ -1627,7 +1502,7 @@ export default function CheckoutComponent() {
                     <div className="flex justify-between text-sm">
                       <span className="text-amber-600">Remote Surcharge</span>
                       <span className="font-semibold text-amber-600">
-                        ₹{odaSurcharge}
+                        {formatAEDShort(odaSurcharge)}
                       </span>
                     </div>
                   )}
@@ -1636,7 +1511,7 @@ export default function CheckoutComponent() {
                   <div className="border-t border-gray-100 pt-4">
                     <div className="flex justify-between items-center">
                       <span className="text-base font-bold text-gray-900">Total</span>
-                      <span className="text-2xl font-bold text-[#800000]">₹{total.toLocaleString()}</span>
+                      <span className="text-2xl font-bold text-[#800000]">{formatAED(total)}</span>
                     </div>
                   </div>
                 </div>

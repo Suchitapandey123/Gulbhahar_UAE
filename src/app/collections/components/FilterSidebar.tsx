@@ -1,6 +1,7 @@
 // @ts-nocheck
 "use client";
 import { useRef, useState, useEffect } from "react";
+import { formatAED } from "@/utils/currency";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -257,7 +258,7 @@ export default function FilterSidebar({
                         boxShadow: "0 1px 6px rgba(0,0,0,0.1)",
                       }}
                     >
-                      ₹{priceRange[0].toLocaleString()}
+                      {formatAED(priceRange[0])}
                     </motion.span>
                     <motion.span
                       className="bg-white px-3 py-1 rounded-full shadow"
@@ -266,7 +267,7 @@ export default function FilterSidebar({
                         boxShadow: "0 1px 6px rgba(0,0,0,0.1)",
                       }}
                     >
-                      ₹{priceRange[1].toLocaleString()}
+                      {formatAED(priceRange[1])}
                     </motion.span>
                   </motion.div>
 

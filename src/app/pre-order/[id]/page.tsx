@@ -1,4 +1,5 @@
 "use client";
+import { formatAED } from "@/utils/currency";
 
 import { PreOrderProductData } from "@/services/preOrder/preOrderTypes";
 import { useParams } from "next/navigation";
@@ -136,11 +137,11 @@ export default function PreOrderPage() {
               {/* Price */}
               <div className="flex items-baseline gap-2 mb-3">
                 <span className="text-xl sm:text-2xl font-serif font-semibold text-white">
-                  ₹{product.price.toLocaleString()}
+                  {formatAED(product.price)}
                 </span>
                 {product.originalPrice && product.originalPrice > product.price && (
                   <span className="text-sm text-white/50 line-through">
-                    ₹{product.originalPrice.toLocaleString()}
+                    {formatAED(product.originalPrice)}
                   </span>
                 )}
               </div>

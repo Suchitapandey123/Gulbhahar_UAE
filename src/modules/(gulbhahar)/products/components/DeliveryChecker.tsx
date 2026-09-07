@@ -102,9 +102,9 @@ export const DeliveryChecker = ({ customRed }: DeliveryCheckerProps) => {
         <div className="flex items-center gap-2">
           <span className="text-base leading-none">⚡</span>
           <span>
-            Estimated delivery in <span className="font-semibold">Delhi NCR</span> within{" "}
-            <span className="font-semibold">2–3 hrs</span>{" "}
-            <span className="text-gray-400 text-xs">(same day · 10 AM – 7 PM)</span>
+            Estimated delivery in <span className="font-semibold">Dubai &amp; Abu Dhabi</span> within{" "}
+            <span className="font-semibold">2–4 business days</span>{" "}
+            <span className="text-gray-400 text-xs">(Express)</span>
           </span>
         </div>
 
@@ -136,7 +136,7 @@ export const DeliveryChecker = ({ customRed }: DeliveryCheckerProps) => {
           </div>
           <div className="flex-1 flex flex-col items-center pt-3.5 px-1">
             <div className="w-full h-px bg-gray-300" />
-            <span className="text-[10px] text-gray-400 mt-1.5 text-center leading-tight">Delivered<br/><span className="font-semibold text-gray-600">5–7 days</span></span>
+            <span className="text-[10px] text-gray-400 mt-1.5 text-center leading-tight">Delivered<br/><span className="font-semibold text-gray-600">3–5 days</span></span>
           </div>
           <div className="flex flex-col items-center gap-1 flex-shrink-0 w-16">
             <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs font-bold">✓</div>
@@ -150,7 +150,7 @@ export const DeliveryChecker = ({ customRed }: DeliveryCheckerProps) => {
           <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">or</span>
           <div className="flex-1 h-px bg-gray-200" />
         </div>
-        <p className="text-[10px] font-bold text-yellow-600 uppercase tracking-widest mb-3">⚡ Delhi NCR Express</p>
+        <p className="text-[10px] font-bold text-yellow-600 uppercase tracking-widest mb-3">⚡ UAE Express</p>
 
         <div className="flex items-start gap-0">
           <div className="flex flex-col items-center gap-1 flex-shrink-0 w-16">
@@ -159,14 +159,14 @@ export const DeliveryChecker = ({ customRed }: DeliveryCheckerProps) => {
           </div>
           <div className="flex-1 flex flex-col items-center pt-3.5 px-1">
             <div className="w-full h-px bg-yellow-300" />
-            <span className="text-[10px] text-yellow-700 mt-1.5 text-center leading-tight font-semibold">2–3 hours</span>
+            <span className="text-[10px] text-yellow-700 mt-1.5 text-center leading-tight font-semibold">2–4 business days</span>
           </div>
           <div className="flex flex-col items-center gap-1 flex-shrink-0 w-16">
             <div className="w-8 h-8 rounded-full bg-yellow-400 flex items-center justify-center text-stone-900 text-xs font-bold">✓</div>
             <span className="text-[10px] text-gray-500 font-medium text-center leading-tight">Delivered</span>
           </div>
         </div>
-        <p className="text-[9px] text-gray-400 mt-2">⚡ Express available 10 AM – 7 PM for Delhi, Noida, Gurgaon, Faridabad & Ghaziabad</p>
+        <p className="text-[9px] text-gray-400 mt-2">⚡ Express delivery available across Dubai, Abu Dhabi, Sharjah &amp; all Emirates</p>
       </div>
 
       {deliveryError && (

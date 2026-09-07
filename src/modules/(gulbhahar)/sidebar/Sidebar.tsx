@@ -345,9 +345,9 @@ const GulbhaharSidebar = ({
           <div className="space-y-4">
             <div className="space-y-2.5">
               {[
-                { icon: MapPin, text: "Delhi, India" },
+                { icon: MapPin, text: "Dubai, UAE" },
                 { icon: Mail,   text: "support@gulbhahar.com" },
-                { icon: Phone,  text: "+91 92209 27241" },
+                { icon: Phone,  text: "+971 50 590 7461" },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} className="flex items-center gap-2.5">
                   <Icon className="w-3 h-3 flex-shrink-0 text-neutral-400" strokeWidth={1.5} />

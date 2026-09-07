@@ -51,7 +51,7 @@ const AddressBookView = ({ onNavigate, ProfileView }) => {
 
   const [form, setForm] = useState({
     fullName: "", phone: "", addressLine1: "",
-    city: "", state: "", postalCode: "", country: "India",
+    city: "", state: "", postalCode: "", country: "UAE",
   });
 
   const loadAddresses = useCallback(async () => {
@@ -171,16 +171,16 @@ const AddressBookView = ({ onNavigate, ProfileView }) => {
             <Field label="Full Name" type="text" name="fullName"
               value={form.fullName} onChange={handleInput} placeholder="e.g. Priya Sharma" />
             <Field label="Phone" type="tel" name="phone"
-              value={form.phone} onChange={handleInput} placeholder="+91 98765 43210" />
+              value={form.phone} onChange={handleInput} placeholder="+971 50 123 4567" />
             <Field label="Address" type="text" name="addressLine1"
               value={form.addressLine1} onChange={handleInput}
-              placeholder="House / Street / Colony" className="sm:col-span-2" />
+              placeholder="Street / Building / Apartment" className="sm:col-span-2" />
             <Field label="City" type="text" name="city"
-              value={form.city} onChange={handleInput} placeholder="Delhi" />
-            <Field label="State" type="text" name="state"
-              value={form.state} onChange={handleInput} placeholder="Delhi" />
+              value={form.city} onChange={handleInput} placeholder="Dubai" />
+            <Field label="Emirate" type="text" name="state"
+              value={form.state} onChange={handleInput} placeholder="Dubai" />
             <Field label="Postal Code" type="text" name="postalCode"
-              value={form.postalCode} onChange={handleInput} placeholder="110001" />
+              value={form.postalCode} onChange={handleInput} placeholder="00000" />
 
             <div className="flex gap-2.5 pt-1 sm:col-span-2">
               <button

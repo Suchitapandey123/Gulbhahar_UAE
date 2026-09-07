@@ -2,6 +2,7 @@
 // Server Component - No "use client" directive
 import { ProductImages } from "@/types";
 import { getProductImages, FALLBACK_LQIP } from "@/utils/productImageUtils";
+import { formatAED } from "@/utils/currency";
 import Link from "next/link";
 import ProductCardInteractive from "./ProductCardInteractive";
 
@@ -144,12 +145,12 @@ export default function ProductCard({
             </div>
             <div className="flex-shrink-0 text-right">
               <div className="flex flex-col items-end gap-0.5">
-                <span className="text-sm font-bold text-red-600">
-                  ₹{item.price.toLocaleString()}
+                <span className="text-sm font-bold text-red-600 tracking-wide">
+                  {formatAED(item.price)}
                 </span>
                 {item.originalPrice && item.originalPrice > item.price && (
                   <span className="text-xs text-gray-400 line-through">
-                    ₹{item.originalPrice.toLocaleString()}
+                    {formatAED(item.originalPrice)}
                   </span>
                 )}
               </div>

@@ -41,7 +41,7 @@ const allFaqs = [
   },
   {
     question: "How much does shipping cost?",
-    answer: "Shipping costs vary based on your location. We offer free shipping on all domestic orders above ₹5,000. For international orders, shipping rates are calculated at checkout.",
+    answer: "Shipping costs vary based on your location. We offer free shipping on all UAE orders above AED 219. For international orders, shipping is calculated at checkout, and prices are displayed in AED.",
     category: "Shipping"
   },
   {

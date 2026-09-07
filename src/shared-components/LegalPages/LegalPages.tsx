@@ -171,7 +171,7 @@ const TAB_DATA = {
             <p className="text-sm text-gray-700 leading-relaxed">We use standard EURO sizes to help you pick the perfect size. However, if you want to RETURN, then you may return the pair to us at</p>
             <div className="flex items-start gap-3 bg-amber-50 border border-amber-100 rounded-xl p-4">
               <MapPin className="h-4 w-4 text-amber-500 mt-0.5 flex-shrink-0" />
-              <p className="text-sm text-gray-700"><strong>S-12 Janta Market, Rajouri Garden Delhi, 110027,</strong> India within 7 Days in its original box packing and the invoice. Please mention your desired exchange piece along with the size on the invoice as well.</p>
+              <p className="text-sm text-gray-700"><strong>Gulbhahar Exchange Hub, P.O. Box 123456,</strong> Dubai, UAE within 7 Days in its original box packing and the invoice. Please mention your desired exchange piece along with the size on the invoice as well.</p>
             </div>
             <p className="text-sm text-gray-700">You may also mail us at <a href="mailto:support@gulbhahar.com" className="font-semibold text-red-800 underline underline-offset-2">support@gulbhahar.com</a> for the same. We do not entertain cancellation requests.</p>
           </div>
@@ -190,7 +190,7 @@ const TAB_DATA = {
         id: "shipping", icon: Truck, title: "Shipping Policy",
         body: (
           <div className="space-y-4">
-            <p className="text-sm text-gray-700 leading-relaxed">We have <strong className="text-gray-900">FREE shipping</strong> within India on prepaid orders above <strong className="text-gray-900">INR 5000</strong>. Once you place an order your pairs will be shipped within the stipulated time period mentioned beside each style. Though we use some of India's largest logistics companies for shipping, we are bound in coverage by their reach.</p>
+            <p className="text-sm text-gray-700 leading-relaxed">We provide <strong className="text-gray-900">FREE shipping</strong> across the UAE on prepaid orders above <strong className="text-gray-900">AED 219</strong>. Once you place an order, your pairs will be shipped within the stipulated time period mentioned beside each style. We partner with trusted international couriers to deliver across all Emirates, including Dubai, Abu Dhabi &amp; Sharjah.</p>
             <InfoBanner><strong>Please Note —</strong> During festive seasons, pandemics, adverse weather conditions, or conditions beyond our control your shipment could get delayed. We assure you that we will try our best to have your parcel delivered to you in good time.</InfoBanner>
           </div>
         ),
@@ -245,10 +245,10 @@ const TAB_DATA = {
         id: "shipping", icon: Truck, title: "Gulbhahar Shipping Policy",
         body: (
           <div className="space-y-4">
-            <p className="text-sm text-gray-700 leading-relaxed">At Gulbhahar, we offer <strong className="text-gray-900">FREE shipping</strong> across India for all prepaid orders above <strong className="text-gray-900">INR 5000</strong>. Your order will be processed and shipped within the timeframe specified for each product. We partner with leading logistics providers to ensure reliable delivery service nationwide.</p>
+            <p className="text-sm text-gray-700 leading-relaxed">At Gulbhahar, we offer <strong className="text-gray-900">FREE shipping</strong> across the UAE on prepaid orders above <strong className="text-gray-900">AED 219</strong>. Your order will be processed and shipped within the timeframe specified for each product. We deliver to all Emirates — including Dubai, Abu Dhabi, Sharjah &amp; Ajman — via trusted international couriers.</p>
             <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-5">
-              <p className="text-sm font-bold text-emerald-800 mb-3">Domestic Shipping Details</p>
-              <ul className="space-y-2">{["Standard delivery: 5–7 business days","Express shipping available at checkout","Order tracking for all shipments","Cash on delivery available (additional charges may apply)"].map((t, i) => <CheckItem key={i} text={t} />)}</ul>
+              <p className="text-sm font-bold text-emerald-800 mb-3">UAE Delivery Details</p>
+              <ul className="space-y-2">{["Standard delivery: 3–5 business days","Express delivery available across the Emirates","Order tracking for all shipments","Cash on delivery available in select Emirates (additional charges may apply)"].map((t, i) => <CheckItem key={i} text={t} />)}</ul>
             </div>
             <div className="bg-amber-50 border border-amber-100 rounded-xl p-5">
               <p className="text-sm font-bold text-amber-800 mb-3">Important Notes</p>
@@ -337,8 +337,8 @@ const TAB_DATA = {
               <p className="text-sm font-bold text-amber-800 mb-3 flex items-center gap-2"><MapPin className="h-4 w-4" /> Return Address</p>
               <div className="text-sm text-gray-700 space-y-1">
                 <p className="font-bold">GULBHAHAR</p>
-                <p className="text-gray-600">S-12 Janta Market, Rajouri Garden, Delhi – 110027</p>
-                <a href="tel:+919220927241" className="flex items-center gap-2 mt-2 text-gray-600 hover:text-red-900 transition-colors"><Phone className="h-3.5 w-3.5" /> +91 9220927241</a>
+                <p className="text-gray-600">Gulbhahar Exchange Hub, P.O. Box 123456, Dubai, UAE</p>
+                <a href="tel:+971505907461" className="flex items-center gap-2 mt-2 text-gray-600 hover:text-red-900 transition-colors"><Phone className="h-3.5 w-3.5" /> +971 50 590 7461</a>
               </div>
               <p className="text-sm text-gray-600 mt-3">For return authorization, please email us at <a href="mailto:support@gulbhahar.com" className="font-semibold text-red-800 underline underline-offset-2">support@gulbhahar.com</a> with your order details.</p>
             </div>
@@ -473,9 +473,9 @@ export default function LegalPages({ defaultTab = "terms", standalone = false }:
               Our team is always here to help you with any queries or concerns.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <a href="tel:+919220927241"
+              <a href="tel:+971505907461"
                 className="flex items-center justify-center gap-2.5 bg-red-900 text-white px-8 py-3.5 rounded-full text-sm font-bold hover:bg-red-800 hover:-translate-y-0.5 transition-all duration-200 shadow-[0_4px_14px_rgba(153,27,27,0.3)]">
-                <Phone className="h-4 w-4" /> +91 9220927241
+                <Phone className="h-4 w-4" /> +971 50 590 7461
               </a>
               <a href="mailto:support@gulbhahar.com"
                 className="flex items-center justify-center gap-2.5 bg-white border-2 border-red-200 text-red-900 px-8 py-3.5 rounded-full text-sm font-bold hover:border-red-300 hover:bg-red-50 transition-all duration-200 hover:-translate-y-0.5">

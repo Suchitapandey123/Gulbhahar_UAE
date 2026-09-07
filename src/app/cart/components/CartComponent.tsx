@@ -1,5 +1,6 @@
 // @ts-nocheck
 "use client";
+import { formatAED, formatAEDShort } from "@/utils/currency";
 
 import { useState } from "react";
 import { Trash2, Minus, Plus, ShoppingCart, Tag } from "lucide-react";
@@ -188,7 +189,7 @@ const CartPage = () => {
                           {item.color} | {item.size}
                         </p>
                         <p className="text-lg font-bold font-raleway mt-2 text-red-900">
-                          ₹ {(item.price * item.quantity).toLocaleString()}
+                          {formatAED(item.price * item.quantity)}
                         </p>
                       </div>
                     </div>
@@ -296,7 +297,7 @@ const CartPage = () => {
                   {/* Desktop Layout - Price */}
                   <div className="hidden sm:block w-1/4 text-right p-4">
                     <p className="text-xl font-bold font-raleway text-red-900">
-                      ₹ {(item.price * item.quantity).toLocaleString()}
+                      {formatAED(item.price * item.quantity)}
                     </p>
                   </div>
                 </div>
@@ -322,14 +323,14 @@ const CartPage = () => {
                   Subtotal
                 </span>
                 <span className="font-bold font-raleway text-gray-900">
-                  ₹ {subtotal.toLocaleString()}
+                  {formatAED(subtotal)}
                 </span>
               </div>
               <div className="flex justify-between py-2 border-b border-red-100">
                 <span className="text-gray-700 font-raleway font-medium">
                   Discount
                 </span>
-                <span className="font-bold font-raleway text-green-600">₹ 0</span>
+                <span className="font-bold font-raleway text-green-600">AED 0</span>
               </div>
               <div className="bg-red-50 p-4 rounded-lg">
                 <div className="flex justify-between">
@@ -337,7 +338,7 @@ const CartPage = () => {
                     Grand Total
                   </span>
                   <span className="text-xl font-bold font-raleway text-red-900">
-                    ₹ {subtotal.toLocaleString()}
+                    {formatAED(subtotal)}
                   </span>
                 </div>
               </div>

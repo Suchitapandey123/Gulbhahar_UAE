@@ -98,21 +98,21 @@ const SecurityPrivacy = () => {
     {
       id: 1,
       device: "Chrome on Windows",
-      location: "Mumbai, India",
+      location: "Dubai, UAE",
       time: "2 hours ago",
       status: "current"
     },
     {
       id: 2,
       device: "Safari on iPhone",
-      location: "Mumbai, India", 
+      location: "Dubai, UAE", 
       time: "1 day ago",
       status: "success"
     },
     {
       id: 3,
       device: "Firefox on Mac",
-      location: "Delhi, India",
+      location: "Abu Dhabi, UAE",
       time: "3 days ago",
       status: "success"
     }
@@ -124,7 +124,7 @@ const SecurityPrivacy = () => {
       id: 1,
       name: "Chrome on Windows",
       type: "Desktop",
-      location: "Mumbai, India",
+      location: "Dubai, UAE",
       lastActive: "Current session",
       current: true
     },
@@ -132,7 +132,7 @@ const SecurityPrivacy = () => {
       id: 2,
       name: "Safari on iPhone 14",
       type: "Mobile",
-      location: "Mumbai, India",
+      location: "Dubai, UAE",
       lastActive: "1 day ago",
       current: false
     },
@@ -140,7 +140,7 @@ const SecurityPrivacy = () => {
       id: 3,
       name: "Firefox on MacBook",
       type: "Desktop", 
-      location: "Delhi, India",
+      location: "Abu Dhabi, UAE",
       lastActive: "3 days ago",
       current: false
     }

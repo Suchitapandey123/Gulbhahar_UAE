@@ -1,4 +1,5 @@
 import { Product } from "../types";
+import { formatAED } from "@/utils/currency";
 
 interface ProductInfoProps {
   product: Product;
@@ -62,16 +63,15 @@ export const ProductInfo = ({ product, displayName, customRed, avgRating = 0, re
         <div className="text-right flex-shrink-0">
           <div className="flex flex-col items-end gap-0.5 md:gap-1">
             <div className="flex items-baseline">
-              <span className="text-xs md:text-sm font-light text-gray-400 mr-0.5 md:mr-1">₹</span>
               <span className="text-2xl sm:text-3xl md:text-3xl font-light text-gray-900 tracking-tight">
-                {product.price?.toLocaleString("en-IN")}
+                {formatAED(product.price)}
               </span>
             </div>
 
             {product.originalPrice > product.price && (
               <div className="flex items-center gap-2 md:gap-3">
                 <span className="text-sm md:text-base text-gray-400 line-through font-light">
-                  ₹{product.originalPrice?.toLocaleString("en-IN")}
+                  {formatAED(product.originalPrice)}
                 </span>
                 <span
                   className="px-1.5 md:px-2 py-0.5 text-[10px] md:text-xs font-bold tracking-wider uppercase border"

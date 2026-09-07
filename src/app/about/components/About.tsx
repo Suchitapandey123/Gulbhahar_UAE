@@ -860,7 +860,7 @@ const CollectionsSection = () => {
     {
       name: "Ada (Jutti)",
       description: "Ada combines appliqué of rani pink, mirror work and pearl accents that add a touch of brilliance.",
-      price: "₹5,799",
+      price: "AED 254",
       features: ["Hand-embroidered", "Premium leather", "Traditional motifs"],
       image: "/about/noorani-1.jpg",
       link: "/collections/P04172723114"
@@ -868,7 +868,7 @@ const CollectionsSection = () => {
     {
       name: "Lal Ishq (Jutti)",
       description: "Shop Lal Ishq bridal juttis by Gulbhahar, featuring an exquisite red base and golden hand embroidery.",
-      price: "₹5,490",
+      price: "AED 240",
       features: ["Contemporary design", "Comfort padding", "Versatile styling"],
       image: "/about/lal-ishq-1.jpg",
       link: "/collections/P45482609607"
@@ -876,7 +876,7 @@ const CollectionsSection = () => {
     {
       name: "Green Banarasi Saree with Zari Embroidery (Sarees)",
       description: "Our Brocade Banarasi saree has raised and richly textured floral and paisley motifs, \n added with a fine golden lace border. 1 Readymade Blouse, 1 Unstitched Blouse Piece",
-      price: "₹8,490",
+      price: "AED 372",
       features: ["Hand-embroidered", "Premium leather", "Traditional motifs"],
       image: "/about/sarees1.png",
       link: "https://www.gulbhahar.com/products/P64096313724"
@@ -884,7 +884,7 @@ const CollectionsSection = () => {
     {
       name: "Heavy Embroidered Kurta Palazzo Set with Dupatta (Suit)",
       description: "The classic colours black and white and festive shine come together in this elegant embroidered kurta set. \n Available in Black and White.",
-      price: "₹14,990",
+      price: "AED 657",
       features: ["Contemporary design", "Comfort padding", "Versatile styling"],
       image: "/about/suits1.webp",
       link: "https://www.gulbhahar.com/products/P18127111223"
@@ -1023,21 +1023,21 @@ const TestimonialsSection = () => {
   const testimonials = [
     {
       name: "Himanshi Malhotra",
-      location: "Delhi",
+      location: "Dubai",
       review: "The craftsmanship is absolutely incredible. Each detail shows the love and skill that went into making these beautiful juttis.",
       rating: 5,
       image: "/about/girl.png"
     },
     {
       name: "Georgia D'Souza",
-      location: "Delhi",
+      location: "Abu Dhabi",
       review: "I've never owned footwear that combines traditional beauty with such comfort. These juttis are truly special.",
       rating: 5,
       image: "/about/girl.png"
     },
     {
       name: "Madhurima Khanduja",
-      location: "Delhi",
+      location: "Sharjah",
       review: "Perfect for my wedding! The quality exceeded my expectations and the designs are absolutely stunning.",
       rating: 5,
       image: "/about/girl.png"

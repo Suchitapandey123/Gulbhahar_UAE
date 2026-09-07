@@ -6,7 +6,7 @@ export const revalidate = 604800; // 7 days
 export async function generateMetadata() {
   return {
     title:"Delivery & Shipping Policy - Gulbhahar Orders",
-  description:"Learn about Gulbhahar's delivery options, shipping charges, and timelines for orders. Fast nationwide delivery with secure packaging .",
+  description:"Learn about Gulbhahar's delivery options, shipping charges, and timelines for orders. Fast tracked delivery across the UAE with secure packaging.",
   keywords: ["delivery policy", "gulbhahar delivery", "gulbhahar shipping"],
     alternates: {
       canonical: "https://www.gulbhahar.com/delivery-shipping-policy",

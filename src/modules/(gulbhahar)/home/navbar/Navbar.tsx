@@ -16,6 +16,14 @@ import CollectionsDropdown from "./Navbar.CollectionDropdown";
 const transparentNavRoutes = ["/"];
 // const transparentNavRoutes = ["/" , "/juttis" ,  "/sarees", "/lehenga", "/bags", "/suits" , "/jewellery"];
 
+// UAE announcement bar — rotating, AED-focused, consistent with site-wide shipping copy
+const UAE_ANNOUNCEMENTS = [
+  { mobile: "Handmade in India • Free UAE delivery", full: "Handmade in India — free UAE-wide delivery over AED 219" },
+  { mobile: "Delivered UAE-wide in 3–5 days", full: "Fast UAE delivery — Dubai, Abu Dhabi & all Emirates" },
+  { mobile: "All prices in AED", full: "All prices in AED — no hidden charges" },
+  { mobile: "COD across the UAE", full: "Cash on Delivery across all Emirates" },
+];
+
 const Navbar = () => {
   const {
     isAuthenticated,
@@ -41,6 +49,7 @@ const Navbar = () => {
     null,
   );
   const [iimageUrl, setiImageUrl] = useState<any>(null);
+  const [announcementIndex, setAnnouncementIndex] = useState(0);
 
   const itemsCount = getCartItemsCount();
 
@@ -155,6 +164,14 @@ const Navbar = () => {
     setMounted(true);
   }, []);
 
+  // Rotate UAE announcement messages
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setAnnouncementIndex((prev) => (prev + 1) % UAE_ANNOUNCEMENTS.length);
+    }, 4200);
+    return () => clearInterval(timer);
+  }, []);
+
   useEffect(() => {
     return () => {
       if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
@@ -237,7 +254,7 @@ const Navbar = () => {
       <nav
         className={`fixed top-0 left-0 right-0 z-[100]
     transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]
-    py-1 lg:py-1
+    ${isScrolled ? "py-1 lg:py-1" : "pt-0 pb-1 lg:pb-1"}
     ${
       isNavSolid
         ? "bg-white/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] border-b border-gray-200/30"
@@ -245,7 +262,60 @@ const Navbar = () => {
     }
   `}
       >
-        <div className="2xl:max-w-[1600px] max-w-7xl mx-auto px-4 sm:px-2 lg:px-2">
+        {/* UAE Announcement Bar */}
+        <div
+          className={`relative z-[60] overflow-hidden bg-[#4a0000] text-white transition-all duration-500 ease-in-out shadow-[0_10px_30px_-10px_rgba(0,0,0,0.6)] ${
+            isScrolled ? "max-h-0 opacity-0" : "max-h-10 sm:max-h-11 opacity-100"
+          }`}
+          aria-hidden={isScrolled}
+        >
+          {/* Rich burgundy gradient base */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#260000] via-[#800000] to-[#260000]" />
+
+          {/* Gold hairline edges — premium highlight */}
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-300/90 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-amber-300/35 to-transparent" />
+
+          {/* Sweeping gold light streak */}
+          <div
+            className="pointer-events-none absolute top-0 bottom-0 w-20 -skew-x-12 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+            style={{ left: "-5rem", animation: "announce-sweep 7s ease-in-out 1.5s infinite" }}
+          />
+
+          {/* Gold diamond ornaments (desktop) */}
+          <div className="absolute inset-y-0 left-4 hidden items-center text-amber-300/80 text-xs lg:flex" aria-hidden="true">
+            ◆
+          </div>
+          <div className="absolute inset-y-0 right-4 hidden items-center text-amber-300/80 text-xs lg:flex" aria-hidden="true">
+            ◆
+          </div>
+
+          <div className="relative h-8 sm:h-9 flex items-center justify-center px-4">
+            {UAE_ANNOUNCEMENTS.map((announcement, idx) => (
+              <span
+                key={announcement.full}
+                aria-hidden={idx !== announcementIndex}
+                className={`absolute inset-0 flex items-center justify-center gap-2 text-center px-4 transition-all duration-500 ease-out ${
+                  idx === announcementIndex
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-1.5 pointer-events-none"
+                }`}
+              >
+                <span className="text-[11px] sm:text-[13px] leading-none" aria-hidden="true">
+                  🇦🇪
+                </span>
+                <span className="whitespace-nowrap md:hidden text-[9.5px] sm:text-[10px] font-semibold tracking-[0.12em] sm:tracking-[0.16em] uppercase text-white/95">
+                  {announcement.mobile}
+                </span>
+                <span className="hidden md:inline whitespace-nowrap text-[10px] md:text-xs font-semibold tracking-[0.18em] uppercase text-white/95">
+                  {announcement.full}
+                </span>
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="2xl:max-w-[1600px] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 2xl:px-10">
           <div className="flex items-center justify-between relative">
             {/* Mobile Menu Toggle - Refined */}
             <div className="flex items-center md:hidden">

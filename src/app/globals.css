@@ -17,6 +17,14 @@
     overflow-x: hidden; /* belt-and-suspenders for older browsers */
     max-width: 100%;
   }
+html {
+    scroll-behavior: smooth;
+  }
+
+  ::selection {
+    background: rgba(128,0,0,0.92);
+    color: #fff;
+  }
 
   :root {
     --background: 20 20% 98%;
@@ -157,4 +165,22 @@
 }
 .animate-stagger-5 {
   animation-delay: 0.3s;
+}
+
+/* Premium gold highlight sweep across the UAE announcement bar */
+@keyframes announce-sweep {
+  0% {
+    opacity: 0;
+    transform: translateX(-0.75rem) /* keep off-screen left */ skewX(-12deg);
+  }
+  8% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(112vw) skewX(-12deg);
+  }
 }

@@ -597,9 +597,9 @@ const formatAddress = (addressData) => {
   // Format currency
   const formatCurrency = (amount) => {
     if (typeof amount !== 'number') {
-      return '₹ 0';
+      return 'AED 0';
     }
-    return `₹ ${amount.toLocaleString('en-IN')}`;
+    return `AED ${amount.toLocaleString('en-US')}`;
   };
      
   
@@ -1370,7 +1370,7 @@ const generateOrderTimeline = (status, orderDate, cancelledAt = null, cancellati
                     </div>
                     <div className="flex justify-between text-xs sm:text-sm">
                       <span className="text-gray-600">Tax</span>
-                      <span className="text-gray-900">₹ 0</span>
+                      <span className="text-gray-900">AED 0</span>
                     </div>
                     <div className="border-t border-gray-300 pt-3 sm:pt-4 mt-3 sm:mt-4">
                       <div className="flex justify-between font-bold text-sm sm:text-base md:text-lg">
@@ -1964,7 +1964,7 @@ function getFallbackOrderData(selectedOrder) {
     }],
     orderDate: formatDate(fallbackDate),
     expectedDelivery: formatDate(new Date(fallbackDate.setDate(fallbackDate.getDate() + 7))),
-    totalAmount: selectedOrder?.value || '₹ 0',
+    totalAmount: selectedOrder?.value || 'AED 0',
     status: orderStatus,
     statusColor: orderStatus === 'Cancelled' ? 'bg-red-100 text-red-800 border-red-200' : 'bg-amber-100 text-amber-800 border-amber-200',
     statusIcon: orderStatus === 'Cancelled' ? XCircle : Clock,

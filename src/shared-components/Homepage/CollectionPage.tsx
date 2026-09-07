@@ -2,6 +2,7 @@
 "use client";
 
 import { getFirstProductImage } from "@/utils/productImageUtils";
+import { formatAED } from "@/utils/currency";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
@@ -141,7 +142,7 @@ export default function CollectionsPage({ collections = [] }) {
               <Link href={`/collections/${collection.productId}`}>
                 <div className="space-y-3 cursor-pointer">
                   {/* Image Container */}
-                  <div className="relative overflow-hidden w-full aspect-[3/4] rounded-lg bg-gray-100">
+                  <div className="relative overflow-hidden w-full aspect-[3/4] rounded-2xl bg-gray-100">
                     {(() => {
                       const img = getFirstProductImage(collection.productId, collection.images);
                       return (
@@ -173,8 +174,8 @@ export default function CollectionsPage({ collections = [] }) {
                     <p className="text-sm sm:text-base lg:text-lg font-sans text-black line-clamp-2">
                       {collection.name?.toUpperCase() || "PRODUCT NAME"}
                     </p>
-                    <p className="text-xs sm:text-sm text-gray-700 font-medium">
-                      ₹ {collection.price?.toLocaleString() || "0"}
+                    <p className="text-xs sm:text-sm text-gray-700 font-medium tracking-wide">
+                      {formatAED(collection.price)}
                     </p>
                     
                   </div>

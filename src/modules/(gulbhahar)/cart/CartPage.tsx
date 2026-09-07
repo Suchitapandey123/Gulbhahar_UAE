@@ -1,6 +1,7 @@
 // @ts-nocheck
 // src\modules\(gulbhahar)\cart\CartPage.tsx
 "use client";
+import { formatAED, formatAEDShort } from "@/utils/currency";
 
 import analyticsAPI from "@/services/analytics/analyticsService";
 import { trackVisitorEvent } from "@/services/analytics/journeyService";
@@ -301,7 +302,7 @@ const CartPage = () => {
                             </h4>
                           </div>
                           <p className="text-sm text-gray-600">
-                            ₹{item.price.toLocaleString()}
+                            {formatAED(item.price)}
                           </p>
 
                           {/* Current Variants */}
@@ -371,7 +372,7 @@ const CartPage = () => {
                         {/* Price and Expand Button */}
                         <div className="text-right flex flex-col justify-between">
                           <p className="text-sm font-semibold text-gray-900">
-                            ₹{(item.price * item.quantity).toLocaleString()}
+                            {formatAED(item.price * item.quantity)}
                           </p>
 
                           {((item.availableColors && item.availableColors.length > 1) ||
@@ -532,7 +533,7 @@ const CartPage = () => {
               <div className="flex justify-between items-center">
                 <span className="text-lg font-bold text-gray-900">Total:</span>
                 <span className="text-lg font-bold text-red-900">
-                  ₹{total.toLocaleString()}
+                  {formatAED(total)}
                 </span>
               </div>
 

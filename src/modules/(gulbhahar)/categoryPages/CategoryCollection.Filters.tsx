@@ -274,12 +274,12 @@ export default function CategoryCollection_Filters({
 
   const priceOptions: FilterOption[] = [
     { label: "All Prices", value: "all" },
-    { label: "Under ₹1,000", value: "0-1000" },
-    { label: "₹1,000 - ₹2,000", value: "1000-2000" },
-    { label: "₹2,000 - ₹3,000", value: "2000-3000" },
-    { label: "₹3,000 - ₹5,000", value: "3000-5000" },
-    { label: "₹5,000 - ₹10,000", value: "5000-10000" },
-    { label: "Above ₹10,000", value: "10000-999999" },
+    { label: "Under AED 44", value: "0-1000" },
+    { label: "AED 44 - AED 88", value: "1000-2000" },
+    { label: "AED 88 - AED 131", value: "2000-3000" },
+    { label: "AED 131 - AED 219", value: "3000-5000" },
+    { label: "AED 219 - AED 438", value: "5000-10000" },
+    { label: "Above AED 438", value: "10000-999999" },
   ];
 
   const sortOptions: FilterOption[] = [

@@ -1,6 +1,7 @@
 // @ts-nocheck
 "use client";
 import { ShoppingBag } from "lucide-react";
+import { formatAED } from "@/utils/currency";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -179,11 +180,11 @@ export default function ProductCard({
             <div className="flex-shrink-0 text-right">
               <div className="flex flex-col items-end gap-0.5">
                 <span className="text-sm font-bold text-red-600">
-                  ₹{item.price.toLocaleString()}
+                  {formatAED(item.price)}
                 </span>
                 {item.originalPrice && item.originalPrice > item.price && (
                   <span className="text-xs text-gray-400 line-through">
-                    ₹{item.originalPrice.toLocaleString()}
+                    {formatAED(item.originalPrice)}
                   </span>
                 )}
               </div>
@@ -234,7 +235,7 @@ export default function ProductCard({
             {(item.name || item.title || "PRODUCT").toUpperCase()}
           </h3>
           <span className="text-lg font-bold text-red-600">
-            ₹{item.price?.toLocaleString?.() || String(item.price)}
+            {formatAED(item.price)}
           </span>
         </div>
       )}

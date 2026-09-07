@@ -1,0 +1,4 @@
+﻿4: import { formatAED, formatAEDShort } from "@/utils/currency";
+305: {formatAED(item.price)}
+375: {formatAED(item.price * item.quantity)}
+536: {formatAED(total)}

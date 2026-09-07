@@ -2,6 +2,7 @@
 "use client";
 
 import { getFirstProductImage } from "@/utils/productImageUtils";
+import { formatAED } from "@/utils/currency";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -53,7 +54,7 @@ const NewCollection = ({ newCollection }) => {
                 <Link href={`/products/${product.productId}`}>
                   <div className="space-y-3 cursor-pointer relative">
                     {/* Image Container */}
-                    <div className="relative overflow-hidden w-full aspect-[3/4]">
+                    <div className="relative overflow-hidden w-full aspect-[3/4] rounded-2xl">
                       <div className="relative w-full h-full bg-gray-100">
                         {(() => {
                           const img = getFirstProductImage(product.productId, product.images);
@@ -104,8 +105,8 @@ const NewCollection = ({ newCollection }) => {
                       <p className="text-sm sm:text-base lg:text-lg font-sans text-black line-clamp-2">
                         {product.name?.toUpperCase() || "PRODUCT NAME"}
                       </p>
-                      <p className="text-xs sm:text-sm text-gray-700 font-medium">
-                        ₹ {product.price?.toLocaleString() || "0"}
+                      <p className="text-xs sm:text-sm text-gray-700 font-medium tracking-wide">
+                        {formatAED(product.price)}
                       </p>
                     </div>
                   </div>

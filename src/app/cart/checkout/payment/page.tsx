@@ -1,5 +1,6 @@
 // @ts-nocheck
 "use client";
+import { formatAED, formatAEDShort } from "@/utils/currency";
 
 import analyticsAPI from "@/services/analytics/analyticsService";
 import { trackVisitorEvent } from "@/services/analytics/journeyService";
@@ -141,9 +142,9 @@ function PaymentContent() {
       });
     } catch {
       setCheckoutData({
-        fullName: "Test User", email: "test@example.com", phone: "+919876543210",
-        address: "123 Test Street", city: "Mumbai", region: "Maharashtra",
-        postalCode: "400001", country: "India", orderId: orderId || "TEST_ORDER_001",
+        fullName: "Test User", email: "test@example.com", phone: "+971550000000",
+        address: "123 Sheikh Zayed Road", city: "Dubai", region: "Dubai",
+        postalCode: "00000", country: "UAE", orderId: orderId || "TEST_ORDER_001",
         orderTotal: amount || 1200, orderSubtotal: amount ? parseFloat(amount) - 100 : 1100,
         orderShipping: 100, orderItems: [{ id: "1", name: "Test Product", price: 1100, quantity: 1 }],
         deliveryInfo: { cod: true },
@@ -177,7 +178,7 @@ function PaymentContent() {
           currency: order.currency,
           name: "Gulbhahar",
           description: isPartialCOD
-            ? `Advance ₹${partialCodAmount} for Order ${checkoutData?.orderId || ""}`
+            ? `Advance AED ${partialCodAmount} for Order ${checkoutData?.orderId || ""}`
             : `Order ${checkoutData?.orderId || ""}`,
           order_id: order.order_id,
           prefill: {
@@ -268,7 +269,7 @@ function PaymentContent() {
     }
   };
 
-  /* ── Partial COD: pay ₹300 advance, rest on delivery ── */
+  /* ── Partial COD: pay AED 13 advance, rest on delivery ── */
   const handlePartialCODPayment = async () => {
     setOnlinePaymentError("");
     if (!window.Razorpay) {
@@ -333,7 +334,7 @@ function PaymentContent() {
   );
 
   const isPaying = isProcessingOnline || isProcessingPartialCOD;
-  const isExpressOrder = checkoutData?.shippingMethod === "delhi-express";
+  const isExpressOrder = checkoutData?.shippingMethod === "uae-express";
   const orderTotalTooLow = (checkoutData?.orderTotal || 0) <= partialCodAmount;
   // Auto-switch to online if partial COD is not available for this order
   if ((isExpressOrder || orderTotalTooLow) && paymentMethod === "partial-cod") setPaymentMethod("online");
@@ -376,12 +377,12 @@ function PaymentContent() {
                   />
                   {isExpressOrder && (
                     <p className="text-[10px] text-amber-700 mt-2 flex items-center gap-1">
-                      ⚡ Partial COD is not available for Delhi NCR Express delivery
+                      ⚡ Partial COD is not available for UAE Express delivery
                     </p>
                   )}
                   {!isExpressOrder && orderTotalTooLow && (
                     <p className="text-[10px] text-amber-700 mt-2 flex items-center gap-1">
-                      Partial COD is not available for orders below ₹{partialCodAmount + 1}
+                      Partial COD is not available for orders below AED {partialCodAmount + 1}
                     </p>
                   )}
                 </div>
@@ -423,7 +424,7 @@ function PaymentContent() {
                           </p>
                           <div className="flex flex-wrap gap-2">
                             <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-100">
-                              ₹{partialCodAmount} advance
+                              {formatAED(partialCodAmount)} advance
                             </span>
                             <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">✓ Available</span>
                           </div>
@@ -432,11 +433,11 @@ function PaymentContent() {
                       <div className="grid grid-cols-2 gap-2">
                         <div className="bg-white rounded-xl px-4 py-3 border border-[#E5E7EB] text-center">
                           <p className="text-[10px] font-semibold text-[#757575] uppercase tracking-wide mb-1">Pay Now (Razorpay)</p>
-                          <p className="text-lg font-bold text-red-800">₹{partialCodAmount}</p>
+                          <p className="text-lg font-bold text-red-800">{formatAED(partialCodAmount)}</p>
                         </div>
                         <div className="bg-white rounded-xl px-4 py-3 border border-[#E5E7EB] text-center">
                           <p className="text-[10px] font-semibold text-[#757575] uppercase tracking-wide mb-1">On Delivery</p>
-                          <p className="text-lg font-bold text-[#1a1a1a]">₹{((checkoutData?.orderTotal || 1200) - partialCodAmount).toLocaleString()}</p>
+                          <p className="text-lg font-bold text-[#1a1a1a]">{formatAED((checkoutData?.orderTotal || 1200) - partialCodAmount)}</p>
                         </div>
                       </div>
                     </div>
@@ -462,8 +463,8 @@ function PaymentContent() {
                     {isPaying
                       ? <><Loader2 className="h-4 w-4 animate-spin" />Processing your order...</>
                       : paymentMethod === "online"
-                        ? <><Lock className="h-4 w-4" />Pay ₹{(checkoutData?.orderTotal || 1200).toLocaleString()} Securely</>
-                        : <><Lock className="h-4 w-4" />Pay ₹{partialCodAmount} Now via Razorpay</>
+                        ? <><Lock className="h-4 w-4" />Pay {formatAED(checkoutData?.orderTotal || 1200)} Securely</>
+                        : <><Lock className="h-4 w-4" />Pay {formatAED(partialCodAmount)} Now via Razorpay</>
                     }
                   </button>
 
@@ -536,23 +537,23 @@ function PaymentContent() {
                 <div className="px-5 sm:px-6 py-4 space-y-2 border-b border-[#E5E7EB] bg-white">
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-[#757575]">Subtotal</span>
-                    <span className="text-sm font-medium text-[#1a1a1a]">₹{(checkoutData?.orderSubtotal || 1100).toLocaleString()}</span>
+                    <span className="text-sm font-medium text-[#1a1a1a]">{formatAED(checkoutData?.orderSubtotal || 1100)}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-[#757575]">Shipping</span>
                     <span className={`text-sm font-medium ${checkoutData?.orderShipping === 0 ? "text-emerald-600" : "text-[#1a1a1a]"}`}>
-                      {checkoutData?.orderShipping === 0 ? "Free" : `₹${(checkoutData?.orderShipping || 100).toLocaleString()}`}
+                      {checkoutData?.orderShipping === 0 ? "Free" : `${formatAEDShort(checkoutData?.orderShipping || 100)}`}
                     </span>
                   </div>
-                  {checkoutData?.delhiNCRPrepayment > 0 && (
+                  {checkoutData?.uaeExpressPrepayment > 0 && (
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-amber-700 flex items-center gap-1">⚡ Delhi NCR Express (2–3 hrs)</span>
-                      <span className="text-sm font-medium text-amber-700">₹{checkoutData.delhiNCRPrepayment}</span>
+                      <span className="text-sm text-amber-700 flex items-center gap-1">⚡ UAE Express (2–4 business days)</span>
+                      <span className="text-sm font-medium text-amber-700">{formatAEDShort(checkoutData.uaeExpressPrepayment)}</span>
                     </div>
                   )}
                   <div className="pt-2 border-t border-[#F3F4F6] flex justify-between items-center">
                     <span className="text-sm font-semibold text-[#757575]">Total</span>
-                    <span className="text-xl font-bold text-[#1a1a1a]">₹{(checkoutData?.orderTotal || 1200).toLocaleString()}</span>
+                    <span className="text-xl font-bold text-[#1a1a1a]">{formatAED(checkoutData?.orderTotal || 1200)}</span>
                   </div>
                 </div>
 
@@ -561,18 +562,18 @@ function PaymentContent() {
                   <div className="px-5 sm:px-6 py-4 space-y-2 border-b border-[#E5E7EB]">
                     <div className="flex justify-between items-center py-2.5 px-3 bg-white border border-red-100 rounded-xl">
                       <span className="text-xs font-medium text-[#757575]">Pay Now (Razorpay)</span>
-                      <span className="text-sm font-bold text-red-800">₹{partialCodAmount}</span>
+                      <span className="text-sm font-bold text-red-800">{formatAED(partialCodAmount)}</span>
                     </div>
                     <div className="flex justify-between items-center py-2.5 px-3 bg-white border border-amber-100 rounded-xl">
                       <span className="text-xs font-medium text-[#757575]">On Delivery</span>
-                      <span className="text-sm font-bold text-amber-700">₹{((checkoutData?.orderTotal || 1200) - partialCodAmount).toLocaleString()}</span>
+                      <span className="text-sm font-bold text-amber-700">{formatAED((checkoutData?.orderTotal || 1200) - partialCodAmount)}</span>
                     </div>
                   </div>
                 ) : (
                   <div className="px-5 sm:px-6 py-4 border-b border-[#E5E7EB]">
                     <div className="flex justify-between items-center py-2.5 px-3 bg-white border border-emerald-100 rounded-xl">
                       <span className="text-xs font-medium text-[#757575]">Pay Now</span>
-                      <span className="text-sm font-bold text-emerald-700">₹{(checkoutData?.orderTotal || 1200).toLocaleString()}</span>
+                      <span className="text-sm font-bold text-emerald-700">{formatAED(checkoutData?.orderTotal || 1200)}</span>
                     </div>
                   </div>
                 )}
@@ -585,7 +586,7 @@ function PaymentContent() {
                     <div className="min-w-0">
                       <p className="text-xs font-semibold text-[#1a1a1a]">{checkoutData?.fullName || "Test User"}</p>
                       <p className="text-xs text-[#757575] mt-0.5 leading-relaxed">
-                        {checkoutData?.address || "123 Test Street"}, {checkoutData?.city || "Mumbai"}, {checkoutData?.region || "Maharashtra"} {checkoutData?.postalCode || "400001"}
+                        {checkoutData?.address || "123 Sheikh Zayed Road"}, {checkoutData?.city || "Dubai"}, {checkoutData?.region || "Dubai"} {checkoutData?.postalCode || "00000"}
                       </p>
                     </div>
                   </div>
@@ -595,7 +596,7 @@ function PaymentContent() {
                   </div>
                   <div className="flex items-center gap-3">
                     <Phone className="h-3.5 w-3.5 text-red-800 flex-shrink-0" />
-                    <span className="text-xs text-[#757575]">{checkoutData?.phone || "+919876543210"}</span>
+                    <span className="text-xs text-[#757575]">{checkoutData?.phone || "+971550000000"}</span>
                   </div>
                 </div>
 

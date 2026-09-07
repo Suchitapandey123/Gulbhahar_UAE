@@ -72,7 +72,7 @@ export default function SimilarProductCardInteractive({
   const isOutOfStock = totalStock === 0;
 
   return (
-    <div className="relative overflow-hidden w-full aspect-[3/4] bg-gray-50">
+    <div className="relative overflow-hidden w-full aspect-[3/4] rounded-2xl bg-gray-50">
       {images.length > 1 ? (
         <ImageSlider images={images} alt={productName} />
       ) : (
